@@ -21,7 +21,7 @@ export class TestClient extends ConnectorClientBase {
      * Public constructor for testing (makes protected constructor accessible)
      */
     constructor(tokenProvider: ITokenProvider, options?: ConnectorClientOptions) {
-        super(tokenProvider, options);
+        super(undefined, tokenProvider, options);
     }
 
     /**

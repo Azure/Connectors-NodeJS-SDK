@@ -40,7 +40,8 @@ describe('HttpClient', () => {
     clientOptions = new ConnectorClientOptions({
       baseUrl: TEST_CONSTANTS.MOCK_BASE_URL,
       timeout: TEST_CONSTANTS.TIMEOUT,
-      enableLogging: false
+      enableLogging: false,
+      maxRetryAttempts: 1
     });
   });
 

@@ -14,7 +14,8 @@ export * from './sdk/base/iConnectorClient';
 
 // Authentication exports
 export * from './sdk/authentication/tokenProvider';
-export * from './sdk/authentication/msalTokenProvider';
+export * from './sdk/authentication/managedIdentityTokenProvider';
+export * from './sdk/authentication/connectionStringTokenProvider';
 
 // Client exports
 export * from './sdk/clients/office365Client';

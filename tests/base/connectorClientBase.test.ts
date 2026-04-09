@@ -305,7 +305,7 @@ describe('ConnectorClientBase', () => {
       // Instead, test that our concrete test class implements it correctly
       class InlineTestClient extends ConnectorClientBase {
         constructor(tokenProvider: ITokenProvider) {
-          super(tokenProvider);
+          super(undefined, tokenProvider);
         }
         
         get connectorName(): string {
@@ -323,7 +323,7 @@ describe('ConnectorClientBase', () => {
         public readonly connectorName: string = 'custom-connector-v2';
         
         constructor(tokenProvider: ITokenProvider, options?: ConnectorClientOptions) {
-          super(tokenProvider, options);
+          super(undefined, tokenProvider, options);
         }
       }
 

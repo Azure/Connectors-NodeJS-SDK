@@ -23,11 +23,12 @@ import {
 export class SharepointonlineClient extends ConnectorClientBase {
     /**
      * Initializes a new instance of the SharepointonlineClient class.
+     * @param connectionRuntimeUrl The connection runtime URL for the SharePoint Online connector endpoint.
      * @param tokenProvider The token provider for authentication.
      * @param options The connector client options.
      */
-    constructor(tokenProvider: ITokenProvider, options?: ConnectorClientOptions) {
-        super(tokenProvider, options);
+    constructor(connectionRuntimeUrl: string | undefined, tokenProvider: ITokenProvider, options?: ConnectorClientOptions) {
+        super(connectionRuntimeUrl, tokenProvider, options);
     }
 
     /**
@@ -45,14 +46,11 @@ export class SharepointonlineClient extends ConnectorClientBase {
         cancellationToken?: AbortSignal
     ): Promise<SharePointTablesResponse> {
         try {
-            const response = await this.callConnectorAsync<SharePointTablesResponse>(
-                'GET',
+            return await this.getAsync<SharePointTablesResponse>(
                 `/apim/sharepointonline/datasets/${encodeURIComponent(siteAddress)}/tables`,
-                undefined,
                 undefined,
                 { signal: cancellationToken }
             );
-            return response.data;
         } catch (error) {
             throw this.handleSharePointError(error);
         }
@@ -68,14 +66,12 @@ export class SharepointonlineClient extends ConnectorClientBase {
         cancellationToken?: AbortSignal
     ): Promise<BlobMetadata[]> {
         try {
-            const response = await this.callConnectorAsync<{ value: BlobMetadata[] }>(
-                'GET',
+            const result = await this.getAsync<{ value: BlobMetadata[] }>(
                 `/apim/sharepointonline/datasets/${encodeURIComponent(siteAddress)}/files`,
-                undefined,
                 undefined,
                 { signal: cancellationToken }
             );
-            return response.data.value ?? [];
+            return result.value ?? [];
         } catch (error) {
             throw this.handleSharePointError(error);
         }
@@ -93,14 +89,12 @@ export class SharepointonlineClient extends ConnectorClientBase {
         cancellationToken?: AbortSignal
     ): Promise<BlobMetadata[]> {
         try {
-            const response = await this.callConnectorAsync<{ value: BlobMetadata[] }>(
-                'GET',
+            const result = await this.getAsync<{ value: BlobMetadata[] }>(
                 `/apim/sharepointonline/datasets/${encodeURIComponent(siteAddress)}/folders/${encodeURIComponent(folderId)}/files`,
-                undefined,
                 undefined,
                 { signal: cancellationToken }
             );
-            return response.data.value ?? [];
+            return result.value ?? [];
         } catch (error) {
             throw this.handleSharePointError(error);
         }
@@ -147,8 +141,7 @@ export class SharepointonlineClient extends ConnectorClientBase {
         cancellationToken?: AbortSignal
     ): Promise<SharePointBlobMetadata> {
         try {
-            const response = await this.callConnectorAsync<SharePointBlobMetadata>(
-                'POST',
+            return await this.postAsync<SharePointBlobMetadata>(
                 `/apim/sharepointonline/datasets/${encodeURIComponent(siteAddress)}/files/folders/${encodeURIComponent(folderPath)}/files`,
                 fileContent,
                 { 
@@ -157,7 +150,6 @@ export class SharepointonlineClient extends ConnectorClientBase {
                 },
                 { signal: cancellationToken }
             );
-            return response.data;
         } catch (error) {
             throw this.handleSharePointError(error);
         }
@@ -177,14 +169,12 @@ export class SharepointonlineClient extends ConnectorClientBase {
         cancellationToken?: AbortSignal
     ): Promise<SharePointBlobMetadata> {
         try {
-            const response = await this.callConnectorAsync<SharePointBlobMetadata>(
-                'PUT',
+            return await this.putAsync<SharePointBlobMetadata>(
                 `/apim/sharepointonline/datasets/${encodeURIComponent(siteAddress)}/files/getfilecontentbypath(path='${encodeURIComponent(filePath)}')/content`,
                 fileContent,
                 { 'Content-Type': 'application/octet-stream' },
                 { signal: cancellationToken }
             );
-            return response.data;
         } catch (error) {
             throw this.handleSharePointError(error);
         }
@@ -202,10 +192,8 @@ export class SharepointonlineClient extends ConnectorClientBase {
         cancellationToken?: AbortSignal
     ): Promise<void> {
         try {
-            await this.callConnectorAsync(
-                'DELETE',
+            await this.deleteAsync(
                 `/apim/sharepointonline/datasets/${encodeURIComponent(siteAddress)}/files/getfilecontentbypath(path='${encodeURIComponent(filePath)}')`,
-                undefined,
                 undefined,
                 { signal: cancellationToken }
             );
@@ -226,14 +214,11 @@ export class SharepointonlineClient extends ConnectorClientBase {
         cancellationToken?: AbortSignal
     ): Promise<SharePointListItemsResponse> {
         try {
-            const response = await this.callConnectorAsync<SharePointListItemsResponse>(
-                'GET',
+            return await this.getAsync<SharePointListItemsResponse>(
                 `/apim/sharepointonline/datasets/${encodeURIComponent(siteAddress)}/tables/${encodeURIComponent(listName)}/items`,
-                undefined,
                 undefined,
                 { signal: cancellationToken }
             );
-            return response.data;
         } catch (error) {
             throw this.handleSharePointError(error);
         }
@@ -253,14 +238,12 @@ export class SharepointonlineClient extends ConnectorClientBase {
         cancellationToken?: AbortSignal
     ): Promise<any> {
         try {
-            const response = await this.callConnectorAsync<any>(
-                'POST',
+            return await this.postAsync<any>(
                 `/apim/sharepointonline/datasets/${encodeURIComponent(siteAddress)}/tables/${encodeURIComponent(listName)}/items`,
                 item,
                 { 'Content-Type': 'application/json' },
                 { signal: cancellationToken }
             );
-            return response.data;
         } catch (error) {
             throw this.handleSharePointError(error);
         }
@@ -282,14 +265,127 @@ export class SharepointonlineClient extends ConnectorClientBase {
         cancellationToken?: AbortSignal
     ): Promise<any> {
         try {
-            const response = await this.callConnectorAsync<any>(
-                'PATCH',
+            return await this.patchAsync<any>(
                 `/apim/sharepointonline/datasets/${encodeURIComponent(siteAddress)}/tables/${encodeURIComponent(listName)}/items/${encodeURIComponent(itemId)}`,
                 item,
                 { 'Content-Type': 'application/json' },
                 { signal: cancellationToken }
             );
-            return response.data;
+        } catch (error) {
+            throw this.handleSharePointError(error);
+        }
+    }
+
+    /**
+     * Gets all datasets (site collections) available.
+     * @param cancellationToken Optional cancellation token.
+     */
+    public async getDatasetsAsync(
+        cancellationToken?: AbortSignal
+    ): Promise<any> {
+        try {
+            return await this.getAsync<any>(
+                '/apim/sharepointonline/datasets',
+                undefined,
+                { signal: cancellationToken }
+            );
+        } catch (error) {
+            throw this.handleSharePointError(error);
+        }
+    }
+
+    /**
+     * Gets a specific item from a SharePoint list by ID.
+     * @param siteAddress The SharePoint site address.
+     * @param listName The name of the list.
+     * @param itemId The ID of the item.
+     * @param cancellationToken Optional cancellation token.
+     */
+    public async getItemAsync(
+        siteAddress: string,
+        listName: string,
+        itemId: string,
+        cancellationToken?: AbortSignal
+    ): Promise<any> {
+        try {
+            return await this.getAsync<any>(
+                `/apim/sharepointonline/datasets/${encodeURIComponent(siteAddress)}/tables/${encodeURIComponent(listName)}/items/${encodeURIComponent(itemId)}`,
+                undefined,
+                { signal: cancellationToken }
+            );
+        } catch (error) {
+            throw this.handleSharePointError(error);
+        }
+    }
+
+    /**
+     * Gets items from a SharePoint list with OData query options.
+     * @param siteAddress The SharePoint site address.
+     * @param listName The name of the list.
+     * @param filter Optional OData filter expression.
+     * @param top Optional number of items to retrieve.
+     * @param orderBy Optional OData orderBy expression.
+     * @param cancellationToken Optional cancellation token.
+     */
+    public async getItemsAsync(
+        siteAddress: string,
+        listName: string,
+        filter?: string,
+        top?: number,
+        orderBy?: string,
+        cancellationToken?: AbortSignal
+    ): Promise<SharePointListItemsResponse> {
+        try {
+            const queryParams: string[] = [];
+            if (filter) queryParams.push(`$filter=${encodeURIComponent(filter)}`);
+            if (top !== undefined) queryParams.push(`$top=${top}`);
+            if (orderBy) queryParams.push(`$orderby=${encodeURIComponent(orderBy)}`);
+            const qs = queryParams.length > 0 ? `?${queryParams.join('&')}` : '';
+            return await this.getAsync<SharePointListItemsResponse>(
+                `/apim/sharepointonline/datasets/${encodeURIComponent(siteAddress)}/tables/${encodeURIComponent(listName)}/items${qs}`,
+                undefined,
+                { signal: cancellationToken }
+            );
+        } catch (error) {
+            throw this.handleSharePointError(error);
+        }
+    }
+
+    /**
+     * Creates a new item in a SharePoint list (alternative name for createListItemAsync).
+     * @param siteAddress The SharePoint site address.
+     * @param listName The name of the list.
+     * @param item The item data to create.
+     * @param cancellationToken Optional cancellation token.
+     */
+    public async postItemAsync(
+        siteAddress: string,
+        listName: string,
+        item: Record<string, any>,
+        cancellationToken?: AbortSignal
+    ): Promise<any> {
+        return await this.createListItemAsync(siteAddress, listName, item, cancellationToken);
+    }
+
+    /**
+     * Deletes an item from a SharePoint list.
+     * @param siteAddress The SharePoint site address.
+     * @param listName The name of the list.
+     * @param itemId The ID of the item to delete.
+     * @param cancellationToken Optional cancellation token.
+     */
+    public async deleteItemAsync(
+        siteAddress: string,
+        listName: string,
+        itemId: string,
+        cancellationToken?: AbortSignal
+    ): Promise<void> {
+        try {
+            await this.deleteAsync(
+                `/apim/sharepointonline/datasets/${encodeURIComponent(siteAddress)}/tables/${encodeURIComponent(listName)}/items/${encodeURIComponent(itemId)}`,
+                undefined,
+                { signal: cancellationToken }
+            );
         } catch (error) {
             throw this.handleSharePointError(error);
         }

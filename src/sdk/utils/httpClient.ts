@@ -59,31 +59,7 @@ export class HttpClient {
             ...options,
         };
 
-        try {
-            const response: AxiosResponse<T> = await this._axiosInstance.request(config);
-            
-            return new ConnectorResponse<T>(
-                response.data,
-                response.status,
-                response.statusText,
-                this.normalizeHeaders(response.headers),
-                response
-            );
-        } catch (error) {
-            if (axios.isAxiosError(error)) {
-                const status = error.response?.status ?? 0;
-                const statusText = error.response?.statusText ?? 'Unknown Error';
-                const responseBody = error.response?.data;
-                
-                throw new ConnectorException(
-                    error.message,
-                    status,
-                    statusText,
-                    responseBody
-                );
-            }
-            throw error;
-        }
+        return await this.sendWithRetry<T>(config, false);
     }
 
     /**
@@ -112,32 +88,86 @@ export class HttpClient {
             ...options,
         };
 
-        try {
-            const response: AxiosResponse<ArrayBuffer> = await this._axiosInstance.request(config);
-            const buffer = Buffer.from(response.data);
-            
-            return new ConnectorResponse<Buffer>(
-                buffer,
-                response.status,
-                response.statusText,
-                this.normalizeHeaders(response.headers),
-                response
-            );
-        } catch (error) {
-            if (axios.isAxiosError(error)) {
-                const status = error.response?.status ?? 0;
-                const statusText = error.response?.statusText ?? 'Unknown Error';
-                const responseBody = error.response?.data;
-                
-                throw new ConnectorException(
-                    error.message,
-                    status,
-                    statusText,
-                    responseBody
+        return await this.sendWithRetry<Buffer>(config, true);
+    }
+
+    /**
+     * Sends a request with retry logic for transient failures (429, 5xx).
+     */
+    private async sendWithRetry<T>(config: AxiosRequestConfig, isBinary: boolean): Promise<ConnectorResponse<T>> {
+        const maxAttempts = this._options.maxRetryAttempts ?? 3;
+        let lastError: any;
+
+        for (let attempt = 0; attempt < maxAttempts; attempt++) {
+            try {
+                const response: AxiosResponse = await this._axiosInstance.request(config);
+
+                if (isBinary) {
+                    const buffer = Buffer.from(response.data) as any;
+                    return new ConnectorResponse<T>(
+                        buffer,
+                        response.status,
+                        response.statusText,
+                        this.normalizeHeaders(response.headers),
+                        response
+                    );
+                }
+
+                return new ConnectorResponse<T>(
+                    response.data,
+                    response.status,
+                    response.statusText,
+                    this.normalizeHeaders(response.headers),
+                    response
                 );
+            } catch (error) {
+                lastError = error;
+
+                // Check if this is a retryable error
+                if (axios.isAxiosError(error)) {
+                    const status = error.response?.status ?? 0;
+                    const isRetryable = status === 429 || status >= 500;
+
+                    if (isRetryable && attempt < maxAttempts - 1) {
+                        await this.delayRetry(attempt);
+                        continue;
+                    }
+
+                    // Non-retryable or last attempt — throw ConnectorException
+                    const statusText = error.response?.statusText ?? 'Unknown Error';
+                    const responseBody = error.response?.data;
+                    throw new ConnectorException(
+                        error.message,
+                        status,
+                        statusText,
+                        responseBody
+                    );
+                }
+
+                // Non-Axios errors get a retry for network-level failures
+                if (attempt < maxAttempts - 1) {
+                    await this.delayRetry(attempt);
+                    continue;
+                }
+                throw error;
             }
-            throw error;
         }
+
+        // Should not reach here, but safety net
+        throw lastError;
+    }
+
+    /**
+     * Calculates and applies retry delay with optional exponential backoff.
+     */
+    private delayRetry(attempt: number): Promise<void> {
+        let delay: number;
+        if (this._options.useExponentialBackoff) {
+            delay = (this._options.initialRetryDelayMs ?? 500) * Math.pow(2, attempt);
+        } else {
+            delay = this._options.retryDelayMs ?? 1000;
+        }
+        return new Promise(resolve => setTimeout(resolve, delay));
     }
 
     /**

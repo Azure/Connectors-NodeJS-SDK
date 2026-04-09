@@ -7,6 +7,11 @@
  */
 export class ConnectorException extends Error {
     /**
+     * Maximum length of response body stored in exception.
+     */
+    public static readonly MAX_RESPONSE_BODY_LENGTH = 2000;
+
+    /**
      * The HTTP status code of the failed request.
      */
     public readonly statusCode: number;
@@ -17,7 +22,7 @@ export class ConnectorException extends Error {
     public readonly statusText: string;
 
     /**
-     * The response body from the failed request.
+     * The response body from the failed request (truncated if too large).
      */
     public readonly responseBody: any;
 
@@ -26,10 +31,30 @@ export class ConnectorException extends Error {
         this.name = 'ConnectorException';
         this.statusCode = statusCode;
         this.statusText = statusText;
-        this.responseBody = responseBody;
+        this.responseBody = ConnectorException.truncateBody(responseBody);
 
         // Ensures proper prototype chain for instanceof checks
         Object.setPrototypeOf(this, ConnectorException.prototype);
+    }
+
+    /**
+     * Truncates response body if it exceeds maximum length.
+     */
+    private static truncateBody(body: any): any {
+        if (body === null || body === undefined) {
+            return body;
+        }
+        let bodyStr: string;
+        try {
+            bodyStr = typeof body === 'string' ? body : JSON.stringify(body);
+        } catch {
+            // Handle circular references or other serialization errors
+            return body;
+        }
+        if (bodyStr.length <= ConnectorException.MAX_RESPONSE_BODY_LENGTH) {
+            return body;
+        }
+        return bodyStr.substring(0, ConnectorException.MAX_RESPONSE_BODY_LENGTH) + '...[truncated]';
     }
 }
 

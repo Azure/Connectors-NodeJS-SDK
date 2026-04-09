@@ -74,12 +74,14 @@ export interface BlobMetadata {
 
 /**
  * Trigger callback payload base structure.
+ * Envelope type for AI Gateway trigger callback payloads.
+ * The AI Gateway wraps triggerBody() in a {"body":{"value":[...]}} structure.
  */
 export interface TriggerCallbackPayload<T = any> {
     /**
      * The trigger body containing the actual data.
      */
-    body?: T;
+    body?: TriggerCallbackBody<T>;
 
     /**
      * Trigger metadata.
@@ -90,4 +92,15 @@ export interface TriggerCallbackPayload<T = any> {
      * Headers from the trigger request.
      */
     headers?: Record<string, string>;
+}
+
+/**
+ * Inner body of the AI Gateway trigger callback, containing the array of trigger items.
+ */
+export interface TriggerCallbackBody<T = any> {
+    /**
+     * The list of trigger items delivered by the connector trigger.
+     * Split-on is not supported — consumers must iterate this array.
+     */
+    value?: T[];
 }

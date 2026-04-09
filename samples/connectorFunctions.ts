@@ -10,7 +10,7 @@ import { Context, HttpRequest, HttpResponseInit } from '@azure/functions';
 import { Office365Client } from '../src/sdk/clients/office365Client';
 import { SharepointonlineClient } from '../src/sdk/clients/sharepointonlineClient';
 import { TeamsClient } from '../src/sdk/clients/teamsClient';
-import { MsalTokenProvider } from '../src/sdk/authentication/msalTokenProvider';
+import { ManagedIdentityTokenProvider } from '../src/sdk/authentication/managedIdentityTokenProvider';
 import { ConnectorClientOptions } from '../src/sdk/base/connectorClientOptions';
 import {
     Office365ConnectorException,
@@ -51,13 +51,6 @@ const TEAMS_DEFAULT_LOCATION = 'Channel';
  * Configuration for the connector clients.
  */
 class ConnectorFunctionsConfig {
-    public static readonly tokenProviderConfig = {
-        tenantId: process.env.AZURE_TENANT_ID || '',
-        clientId: process.env.AZURE_CLIENT_ID || '',
-        clientSecret: process.env.AZURE_CLIENT_SECRET || '',
-        defaultScopes: ['https://graph.microsoft.com/.default']
-    };
-
     public static readonly clientOptions = new ConnectorClientOptions({
         enableLogging: process.env.NODE_ENV !== 'production',
         timeout: 30000,
@@ -77,12 +70,12 @@ export class ConnectorFunctions {
      * Initializes a new instance of the ConnectorFunctions class.
      */
     constructor() {
-        const tokenProvider = new MsalTokenProvider(ConnectorFunctionsConfig.tokenProviderConfig);
+        const tokenProvider = new ManagedIdentityTokenProvider();
         const options = ConnectorFunctionsConfig.clientOptions;
 
-        this._office365Client = new Office365Client(tokenProvider, options);
-        this._sharePointClient = new SharepointonlineClient(tokenProvider, options);
-        this._teamsClient = new TeamsClient(tokenProvider, options);
+        this._office365Client = new Office365Client(undefined, tokenProvider, options);
+        this._sharePointClient = new SharepointonlineClient(undefined, tokenProvider, options);
+        this._teamsClient = new TeamsClient(undefined, tokenProvider, options);
     }
 
     /**

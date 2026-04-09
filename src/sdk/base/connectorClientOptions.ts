@@ -31,6 +31,18 @@ export class ConnectorClientOptions {
     public retryDelayMs?: number = 1000;
 
     /**
+     * Whether to use exponential backoff for retries.
+     * Defaults to true.
+     */
+    public useExponentialBackoff?: boolean = true;
+
+    /**
+     * Initial retry delay in milliseconds for exponential backoff.
+     * Defaults to 500ms.
+     */
+    public initialRetryDelayMs?: number = 500;
+
+    /**
      * User agent string to include in requests.
      */
     public userAgent?: string = 'Azure-Connectors-NodeJS-SDK/1.0.0';

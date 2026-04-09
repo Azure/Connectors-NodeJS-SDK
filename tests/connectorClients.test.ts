@@ -5,7 +5,7 @@
 import { Office365Client } from '../src/sdk/clients/office365Client';
 import { SharepointonlineClient } from '../src/sdk/clients/sharepointonlineClient';
 import { TeamsClient } from '../src/sdk/clients/teamsClient';
-import { MsalTokenProvider, MsalTokenProviderConfig } from '../src/sdk/authentication/msalTokenProvider';
+import { ITokenProvider } from '../src/sdk/authentication/tokenProvider';
 import { ConnectorClientOptions } from '../src/sdk/base/connectorClientOptions';
 import { ConnectorResponse } from '../src/sdk/base/connectorResponse';
 import { ConnectorNames } from '../src/sdk/constants/connectorNames';
@@ -18,32 +18,20 @@ import {
 import { TEST_CONSTANTS } from './setup/testSetup';
 
 // Mock dependencies
-jest.mock('@azure/msal-node');
 jest.mock('../src/sdk/utils/httpClient');
 
 const MockedHttpClient = HttpClient as jest.MockedClass<typeof HttpClient>;
 
 describe('Connector Clients Integration Tests', () => {
-  let tokenProvider: MsalTokenProvider;
+  let tokenProvider: jest.Mocked<ITokenProvider>;
   let clientOptions: ConnectorClientOptions;
   let mockHttpClient: jest.Mocked<HttpClient>;
 
   beforeEach(() => {
-    // Mock MSAL
-    const mockMsal = require('@azure/msal-node');
-    mockMsal.ConfidentialClientApplication = jest.fn().mockImplementation(() => ({
-      acquireTokenByClientCredential: jest.fn().mockResolvedValue({
-        accessToken: TEST_CONSTANTS.MOCK_TOKEN,
-        expiresOn: new Date(Date.now() + 3600000)
-      })
-    }));
-
-    const config: MsalTokenProviderConfig = {
-      tenantId: TEST_CONSTANTS.TENANT_ID,
-      clientId: TEST_CONSTANTS.CLIENT_ID,
-      clientSecret: TEST_CONSTANTS.CLIENT_SECRET
+    tokenProvider = {
+      getToken: jest.fn().mockResolvedValue(TEST_CONSTANTS.MOCK_TOKEN),
+      refreshToken: jest.fn().mockResolvedValue(TEST_CONSTANTS.MOCK_TOKEN)
     };
-    tokenProvider = new MsalTokenProvider(config);
 
     clientOptions = new ConnectorClientOptions({
       baseUrl: TEST_CONSTANTS.MOCK_BASE_URL,
@@ -65,7 +53,7 @@ describe('Connector Clients Integration Tests', () => {
     let office365Client: Office365Client;
 
     beforeEach(() => {
-      office365Client = new Office365Client(tokenProvider, clientOptions);
+      office365Client = new Office365Client(undefined, tokenProvider, clientOptions);
     });
 
     afterEach(async () => {
@@ -79,7 +67,7 @@ describe('Connector Clients Integration Tests', () => {
 
       it('should throw error when token provider is null', () => {
         expect(() => {
-          new Office365Client(null as any);
+          new Office365Client(undefined, null as any);
         }).toThrow('Token provider is required');
       });
 
@@ -90,7 +78,7 @@ describe('Connector Clients Integration Tests', () => {
           enableLogging: true
         });
 
-        const customClient = new Office365Client(tokenProvider, customOptions);
+        const customClient = new Office365Client(undefined, tokenProvider, customOptions);
         expect(customClient.connectorName).toBe(ConnectorNames.Office365);
         customClient.dispose();
       });
@@ -284,7 +272,7 @@ describe('Connector Clients Integration Tests', () => {
     let sharepointClient: SharepointonlineClient;
 
     beforeEach(() => {
-      sharepointClient = new SharepointonlineClient(tokenProvider, clientOptions);
+      sharepointClient = new SharepointonlineClient(undefined, tokenProvider, clientOptions);
     });
 
     afterEach(async () => {
@@ -298,7 +286,7 @@ describe('Connector Clients Integration Tests', () => {
 
       it('should throw error when token provider is null', () => {
         expect(() => {
-          new SharepointonlineClient(null as any);
+          new SharepointonlineClient(undefined, null as any);
         }).toThrow('Token provider is required');
       });
     });
@@ -433,7 +421,7 @@ describe('Connector Clients Integration Tests', () => {
     let teamsClient: TeamsClient;
 
     beforeEach(() => {
-      teamsClient = new TeamsClient(tokenProvider, clientOptions);
+      teamsClient = new TeamsClient(undefined, tokenProvider, clientOptions);
     });
 
     afterEach(async () => {
@@ -447,7 +435,7 @@ describe('Connector Clients Integration Tests', () => {
 
       it('should throw error when token provider is null', () => {
         expect(() => {
-          new TeamsClient(null as any);
+          new TeamsClient(undefined, null as any);
         }).toThrow('Token provider is required');
       });
     });
@@ -616,9 +604,9 @@ describe('Connector Clients Integration Tests', () => {
     let teamsClient: TeamsClient;
 
     beforeEach(() => {
-      office365Client = new Office365Client(tokenProvider, clientOptions);
-      sharepointClient = new SharepointonlineClient(tokenProvider, clientOptions);
-      teamsClient = new TeamsClient(tokenProvider, clientOptions);
+      office365Client = new Office365Client(undefined, tokenProvider, clientOptions);
+      sharepointClient = new SharepointonlineClient(undefined, tokenProvider, clientOptions);
+      teamsClient = new TeamsClient(undefined, tokenProvider, clientOptions);
     });
 
     afterEach(async () => {
@@ -687,13 +675,13 @@ describe('Connector Clients Integration Tests', () => {
       for (let i = 0; i < 50; i++) {
         switch (i % 3) {
           case 0:
-            clients.push(new Office365Client(tokenProvider, clientOptions));
+            clients.push(new Office365Client(undefined, tokenProvider, clientOptions));
             break;
           case 1:
-            clients.push(new SharepointonlineClient(tokenProvider, clientOptions));
+            clients.push(new SharepointonlineClient(undefined, tokenProvider, clientOptions));
             break;
           case 2:
-            clients.push(new TeamsClient(tokenProvider, clientOptions));
+            clients.push(new TeamsClient(undefined, tokenProvider, clientOptions));
             break;
         }
       }
@@ -707,7 +695,7 @@ describe('Connector Clients Integration Tests', () => {
 
     it('should handle rapid client creation and disposal', async () => {
       for (let i = 0; i < 10; i++) {
-        const client = new Office365Client(tokenProvider, clientOptions);
+        const client = new Office365Client(undefined, tokenProvider, clientOptions);
         await client.dispose();
       }
 

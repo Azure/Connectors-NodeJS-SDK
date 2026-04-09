@@ -21,11 +21,12 @@ import {
 export class TeamsClient extends ConnectorClientBase {
     /**
      * Initializes a new instance of the TeamsClient class.
+     * @param connectionRuntimeUrl The connection runtime URL for the Teams connector endpoint.
      * @param tokenProvider The token provider for authentication.
      * @param options The connector client options.
      */
-    constructor(tokenProvider: ITokenProvider, options?: ConnectorClientOptions) {
-        super(tokenProvider, options);
+    constructor(connectionRuntimeUrl: string | undefined, tokenProvider: ITokenProvider, options?: ConnectorClientOptions) {
+        super(connectionRuntimeUrl, tokenProvider, options);
     }
 
     /**
@@ -39,14 +40,11 @@ export class TeamsClient extends ConnectorClientBase {
      */
     public async getAllTeamsAsync(cancellationToken?: AbortSignal): Promise<TeamsTeamsResponse> {
         try {
-            const response = await this.callConnectorAsync<TeamsTeamsResponse>(
-                'GET',
+            return await this.getAsync<TeamsTeamsResponse>(
                 '/apim/teams/v1.0/me/joinedTeams',
-                undefined,
                 undefined,
                 { signal: cancellationToken }
             );
-            return response.data;
         } catch (error) {
             throw this.handleTeamsError(error);
         }
@@ -62,14 +60,11 @@ export class TeamsClient extends ConnectorClientBase {
         cancellationToken?: AbortSignal
     ): Promise<TeamsChannelsResponse> {
         try {
-            const response = await this.callConnectorAsync<TeamsChannelsResponse>(
-                'GET',
+            return await this.getAsync<TeamsChannelsResponse>(
                 `/apim/teams/v1.0/teams/${encodeURIComponent(teamId)}/channels`,
-                undefined,
                 undefined,
                 { signal: cancellationToken }
             );
-            return response.data;
         } catch (error) {
             throw this.handleTeamsError(error);
         }
@@ -89,14 +84,12 @@ export class TeamsClient extends ConnectorClientBase {
         cancellationToken?: AbortSignal
     ): Promise<PostMessageResponse> {
         try {
-            const response = await this.callConnectorAsync<PostMessageResponse>(
-                'POST',
+            return await this.postAsync<PostMessageResponse>(
                 `/beta/teams/conversation/message/poster/${encodeURIComponent(postAs)}/location/${encodeURIComponent(postIn)}`,
                 input.additionalProperties ?? input,
                 { 'Content-Type': 'application/json' },
                 { signal: cancellationToken }
             );
-            return response.data;
         } catch (error) {
             throw this.handleTeamsError(error);
         }
@@ -140,14 +133,11 @@ export class TeamsClient extends ConnectorClientBase {
      */
     public async getTeamAsync(teamId: string, cancellationToken?: AbortSignal): Promise<any> {
         try {
-            const response = await this.callConnectorAsync<any>(
-                'GET',
+            return await this.getAsync<any>(
                 `/apim/teams/v1.0/teams/${encodeURIComponent(teamId)}`,
-                undefined,
                 undefined,
                 { signal: cancellationToken }
             );
-            return response.data;
         } catch (error) {
             throw this.handleTeamsError(error);
         }
@@ -165,14 +155,11 @@ export class TeamsClient extends ConnectorClientBase {
         cancellationToken?: AbortSignal
     ): Promise<any> {
         try {
-            const response = await this.callConnectorAsync<any>(
-                'GET',
+            return await this.getAsync<any>(
                 `/apim/teams/v1.0/teams/${encodeURIComponent(teamId)}/channels/${encodeURIComponent(channelId)}`,
-                undefined,
                 undefined,
                 { signal: cancellationToken }
             );
-            return response.data;
         } catch (error) {
             throw this.handleTeamsError(error);
         }
@@ -190,14 +177,11 @@ export class TeamsClient extends ConnectorClientBase {
         cancellationToken?: AbortSignal
     ): Promise<any> {
         try {
-            const response = await this.callConnectorAsync<any>(
-                'GET',
+            return await this.getAsync<any>(
                 `/apim/teams/v1.0/teams/${encodeURIComponent(teamId)}/channels/${encodeURIComponent(channelId)}/messages`,
-                undefined,
                 undefined,
                 { signal: cancellationToken }
             );
-            return response.data;
         } catch (error) {
             throw this.handleTeamsError(error);
         }
@@ -209,14 +193,11 @@ export class TeamsClient extends ConnectorClientBase {
      */
     public async getUserProfileAsync(cancellationToken?: AbortSignal): Promise<any> {
         try {
-            const response = await this.callConnectorAsync<any>(
-                'GET',
+            return await this.getAsync<any>(
                 '/apim/teams/v1.0/me',
-                undefined,
                 undefined,
                 { signal: cancellationToken }
             );
-            return response.data;
         } catch (error) {
             throw this.handleTeamsError(error);
         }
@@ -228,14 +209,11 @@ export class TeamsClient extends ConnectorClientBase {
      */
     public async getUserPresenceAsync(cancellationToken?: AbortSignal): Promise<any> {
         try {
-            const response = await this.callConnectorAsync<any>(
-                'GET',
+            return await this.getAsync<any>(
                 '/apim/teams/v1.0/me/presence',
-                undefined,
                 undefined,
                 { signal: cancellationToken }
             );
-            return response.data;
         } catch (error) {
             throw this.handleTeamsError(error);
         }

@@ -317,8 +317,12 @@ describe('Exception Classes', () => {
       };
 
       const exception = new ConnectorException('Large data test', 500, 'Error', largeResponseBody);
-      expect(exception.responseBody.data.length).toBe(10000);
-      expect(exception.responseBody.metadata.size).toBe(10000);
+      // Body exceeds MAX_RESPONSE_BODY_LENGTH so it gets truncated to a string
+      expect(typeof exception.responseBody).toBe('string');
+      expect(exception.responseBody.endsWith('...[truncated]')).toBe(true);
+      expect(exception.responseBody.length).toBeLessThanOrEqual(
+        ConnectorException.MAX_RESPONSE_BODY_LENGTH + '...[truncated]'.length
+      );
     });
 
     it('should create multiple exceptions without memory leaks', () => {

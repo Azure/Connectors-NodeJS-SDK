@@ -3,6 +3,11 @@
  */
 
 /**
+ * Default scopes for API Hub authentication.
+ */
+export const API_HUB_SCOPES = ['https://apihub.azure.com/.default'];
+
+/**
  * Interface for providing authentication tokens.
  */
 export interface ITokenProvider {
