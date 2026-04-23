@@ -1,0 +1,41 @@
+{
+    "name": "@azure/azure-connectors",
+    "version": "0.1.0",
+    "description": "Azure Logic Apps Connector SDK for TypeScript / Node.js",
+    "main": "dist/index.js",
+    "types": "dist/index.d.ts",
+    "scripts": {
+        "build": "tsc && tsc -p samples/tsconfig.json --noEmit",
+        "test": "jest --verbose",
+        "typecheck": "tsc --noEmit && tsc -p samples/tsconfig.json --noEmit",
+        "typecheck:samples": "tsc -p samples/tsconfig.json --noEmit",
+        "lint": "eslint src/ --ext .ts"
+    },
+    "keywords": [
+        "azure",
+        "logic-apps",
+        "connectors",
+        "sdk",
+        "typescript"
+    ],
+    "author": "Microsoft Corporation",
+    "license": "MIT",
+    "dependencies": {
+        "@azure/identity": "^4.0.0"
+    },
+    "devDependencies": {
+        "@types/jest": "^29.5.0",
+        "@types/node": "^20.0.0",
+        "jest": "^29.7.0",
+        "ts-jest": "^29.1.0",
+        "typescript": "^5.4.0"
+    },
+    "engines": {
+        "node": ">=18.0.0"
+    },
+    "files": [
+        "dist/",
+        "README.md",
+        "LICENSE"
+    ]
+}

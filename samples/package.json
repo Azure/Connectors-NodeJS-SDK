@@ -1,0 +1,17 @@
+{
+    "name": "connector-sdk-samples",
+    "version": "0.0.0",
+    "private": true,
+    "description": "Samples for @azure/azure-connectors SDK",
+    "scripts": {
+        "typecheck": "tsc --noEmit"
+    },
+    "dependencies": {
+        "@azure/azure-connectors": "file:..",
+        "@azure/identity": "^4.0.0"
+    },
+    "devDependencies": {
+        "typescript": "^5.4.0",
+        "ts-node": "^10.9.0"
+    }
+}
