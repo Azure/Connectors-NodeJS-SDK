@@ -5,6 +5,7 @@
  * Well-known connector names for connectors with SDK-generated clients.
  */
 export const ConnectorNames = {
+    Kusto: "kusto",
     Office365: "office365",
     Sharepointonline: "sharepointonline",
     Teams: "teams",

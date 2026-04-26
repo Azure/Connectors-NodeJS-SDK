@@ -24,8 +24,8 @@ import { DefaultAzureCredential } from "@azure/identity";
 import {
     Office365Client,
     Office365ConnectorError,
-    SendEmailInput,
-    DraftEmailInput,
+    ClientSendHtmlMessage,
+    ClientDraftHtmlMessage,
 } from "@azure/azure-connectors/generated/Office365Extensions";
 
 // Connection runtime URL format:
@@ -38,7 +38,7 @@ function createClient(): Office365Client {
     return new Office365Client({
         connectionRuntimeUrl: CONNECTION_RUNTIME_URL,
         getToken: async () => {
-            const token = await credential.getToken("https://logic-apis-westus.azure-apihub.net/.default");
+            const token = await credential.getToken("https://apihub.azure.com/.default");
             return token.token;
         },
     });
@@ -77,7 +77,7 @@ async function example2SendEmail(): Promise<void> {
     const client = createClient();
 
     try {
-        const email: SendEmailInput = {
+        const email: ClientSendHtmlMessage = {
             To: toAddress,
             Subject: "Test Email from Office365 Connector SDK",
             Body: "<p>This is a test email sent from the <strong>TypeScript Office365 Connector SDK</strong>.</p>",
@@ -101,11 +101,12 @@ async function example3GetEmails(): Promise<void> {
     const client = createClient();
 
     try {
-        const emails = await client.getEmailsAsync();
+        const emails = await client.getEmailsAsync() as Record<string, unknown>;
+        const emailList = (emails?.value ?? []) as Array<Record<string, unknown>>;
 
-        if (emails?.value && emails.value.length > 0) {
-            console.log(`Found ${emails.value.length} emails:`);
-            for (const email of emails.value) {
+        if (emailList.length > 0) {
+            console.log(`Found ${emailList.length} emails:`);
+            for (const email of emailList) {
                 console.log(`  - ${email.subject ?? "No Subject"}`);
                 console.log(`    From: ${email.from ?? "Unknown"}`);
                 console.log(`    Received: ${email.receivedDateTime ?? "Unknown"}`);
@@ -130,19 +131,19 @@ async function example4DraftAndSendEmail(): Promise<void> {
     const client = createClient();
 
     try {
-        const draft: DraftEmailInput = {
+        const draft: ClientDraftHtmlMessage = {
             To: toAddress,
             Subject: "Draft Email from SDK",
             Body: "<p>This email was created as a draft first.</p>",
         };
 
-        const draftResponse = await client.draftEmailAsync(draft);
+        const draftResponse = await client.draftEmailAsync(draft) as Record<string, unknown>;
         console.log("Draft created successfully");
 
         if (draftResponse?.Id) {
             console.log(`Draft message ID: ${draftResponse.Id}`);
 
-            await client.sendDraftEmailAsync(draftResponse.Id);
+            await client.sendDraftEmailAsync(draftResponse.Id as string);
             console.log(`Draft email sent successfully to ${toAddress}`);
         } else {
             console.log("Draft created but no ID returned.");

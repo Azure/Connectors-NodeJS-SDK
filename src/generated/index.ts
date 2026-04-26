@@ -6,4 +6,4 @@
 
 export { ConnectorNames } from "./connectorNames";
 export type { ConnectorName } from "./connectorNames";
-export { availableConnectors, Office365Client, SharepointonlineClient, TeamsClient } from "./ManagedConnectors";
+export { availableConnectors, KustoClient, Office365Client, SharepointonlineClient, TeamsClient } from "./ManagedConnectors";

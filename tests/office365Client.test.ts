@@ -4,10 +4,10 @@ import {
     Office365Client,
     Office365ConnectorError,
     Office365ClientOptions,
-    DraftEmailInput,
+    ClientDraftHtmlMessage,
     OutlookReceiveMessage,
     GraphOutlookCategory,
-    SendEmailInput,
+    ClientSendHtmlMessage,
     GraphClientReceiveMessage,
     GraphCalendarEventClientReceive,
     GraphCalendarEventListClientReceive,
@@ -48,13 +48,13 @@ function mockFetchError(status: number, errorBody: string): void {
 // Type-level compile-time checks
 // ──────────────────────────────────────────────
 
-const _sendInput: SendEmailInput = {
+const _sendInput: ClientSendHtmlMessage = {
     To: "user@example.com",
     Subject: "Test Subject",
     Body: "<p>Hello</p>",
 };
 
-const _draftInput: DraftEmailInput = {
+const _draftInput: ClientDraftHtmlMessage = {
     To: "user@example.com",
     Subject: "Draft Subject",
     Body: "Draft body",
@@ -99,7 +99,7 @@ describe("Office365Client — sendEmailAsync", () => {
         mockFetchResponse(null);
 
         const client = new Office365Client(createMockOptions());
-        const input: SendEmailInput = {
+        const input: ClientSendHtmlMessage = {
             To: "user@example.com",
             Subject: "Test",
             Body: "Hello",
@@ -160,7 +160,7 @@ describe("Office365Client — draftEmailAsync", () => {
         mockFetchResponse(draftedMessage);
 
         const client = new Office365Client(createMockOptions());
-        const input: DraftEmailInput = { To: "user@example.com", Subject: "Draft" };
+        const input: ClientDraftHtmlMessage = { To: "user@example.com", Subject: "Draft" };
 
         const result = await client.draftEmailAsync(input, "parent-msg-id", "reply");
 
@@ -221,7 +221,7 @@ describe("Office365Client — calendarGetItemsAsync", () => {
             "calendar-1",
             undefined,
             "start desc",
-            5,
+            "5",
         );
 
         const [url] = (global.fetch as jest.Mock).mock.calls[0];

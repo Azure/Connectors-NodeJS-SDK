@@ -7,16 +7,780 @@
  * Response for Get Outlook category names
  */
 export interface GraphOutlookCategory {
-    /** The ID of the Outlook Category. */
-    id?: string;
-    /** The display name of the Outlook Category. */
-    displayName?: string;
+    [key: string]: unknown;
 }
 
 /**
- * Draft an email message
+ * Response for Draft an email message
  */
-export interface DraftEmailInput {
+export interface OutlookReceiveMessage {
+    [key: string]: unknown;
+}
+
+/**
+ * Assign a category to multiple emails
+ */
+export interface AssignCategoryBulkInput {
+    [key: string]: unknown;
+}
+
+/**
+ * Response for Assign a category to multiple emails
+ */
+export interface BatchOperationResult {
+    [key: string]: unknown;
+}
+
+/**
+ * Response for Send email with options
+ */
+export interface SubscriptionResponse {
+    [key: string]: unknown;
+}
+
+/**
+ * Update my contact's photo
+ */
+export interface UpdateMyContactPhotoInput {
+    [key: string]: unknown;
+}
+
+/**
+ * Send an HTTP request
+ */
+export interface HttpRequestInput {
+    [key: string]: unknown;
+}
+
+/**
+ * Response for Send an HTTP request
+ */
+export interface ObjectWithoutType {
+    [key: string]: unknown;
+}
+
+/**
+ * Response for Email Management MCP Server (deprecated)
+ */
+export interface MCPQueryResponse {
+    [key: string]: unknown;
+}
+
+/**
+ * Response for Get event (V3)
+ */
+export interface GraphCalendarEventClientReceive {
+    [key: string]: unknown;
+}
+
+/**
+ * Response for Get events (V4)
+ */
+export interface GraphCalendarEventListClientReceive {
+    [key: string]: unknown;
+}
+
+/**
+ * Response for When an event is added, updated or deleted (V3)
+ */
+export interface GraphCalendarEventListWithActionType {
+    [key: string]: unknown;
+}
+
+/**
+ * Response for Get calendars (V2)
+ */
+export interface CalendarGetTablesResponse {
+    /** value */
+    value?: Array<Record<string, unknown>>;
+}
+
+/**
+ * Response for Get contact (V2)
+ */
+export interface ContactResponse {
+    [key: string]: unknown;
+}
+
+/**
+ * Response for Get contacts (V2)
+ */
+export interface EntityListResponseContactResponse {
+    [key: string]: unknown;
+}
+
+/**
+ * Response for Get contact folders (V2)
+ */
+export interface EntityListResponseGraphContactFolder {
+    [key: string]: unknown;
+}
+
+/**
+ * Find meeting times (V2)
+ */
+export interface FindMeetingTimesInput {
+    /** List of semicolon separated email addresses */
+    RequiredAttendees?: string;
+    /** List of semicolon separated email addresses */
+    OptionalAttendees?: string;
+    /** Resource attendees for the event separated by semicolons */
+    ResourceAttendees?: string;
+    /** Duration of the meeting in minutes */
+    MeetingDuration?: number;
+    /** Start time for meeting time suggestions */
+    Start?: string;
+    /** End time for meeting time suggestions */
+    End?: string;
+    /** The maximum number of meeting suggestions to return in the response */
+    MaxCandidates?: number;
+    /** The minimum required confidence for a time slot to be returned in the response */
+    MinimumAttendeePercentage?: string;
+    /** true if the organizer doesn't have to attend. The default is false */
+    IsOrganizerOptional?: boolean;
+    /** Work, Personal, Unrestricted, or Unknown */
+    ActivityDomain?: string;
+}
+
+/**
+ * Response for Find meeting times (V2)
+ */
+export interface FindMeetingTimesResponse {
+    /** Empty Suggestions Reason */
+    emptySuggestionsReason?: string;
+    meetingTimeSuggestions?: MeetingTimeSuggestionsV2;
+}
+
+/**
+ * Response for Get Attachment (V2)
+ */
+export interface GetAttachmentResponse {
+    /** Id of the attachment. */
+    id?: string;
+    /** Name of attachment. */
+    name?: string;
+    /** Content type of attachment. */
+    contentType?: string;
+    /** Size of attachment. */
+    size?: number;
+    /** Content of attachment. */
+    contentBytes?: string;
+    /** Set to true if this is an inline attachment. */
+    isInline?: boolean;
+    /** The date and time when the attachment was last modified. */
+    lastModifiedDateTime?: string;
+    /** Content Id */
+    contentId?: string;
+    sensitivityLabelInfo?: Array<SensitivityLabelMetadata>;
+}
+
+/**
+ * Response for Get email (V2)
+ */
+export interface GraphClientReceiveMessage {
+    [key: string]: unknown;
+}
+
+/**
+ * Response for Get emails (V3)
+ */
+export interface BatchResponseGraphClientReceiveMessage {
+    [key: string]: unknown;
+}
+
+/**
+ * Response for Get calendar view of events (V3)
+ */
+export interface EntityListResponseGraphCalendarEventClientReceive {
+    [key: string]: unknown;
+}
+
+/**
+ * Get mail tips for a mailbox (V2)
+ */
+export interface GetMailTipsInput {
+    /** Flags that represents the mailtips. */
+    MailTipsOptions?: string;
+    /** Address of the mailbox to get mail tips for. */
+    EmailAddresses?: Array<string>;
+}
+
+/**
+ * Response for Get mail tips for a mailbox (V2)
+ */
+export interface GetMailTipsResponse {
+    value?: Array<MailTipsClientReceiveV2>;
+}
+
+/**
+ * Response for Get room lists (V2)
+ */
+export interface GetRoomListsResponse {
+    /** value */
+    value?: Array<Record<string, unknown>>;
+}
+
+/**
+ * Response for Get rooms (V2)
+ */
+export interface GetRoomsResponse {
+    /** value */
+    value?: Array<Record<string, unknown>>;
+}
+
+/**
+ * Response for Get rooms in room list (V2)
+ */
+export interface GetRoomsInRoomListResponse {
+    /** value */
+    value?: Array<Record<string, unknown>>;
+}
+
+/**
+ * Mark as read or unread (V3)
+ */
+export interface MarkAsReadInput {
+    /** Mark as read/unread. */
+    isRead?: boolean;
+}
+
+/**
+ * Response for When an email is flagged (V4)
+ */
+export interface TriggerBatchResponseGraphClientReceiveMessage {
+    [key: string]: unknown;
+}
+
+/**
+ * Set up automatic replies (V2)
+ */
+export interface SetAutomaticRepliesSettingInput {
+    automaticRepliesSetting?: AutomaticRepliesSettingClientV2;
+}
+
+/**
+ * Response for Set up automatic replies (V2)
+ */
+export interface SetAutomaticRepliesSettingResponse {
+    automaticRepliesSetting?: AutomaticRepliesSettingClientV2;
+}
+
+/**
+ * Definition: TableMetadata
+ */
+export interface TableMetadata {
+    /** Table name */
+    name?: string;
+    /** Table title */
+    title?: string;
+    /** Table permission */
+    "x-ms-permission"?: string;
+    "x-ms-capabilities"?: TableCapabilitiesMetadata;
+    schema?: ObjectEntity;
+    referencedEntities?: ObjectEntity;
+    /** Url link */
+    webUrl?: string;
+}
+
+/**
+ * Definition: TableCapabilitiesMetadata
+ */
+export interface TableCapabilitiesMetadata {
+    sortRestrictions?: TableSortRestrictionsMetadata;
+    filterRestrictions?: TableFilterRestrictionsMetadata;
+    selectRestrictions?: TableSelectRestrictionsMetadata;
+    /** Server paging restrictions */
+    isOnlyServerPagable?: boolean;
+    /** List of supported filter capabilities */
+    filterFunctionSupport?: Array<string>;
+    /** List of supported server-driven paging capabilities */
+    serverPagingOptions?: Array<string>;
+}
+
+/**
+ * Definition: Object
+ */
+export interface ObjectEntity {
+    [key: string]: unknown;
+}
+
+/**
+ * Definition: TableSortRestrictionsMetadata
+ */
+export interface TableSortRestrictionsMetadata {
+    /** Indicates whether this table has sortable columns */
+    sortable?: boolean;
+    /** List of unsortable properties */
+    unsortableProperties?: Array<string>;
+    /** List of properties which support ascending order only */
+    ascendingOnlyProperties?: Array<string>;
+}
+
+/**
+ * Definition: TableFilterRestrictionsMetadata
+ */
+export interface TableFilterRestrictionsMetadata {
+    /** Indicates whether this table has filterable columns */
+    filterable?: boolean;
+    /** List of non filterable properties */
+    nonFilterableProperties?: Array<string>;
+    /** List of required properties */
+    requiredProperties?: Array<string>;
+}
+
+/**
+ * Definition: TableSelectRestrictionsMetadata
+ */
+export interface TableSelectRestrictionsMetadata {
+    /** Indicates whether this table has selectable columns */
+    selectable?: boolean;
+}
+
+/**
+ * Definition: CalendarEventList
+ */
+export interface CalendarEventList {
+    /** List of calendar items */
+    value?: Array<CalendarEventBackend>;
+}
+
+/**
+ * Definition: CalendarEventBackend
+ */
+export interface CalendarEventBackend {
+    /** The Event's unique identifier */
+    Id?: string;
+    /** List of attendees for the event */
+    Attendees?: Array<Attendee>;
+    Body?: ItemBody;
+    /** The preview of the message associated with the event */
+    BodyPreview?: string;
+    /** The categories associated with the event */
+    Categories?: Array<string>;
+    /** This property identifies the version of the event object. Every time the event is changed, ChangeKey changes as well. */
+    ChangeKey?: string;
+    /** The date and time that the event was created */
+    DateTimeCreated?: string;
+    /** The date and time that the event was last modified */
+    DateTimeLastModified?: string;
+    /** The end time of the event */
+    End?: string;
+    /** This property specifies the time zone of the meeting end time. The value must be as defined in Windows (example: 'Pacific Standard Time'). */
+    EndTimeZone?: string;
+    /** Set to true if the event has attachments */
+    HasAttachments?: boolean;
+    /** A unique identifier that is shared by all instances of an event across different calendars */
+    ICalUId?: string;
+    /** The importance of the event: Low, Normal, or High */
+    Importance?: string;
+    /** Set to true if the event lasts all day */
+    IsAllDay?: boolean;
+    /** Set to true if the event has been canceled */
+    IsCancelled?: boolean;
+    /** Set to true if the message sender is also the organizer */
+    IsOrganizer?: boolean;
+    Location?: Location;
+    Organizer?: Recipient;
+    Recurrence?: PatternedRecurrence;
+    /** Time in minutes before event start to remind */
+    Reminder?: number;
+    /** Set to true if the sender would like a response when the event is accepted or declined */
+    ResponseRequested?: boolean;
+    ResponseStatus?: ResponseStatus;
+    /** Unique identifier for Series Master event type */
+    SeriesMasterId?: string;
+    /** Shows as free or busy */
+    ShowAs?: string;
+    /** The start time of the event */
+    Start?: string;
+    /** This property specifies the time zone of the meeting start time. The value must be as defined in Windows (example: 'Pacific Standard Time'). */
+    StartTimeZone?: string;
+    /** Event subject */
+    Subject?: string;
+    /** The event type: Single Instance, Occurrence, Exception, or Series Master */
+    Type?: string;
+    /** The preview of the message associated with the event */
+    WebLink?: string;
+    /** The reason property used by O365 sync events protocol, will be 'deleted' if its a deleted event. */
+    Reason?: string;
+}
+
+/**
+ * Definition: Attendee
+ */
+export interface Attendee {
+    Status?: ResponseStatus;
+    Type?: string;
+    EmailAddress?: EmailAddress;
+}
+
+/**
+ * Definition: ItemBody
+ */
+export interface ItemBody {
+    ContentType?: string;
+    Content?: string;
+}
+
+/**
+ * Definition: Location
+ */
+export interface Location {
+    DisplayName?: string;
+    Address?: PhysicalAddress;
+    Coordinates?: GeoCoordinates;
+}
+
+/**
+ * Definition: Recipient
+ */
+export interface Recipient {
+    EmailAddress?: EmailAddress;
+}
+
+/**
+ * Definition: PatternedRecurrence
+ */
+export interface PatternedRecurrence {
+    Pattern?: RecurrencePattern;
+    Range?: RecurrenceRange;
+}
+
+/**
+ * Definition: ResponseStatus
+ */
+export interface ResponseStatus {
+    Response?: string;
+    Time?: string;
+}
+
+/**
+ * Definition: EmailAddress
+ */
+export interface EmailAddress {
+    Name?: string;
+    Address?: string;
+}
+
+/**
+ * Definition: PhysicalAddress
+ */
+export interface PhysicalAddress {
+    Street?: string;
+    City?: string;
+    State?: string;
+    CountryOrRegion?: string;
+    PostalCode?: string;
+}
+
+/**
+ * Definition: GeoCoordinates
+ */
+export interface GeoCoordinates {
+    Altitude?: number;
+    Latitude?: number;
+    Longitude?: number;
+    Accuracy?: number;
+    AltitudeAccuracy?: number;
+}
+
+/**
+ * Definition: RecurrencePattern
+ */
+export interface RecurrencePattern {
+    Type?: string;
+    Interval?: number;
+    Month?: number;
+    DayOfMonth?: number;
+    DaysOfWeek?: Array<string>;
+    FirstDayOfWeek?: string;
+    Index?: string;
+}
+
+/**
+ * Definition: RecurrenceRange
+ */
+export interface RecurrenceRange {
+    Type?: string;
+    StartDate?: string;
+    EndDate?: string;
+    NumberOfOccurrences?: number;
+}
+
+/**
+ * Definition: CalendarEventListClientReceive
+ */
+export interface CalendarEventListClientReceive {
+    /** List of calendar items */
+    value?: Array<CalendarEventClientReceive>;
+}
+
+/**
+ * Definition: CalendarEventClientReceive
+ */
+export interface CalendarEventClientReceive {
+    /** Event subject */
+    Subject?: string;
+    /** Start time of the event (example: '2016-11-01T14:30:00Z') */
+    Start?: string;
+    /** End time of the event (example: '2016-11-01T15:30:00Z') */
+    End?: string;
+    /** Status to show during the event (Unknown - -1, Free - 0, Tentative - 1, Busy - 2, Oof - 3, WorkingElsewhere - 4) */
+    ShowAs?: number;
+    /** The recurrence pattern for the event (None - 0, Daily - 1, Weekly - 2, Monthly - 3, Yearly - 4) */
+    Recurrence?: number;
+    /** The response type of the event (None - 0, Organizer - 1, TentativelyAccepted - 2, Accepted - 3, Declined - 4, NotResponded - 5) */
+    ResponseType?: number;
+    /** The response time of the event */
+    ResponseTime?: string;
+    /** A unique identifier that is shared by all instances of an event across different calendars */
+    ICalUId?: string;
+    /** The importance of the event (0 - Low, 1 - Normal, 2 - High) */
+    Importance?: number;
+    /** The event's unique identifier */
+    Id?: string;
+    /** The date and time that the event was created */
+    DateTimeCreated?: string;
+    /** The date and time that the event was last modified */
+    DateTimeLastModified?: string;
+    /** The organizer of the event */
+    Organizer?: string;
+    /** Time zone of the event */
+    TimeZone?: string;
+    /** Unique identifier for Series Master event type */
+    SeriesMasterId?: string;
+    /** The categories associated with the event */
+    Categories?: Array<string>;
+    /** The URL to open the event in Outlook Web App */
+    WebLink?: string;
+    /** Required attendees for the event separated by semicolons */
+    RequiredAttendees?: string;
+    /** Optional attendees for the event separated by semicolons */
+    OptionalAttendees?: string;
+    /** Resource attendees for the event separated by semicolons */
+    ResourceAttendees?: string;
+    /** Body of the message associated with the event */
+    Body?: string;
+    /** Set to true if the body is Html */
+    IsHtml?: boolean;
+    /** Location of the event */
+    Location?: string;
+    /** Set to true if the event lasts all day */
+    IsAllDay?: boolean;
+    /** End time of the recurrence */
+    RecurrenceEnd?: string;
+    /** How many times to repeat the event */
+    NumberOfOccurrences?: number;
+    /** Time in minutes before event start to remind */
+    Reminder?: number;
+    /** Set to true if the sender would like a response when the event is accepted or declined */
+    ResponseRequested?: boolean;
+}
+
+/**
+ * Definition: PaginatedListResponse[CalendarEventClientReceiveStringEnums]
+ */
+export interface PaginatedListResponseCalendarEventClientReceiveStringEnums {
+    /** Values */
+    Values?: Array<CalendarEventClientReceiveStringEnums>;
+}
+
+/**
+ * Definition: CalendarEventClientReceiveStringEnums
+ */
+export interface CalendarEventClientReceiveStringEnums {
+    /** The importance of the event: Low, Normal, or High */
+    Importance?: string;
+    /** The response type of the event: None, Organizer, TentativelyAccepted, Accepted, Declined or NotResponded */
+    ResponseType?: string;
+    /** The recurrence pattern for the event */
+    Recurrence?: string;
+    /** Status to show during the event */
+    ShowAs?: string;
+    /** Event subject */
+    Subject?: string;
+    /** Start time of the event (example: '2016-11-01T14:30:00Z') */
+    Start?: string;
+    /** End time of the event (example: '2016-11-01T15:30:00Z') */
+    End?: string;
+    /** The response time of the event */
+    ResponseTime?: string;
+    /** A unique identifier that is shared by all instances of an event across different calendars */
+    ICalUId?: string;
+    /** The event's unique identifier */
+    Id?: string;
+    /** The date and time that the event was created */
+    DateTimeCreated?: string;
+    /** The date and time that the event was last modified */
+    DateTimeLastModified?: string;
+    /** The organizer of the event */
+    Organizer?: string;
+    /** Time zone of the event */
+    TimeZone?: string;
+    /** Unique identifier for Series Master event type */
+    SeriesMasterId?: string;
+    /** The categories associated with the event */
+    Categories?: Array<string>;
+    /** The URL to open the event in Outlook Web App */
+    WebLink?: string;
+    /** Required attendees for the event separated by semicolons */
+    RequiredAttendees?: string;
+    /** Optional attendees for the event separated by semicolons */
+    OptionalAttendees?: string;
+    /** Resource attendees for the event separated by semicolons */
+    ResourceAttendees?: string;
+    /** Body of the message associated with the event */
+    Body?: string;
+    /** Set to true if the body is Html */
+    IsHtml?: boolean;
+    /** Location of the event */
+    Location?: string;
+    /** Set to true if the event lasts all day */
+    IsAllDay?: boolean;
+    /** End time of the recurrence */
+    RecurrenceEnd?: string;
+    /** How many times to repeat the event */
+    NumberOfOccurrences?: number;
+    /** Time in minutes before event start to remind */
+    Reminder?: number;
+    /** Set to true if the sender would like a response when the event is accepted or declined */
+    ResponseRequested?: boolean;
+}
+
+/**
+ * Definition: ClientSubscription
+ */
+export interface ClientSubscription {
+    /** Callback url to the flow engine. Expected as part of the request and provided by Flow. */
+    NotificationUrl?: string;
+}
+
+/**
+ * Definition: EntityListResponse[FilePickerFile]
+ */
+export interface EntityListResponseFilePickerFile {
+    /** List of values */
+    value?: Array<FilePickerFile>;
+}
+
+/**
+ * Definition: FilePickerFile
+ */
+export interface FilePickerFile {
+    /** Uniquely identifies the file */
+    Id?: string;
+    /** Display name for the file */
+    DisplayName?: string;
+    /** Set to true if the file is a folder */
+    IsFolder?: boolean;
+    /** Path of the file */
+    Path?: string;
+}
+
+/**
+ * Definition: ClientSendMessage
+ */
+export interface ClientSendMessage {
+    /** Email address to send mail from (requires "Send as" or "Send on behalf of" permission for that mailbox). For more info on granting permissions please refer https://docs.microsoft.com/office365/admin/manage/send-email-as-distribution-list */
+    From?: string;
+    /** Specify email addresses separated by semicolons like someone@contoso.com */
+    Cc?: string;
+    /** Specify email addresses separated by semicolons like someone@contoso.com */
+    Bcc?: string;
+    /** Specify email addresses separated by semicolons like someone@contoso.com */
+    To?: string;
+    /** Specify the subject of the mail */
+    Subject?: string;
+    /** Specify the body of the mail */
+    Body?: string;
+    /** Attachments */
+    Attachments?: Array<ClientSendAttachment>;
+    /** Sensitivity */
+    Sensitivity?: string;
+    /** The email addresses to use when replying */
+    ReplyTo?: string;
+    /** Importance */
+    Importance?: string;
+    /** Is Html? */
+    IsHtml?: boolean;
+}
+
+/**
+ * Definition: ClientSendAttachment
+ */
+export interface ClientSendAttachment {
+    /** Attachment name */
+    Name?: string;
+    /** Attachment content */
+    ContentBytes?: string;
+}
+
+/**
+ * Definition: ClientReceiveMessageStringEnums
+ */
+export interface ClientReceiveMessageStringEnums {
+    /** The importance of the message */
+    Importance?: string;
+    /** The mailbox owner and sender of the message */
+    From?: string;
+    /** The recipients for the message */
+    To?: string;
+    /** The Cc recipients for the message */
+    Cc?: string;
+    /** The Bcc recipients for the message */
+    Bcc?: string;
+    /** The email addresses to use when replying */
+    ReplyTo?: string;
+    /** The subject of the message */
+    Subject?: string;
+    /** The body of the message */
+    Body?: string;
+    /** The preview of the message */
+    BodyPreview?: string;
+    /** Indicates whether the message has attachments */
+    HasAttachment?: boolean;
+    /** The unique identifier of the message */
+    Id?: string;
+    /** The message ID in the format specified by RFC2822 */
+    InternetMessageId?: string;
+    /** The Id of the conversation the email belongs to */
+    ConversationId?: string;
+    /** The date and time the message was received */
+    DateTimeReceived?: string;
+    /** Indicates whether the message has been read */
+    IsRead?: boolean;
+    /** The file attachments for the message */
+    Attachments?: Array<ClientReceiveFileAttachment>;
+    /** Is Html? */
+    IsHtml?: boolean;
+}
+
+/**
+ * Definition: ClientReceiveFileAttachment
+ */
+export interface ClientReceiveFileAttachment {
+    /** Attachment Id */
+    Id?: string;
+    /** Attachment name */
+    Name?: string;
+    /** Attachment content */
+    ContentBytes?: string;
+    /** Attachment content type */
+    ContentType?: string;
+    /** The size in bytes of the attachment */
+    Size?: number;
+    /** Set to true if this is an inline attachment */
+    IsInline?: boolean;
+    /** The date and time when the attachment was last modified */
+    LastModifiedDateTime?: string;
+    /** Content Id */
+    ContentId?: string;
+}
+
+/**
+ * Definition: ClientSendHtmlMessage
+ */
+export interface ClientSendHtmlMessage {
     /** Specify email addresses separated by semicolons like someone@contoso.com */
     To?: string;
     /** Specify the subject of the mail */
@@ -40,139 +804,33 @@ export interface DraftEmailInput {
 }
 
 /**
- * Item in Attachments
+ * Definition: ClientDraftHtmlMessage
  */
-export interface ClientSendAttachment {
-    /** Attachment name */
-    Name?: string;
-    /** Attachment content */
-    ContentBytes?: string;
-}
-
-/**
- * Response for Draft an email message
- */
-export interface OutlookReceiveMessage {
-    /** Internet Message Id */
-    InternetMessageId?: string;
-    /** Body preview */
-    BodyPreview?: string;
-    /** Id */
-    Id?: string;
-    /** Conversation Id */
-    ConversationId?: string;
-    /** Has attachments */
-    HasAttachments?: boolean;
-    /** Is read */
-    IsRead?: boolean;
-    /** Created date and time */
-    CreatedDateTime?: string;
-    /** Received date and time */
-    ReceivedDateTime?: string;
-    /** Last modified date and time */
-    LastModifiedDateTime?: string;
-    /** Attachments */
-    Attachments?: Array<OutlookReceiveAttachment>;
-    /** To Recipient */
-    ToRecipients?: Array<Recipient>;
-    /** Cc Recipients */
-    CcRecipients?: Array<Recipient>;
-    /** Bcc Recipients */
-    BccRecipients?: Array<Recipient>;
-    /** The email addresses to use when replying */
-    ReplyTo?: Array<Recipient>;
-    /** Subject */
+export interface ClientDraftHtmlMessage {
+    /** Specify email addresses separated by semicolons like someone@contoso.com */
+    To?: string;
+    /** Specify the subject of the mail */
     Subject?: string;
-    /** Body */
-    Body?: ItemBody;
-    /** From */
-    From?: Recipient;
+    /** Specify the body of the mail */
+    Body?: string;
+    /** Email address to send mail from (requires "Send as" or "Send on behalf of" permission for that mailbox). For more info on granting permissions please refer https://docs.microsoft.com/office365/admin/manage/send-email-as-distribution-list */
+    From?: string;
+    /** Specify email addresses separated by semicolons like someone@contoso.com */
+    Cc?: string;
+    /** Specify email addresses separated by semicolons like someone@contoso.com */
+    Bcc?: string;
+    /** Attachments */
+    Attachments?: Array<ClientSendAttachment>;
+    /** Sensitivity */
+    Sensitivity?: string;
+    /** The email addresses to use when replying */
+    ReplyTo?: string;
     /** Importance */
     Importance?: string;
-    /** Internet message headers */
-    InternetMessageHeaders?: Array<InternetMessageHeader>;
 }
 
 /**
- * Item in Attachments
- */
-export interface OutlookReceiveAttachment {
-    /** OData type */
-    "@odata.type"?: string;
-    /** Attachment Id */
-    Id?: string;
-    /** Attachment name */
-    Name?: string;
-    /** Attachment content */
-    ContentBytes?: string;
-    /** Attachment content type */
-    ContentType?: string;
-    /** Attachment size in bytes */
-    Size?: number;
-    /** Permission associated with a reference attachment */
-    Permission?: string;
-    /** Provider for the reference attachment */
-    ProviderType?: string;
-    /** Reference attachment source url */
-    SourceUrl?: string;
-    /** Set to true if this is an inline attachment */
-    IsInline?: boolean;
-    /** The date and time when the attachment was last modified */
-    LastModifiedDateTime?: string;
-    /** Content Id */
-    ContentId?: string;
-}
-
-/**
- * Item in ToRecipients
- */
-export interface Recipient {
-    /** EmailAddress */
-    EmailAddress?: EmailAddress;
-}
-
-/**
- * EmailAddress
- */
-export interface EmailAddress {
-    /** Name */
-    Name?: string;
-    /** Address */
-    Address?: string;
-}
-
-/**
- * Body
- */
-export interface ItemBody {
-    /** ContentType */
-    ContentType?: string;
-    /** Content */
-    Content?: string;
-}
-
-/**
- * Item in InternetMessageHeaders
- */
-export interface InternetMessageHeader {
-    /** Header name */
-    Name?: string;
-    /** Header value */
-    Value?: string;
-}
-
-/**
- * Response for Assign a category to multiple emails
- */
-export interface BatchOperationResult {
-    /** The count of messages processed successfully. */
-    successCount?: number;
-    /** The list of failed messages with errors. */
-    failures?: Array<BatchItemFailureResult>;
-}
-
-/**
- * Item in failures
+ * Definition: BatchItemFailureResult
  */
 export interface BatchItemFailureResult {
     /** The ID of the failed message. */
@@ -182,17 +840,279 @@ export interface BatchItemFailureResult {
 }
 
 /**
- * Send email with options
+ * Definition: BatchResponse[ClientReceiveMessage]
+ */
+export interface BatchResponseClientReceiveMessage {
+    /** A list of the response objects */
+    value?: Array<ClientReceiveMessage>;
+}
+
+/**
+ * Definition: ClientReceiveMessage
+ */
+export interface ClientReceiveMessage {
+    /** The mailbox owner and sender of the message */
+    From?: string;
+    /** The recipients for the message */
+    To?: string;
+    /** The Cc recipients for the message */
+    Cc?: string;
+    /** The Bcc recipients for the message */
+    Bcc?: string;
+    /** The email addresses to use when replying */
+    ReplyTo?: string;
+    /** The subject of the message */
+    Subject?: string;
+    /** The body of the message */
+    Body?: string;
+    /** The importance of the message (0 - Low, 1 - Normal, 2 - High) */
+    Importance?: number;
+    /** The preview of the message */
+    BodyPreview?: string;
+    /** Indicates whether the message has attachments */
+    HasAttachment?: boolean;
+    /** The unique identifier of the message */
+    Id?: string;
+    /** The message ID in the format specified by RFC2822 */
+    InternetMessageId?: string;
+    /** The Id of the conversation the email belongs to */
+    ConversationId?: string;
+    /** The date and time the message was received */
+    DateTimeReceived?: string;
+    /** Indicates whether the message has been read */
+    IsRead?: boolean;
+    /** The file attachments for the message */
+    Attachments?: Array<ClientReceiveFileAttachment>;
+    /** Is Html? */
+    IsHtml?: boolean;
+}
+
+/**
+ * Definition: GraphClientReceiveFileAttachment
+ */
+export interface GraphClientReceiveFileAttachment {
+    /** Attachment Id */
+    id?: string;
+    /** Attachment name */
+    name?: string;
+    /** Attachment content */
+    contentBytes?: string;
+    /** Attachment content type */
+    contentType?: string;
+    /** The size in bytes of the attachment */
+    size?: number;
+    /** Set to true if this is an inline attachment */
+    isInline?: boolean;
+    /** The date and time when the attachment was last modified */
+    lastModifiedDateTime?: string;
+    /** Content Id */
+    contentId?: string;
+}
+
+/**
+ * Definition: ReplyMessage
+ */
+export interface ReplyMessage {
+    /** Example: recipient1@domain.com; recipient2@domain.com */
+    To?: string;
+    /** Example: recipient1@domain.com; recipient2@domain.com */
+    Cc?: string;
+    /** Example: recipient1@domain.com; recipient2@domain.com */
+    Bcc?: string;
+    /** Email subject (if empty, the original subject used). */
+    Subject?: string;
+    /** Content of the email. */
+    Body?: string;
+    /** True to reply to all recipients. (default: False) */
+    ReplyAll?: boolean;
+    /** True to send the reply as HTML. (default: True) */
+    IsHtml?: boolean;
+    /** Pick an importance. (default: Low) */
+    Importance?: string;
+    /** Details of attachments to be sent along with the reply. */
+    Attachments?: Array<ClientSendAttachment>;
+}
+
+/**
+ * Definition: ReplyHtmlMessage
+ */
+export interface ReplyHtmlMessage {
+    /** Example: recipient1@domain.com; recipient2@domain.com */
+    To?: string;
+    /** Example: recipient1@domain.com; recipient2@domain.com */
+    Cc?: string;
+    /** Example: recipient1@domain.com; recipient2@domain.com */
+    Bcc?: string;
+    /** Email subject (if empty, the original subject used). */
+    Subject?: string;
+    /** Content of the email. */
+    Body?: string;
+    /** True to reply to all recipients. (default: False) */
+    ReplyAll?: boolean;
+    /** Pick an importance. (default: Low) */
+    Importance?: string;
+    /** Details of attachments to be sent along with the reply. */
+    Attachments?: Array<ClientSendAttachment>;
+}
+
+/**
+ * Definition: TriggerBatchResponse[ClientReceiveMessage]
+ */
+export interface TriggerBatchResponseClientReceiveMessage {
+    /** A list of the response objects */
+    value?: Array<ClientReceiveMessage>;
+}
+
+/**
+ * Definition: AutomaticRepliesSettingClient
+ */
+export interface AutomaticRepliesSettingClient {
+    /** Automatic reply setting status */
+    Status?: string;
+    /** The audience that will see the external reply message */
+    ExternalAudience?: string;
+    /** Scheduled start time (example: '2016-11-01T15:30:00-00:00Z') */
+    ScheduledStartDateTimeOffset?: string;
+    /** Scheduled end time (example: '2016-11-01T15:30:00-00:00Z') */
+    ScheduledEndDateTimeOffset?: string;
+    /** Message for people within your organization */
+    InternalReplyMessage?: string;
+    /** Message for people outside your organization */
+    ExternalReplyMessage?: string;
+}
+
+/**
+ * Definition: MailTipsClientReceive
+ */
+export interface MailTipsClientReceive {
+    AutomaticReplies?: MailTipsAutomaticReplies;
+    /** Is delivery restricted */
+    DeliveryRestricted?: boolean;
+    /** Number of external members */
+    ExternalMemberCount?: number;
+    /** Is moderated */
+    IsModerated?: boolean;
+    /** Is mailbox full */
+    MailboxFull?: boolean;
+    /** Maximum message size */
+    MaxMessageSize?: number;
+    /** Total member count */
+    TotalMemberCount?: number;
+}
+
+/**
+ * Definition: MailTipsAutomaticReplies
+ */
+export interface MailTipsAutomaticReplies {
+    /** Automatic replies message */
+    Message?: string;
+}
+
+/**
+ * Definition: BatchResponse[SensitivityLabel]
+ */
+export interface BatchResponseSensitivityLabel {
+    /** A list of the response objects */
+    value?: Array<SensitivityLabel>;
+}
+
+/**
+ * Definition: SensitivityLabel
+ */
+export interface SensitivityLabel {
+    /** Gets or sets the identifier. */
+    Id?: string;
+    /** Gets or sets the display name. */
+    DisplayName?: string;
+    /** Gets or sets the applicable to. */
+    ApplicableTo?: string;
+    /** Gets or sets sub labels. */
+    SubLabels?: Array<SensitivityLabel>;
+}
+
+/**
+ * Definition: TriggerBatchResponse[ReceiveMessageMetadata]
+ */
+export interface TriggerBatchResponseReceiveMessageMetadata {
+    /** A list of the response objects */
+    value?: Array<ReceiveMessageMetadata>;
+}
+
+/**
+ * Definition: ReceiveMessageMetadata
+ */
+export interface ReceiveMessageMetadata {
+    /** The mailbox owner and sender of the message */
+    From?: string;
+    /** The recipients for the message */
+    To?: string;
+    /** The Cc recipients for the message */
+    Cc?: string;
+    /** The Bcc recipients for the message */
+    Bcc?: string;
+    /** The email addresses to use when replying */
+    ReplyTo?: string;
+    /** The subject of the message */
+    Subject?: string;
+    /** The importance of the message  (0 - Low, 1 - Normal, 2 - High) */
+    Importance?: number;
+    /** Indicates whether the message has attachments */
+    HasAttachment?: boolean;
+    /** The unique identifier of the message */
+    Id?: string;
+    /** The date and time the message was received */
+    DateTimeReceived?: string;
+    /** Indicates whether the message has been read */
+    IsRead?: boolean;
+}
+
+/**
+ * Definition: DataSetsMetadata
+ */
+export interface DataSetsMetadata {
+    tabular?: TabularDataSetsMetadata;
+    blob?: BlobDataSetsMetadata;
+}
+
+/**
+ * Definition: TabularDataSetsMetadata
+ */
+export interface TabularDataSetsMetadata {
+    /** Dataset source */
+    source?: string;
+    /** Dataset display name */
+    displayName?: string;
+    /** Dataset url encoding */
+    urlEncoding?: string;
+    /** Table display name */
+    tableDisplayName?: string;
+    /** Table plural display name */
+    tablePluralName?: string;
+}
+
+/**
+ * Definition: BlobDataSetsMetadata
+ */
+export interface BlobDataSetsMetadata {
+    /** Blob dataset source */
+    source?: string;
+    /** Blob dataset display name */
+    displayName?: string;
+    /** Blob dataset url encoding */
+    urlEncoding?: string;
+}
+
+/**
+ * Definition: OptionsEmailSubscription
  */
 export interface OptionsEmailSubscription {
     /** Gets or sets callback url to flow engine. It is expected as part of request */
     NotificationUrl?: string;
-    /** Message */
     Message?: MessageWithOptions;
 }
 
 /**
- * Message
+ * Definition: MessageWithOptions
  */
 export interface MessageWithOptions {
     /** Specify email addresses separated by semicolons like someone@contoso.com */
@@ -222,31 +1142,30 @@ export interface MessageWithOptions {
 }
 
 /**
- * Response for Send email with options
+ * Definition: ApprovalEmailResponse
  */
-export interface SubscriptionResponse {
-    /** Id of the subscription */
-    id?: string;
-    /** Resource of the subscription request */
-    resource?: string;
-    /** Notification Type */
-    notificationType?: string;
-    /** Notification Url */
-    notificationUrl?: string;
+export interface ApprovalEmailResponse {
+    /** User response */
+    SelectedOption?: string;
+    /** User email address. The value is the user's email address for individual users and user ID for the members in Distribution Group or Mail Enabled Security Group. */
+    UserEmailAddress?: string;
+    /** User tenant ID. The value is the tenant id of the user for both individual users and the members in Distribution Group or Mail Enabled Security Group. */
+    UserTenantId?: string;
+    /** User ID. The value is the user id for both individual users and the members in Distribution Group or Mail Enabled Security Group. */
+    UserId?: string;
 }
 
 /**
- * Send approval email
+ * Definition: ApprovalEmailSubscription
  */
 export interface ApprovalEmailSubscription {
     /** Gets or sets callback url to flow engine. It is expected as part of request */
     NotificationUrl?: string;
-    /** Message */
     Message?: ApprovalMessage;
 }
 
 /**
- * Message
+ * Definition: ApprovalMessage
  */
 export interface ApprovalMessage {
     /** Specify email addresses separated by semicolons like someone@contoso.com */
@@ -274,96 +1193,293 @@ export interface ApprovalMessage {
 }
 
 /**
- * Response for Send an HTTP request
+ * Definition: SharedMailboxClientSendMessage
  */
-export interface ObjectWithoutType {
-    [key: string]: unknown;
+export interface SharedMailboxClientSendMessage {
+    /** Specify email address of a shared mailbox like someone@contoso.com */
+    MailboxAddress?: string;
+    /** Specify email addresses separated by semicolons like someone@contoso.com */
+    To?: string;
+    /** Specify the subject of the mail */
+    Subject?: string;
+    /** Specify the body of the mail */
+    Body?: string;
+    /** Specify email addresses separated by semicolons like someone@contoso.com */
+    Cc?: string;
+    /** Specify email addresses separated by semicolons like someone@contoso.com */
+    Bcc?: string;
+    /** Attachments */
+    Attachments?: Array<ClientSendAttachment>;
+    /** Sensitivity */
+    Sensitivity?: string;
+    /** The email addresses to use when replying */
+    ReplyTo?: string;
+    /** Importance */
+    Importance?: string;
+    /** Is Html? */
+    IsHtml?: boolean;
 }
 
 /**
- * Email Management MCP Server (deprecated)
+ * Definition: SharedMailboxClientSendHtmlMessage
  */
-export interface MCPQueryRequest {
-    /** jsonrpc */
-    jsonrpc?: string;
-    /** id */
-    id?: string;
-    /** method */
-    method?: string;
-    /** params */
-    params?: Record<string, unknown>;
-    /** result */
-    result?: Record<string, unknown>;
-    /** error */
-    error?: Record<string, unknown>;
-    /** callbackEndpoint */
-    callbackEndpoint?: string;
+export interface SharedMailboxClientSendHtmlMessage {
+    /** Specify email address of a shared mailbox like someone@contoso.com */
+    MailboxAddress?: string;
+    /** Specify email addresses separated by semicolons like someone@contoso.com */
+    To?: string;
+    /** Specify the subject of the mail */
+    Subject?: string;
+    /** Specify the body of the mail */
+    Body?: string;
+    /** Specify email addresses separated by semicolons like someone@contoso.com */
+    Cc?: string;
+    /** Specify email addresses separated by semicolons like someone@contoso.com */
+    Bcc?: string;
+    /** Attachments */
+    Attachments?: Array<ClientSendAttachment>;
+    /** Sensitivity */
+    Sensitivity?: string;
+    /** The email addresses to use when replying */
+    ReplyTo?: string;
+    /** Importance */
+    Importance?: string;
 }
 
 /**
- * Response for Email Management MCP Server (deprecated)
+ * Definition: SubscriptionPayload[OutlookReceiveMessage]
  */
-export interface MCPQueryResponse {
-    /** jsonrpc */
-    jsonrpc?: string;
-    /** id */
-    id?: string;
-    /** method */
-    method?: string;
-    /** params */
-    params?: Record<string, unknown>;
-    /** result */
-    result?: Record<string, unknown>;
-    /** error */
-    error?: Record<string, unknown>;
+export interface SubscriptionPayloadOutlookReceiveMessage {
+    /** List of values */
+    value?: Array<SubscriptionPayloadEntityOutlookReceiveMessage>;
 }
 
 /**
- * Response for Get event (V3)
+ * Definition: SubscriptionPayloadEntity[OutlookReceiveMessage]
  */
-export interface GraphCalendarEventClientReceive {
+export interface SubscriptionPayloadEntityOutlookReceiveMessage {
+    /** Sequence number */
+    SequenceNumber?: number;
+    /** Change type */
+    ChangeType?: string;
+    /** Client state */
+    ClientState?: string;
+    /** Resource */
+    Resource?: string;
+    ResourceData?: OutlookReceiveMessage;
+}
+
+/**
+ * Definition: OutlookReceiveAttachment
+ */
+export interface OutlookReceiveAttachment {
+    /** OData type */
+    "@odata.type"?: string;
+    /** Attachment Id */
+    Id?: string;
+    /** Attachment name */
+    Name?: string;
+    /** Attachment content */
+    ContentBytes?: string;
+    /** Attachment content type */
+    ContentType?: string;
+    /** Attachment size in bytes */
+    Size?: number;
+    /** Permission associated with a reference attachment */
+    Permission?: string;
+    /** Provider for the reference attachment */
+    ProviderType?: string;
+    /** Reference attachment source url */
+    SourceUrl?: string;
+    /** Set to true if this is an inline attachment */
+    IsInline?: boolean;
+    /** The date and time when the attachment was last modified */
+    LastModifiedDateTime?: string;
+    /** Content Id */
+    ContentId?: string;
+}
+
+/**
+ * Definition: InternetMessageHeader
+ */
+export interface InternetMessageHeader {
+    /** Header name */
+    Name?: string;
+    /** Header value */
+    Value?: string;
+}
+
+/**
+ * Definition: SubscriptionPayload[SubscriptionEvent]
+ */
+export interface SubscriptionPayloadSubscriptionEvent {
+    /** List of values */
+    value?: Array<SubscriptionPayloadEntitySubscriptionEvent>;
+}
+
+/**
+ * Definition: SubscriptionPayloadEntity[SubscriptionEvent]
+ */
+export interface SubscriptionPayloadEntitySubscriptionEvent {
+    /** Sequence number */
+    SequenceNumber?: number;
+    /** Change type */
+    ChangeType?: string;
+    /** Client state */
+    ClientState?: string;
+    /** Resource */
+    Resource?: string;
+    ResourceData?: SubscriptionEvent;
+}
+
+/**
+ * Definition: SubscriptionEvent
+ */
+export interface SubscriptionEvent {
+    /** The Event's unique identifier */
+    Id?: string;
+}
+
+/**
+ * Definition: EntityListResponse[Table]
+ */
+export interface EntityListResponseTable {
+    /** List of values */
+    value?: Array<Table>;
+}
+
+/**
+ * Definition: Table
+ */
+export interface Table {
+    /** The name of the table. The name is used at runtime. */
+    Name?: string;
+    /** The display name of the table. */
+    DisplayName?: string;
+    /** Additional table properties provided by the connector to the clients. */
+    DynamicProperties?: Record<string, unknown>;
+}
+
+/**
+ * Definition: EntityListResponse[CalendarEventBackend]
+ */
+export interface EntityListResponseCalendarEventBackend {
+    /** List of values */
+    value?: Array<CalendarEventBackend>;
+}
+
+/**
+ * Definition: EntityListResponse[CalendarEventClientReceiveStringEnums]
+ */
+export interface EntityListResponseCalendarEventClientReceiveStringEnums {
+    /** List of values */
+    value?: Array<CalendarEventClientReceiveStringEnums>;
+}
+
+/**
+ * Definition: CalendarEventClient
+ */
+export interface CalendarEventClient {
+    /** Event subject */
+    Subject?: string;
+    /** Start time of the event (example: '2016-11-01T14:30:00Z') */
+    Start?: string;
+    /** End time of the event (example: '2016-11-01T15:30:00Z') */
+    End?: string;
+    /** Time zone of the event */
+    TimeZone?: string;
+    /** Required attendees for the event separated by semicolons */
+    RequiredAttendees?: string;
+    /** Optional attendees for the event separated by semicolons */
+    OptionalAttendees?: string;
+    /** Resource attendees for the event separated by semicolons */
+    ResourceAttendees?: string;
+    /** Body of the message associated with the event */
+    Body?: string;
+    /** Set to true if the body is Html */
+    IsHtml?: boolean;
+    /** Location of the event */
+    Location?: string;
+    /** The importance of the event: Low, Normal, or High */
+    Importance?: string;
+    /** Set to true if the event lasts all day */
+    IsAllDay?: boolean;
+    /** The recurrence pattern for the event */
+    Recurrence?: string;
+    /** End time of the recurrence */
+    RecurrenceEnd?: string;
+    /** How many times to repeat the event */
+    NumberOfOccurrences?: number;
+    /** Time in minutes before event start to remind */
+    Reminder?: number;
+    /** Status to show during the event */
+    ShowAs?: string;
+    /** Set to true if the sender would like a response when the event is accepted or declined */
+    ResponseRequested?: boolean;
+}
+
+/**
+ * Definition: CalendarEventHtmlClient
+ */
+export interface CalendarEventHtmlClient {
+    /** Event subject */
+    Subject?: string;
+    /** Start time of the event (example: '2016-11-01T14:30:00Z') */
+    Start?: string;
+    /** End time of the event (example: '2016-11-01T15:30:00Z') */
+    End?: string;
+    /** Time zone of the event */
+    TimeZone?: string;
+    /** Required attendees for the event separated by semicolons */
+    RequiredAttendees?: string;
+    /** Optional attendees for the event separated by semicolons */
+    OptionalAttendees?: string;
+    /** Resource attendees for the event separated by semicolons */
+    ResourceAttendees?: string;
+    /** Body of the message associated with the event */
+    Body?: string;
+    /** Location of the event */
+    Location?: string;
+    /** The importance of the event: Low, Normal, or High */
+    Importance?: string;
+    /** Set to true if the event lasts all day */
+    IsAllDay?: boolean;
+    /** The recurrence pattern for the event */
+    Recurrence?: string;
+    /** End time of the recurrence */
+    RecurrenceEnd?: string;
+    /** How many times to repeat the event */
+    NumberOfOccurrences?: number;
+    /** Time in minutes before event start to remind */
+    Reminder?: number;
+    /** Status to show during the event */
+    ShowAs?: string;
+    /** Set to true if the sender would like a response when the event is accepted or declined */
+    ResponseRequested?: boolean;
+}
+
+/**
+ * Definition: GraphCalendarEventClient
+ */
+export interface GraphCalendarEventClient {
     /** Event subject */
     subject?: string;
-    /** Start time of the event (example: '2017-08-29T04:00:00.0000000') */
+    /** Start time of the event (example: '2017-08-29T04:00:00') */
     start?: string;
-    /** End time of the event (example: '2017-08-29T05:00:00.0000000') */
+    /** End time of the event (example: '2017-08-29T05:00:00') */
     end?: string;
-    /** Start time of the event with time zone (example: '2017-08-29T04:00:00.0000000+00:00') */
-    startWithTimeZone?: string;
-    /** End time of the event with time zone (example: '2017-08-29T05:00:00.0000000+00:00') */
-    endWithTimeZone?: string;
-    /** Body of the message associated with the event */
-    body?: string;
-    /** Set to true if the body is Html */
-    isHtml?: boolean;
-    /** The response type of the event (none, organizer, tentativelyAccepted, accepted, declined or notResponded) */
-    responseType?: string;
-    /** The response time of the event */
-    responseTime?: string;
-    /** The event's unique identifier */
-    id?: string;
-    /** The date and time that the event was created */
-    createdDateTime?: string;
-    /** The date and time that the event was last modified */
-    lastModifiedDateTime?: string;
-    /** The organizer of the event */
-    organizer?: string;
     /** Time zone of the event */
     timeZone?: string;
-    /** Unique identifier for Series Master event type */
-    seriesMasterId?: string;
-    /** A unique identifier for an event across calendars. This ID is different for each occurrence in a recurring series */
-    iCalUId?: string;
-    /** The categories associated with the event */
-    categories?: Array<string>;
-    /** The URL to open the event in Outlook Web App */
-    webLink?: string;
     /** Required attendees for the event separated by semicolons */
     requiredAttendees?: string;
     /** Optional attendees for the event separated by semicolons */
     optionalAttendees?: string;
     /** Resource attendees for the event separated by semicolons */
     resourceAttendees?: string;
+    /** Body of the message associated with the event */
+    body?: string;
+    /** The categories associated with the event */
+    categories?: Array<string>;
     /** Location of the event */
     location?: string;
     /** The importance of the event: low, normal, or high */
@@ -372,6 +1488,8 @@ export interface GraphCalendarEventClientReceive {
     isAllDay?: boolean;
     /** The recurrence pattern for the event: none, daily, weekly, monthly or yearly */
     recurrence?: string;
+    /** Days of week for weekly recurrence */
+    selectedDaysOfWeek?: Array<string>;
     /** End Date of the recurrence */
     recurrenceEnd?: string;
     /** How many times to repeat the event */
@@ -389,23 +1507,83 @@ export interface GraphCalendarEventClientReceive {
 }
 
 /**
- * Response for Get events (V4)
+ * Definition: CalendarEventListWithActionType
  */
-export interface GraphCalendarEventListClientReceive {
+export interface CalendarEventListWithActionType {
     /** List of calendar items */
-    value?: Array<GraphCalendarEventClientReceive>;
+    value?: Array<CalendarEventClientWithActionType>;
 }
 
 /**
- * Response for When an event is added, updated or deleted (V3)
+ * Definition: CalendarEventClientWithActionType
  */
-export interface GraphCalendarEventListWithActionType {
-    /** List of calendar items */
-    value?: Array<GraphCalendarEventClientWithActionType>;
+export interface CalendarEventClientWithActionType {
+    /** Changed action type of the event - added, updated or deleted. */
+    ActionType?: string;
+    /** Flag that indicates whether the event was added since the last poll of the trigger. */
+    IsAdded?: boolean;
+    /** Flag that indicates whether the event was updated since the last poll of the trigger. */
+    IsUpdated?: boolean;
+    /** Event subject */
+    Subject?: string;
+    /** Start time of the event (example: '2016-11-01T14:30:00Z') */
+    Start?: string;
+    /** End time of the event (example: '2016-11-01T15:30:00Z') */
+    End?: string;
+    /** Status to show during the event (Unknown - -1, Free - 0, Tentative - 1, Busy - 2, Oof - 3, WorkingElsewhere - 4) */
+    ShowAs?: number;
+    /** The recurrence pattern for the event (None - 0, Daily - 1, Weekly - 2, Monthly - 3, Yearly - 4) */
+    Recurrence?: number;
+    /** The response type of the event (None - 0, Organizer - 1, TentativelyAccepted - 2, Accepted - 3, Declined - 4, NotResponded - 5) */
+    ResponseType?: number;
+    /** The response time of the event */
+    ResponseTime?: string;
+    /** A unique identifier that is shared by all instances of an event across different calendars */
+    ICalUId?: string;
+    /** The importance of the event (0 - Low, 1 - Normal, 2 - High) */
+    Importance?: number;
+    /** The event's unique identifier */
+    Id?: string;
+    /** The date and time that the event was created */
+    DateTimeCreated?: string;
+    /** The date and time that the event was last modified */
+    DateTimeLastModified?: string;
+    /** The organizer of the event */
+    Organizer?: string;
+    /** Time zone of the event */
+    TimeZone?: string;
+    /** Unique identifier for Series Master event type */
+    SeriesMasterId?: string;
+    /** The categories associated with the event */
+    Categories?: Array<string>;
+    /** The URL to open the event in Outlook Web App */
+    WebLink?: string;
+    /** Required attendees for the event separated by semicolons */
+    RequiredAttendees?: string;
+    /** Optional attendees for the event separated by semicolons */
+    OptionalAttendees?: string;
+    /** Resource attendees for the event separated by semicolons */
+    ResourceAttendees?: string;
+    /** Body of the message associated with the event */
+    Body?: string;
+    /** Set to true if the body is Html */
+    IsHtml?: boolean;
+    /** Location of the event */
+    Location?: string;
+    /** Set to true if the event lasts all day */
+    IsAllDay?: boolean;
+    /** End time of the recurrence */
+    RecurrenceEnd?: string;
+    /** How many times to repeat the event */
+    NumberOfOccurrences?: number;
+    /** Time in minutes before event start to remind */
+    Reminder?: number;
+    /** Set to true if the sender would like a response when the event is accepted or declined */
+    ResponseRequested?: boolean;
 }
 
 /**
- * Item in value
+ * Definition: GraphCalendarEventClientWithActionType
  */
 export interface GraphCalendarEventClientWithActionType {
     /** Changed action type of the event - added, updated or deleted. */
@@ -481,65 +1659,283 @@ export interface GraphCalendarEventClientWithActionType {
 }
 
 /**
- * Response for Get calendars (V2)
+ * Definition: GraphContactFolder
  */
-export interface CalendarGetTablesResponse {
-    /** value */
-    value?: Array<Record<string, unknown>>;
+export interface GraphContactFolder {
+    /** The ID of the contacts folder */
+    id?: string;
+    /** The name of the contacts folder */
+    displayName?: string;
+    /** The ID of the parent folder */
+    parentFolderId?: string;
 }
 
 /**
- * Update event (V4)
+ * Definition: Contact
  */
-export interface GraphCalendarEventClient {
-    /** Event subject */
-    subject?: string;
-    /** Start time of the event (example: '2017-08-29T04:00:00') */
-    start?: string;
-    /** End time of the event (example: '2017-08-29T05:00:00') */
-    end?: string;
-    /** Time zone of the event */
+export interface Contact {
+    /** The contact's unique identifier. */
+    Id?: string;
+    /** The ID of the contact's parent folder */
+    ParentFolderId?: string;
+    /** The contact's birthday */
+    Birthday?: string;
+    /** The name the contact is filed under */
+    FileAs?: string;
+    /** The contact's display name */
+    DisplayName?: string;
+    /** The contact's given name */
+    GivenName?: string;
+    /** The contact's initials */
+    Initials?: string;
+    /** The contact's middle name */
+    MiddleName?: string;
+    /** The contact's nickname */
+    NickName?: string;
+    /** The contact's surname */
+    Surname?: string;
+    /** The contact's title */
+    Title?: string;
+    /** The contact's generation */
+    Generation?: string;
+    /** The contact's email addresses */
+    EmailAddresses?: Array<EmailAddress>;
+    /** The contact's instant messaging (IM) addresses */
+    ImAddresses?: Array<string>;
+    /** The contact's job title */
+    JobTitle?: string;
+    /** The name of the contact's company */
+    CompanyName?: string;
+    /** The contact's department */
+    Department?: string;
+    /** The location of the contact's office */
+    OfficeLocation?: string;
+    /** The contact's profession */
+    Profession?: string;
+    /** The business home page of the contact */
+    BusinessHomePage?: string;
+    /** The name of the contact's assistant */
+    AssistantName?: string;
+    /** The name of the contact's manager */
+    Manager?: string;
+    /** The contact's home phone numbers */
+    HomePhones?: Array<string>;
+    /** The contact's business phone numbers */
+    BusinessPhones?: Array<string>;
+    /** The contact's mobile phone number */
+    MobilePhone1?: string;
+    HomeAddress?: PhysicalAddress;
+    BusinessAddress?: PhysicalAddress;
+    OtherAddress?: PhysicalAddress;
+    /** The phonetic Japanese company name of the contact */
+    YomiCompanyName?: string;
+    /** The phonetic Japanese given name (first name) of the contact */
+    YomiGivenName?: string;
+    /** The phonetic Japanese surname (last name) of the contact */
+    YomiSurname?: string;
+    /** The categories associated with the contact */
+    Categories?: Array<string>;
+    /** Identifies the version of the event object */
+    ChangeKey?: string;
+    /** The time the contact was created */
+    DateTimeCreated?: string;
+    /** The time the contact was modified */
+    DateTimeLastModified?: string;
+}
+
+/**
+ * Definition: DataSetsList
+ */
+export interface DataSetsList {
+    /** List of datasets */
+    value?: Array<DataSet>;
+}
+
+/**
+ * Definition: DataSet
+ */
+export interface DataSet {
+    /** Dataset name */
+    Name?: string;
+    /** Dataset display name */
+    DisplayName?: string;
+    /** Pass-through Native Queries */
+    query?: Array<PassThroughNativeQuery>;
+}
+
+/**
+ * Definition: Procedure
+ */
+export interface Procedure {
+    /** Procedure name */
+    Name?: string;
+    /** Procedure display name */
+    DisplayName?: string;
+}
+
+/**
+ * Definition: PassThroughNativeQuery
+ */
+export interface PassThroughNativeQuery {
+    /** Query language */
+    Language?: string;
+}
+
+/**
+ * Definition: AutomaticRepliesSettingClient_V2
+ */
+export interface AutomaticRepliesSettingClientV2 {
+    /** Automatic reply setting status */
+    status?: string;
+    /** The audience that will see the external reply message */
+    externalAudience?: string;
+    /** Scheduled start time (example: '2017-08-29T04:00:00.0000000') */
+    scheduledStartDateTime?: Record<string, unknown>;
+    /** Scheduled end time (example: '2017-08-29T05:00:00.0000000') */
+    scheduledEndDateTime?: Record<string, unknown>;
+    /** Message for people within your organization */
+    internalReplyMessage?: string;
+    /** Message for people outside your organization */
+    externalReplyMessage?: string;
+}
+
+/**
+ * Definition: MailTipsClientReceive_V2
+ */
+export interface MailTipsClientReceiveV2 {
+    automaticReplies?: MailTipsAutomaticRepliesV2;
+    /** Is delivery restricted */
+    deliveryRestricted?: boolean;
+    /** Number of external members */
+    externalMemberCount?: number;
+    /** Is moderated */
+    isModerated?: boolean;
+    /** Is mailbox full */
+    mailboxFull?: boolean;
+    /** Maximum message size */
+    maxMessageSize?: number;
+    /** Total member count */
+    totalMemberCount?: number;
+}
+
+/**
+ * Definition: MailTipsAutomaticReplies_V2
+ */
+export interface MailTipsAutomaticRepliesV2 {
+    /** Automatic replies message */
+    message?: string;
+}
+
+/**
+ * Definition: UpdateEmailFlag
+ */
+export interface UpdateEmailFlag {
+    /** Flag status */
+    flag?: Record<string, unknown>;
+}
+
+/**
+ * Definition: ResponseToEventInvite
+ */
+export interface ResponseToEventInvite {
+    /** Comment */
+    Comment?: string;
+    /** Send response to organizer? */
+    SendResponse?: boolean;
+}
+
+/**
+ * Definition: DirectForwardMessage
+ */
+export interface DirectForwardMessage {
+    /** Comment */
+    Comment?: string;
+    /** Semicolon separated list of recipients to forward the message to */
+    ToRecipients?: string;
+}
+
+/**
+ * Definition: MeetingTimeSuggestions
+ */
+export interface MeetingTimeSuggestions {
+    [key: string]: unknown;
+}
+
+/**
+ * Definition: MeetingTimeSuggestions_V2
+ */
+export interface MeetingTimeSuggestionsV2 {
+    [key: string]: unknown;
+}
+
+/**
+ * Definition: LocationConstraint
+ */
+export interface LocationConstraint {
+    /** Should a meeting location be returned for the meeting? */
+    IsRequired?: boolean;
+    /** Should the response provide one or more meeting location suggestions? */
+    SuggestLocation?: boolean;
+    /** Locations */
+    Locations?: Array<Record<string, unknown>>;
+}
+
+/**
+ * Definition: DateTimeTimeZone
+ */
+export interface DateTimeTimeZone {
+    /** DateTime */
+    DateTime?: string;
+    /** TimeZone */
+    TimeZone?: string;
+}
+
+/**
+ * Definition: DateTimeTimeZone_V2
+ */
+export interface DateTimeTimeZoneV2 {
+    /** DateTime (example: '2017-08-29T04:00:00.0000000') */
+    dateTime?: string;
+    /** TimeZone (example: 'Pacific Standard Time') */
     timeZone?: string;
-    /** Required attendees for the event separated by semicolons */
-    requiredAttendees?: string;
-    /** Optional attendees for the event separated by semicolons */
-    optionalAttendees?: string;
-    /** Resource attendees for the event separated by semicolons */
-    resourceAttendees?: string;
-    /** Body of the message associated with the event */
-    body?: string;
-    /** The categories associated with the event */
-    categories?: Array<string>;
-    /** Location of the event */
-    location?: string;
-    /** The importance of the event: low, normal, or high */
-    importance?: string;
-    /** Set to true if the event lasts all day */
-    isAllDay?: boolean;
-    /** The recurrence pattern for the event: none, daily, weekly, monthly or yearly */
-    recurrence?: string;
-    /** Days of week for weekly recurrence */
-    selectedDaysOfWeek?: Array<string>;
-    /** End Date of the recurrence */
-    recurrenceEnd?: string;
-    /** How many times to repeat the event */
-    numberOfOccurences?: number;
-    /** Time in minutes before event start to remind */
-    reminderMinutesBeforeStart?: number;
-    /** Set to true if an alert is set to remind the user of the event. */
-    isReminderOn?: boolean;
-    /** Status to show during the event: free, tentative, busy, oof, workingElsewhere or unknown */
-    showAs?: string;
-    /** Set to true if the sender would like a response when the event is accepted or declined */
-    responseRequested?: boolean;
-    /** The possible values are: normal, personal, private, confidential */
-    sensitivity?: string;
 }
 
 /**
- * Response for Get contact (V2)
+ * Definition: EntityListResponse[ContactResponse]_V2
  */
-export interface ContactResponse {
+export interface EntityListResponseContactResponseV2 {
+    /** List of values */
+    value?: Array<ContactResponseV2>;
+}
+
+/**
+ * Definition: EmailAddress_V2
+ */
+export interface EmailAddressV2 {
+    name?: string;
+    address?: string;
+}
+
+/**
+ * Definition: PhysicalAddress_V2
+ */
+export interface PhysicalAddressV2 {
+    /** The contact's street address. */
+    street?: string;
+    /** The contact's city. */
+    city?: string;
+    /** The contact's state. */
+    state?: string;
+    /** The contact's country of region. */
+    countryOrRegion?: string;
+    /** The contact's postal code. */
+    postalCode?: string;
+}
+
+/**
+ * Definition: Contact_V2
+ */
+export interface ContactV2 {
     /** The contact's unique identifier. */
     id?: string;
     /** The ID of the contact's parent folder */
@@ -565,7 +1961,7 @@ export interface ContactResponse {
     /** The contact's generation */
     generation?: string;
     /** The contact's email addresses */
-    emailAddresses?: Array<EmailAddress>;
+    emailAddresses?: Array<EmailAddressV2>;
     /** The contact's instant messaging (IM) addresses */
     imAddresses?: Array<string>;
     /** The contact's job title */
@@ -590,12 +1986,9 @@ export interface ContactResponse {
     businessPhones?: Array<string>;
     /** The contact's mobile phone number */
     mobilePhone?: string;
-    /** homeAddress */
-    homeAddress?: PhysicalAddress;
-    /** businessAddress */
-    businessAddress?: PhysicalAddress;
-    /** otherAddress */
-    otherAddress?: PhysicalAddress;
+    homeAddress?: PhysicalAddressV2;
+    businessAddress?: PhysicalAddressV2;
+    otherAddress?: PhysicalAddressV2;
     /** The phonetic Japanese company name of the contact */
     yomiCompanyName?: string;
     /** The phonetic Japanese given name (first name) of the contact */
@@ -613,41 +2006,7 @@ export interface ContactResponse {
 }
 
 /**
- * Item in emailAddresses
- */
-export interface EmailAddressV2 {
-    /** name */
-    name?: string;
-    /** address */
-    address?: string;
-}
-
-/**
- * homeAddress
- */
-export interface PhysicalAddress {
-    /** The contact's street address. */
-    street?: string;
-    /** The contact's city. */
-    city?: string;
-    /** The contact's state. */
-    state?: string;
-    /** The contact's country of region. */
-    countryOrRegion?: string;
-    /** The contact's postal code. */
-    postalCode?: string;
-}
-
-/**
- * Response for Get contacts (V2)
- */
-export interface EntityListResponseContactResponse {
-    /** List of values */
-    value?: Array<ContactResponse>;
-}
-
-/**
- * Item in value
+ * Definition: ContactResponse_V2
  */
 export interface ContactResponseV2 {
     /** The contact's unique identifier. */
@@ -675,7 +2034,7 @@ export interface ContactResponseV2 {
     /** The contact's generation */
     generation?: string;
     /** The contact's email addresses */
-    emailAddresses?: Array<EmailAddress>;
+    emailAddresses?: Array<EmailAddressV2>;
     /** The contact's instant messaging (IM) addresses */
     imAddresses?: Array<string>;
     /** The contact's job title */
@@ -700,12 +2059,9 @@ export interface ContactResponseV2 {
     businessPhones?: Array<string>;
     /** The contact's mobile phone number */
     mobilePhone?: string;
-    /** homeAddress */
-    homeAddress?: PhysicalAddress;
-    /** businessAddress */
-    businessAddress?: PhysicalAddress;
-    /** otherAddress */
-    otherAddress?: PhysicalAddress;
+    homeAddress?: PhysicalAddressV2;
+    businessAddress?: PhysicalAddressV2;
+    otherAddress?: PhysicalAddressV2;
     /** The phonetic Japanese company name of the contact */
     yomiCompanyName?: string;
     /** The phonetic Japanese given name (first name) of the contact */
@@ -723,181 +2079,7 @@ export interface ContactResponseV2 {
 }
 
 /**
- * Response for Get contact folders (V2)
- */
-export interface EntityListResponseGraphContactFolder {
-    /** List of values */
-    value?: Array<GraphContactFolder>;
-}
-
-/**
- * Item in value
- */
-export interface GraphContactFolder {
-    /** The ID of the contacts folder */
-    id?: string;
-    /** The name of the contacts folder */
-    displayName?: string;
-    /** The ID of the parent folder */
-    parentFolderId?: string;
-}
-
-/**
- * Update contact (V2)
- */
-export interface Contact {
-    /** The contact's unique identifier. */
-    id?: string;
-    /** The ID of the contact's parent folder */
-    parentFolderId?: string;
-    /** The contact's birthday */
-    birthday?: string;
-    /** The name the contact is filed under */
-    fileAs?: string;
-    /** The contact's display name */
-    displayName?: string;
-    /** The contact's given name */
-    givenName?: string;
-    /** The contact's initials */
-    initials?: string;
-    /** The contact's middle name */
-    middleName?: string;
-    /** The contact's nickname */
-    nickName?: string;
-    /** The contact's surname */
-    surname?: string;
-    /** The contact's title */
-    title?: string;
-    /** The contact's generation */
-    generation?: string;
-    /** The contact's email addresses */
-    emailAddresses?: Array<EmailAddress>;
-    /** The contact's instant messaging (IM) addresses */
-    imAddresses?: Array<string>;
-    /** The contact's job title */
-    jobTitle?: string;
-    /** The name of the contact's company */
-    companyName?: string;
-    /** The contact's department */
-    department?: string;
-    /** The location of the contact's office */
-    officeLocation?: string;
-    /** The contact's profession */
-    profession?: string;
-    /** The business home page of the contact */
-    businessHomePage?: string;
-    /** The name of the contact's assistant */
-    assistantName?: string;
-    /** The name of the contact's manager */
-    manager?: string;
-    /** The contact's home phone numbers */
-    homePhones?: Array<string>;
-    /** The contact's business phone numbers */
-    businessPhones?: Array<string>;
-    /** The contact's mobile phone number */
-    mobilePhone?: string;
-    /** homeAddress */
-    homeAddress?: PhysicalAddress;
-    /** businessAddress */
-    businessAddress?: PhysicalAddress;
-    /** otherAddress */
-    otherAddress?: PhysicalAddress;
-    /** The phonetic Japanese company name of the contact */
-    yomiCompanyName?: string;
-    /** The phonetic Japanese given name (first name) of the contact */
-    yomiGivenName?: string;
-    /** The phonetic Japanese surname (last name) of the contact */
-    yomiSurname?: string;
-    /** The categories associated with the contact */
-    categories?: Array<string>;
-    /** Identifies the version of the event object */
-    changeKey?: string;
-    /** The time the contact was created */
-    createdDateTime?: string;
-    /** The time the contact was modified */
-    lastModifiedDateTime?: string;
-}
-
-/**
- * Find meeting times (V2)
- */
-export interface FindMeetingTimesInput {
-    /** List of semicolon separated email addresses */
-    RequiredAttendees?: string;
-    /** List of semicolon separated email addresses */
-    OptionalAttendees?: string;
-    /** Resource attendees for the event separated by semicolons */
-    ResourceAttendees?: string;
-    /** Duration of the meeting in minutes */
-    MeetingDuration?: number;
-    /** Start time for meeting time suggestions */
-    Start?: string;
-    /** End time for meeting time suggestions */
-    End?: string;
-    /** The maximum number of meeting suggestions to return in the response */
-    MaxCandidates?: number;
-    /** The minimum required confidence for a time slot to be returned in the response */
-    MinimumAttendeePercentage?: string;
-    /** true if the organizer doesn't have to attend. The default is false */
-    IsOrganizerOptional?: boolean;
-    /** Work, Personal, Unrestricted, or Unknown */
-    ActivityDomain?: string;
-}
-
-/**
- * Response for Find meeting times (V2)
- */
-export interface FindMeetingTimesResponse {
-    /** Empty Suggestions Reason */
-    emptySuggestionsReason?: string;
-    /** meetingTimeSuggestions */
-    meetingTimeSuggestions?: Array<Record<string, unknown>>;
-}
-
-/**
- * Flag email (V2)
- */
-export interface UpdateEmailFlag {
-    /** Flag status */
-    flag?: Record<string, unknown>;
-}
-
-/**
- * Forward an email (V2)
- */
-export interface DirectForwardMessage {
-    /** Comment */
-    Comment?: string;
-    /** Semicolon separated list of recipients to forward the message to */
-    ToRecipients?: string;
-}
-
-/**
- * Response for Get Attachment (V2)
- */
-export interface GetAttachmentResponse {
-    /** Id of the attachment. */
-    id?: string;
-    /** Name of attachment. */
-    name?: string;
-    /** Content type of attachment. */
-    contentType?: string;
-    /** Size of attachment. */
-    size?: number;
-    /** Content of attachment. */
-    contentBytes?: string;
-    /** Set to true if this is an inline attachment. */
-    isInline?: boolean;
-    /** The date and time when the attachment was last modified. */
-    lastModifiedDateTime?: string;
-    /** Content Id */
-    contentId?: string;
-    /** sensitivityLabelInfo */
-    sensitivityLabelInfo?: Array<SensitivityLabelMetadata>;
-}
-
-/**
- * Item in sensitivityLabelInfo
+ * Definition: sensitivityLabelMetadata
  */
 export interface SensitivityLabelMetadata {
     /** SensitivityLabel Id. */
@@ -923,319 +2105,17 @@ export interface SensitivityLabelMetadata {
 }
 
 /**
- * Response for Get email (V2)
+ * Definition: MCPQueryRequest
  */
-export interface GraphClientReceiveMessage {
-    /** The mailbox owner and sender of the message */
-    from?: string;
-    /** The recipients for the message */
-    toRecipients?: string;
-    /** The Cc recipients for the message */
-    ccRecipients?: string;
-    /** The Bcc recipients for the message */
-    bccRecipients?: string;
-    /** The email addresses to use when replying */
-    replyTo?: string;
-    /** The subject of the message */
-    subject?: string;
-    /** The body of the message */
-    body?: string;
-    /** The importance of the message (low, normal, high) */
-    importance?: string;
-    /** The preview of the message */
-    bodyPreview?: string;
-    /** Indicates whether the message has attachments */
-    hasAttachments?: boolean;
-    /** The unique identifier of the message */
+export interface MCPQueryRequest {
+    jsonrpc?: string;
     id?: string;
-    /** The message ID in the format specified by RFC2822 */
-    internetMessageId?: string;
-    /** The Id of the conversation the email belongs to */
-    conversationId?: string;
-    /** The date and time the message was received */
-    receivedDateTime?: string;
-    /** Indicates whether the message has been read */
-    isRead?: boolean;
-    /** The file attachments for the message */
-    attachments?: Array<GraphClientReceiveFileAttachment>;
-    /** Is Html? */
-    isHtml?: boolean;
-    /** sensitivityLabelInfo */
-    sensitivityLabelInfo?: Array<SensitivityLabelMetadata>;
+    method?: string;
+    params?: Record<string, unknown>;
+    result?: Record<string, unknown>;
+    error?: Record<string, unknown>;
+    callbackEndpoint?: string;
 }
-
-/**
- * Item in attachments
- */
-export interface GraphClientReceiveFileAttachment {
-    /** Attachment Id */
-    id?: string;
-    /** Attachment name */
-    name?: string;
-    /** Attachment content */
-    contentBytes?: string;
-    /** Attachment content type */
-    contentType?: string;
-    /** The size in bytes of the attachment */
-    size?: number;
-    /** Set to true if this is an inline attachment */
-    isInline?: boolean;
-    /** The date and time when the attachment was last modified */
-    lastModifiedDateTime?: string;
-    /** Content Id */
-    contentId?: string;
-}
-
-/**
- * Response for Get emails (V3)
- */
-export interface BatchResponseGraphClientReceiveMessage {
-    /** A list of the response objects */
-    value?: Array<GraphClientReceiveMessage>;
-}
-
-/**
- * Response for Get calendar view of events (V3)
- */
-export interface EntityListResponseGraphCalendarEventClientReceive {
-    /** List of values */
-    value?: Array<GraphCalendarEventClientReceive>;
-}
-
-/**
- * Get mail tips for a mailbox (V2)
- */
-export interface GetMailTipsInput {
-    /** Flags that represents the mailtips. */
-    MailTipsOptions?: string;
-    /** Address of the mailbox to get mail tips for. */
-    EmailAddresses?: Array<string>;
-}
-
-/**
- * Response for Get mail tips for a mailbox (V2)
- */
-export interface GetMailTipsResponse {
-    /** value */
-    value?: Array<MailTipsClientReceive>;
-}
-
-/**
- * Item in value
- */
-export interface MailTipsClientReceiveV2 {
-    /** automaticReplies */
-    automaticReplies?: MailTipsAutomaticReplies;
-    /** Is delivery restricted */
-    deliveryRestricted?: boolean;
-    /** Number of external members */
-    externalMemberCount?: number;
-    /** Is moderated */
-    isModerated?: boolean;
-    /** Is mailbox full */
-    mailboxFull?: boolean;
-    /** Maximum message size */
-    maxMessageSize?: number;
-    /** Total member count */
-    totalMemberCount?: number;
-}
-
-/**
- * automaticReplies
- */
-export interface MailTipsAutomaticReplies {
-    /** Automatic replies message */
-    message?: string;
-}
-
-/**
- * Response for Get room lists (V2)
- */
-export interface GetRoomListsResponse {
-    /** value */
-    value?: Array<Record<string, unknown>>;
-}
-
-/**
- * Response for Get rooms (V2)
- */
-export interface GetRoomsResponse {
-    /** value */
-    value?: Array<Record<string, unknown>>;
-}
-
-/**
- * Response for Get rooms in room list (V2)
- */
-export interface GetRoomsInRoomListResponse {
-    /** value */
-    value?: Array<Record<string, unknown>>;
-}
-
-/**
- * Mark as read or unread (V3)
- */
-export interface MarkAsReadInput {
-    /** Mark as read/unread. */
-    isRead?: boolean;
-}
-
-/**
- * Response for When an email is flagged (V4)
- */
-export interface TriggerBatchResponseGraphClientReceiveMessage {
-    /** A list of the response objects */
-    value?: Array<GraphClientReceiveMessage>;
-}
-
-/**
- * Reply to email (V3)
- */
-export interface ReplyEmailInput {
-    /** Example: recipient1@domain.com; recipient2@domain.com */
-    To?: string;
-    /** Example: recipient1@domain.com; recipient2@domain.com */
-    Cc?: string;
-    /** Example: recipient1@domain.com; recipient2@domain.com */
-    Bcc?: string;
-    /** Email subject (if empty, the original subject used). */
-    Subject?: string;
-    /** Content of the email. */
-    Body?: string;
-    /** True to reply to all recipients. (default: False) */
-    ReplyAll?: boolean;
-    /** Pick an importance. (default: Low) */
-    Importance?: string;
-    /** Details of attachments to be sent along with the reply. */
-    Attachments?: Array<ClientSendAttachment>;
-}
-
-/**
- * Respond to an event invite (V2)
- */
-export interface ResponseToEventInvite {
-    /** Comment */
-    Comment?: string;
-    /** Send response to organizer? */
-    SendResponse?: boolean;
-}
-
-/**
- * Send an email (V2)
- */
-export interface SendEmailInput {
-    /** Specify email addresses separated by semicolons like someone@contoso.com */
-    To?: string;
-    /** Specify the subject of the mail */
-    Subject?: string;
-    /** Specify the body of the mail */
-    Body?: string;
-    /** Email address to send mail from (requires "Send as" or "Send on behalf of" permission for that mailbox). For more info on granting permissions please refer https://docs.microsoft.com/office365/admin/manage/send-email-as-distribution-list */
-    From?: string;
-    /** Specify email addresses separated by semicolons like someone@contoso.com */
-    Cc?: string;
-    /** Specify email addresses separated by semicolons like someone@contoso.com */
-    Bcc?: string;
-    /** Attachments */
-    Attachments?: Array<ClientSendAttachment>;
-    /** Sensitivity */
-    Sensitivity?: string;
-    /** The email addresses to use when replying */
-    ReplyTo?: string;
-    /** Importance */
-    Importance?: string;
-}
-
-/**
- * Set up automatic replies (V2)
- */
-export interface SetAutomaticRepliesSettingInput {
-    /** automaticRepliesSetting */
-    automaticRepliesSetting?: AutomaticRepliesSettingClient;
-}
-
-/**
- * automaticRepliesSetting
- */
-export interface AutomaticRepliesSettingClient {
-    /** Automatic reply setting status */
-    status?: string;
-    /** The audience that will see the external reply message */
-    externalAudience?: string;
-    /** Scheduled start time (example: '2017-08-29T04:00:00.0000000') */
-    scheduledStartDateTime?: Record<string, unknown>;
-    /** Scheduled end time (example: '2017-08-29T05:00:00.0000000') */
-    scheduledEndDateTime?: Record<string, unknown>;
-    /** Message for people within your organization */
-    internalReplyMessage?: string;
-    /** Message for people outside your organization */
-    externalReplyMessage?: string;
-}
-
-/**
- * Response for Set up automatic replies (V2)
- */
-export interface SetAutomaticRepliesSettingResponse {
-    /** automaticRepliesSetting */
-    automaticRepliesSetting?: AutomaticRepliesSettingClient;
-}
-
-/**
- * Send an email from a shared mailbox (V2)
- */
-export interface SharedMailboxSendEmailInput {
-    /** Specify email address of a shared mailbox like someone@contoso.com */
-    MailboxAddress?: string;
-    /** Specify email addresses separated by semicolons like someone@contoso.com */
-    To?: string;
-    /** Specify the subject of the mail */
-    Subject?: string;
-    /** Specify the body of the mail */
-    Body?: string;
-    /** Specify email addresses separated by semicolons like someone@contoso.com */
-    Cc?: string;
-    /** Specify email addresses separated by semicolons like someone@contoso.com */
-    Bcc?: string;
-    /** Attachments */
-    Attachments?: Array<ClientSendAttachment>;
-    /** Sensitivity */
-    Sensitivity?: string;
-    /** The email addresses to use when replying */
-    ReplyTo?: string;
-    /** Importance */
-    Importance?: string;
-}
-
-/**
- * MailTipsClientReceive_V2
- */
-export interface MailTipsClientReceive {
-    /** automaticReplies */
-    automaticReplies?: MailTipsAutomaticReplies;
-    /** Is delivery restricted */
-    deliveryRestricted?: boolean;
-    /** Number of external members */
-    externalMemberCount?: number;
-    /** Is moderated */
-    isModerated?: boolean;
-    /** Is mailbox full */
-    mailboxFull?: boolean;
-    /** Maximum message size */
-    maxMessageSize?: number;
-    /** Total member count */
-    totalMemberCount?: number;
-}
-
-/**
- * DateTimeTimeZone_V2
- */
-export interface DateTimeTimeZone {
-    /** DateTime (example: '2017-08-29T04:00:00.0000000') */
-    dateTime?: string;
-    /** TimeZone (example: 'Pacific Standard Time') */
-    timeZone?: string;
-}
-
 // #endregion Types
 
 // #region Client
@@ -1322,15 +2202,15 @@ export class Office365Client {
      * @remarks This operation gets Outlook category display names.
      */
     public async getOutlookCategoryNamesAsync(): Promise<Array<GraphOutlookCategory>> {
-        const path = `/Categories`;
-        return await this.callConnector<Array<GraphOutlookCategory>>("GET", path);
+        const requestPath = `/Categories`;
+        return await this.callConnector<Array<GraphOutlookCategory>>("GET", requestPath);
     }
 
     /**
      * Draft an email message
      * @remarks This operation drafts an email message.
      */
-    public async draftEmailAsync(input: DraftEmailInput, messageId?: string, draftType?: string, comment?: string): Promise<OutlookReceiveMessage> {
+    public async draftEmailAsync(input: ClientDraftHtmlMessage, messageId?: string, draftType?: string, comment?: string): Promise<OutlookReceiveMessage> {
         const queryParams: string[] = [];
         if (messageId !== undefined) {
             queryParams.push(`messageId=${encodeURIComponent(String(messageId))}`);
@@ -1341,21 +2221,21 @@ export class Office365Client {
         if (comment !== undefined) {
             queryParams.push(`comment=${encodeURIComponent(String(comment))}`);
         }
-        const path = `/Draft` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
-        return await this.callConnector<OutlookReceiveMessage>("POST", path, input);
+        const requestPath = `/Draft` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
+        return await this.callConnector<OutlookReceiveMessage>("POST", requestPath, input);
     }
 
     /**
      * Updates an email Draft message
      * @remarks This operation updates an an email Draft message.
      */
-    public async updateDraftEmailAsync(input: DraftEmailInput, messageId: string): Promise<void> {
+    public async updateDraftEmailAsync(input: ClientDraftHtmlMessage, messageId?: string): Promise<void> {
         const queryParams: string[] = [];
         if (messageId !== undefined) {
             queryParams.push(`messageId=${encodeURIComponent(String(messageId))}`);
         }
-        const path = `/Draft` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
-        await this.callConnector<void>("PATCH", path, input);
+        const requestPath = `/Draft` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
+        await this.callConnector<void>("PATCH", requestPath, input);
     }
 
     /**
@@ -1363,15 +2243,15 @@ export class Office365Client {
      * @remarks This operation sends a Draft message.
      */
     public async sendDraftEmailAsync(messageId: string): Promise<void> {
-        const path = `/Draft/Send/${encodeURIComponent(String(messageId))}`;
-        await this.callConnector<void>("POST", path);
+        const requestPath = `/Draft/Send/${encodeURIComponent(String(messageId))}`;
+        await this.callConnector<void>("POST", requestPath);
     }
 
     /**
      * Assigns an Outlook category
      * @remarks This operation assigns an Outlook category to an email.
      */
-    public async assignCategoryAsync(messageId: string, category: string): Promise<void> {
+    public async assignCategoryAsync(messageId?: string, category?: string): Promise<void> {
         const queryParams: string[] = [];
         if (messageId !== undefined) {
             queryParams.push(`messageId=${encodeURIComponent(String(messageId))}`);
@@ -1379,17 +2259,17 @@ export class Office365Client {
         if (category !== undefined) {
             queryParams.push(`category=${encodeURIComponent(String(category))}`);
         }
-        const path = `/Mail/Category` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
-        await this.callConnector<void>("POST", path);
+        const requestPath = `/Mail/Category` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
+        await this.callConnector<void>("POST", requestPath);
     }
 
     /**
      * Assign a category to multiple emails
      * @remarks This operation assigns an Outlook category to multiple emails.
      */
-    public async assignCategoryBulkAsync(categoryName: string, input: Array<string>): Promise<BatchOperationResult> {
-        const path = `/Mail/Category/Bulk/${encodeURIComponent(String(categoryName))}`;
-        return await this.callConnector<BatchOperationResult>("POST", path, input);
+    public async assignCategoryBulkAsync(input: AssignCategoryBulkInput, categoryName: string): Promise<BatchOperationResult> {
+        const requestPath = `/Mail/Category/Bulk/${encodeURIComponent(String(categoryName))}`;
+        return await this.callConnector<BatchOperationResult>("POST", requestPath, input);
     }
 
     /**
@@ -1397,8 +2277,8 @@ export class Office365Client {
      * @remarks This operation sends an email with multiple options and waits for the recipient to respond back with one of the options. Please refer to the following link regarding the support of actionable messages in different mail clients: https://docs.microsoft.com/outlook/actionable-messages/#outlook-version-requirements-for-actionable-messages.
      */
     public async sendMailWithOptionsAsync(input: OptionsEmailSubscription): Promise<SubscriptionResponse> {
-        const path = `/mailwithoptions/$subscriptions`;
-        return await this.callConnector<SubscriptionResponse>("POST", path, input);
+        const requestPath = `/mailwithoptions/$subscriptions`;
+        return await this.callConnector<SubscriptionResponse>("POST", requestPath, input);
     }
 
     /**
@@ -1406,26 +2286,26 @@ export class Office365Client {
      * @remarks This operation sends an approval email and waits for a response from the recipient. Please refer to the following link regarding the support of actionable messages in different mail clients: https://docs.microsoft.com/outlook/actionable-messages/#outlook-version-requirements-for-actionable-messages.
      */
     public async sendApprovalMailAsync(input: ApprovalEmailSubscription): Promise<SubscriptionResponse> {
-        const path = `/approvalmail/$subscriptions`;
-        return await this.callConnector<SubscriptionResponse>("POST", path, input);
+        const requestPath = `/approvalmail/$subscriptions`;
+        return await this.callConnector<SubscriptionResponse>("POST", requestPath, input);
     }
 
     /**
      * Update my contact's photo
      * @remarks Updates the photo of the specified contact of the current user. The size of the photo must be less than 4 MB.
      */
-    public async updateMyContactPhotoAsync(folderId: string, itemId: string, input: Blob): Promise<void> {
-        const path = `/codeless/v1.0/me/contactFolders/${encodeURIComponent(String(folderId))}/contacts/${encodeURIComponent(String(itemId))}/photo/$value`;
-        await this.callConnector<void>("PUT", path, input);
+    public async updateMyContactPhotoAsync(input: UpdateMyContactPhotoInput, folder: string, id: string): Promise<void> {
+        const requestPath = `/codeless/v1.0/me/contactFolders/${encodeURIComponent(String(folder))}/contacts/${encodeURIComponent(String(id))}/photo/$value`;
+        await this.callConnector<void>("PUT", requestPath, input);
     }
 
     /**
      * Send an HTTP request
      * @remarks Construct a Microsoft Graph REST API request to invoke. These segments are supported: 1st segement: /me, /users/<userId> 2nd segment: messages, mailFolders, events, calendar, calendars, outlook, inferenceClassification. Learn more: https://docs.microsoft.com/en-us/graph/use-the-api.
      */
-    public async httpRequestAsync(input: Blob): Promise<ObjectWithoutType> {
-        const path = `/codeless/httprequest`;
-        return await this.callConnector<ObjectWithoutType>("POST", path, input);
+    public async httpRequestAsync(input: HttpRequestInput): Promise<ObjectWithoutType> {
+        const requestPath = `/codeless/httprequest`;
+        return await this.callConnector<ObjectWithoutType>("POST", requestPath, input);
     }
 
     /**
@@ -1437,8 +2317,8 @@ export class Office365Client {
         if (sessionId !== undefined) {
             queryParams.push(`sessionId=${encodeURIComponent(String(sessionId))}`);
         }
-        const path = `/mcp/EmailsManagement` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
-        return await this.callConnector<MCPQueryResponse>("POST", path, input);
+        const requestPath = `/mcp/EmailsManagement` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
+        return await this.callConnector<MCPQueryResponse>("POST", requestPath, input);
     }
 
     /**
@@ -1450,8 +2330,8 @@ export class Office365Client {
         if (sessionId !== undefined) {
             queryParams.push(`sessionId=${encodeURIComponent(String(sessionId))}`);
         }
-        const path = `/mcp/MeetingManagement` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
-        return await this.callConnector<MCPQueryResponse>("POST", path, input);
+        const requestPath = `/mcp/MeetingManagement` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
+        return await this.callConnector<MCPQueryResponse>("POST", requestPath, input);
     }
 
     /**
@@ -1463,115 +2343,185 @@ export class Office365Client {
         if (sessionId !== undefined) {
             queryParams.push(`sessionId=${encodeURIComponent(String(sessionId))}`);
         }
-        const path = `/mcp/ContactsManagement` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
-        return await this.callConnector<MCPQueryResponse>("POST", path, input);
+        const requestPath = `/mcp/ContactsManagement` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
+        return await this.callConnector<MCPQueryResponse>("POST", requestPath, input);
     }
 
     /**
      * Delete event (V2)
      * @remarks This operation deletes an event in a calendar.
      */
-    public async calendarDeleteItemAsync(calendarId: string, id: string): Promise<void> {
-        const path = `/codeless/v1.0/me/calendars/${encodeURIComponent(String(calendarId))}/events/${encodeURIComponent(String(id))}`;
-        await this.callConnector<void>("DELETE", path);
+    public async calendarDeleteItemAsync(calendar: string, event_: string): Promise<void> {
+        const requestPath = `/codeless/v1.0/me/calendars/${encodeURIComponent(String(calendar))}/events/${encodeURIComponent(String(event_))}`;
+        await this.callConnector<void>("DELETE", requestPath);
     }
 
     /**
      * Get event (V3)
      * @remarks This operation gets a specific event from a calendar using Graph API. (V3)
      */
-    public async calendarGetItemAsync(calendarId: string, itemId: string): Promise<GraphCalendarEventClientReceive> {
-        const path = `/datasets/calendars/v3/tables/${encodeURIComponent(String(calendarId))}/items/${encodeURIComponent(String(itemId))}`;
-        return await this.callConnector<GraphCalendarEventClientReceive>("GET", path);
+    public async calendarGetItemAsync(table: string, id: string): Promise<GraphCalendarEventClientReceive> {
+        const requestPath = `/datasets/calendars/v3/tables/${encodeURIComponent(String(table))}/items/${encodeURIComponent(String(id))}`;
+        return await this.callConnector<GraphCalendarEventClientReceive>("GET", requestPath);
     }
 
     /**
      * Get events (V4)
      * @remarks This operation gets events from a calendar using Graph API. (V4)
      */
-    public async calendarGetItemsAsync(calendarId: string, filterQuery?: string, orderBy?: string, topCount?: number, skipCount?: number): Promise<GraphCalendarEventListClientReceive> {
+    public async calendarGetItemsAsync(table: string, filter?: string, orderby?: string, top?: string, skip?: string): Promise<GraphCalendarEventListClientReceive> {
         const queryParams: string[] = [];
-        if (filterQuery !== undefined) {
-            queryParams.push(`$filter=${encodeURIComponent(String(filterQuery))}`);
+        if (filter !== undefined) {
+            queryParams.push(`$filter=${encodeURIComponent(String(filter))}`);
         }
-        if (orderBy !== undefined) {
-            queryParams.push(`$orderby=${encodeURIComponent(String(orderBy))}`);
+        if (orderby !== undefined) {
+            queryParams.push(`$orderby=${encodeURIComponent(String(orderby))}`);
         }
-        if (topCount !== undefined) {
-            queryParams.push(`$top=${encodeURIComponent(String(topCount))}`);
+        if (top !== undefined) {
+            queryParams.push(`$top=${encodeURIComponent(String(top))}`);
         }
-        if (skipCount !== undefined) {
-            queryParams.push(`$skip=${encodeURIComponent(String(skipCount))}`);
+        if (skip !== undefined) {
+            queryParams.push(`$skip=${encodeURIComponent(String(skip))}`);
         }
-        const path = `/datasets/calendars/v4/tables/${encodeURIComponent(String(calendarId))}/items` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
-        return await this.callConnector<GraphCalendarEventListClientReceive>("GET", path);
+        const requestPath = `/datasets/calendars/v4/tables/${encodeURIComponent(String(table))}/items` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
+        return await this.callConnector<GraphCalendarEventListClientReceive>("GET", requestPath);
+    }
+
+    /**
+     * When an event is added, updated or deleted (V3)
+     * @remarks This operation triggers a flow when an event is added, updated or deleted in a calendar. (V3) This is not available in Mooncake.
+     */
+    public async calendarGetOnChangedItemsAsync(table: string, incomingDays?: string, pastDays?: string): Promise<GraphCalendarEventListWithActionType> {
+        const queryParams: string[] = [];
+        if (incomingDays !== undefined) {
+            queryParams.push(`incomingDays=${encodeURIComponent(String(incomingDays))}`);
+        }
+        if (pastDays !== undefined) {
+            queryParams.push(`pastDays=${encodeURIComponent(String(pastDays))}`);
+        }
+        const requestPath = `/datasets/calendars/v3/tables/${encodeURIComponent(String(table))}/onchangeditems` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
+        return await this.callConnector<GraphCalendarEventListWithActionType>("GET", requestPath);
+    }
+
+    /**
+     * When a new event is created (V3)
+     * @remarks This operation triggers a flow when a new event is created in a calendar. (V3)
+     */
+    public async calendarGetOnNewItemsAsync(table: string, filter?: string, orderby?: string, top?: string, skip?: string): Promise<GraphCalendarEventListClientReceive> {
+        const queryParams: string[] = [];
+        if (filter !== undefined) {
+            queryParams.push(`$filter=${encodeURIComponent(String(filter))}`);
+        }
+        if (orderby !== undefined) {
+            queryParams.push(`$orderby=${encodeURIComponent(String(orderby))}`);
+        }
+        if (top !== undefined) {
+            queryParams.push(`$top=${encodeURIComponent(String(top))}`);
+        }
+        if (skip !== undefined) {
+            queryParams.push(`$skip=${encodeURIComponent(String(skip))}`);
+        }
+        const requestPath = `/datasets/calendars/v3/tables/${encodeURIComponent(String(table))}/onnewitems` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
+        return await this.callConnector<GraphCalendarEventListClientReceive>("GET", requestPath);
+    }
+
+    /**
+     * When an event is modified (V3)
+     * @remarks This operation triggers a flow when an event is modified in a calendar. (V3)
+     */
+    public async calendarGetOnUpdatedItemsAsync(table: string, filter?: string, orderby?: string, top?: string, skip?: string): Promise<GraphCalendarEventListClientReceive> {
+        const queryParams: string[] = [];
+        if (filter !== undefined) {
+            queryParams.push(`$filter=${encodeURIComponent(String(filter))}`);
+        }
+        if (orderby !== undefined) {
+            queryParams.push(`$orderby=${encodeURIComponent(String(orderby))}`);
+        }
+        if (top !== undefined) {
+            queryParams.push(`$top=${encodeURIComponent(String(top))}`);
+        }
+        if (skip !== undefined) {
+            queryParams.push(`$skip=${encodeURIComponent(String(skip))}`);
+        }
+        const requestPath = `/datasets/calendars/v3/tables/${encodeURIComponent(String(table))}/onupdateditems` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
+        return await this.callConnector<GraphCalendarEventListClientReceive>("GET", requestPath);
     }
 
     /**
      * Get calendars (V2)
      * @remarks This operation lists available calendars.
      */
-    public async calendarGetTablesAsync(): Promise<CalendarGetTablesResponse> {
-        const path = `/codeless/v1.0/me/calendars`;
-        return await this.callConnector<CalendarGetTablesResponse>("GET", path);
+    public async calendarGetTablesAsync(skip?: string, top?: string, orderBy?: string): Promise<CalendarGetTablesResponse> {
+        const queryParams: string[] = [];
+        if (skip !== undefined) {
+            queryParams.push(`skip=${encodeURIComponent(String(skip))}`);
+        }
+        if (top !== undefined) {
+            queryParams.push(`top=${encodeURIComponent(String(top))}`);
+        }
+        if (orderBy !== undefined) {
+            queryParams.push(`orderBy=${encodeURIComponent(String(orderBy))}`);
+        }
+        const requestPath = `/codeless/v1.0/me/calendars` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
+        return await this.callConnector<CalendarGetTablesResponse>("GET", requestPath);
     }
 
     /**
      * Update event (V4)
      * @remarks This operation updates an event in a calendar using Graph API.
      */
-    public async calendarPatchItemAsync(calendarId: string, id: string, input: GraphCalendarEventClient): Promise<GraphCalendarEventClientReceive> {
-        const path = `/datasets/calendars/v4/tables/${encodeURIComponent(String(calendarId))}/items/${encodeURIComponent(String(id))}`;
-        return await this.callConnector<GraphCalendarEventClientReceive>("PATCH", path, input);
+    public async calendarPatchItemAsync(input: GraphCalendarEventClient, table: string, id: string): Promise<GraphCalendarEventClientReceive> {
+        const requestPath = `/datasets/calendars/v4/tables/${encodeURIComponent(String(table))}/items/${encodeURIComponent(String(id))}`;
+        return await this.callConnector<GraphCalendarEventClientReceive>("PATCH", requestPath, input);
     }
 
     /**
      * Create event (V4)
      * @remarks This operation creates a new event in a calendar.
      */
-    public async calendarPostItemAsync(calendarId: string, input: GraphCalendarEventClient): Promise<GraphCalendarEventClientReceive> {
-        const path = `/datasets/calendars/v4/tables/${encodeURIComponent(String(calendarId))}/items`;
-        return await this.callConnector<GraphCalendarEventClientReceive>("POST", path, input);
+    public async calendarPostItemAsync(input: GraphCalendarEventClient, table: string): Promise<GraphCalendarEventClientReceive> {
+        const requestPath = `/datasets/calendars/v4/tables/${encodeURIComponent(String(table))}/items`;
+        return await this.callConnector<GraphCalendarEventClientReceive>("POST", requestPath, input);
     }
 
     /**
      * Delete contact (V2)
      * @remarks This operation deletes a contact from a contacts folder.
      */
-    public async contactDeleteItemAsync(folderId: string, id: string): Promise<void> {
-        const path = `/codeless/v1.0/me/contactFolders/${encodeURIComponent(String(folderId))}/contacts/${encodeURIComponent(String(id))}`;
-        await this.callConnector<void>("DELETE", path);
+    public async contactDeleteItemAsync(folder: string, id: string): Promise<void> {
+        const requestPath = `/codeless/v1.0/me/contactFolders/${encodeURIComponent(String(folder))}/contacts/${encodeURIComponent(String(id))}`;
+        await this.callConnector<void>("DELETE", requestPath);
     }
 
     /**
      * Get contact (V2)
      * @remarks This operation gets a specific contact from a contacts folder.
      */
-    public async contactGetItemAsync(folderId: string, itemId: string): Promise<ContactResponse> {
-        const path = `/codeless/v1.0/me/contactFolders/${encodeURIComponent(String(folderId))}/contacts/${encodeURIComponent(String(itemId))}`;
-        return await this.callConnector<ContactResponse>("GET", path);
+    public async contactGetItemAsync(folder: string, id: string): Promise<ContactResponse> {
+        const requestPath = `/codeless/v1.0/me/contactFolders/${encodeURIComponent(String(folder))}/contacts/${encodeURIComponent(String(id))}`;
+        return await this.callConnector<ContactResponse>("GET", requestPath);
     }
 
     /**
      * Get contacts (V2)
      * @remarks This operation gets contacts from a contacts folder.
      */
-    public async contactGetItemsAsync(folderId: string, filterQuery?: string, orderBy?: string, topCount?: number, skipCount?: number): Promise<EntityListResponseContactResponse> {
+    public async contactGetItemsAsync(folder: string, filter?: string, orderby?: string, top?: string, skip?: string): Promise<EntityListResponseContactResponse> {
         const queryParams: string[] = [];
-        if (filterQuery !== undefined) {
-            queryParams.push(`$filter=${encodeURIComponent(String(filterQuery))}`);
+        if (filter !== undefined) {
+            queryParams.push(`$filter=${encodeURIComponent(String(filter))}`);
         }
-        if (orderBy !== undefined) {
-            queryParams.push(`$orderby=${encodeURIComponent(String(orderBy))}`);
+        if (orderby !== undefined) {
+            queryParams.push(`$orderby=${encodeURIComponent(String(orderby))}`);
         }
-        if (topCount !== undefined) {
-            queryParams.push(`$top=${encodeURIComponent(String(topCount))}`);
+        if (top !== undefined) {
+            queryParams.push(`$top=${encodeURIComponent(String(top))}`);
         }
-        if (skipCount !== undefined) {
-            queryParams.push(`$skip=${encodeURIComponent(String(skipCount))}`);
+        if (skip !== undefined) {
+            queryParams.push(`$skip=${encodeURIComponent(String(skip))}`);
         }
-        const path = `/codeless/v1.0/me/contactFolders/${encodeURIComponent(String(folderId))}/contacts` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
-        return await this.callConnector<EntityListResponseContactResponse>("GET", path);
+        const requestPath = `/codeless/v1.0/me/contactFolders/${encodeURIComponent(String(folder))}/contacts` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
+        return await this.callConnector<EntityListResponseContactResponse>("GET", requestPath);
     }
 
     /**
@@ -1579,52 +2529,52 @@ export class Office365Client {
      * @remarks This operation lists available contacts folders using Graph API
      */
     public async contactGetTablesAsync(): Promise<EntityListResponseGraphContactFolder> {
-        const path = `/v2/datasets/contacts/tables`;
-        return await this.callConnector<EntityListResponseGraphContactFolder>("GET", path);
+        const requestPath = `/v2/datasets/contacts/tables`;
+        return await this.callConnector<EntityListResponseGraphContactFolder>("GET", requestPath);
     }
 
     /**
      * Update contact (V2)
      * @remarks This operation updates a contact in a contacts folder.
      */
-    public async contactPatchItemAsync(folderId: string, id: string, input: Contact): Promise<ContactResponse> {
-        const path = `/codeless/v1.0/me/contactFolders/${encodeURIComponent(String(folderId))}/contacts/${encodeURIComponent(String(id))}`;
-        return await this.callConnector<ContactResponse>("PATCH", path, input);
+    public async contactPatchItemAsync(input: ContactV2, folder: string, id: string): Promise<ContactResponse> {
+        const requestPath = `/codeless/v1.0/me/contactFolders/${encodeURIComponent(String(folder))}/contacts/${encodeURIComponent(String(id))}`;
+        return await this.callConnector<ContactResponse>("PATCH", requestPath, input);
     }
 
     /**
      * Create contact (V2)
      * @remarks This operation creates a new contact in a contacts folder.
      */
-    public async contactPostItemAsync(folderId: string, input: Contact): Promise<ContactResponse> {
-        const path = `/codeless/v1.0/me/contactFolders/${encodeURIComponent(String(folderId))}/contacts`;
-        return await this.callConnector<ContactResponse>("POST", path, input);
+    public async contactPostItemAsync(input: ContactV2, folder: string): Promise<ContactResponse> {
+        const requestPath = `/codeless/v1.0/me/contactFolders/${encodeURIComponent(String(folder))}/contacts`;
+        return await this.callConnector<ContactResponse>("POST", requestPath, input);
     }
 
     /**
      * Delete email (V2)
      * @remarks This operation deletes an email by id.
      */
-    public async deleteEmailAsync(messageId: string, originalMailboxAddress?: string): Promise<void> {
+    public async deleteEmailAsync(messageId: string, mailboxAddress?: string): Promise<void> {
         const queryParams: string[] = [];
-        if (originalMailboxAddress !== undefined) {
-            queryParams.push(`mailboxAddress=${encodeURIComponent(String(originalMailboxAddress))}`);
+        if (mailboxAddress !== undefined) {
+            queryParams.push(`mailboxAddress=${encodeURIComponent(String(mailboxAddress))}`);
         }
-        const path = `/codeless/v1.0/me/messages/${encodeURIComponent(String(messageId))}` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
-        await this.callConnector<void>("DELETE", path);
+        const requestPath = `/codeless/v1.0/me/messages/${encodeURIComponent(String(messageId))}` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
+        await this.callConnector<void>("DELETE", requestPath);
     }
 
     /**
      * Export email (V2)
      * @remarks Export the content of the email in the EML file format.
      */
-    public async exportEmailAsync(messageId: string, originalMailboxAddress?: string): Promise<Blob> {
+    public async exportEmailAsync(messageId: string, mailboxAddress?: string): Promise<Blob> {
         const queryParams: string[] = [];
-        if (originalMailboxAddress !== undefined) {
-            queryParams.push(`mailboxAddress=${encodeURIComponent(String(originalMailboxAddress))}`);
+        if (mailboxAddress !== undefined) {
+            queryParams.push(`mailboxAddress=${encodeURIComponent(String(mailboxAddress))}`);
         }
-        const path = `/codeless/beta/me/messages/${encodeURIComponent(String(messageId))}/$value` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
-        return await this.callConnector<Blob>("GET", path);
+        const requestPath = `/codeless/beta/me/messages/${encodeURIComponent(String(messageId))}/$value` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
+        return await this.callConnector<Blob>("GET", requestPath);
     }
 
     /**
@@ -1632,63 +2582,63 @@ export class Office365Client {
      * @remarks Find meeting time suggestions based on organizer, attendee availability, and time or location constraints
      */
     public async findMeetingTimesAsync(input: FindMeetingTimesInput): Promise<FindMeetingTimesResponse> {
-        const path = `/codeless/beta/me/findMeetingTimes`;
-        return await this.callConnector<FindMeetingTimesResponse>("POST", path, input);
+        const requestPath = `/codeless/beta/me/findMeetingTimes`;
+        return await this.callConnector<FindMeetingTimesResponse>("POST", requestPath, input);
     }
 
     /**
      * Flag email (V2)
      * @remarks This operation updates an email flag.
      */
-    public async flagAsync(messageId: string, input: UpdateEmailFlag, originalMailboxAddress?: string): Promise<void> {
+    public async flagAsync(input: UpdateEmailFlag, messageId: string, mailboxAddress?: string): Promise<void> {
         const queryParams: string[] = [];
-        if (originalMailboxAddress !== undefined) {
-            queryParams.push(`mailboxAddress=${encodeURIComponent(String(originalMailboxAddress))}`);
+        if (mailboxAddress !== undefined) {
+            queryParams.push(`mailboxAddress=${encodeURIComponent(String(mailboxAddress))}`);
         }
-        const path = `/codeless/v1.0/me/messages/${encodeURIComponent(String(messageId))}/flag` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
-        await this.callConnector<void>("PATCH", path, input);
+        const requestPath = `/codeless/v1.0/me/messages/${encodeURIComponent(String(messageId))}/flag` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
+        await this.callConnector<void>("PATCH", requestPath, input);
     }
 
     /**
      * Forward an email (V2)
      * @remarks Forward an email.
      */
-    public async forwardEmailAsync(messageId: string, input: DirectForwardMessage, originalMailboxAddress?: string): Promise<void> {
+    public async forwardEmailAsync(input: DirectForwardMessage, messageId: string, mailboxAddress?: string): Promise<void> {
         const queryParams: string[] = [];
-        if (originalMailboxAddress !== undefined) {
-            queryParams.push(`mailboxAddress=${encodeURIComponent(String(originalMailboxAddress))}`);
+        if (mailboxAddress !== undefined) {
+            queryParams.push(`mailboxAddress=${encodeURIComponent(String(mailboxAddress))}`);
         }
-        const path = `/codeless/v1.0/me/messages/${encodeURIComponent(String(messageId))}/forward` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
-        await this.callConnector<void>("POST", path, input);
+        const requestPath = `/codeless/v1.0/me/messages/${encodeURIComponent(String(messageId))}/forward` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
+        await this.callConnector<void>("POST", requestPath, input);
     }
 
     /**
      * Get Attachment (V2)
      * @remarks This operation gets an email attachment by id.
      */
-    public async getAttachmentAsync(messageId: string, attachementId: string, originalMailboxAddress?: string, extractSensitivityLabel?: boolean, sensitivityLabelMetadata?: boolean): Promise<GetAttachmentResponse> {
+    public async getAttachmentAsync(messageId: string, attachmentId: string, mailboxAddress?: string, extractSensitivityLabel?: string, fetchSensitivityLabelMetadata?: string): Promise<GetAttachmentResponse> {
         const queryParams: string[] = [];
-        if (originalMailboxAddress !== undefined) {
-            queryParams.push(`mailboxAddress=${encodeURIComponent(String(originalMailboxAddress))}`);
+        if (mailboxAddress !== undefined) {
+            queryParams.push(`mailboxAddress=${encodeURIComponent(String(mailboxAddress))}`);
         }
         if (extractSensitivityLabel !== undefined) {
             queryParams.push(`extractSensitivityLabel=${encodeURIComponent(String(extractSensitivityLabel))}`);
         }
-        if (sensitivityLabelMetadata !== undefined) {
-            queryParams.push(`fetchSensitivityLabelMetadata=${encodeURIComponent(String(sensitivityLabelMetadata))}`);
+        if (fetchSensitivityLabelMetadata !== undefined) {
+            queryParams.push(`fetchSensitivityLabelMetadata=${encodeURIComponent(String(fetchSensitivityLabelMetadata))}`);
         }
-        const path = `/codeless/v1.0/me/messages/${encodeURIComponent(String(messageId))}/attachments/${encodeURIComponent(String(attachementId))}` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
-        return await this.callConnector<GetAttachmentResponse>("GET", path);
+        const requestPath = `/codeless/v1.0/me/messages/${encodeURIComponent(String(messageId))}/attachments/${encodeURIComponent(String(attachmentId))}` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
+        return await this.callConnector<GetAttachmentResponse>("GET", requestPath);
     }
 
     /**
      * Get email (V2)
      * @remarks This operation gets an email by id.
      */
-    public async getEmailAsync(messageId: string, originalMailboxAddress?: string, includeAttachments?: boolean, internetMessageId?: string, extractSensitivityLabel?: boolean, sensitivityLabelMetadata?: boolean): Promise<GraphClientReceiveMessage> {
+    public async getEmailAsync(messageId: string, mailboxAddress?: string, includeAttachments?: string, internetMessageId?: string, extractSensitivityLabel?: string, fetchSensitivityLabelMetadata?: string): Promise<GraphClientReceiveMessage> {
         const queryParams: string[] = [];
-        if (originalMailboxAddress !== undefined) {
-            queryParams.push(`mailboxAddress=${encodeURIComponent(String(originalMailboxAddress))}`);
+        if (mailboxAddress !== undefined) {
+            queryParams.push(`mailboxAddress=${encodeURIComponent(String(mailboxAddress))}`);
         }
         if (includeAttachments !== undefined) {
             queryParams.push(`includeAttachments=${encodeURIComponent(String(includeAttachments))}`);
@@ -1699,30 +2649,30 @@ export class Office365Client {
         if (extractSensitivityLabel !== undefined) {
             queryParams.push(`extractSensitivityLabel=${encodeURIComponent(String(extractSensitivityLabel))}`);
         }
-        if (sensitivityLabelMetadata !== undefined) {
-            queryParams.push(`fetchSensitivityLabelMetadata=${encodeURIComponent(String(sensitivityLabelMetadata))}`);
+        if (fetchSensitivityLabelMetadata !== undefined) {
+            queryParams.push(`fetchSensitivityLabelMetadata=${encodeURIComponent(String(fetchSensitivityLabelMetadata))}`);
         }
-        const path = `/v2/Mail/${encodeURIComponent(String(messageId))}` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
-        return await this.callConnector<GraphClientReceiveMessage>("GET", path);
+        const requestPath = `/v2/Mail/${encodeURIComponent(String(messageId))}` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
+        return await this.callConnector<GraphClientReceiveMessage>("GET", requestPath);
     }
 
     /**
      * Get emails (V3)
      * @remarks This operation gets emails from a folder via graph apis. Please note that filtering related to these fields: To, Cc, To Or Cc, From, Importance, Fetch Only With Attachments, Subject Filter, is performed using first 250 items in a given mail folder. To avoid that limitation you can use 'Search Query' field.
      */
-    public async getEmailsAsync(folder?: string, to?: string, cC?: string, toOrCC?: string, from?: string, importance?: string, onlyWithAttachments?: boolean, subjectFilter?: string, fetchOnlyUnreadMessages?: boolean, originalMailboxAddress?: string, includeAttachments?: boolean, searchQuery?: string, top?: number): Promise<BatchResponseGraphClientReceiveMessage> {
+    public async getEmailsAsync(folderPath?: string, to?: string, cc?: string, toOrCc?: string, from?: string, importance?: string, fetchOnlyWithAttachment?: string, subjectFilter?: string, fetchOnlyUnread?: string, fetchOnlyFlagged?: string, mailboxAddress?: string, includeAttachments?: string, searchQuery?: string, top?: string): Promise<BatchResponseGraphClientReceiveMessage> {
         const queryParams: string[] = [];
-        if (folder !== undefined) {
-            queryParams.push(`folderPath=${encodeURIComponent(String(folder))}`);
+        if (folderPath !== undefined) {
+            queryParams.push(`folderPath=${encodeURIComponent(String(folderPath))}`);
         }
         if (to !== undefined) {
             queryParams.push(`to=${encodeURIComponent(String(to))}`);
         }
-        if (cC !== undefined) {
-            queryParams.push(`cc=${encodeURIComponent(String(cC))}`);
+        if (cc !== undefined) {
+            queryParams.push(`cc=${encodeURIComponent(String(cc))}`);
         }
-        if (toOrCC !== undefined) {
-            queryParams.push(`toOrCc=${encodeURIComponent(String(toOrCC))}`);
+        if (toOrCc !== undefined) {
+            queryParams.push(`toOrCc=${encodeURIComponent(String(toOrCc))}`);
         }
         if (from !== undefined) {
             queryParams.push(`from=${encodeURIComponent(String(from))}`);
@@ -1730,17 +2680,20 @@ export class Office365Client {
         if (importance !== undefined) {
             queryParams.push(`importance=${encodeURIComponent(String(importance))}`);
         }
-        if (onlyWithAttachments !== undefined) {
-            queryParams.push(`fetchOnlyWithAttachment=${encodeURIComponent(String(onlyWithAttachments))}`);
+        if (fetchOnlyWithAttachment !== undefined) {
+            queryParams.push(`fetchOnlyWithAttachment=${encodeURIComponent(String(fetchOnlyWithAttachment))}`);
         }
         if (subjectFilter !== undefined) {
             queryParams.push(`subjectFilter=${encodeURIComponent(String(subjectFilter))}`);
         }
-        if (fetchOnlyUnreadMessages !== undefined) {
-            queryParams.push(`fetchOnlyUnread=${encodeURIComponent(String(fetchOnlyUnreadMessages))}`);
+        if (fetchOnlyUnread !== undefined) {
+            queryParams.push(`fetchOnlyUnread=${encodeURIComponent(String(fetchOnlyUnread))}`);
         }
-        if (originalMailboxAddress !== undefined) {
-            queryParams.push(`mailboxAddress=${encodeURIComponent(String(originalMailboxAddress))}`);
+        if (fetchOnlyFlagged !== undefined) {
+            queryParams.push(`fetchOnlyFlagged=${encodeURIComponent(String(fetchOnlyFlagged))}`);
+        }
+        if (mailboxAddress !== undefined) {
+            queryParams.push(`mailboxAddress=${encodeURIComponent(String(mailboxAddress))}`);
         }
         if (includeAttachments !== undefined) {
             queryParams.push(`includeAttachments=${encodeURIComponent(String(includeAttachments))}`);
@@ -1751,42 +2704,42 @@ export class Office365Client {
         if (top !== undefined) {
             queryParams.push(`top=${encodeURIComponent(String(top))}`);
         }
-        const path = `/v3/Mail` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
-        return await this.callConnector<BatchResponseGraphClientReceiveMessage>("GET", path);
+        const requestPath = `/v3/Mail` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
+        return await this.callConnector<BatchResponseGraphClientReceiveMessage>("GET", requestPath);
     }
 
     /**
      * Get calendar view of events (V3)
      * @remarks This operation gets all events (including instances of recurrences) in a calendar using Graph API. Recurrence property is null in this case.
      */
-    public async getEventsCalendarViewAsync(calendarId: string, startTime: string, endTime: string, filterQuery?: string, orderBy?: string, topCount?: number, skipCount?: number, search?: string): Promise<EntityListResponseGraphCalendarEventClientReceive> {
+    public async getEventsCalendarViewAsync(calendarId?: string, startDateTimeUtc?: string, endDateTimeUtc?: string, filter?: string, orderby?: string, top?: string, skip?: string, search?: string): Promise<EntityListResponseGraphCalendarEventClientReceive> {
         const queryParams: string[] = [];
         if (calendarId !== undefined) {
             queryParams.push(`calendarId=${encodeURIComponent(String(calendarId))}`);
         }
-        if (startTime !== undefined) {
-            queryParams.push(`startDateTimeUtc=${encodeURIComponent(String(startTime))}`);
+        if (startDateTimeUtc !== undefined) {
+            queryParams.push(`startDateTimeUtc=${encodeURIComponent(String(startDateTimeUtc))}`);
         }
-        if (endTime !== undefined) {
-            queryParams.push(`endDateTimeUtc=${encodeURIComponent(String(endTime))}`);
+        if (endDateTimeUtc !== undefined) {
+            queryParams.push(`endDateTimeUtc=${encodeURIComponent(String(endDateTimeUtc))}`);
         }
-        if (filterQuery !== undefined) {
-            queryParams.push(`$filter=${encodeURIComponent(String(filterQuery))}`);
+        if (filter !== undefined) {
+            queryParams.push(`$filter=${encodeURIComponent(String(filter))}`);
         }
-        if (orderBy !== undefined) {
-            queryParams.push(`$orderby=${encodeURIComponent(String(orderBy))}`);
+        if (orderby !== undefined) {
+            queryParams.push(`$orderby=${encodeURIComponent(String(orderby))}`);
         }
-        if (topCount !== undefined) {
-            queryParams.push(`$top=${encodeURIComponent(String(topCount))}`);
+        if (top !== undefined) {
+            queryParams.push(`$top=${encodeURIComponent(String(top))}`);
         }
-        if (skipCount !== undefined) {
-            queryParams.push(`$skip=${encodeURIComponent(String(skipCount))}`);
+        if (skip !== undefined) {
+            queryParams.push(`$skip=${encodeURIComponent(String(skip))}`);
         }
         if (search !== undefined) {
             queryParams.push(`search=${encodeURIComponent(String(search))}`);
         }
-        const path = `/datasets/calendars/v3/tables/items/calendarview` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
-        return await this.callConnector<EntityListResponseGraphCalendarEventClientReceive>("GET", path);
+        const requestPath = `/datasets/calendars/v3/tables/items/calendarview` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
+        return await this.callConnector<EntityListResponseGraphCalendarEventClientReceive>("GET", requestPath);
     }
 
     /**
@@ -1794,8 +2747,8 @@ export class Office365Client {
      * @remarks Get mail tips for a mailbox such as automatic replies / OOF message or if the mailbox is full. This is not available in GccHigh and Mooncake.
      */
     public async getMailTipsAsync(input: GetMailTipsInput): Promise<GetMailTipsResponse> {
-        const path = `/codeless/v1.0/me/getMailTips`;
-        return await this.callConnector<GetMailTipsResponse>("POST", path, input);
+        const requestPath = `/codeless/v1.0/me/getMailTips`;
+        return await this.callConnector<GetMailTipsResponse>("POST", requestPath, input);
     }
 
     /**
@@ -1803,8 +2756,8 @@ export class Office365Client {
      * @remarks Get all the room lists defined in the user's tenant
      */
     public async getRoomListsAsync(): Promise<GetRoomListsResponse> {
-        const path = `/codeless/beta/me/findRoomLists`;
-        return await this.callConnector<GetRoomListsResponse>("GET", path);
+        const requestPath = `/codeless/beta/me/findRoomLists`;
+        return await this.callConnector<GetRoomListsResponse>("GET", requestPath);
     }
 
     /**
@@ -1812,8 +2765,8 @@ export class Office365Client {
      * @remarks Get all the meeting rooms defined in the user's tenant
      */
     public async getRoomsAsync(): Promise<GetRoomsResponse> {
-        const path = `/codeless/beta/me/findRooms`;
-        return await this.callConnector<GetRoomsResponse>("GET", path);
+        const requestPath = `/codeless/beta/me/findRooms`;
+        return await this.callConnector<GetRoomsResponse>("GET", requestPath);
     }
 
     /**
@@ -1821,68 +2774,198 @@ export class Office365Client {
      * @remarks Get the meeting rooms in a specific room list
      */
     public async getRoomsInRoomListAsync(roomList: string): Promise<GetRoomsInRoomListResponse> {
-        const path = `/codeless/beta/me/findRooms(RoomList='${encodeURIComponent(String(roomList))}')`;
-        return await this.callConnector<GetRoomsInRoomListResponse>("GET", path);
+        const requestPath = `/codeless/beta/me/findRooms(RoomList='${encodeURIComponent(String(roomList))}')`;
+        return await this.callConnector<GetRoomsInRoomListResponse>("GET", requestPath);
     }
 
     /**
      * Mark as read or unread (V3)
      * @remarks This operation marks an email as read/unread.
      */
-    public async markAsReadAsync(messageId: string, input: MarkAsReadInput, originalMailboxAddress?: string): Promise<void> {
+    public async markAsReadAsync(input: MarkAsReadInput, messageId: string, mailboxAddress?: string): Promise<void> {
         const queryParams: string[] = [];
-        if (originalMailboxAddress !== undefined) {
-            queryParams.push(`mailboxAddress=${encodeURIComponent(String(originalMailboxAddress))}`);
+        if (mailboxAddress !== undefined) {
+            queryParams.push(`mailboxAddress=${encodeURIComponent(String(mailboxAddress))}`);
         }
-        const path = `/codeless/v3/v1.0/me/messages/${encodeURIComponent(String(messageId))}/markAsRead` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
-        await this.callConnector<void>("PATCH", path, input);
+        const requestPath = `/codeless/v3/v1.0/me/messages/${encodeURIComponent(String(messageId))}/markAsRead` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
+        await this.callConnector<void>("PATCH", requestPath, input);
     }
 
     /**
      * Move email (V2)
      * @remarks This operation moves an email to the specified folder within the same mailbox.
      */
-    public async moveAsync(messageId: string, folder: string, originalMailboxAddress?: string): Promise<GraphClientReceiveMessage> {
+    public async moveAsync(messageId: string, folderPath?: string, mailboxAddress?: string): Promise<GraphClientReceiveMessage> {
         const queryParams: string[] = [];
-        if (folder !== undefined) {
-            queryParams.push(`folderPath=${encodeURIComponent(String(folder))}`);
+        if (folderPath !== undefined) {
+            queryParams.push(`folderPath=${encodeURIComponent(String(folderPath))}`);
         }
-        if (originalMailboxAddress !== undefined) {
-            queryParams.push(`mailboxAddress=${encodeURIComponent(String(originalMailboxAddress))}`);
+        if (mailboxAddress !== undefined) {
+            queryParams.push(`mailboxAddress=${encodeURIComponent(String(mailboxAddress))}`);
         }
-        const path = `/v2/Mail/Move/${encodeURIComponent(String(messageId))}` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
-        return await this.callConnector<GraphClientReceiveMessage>("POST", path);
+        const requestPath = `/v2/Mail/Move/${encodeURIComponent(String(messageId))}` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
+        return await this.callConnector<GraphClientReceiveMessage>("POST", requestPath);
+    }
+
+    /**
+     * When an email is flagged (V4)
+     * @remarks This operation triggers a flow when an email is flagged.
+     */
+    public async onFlaggedEmailAsync(folderPath?: string, to?: string, cc?: string, toOrCc?: string, from?: string, importance?: string, fetchOnlyWithAttachment?: string, includeAttachments?: string, subjectFilter?: string): Promise<TriggerBatchResponseGraphClientReceiveMessage> {
+        const queryParams: string[] = [];
+        if (folderPath !== undefined) {
+            queryParams.push(`folderPath=${encodeURIComponent(String(folderPath))}`);
+        }
+        if (to !== undefined) {
+            queryParams.push(`to=${encodeURIComponent(String(to))}`);
+        }
+        if (cc !== undefined) {
+            queryParams.push(`cc=${encodeURIComponent(String(cc))}`);
+        }
+        if (toOrCc !== undefined) {
+            queryParams.push(`toOrCc=${encodeURIComponent(String(toOrCc))}`);
+        }
+        if (from !== undefined) {
+            queryParams.push(`from=${encodeURIComponent(String(from))}`);
+        }
+        if (importance !== undefined) {
+            queryParams.push(`importance=${encodeURIComponent(String(importance))}`);
+        }
+        if (fetchOnlyWithAttachment !== undefined) {
+            queryParams.push(`fetchOnlyWithAttachment=${encodeURIComponent(String(fetchOnlyWithAttachment))}`);
+        }
+        if (includeAttachments !== undefined) {
+            queryParams.push(`includeAttachments=${encodeURIComponent(String(includeAttachments))}`);
+        }
+        if (subjectFilter !== undefined) {
+            queryParams.push(`subjectFilter=${encodeURIComponent(String(subjectFilter))}`);
+        }
+        const requestPath = `/v4/Mail/OnFlaggedEmail` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
+        return await this.callConnector<TriggerBatchResponseGraphClientReceiveMessage>("GET", requestPath);
+    }
+
+    /**
+     * When a new email arrives (V3)
+     * @remarks This operation triggers a flow when a new email arrives. It will skip any email that has a total message size greater than the limit put by your Exchange Admin or 50 MB, whichever is less. It may also skip protected emails and emails with invalid body or attachments.
+     */
+    public async onNewEmailAsync(folderPath?: string, to?: string, cc?: string, toOrCc?: string, from?: string, importance?: string, fetchOnlyWithAttachment?: string, includeAttachments?: string, subjectFilter?: string): Promise<TriggerBatchResponseGraphClientReceiveMessage> {
+        const queryParams: string[] = [];
+        if (folderPath !== undefined) {
+            queryParams.push(`folderPath=${encodeURIComponent(String(folderPath))}`);
+        }
+        if (to !== undefined) {
+            queryParams.push(`to=${encodeURIComponent(String(to))}`);
+        }
+        if (cc !== undefined) {
+            queryParams.push(`cc=${encodeURIComponent(String(cc))}`);
+        }
+        if (toOrCc !== undefined) {
+            queryParams.push(`toOrCc=${encodeURIComponent(String(toOrCc))}`);
+        }
+        if (from !== undefined) {
+            queryParams.push(`from=${encodeURIComponent(String(from))}`);
+        }
+        if (importance !== undefined) {
+            queryParams.push(`importance=${encodeURIComponent(String(importance))}`);
+        }
+        if (fetchOnlyWithAttachment !== undefined) {
+            queryParams.push(`fetchOnlyWithAttachment=${encodeURIComponent(String(fetchOnlyWithAttachment))}`);
+        }
+        if (includeAttachments !== undefined) {
+            queryParams.push(`includeAttachments=${encodeURIComponent(String(includeAttachments))}`);
+        }
+        if (subjectFilter !== undefined) {
+            queryParams.push(`subjectFilter=${encodeURIComponent(String(subjectFilter))}`);
+        }
+        const requestPath = `/v3/Mail/OnNewEmail` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
+        return await this.callConnector<TriggerBatchResponseGraphClientReceiveMessage>("GET", requestPath);
+    }
+
+    /**
+     * When a new email mentioning me arrives (V3)
+     * @remarks This operation triggers a flow when a new email mentioning me arrives. It will skip any email that has a total message size greater than the limit put by your Exchange Admin or 50 MB, whichever is less. It may also skip protected emails and emails with invalid body or attachments.
+     */
+    public async onNewMentionMeEmailAsync(messageIdToFireOnFirstTriggerRun?: string, folderPath?: string, to?: string, cc?: string, toOrCc?: string, from?: string, importance?: string, fetchOnlyWithAttachment?: string, includeAttachments?: string, subjectFilter?: string): Promise<TriggerBatchResponseGraphClientReceiveMessage> {
+        const queryParams: string[] = [];
+        if (messageIdToFireOnFirstTriggerRun !== undefined) {
+            queryParams.push(`messageIdToFireOnFirstTriggerRun=${encodeURIComponent(String(messageIdToFireOnFirstTriggerRun))}`);
+        }
+        if (folderPath !== undefined) {
+            queryParams.push(`folderPath=${encodeURIComponent(String(folderPath))}`);
+        }
+        if (to !== undefined) {
+            queryParams.push(`to=${encodeURIComponent(String(to))}`);
+        }
+        if (cc !== undefined) {
+            queryParams.push(`cc=${encodeURIComponent(String(cc))}`);
+        }
+        if (toOrCc !== undefined) {
+            queryParams.push(`toOrCc=${encodeURIComponent(String(toOrCc))}`);
+        }
+        if (from !== undefined) {
+            queryParams.push(`from=${encodeURIComponent(String(from))}`);
+        }
+        if (importance !== undefined) {
+            queryParams.push(`importance=${encodeURIComponent(String(importance))}`);
+        }
+        if (fetchOnlyWithAttachment !== undefined) {
+            queryParams.push(`fetchOnlyWithAttachment=${encodeURIComponent(String(fetchOnlyWithAttachment))}`);
+        }
+        if (includeAttachments !== undefined) {
+            queryParams.push(`includeAttachments=${encodeURIComponent(String(includeAttachments))}`);
+        }
+        if (subjectFilter !== undefined) {
+            queryParams.push(`subjectFilter=${encodeURIComponent(String(subjectFilter))}`);
+        }
+        const requestPath = `/v3/Mail/OnNewMentionMeEmail` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
+        return await this.callConnector<TriggerBatchResponseGraphClientReceiveMessage>("GET", requestPath);
+    }
+
+    /**
+     * When an upcoming event is starting soon (V3)
+     * @remarks This operation triggers a flow when an upcoming calendar event is starting.
+     */
+    public async onUpcomingEventsAsync(table?: string, lookAheadTimeInMinutes?: string): Promise<GraphCalendarEventListClientReceive> {
+        const queryParams: string[] = [];
+        if (table !== undefined) {
+            queryParams.push(`table=${encodeURIComponent(String(table))}`);
+        }
+        if (lookAheadTimeInMinutes !== undefined) {
+            queryParams.push(`lookAheadTimeInMinutes=${encodeURIComponent(String(lookAheadTimeInMinutes))}`);
+        }
+        const requestPath = `/v3/Events/OnUpcomingEvents` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
+        return await this.callConnector<GraphCalendarEventListClientReceive>("GET", requestPath);
     }
 
     /**
      * Reply to email (V3)
      * @remarks This operation replies to an email.
      */
-    public async replyToAsync(messageId: string, input: ReplyEmailInput, originalMailboxAddress?: string): Promise<void> {
+    public async replyToAsync(input: ReplyHtmlMessage, messageId: string, mailboxAddress?: string): Promise<void> {
         const queryParams: string[] = [];
-        if (originalMailboxAddress !== undefined) {
-            queryParams.push(`mailboxAddress=${encodeURIComponent(String(originalMailboxAddress))}`);
+        if (mailboxAddress !== undefined) {
+            queryParams.push(`mailboxAddress=${encodeURIComponent(String(mailboxAddress))}`);
         }
-        const path = `/v3/Mail/ReplyTo/${encodeURIComponent(String(messageId))}` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
-        await this.callConnector<void>("POST", path, input);
+        const requestPath = `/v3/Mail/ReplyTo/${encodeURIComponent(String(messageId))}` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
+        await this.callConnector<void>("POST", requestPath, input);
     }
 
     /**
      * Respond to an event invite (V2)
      * @remarks Respond to an event invite.
      */
-    public async respondToEventAsync(eventId: string, response: string, input: ResponseToEventInvite): Promise<void> {
-        const path = `/codeless/v1.0/me/events/${encodeURIComponent(String(eventId))}/${encodeURIComponent(String(response))}`;
-        await this.callConnector<void>("POST", path, input);
+    public async respondToEventAsync(input: ResponseToEventInvite, eventId: string, response: string): Promise<void> {
+        const requestPath = `/codeless/v1.0/me/events/${encodeURIComponent(String(eventId))}/${encodeURIComponent(String(response))}`;
+        await this.callConnector<void>("POST", requestPath, input);
     }
 
     /**
      * Send an email (V2)
      * @remarks This operation sends an email message.
      */
-    public async sendEmailAsync(input: SendEmailInput): Promise<void> {
-        const path = `/v2/Mail`;
-        await this.callConnector<void>("POST", path, input);
+    public async sendEmailAsync(input: ClientSendHtmlMessage): Promise<void> {
+        const requestPath = `/v2/Mail`;
+        await this.callConnector<void>("POST", requestPath, input);
     }
 
     /**
@@ -1890,17 +2973,57 @@ export class Office365Client {
      * @remarks Set the automatic replies setting for your mailbox.
      */
     public async setAutomaticRepliesSettingAsync(input: SetAutomaticRepliesSettingInput): Promise<SetAutomaticRepliesSettingResponse> {
-        const path = `/codeless/v1.0/me/mailboxSettings`;
-        return await this.callConnector<SetAutomaticRepliesSettingResponse>("PATCH", path, input);
+        const requestPath = `/codeless/v1.0/me/mailboxSettings`;
+        return await this.callConnector<SetAutomaticRepliesSettingResponse>("PATCH", requestPath, input);
+    }
+
+    /**
+     * When a new email arrives in a shared mailbox (V2)
+     * @remarks This operation triggers a flow when a new email arrives in a shared mailbox. Your account should have permission to access the mailbox for this operation to succeed. It will skip any email that has a total message size greater than the limit put by your Exchange Admin or 50 MB, whichever is less. It may also skip protected emails and emails with invalid body or attachments.
+     */
+    public async sharedMailboxOnNewEmailAsync(mailboxAddress?: string, folderId?: string, to?: string, cc?: string, toOrCc?: string, from?: string, importance?: string, hasAttachments?: string, includeAttachments?: string, subjectFilter?: string): Promise<TriggerBatchResponseGraphClientReceiveMessage> {
+        const queryParams: string[] = [];
+        if (mailboxAddress !== undefined) {
+            queryParams.push(`mailboxAddress=${encodeURIComponent(String(mailboxAddress))}`);
+        }
+        if (folderId !== undefined) {
+            queryParams.push(`folderId=${encodeURIComponent(String(folderId))}`);
+        }
+        if (to !== undefined) {
+            queryParams.push(`to=${encodeURIComponent(String(to))}`);
+        }
+        if (cc !== undefined) {
+            queryParams.push(`cc=${encodeURIComponent(String(cc))}`);
+        }
+        if (toOrCc !== undefined) {
+            queryParams.push(`toOrCc=${encodeURIComponent(String(toOrCc))}`);
+        }
+        if (from !== undefined) {
+            queryParams.push(`from=${encodeURIComponent(String(from))}`);
+        }
+        if (importance !== undefined) {
+            queryParams.push(`importance=${encodeURIComponent(String(importance))}`);
+        }
+        if (hasAttachments !== undefined) {
+            queryParams.push(`hasAttachments=${encodeURIComponent(String(hasAttachments))}`);
+        }
+        if (includeAttachments !== undefined) {
+            queryParams.push(`includeAttachments=${encodeURIComponent(String(includeAttachments))}`);
+        }
+        if (subjectFilter !== undefined) {
+            queryParams.push(`subjectFilter=${encodeURIComponent(String(subjectFilter))}`);
+        }
+        const requestPath = `/v2/SharedMailbox/Mail/OnNewEmail` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
+        return await this.callConnector<TriggerBatchResponseGraphClientReceiveMessage>("GET", requestPath);
     }
 
     /**
      * Send an email from a shared mailbox (V2)
      * @remarks This operation sends an email from a shared mailbox. Your account should have permission to access the mailbox for this operation to succeed.
      */
-    public async sharedMailboxSendEmailAsync(input: SharedMailboxSendEmailInput): Promise<void> {
-        const path = `/v2/SharedMailbox/Mail`;
-        await this.callConnector<void>("POST", path, input);
+    public async sharedMailboxSendEmailAsync(input: SharedMailboxClientSendHtmlMessage): Promise<void> {
+        const requestPath = `/v2/SharedMailbox/Mail`;
+        await this.callConnector<void>("POST", requestPath, input);
     }
 
 }

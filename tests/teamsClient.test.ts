@@ -5,7 +5,7 @@ import {
     TeamsConnectorError,
     TeamsClientOptions,
     NewMeeting,
-    NewMeetingResponse,
+    NewMeetingRespone,
     GetAllTeamsResponse,
     GetChannelsForGroupResponse,
     CreateChannelInput,
@@ -54,7 +54,7 @@ const _meeting: NewMeeting = {
     isOnlineMeeting: true,
 };
 
-const _meetingResponse: NewMeetingResponse = {
+const _meetingResponse: NewMeetingRespone = {
     id: "meeting-1",
     subject: "Team Standup",
 };
@@ -106,7 +106,7 @@ describe("TeamsClient — createTeamsMeetingAsync", () => {
     });
 
     it("should POST meeting with body to calendar endpoint", async () => {
-        const mockResponse: NewMeetingResponse = {
+        const mockResponse: NewMeetingRespone = {
             id: "event-1",
             subject: "Standup",
         };
@@ -118,7 +118,7 @@ describe("TeamsClient — createTeamsMeetingAsync", () => {
             isOnlineMeeting: true,
         };
 
-        const result = await client.createTeamsMeetingAsync("calendar-1", input);
+        const result = await client.createTeamsMeetingAsync(input, "calendar-1");
 
         expect(result).toEqual(mockResponse);
         const [url, init] = (global.fetch as jest.Mock).mock.calls[0];
@@ -178,7 +178,7 @@ describe("TeamsClient — createChannelAsync", () => {
             displayName: "New Channel",
         };
 
-        const result = await client.createChannelAsync("team-1", input);
+        const result = await client.createChannelAsync(input, "team-1");
 
         expect(result).toEqual(mockResponse);
         const [, init] = (global.fetch as jest.Mock).mock.calls[0];

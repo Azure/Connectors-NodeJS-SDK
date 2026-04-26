@@ -4,308 +4,59 @@
 // #region Types
 
 /**
- * Response for Get list metadata
- */
-export interface TableMetadata {
-    /** Table name */
-    name?: string;
-    /** Table title */
-    title?: string;
-    /** Table permission */
-    "x-ms-permission"?: string;
-    /** x-ms-capabilities */
-    "x-ms-capabilities"?: TableCapabilitiesMetadata;
-    /** schema */
-    schema?: ObjectEntity;
-    /** referencedEntities */
-    referencedEntities?: ObjectEntity;
-    /** Url link */
-    webUrl?: string;
-}
-
-/**
- * x-ms-capabilities
- */
-export interface TableCapabilitiesMetadata {
-    /** sortRestrictions */
-    sortRestrictions?: TableSortRestrictionsMetadata;
-    /** filterRestrictions */
-    filterRestrictions?: TableFilterRestrictionsMetadata;
-    /** selectRestrictions */
-    selectRestrictions?: TableSelectRestrictionsMetadata;
-    /** Server paging restrictions */
-    isOnlyServerPagable?: boolean;
-    /** List of supported filter capabilities */
-    filterFunctionSupport?: Array<string>;
-    /** List of supported server-driven paging capabilities */
-    serverPagingOptions?: Array<string>;
-}
-
-/**
- * sortRestrictions
- */
-export interface TableSortRestrictionsMetadata {
-    /** Indicates whether this table has sortable columns */
-    sortable?: boolean;
-    /** List of unsortable properties */
-    unsortableProperties?: Array<string>;
-    /** List of properties which support ascending order only */
-    ascendingOnlyProperties?: Array<string>;
-}
-
-/**
- * filterRestrictions
- */
-export interface TableFilterRestrictionsMetadata {
-    /** Indicates whether this table has filterable columns */
-    filterable?: boolean;
-    /** List of non filterable properties */
-    nonFilterableProperties?: Array<string>;
-    /** List of required properties */
-    requiredProperties?: Array<string>;
-}
-
-/**
- * selectRestrictions
- */
-export interface TableSelectRestrictionsMetadata {
-    /** Indicates whether this table has selectable columns */
-    selectable?: boolean;
-}
-
-/**
- * schema
- */
-export interface ObjectEntity {
-    [key: string]: unknown;
-}
-
-/**
- * Response for Get metadata about the return type of the GetItemChanges operation
- */
-export interface GetItemChangesMetadataResponse {
-    /** schema */
-    schema?: ObjectEntity;
-}
-
-/**
- * Response for Get datasets
- */
-export interface DataSetsList {
-    /** List of datasets */
-    value?: Array<DataSet>;
-}
-
-/**
- * Item in value
- */
-export interface DataSet {
-    /** Dataset name */
-    Name?: string;
-    /** Dataset display name */
-    DisplayName?: string;
-    /** Pass-through Native Queries */
-    query?: Array<PassThroughNativeQuery>;
-}
-
-/**
- * Item in query
- */
-export interface PassThroughNativeQuery {
-    /** Query language */
-    Language?: string;
-}
-
-/**
  * Response for Get all lists and libraries
  */
 export interface TablesList {
-    /** List of Tables */
-    value?: Array<Table>;
-}
-
-/**
- * Item in value
- */
-export interface Table {
-    /** The name of the table. The name is used at runtime. */
-    Name?: string;
-    /** The display name of the table. */
-    DisplayName?: string;
-    /** Additional table properties provided by the connector to the clients. */
-    DynamicProperties?: Record<string, unknown>;
+    [key: string]: unknown;
 }
 
 /**
  * Response for Approve hub site join request
  */
 export interface ApproveHubSiteJoinResponse {
-    /** Approval Token */
-    ApprovalToken?: string;
-}
-
-/**
- * Create sharing link for a file or folder
- */
-export interface ItemPermissionCreateLinkBody {
-    /** The type of sharing link to create */
-    type?: string;
-    /** Choose who your sharing link gives access to. "Anyone" option will only work if your administrator has enabled it. */
-    scope?: string;
-    /** The date after which the link will expire in yyyy-MM-dd format. Only applicable for anonymous links. */
-    expirationDateTime?: string;
+    [key: string]: unknown;
 }
 
 /**
  * Response for Create sharing link for a file or folder
  */
 export interface SharingLinkPermission {
-    /** link */
-    link?: SharingLink;
+    [key: string]: unknown;
 }
 
 /**
- * link
+ * Response for Copy file (deprecated)
  */
-export interface SharingLink {
-    /** A link to the item */
-    webUrl?: string;
-}
-
-/**
- * Copy file
- */
-export interface CopyFileParameters {
-    /** File Identifier */
-    sourceFileId?: string;
-    /** Example: https://contoso.sharepoint.com/sites/sitename */
-    destinationDataset?: string;
-    /** Destination Folder */
-    destinationFolderPath?: string;
-    /** Pick one of the options available */
-    nameConflictBehavior?: number;
+export interface BlobMetadata {
+    [key: string]: unknown;
 }
 
 /**
  * Response for Copy file
  */
 export interface SPBlobMetadataResponse {
-    /** The value that can be used to Get or Update file properties in libraries. */
-    ItemId?: number;
-    /** The unique id of the file or folder. */
-    Id?: string;
-    /** The name of the file or folder. */
-    Name?: string;
-    /** The display name of the file or folder. */
-    DisplayName?: string;
-    /** The path of the file or folder. */
-    Path?: string;
-    /** The date and time the file or folder was last modified. */
-    LastModified?: string;
-    /** The size of the file or folder. */
-    Size?: number;
-    /** The media type of the file or folder. */
-    MediaType?: string;
-    /** A boolean value (true, false) to indicate whether or not the blob is a folder. */
-    IsFolder?: boolean;
-    /** The etag of the file or folder. */
-    ETag?: string;
-    /** The filelocator of the file or folder. */
-    FileLocator?: string;
+    [key: string]: unknown;
 }
 
 /**
- * Copy folder
+ * Create file
  */
-export interface CopyFolderParameters {
-    /** File Identifier */
-    sourceFolderId?: string;
-    /** Example: https://contoso.sharepoint.com/sites/sitename */
-    destinationDataset?: string;
-    /** Destination Folder */
-    destinationFolderPath?: string;
-    /** Pick one of the options available */
-    nameConflictBehavior?: number;
+export interface CreateFileInput {
+    [key: string]: unknown;
+}
+
+/**
+ * Update file
+ */
+export interface UpdateFileInput {
+    [key: string]: unknown;
 }
 
 /**
  * Response for Update file
  */
 export interface BlobMetadataResponse {
-    /** The unique id of the file or folder. */
-    Id?: string;
-    /** The name of the file or folder. */
-    Name?: string;
-    /** The display name of the file or folder. */
-    DisplayName?: string;
-    /** The path of the file or folder. */
-    Path?: string;
-    /** The date and time the file or folder was last modified. */
-    LastModified?: string;
-    /** The size of the file or folder. */
-    Size?: number;
-    /** The media type of the file or folder. */
-    MediaType?: string;
-    /** A boolean value (true, false) to indicate whether or not the blob is a folder. */
-    IsFolder?: boolean;
-    /** The etag of the file or folder. */
-    ETag?: string;
-    /** The filelocator of the file or folder. */
-    FileLocator?: string;
-}
-
-/**
- * Send an HTTP request to SharePoint
- */
-export interface SharePointHttpRequestBodyParameters {
-    /** Http Method */
-    method?: string;
-    /** Example: _api/web/lists/getbytitle('Documents') */
-    uri?: string;
-    /** Enter JSON object of request headers */
-    headers?: Record<string, unknown>;
-    /** Enter request content in JSON */
-    body?: string;
-}
-
-/**
- * Move file
- */
-export interface MoveFileParameters {
-    /** File Identifier */
-    sourceFileId?: string;
-    /** Example: https://contoso.sharepoint.com/sites/sitename */
-    destinationDataset?: string;
-    /** Destination Folder */
-    destinationFolderPath?: string;
-    /** Pick one of the options available */
-    nameConflictBehavior?: number;
-}
-
-/**
- * Move folder
- */
-export interface MoveFolderParameters {
-    /** File Identifier */
-    sourceFolderId?: string;
-    /** Example: https://contoso.sharepoint.com/sites/sitename */
-    destinationDataset?: string;
-    /** Destination Folder */
-    destinationFolderPath?: string;
-    /** Pick one of the options available */
-    nameConflictBehavior?: number;
-}
-
-/**
- * Create new document set
- */
-export interface CreateNewDocumentSetParameters {
-    /** Example: folder1/folder2/dsName */
-    path?: string;
-    /** Example: 0x0120D520 */
-    contentTypeId?: string;
-    /** DynamicProperties */
-    DynamicProperties?: Record<string, unknown>;
+    [key: string]: unknown;
 }
 
 /**
@@ -313,14 +64,6 @@ export interface CreateNewDocumentSetParameters {
  */
 export interface CreateNewDocumentSetResponse {
     [key: string]: unknown;
-}
-
-/**
- * Create new folder
- */
-export interface CreateNewFolderParameters {
-    /** Example: folder1/folder2/folder3 */
-    path?: string;
 }
 
 /**
@@ -334,44 +77,13 @@ export interface CreateNewFolderResponse {
  * Response for Resolve person
  */
 export interface SPListExpandedUser {
-    /** user claims */
-    Claims?: string;
-    /** user title */
-    DisplayName?: string;
-    /** user email */
-    Email?: string;
-    /** user picture */
-    Picture?: string;
-    /** user department */
-    Department?: string;
-    /** user job title */
-    JobTitle?: string;
-    /** @odata.type */
-    "@odata.type"?: string;
-}
-
-/**
- * Response for Returns User fields for a list
- */
-export interface SPListEntity {
-    /** The Id of the SPField */
-    Id?: string;
-    /** What type of entity (field) this is */
-    EntityType?: string;
+    [key: string]: unknown;
 }
 
 /**
  * Response for Get files (properties only)
  */
 export interface ItemsList {
-    /** List of Items */
-    value?: Array<Item>;
-}
-
-/**
- * Item in value
- */
-export interface Item {
     [key: string]: unknown;
 }
 
@@ -421,8 +133,7 @@ export interface CreateApprovalRequestInput {
  * Response for Create an approval request for an item or file
  */
 export interface ApprovalData {
-    /** The ID of the approval request created */
-    ApprovalId?: string;
+    [key: string]: unknown;
 }
 
 /**
@@ -433,27 +144,10 @@ export interface GetItemChangesResponse {
 }
 
 /**
- * Check in file
+ * Response for Get file properties
  */
-export interface FileCheckInParameters {
-    /** Type comments describing what has changed in this version */
-    comment?: string;
-    /** Select the type of version you would like to check in */
-    checkinType?: number;
-}
-
-/**
- * Grant access to an item or a folder
- */
-export interface ItemGrantAccessBody {
-    /** A collection of recipients who will receive the sharing invitation */
-    recipients?: string;
-    /** Specify a role that is to be granted to the recipients */
-    roleValue?: string;
-    /** A plain text formatted message that is included in the sharing invitation */
-    emailBody?: string;
-    /** Specify whether recipients should receive an email notification message */
-    sendEmail?: boolean;
+export interface Item {
+    [key: string]: unknown;
 }
 
 /**
@@ -471,53 +165,159 @@ export interface PatchFileItemResponse {
 }
 
 /**
- * Update file properties using AI Builder model results
- */
-export interface PatchFileItemWithPredictedValuesParameters {
-    /** Enter modelId of the Model which is used for prediction */
-    modelId?: string;
-    /** Enter request content in JSON */
-    predictResult?: string;
-}
-
-/**
  * Response for Set content approval status
  */
 export interface SetApprovalStatusOutput {
-    /** ETag of the item after the approval status was set */
-    ETag?: string;
-    /** A link to the item that needs approval */
-    ApprovalLink?: string;
-    /** Date time at which the item will be Published */
-    PublishStartDate?: string;
-    /** The content approval status of the list item */
-    ContentApprovalStatus?: string;
-    /** The version of the item that has been scheduled */
-    ScheduledVersion?: string;
+    [key: string]: unknown;
 }
 
 /**
  * Response for Get attachments
  */
 export interface SPListItemAttachment {
-    /** File identifier */
-    Id?: string;
-    /** Link to attachment */
-    AbsoluteUri?: string;
-    /** Name */
-    DisplayName?: string;
+    [key: string]: unknown;
+}
+
+/**
+ * Add attachment
+ */
+export interface CreateAttachmentInput {
+    [key: string]: unknown;
 }
 
 /**
  * Response for When a file is deleted
  */
 export interface DeletedItemList {
-    /** List of Deleted Items */
-    value?: Array<DeletedItem>;
+    [key: string]: unknown;
 }
 
 /**
- * Item in value
+ * Generate document using Microsoft Syntex (preview)
+ */
+export interface CreateContentAssemblyDocumentInput {
+    [key: string]: unknown;
+}
+
+/**
+ * Response for Get list views
+ */
+export interface Table {
+    [key: string]: unknown;
+}
+
+/**
+ * Agreements Solution - Generate document within Agreements Solution workspace
+ */
+export interface CreateAgreementsSolutionDocumentInput {
+    [key: string]: unknown;
+}
+
+/**
+ * Definition: ApplicationPermissionIdentity
+ */
+export interface ApplicationPermissionIdentity {
+    /** Application display name */
+    displayName?: string;
+}
+
+/**
+ * Definition: BlobDataSetsMetadata
+ */
+export interface BlobDataSetsMetadata {
+    /** Blob dataset source */
+    source?: string;
+    /** Blob dataset display name */
+    displayName?: string;
+    /** Blob dataset url encoding */
+    urlEncoding?: string;
+}
+
+/**
+ * Definition: BlobMetadataPage
+ */
+export interface BlobMetadataPage {
+    /** Blob metadata collection. */
+    value?: Array<BlobMetadata>;
+}
+
+/**
+ * Definition: CopyFileParameters
+ */
+export interface CopyFileParameters {
+    /** File Identifier */
+    sourceFileId?: string;
+    /** Example: https://contoso.sharepoint.com/sites/sitename */
+    destinationDataset?: string;
+    /** Destination Folder */
+    destinationFolderPath?: string;
+    /** Pick one of the options available */
+    nameConflictBehavior?: number;
+}
+
+/**
+ * Definition: CopyFolderParameters
+ */
+export interface CopyFolderParameters {
+    /** File Identifier */
+    sourceFolderId?: string;
+    /** Example: https://contoso.sharepoint.com/sites/sitename */
+    destinationDataset?: string;
+    /** Destination Folder */
+    destinationFolderPath?: string;
+    /** Pick one of the options available */
+    nameConflictBehavior?: number;
+}
+
+/**
+ * Definition: CreateNewDocumentSetParameters
+ */
+export interface CreateNewDocumentSetParameters {
+    /** Example: folder1/folder2/dsName */
+    path?: string;
+    /** Example: 0x0120D520 */
+    contentTypeId?: string;
+    DynamicProperties?: Record<string, unknown>;
+}
+
+/**
+ * Definition: CreateNewFolderParameters
+ */
+export interface CreateNewFolderParameters {
+    /** Example: folder1/folder2/folder3 */
+    path?: string;
+}
+
+/**
+ * Definition: DataSet
+ */
+export interface DataSet {
+    /** Dataset name */
+    Name?: string;
+    /** Dataset display name */
+    DisplayName?: string;
+    /** Pass-through Native Queries */
+    query?: Array<PassThroughNativeQuery>;
+}
+
+/**
+ * Definition: DataSetsList
+ */
+export interface DataSetsList {
+    /** List of datasets */
+    value?: Array<DataSet>;
+}
+
+/**
+ * Definition: DataSetsMetadata
+ */
+export interface DataSetsMetadata {
+    tabular?: TabularDataSetsMetadata;
+    blob?: BlobDataSetsMetadata;
+}
+
+/**
+ * Definition: DeletedItem
  */
 export interface DeletedItem {
     /** List item id */
@@ -535,45 +335,407 @@ export interface DeletedItem {
 }
 
 /**
- * Generate document using Microsoft Syntex (preview)
+ * Definition: FileCheckInParameters
  */
-export interface CreateContentAssemblyDocumentInput {
+export interface FileCheckInParameters {
+    /** Type comments describing what has changed in this version */
+    comment?: string;
+    /** Select the type of version you would like to check in */
+    checkinType?: number;
+}
+
+/**
+ * Definition: GetItemChangesMetadataResponse
+ */
+export interface GetItemChangesMetadataResponse {
+    schema?: ObjectEntity;
+}
+
+/**
+ * Definition: GroupPermissionIdentity
+ */
+export interface GroupPermissionIdentity {
+    /** Group display name */
+    displayName?: string;
+}
+
+/**
+ * Definition: HubSiteJoinApprovalOutput
+ */
+export interface HubSiteJoinApprovalOutput {
+    /** Requesting Site Url */
+    RequestingSiteUrl?: string;
+    /** Requesting Site Id */
+    RequestingSiteId?: string;
+    /** Requesting Site Title */
+    RequestingSiteTitle?: string;
+    /** Approval Correlation Id */
+    ApprovalCorrelationId?: string;
+}
+
+/**
+ * Definition: ItemGrantAccessBody
+ */
+export interface ItemGrantAccessBody {
+    /** A collection of recipients who will receive the sharing invitation */
+    recipients?: string;
+    /** Specify a role that is to be granted to the recipients */
+    roleValue?: string;
+    /** A plain text formatted message that is included in the sharing invitation */
+    emailBody?: string;
+    /** Specify whether recipients should receive an email notification message */
+    sendEmail?: boolean;
+}
+
+/**
+ * Definition: ItemPermissionAddBody
+ */
+export interface ItemPermissionAddBody {
+    /** A collection of recipients who will receive access and the sharing invitation. */
+    recipients?: Array<ItemPermissionRecipient>;
+    /** Specify the roles that are be granted to the recipients of the sharing invitation. */
+    roles?: Array<string>;
+    /** Specifies where the recipient of the invitation is required to sign-in to view the shared item. */
+    requireSignIn?: boolean;
+    /** Specifies if an email or post is generated (true) or if the permission is just created (false). */
+    sendInvitation?: boolean;
+    /** A plain text formatted message that is included in the sharing invitation. Maximum length 2000 characters. */
+    message?: string;
+}
+
+/**
+ * Definition: ItemPermissionCreateLinkBody
+ */
+export interface ItemPermissionCreateLinkBody {
+    /** The type of sharing link to create */
+    type?: string;
+    /** Choose who your sharing link gives access to. "Anyone" option will only work if your administrator has enabled it. */
+    scope?: string;
+    /** The date after which the link will expire in yyyy-MM-dd format. Only applicable for anonymous links. */
+    expirationDateTime?: string;
+}
+
+/**
+ * Definition: ItemPermissionRecipient
+ */
+export interface ItemPermissionRecipient {
+    /** The email address for the recipient, if the recipient has an associated email address. */
+    email?: string;
+}
+
+/**
+ * Definition: ItemPermissionUpdateBody
+ */
+export interface ItemPermissionUpdateBody {
+    /** Specify updated roles for this permission. */
+    roles?: Array<string>;
+}
+
+/**
+ * Definition: ItemReference
+ */
+export interface ItemReference {
+    /** The name of the parent item */
+    name?: string;
+    /** Path that can be used to navigate to the parent item */
+    path?: string;
+    sharepointIds?: SharePointIds;
+}
+
+/**
+ * Definition: MoveFileParameters
+ */
+export interface MoveFileParameters {
+    /** File Identifier */
+    sourceFileId?: string;
+    /** Example: https://contoso.sharepoint.com/sites/sitename */
+    destinationDataset?: string;
+    /** Destination Folder */
+    destinationFolderPath?: string;
+    /** Pick one of the options available */
+    nameConflictBehavior?: number;
+}
+
+/**
+ * Definition: MoveFolderParameters
+ */
+export interface MoveFolderParameters {
+    /** File Identifier */
+    sourceFolderId?: string;
+    /** Example: https://contoso.sharepoint.com/sites/sitename */
+    destinationDataset?: string;
+    /** Destination Folder */
+    destinationFolderPath?: string;
+    /** Pick one of the options available */
+    nameConflictBehavior?: number;
+}
+
+/**
+ * Definition: Object
+ */
+export interface ObjectEntity {
     [key: string]: unknown;
 }
 
 /**
- * Agreements Solution - Generate document within Agreements Solution workspace
+ * Definition: PassThroughNativeQuery
  */
-export interface CreateAgreementsSolutionDocumentInput {
-    [key: string]: unknown;
+export interface PassThroughNativeQuery {
+    /** Query language */
+    Language?: string;
 }
 
 /**
- * Response for Extract folder
+ * Definition: PatchFileItemWithPredictedValuesParameters
  */
-export interface BlobMetadata {
-    /** The unique id of the file or folder. */
-    Id?: string;
-    /** The name of the file or folder. */
+export interface PatchFileItemWithPredictedValuesParameters {
+    /** Enter modelId of the Model which is used for prediction */
+    modelId?: string;
+    /** Enter request content in JSON */
+    predictResult?: string;
+}
+
+/**
+ * Definition: Permission
+ */
+export interface Permission {
+    /** Permission id */
+    id?: string;
+    grantedTo?: PermissionIdentitySet;
+    /** For link type permissions, the details of the users to whom permission was granted */
+    grantedToIdentities?: Array<SharingLinkPermissionIdentitySet>;
+    invitation?: SharingInvitation;
+    inheritedFrom?: ItemReference;
+    link?: SharingLink;
+    /** The type of permission - read, write, owner, member */
+    roles?: Array<string>;
+}
+
+/**
+ * Definition: PermissionIdentitySet
+ */
+export interface PermissionIdentitySet {
+    application?: ApplicationPermissionIdentity;
+    group?: GroupPermissionIdentity;
+    user?: UserPermissionIdentity;
+}
+
+/**
+ * Definition: PermissionsList
+ */
+export interface PermissionsList {
+    /** List of Permissions */
+    value?: Array<Permission>;
+}
+
+/**
+ * Definition: Procedure
+ */
+export interface Procedure {
+    /** Procedure name */
     Name?: string;
-    /** The display name of the file or folder. */
+    /** Procedure display name */
     DisplayName?: string;
-    /** The path of the file or folder. */
-    Path?: string;
-    /** The date and time the file or folder was last modified. */
-    LastModified?: string;
-    /** The size of the file or folder. */
-    Size?: number;
-    /** The media type of the file or folder. */
-    MediaType?: string;
-    /** A boolean value (true, false) to indicate whether or not the blob is a folder. */
-    IsFolder?: boolean;
-    /** The etag of the file or folder. */
-    ETag?: string;
-    /** The filelocator of the file or folder. */
-    FileLocator?: string;
 }
 
+/**
+ * Definition: PublishedResult
+ */
+export interface PublishedResult {
+    /** A boolean value (true, false) to indicate whether the scheduled version of the file has been published */
+    IsFilePublished?: boolean;
+}
+
+/**
+ * Definition: SharePointHttpRequestBodyParameters
+ */
+export interface SharePointHttpRequestBodyParameters {
+    /** Http Method */
+    method?: string;
+    /** Example: _api/web/lists/getbytitle('Documents') */
+    uri?: string;
+    /** Enter JSON object of request headers */
+    headers?: Record<string, unknown>;
+    /** Enter request content in JSON */
+    body?: string;
+}
+
+/**
+ * Definition: SharePointIds
+ */
+export interface SharePointIds {
+    /** The unique identifier (guid) for the item's list in SharePoint */
+    listId?: string;
+    /** An integer identifier for the item within the containing list */
+    listItemId?: string;
+    /** The unique identifier (guid) for the item within OneDrive for Business or a SharePoint site */
+    listItemUniqueId?: string;
+    /** The unique identifier (guid) for the item's site collection (SPSite) */
+    siteId?: string;
+    /** The SharePoint URL for the site that contains the item */
+    siteUrl?: string;
+    /** The unique identifier (guid) for the tenancy */
+    tenantId?: string;
+    /** The unique identifier (guid) for the item's site (SPWeb) */
+    webId?: string;
+}
+
+/**
+ * Definition: SharingInvitation
+ */
+export interface SharingInvitation {
+    /** The email address provided for the recipient of the sharing invitation */
+    email?: string;
+    /** If true the recipient of the invitation needs to sign in in order to access the shared item */
+    signInRequired?: boolean;
+}
+
+/**
+ * Definition: SharingLink
+ */
+export interface SharingLink {
+    /** A link to the item */
+    webUrl?: string;
+}
+
+/**
+ * Definition: SharingLinkPermissionIdentitySet
+ */
+export interface SharingLinkPermissionIdentitySet {
+    user?: SharingLinkUserPermissionIdentity;
+}
+
+/**
+ * Definition: SharingLinkUserPermissionIdentity
+ */
+export interface SharingLinkUserPermissionIdentity {
+    /** User display name */
+    displayName?: string;
+    /** User email */
+    email?: string;
+}
+
+/**
+ * Definition: SPContentType
+ */
+export interface SPContentType {
+    /** Content type Id */
+    Id?: string;
+    /** Content type name */
+    Name?: string;
+}
+
+/**
+ * Definition: SPForASelectedFileResponse
+ */
+export interface SPForASelectedFileResponse {
+    /** File Identifier */
+    ID?: number;
+    /** File Url */
+    itemUrl?: string;
+    /** File Name */
+    fileName?: string;
+}
+
+/**
+ * Definition: SPListEntity
+ */
+export interface SPListEntity {
+    /** The Id of the SPField */
+    Id?: string;
+    /** What type of entity (field) this is */
+    EntityType?: string;
+}
+
+/**
+ * Definition: TableCapabilitiesMetadata
+ */
+export interface TableCapabilitiesMetadata {
+    sortRestrictions?: TableSortRestrictionsMetadata;
+    filterRestrictions?: TableFilterRestrictionsMetadata;
+    selectRestrictions?: TableSelectRestrictionsMetadata;
+    /** Server paging restrictions */
+    isOnlyServerPagable?: boolean;
+    /** List of supported filter capabilities */
+    filterFunctionSupport?: Array<string>;
+    /** List of supported server-driven paging capabilities */
+    serverPagingOptions?: Array<string>;
+}
+
+/**
+ * Definition: TableFilterRestrictionsMetadata
+ */
+export interface TableFilterRestrictionsMetadata {
+    /** Indicates whether this table has filterable columns */
+    filterable?: boolean;
+    /** List of non filterable properties */
+    nonFilterableProperties?: Array<string>;
+    /** List of required properties */
+    requiredProperties?: Array<string>;
+}
+
+/**
+ * Definition: TableMetadata
+ */
+export interface TableMetadata {
+    /** Table name */
+    name?: string;
+    /** Table title */
+    title?: string;
+    /** Table permission */
+    "x-ms-permission"?: string;
+    "x-ms-capabilities"?: TableCapabilitiesMetadata;
+    schema?: ObjectEntity;
+    referencedEntities?: ObjectEntity;
+    /** Url link */
+    webUrl?: string;
+}
+
+/**
+ * Definition: TableSelectRestrictionsMetadata
+ */
+export interface TableSelectRestrictionsMetadata {
+    /** Indicates whether this table has selectable columns */
+    selectable?: boolean;
+}
+
+/**
+ * Definition: TableSortRestrictionsMetadata
+ */
+export interface TableSortRestrictionsMetadata {
+    /** Indicates whether this table has sortable columns */
+    sortable?: boolean;
+    /** List of unsortable properties */
+    unsortableProperties?: Array<string>;
+    /** List of properties which support ascending order only */
+    ascendingOnlyProperties?: Array<string>;
+}
+
+/**
+ * Definition: TabularDataSetsMetadata
+ */
+export interface TabularDataSetsMetadata {
+    /** Dataset source */
+    source?: string;
+    /** Dataset display name */
+    displayName?: string;
+    /** Dataset url encoding */
+    urlEncoding?: string;
+    /** Table display name */
+    tableDisplayName?: string;
+    /** Table plural display name */
+    tablePluralName?: string;
+}
+
+/**
+ * Definition: UserPermissionIdentity
+ */
+export interface UserPermissionIdentity {
+    /** User display name */
+    displayName?: string;
+    /** User email */
+    email?: string;
+}
 // #endregion Types
 
 // #region Client
@@ -656,226 +818,235 @@ export class SharepointonlineClient {
     }
 
     /**
-     * Get list metadata
-     * @remarks Discovery method used to populate dynamic parameter values at design time.
-     */
-    public async getTableAsync(siteAddress: string, listName: string, limitColumnsByView?: string, limitColumnsByContentType?: string): Promise<TableMetadata> {
-        const queryParams: string[] = [];
-        if (limitColumnsByView !== undefined) {
-            queryParams.push(`view=${encodeURIComponent(String(limitColumnsByView))}`);
-        }
-        if (limitColumnsByContentType !== undefined) {
-            queryParams.push(`contentTypeId=${encodeURIComponent(String(limitColumnsByContentType))}`);
-        }
-        const path = `/$metadata.json/datasets/${encodeURIComponent(String(siteAddress))}/tables/${encodeURIComponent(String(listName))}` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
-        return await this.callConnector<TableMetadata>("GET", path);
-    }
-
-    /**
-     * Get metadata about the return type of the GetItemChanges operation
-     * @remarks Discovery method used to populate dynamic parameter values at design time.
-     */
-    public async getItemChangesMetadataAsync(siteAddress: string, listOrLibraryName: string): Promise<GetItemChangesMetadataResponse> {
-        const path = `/$metadata.json/datasets/${encodeURIComponent(String(siteAddress))}/tables/${encodeURIComponent(String(listOrLibraryName))}/items/changes`;
-        return await this.callConnector<GetItemChangesMetadataResponse>("GET", path);
-    }
-
-    /**
-     * Get datasets
-     * @remarks Discovery method used to populate dynamic parameter values at design time.
-     */
-    public async getDataSetsAsync(): Promise<DataSetsList> {
-        const path = `/datasets`;
-        return await this.callConnector<DataSetsList>("GET", path);
-    }
-
-    /**
      * Get all lists and libraries
      * @remarks Get all lists and libraries.
      */
-    public async getAllTablesAsync(siteAddress: string): Promise<TablesList> {
-        const path = `/datasets/${encodeURIComponent(String(siteAddress))}/alltables`;
-        return await this.callConnector<TablesList>("GET", path);
+    public async getAllTablesAsync(dataset: string): Promise<TablesList> {
+        const requestPath = `/datasets/${encodeURIComponent(String(dataset))}/alltables`;
+        return await this.callConnector<TablesList>("GET", requestPath);
     }
 
     /**
      * Approve hub site join request
      * @remarks Approve hub site join request. This will return an approval token that can be used to complete the join request using the join hub site action.
      */
-    public async approveHubSiteJoinAsync(hubSiteAddress: string, requestingSiteId: string): Promise<ApproveHubSiteJoinResponse> {
+    public async approveHubSiteJoinAsync(dataset: string, joiningSiteId?: string): Promise<ApproveHubSiteJoinResponse> {
         const queryParams: string[] = [];
-        if (requestingSiteId !== undefined) {
-            queryParams.push(`joiningSiteId=${encodeURIComponent(String(requestingSiteId))}`);
+        if (joiningSiteId !== undefined) {
+            queryParams.push(`joiningSiteId=${encodeURIComponent(String(joiningSiteId))}`);
         }
-        const path = `/datasets/${encodeURIComponent(String(hubSiteAddress))}/approvehubsitejoin` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
-        return await this.callConnector<ApproveHubSiteJoinResponse>("POST", path);
+        const requestPath = `/datasets/${encodeURIComponent(String(dataset))}/approvehubsitejoin` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
+        return await this.callConnector<ApproveHubSiteJoinResponse>("POST", requestPath);
     }
 
     /**
      * Cancel hub site join request
      * @remarks Cancel hub join request. If applicable, you should specify the same Approval Correlation Id as used in the "Set hub site join status to pending" action.
      */
-    public async cancelHubSiteJoinApprovalAsync(requestingSiteAddress: string, approvalCorrelationId?: string): Promise<void> {
+    public async cancelHubSiteJoinApprovalAsync(dataset: string, approvalCorrelationId?: string): Promise<void> {
         const queryParams: string[] = [];
         if (approvalCorrelationId !== undefined) {
             queryParams.push(`approvalCorrelationId=${encodeURIComponent(String(approvalCorrelationId))}`);
         }
-        const path = `/datasets/${encodeURIComponent(String(requestingSiteAddress))}/cancelhubsitejoinapproval` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
-        await this.callConnector<void>("POST", path);
+        const requestPath = `/datasets/${encodeURIComponent(String(dataset))}/cancelhubsitejoinapproval` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
+        await this.callConnector<void>("POST", requestPath);
     }
 
     /**
      * Create sharing link for a file or folder
      * @remarks Create sharing link for a file or folder.
      */
-    public async createSharingLinkAsync(siteAddress: string, libraryName: string, itemId: number, input: ItemPermissionCreateLinkBody): Promise<SharingLinkPermission> {
-        const path = `/datasets/${encodeURIComponent(String(siteAddress))}/codeless/_api/v2.0/sites/root/lists/${encodeURIComponent(String(libraryName))}/items/${encodeURIComponent(String(itemId))}/driveItem/createLink`;
-        return await this.callConnector<SharingLinkPermission>("POST", path, input);
+    public async createSharingLinkAsync(input: ItemPermissionCreateLinkBody, dataset: string, table: string, id: string): Promise<SharingLinkPermission> {
+        const requestPath = `/datasets/${encodeURIComponent(String(dataset))}/codeless/_api/v2.0/sites/root/lists/${encodeURIComponent(String(table))}/items/${encodeURIComponent(String(id))}/driveItem/createLink`;
+        return await this.callConnector<SharingLinkPermission>("POST", requestPath, input);
     }
 
     /**
-     * Copy file
-     * @remarks Copies a file. Works in a similar way to the "Copy to" command in SharePoint libraries. Returns information about the new file after copy.
+     * Copy file (deprecated)
+     * @remarks Copies a file to a SharePoint site.
      */
-    public async copyFileAsync(currentSiteAddress: string, input: CopyFileParameters): Promise<SPBlobMetadataResponse> {
-        const path = `/datasets/${encodeURIComponent(String(currentSiteAddress))}/copyFileAsync`;
-        return await this.callConnector<SPBlobMetadataResponse>("POST", path, input);
+    public async copyFileAsync(dataset: string, source?: string, destination?: string, overwrite?: string, queryParametersSingleEncoded?: string): Promise<BlobMetadata> {
+        const queryParams: string[] = [];
+        if (source !== undefined) {
+            queryParams.push(`source=${encodeURIComponent(String(source))}`);
+        }
+        if (destination !== undefined) {
+            queryParams.push(`destination=${encodeURIComponent(String(destination))}`);
+        }
+        if (overwrite !== undefined) {
+            queryParams.push(`overwrite=${encodeURIComponent(String(overwrite))}`);
+        }
+        if (queryParametersSingleEncoded !== undefined) {
+            queryParams.push(`queryParametersSingleEncoded=${encodeURIComponent(String(queryParametersSingleEncoded))}`);
+        }
+        const requestPath = `/datasets/${encodeURIComponent(String(dataset))}/copyFile` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
+        return await this.callConnector<BlobMetadata>("POST", requestPath);
     }
 
     /**
      * Copy folder
      * @remarks Copies a folder. Works in a similar way to the "Copy to" command in SharePoint libraries. Returns information about the new folder after copy.
      */
-    public async copyFolderAsync(currentSiteAddress: string, input: CopyFolderParameters): Promise<SPBlobMetadataResponse> {
-        const path = `/datasets/${encodeURIComponent(String(currentSiteAddress))}/copyFolderAsync`;
-        return await this.callConnector<SPBlobMetadataResponse>("POST", path, input);
+    public async copyFolderAsync(input: CopyFolderParameters, dataset: string): Promise<SPBlobMetadataResponse> {
+        const requestPath = `/datasets/${encodeURIComponent(String(dataset))}/copyFolderAsync`;
+        return await this.callConnector<SPBlobMetadataResponse>("POST", requestPath, input);
     }
 
     /**
      * Create file
      * @remarks Uploads a file to a SharePoint site. Make sure to pick an existing library.
      */
-    public async createFileAsync(siteAddress: string, input: Blob, folderPath: string, fileName: string): Promise<SPBlobMetadataResponse> {
+    public async createFileAsync(input: CreateFileInput, dataset: string, folderPath?: string, name?: string, queryParametersSingleEncoded?: string): Promise<SPBlobMetadataResponse> {
         const queryParams: string[] = [];
         if (folderPath !== undefined) {
             queryParams.push(`folderPath=${encodeURIComponent(String(folderPath))}`);
         }
-        if (fileName !== undefined) {
-            queryParams.push(`name=${encodeURIComponent(String(fileName))}`);
+        if (name !== undefined) {
+            queryParams.push(`name=${encodeURIComponent(String(name))}`);
         }
-        const path = `/datasets/${encodeURIComponent(String(siteAddress))}/files` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
-        return await this.callConnector<SPBlobMetadataResponse>("POST", path, input);
+        if (queryParametersSingleEncoded !== undefined) {
+            queryParams.push(`queryParametersSingleEncoded=${encodeURIComponent(String(queryParametersSingleEncoded))}`);
+        }
+        const requestPath = `/datasets/${encodeURIComponent(String(dataset))}/files` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
+        return await this.callConnector<SPBlobMetadataResponse>("POST", requestPath, input);
     }
 
     /**
      * Get file metadata
      * @remarks Gets information about the file such as size, etag, created date, etc. Uses a file identifier to pick the file. Use "Get file properties" action to get to the values stored in the columns in the library.
      */
-    public async getFileMetadataAsync(siteAddress: string, fileIdentifier: string): Promise<SPBlobMetadataResponse> {
-        const path = `/datasets/${encodeURIComponent(String(siteAddress))}/files/${encodeURIComponent(String(fileIdentifier))}`;
-        return await this.callConnector<SPBlobMetadataResponse>("GET", path);
+    public async getFileMetadataAsync(dataset: string, id: string): Promise<SPBlobMetadataResponse> {
+        const requestPath = `/datasets/${encodeURIComponent(String(dataset))}/files/${encodeURIComponent(String(id))}`;
+        return await this.callConnector<SPBlobMetadataResponse>("GET", requestPath);
     }
 
     /**
      * Update file
      * @remarks Updates the contents of the file specified by the file identifier.
      */
-    public async updateFileAsync(siteAddress: string, fileIdentifier: string, input: Blob): Promise<BlobMetadataResponse> {
-        const path = `/datasets/${encodeURIComponent(String(siteAddress))}/files/${encodeURIComponent(String(fileIdentifier))}`;
-        return await this.callConnector<BlobMetadataResponse>("PUT", path, input);
+    public async updateFileAsync(input: UpdateFileInput, dataset: string, id: string): Promise<BlobMetadataResponse> {
+        const requestPath = `/datasets/${encodeURIComponent(String(dataset))}/files/${encodeURIComponent(String(id))}`;
+        return await this.callConnector<BlobMetadataResponse>("PUT", requestPath, input);
     }
 
     /**
      * Delete file
      * @remarks Deletes the file specified by the file identifier.
      */
-    public async deleteFileAsync(siteAddress: string, fileIdentifier: string): Promise<void> {
-        const path = `/datasets/${encodeURIComponent(String(siteAddress))}/files/${encodeURIComponent(String(fileIdentifier))}`;
-        await this.callConnector<void>("DELETE", path);
+    public async deleteFileAsync(dataset: string, id: string): Promise<void> {
+        const requestPath = `/datasets/${encodeURIComponent(String(dataset))}/files/${encodeURIComponent(String(id))}`;
+        await this.callConnector<void>("DELETE", requestPath);
     }
 
     /**
      * Get file content
      * @remarks Gets file contents using the file identifier. The contents can be copied somewhere else, or be used as an attachment.
      */
-    public async getFileContentAsync(siteAddress: string, fileIdentifier: string, inferContentType?: boolean): Promise<Blob> {
+    public async getFileContentAsync(dataset: string, id: string, inferContentType?: string): Promise<Blob> {
         const queryParams: string[] = [];
         if (inferContentType !== undefined) {
             queryParams.push(`inferContentType=${encodeURIComponent(String(inferContentType))}`);
         }
-        const path = `/datasets/${encodeURIComponent(String(siteAddress))}/files/${encodeURIComponent(String(fileIdentifier))}/content` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
-        return await this.callConnector<Blob>("GET", path);
+        const requestPath = `/datasets/${encodeURIComponent(String(dataset))}/files/${encodeURIComponent(String(id))}/content` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
+        return await this.callConnector<Blob>("GET", requestPath);
+    }
+
+    /**
+     * List root folder
+     * @remarks Returns files in the root SharePoint folder.
+     */
+    public async listRootFolderAsync(dataset: string): Promise<Array<BlobMetadata>> {
+        const requestPath = `/datasets/${encodeURIComponent(String(dataset))}/folders`;
+        return await this.callConnector<Array<BlobMetadata>>("GET", requestPath);
+    }
+
+    /**
+     * List folder
+     * @remarks Returns files contained in a SharePoint folder.
+     */
+    public async listFolderAsync(dataset: string, id: string): Promise<Array<BlobMetadata>> {
+        const requestPath = `/datasets/${encodeURIComponent(String(dataset))}/folders/${encodeURIComponent(String(id))}`;
+        return await this.callConnector<Array<BlobMetadata>>("GET", requestPath);
     }
 
     /**
      * Get file metadata using path
      * @remarks Gets information about the file such as size, etag, created date, etc. Uses a file path to pick the file. Use "Get file properties" action to get to the values stored in the columns in the library.
      */
-    public async getFileMetadataByPathAsync(siteAddress: string, filePath: string): Promise<SPBlobMetadataResponse> {
+    public async getFileMetadataByPathAsync(dataset: string, path?: string, queryParametersSingleEncoded?: string): Promise<SPBlobMetadataResponse> {
         const queryParams: string[] = [];
-        if (filePath !== undefined) {
-            queryParams.push(`path=${encodeURIComponent(String(filePath))}`);
+        if (path !== undefined) {
+            queryParams.push(`path=${encodeURIComponent(String(path))}`);
         }
-        const path = `/datasets/${encodeURIComponent(String(siteAddress))}/GetFileByPath` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
-        return await this.callConnector<SPBlobMetadataResponse>("GET", path);
+        if (queryParametersSingleEncoded !== undefined) {
+            queryParams.push(`queryParametersSingleEncoded=${encodeURIComponent(String(queryParametersSingleEncoded))}`);
+        }
+        const requestPath = `/datasets/${encodeURIComponent(String(dataset))}/GetFileByPath` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
+        return await this.callConnector<SPBlobMetadataResponse>("GET", requestPath);
     }
 
     /**
      * Get file content using path
      * @remarks Gets file contents using the file path.
      */
-    public async getFileContentByPathAsync(siteAddress: string, filePath: string, inferContentType?: boolean): Promise<Blob> {
+    public async getFileContentByPathAsync(dataset: string, path?: string, inferContentType?: string, queryParametersSingleEncoded?: string): Promise<Blob> {
         const queryParams: string[] = [];
-        if (filePath !== undefined) {
-            queryParams.push(`path=${encodeURIComponent(String(filePath))}`);
+        if (path !== undefined) {
+            queryParams.push(`path=${encodeURIComponent(String(path))}`);
         }
         if (inferContentType !== undefined) {
             queryParams.push(`inferContentType=${encodeURIComponent(String(inferContentType))}`);
         }
-        const path = `/datasets/${encodeURIComponent(String(siteAddress))}/GetFileContentByPath` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
-        return await this.callConnector<Blob>("GET", path);
+        if (queryParametersSingleEncoded !== undefined) {
+            queryParams.push(`queryParametersSingleEncoded=${encodeURIComponent(String(queryParametersSingleEncoded))}`);
+        }
+        const requestPath = `/datasets/${encodeURIComponent(String(dataset))}/GetFileContentByPath` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
+        return await this.callConnector<Blob>("GET", requestPath);
     }
 
     /**
      * Get folder metadata
      * @remarks Gets information about the folder. Uses a file identifier to pick the folder.
      */
-    public async getFolderMetadataAsync(siteAddress: string, fileIdentifier: string): Promise<SPBlobMetadataResponse> {
+    public async getFolderMetadataAsync(dataset: string, id?: string): Promise<SPBlobMetadataResponse> {
         const queryParams: string[] = [];
-        if (fileIdentifier !== undefined) {
-            queryParams.push(`id=${encodeURIComponent(String(fileIdentifier))}`);
+        if (id !== undefined) {
+            queryParams.push(`id=${encodeURIComponent(String(id))}`);
         }
-        const path = `/datasets/${encodeURIComponent(String(siteAddress))}/GetFolder` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
-        return await this.callConnector<SPBlobMetadataResponse>("GET", path);
+        const requestPath = `/datasets/${encodeURIComponent(String(dataset))}/GetFolder` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
+        return await this.callConnector<SPBlobMetadataResponse>("GET", requestPath);
     }
 
     /**
      * Get folder metadata using path
      * @remarks Gets information about the folder. Uses a folder path to pick the folder.
      */
-    public async getFolderMetadataByPathAsync(siteAddress: string, folderPath: string): Promise<SPBlobMetadataResponse> {
+    public async getFolderMetadataByPathAsync(dataset: string, path?: string, queryParametersSingleEncoded?: string): Promise<SPBlobMetadataResponse> {
         const queryParams: string[] = [];
-        if (folderPath !== undefined) {
-            queryParams.push(`path=${encodeURIComponent(String(folderPath))}`);
+        if (path !== undefined) {
+            queryParams.push(`path=${encodeURIComponent(String(path))}`);
         }
-        const path = `/datasets/${encodeURIComponent(String(siteAddress))}/GetFolderByPath` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
-        return await this.callConnector<SPBlobMetadataResponse>("GET", path);
+        if (queryParametersSingleEncoded !== undefined) {
+            queryParams.push(`queryParametersSingleEncoded=${encodeURIComponent(String(queryParametersSingleEncoded))}`);
+        }
+        const requestPath = `/datasets/${encodeURIComponent(String(dataset))}/GetFolderByPath` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
+        return await this.callConnector<SPBlobMetadataResponse>("GET", requestPath);
     }
 
     /**
      * Send an HTTP request to SharePoint
      * @remarks Construct a SharePoint REST API to invoke. Note – This action may execute any SharePoint REST API you have access to. Please proceed with caution.
      */
-    public async httpRequestAsync(siteAddress: string, input: SharePointHttpRequestBodyParameters): Promise<void> {
-        const path = `/datasets/${encodeURIComponent(String(siteAddress))}/httprequest`;
-        await this.callConnector<void>("POST", path, input);
+    public async httpRequestAsync(input: SharePointHttpRequestBodyParameters, dataset: string): Promise<void> {
+        const requestPath = `/datasets/${encodeURIComponent(String(dataset))}/httprequest`;
+        await this.callConnector<void>("POST", requestPath, input);
     }
 
     /**
      * Join hub site
      * @remarks Join the requested site to the hub site. An Approval Token is required to complete the join successfully if that hub requires approval. If applicable, you should specify the same Approval Correlation Id as used in the "Set hub site join status to pending" action.
      */
-    public async joinHubSiteAsync(requestingSiteAddress: string, hubSiteId: string, approvalToken?: string, approvalCorrelationId?: string): Promise<void> {
+    public async joinHubSiteAsync(dataset: string, hubSiteId?: string, approvalToken?: string, approvalCorrelationId?: string): Promise<void> {
         const queryParams: string[] = [];
         if (hubSiteId !== undefined) {
             queryParams.push(`hubSiteId=${encodeURIComponent(String(hubSiteId))}`);
@@ -886,234 +1057,210 @@ export class SharepointonlineClient {
         if (approvalCorrelationId !== undefined) {
             queryParams.push(`approvalCorrelationId=${encodeURIComponent(String(approvalCorrelationId))}`);
         }
-        const path = `/datasets/${encodeURIComponent(String(requestingSiteAddress))}/joinhubsite` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
-        await this.callConnector<void>("POST", path);
+        const requestPath = `/datasets/${encodeURIComponent(String(dataset))}/joinhubsite` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
+        await this.callConnector<void>("POST", requestPath);
     }
 
     /**
      * Move file
      * @remarks Moves a file. Works in a similar way to the "Move to" command in SharePoint libraries. Returns information about the new file after move.
      */
-    public async moveFileAsync(currentSiteAddress: string, input: MoveFileParameters): Promise<SPBlobMetadataResponse> {
-        const path = `/datasets/${encodeURIComponent(String(currentSiteAddress))}/moveFileAsync`;
-        return await this.callConnector<SPBlobMetadataResponse>("POST", path, input);
+    public async moveFileAsync(input: MoveFileParameters, dataset: string): Promise<SPBlobMetadataResponse> {
+        const requestPath = `/datasets/${encodeURIComponent(String(dataset))}/moveFileAsync`;
+        return await this.callConnector<SPBlobMetadataResponse>("POST", requestPath, input);
     }
 
     /**
      * Move folder
      * @remarks Moves a folder. Works in a similar way to the "Move to" command in SharePoint libraries. Returns information about the new folder after move.
      */
-    public async moveFolderAsync(currentSiteAddress: string, input: MoveFolderParameters): Promise<SPBlobMetadataResponse> {
-        const path = `/datasets/${encodeURIComponent(String(currentSiteAddress))}/moveFolderAsync`;
-        return await this.callConnector<SPBlobMetadataResponse>("POST", path, input);
+    public async moveFolderAsync(input: MoveFolderParameters, dataset: string): Promise<SPBlobMetadataResponse> {
+        const requestPath = `/datasets/${encodeURIComponent(String(dataset))}/moveFolderAsync`;
+        return await this.callConnector<SPBlobMetadataResponse>("POST", requestPath, input);
     }
 
     /**
      * Set hub site join status to pending
      * @remarks Set the requested site's hub join request status to pending. The Approval Correlation Id is an optional parameter that helps SharePoint identify a particular hub join request. The requesting site can only have one pending request at a given time.
      */
-    public async notifyHubSiteJoinApprovalStartedAsync(requestingSiteAddress: string, approvalCorrelationId?: string): Promise<void> {
+    public async notifyHubSiteJoinApprovalStartedAsync(dataset: string, approvalCorrelationId?: string): Promise<void> {
         const queryParams: string[] = [];
         if (approvalCorrelationId !== undefined) {
             queryParams.push(`approvalCorrelationId=${encodeURIComponent(String(approvalCorrelationId))}`);
         }
-        const path = `/datasets/${encodeURIComponent(String(requestingSiteAddress))}/notifyhubsitejoinapprovalstarted` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
-        await this.callConnector<void>("POST", path);
+        const requestPath = `/datasets/${encodeURIComponent(String(dataset))}/notifyhubsitejoinapprovalstarted` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
+        await this.callConnector<void>("POST", requestPath);
     }
 
     /**
      * Get lists
      * @remarks Gets SharePoint lists from a site.
      */
-    public async getTablesAsync(siteAddress: string): Promise<TablesList> {
-        const path = `/datasets/${encodeURIComponent(String(siteAddress))}/tables`;
-        return await this.callConnector<TablesList>("GET", path);
+    public async getTablesAsync(dataset: string): Promise<TablesList> {
+        const requestPath = `/datasets/${encodeURIComponent(String(dataset))}/tables`;
+        return await this.callConnector<TablesList>("GET", requestPath);
     }
 
     /**
      * Create new document set
      * @remarks Creates a new document set list item.
      */
-    public async createNewDocumentSetAsync(siteAddress: string, library: string, input: CreateNewDocumentSetParameters): Promise<CreateNewDocumentSetResponse> {
-        const path = `/datasets/${encodeURIComponent(String(siteAddress))}/tables/${encodeURIComponent(String(library))}/createnewdocumentset`;
-        return await this.callConnector<CreateNewDocumentSetResponse>("POST", path, input);
+    public async createNewDocumentSetAsync(input: CreateNewDocumentSetParameters, dataset: string, table: string): Promise<CreateNewDocumentSetResponse> {
+        const requestPath = `/datasets/${encodeURIComponent(String(dataset))}/tables/${encodeURIComponent(String(table))}/createnewdocumentset`;
+        return await this.callConnector<CreateNewDocumentSetResponse>("POST", requestPath, input);
     }
 
     /**
      * Create new folder
      * @remarks Creates a new folder or folder path.
      */
-    public async createNewFolderAsync(siteAddress: string, listOrLibrary: string, input: CreateNewFolderParameters, limitColumnsByView?: string): Promise<CreateNewFolderResponse> {
+    public async createNewFolderAsync(input: CreateNewFolderParameters, dataset: string, table: string, view?: string): Promise<CreateNewFolderResponse> {
         const queryParams: string[] = [];
-        if (limitColumnsByView !== undefined) {
-            queryParams.push(`view=${encodeURIComponent(String(limitColumnsByView))}`);
+        if (view !== undefined) {
+            queryParams.push(`view=${encodeURIComponent(String(view))}`);
         }
-        const path = `/datasets/${encodeURIComponent(String(siteAddress))}/tables/${encodeURIComponent(String(listOrLibrary))}/createnewfolder` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
-        return await this.callConnector<CreateNewFolderResponse>("POST", path, input);
+        const requestPath = `/datasets/${encodeURIComponent(String(dataset))}/tables/${encodeURIComponent(String(table))}/createnewfolder` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
+        return await this.callConnector<CreateNewFolderResponse>("POST", requestPath, input);
     }
 
     /**
      * Resolve person
      * @remarks Returns a single matching user value so it can be assigned to a column of type person. If there are no matches, or multiple matches, this action will error out.
      */
-    public async searchForUserAsync(siteAddress: string, listOrLibrary: string, column: string, emailOrName: string, limitColumnsByView?: string): Promise<SPListExpandedUser> {
+    public async searchForUserAsync(dataset: string, table: string, entityId: string, searchValue?: string, view?: string): Promise<SPListExpandedUser> {
         const queryParams: string[] = [];
-        if (emailOrName !== undefined) {
-            queryParams.push(`searchValue=${encodeURIComponent(String(emailOrName))}`);
+        if (searchValue !== undefined) {
+            queryParams.push(`searchValue=${encodeURIComponent(String(searchValue))}`);
         }
-        if (limitColumnsByView !== undefined) {
-            queryParams.push(`view=${encodeURIComponent(String(limitColumnsByView))}`);
+        if (view !== undefined) {
+            queryParams.push(`view=${encodeURIComponent(String(view))}`);
         }
-        const path = `/datasets/${encodeURIComponent(String(siteAddress))}/tables/${encodeURIComponent(String(listOrLibrary))}/entities/${encodeURIComponent(String(column))}/searchforuser` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
-        return await this.callConnector<SPListExpandedUser>("GET", path);
-    }
-
-    /**
-     * Returns User fields for a list
-     * @remarks Discovery method used to populate dynamic parameter values at design time.
-     */
-    public async getEntitiesForUserAsync(siteAddress: string, listName: string, limitColumnsByView?: string): Promise<Array<SPListEntity>> {
-        const queryParams: string[] = [];
-        if (limitColumnsByView !== undefined) {
-            queryParams.push(`view=${encodeURIComponent(String(limitColumnsByView))}`);
-        }
-        const path = `/datasets/${encodeURIComponent(String(siteAddress))}/tables/${encodeURIComponent(String(listName))}/entitiesfor/user` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
-        return await this.callConnector<Array<SPListEntity>>("GET", path);
+        const requestPath = `/datasets/${encodeURIComponent(String(dataset))}/tables/${encodeURIComponent(String(table))}/entities/${encodeURIComponent(String(entityId))}/searchforuser` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
+        return await this.callConnector<SPListExpandedUser>("GET", requestPath);
     }
 
     /**
      * Get files (properties only)
-     * @remarks Gets the properties saved in the columns in the library for all folders and files stored in the library.
-            You can also filter down to the items that match a condition. An "Apply to each" section is usually used to work with the output from this action.
-            When using this with the On-Premises Data Gateway, the name of the library to connect to may need to be entered manually.
+     * @remarks Gets the properties saved in the columns in the library for all folders and files stored in the library.             You can also filter down to the items that match a condition. An "Apply to each" section is usually used to work with the output from this action.             When using this with the On-Premises Data Gateway, the name of the library to connect to may need to be entered manually.
      */
-    public async getFileItemsAsync(siteAddress: string, libraryName: string, filterQuery?: string, orderBy?: string, topCount?: number, limitEntriesToFolder?: string, includeNestedItems?: string, limitColumnsByView?: string): Promise<ItemsList> {
+    public async getFileItemsAsync(dataset: string, table: string, filter?: string, orderby?: string, top?: string, folderPath?: string, viewScopeOption?: string, view?: string): Promise<ItemsList> {
         const queryParams: string[] = [];
-        if (filterQuery !== undefined) {
-            queryParams.push(`$filter=${encodeURIComponent(String(filterQuery))}`);
+        if (filter !== undefined) {
+            queryParams.push(`$filter=${encodeURIComponent(String(filter))}`);
         }
-        if (orderBy !== undefined) {
-            queryParams.push(`$orderby=${encodeURIComponent(String(orderBy))}`);
+        if (orderby !== undefined) {
+            queryParams.push(`$orderby=${encodeURIComponent(String(orderby))}`);
         }
-        if (topCount !== undefined) {
-            queryParams.push(`$top=${encodeURIComponent(String(topCount))}`);
+        if (top !== undefined) {
+            queryParams.push(`$top=${encodeURIComponent(String(top))}`);
         }
-        if (limitEntriesToFolder !== undefined) {
-            queryParams.push(`folderPath=${encodeURIComponent(String(limitEntriesToFolder))}`);
+        if (folderPath !== undefined) {
+            queryParams.push(`folderPath=${encodeURIComponent(String(folderPath))}`);
         }
-        if (includeNestedItems !== undefined) {
-            queryParams.push(`viewScopeOption=${encodeURIComponent(String(includeNestedItems))}`);
+        if (viewScopeOption !== undefined) {
+            queryParams.push(`viewScopeOption=${encodeURIComponent(String(viewScopeOption))}`);
         }
-        if (limitColumnsByView !== undefined) {
-            queryParams.push(`view=${encodeURIComponent(String(limitColumnsByView))}`);
+        if (view !== undefined) {
+            queryParams.push(`view=${encodeURIComponent(String(view))}`);
         }
-        const path = `/datasets/${encodeURIComponent(String(siteAddress))}/tables/${encodeURIComponent(String(libraryName))}/getfileitems` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
-        return await this.callConnector<ItemsList>("GET", path);
-    }
-
-    /**
-     * Get list image fields
-     * @remarks Discovery method used to populate dynamic parameter values at design time.
-     */
-    public async getListImageFieldsAsync(siteAddress: string, listName: string): Promise<Array<Table>> {
-        const path = `/datasets/${encodeURIComponent(String(siteAddress))}/tables/${encodeURIComponent(String(listName))}/imagefields`;
-        return await this.callConnector<Array<Table>>("GET", path);
+        const requestPath = `/datasets/${encodeURIComponent(String(dataset))}/tables/${encodeURIComponent(String(table))}/getfileitems` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
+        return await this.callConnector<ItemsList>("GET", requestPath);
     }
 
     /**
      * Get items
      * @remarks Gets items from a SharePoint list.
      */
-    public async getItemsAsync(siteAddress: string, listName: string, filterQuery?: string, orderBy?: string, topCount?: number, limitEntriesToFolder?: string, includeNestedItems?: string, limitColumnsByView?: string): Promise<ItemsList> {
+    public async getItemsAsync(dataset: string, table: string, filter?: string, orderby?: string, top?: string, folderPath?: string, viewScopeOption?: string, view?: string): Promise<ItemsList> {
         const queryParams: string[] = [];
-        if (filterQuery !== undefined) {
-            queryParams.push(`$filter=${encodeURIComponent(String(filterQuery))}`);
+        if (filter !== undefined) {
+            queryParams.push(`$filter=${encodeURIComponent(String(filter))}`);
         }
-        if (orderBy !== undefined) {
-            queryParams.push(`$orderby=${encodeURIComponent(String(orderBy))}`);
+        if (orderby !== undefined) {
+            queryParams.push(`$orderby=${encodeURIComponent(String(orderby))}`);
         }
-        if (topCount !== undefined) {
-            queryParams.push(`$top=${encodeURIComponent(String(topCount))}`);
+        if (top !== undefined) {
+            queryParams.push(`$top=${encodeURIComponent(String(top))}`);
         }
-        if (limitEntriesToFolder !== undefined) {
-            queryParams.push(`folderPath=${encodeURIComponent(String(limitEntriesToFolder))}`);
+        if (folderPath !== undefined) {
+            queryParams.push(`folderPath=${encodeURIComponent(String(folderPath))}`);
         }
-        if (includeNestedItems !== undefined) {
-            queryParams.push(`viewScopeOption=${encodeURIComponent(String(includeNestedItems))}`);
+        if (viewScopeOption !== undefined) {
+            queryParams.push(`viewScopeOption=${encodeURIComponent(String(viewScopeOption))}`);
         }
-        if (limitColumnsByView !== undefined) {
-            queryParams.push(`view=${encodeURIComponent(String(limitColumnsByView))}`);
+        if (view !== undefined) {
+            queryParams.push(`view=${encodeURIComponent(String(view))}`);
         }
-        const path = `/datasets/${encodeURIComponent(String(siteAddress))}/tables/${encodeURIComponent(String(listName))}/items` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
-        return await this.callConnector<ItemsList>("GET", path);
+        const requestPath = `/datasets/${encodeURIComponent(String(dataset))}/tables/${encodeURIComponent(String(table))}/items` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
+        return await this.callConnector<ItemsList>("GET", requestPath);
     }
 
     /**
      * Create item
      * @remarks Creates a new item in a SharePoint list.
      */
-    public async postItemAsync(siteAddress: string, listName: string, input: PostItemInput, limitColumnsByView?: string): Promise<PostItemResponse> {
+    public async postItemAsync(input: PostItemInput, dataset: string, table: string, view?: string): Promise<PostItemResponse> {
         const queryParams: string[] = [];
-        if (limitColumnsByView !== undefined) {
-            queryParams.push(`view=${encodeURIComponent(String(limitColumnsByView))}`);
+        if (view !== undefined) {
+            queryParams.push(`view=${encodeURIComponent(String(view))}`);
         }
-        const path = `/datasets/${encodeURIComponent(String(siteAddress))}/tables/${encodeURIComponent(String(listName))}/items` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
-        return await this.callConnector<PostItemResponse>("POST", path, input);
+        const requestPath = `/datasets/${encodeURIComponent(String(dataset))}/tables/${encodeURIComponent(String(table))}/items` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
+        return await this.callConnector<PostItemResponse>("POST", requestPath, input);
     }
 
     /**
      * Get item
      * @remarks Gets a single item by its id from a SharePoint list.
      */
-    public async getItemAsync(siteAddress: string, listName: string, id: number, limitColumnsByView?: string): Promise<GetItemResponse> {
+    public async getItemAsync(dataset: string, table: string, id: string, view?: string): Promise<GetItemResponse> {
         const queryParams: string[] = [];
-        if (limitColumnsByView !== undefined) {
-            queryParams.push(`view=${encodeURIComponent(String(limitColumnsByView))}`);
+        if (view !== undefined) {
+            queryParams.push(`view=${encodeURIComponent(String(view))}`);
         }
-        const path = `/datasets/${encodeURIComponent(String(siteAddress))}/tables/${encodeURIComponent(String(listName))}/items/${encodeURIComponent(String(id))}` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
-        return await this.callConnector<GetItemResponse>("GET", path);
+        const requestPath = `/datasets/${encodeURIComponent(String(dataset))}/tables/${encodeURIComponent(String(table))}/items/${encodeURIComponent(String(id))}` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
+        return await this.callConnector<GetItemResponse>("GET", requestPath);
     }
 
     /**
      * Delete item
      * @remarks Deletes an item from a SharePoint list.
      */
-    public async deleteItemAsync(siteAddress: string, listName: string, id: number): Promise<void> {
-        const path = `/datasets/${encodeURIComponent(String(siteAddress))}/tables/${encodeURIComponent(String(listName))}/items/${encodeURIComponent(String(id))}`;
-        await this.callConnector<void>("DELETE", path);
+    public async deleteItemAsync(dataset: string, table: string, id: string): Promise<void> {
+        const requestPath = `/datasets/${encodeURIComponent(String(dataset))}/tables/${encodeURIComponent(String(table))}/items/${encodeURIComponent(String(id))}`;
+        await this.callConnector<void>("DELETE", requestPath);
     }
 
     /**
      * Update item
      * @remarks Updates an item in a SharePoint list.
      */
-    public async patchItemAsync(siteAddress: string, listName: string, id: number, input: PatchItemInput, limitColumnsByView?: string): Promise<PatchItemResponse> {
+    public async patchItemAsync(input: PatchItemInput, dataset: string, table: string, id: string, view?: string): Promise<PatchItemResponse> {
         const queryParams: string[] = [];
-        if (limitColumnsByView !== undefined) {
-            queryParams.push(`view=${encodeURIComponent(String(limitColumnsByView))}`);
+        if (view !== undefined) {
+            queryParams.push(`view=${encodeURIComponent(String(view))}`);
         }
-        const path = `/datasets/${encodeURIComponent(String(siteAddress))}/tables/${encodeURIComponent(String(listName))}/items/${encodeURIComponent(String(id))}` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
-        return await this.callConnector<PatchItemResponse>("PATCH", path, input);
+        const requestPath = `/datasets/${encodeURIComponent(String(dataset))}/tables/${encodeURIComponent(String(table))}/items/${encodeURIComponent(String(id))}` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
+        return await this.callConnector<PatchItemResponse>("PATCH", requestPath, input);
     }
 
     /**
      * Create an approval request for an item or file
      * @remarks Creates an approval request for an item or file.
      */
-    public async createApprovalRequestAsync(siteAddress: string, listOrLibrary: string, id: number, input: CreateApprovalRequestInput, approvalType: number): Promise<ApprovalData> {
+    public async createApprovalRequestAsync(input: CreateApprovalRequestInput, dataset: string, table: string, id: string, approvalType?: string): Promise<ApprovalData> {
         const queryParams: string[] = [];
         if (approvalType !== undefined) {
             queryParams.push(`approvalType=${encodeURIComponent(String(approvalType))}`);
         }
-        const path = `/datasets/${encodeURIComponent(String(siteAddress))}/tables/${encodeURIComponent(String(listOrLibrary))}/items/${encodeURIComponent(String(id))}/approval` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
-        return await this.callConnector<ApprovalData>("POST", path, input);
+        const requestPath = `/datasets/${encodeURIComponent(String(dataset))}/tables/${encodeURIComponent(String(table))}/items/${encodeURIComponent(String(id))}/approval` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
+        return await this.callConnector<ApprovalData>("POST", requestPath, input);
     }
 
     /**
      * Get changes for an item or a file (properties only)
      * @remarks Returns information about columns that have changed within a given time window. Note: The list must have Versioning turned on.
      */
-    public async getItemChangesAsync(siteAddress: string, listOrLibraryName: string, id: number, since: string, until?: string, includeMinorVersions?: boolean, limitColumnsByView?: string): Promise<GetItemChangesResponse> {
+    public async getItemChangesAsync(dataset: string, table: string, id: string, since?: string, until?: string, includeDrafts?: string, view?: string): Promise<GetItemChangesResponse> {
         const queryParams: string[] = [];
         if (since !== undefined) {
             queryParams.push(`since=${encodeURIComponent(String(since))}`);
@@ -1121,172 +1268,272 @@ export class SharepointonlineClient {
         if (until !== undefined) {
             queryParams.push(`until=${encodeURIComponent(String(until))}`);
         }
-        if (includeMinorVersions !== undefined) {
-            queryParams.push(`includeDrafts=${encodeURIComponent(String(includeMinorVersions))}`);
+        if (includeDrafts !== undefined) {
+            queryParams.push(`includeDrafts=${encodeURIComponent(String(includeDrafts))}`);
         }
-        if (limitColumnsByView !== undefined) {
-            queryParams.push(`view=${encodeURIComponent(String(limitColumnsByView))}`);
+        if (view !== undefined) {
+            queryParams.push(`view=${encodeURIComponent(String(view))}`);
         }
-        const path = `/datasets/${encodeURIComponent(String(siteAddress))}/tables/${encodeURIComponent(String(listOrLibraryName))}/items/${encodeURIComponent(String(id))}/changes` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
-        return await this.callConnector<GetItemChangesResponse>("POST", path);
+        const requestPath = `/datasets/${encodeURIComponent(String(dataset))}/tables/${encodeURIComponent(String(table))}/items/${encodeURIComponent(String(id))}/changes` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
+        return await this.callConnector<GetItemChangesResponse>("POST", requestPath);
     }
 
     /**
      * Check in file
      * @remarks Check in a checked out file in a document library, which makes the version of the document available to others.
      */
-    public async checkInFileAsync(siteAddress: string, libraryName: string, id: number, input: FileCheckInParameters): Promise<void> {
-        const path = `/datasets/${encodeURIComponent(String(siteAddress))}/tables/${encodeURIComponent(String(libraryName))}/items/${encodeURIComponent(String(id))}/checkinfile`;
-        await this.callConnector<void>("POST", path, input);
+    public async checkInFileAsync(input: FileCheckInParameters, dataset: string, table: string, id: string): Promise<void> {
+        const requestPath = `/datasets/${encodeURIComponent(String(dataset))}/tables/${encodeURIComponent(String(table))}/items/${encodeURIComponent(String(id))}/checkinfile`;
+        await this.callConnector<void>("POST", requestPath, input);
     }
 
     /**
      * Check out file
      * @remarks Check out a file in a document library to prevent others from editing the document, and your changes from being visible until the documented is checked in.
      */
-    public async checkOutFileAsync(siteAddress: string, libraryName: string, id: number): Promise<void> {
-        const path = `/datasets/${encodeURIComponent(String(siteAddress))}/tables/${encodeURIComponent(String(libraryName))}/items/${encodeURIComponent(String(id))}/checkoutfile`;
-        await this.callConnector<void>("POST", path);
+    public async checkOutFileAsync(dataset: string, table: string, id: string): Promise<void> {
+        const requestPath = `/datasets/${encodeURIComponent(String(dataset))}/tables/${encodeURIComponent(String(table))}/items/${encodeURIComponent(String(id))}/checkoutfile`;
+        await this.callConnector<void>("POST", requestPath);
     }
 
     /**
      * Discard check out
      * @remarks If you check out a file and don’t make changes to it, or you make changes that you don’t want to keep, you can simply discard the checkout, rather than saving the file. If your organization tracks versions, a new version is created each time you check a file back into the library. By discarding the checkout, you can avoid making new versions when you haven’t made any changes to the file.
      */
-    public async discardFileCheckOutAsync(siteAddress: string, libraryName: string, id: number): Promise<void> {
-        const path = `/datasets/${encodeURIComponent(String(siteAddress))}/tables/${encodeURIComponent(String(libraryName))}/items/${encodeURIComponent(String(id))}/discardfilecheckout`;
-        await this.callConnector<void>("POST", path);
+    public async discardFileCheckOutAsync(dataset: string, table: string, id: string): Promise<void> {
+        const requestPath = `/datasets/${encodeURIComponent(String(dataset))}/tables/${encodeURIComponent(String(table))}/items/${encodeURIComponent(String(id))}/discardfilecheckout`;
+        await this.callConnector<void>("POST", requestPath);
     }
 
     /**
      * Get file properties
-     * @remarks Gets the properties saved in the columns in the library for the item specified by the item id.
-            You can add a "Get file content" step and use the "File identifier" property returned by this action to get to the contents of the file.
-            When using this with the On-Premises Data Gateway, the name of the library to connect to may need to be entered manually.
+     * @remarks Gets the properties saved in the columns in the library for the item specified by the item id.             You can add a "Get file content" step and use the "File identifier" property returned by this action to get to the contents of the file.             When using this with the On-Premises Data Gateway, the name of the library to connect to may need to be entered manually.
      */
-    public async getFileItemAsync(siteAddress: string, libraryName: string, id: number, limitColumnsByView?: string): Promise<Item> {
+    public async getFileItemAsync(dataset: string, table: string, id: string, view?: string): Promise<Item> {
         const queryParams: string[] = [];
-        if (limitColumnsByView !== undefined) {
-            queryParams.push(`view=${encodeURIComponent(String(limitColumnsByView))}`);
+        if (view !== undefined) {
+            queryParams.push(`view=${encodeURIComponent(String(view))}`);
         }
-        const path = `/datasets/${encodeURIComponent(String(siteAddress))}/tables/${encodeURIComponent(String(libraryName))}/items/${encodeURIComponent(String(id))}/getfileitem` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
-        return await this.callConnector<Item>("GET", path);
+        const requestPath = `/datasets/${encodeURIComponent(String(dataset))}/tables/${encodeURIComponent(String(table))}/items/${encodeURIComponent(String(id))}/getfileitem` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
+        return await this.callConnector<Item>("GET", requestPath);
     }
 
     /**
      * Grant access to an item or a folder
      * @remarks Grant access to an item or a folder in SharePoint to specific people.
      */
-    public async grantAccessAsync(siteAddress: string, listOrLibraryName: string, id: number, input: ItemGrantAccessBody): Promise<void> {
-        const path = `/datasets/${encodeURIComponent(String(siteAddress))}/tables/${encodeURIComponent(String(listOrLibraryName))}/items/${encodeURIComponent(String(id))}/grantaccess`;
-        await this.callConnector<void>("POST", path, input);
+    public async grantAccessAsync(input: ItemGrantAccessBody, dataset: string, table: string, id: string): Promise<void> {
+        const requestPath = `/datasets/${encodeURIComponent(String(dataset))}/tables/${encodeURIComponent(String(table))}/items/${encodeURIComponent(String(id))}/grantaccess`;
+        await this.callConnector<void>("POST", requestPath, input);
     }
 
     /**
      * Update file properties
-     * @remarks Updates the properties stored in columns in a library for the item specified by the item id. Use "Update file" action to update file contents.
-            When using this with the On-Premises Data Gateway, the name of the library to connect to may need to be entered manually.
+     * @remarks Updates the properties stored in columns in a library for the item specified by the item id. Use "Update file" action to update file contents.             When using this with the On-Premises Data Gateway, the name of the library to connect to may need to be entered manually.
      */
-    public async patchFileItemAsync(siteAddress: string, libraryName: string, id: number, input: PatchFileItemInput, limitColumnsByView?: string): Promise<PatchFileItemResponse> {
+    public async patchFileItemAsync(input: PatchFileItemInput, dataset: string, table: string, id: string, view?: string): Promise<PatchFileItemResponse> {
         const queryParams: string[] = [];
-        if (limitColumnsByView !== undefined) {
-            queryParams.push(`view=${encodeURIComponent(String(limitColumnsByView))}`);
+        if (view !== undefined) {
+            queryParams.push(`view=${encodeURIComponent(String(view))}`);
         }
-        const path = `/datasets/${encodeURIComponent(String(siteAddress))}/tables/${encodeURIComponent(String(libraryName))}/items/${encodeURIComponent(String(id))}/patchfileitem` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
-        return await this.callConnector<PatchFileItemResponse>("PATCH", path, input);
+        const requestPath = `/datasets/${encodeURIComponent(String(dataset))}/tables/${encodeURIComponent(String(table))}/items/${encodeURIComponent(String(id))}/patchfileitem` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
+        return await this.callConnector<PatchFileItemResponse>("PATCH", requestPath, input);
     }
 
     /**
      * Update file properties using AI Builder model results
      * @remarks Updates the values stored in library columns for a file analyzed by the model specified by the ModelId.
      */
-    public async patchFileItemWithPredictedValuesAsync(siteAddress: string, libraryName: string, id: number, input: PatchFileItemWithPredictedValuesParameters): Promise<Item> {
-        const path = `/datasets/${encodeURIComponent(String(siteAddress))}/tables/${encodeURIComponent(String(libraryName))}/items/${encodeURIComponent(String(id))}/patchfileitemwithpredictedvalues`;
-        return await this.callConnector<Item>("POST", path, input);
+    public async patchFileItemWithPredictedValuesAsync(input: PatchFileItemWithPredictedValuesParameters, dataset: string, table: string, id: string): Promise<Item> {
+        const requestPath = `/datasets/${encodeURIComponent(String(dataset))}/tables/${encodeURIComponent(String(table))}/items/${encodeURIComponent(String(id))}/patchfileitemwithpredictedvalues`;
+        return await this.callConnector<Item>("POST", requestPath, input);
     }
 
     /**
      * Set content approval status
      * @remarks Sets the content approval status for an item in a list or library that has content approval turned on. You must provide an ETag for pages and files. You can get the ETag using the Get File Metadata action. This action is only available for SharePoint Online and SharePoint 2019.
      */
-    public async setApprovalStatusAsync(siteAddress: string, libraryName: string, id: number, action: string, comments?: string, eTag?: string): Promise<SetApprovalStatusOutput> {
+    public async setApprovalStatusAsync(dataset: string, table: string, id: string, approvalAction?: string, comments?: string, entityTag?: string): Promise<SetApprovalStatusOutput> {
         const queryParams: string[] = [];
-        if (action !== undefined) {
-            queryParams.push(`approvalAction=${encodeURIComponent(String(action))}`);
+        if (approvalAction !== undefined) {
+            queryParams.push(`approvalAction=${encodeURIComponent(String(approvalAction))}`);
         }
         if (comments !== undefined) {
             queryParams.push(`comments=${encodeURIComponent(String(comments))}`);
         }
-        if (eTag !== undefined) {
-            queryParams.push(`entityTag=${encodeURIComponent(String(eTag))}`);
+        if (entityTag !== undefined) {
+            queryParams.push(`entityTag=${encodeURIComponent(String(entityTag))}`);
         }
-        const path = `/datasets/${encodeURIComponent(String(siteAddress))}/tables/${encodeURIComponent(String(libraryName))}/items/${encodeURIComponent(String(id))}/setapprovalstatus` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
-        return await this.callConnector<SetApprovalStatusOutput>("POST", path);
+        const requestPath = `/datasets/${encodeURIComponent(String(dataset))}/tables/${encodeURIComponent(String(table))}/items/${encodeURIComponent(String(id))}/setapprovalstatus` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
+        return await this.callConnector<SetApprovalStatusOutput>("POST", requestPath);
     }
 
     /**
      * Stop sharing an item or a file
      * @remarks Delete all links giving access to an item or a file and remove all people with direct access except for owners.
      */
-    public async unshareItemAsync(siteAddress: string, listOrLibraryName: string, id: number): Promise<void> {
-        const path = `/datasets/${encodeURIComponent(String(siteAddress))}/tables/${encodeURIComponent(String(listOrLibraryName))}/items/${encodeURIComponent(String(id))}/unshare`;
-        await this.callConnector<void>("POST", path);
+    public async unshareItemAsync(dataset: string, table: string, id: string): Promise<void> {
+        const requestPath = `/datasets/${encodeURIComponent(String(dataset))}/tables/${encodeURIComponent(String(table))}/items/${encodeURIComponent(String(id))}/unshare`;
+        await this.callConnector<void>("POST", requestPath);
     }
 
     /**
      * Get attachments
      * @remarks Returns the list of attachments for the specified list item. You can add a "Get attachment content" step and use the "File identifier" property returned by this action to get to the contents of the file.
      */
-    public async getItemAttachmentsAsync(siteAddress: string, listName: string, id: string): Promise<Array<SPListItemAttachment>> {
-        const path = `/datasets/${encodeURIComponent(String(siteAddress))}/tables/${encodeURIComponent(String(listName))}/items/${encodeURIComponent(String(id))}/attachments`;
-        return await this.callConnector<Array<SPListItemAttachment>>("GET", path);
+    public async getItemAttachmentsAsync(dataset: string, table: string, itemId: string): Promise<Array<SPListItemAttachment>> {
+        const requestPath = `/datasets/${encodeURIComponent(String(dataset))}/tables/${encodeURIComponent(String(table))}/items/${encodeURIComponent(String(itemId))}/attachments`;
+        return await this.callConnector<Array<SPListItemAttachment>>("GET", requestPath);
     }
 
     /**
      * Add attachment
      * @remarks Adds a new attachment to the specified list item.
      */
-    public async createAttachmentAsync(siteAddress: string, listName: string, id: number, input: Blob, fileName: string): Promise<SPListItemAttachment> {
+    public async createAttachmentAsync(input: CreateAttachmentInput, dataset: string, table: string, itemId: string, displayName?: string): Promise<SPListItemAttachment> {
         const queryParams: string[] = [];
-        if (fileName !== undefined) {
-            queryParams.push(`displayName=${encodeURIComponent(String(fileName))}`);
+        if (displayName !== undefined) {
+            queryParams.push(`displayName=${encodeURIComponent(String(displayName))}`);
         }
-        const path = `/datasets/${encodeURIComponent(String(siteAddress))}/tables/${encodeURIComponent(String(listName))}/items/${encodeURIComponent(String(id))}/attachments` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
-        return await this.callConnector<SPListItemAttachment>("POST", path, input);
+        const requestPath = `/datasets/${encodeURIComponent(String(dataset))}/tables/${encodeURIComponent(String(table))}/items/${encodeURIComponent(String(itemId))}/attachments` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
+        return await this.callConnector<SPListItemAttachment>("POST", requestPath, input);
     }
 
     /**
      * Delete attachment
      * @remarks Deletes the specified attachment.
      */
-    public async deleteAttachmentAsync(siteAddress: string, listName: string, id: number, fileIdentifier: string): Promise<void> {
-        const path = `/datasets/${encodeURIComponent(String(siteAddress))}/tables/${encodeURIComponent(String(listName))}/items/${encodeURIComponent(String(id))}/attachments/${encodeURIComponent(String(fileIdentifier))}`;
-        await this.callConnector<void>("DELETE", path);
+    public async deleteAttachmentAsync(dataset: string, table: string, itemId: string, attachmentId: string): Promise<void> {
+        const requestPath = `/datasets/${encodeURIComponent(String(dataset))}/tables/${encodeURIComponent(String(table))}/items/${encodeURIComponent(String(itemId))}/attachments/${encodeURIComponent(String(attachmentId))}`;
+        await this.callConnector<void>("DELETE", requestPath);
     }
 
     /**
      * Get attachment content
      * @remarks Returns file contents using the file identifier. The contents can be copied somewhere else, or be used as an attachment.
      */
-    public async getAttachmentContentAsync(siteAddress: string, listName: string, id: number, fileIdentifier: string): Promise<Blob> {
-        const path = `/datasets/${encodeURIComponent(String(siteAddress))}/tables/${encodeURIComponent(String(listName))}/items/${encodeURIComponent(String(id))}/attachments/${encodeURIComponent(String(fileIdentifier))}/$value`;
-        return await this.callConnector<Blob>("GET", path);
+    public async getAttachmentContentAsync(dataset: string, table: string, itemId: string, attachmentId: string): Promise<Blob> {
+        const requestPath = `/datasets/${encodeURIComponent(String(dataset))}/tables/${encodeURIComponent(String(table))}/items/${encodeURIComponent(String(itemId))}/attachments/${encodeURIComponent(String(attachmentId))}/$value`;
+        return await this.callConnector<Blob>("GET", requestPath);
     }
 
     /**
-     * Get document library templates
-     * @remarks Discovery method used to populate dynamic parameter values at design time.
+     * When an item or a file is modified
+     * @remarks Triggers when an item is modified (but not when it is created).
      */
-    public async getContentAssemblyTemplatesAsync(dataset: string, sharePointDocumentLibraryName: string): Promise<Array<Table>> {
-        const path = `/datasets/${encodeURIComponent(String(dataset))}/tables/${encodeURIComponent(String(sharePointDocumentLibraryName))}/templates`;
-        return await this.callConnector<Array<Table>>("GET", path);
+    public async getOnChangedItemsAsync(dataset: string, table: string, folderPath?: string, view?: string): Promise<ItemsList> {
+        const queryParams: string[] = [];
+        if (folderPath !== undefined) {
+            queryParams.push(`folderPath=${encodeURIComponent(String(folderPath))}`);
+        }
+        if (view !== undefined) {
+            queryParams.push(`view=${encodeURIComponent(String(view))}`);
+        }
+        const requestPath = `/datasets/${encodeURIComponent(String(dataset))}/tables/${encodeURIComponent(String(table))}/onchangeditems` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
+        return await this.callConnector<ItemsList>("GET", requestPath);
+    }
+
+    /**
+     * When a file is deleted
+     * @remarks Triggers when a file is deleted in a library. You can optionally specify a folder to watch as well. When a folder is deleted, the trigger will fire only once for the deleted folder. This can only be used by site collection admins of the site where the list is located.
+     */
+    public async getOnDeletedFileItemsAsync(dataset: string, table: string, folderPath?: string): Promise<DeletedItemList> {
+        const queryParams: string[] = [];
+        if (folderPath !== undefined) {
+            queryParams.push(`folderPath=${encodeURIComponent(String(folderPath))}`);
+        }
+        const requestPath = `/datasets/${encodeURIComponent(String(dataset))}/tables/${encodeURIComponent(String(table))}/ondeletedfileitems` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
+        return await this.callConnector<DeletedItemList>("GET", requestPath);
+    }
+
+    /**
+     * When an item is deleted
+     * @remarks Triggers when an item is deleted in a list. This can only be used by site collection admins of the site where the list is located.
+     */
+    public async getOnDeletedItemsAsync(dataset: string, table: string): Promise<DeletedItemList> {
+        const requestPath = `/datasets/${encodeURIComponent(String(dataset))}/tables/${encodeURIComponent(String(table))}/ondeleteditems`;
+        return await this.callConnector<DeletedItemList>("GET", requestPath);
+    }
+
+    /**
+     * When a file is created (properties only)
+     * @remarks Triggers when an item is created in a library. Returns only the properties stored in the library columns.             You can add a "Get file content" step and use the "File identifier" property returned by this action to get to the contents of the file.             When using this with the On-Premises Data Gateway, the name of the library to connect to may need to be entered manually.
+     */
+    public async getOnNewFileItemsAsync(dataset: string, table: string, folderPath?: string, view?: string): Promise<ItemsList> {
+        const queryParams: string[] = [];
+        if (folderPath !== undefined) {
+            queryParams.push(`folderPath=${encodeURIComponent(String(folderPath))}`);
+        }
+        if (view !== undefined) {
+            queryParams.push(`view=${encodeURIComponent(String(view))}`);
+        }
+        const requestPath = `/datasets/${encodeURIComponent(String(dataset))}/tables/${encodeURIComponent(String(table))}/onnewfileitems` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
+        return await this.callConnector<ItemsList>("GET", requestPath);
+    }
+
+    /**
+     * When an item is created
+     * @remarks Triggers when an item is created.
+     */
+    public async getOnNewItemsAsync(dataset: string, table: string, view?: string): Promise<ItemsList> {
+        const queryParams: string[] = [];
+        if (view !== undefined) {
+            queryParams.push(`view=${encodeURIComponent(String(view))}`);
+        }
+        const requestPath = `/datasets/${encodeURIComponent(String(dataset))}/tables/${encodeURIComponent(String(table))}/onnewitems` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
+        return await this.callConnector<ItemsList>("GET", requestPath);
+    }
+
+    /**
+     * When a file is classified by a Microsoft Syntex model
+     * @remarks Triggers a flow when Microsoft Syntex changes the classification date of any file in the library. The date changes when a document processing model classifies or extracts information.
+     */
+    public async getOnUpdatedFileClassifiedTimesAsync(dataset: string, table: string, folderPath?: string, view?: string): Promise<ItemsList> {
+        const queryParams: string[] = [];
+        if (folderPath !== undefined) {
+            queryParams.push(`folderPath=${encodeURIComponent(String(folderPath))}`);
+        }
+        if (view !== undefined) {
+            queryParams.push(`view=${encodeURIComponent(String(view))}`);
+        }
+        const requestPath = `/datasets/${encodeURIComponent(String(dataset))}/tables/${encodeURIComponent(String(table))}/onupdatedfileclassifiedtimes` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
+        return await this.callConnector<ItemsList>("GET", requestPath);
+    }
+
+    /**
+     * When a file is created or modified (properties only)
+     * @remarks Triggers when an item is created, or modified in a library. Returns only the properties stored in the library columns.             You can add a "Get file content" step and use the "File identifier" property returned by this action to get to the contents of the file.             When using this with the On-Premises Data Gateway, the name of the library to connect to may need to be entered manually.
+     */
+    public async getOnUpdatedFileItemsAsync(dataset: string, table: string, folderPath?: string, view?: string): Promise<ItemsList> {
+        const queryParams: string[] = [];
+        if (folderPath !== undefined) {
+            queryParams.push(`folderPath=${encodeURIComponent(String(folderPath))}`);
+        }
+        if (view !== undefined) {
+            queryParams.push(`view=${encodeURIComponent(String(view))}`);
+        }
+        const requestPath = `/datasets/${encodeURIComponent(String(dataset))}/tables/${encodeURIComponent(String(table))}/onupdatedfileitems` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
+        return await this.callConnector<ItemsList>("GET", requestPath);
+    }
+
+    /**
+     * When an item is created or modified
+     * @remarks Triggers when an item is created, and also each time it is modified.
+     */
+    public async getOnUpdatedItemsAsync(dataset: string, table: string, view?: string): Promise<ItemsList> {
+        const queryParams: string[] = [];
+        if (view !== undefined) {
+            queryParams.push(`view=${encodeURIComponent(String(view))}`);
+        }
+        const requestPath = `/datasets/${encodeURIComponent(String(dataset))}/tables/${encodeURIComponent(String(table))}/onupdateditems` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
+        return await this.callConnector<ItemsList>("GET", requestPath);
     }
 
     /**
      * Generate document using Microsoft Syntex (preview)
      * @remarks Use this action to create documents based on modern templates from Microsoft Syntex. This preview requires a Syntex license. Pricing is subject to change. For more info see: https://docs.microsoft.com/en-us/microsoft-365/contentunderstanding/content-assembly.
      */
-    public async createContentAssemblyDocumentAsync(siteAddress: string, documentLibraryName: string, documentTemplate: string, input: CreateContentAssemblyDocumentInput, folderPath?: string, fileName?: string, viewNoEffect?: string): Promise<SPBlobMetadataResponse> {
+    public async createContentAssemblyDocumentAsync(input: CreateContentAssemblyDocumentInput, dataset: string, table: string, template: string, folderPath?: string, fileName?: string, view?: string): Promise<SPBlobMetadataResponse> {
         const queryParams: string[] = [];
         if (folderPath !== undefined) {
             queryParams.push(`folderPath=${encodeURIComponent(String(folderPath))}`);
@@ -1294,152 +1541,102 @@ export class SharepointonlineClient {
         if (fileName !== undefined) {
             queryParams.push(`fileName=${encodeURIComponent(String(fileName))}`);
         }
-        if (viewNoEffect !== undefined) {
-            queryParams.push(`view=${encodeURIComponent(String(viewNoEffect))}`);
+        if (view !== undefined) {
+            queryParams.push(`view=${encodeURIComponent(String(view))}`);
         }
-        const path = `/datasets/${encodeURIComponent(String(siteAddress))}/tables/${encodeURIComponent(String(documentLibraryName))}/templates/${encodeURIComponent(String(documentTemplate))}/createnewdocument` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
-        return await this.callConnector<SPBlobMetadataResponse>("POST", path, input);
-    }
-
-    /**
-     * Get placeholders from template
-     * @remarks Discovery method used to populate dynamic parameter values at design time.
-     */
-    public async getContentAssemblyPlaceholdersAsync(dataset: string, sharePointDocumentLibraryName: string, documentTemplate: string): Promise<TableMetadata> {
-        const path = `/datasets/${encodeURIComponent(String(dataset))}/tables/${encodeURIComponent(String(sharePointDocumentLibraryName))}/templates/${encodeURIComponent(String(documentTemplate))}/placeholders`;
-        return await this.callConnector<TableMetadata>("GET", path);
+        const requestPath = `/datasets/${encodeURIComponent(String(dataset))}/tables/${encodeURIComponent(String(table))}/templates/${encodeURIComponent(String(template))}/createnewdocument` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
+        return await this.callConnector<SPBlobMetadataResponse>("POST", requestPath, input);
     }
 
     /**
      * Get list views
      * @remarks Gets views from a SharePoint list.
      */
-    public async getTableViewsAsync(siteAddress: string, listName: string): Promise<Array<Table>> {
-        const path = `/datasets/${encodeURIComponent(String(siteAddress))}/tables/${encodeURIComponent(String(listName))}/views`;
-        return await this.callConnector<Array<Table>>("GET", path);
-    }
-
-    /**
-     * Get libraries where Content Approval is supported
-     * @remarks Discovery method used to populate dynamic parameter values at design time.
-     */
-    public async getTablesForApprovalAsync(siteAddress: string): Promise<TablesList> {
-        const path = `/datasets/${encodeURIComponent(String(siteAddress))}/tablesfor/approval`;
-        return await this.callConnector<TablesList>("GET", path);
-    }
-
-    /**
-     * Get libraries
-     * @remarks Discovery method used to populate dynamic parameter values at design time.
-     */
-    public async getTablesForLibrariesAsync(siteAddress: string): Promise<TablesList> {
-        const path = `/datasets/${encodeURIComponent(String(siteAddress))}/tablesfor/libraries`;
-        return await this.callConnector<TablesList>("GET", path);
-    }
-
-    /**
-     * Get lists and libraries where lightweight approvals is enabled
-     * @remarks Discovery method used to populate dynamic parameter values at design time.
-     */
-    public async getTablesForLightweightApprovalAsync(siteAddress: string): Promise<TablesList> {
-        const path = `/datasets/${encodeURIComponent(String(siteAddress))}/tablesfor/lightweightapproval`;
-        return await this.callConnector<TablesList>("GET", path);
-    }
-
-    /**
-     * Get lists and libraries
-     * @remarks Discovery method used to populate dynamic parameter values at design time.
-     */
-    public async getTablesForListsAndLibrariesAsync(siteAddress: string): Promise<TablesList> {
-        const path = `/datasets/${encodeURIComponent(String(siteAddress))}/tablesfor/listsandlibraries`;
-        return await this.callConnector<TablesList>("GET", path);
-    }
-
-    /**
-     * Agreements Solution - Get Templates
-     * @remarks Discovery method used to populate dynamic parameter values at design time.
-     */
-    public async getAgreementsSolutionTemplatesAsync(dataset: string): Promise<Array<Table>> {
-        const path = `/datasets/${encodeURIComponent(String(dataset))}/agreements/templates`;
-        return await this.callConnector<Array<Table>>("GET", path);
+    public async getTableViewsAsync(dataset: string, table: string): Promise<Array<Table>> {
+        const requestPath = `/datasets/${encodeURIComponent(String(dataset))}/tables/${encodeURIComponent(String(table))}/views`;
+        return await this.callConnector<Array<Table>>("GET", requestPath);
     }
 
     /**
      * Agreements Solution - Generate document within Agreements Solution workspace
      * @remarks Use this action to create documents based on modern templates in a Agreements Solution workspace. This is behind a payment wall currently in planning (either license or PayG).
      */
-    public async createAgreementsSolutionDocumentAsync(agreementsSolutionWorkspace: string, agreementsSolutionTemplate: string, input: CreateAgreementsSolutionDocumentInput, fileName?: string, tableNoEffect?: string, viewNoEffect?: string): Promise<SPBlobMetadataResponse> {
+    public async createAgreementsSolutionDocumentAsync(input: CreateAgreementsSolutionDocumentInput, dataset: string, template: string, documentName?: string, table?: string, view?: string): Promise<SPBlobMetadataResponse> {
         const queryParams: string[] = [];
-        if (fileName !== undefined) {
-            queryParams.push(`documentName=${encodeURIComponent(String(fileName))}`);
+        if (documentName !== undefined) {
+            queryParams.push(`documentName=${encodeURIComponent(String(documentName))}`);
         }
-        if (tableNoEffect !== undefined) {
-            queryParams.push(`table=${encodeURIComponent(String(tableNoEffect))}`);
+        if (table !== undefined) {
+            queryParams.push(`table=${encodeURIComponent(String(table))}`);
         }
-        if (viewNoEffect !== undefined) {
-            queryParams.push(`view=${encodeURIComponent(String(viewNoEffect))}`);
+        if (view !== undefined) {
+            queryParams.push(`view=${encodeURIComponent(String(view))}`);
         }
-        const path = `/datasets/${encodeURIComponent(String(agreementsSolutionWorkspace))}/agreements/templates/${encodeURIComponent(String(agreementsSolutionTemplate))}/createnewdocument` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
-        return await this.callConnector<SPBlobMetadataResponse>("POST", path, input);
+        const requestPath = `/datasets/${encodeURIComponent(String(dataset))}/agreements/templates/${encodeURIComponent(String(template))}/createnewdocument` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
+        return await this.callConnector<SPBlobMetadataResponse>("POST", requestPath, input);
     }
 
     /**
-     * Agreements Solution - Get template fields
-     * @remarks Discovery method used to populate dynamic parameter values at design time.
+     * When a file is created in a folder (deprecated)
+     * @remarks Triggers when a file is created in a SharePoint folder. The trigger does not fire if a file is added/updated in a subfolder. If it is required to trigger on subfolders, multiple triggers should be created.
      */
-    public async getAgreementsSolutionTemplateFieldsAsync(dataset: string, agreementsSolutionTemplate: string): Promise<TableMetadata> {
-        const path = `/datasets/${encodeURIComponent(String(dataset))}/agreements/templates/${encodeURIComponent(String(agreementsSolutionTemplate))}/fields`;
-        return await this.callConnector<TableMetadata>("GET", path);
-    }
-
-    /**
-     * Get the appropriate creation schema for the approval request type
-     * @remarks Discovery method used to populate dynamic parameter values at design time.
-     */
-    public async getApprovalSchemaAsync(approvalType: number): Promise<ObjectEntity> {
+    public async onNewFileAsync(dataset: string, folderId?: string, inferContentType?: string, queryParametersSingleEncoded?: string): Promise<Blob> {
         const queryParams: string[] = [];
-        if (approvalType !== undefined) {
-            queryParams.push(`approvalType=${encodeURIComponent(String(approvalType))}`);
+        if (folderId !== undefined) {
+            queryParams.push(`folderId=${encodeURIComponent(String(folderId))}`);
         }
-        const path = `/getApprovalSchema` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
-        return await this.callConnector<ObjectEntity>("GET", path);
+        if (inferContentType !== undefined) {
+            queryParams.push(`inferContentType=${encodeURIComponent(String(inferContentType))}`);
+        }
+        if (queryParametersSingleEncoded !== undefined) {
+            queryParams.push(`queryParametersSingleEncoded=${encodeURIComponent(String(queryParametersSingleEncoded))}`);
+        }
+        const requestPath = `/datasets/${encodeURIComponent(String(dataset))}/triggers/onnewfile` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
+        return await this.callConnector<Blob>("GET", requestPath);
     }
 
     /**
-     * Get available approval request types
-     * @remarks Discovery method used to populate dynamic parameter values at design time.
+     * When a file is created or modified in a folder (deprecated)
+     * @remarks Triggers when a file is created, and also each time it is modified in a SharePoint folder. The trigger does not fire if a file is added/updated in a subfolder. If it is required to trigger on subfolders, multiple triggers should be created.
      */
-    public async getApprovalTypesAsync(): Promise<ObjectEntity> {
-        const path = `/getApprovalTypes`;
-        return await this.callConnector<ObjectEntity>("GET", path);
-    }
-
-    /**
-     * Get SPViewScope options to use for folder querying behavior
-     * @remarks Discovery method used to populate dynamic parameter values at design time.
-     */
-    public async getViewScopeOptionsAsync(): Promise<ObjectEntity> {
-        const path = `/getViewScopeOptions`;
-        return await this.callConnector<ObjectEntity>("GET", path);
+    public async onUpdatedFileAsync(dataset: string, folderId?: string, includeFileContent?: string, inferContentType?: string, queryParametersSingleEncoded?: string): Promise<Blob> {
+        const queryParams: string[] = [];
+        if (folderId !== undefined) {
+            queryParams.push(`folderId=${encodeURIComponent(String(folderId))}`);
+        }
+        if (includeFileContent !== undefined) {
+            queryParams.push(`includeFileContent=${encodeURIComponent(String(includeFileContent))}`);
+        }
+        if (inferContentType !== undefined) {
+            queryParams.push(`inferContentType=${encodeURIComponent(String(inferContentType))}`);
+        }
+        if (queryParametersSingleEncoded !== undefined) {
+            queryParams.push(`queryParametersSingleEncoded=${encodeURIComponent(String(queryParametersSingleEncoded))}`);
+        }
+        const requestPath = `/datasets/${encodeURIComponent(String(dataset))}/triggers/onupdatedfile` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
+        return await this.callConnector<Blob>("GET", requestPath);
     }
 
     /**
      * Extract folder
      * @remarks Extracts an archive file into a SharePoint folder (example: .zip).
      */
-    public async extractFolderAsync(siteAddress: string, sourceFilePath: string, destinationFolderPath: string, overwriteFlag?: boolean): Promise<Array<BlobMetadata>> {
+    public async extractFolderAsync(dataset: string, source?: string, destination?: string, overwrite?: string, queryParametersSingleEncoded?: string): Promise<Array<BlobMetadata>> {
         const queryParams: string[] = [];
-        if (sourceFilePath !== undefined) {
-            queryParams.push(`source=${encodeURIComponent(String(sourceFilePath))}`);
+        if (source !== undefined) {
+            queryParams.push(`source=${encodeURIComponent(String(source))}`);
         }
-        if (destinationFolderPath !== undefined) {
-            queryParams.push(`destination=${encodeURIComponent(String(destinationFolderPath))}`);
+        if (destination !== undefined) {
+            queryParams.push(`destination=${encodeURIComponent(String(destination))}`);
         }
-        if (overwriteFlag !== undefined) {
-            queryParams.push(`overwrite=${encodeURIComponent(String(overwriteFlag))}`);
+        if (overwrite !== undefined) {
+            queryParams.push(`overwrite=${encodeURIComponent(String(overwrite))}`);
         }
-        const path = `/datasets/${encodeURIComponent(String(siteAddress))}/extractFolderV2` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
-        return await this.callConnector<Array<BlobMetadata>>("POST", path);
+        if (queryParametersSingleEncoded !== undefined) {
+            queryParams.push(`queryParametersSingleEncoded=${encodeURIComponent(String(queryParametersSingleEncoded))}`);
+        }
+        const requestPath = `/datasets/${encodeURIComponent(String(dataset))}/extractFolderV2` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
+        return await this.callConnector<Array<BlobMetadata>>("POST", requestPath);
     }
 
 }

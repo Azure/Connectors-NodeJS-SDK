@@ -24,7 +24,6 @@ import { DefaultAzureCredential } from "@azure/identity";
 import {
     TeamsClient,
     TeamsConnectorError,
-    CreateChannelInput,
 } from "@azure/azure-connectors/generated/TeamsExtensions";
 
 // Connection runtime URL format:
@@ -130,7 +129,7 @@ async function example4GetTeamDetails(): Promise<void> {
     const client = createClient();
 
     try {
-        const team = await client.getTeamAsync(teamId);
+        const team = await client.getTeamAsync(teamId) as Record<string, unknown>;
 
         console.log(`Team: ${team.displayName ?? "Unknown"}`);
         console.log(`  ID: ${team.id ?? "Unknown"}`);
@@ -159,9 +158,9 @@ async function example5GetChannelMessages(): Promise<void> {
     const client = createClient();
 
     try {
-        const messages = await client.getMessagesFromChannelAsync(teamId, channelId);
+        const messagesResponse = await client.getMessagesFromChannelAsync(teamId, channelId) as Record<string, unknown>;
 
-        const messageList = messages?.value ?? [];
+        const messageList = (messagesResponse?.value ?? []) as Array<Record<string, unknown>>;
         console.log(`Found ${messageList.length} messages:`);
         for (const message of messageList.slice(0, 5)) {
             const body = message.body as Record<string, unknown> | undefined;

@@ -4,16 +4,13 @@ import {
     SharepointonlineClient,
     SharepointonlineConnectorError,
     SharepointonlineClientOptions,
-    TableMetadata,
-    DataSetsList,
     TablesList,
+    PostItemInput,
 } from "../src/generated/SharepointonlineExtensions";
 import { ConnectorNames } from "../src/generated/connectorNames";
 import { availableConnectors } from "../src/generated/ManagedConnectors";
 
-// ──────────────────────────────────────────────
 // Test helpers
-// ──────────────────────────────────────────────
 
 const TestConnectionUrl = "https://connection-runtime.azure.com/apim/sharepointonline/abc123";
 
@@ -40,18 +37,7 @@ function mockFetchError(status: number, errorBody: string): void {
     } as Response);
 }
 
-// ──────────────────────────────────────────────
-// Type-level compile-time checks
-// ──────────────────────────────────────────────
-
-const _tableMetadata: TableMetadata = {
-    name: "Documents",
-    title: "Documents Library",
-};
-
-// ──────────────────────────────────────────────
 // Runtime tests
-// ──────────────────────────────────────────────
 
 describe("SharepointonlineClient — constructor", () => {
     it("should construct with valid options", () => {
@@ -68,37 +54,29 @@ describe("SharepointonlineClient — constructor", () => {
     });
 });
 
-describe("SharepointonlineClient — getDataSetsAsync", () => {
-    afterEach(() => {
-        jest.restoreAllMocks();
-    });
+describe("SharepointonlineClient — getTablesAsync", () => {
+    afterEach(() => { jest.restoreAllMocks(); });
 
-    it("should GET /datasets", async () => {
-        const mockDatasets: DataSetsList = {
-            value: [{ Name: "https://contoso.sharepoint.com" }],
-        };
-        mockFetchResponse(mockDatasets);
+    it("should GET tables with encoded dataset", async () => {
+        const mockTables: TablesList = {};
+        mockFetchResponse(mockTables);
 
         const client = new SharepointonlineClient(createMockOptions());
-        const result = await client.getDataSetsAsync();
+        const result = await client.getTablesAsync("https://contoso.sharepoint.com/sites/team");
 
-        expect(result).toEqual(mockDatasets);
+        expect(result).toEqual(mockTables);
         const [url, init] = (global.fetch as jest.Mock).mock.calls[0];
-        expect(url).toBe(`${TestConnectionUrl}/datasets`);
+        expect(url).toContain(encodeURIComponent("https://contoso.sharepoint.com/sites/team"));
         expect(init.method).toBe("GET");
         expect(init.headers["Authorization"]).toBe("Bearer mock-bearer-token");
     });
 });
 
 describe("SharepointonlineClient — getAllTablesAsync", () => {
-    afterEach(() => {
-        jest.restoreAllMocks();
-    });
+    afterEach(() => { jest.restoreAllMocks(); });
 
     it("should encode site address in URL", async () => {
-        const mockTables: TablesList = {
-            value: [{ Name: "Documents", DisplayName: "Documents" }],
-        };
+        const mockTables: TablesList = {};
         mockFetchResponse(mockTables);
 
         const client = new SharepointonlineClient(createMockOptions());
@@ -112,47 +90,15 @@ describe("SharepointonlineClient — getAllTablesAsync", () => {
     });
 });
 
-describe("SharepointonlineClient — getTableAsync", () => {
-    afterEach(() => {
-        jest.restoreAllMocks();
-    });
-
-    it("should GET metadata with optional query parameters", async () => {
-        const mockMetadata: TableMetadata = {
-            name: "Documents",
-            title: "Documents Library",
-        };
-        mockFetchResponse(mockMetadata);
-
-        const client = new SharepointonlineClient(createMockOptions());
-        const result = await client.getTableAsync(
-            "https://contoso.sharepoint.com",
-            "Documents",
-            "MyView",
-        );
-
-        expect(result).toEqual(mockMetadata);
-        const [url] = (global.fetch as jest.Mock).mock.calls[0];
-        expect(url).toContain("/$metadata.json/datasets/");
-        expect(url).toContain("view=MyView");
-    });
-});
-
 describe("SharepointonlineClient — getItemAsync", () => {
-    afterEach(() => {
-        jest.restoreAllMocks();
-    });
+    afterEach(() => { jest.restoreAllMocks(); });
 
     it("should GET a specific item by ID", async () => {
         const mockItem = { Id: 42, Title: "Important Document" };
         mockFetchResponse(mockItem);
 
         const client = new SharepointonlineClient(createMockOptions());
-        const result = await client.getItemAsync(
-            "https://contoso.sharepoint.com",
-            "Documents",
-            42,
-        );
+        const result = await client.getItemAsync("https://contoso.sharepoint.com", "Documents", "42");
 
         expect(result).toEqual(mockItem);
         const [url, init] = (global.fetch as jest.Mock).mock.calls[0];
@@ -162,21 +108,15 @@ describe("SharepointonlineClient — getItemAsync", () => {
 });
 
 describe("SharepointonlineClient — postItemAsync", () => {
-    afterEach(() => {
-        jest.restoreAllMocks();
-    });
+    afterEach(() => { jest.restoreAllMocks(); });
 
     it("should POST new item with body", async () => {
         const newItem = { Id: 99, Title: "New Item" };
         mockFetchResponse(newItem);
 
         const client = new SharepointonlineClient(createMockOptions());
-        const input = { Title: "New Item" };
-        const result = await client.postItemAsync(
-            "https://contoso.sharepoint.com",
-            "Tasks",
-            input,
-        );
+        const input: PostItemInput = { Title: "New Item" };
+        const result = await client.postItemAsync(input, "https://contoso.sharepoint.com", "Tasks");
 
         expect(result).toEqual(newItem);
         const [, init] = (global.fetch as jest.Mock).mock.calls[0];
@@ -187,15 +127,13 @@ describe("SharepointonlineClient — postItemAsync", () => {
 });
 
 describe("SharepointonlineClient — deleteItemAsync", () => {
-    afterEach(() => {
-        jest.restoreAllMocks();
-    });
+    afterEach(() => { jest.restoreAllMocks(); });
 
     it("should send DELETE request", async () => {
         mockFetchResponse(null);
 
         const client = new SharepointonlineClient(createMockOptions());
-        await client.deleteItemAsync("https://contoso.sharepoint.com", "Tasks", 42);
+        await client.deleteItemAsync("https://contoso.sharepoint.com", "Tasks", "42");
 
         const [, init] = (global.fetch as jest.Mock).mock.calls[0];
         expect(init.method).toBe("DELETE");
@@ -203,18 +141,13 @@ describe("SharepointonlineClient — deleteItemAsync", () => {
 });
 
 describe("SharepointonlineClient — error handling", () => {
-    afterEach(() => {
-        jest.restoreAllMocks();
-    });
+    afterEach(() => { jest.restoreAllMocks(); });
 
     it("should throw SharepointonlineConnectorError on non-OK response", async () => {
         mockFetchError(404, '{"error": "List not found"}');
 
         const client = new SharepointonlineClient(createMockOptions());
-
-        await expect(client.getDataSetsAsync()).rejects.toThrow(
-            SharepointonlineConnectorError,
-        );
+        await expect(client.getTablesAsync("https://contoso.sharepoint.com")).rejects.toThrow(SharepointonlineConnectorError);
     });
 
     it("should include status code and response body in error", async () => {
@@ -224,7 +157,7 @@ describe("SharepointonlineClient — error handling", () => {
         const client = new SharepointonlineClient(createMockOptions());
 
         try {
-            await client.getDataSetsAsync();
+            await client.getTablesAsync("https://contoso.sharepoint.com");
             fail("Expected SharepointonlineConnectorError to be thrown");
         } catch (error) {
             expect(error).toBeInstanceOf(SharepointonlineConnectorError);

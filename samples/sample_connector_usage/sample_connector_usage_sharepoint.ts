@@ -54,11 +54,12 @@ async function example1GetLists(): Promise<void> {
     const client = createClient();
 
     try {
-        const lists = await client.getTablesAsync(SHAREPOINT_SITE_URL);
+        const lists = await client.getTablesAsync(SHAREPOINT_SITE_URL) as Record<string, unknown>;
+        const listValues = (lists?.value ?? []) as Array<Record<string, unknown>>;
 
-        if (lists?.value && lists.value.length > 0) {
-            console.log(`Found ${lists.value.length} lists and libraries:`);
-            for (const listItem of lists.value.slice(0, 5)) {
+        if (listValues.length > 0) {
+            console.log(`Found ${listValues.length} lists and libraries:`);
+            for (const listItem of listValues.slice(0, 5)) {
                 console.log(`  - ${listItem.DisplayName ?? "Unknown"} (${listItem.Name ?? "Unknown"})`);
             }
         } else {
@@ -81,11 +82,12 @@ async function example2GetListItems(): Promise<void> {
     const client = createClient();
 
     try {
-        const items = await client.getItemsAsync(SHAREPOINT_SITE_URL, listName);
+        const items = await client.getItemsAsync(SHAREPOINT_SITE_URL, listName) as Record<string, unknown>;
+        const itemValues = (items?.value ?? []) as Array<Record<string, unknown>>;
 
-        if (items?.value && items.value.length > 0) {
-            console.log(`Found ${items.value.length} items in '${listName}' list:`);
-            for (const item of items.value) {
+        if (itemValues.length > 0) {
+            console.log(`Found ${itemValues.length} items in '${listName}' list:`);
+            for (const item of itemValues) {
                 const title = (item as Record<string, unknown>).Title ?? "No Title";
                 const itemId = (item as Record<string, unknown>).Id ?? "Unknown";
                 console.log(`  - [${itemId}] ${title}`);
@@ -118,11 +120,11 @@ async function example3CreateListItem(): Promise<void> {
             Title: "Test Task from TypeScript SDK",
         };
 
-        const created = await client.postItemAsync(SHAREPOINT_SITE_URL, listName, newItem);
+        const created = await client.postItemAsync(newItem, SHAREPOINT_SITE_URL, listName);
 
         const createdRecord = created as Record<string, unknown>;
         if (createdRecord?.Id) {
-            const itemId = createdRecord.Id as number;
+            const itemId = String(createdRecord.Id);
             console.log(`Created item successfully with ID: ${itemId}`);
             console.log(`Title: ${createdRecord.Title ?? "N/A"}`);
 
@@ -157,9 +159,9 @@ async function example4UpdateListItem(): Promise<void> {
         const newItem = {
             Title: "Task to Update",
         };
-        const created = await client.postItemAsync(SHAREPOINT_SITE_URL, listName, newItem);
+        const created = await client.postItemAsync(newItem, SHAREPOINT_SITE_URL, listName);
         const createdRecord = created as Record<string, unknown>;
-        const itemId = createdRecord.Id as number;
+        const itemId = String(createdRecord.Id);
         console.log(`  Created item ${itemId}: ${createdRecord.Title}`);
 
         // READ
@@ -173,7 +175,7 @@ async function example4UpdateListItem(): Promise<void> {
         const updates = {
             Title: "Updated Task Title",
         };
-        await client.patchItemAsync(SHAREPOINT_SITE_URL, listName, itemId, updates);
+        await client.patchItemAsync(updates, SHAREPOINT_SITE_URL, listName, itemId);
 
         // Verify update
         const updated = await client.getItemAsync(SHAREPOINT_SITE_URL, listName, itemId);
@@ -203,11 +205,12 @@ async function example5GetFileMetadata(): Promise<void> {
     try {
         const libraryName = process.env.TEST_LIBRARY_NAME ?? "Documents";
 
-        const files = await client.getFileItemsAsync(SHAREPOINT_SITE_URL, libraryName);
+        const files = await client.getFileItemsAsync(SHAREPOINT_SITE_URL, libraryName) as Record<string, unknown>;
+        const fileValues = (files?.value ?? []) as Array<Record<string, unknown>>;
 
-        if (files?.value && files.value.length > 0) {
-            console.log(`Found ${files.value.length} files in '${libraryName}':`);
-            for (const file of files.value.slice(0, 5)) {
+        if (fileValues.length > 0) {
+            console.log(`Found ${fileValues.length} files in '${libraryName}':`);
+            for (const file of fileValues.slice(0, 5)) {
                 const fileRecord = file as Record<string, unknown>;
                 console.log(`  - ${fileRecord.FileLeafRef ?? fileRecord.Title ?? "Unknown"}`);
                 console.log(`    ID: ${fileRecord.Id ?? "Unknown"}`);
