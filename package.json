@@ -4,6 +4,16 @@
     "description": "Azure Logic Apps Connector SDK for TypeScript / Node.js",
     "main": "dist/index.js",
     "types": "dist/index.d.ts",
+    "exports": {
+        ".": {
+            "types": "./dist/index.d.ts",
+            "default": "./dist/index.js"
+        },
+        "./generated/*": {
+            "types": "./dist/generated/*.d.ts",
+            "default": "./dist/generated/*.js"
+        }
+    },
     "scripts": {
         "build": "tsc && tsc -p samples/tsconfig.json --noEmit",
         "test": "jest --verbose",
