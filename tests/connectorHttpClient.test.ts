@@ -1,7 +1,7 @@
 // Copyright (c) Microsoft Corporation.  All rights reserved.
 
-import { ConnectorHttpClient, ConnectorResponse } from "../src/azure-workflows-connectors-sdk/connectorHttpClient";
-import { TokenProvider } from "../src/azure-workflows-connectors-sdk/authentication";
+import { ConnectorHttpClient, ConnectorResponse } from "../src/azureConnectors/connectorHttpClient";
+import { TokenProvider } from "../src/azureConnectors/authentication";
 
 class MockTokenProvider implements TokenProvider {
     public async getAccessTokenAsync(_scopes: string[]): Promise<string> {

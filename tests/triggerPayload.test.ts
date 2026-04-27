@@ -1,6 +1,6 @@
 // Copyright (c) Microsoft Corporation.  All rights reserved.
 
-import { TriggerCallbackPayload, TriggerCallbackBody } from "../src/azure-workflows-connectors-sdk/triggerPayload";
+import { TriggerCallbackPayload, TriggerCallbackBody } from "../src/azureConnectors/triggerPayload";
 import { GraphClientReceiveMessage } from "../src/generated/Office365Extensions";
 
 describe("TriggerCallbackPayload", () => {

@@ -1,10 +1,10 @@
-# Sample Connector Usage
+# Connector Usage Samples
 
 This directory contains samples demonstrating how to use the Azure Workflows Connector SDK for TypeScript / Node.js with generated connector clients.
 
 ## Samples
 
-### 1. Office 365 Connector (`sample_connector_usage_office365.ts`)
+### 1. Office 365 Connector (`sampleOffice365.ts`)
 Demonstrates Office 365 Outlook operations:
 - Getting Outlook categories
 - Sending emails
@@ -14,10 +14,10 @@ Demonstrates Office 365 Outlook operations:
 
 **Run:**
 ```bash
-npx ts-node sample_connector_usage_office365.ts
+npx ts-node sampleOffice365.ts
 ```
 
-### 2. SharePoint Online Connector (`sample_connector_usage_sharepoint.ts`)
+### 2. SharePoint Online Connector (`sampleSharepoint.ts`)
 Demonstrates SharePoint Online operations:
 - Listing all lists and libraries
 - Getting items from a list
@@ -28,10 +28,10 @@ Demonstrates SharePoint Online operations:
 
 **Run:**
 ```bash
-npx ts-node sample_connector_usage_sharepoint.ts
+npx ts-node sampleSharepoint.ts
 ```
 
-### 3. Microsoft Teams Connector (`sample_connector_usage_teams.ts`)
+### 3. Microsoft Teams Connector (`sampleTeams.ts`)
 Demonstrates Microsoft Teams operations:
 - Listing joined teams
 - Listing associated teams
@@ -42,7 +42,7 @@ Demonstrates Microsoft Teams operations:
 
 **Run:**
 ```bash
-npx ts-node sample_connector_usage_teams.ts
+npx ts-node sampleTeams.ts
 ```
 
 ## Prerequisites

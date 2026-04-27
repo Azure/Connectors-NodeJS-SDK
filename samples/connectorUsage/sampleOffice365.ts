@@ -17,7 +17,7 @@
  *     Set environment variable:
  *     $env:OFFICE365_CONNECTION_URL = "https://[region].azure-apihub.net/apim/office365/[connection-id]"
  *
- *     npx ts-node sample_connector_usage_office365.ts
+ *     npx ts-node sampleOffice365.ts
  */
 
 import { DefaultAzureCredential } from "@azure/identity";

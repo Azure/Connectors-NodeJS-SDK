@@ -17,7 +17,7 @@
  *     Set environment variable:
  *     $env:TEAMS_CONNECTION_URL = "https://[region].azure-apihub.net/apim/teams/[connection-id]"
  *
- *     npx ts-node sample_connector_usage_teams.ts
+ *     npx ts-node sampleTeams.ts
  */
 
 import { DefaultAzureCredential } from "@azure/identity";

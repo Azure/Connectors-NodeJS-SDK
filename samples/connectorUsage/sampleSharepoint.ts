@@ -19,7 +19,7 @@
  *     $env:SHAREPOINT_CONNECTION_URL = "https://[region].azure-apihub.net/apim/sharepointonline/[connection-id]"
  *     $env:SHAREPOINT_SITE_URL = "https://[tenant].sharepoint.com/sites/[site-name]"
  *
- *     npx ts-node sample_connector_usage_sharepoint.ts
+ *     npx ts-node sampleSharepoint.ts
  */
 
 import { DefaultAzureCredential } from "@azure/identity";

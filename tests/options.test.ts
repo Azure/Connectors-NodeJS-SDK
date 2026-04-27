@@ -1,6 +1,6 @@
 // Copyright (c) Microsoft Corporation.  All rights reserved.
 
-import { ConnectorClientOptions, DefaultConnectorClientOptions } from "../src/azure-workflows-connectors-sdk/options";
+import { ConnectorClientOptions, DefaultConnectorClientOptions } from "../src/azureConnectors/options";
 
 describe("ConnectorClientOptions", () => {
     it("should have sensible defaults", () => {
