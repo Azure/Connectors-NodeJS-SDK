@@ -23,25 +23,20 @@
 import { DefaultAzureCredential } from "@azure/identity";
 import {
     Office365Client,
-    Office365ConnectorError,
     ClientSendHtmlMessage,
     ClientDraftHtmlMessage,
 } from "@azure/azure-connectors/generated/Office365Extensions";
+import { ConnectorException } from "@azure/azure-connectors/azureConnectors/connectorException";
+import { ManagedIdentityTokenProvider } from "@azure/azure-connectors/azureConnectors/authentication";
 
 // Connection runtime URL format:
 // https://[region].azure-apihub.net/apim/office365/[connection-id]
 const CONNECTION_RUNTIME_URL = process.env.OFFICE365_CONNECTION_URL ?? "";
 
 function createClient(): Office365Client {
-    const credential = new DefaultAzureCredential();
+    const tokenProvider = new ManagedIdentityTokenProvider();
 
-    return new Office365Client({
-        connectionRuntimeUrl: CONNECTION_RUNTIME_URL,
-        getToken: async () => {
-            const token = await credential.getToken("https://apihub.azure.com/.default");
-            return token.token;
-        },
-    });
+    return new Office365Client(CONNECTION_RUNTIME_URL, tokenProvider);
 }
 
 async function example1GetOutlookCategories(): Promise<void> {
@@ -61,7 +56,7 @@ async function example1GetOutlookCategories(): Promise<void> {
             console.log("No categories found or unexpected response format.");
         }
     } catch (error) {
-        if (error instanceof Office365ConnectorError) {
+        if (error instanceof ConnectorException) {
             console.log(`Connector error: ${error.message}`);
         } else {
             console.log(`Error: ${error}`);
@@ -87,7 +82,7 @@ async function example2SendEmail(): Promise<void> {
         console.log(`Email sent successfully to ${toAddress}`);
         console.log("Note: Set TEST_EMAIL_TO environment variable to send to a real address");
     } catch (error) {
-        if (error instanceof Office365ConnectorError) {
+        if (error instanceof ConnectorException) {
             console.log(`Connector error: ${error.message}`);
         } else {
             console.log(`Error: ${error}`);
@@ -115,7 +110,7 @@ async function example3GetEmails(): Promise<void> {
             console.log("No emails found or unexpected response format.");
         }
     } catch (error) {
-        if (error instanceof Office365ConnectorError) {
+        if (error instanceof ConnectorException) {
             console.log(`Connector error: ${error.message}`);
         } else {
             console.log(`Error: ${error}`);
@@ -149,7 +144,7 @@ async function example4DraftAndSendEmail(): Promise<void> {
             console.log("Draft created but no ID returned.");
         }
     } catch (error) {
-        if (error instanceof Office365ConnectorError) {
+        if (error instanceof ConnectorException) {
             console.log(`Connector error: ${error.message}`);
         } else {
             console.log(`Error: ${error}`);
@@ -167,7 +162,7 @@ async function example5ErrorHandling(): Promise<void> {
         const email = await client.getEmailAsync(invalidMessageId);
         console.log(`Unexpected success: ${JSON.stringify(email)}`);
     } catch (error) {
-        if (error instanceof Office365ConnectorError) {
+        if (error instanceof ConnectorException) {
             console.log("Expected error caught:");
             console.log(`  Message: ${error.message}`);
         } else {

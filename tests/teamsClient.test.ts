@@ -2,8 +2,6 @@
 
 import {
     TeamsClient,
-    TeamsConnectorError,
-    TeamsClientOptions,
     NewMeeting,
     NewMeetingRespone,
     GetAllTeamsResponse,
@@ -12,6 +10,8 @@ import {
     CreateChannelResponse,
     GetTagsResponseSchema,
 } from "../src/generated/TeamsExtensions";
+import { ConnectorException } from "../src/azureConnectors/connectorException";
+import { TokenProvider } from "../src/azureConnectors/authentication";
 import { ConnectorNames } from "../src/generated/connectorNames";
 import { availableConnectors } from "../src/generated/ManagedConnectors";
 
@@ -21,10 +21,9 @@ import { availableConnectors } from "../src/generated/ManagedConnectors";
 
 const TestConnectionUrl = "https://connection-runtime.azure.com/apim/teams/abc123";
 
-function createMockOptions(): TeamsClientOptions {
+function createMockTokenProvider(): TokenProvider {
     return {
-        connectionRuntimeUrl: TestConnectionUrl,
-        getToken: async () => "mock-bearer-token",
+        getAccessTokenAsync: async () => "mock-bearer-token",
     };
 }
 
@@ -33,6 +32,7 @@ function mockFetchResponse(body: unknown, status = 200): void {
         ok: status >= 200 && status < 300,
         status,
         text: async () => (body !== undefined && body !== null ? JSON.stringify(body) : ""),
+        headers: new Headers(),
     } as Response);
 }
 
@@ -41,6 +41,7 @@ function mockFetchError(status: number, errorBody: string): void {
         ok: false,
         status,
         text: async () => errorBody,
+        headers: new Headers(),
     } as Response);
 }
 
@@ -50,8 +51,12 @@ function mockFetchError(status: number, errorBody: string): void {
 
 const _meeting: NewMeeting = {
     subject: "Team Standup",
+    body: { content: "Discussion" },
     timeZone: "Pacific Standard Time",
+    start: { dateTime: "2024-01-01T09:00:00" },
+    end: { dateTime: "2024-01-01T09:30:00" },
     isOnlineMeeting: true,
+    onlineMeetingProvider: "teamsForBusiness",
 };
 
 const _meetingResponse: NewMeetingRespone = {
@@ -65,15 +70,13 @@ const _meetingResponse: NewMeetingRespone = {
 
 describe("TeamsClient — constructor", () => {
     it("should construct with valid options", () => {
-        const client = new TeamsClient(createMockOptions());
+        const client = new TeamsClient(TestConnectionUrl, createMockTokenProvider());
         expect(client).toBeDefined();
         expect(client).toBeInstanceOf(TeamsClient);
     });
 
     it("should strip trailing slashes from connection URL", () => {
-        const options = createMockOptions();
-        options.connectionRuntimeUrl = TestConnectionUrl + "///";
-        const client = new TeamsClient(options);
+        const client = new TeamsClient(TestConnectionUrl + "///", createMockTokenProvider());
         expect(client).toBeDefined();
     });
 });
@@ -89,7 +92,7 @@ describe("TeamsClient — getAllTeamsAsync", () => {
         };
         mockFetchResponse(mockResponse);
 
-        const client = new TeamsClient(createMockOptions());
+        const client = new TeamsClient(TestConnectionUrl, createMockTokenProvider());
         const result = await client.getAllTeamsAsync();
 
         expect(result).toEqual(mockResponse);
@@ -112,10 +115,15 @@ describe("TeamsClient — createTeamsMeetingAsync", () => {
         };
         mockFetchResponse(mockResponse);
 
-        const client = new TeamsClient(createMockOptions());
+        const client = new TeamsClient(TestConnectionUrl, createMockTokenProvider());
         const input: NewMeeting = {
             subject: "Standup",
+            body: { content: "Discussion" },
+            timeZone: "Pacific Standard Time",
+            start: { dateTime: "2024-01-01T09:00:00" },
+            end: { dateTime: "2024-01-01T09:30:00" },
             isOnlineMeeting: true,
+            onlineMeetingProvider: "teamsForBusiness",
         };
 
         const result = await client.createTeamsMeetingAsync(input, "calendar-1");
@@ -136,24 +144,24 @@ describe("TeamsClient — getChannelsForGroupAsync", () => {
         jest.restoreAllMocks();
     });
 
-    it("should encode team ID in URL path", async () => {
+    it("should include team ID in URL path", async () => {
         const mockResponse: GetChannelsForGroupResponse = {
             value: [{ id: "ch-1", displayName: "General" }],
         };
         mockFetchResponse(mockResponse);
 
-        const client = new TeamsClient(createMockOptions());
-        const result = await client.getChannelsForGroupAsync("team with spaces");
+        const client = new TeamsClient(TestConnectionUrl, createMockTokenProvider());
+        const result = await client.getChannelsForGroupAsync("team-123");
 
         expect(result).toEqual(mockResponse);
         const [url] = (global.fetch as jest.Mock).mock.calls[0];
-        expect(url).toContain(encodeURIComponent("team with spaces"));
+        expect(url).toContain("/team-123/channels");
     });
 
     it("should include query parameters when provided", async () => {
         mockFetchResponse({ value: [] });
 
-        const client = new TeamsClient(createMockOptions());
+        const client = new TeamsClient(TestConnectionUrl, createMockTokenProvider());
         await client.getChannelsForGroupAsync("team-1", "$filter=name eq 'General'");
 
         const [url] = (global.fetch as jest.Mock).mock.calls[0];
@@ -173,7 +181,7 @@ describe("TeamsClient — createChannelAsync", () => {
         };
         mockFetchResponse(mockResponse);
 
-        const client = new TeamsClient(createMockOptions());
+        const client = new TeamsClient(TestConnectionUrl, createMockTokenProvider());
         const input: CreateChannelInput = {
             displayName: "New Channel",
         };
@@ -198,7 +206,7 @@ describe("TeamsClient — getTagsAsync", () => {
         };
         mockFetchResponse(mockResponse);
 
-        const client = new TeamsClient(createMockOptions());
+        const client = new TeamsClient(TestConnectionUrl, createMockTokenProvider());
         const result = await client.getTagsAsync("team-1");
 
         expect(result).toEqual(mockResponse);
@@ -216,7 +224,7 @@ describe("TeamsClient — deleteTagAsync", () => {
     it("should send DELETE request", async () => {
         mockFetchResponse(null);
 
-        const client = new TeamsClient(createMockOptions());
+        const client = new TeamsClient(TestConnectionUrl, createMockTokenProvider());
         await client.deleteTagAsync("team-1", "tag-1");
 
         const [, init] = (global.fetch as jest.Mock).mock.calls[0];
@@ -229,13 +237,12 @@ describe("TeamsClient — error handling", () => {
         jest.restoreAllMocks();
     });
 
-    it("should throw TeamsConnectorError on non-OK response", async () => {
+    it("should throw ConnectorException on non-OK response", async () => {
         mockFetchError(403, '{"error": "Access denied"}');
 
-        const client = new TeamsClient(createMockOptions());
+        const client = new TeamsClient(TestConnectionUrl, createMockTokenProvider());
 
         await expect(client.getAllTeamsAsync()).rejects.toThrow(
-            TeamsConnectorError,
         );
     });
 
@@ -243,14 +250,14 @@ describe("TeamsClient — error handling", () => {
         const errorBody = '{"code": "NotFound"}';
         mockFetchError(404, errorBody);
 
-        const client = new TeamsClient(createMockOptions());
+        const client = new TeamsClient(TestConnectionUrl, createMockTokenProvider());
 
         try {
             await client.getAllTeamsAsync();
-            fail("Expected TeamsConnectorError to be thrown");
+            fail("Expected ConnectorException to be thrown");
         } catch (error) {
-            expect(error).toBeInstanceOf(TeamsConnectorError);
-            const connectorError = error as TeamsConnectorError;
+            expect(error).toBeInstanceOf(ConnectorException);
+            const connectorError = error as ConnectorException;
             expect(connectorError.statusCode).toBe(404);
             expect(connectorError.responseBody).toBe(errorBody);
             expect(connectorError.operation).toContain("GET");
@@ -259,7 +266,7 @@ describe("TeamsClient — error handling", () => {
 
     it("should truncate long error response bodies in message", () => {
         const longBody = "x".repeat(3000);
-        const error = new TeamsConnectorError("GET /test", 500, longBody);
+        const error = new ConnectorException("GET /test", 500, longBody);
 
         expect(error.message).toContain("...[truncated]");
         expect(error.responseBody).toBe(longBody);

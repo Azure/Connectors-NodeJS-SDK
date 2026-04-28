@@ -11,6 +11,7 @@
         "lib": ["ES2020"],
         "paths": {
             "@azure/azure-connectors/generated/*": ["../src/generated/*"],
+            "@azure/azure-connectors/azureConnectors/*": ["../src/azureConnectors/*"],
             "@azure/azure-connectors": ["../src/azureConnectors/index"]
         },
         "baseUrl": "."

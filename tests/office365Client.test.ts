@@ -2,8 +2,6 @@
 
 import {
     Office365Client,
-    Office365ConnectorError,
-    Office365ClientOptions,
     ClientDraftHtmlMessage,
     OutlookReceiveMessage,
     GraphOutlookCategory,
@@ -12,6 +10,8 @@ import {
     GraphCalendarEventClientReceive,
     GraphCalendarEventListClientReceive,
 } from "../src/generated/Office365Extensions";
+import { ConnectorException } from "../src/azureConnectors/connectorException";
+import { TokenProvider } from "../src/azureConnectors/authentication";
 import { ConnectorNames } from "../src/generated/connectorNames";
 import { availableConnectors } from "../src/generated/ManagedConnectors";
 
@@ -21,10 +21,9 @@ import { availableConnectors } from "../src/generated/ManagedConnectors";
 
 const TestConnectionUrl = "https://connection-runtime.azure.com/apim/office365/abc123";
 
-function createMockOptions(): Office365ClientOptions {
+function createMockTokenProvider(): TokenProvider {
     return {
-        connectionRuntimeUrl: TestConnectionUrl,
-        getToken: async () => "mock-bearer-token",
+        getAccessTokenAsync: async () => "mock-bearer-token",
     };
 }
 
@@ -33,6 +32,7 @@ function mockFetchResponse(body: unknown, status = 200): void {
         ok: status >= 200 && status < 300,
         status,
         text: async () => (body !== undefined && body !== null ? JSON.stringify(body) : ""),
+        headers: new Headers(),
     } as Response);
 }
 
@@ -41,6 +41,7 @@ function mockFetchError(status: number, errorBody: string): void {
         ok: false,
         status,
         text: async () => errorBody,
+        headers: new Headers(),
     } as Response);
 }
 
@@ -77,15 +78,13 @@ const _message: GraphClientReceiveMessage = {
 
 describe("Office365Client — constructor", () => {
     it("should construct with valid options", () => {
-        const client = new Office365Client(createMockOptions());
+        const client = new Office365Client(TestConnectionUrl, createMockTokenProvider());
         expect(client).toBeDefined();
         expect(client).toBeInstanceOf(Office365Client);
     });
 
     it("should strip trailing slashes from connection URL", () => {
-        const options = createMockOptions();
-        options.connectionRuntimeUrl = TestConnectionUrl + "///";
-        const client = new Office365Client(options);
+        const client = new Office365Client(TestConnectionUrl + "///", createMockTokenProvider());
         expect(client).toBeDefined();
     });
 });
@@ -98,7 +97,7 @@ describe("Office365Client — sendEmailAsync", () => {
     it("should POST to /v2/Mail with correct body and headers", async () => {
         mockFetchResponse(null);
 
-        const client = new Office365Client(createMockOptions());
+        const client = new Office365Client(TestConnectionUrl, createMockTokenProvider());
         const input: ClientSendHtmlMessage = {
             To: "user@example.com",
             Subject: "Test",
@@ -117,13 +116,13 @@ describe("Office365Client — sendEmailAsync", () => {
         expect(JSON.parse(init.body)).toEqual(input);
     });
 
-    it("should throw Office365ConnectorError on non-OK response", async () => {
+    it("should throw ConnectorException on non-OK response", async () => {
         mockFetchError(401, "Unauthorized");
 
-        const client = new Office365Client(createMockOptions());
+        const client = new Office365Client(TestConnectionUrl, createMockTokenProvider());
         await expect(
             client.sendEmailAsync({ To: "x", Subject: "x", Body: "x" }),
-        ).rejects.toThrow(Office365ConnectorError);
+        ).rejects.toThrow(ConnectorException);
     });
 });
 
@@ -139,7 +138,7 @@ describe("Office365Client — getOutlookCategoryNamesAsync", () => {
         ];
         mockFetchResponse(categories);
 
-        const client = new Office365Client(createMockOptions());
+        const client = new Office365Client(TestConnectionUrl, createMockTokenProvider());
         const result = await client.getOutlookCategoryNamesAsync();
 
         expect(result).toEqual(categories);
@@ -159,8 +158,8 @@ describe("Office365Client — draftEmailAsync", () => {
         const draftedMessage: OutlookReceiveMessage = { Id: "draft-1" };
         mockFetchResponse(draftedMessage);
 
-        const client = new Office365Client(createMockOptions());
-        const input: ClientDraftHtmlMessage = { To: "user@example.com", Subject: "Draft" };
+        const client = new Office365Client(TestConnectionUrl, createMockTokenProvider());
+        const input: ClientDraftHtmlMessage = { To: "user@example.com", Subject: "Draft", Body: "<p>Hello</p>" };
 
         const result = await client.draftEmailAsync(input, "parent-msg-id", "reply");
 
@@ -185,7 +184,7 @@ describe("Office365Client — getEmailAsync", () => {
         };
         mockFetchResponse(mockMessage);
 
-        const client = new Office365Client(createMockOptions());
+        const client = new Office365Client(TestConnectionUrl, createMockTokenProvider());
         const result = await client.getEmailAsync("abc-123");
 
         expect(result.id).toBe("abc-123");
@@ -193,15 +192,14 @@ describe("Office365Client — getEmailAsync", () => {
         expect(result.isRead).toBe(false);
     });
 
-    it("should URL-encode path parameters", async () => {
+    it("should pass path parameters directly in URL", async () => {
         mockFetchResponse({});
 
-        const client = new Office365Client(createMockOptions());
-        await client.getEmailAsync("msg/with spaces");
+        const client = new Office365Client(TestConnectionUrl, createMockTokenProvider());
+        await client.getEmailAsync("msg-123");
 
         const [url] = (global.fetch as jest.Mock).mock.calls[0];
-        expect(url).toContain(encodeURIComponent("msg/with spaces"));
-        expect(url).not.toContain("msg/with spaces");
+        expect(url).toContain("/msg-123");
     });
 });
 
@@ -216,7 +214,7 @@ describe("Office365Client — calendarGetItemsAsync", () => {
         };
         mockFetchResponse(mockResponse);
 
-        const client = new Office365Client(createMockOptions());
+        const client = new Office365Client(TestConnectionUrl, createMockTokenProvider());
         const result = await client.calendarGetItemsAsync(
             "calendar-1",
             undefined,
@@ -240,7 +238,7 @@ describe("Office365Client — deleteEmailAsync", () => {
     it("should send DELETE request", async () => {
         mockFetchResponse(null);
 
-        const client = new Office365Client(createMockOptions());
+        const client = new Office365Client(TestConnectionUrl, createMockTokenProvider());
         await client.deleteEmailAsync("msg-to-delete");
 
         const [, init] = (global.fetch as jest.Mock).mock.calls[0];
@@ -248,20 +246,20 @@ describe("Office365Client — deleteEmailAsync", () => {
     });
 });
 
-describe("Office365ConnectorError", () => {
+describe("ConnectorException", () => {
     it("should include status code and response body", () => {
         const errorBody = '{"code": "Forbidden"}';
-        const error = new Office365ConnectorError("GET /test", 403, errorBody);
+        const error = new ConnectorException("GET /test", 403, errorBody);
 
         expect(error.statusCode).toBe(403);
         expect(error.responseBody).toBe(errorBody);
         expect(error.operation).toBe("GET /test");
-        expect(error.name).toBe("Office365ConnectorError");
+        expect(error.name).toBe("ConnectorException");
     });
 
     it("should truncate long error response bodies in message", () => {
         const longBody = "x".repeat(3000);
-        const error = new Office365ConnectorError("GET /test", 500, longBody);
+        const error = new ConnectorException("GET /test", 500, longBody);
 
         expect(error.message).toContain("...[truncated]");
         expect(error.responseBody).toBe(longBody);

@@ -23,23 +23,18 @@
 import { DefaultAzureCredential } from "@azure/identity";
 import {
     TeamsClient,
-    TeamsConnectorError,
 } from "@azure/azure-connectors/generated/TeamsExtensions";
+import { ConnectorException } from "@azure/azure-connectors/azureConnectors/connectorException";
+import { ManagedIdentityTokenProvider } from "@azure/azure-connectors/azureConnectors/authentication";
 
 // Connection runtime URL format:
 // https://[region].azure-apihub.net/apim/teams/[connection-id]
 const CONNECTION_RUNTIME_URL = process.env.TEAMS_CONNECTION_URL ?? "";
 
 function createClient(): TeamsClient {
-    const credential = new DefaultAzureCredential();
+    const tokenProvider = new ManagedIdentityTokenProvider();
 
-    return new TeamsClient({
-        connectionRuntimeUrl: CONNECTION_RUNTIME_URL,
-        getToken: async () => {
-            const token = await credential.getToken("https://logic-apis-westus.azure-apihub.net/.default");
-            return token.token;
-        },
-    });
+    return new TeamsClient(CONNECTION_RUNTIME_URL, tokenProvider);
 }
 
 async function example1ListJoinedTeams(): Promise<void> {
@@ -56,7 +51,7 @@ async function example1ListJoinedTeams(): Promise<void> {
             console.log(`  - ${team.displayName ?? "Unknown"} (${team.id ?? "Unknown"})`);
         }
     } catch (error) {
-        if (error instanceof TeamsConnectorError) {
+        if (error instanceof ConnectorException) {
             console.log(`Connector error: ${error.message}`);
         } else {
             console.log(`Error: ${error}`);
@@ -78,7 +73,7 @@ async function example2ListAssociatedTeams(): Promise<void> {
             console.log(`  - ${team.displayName ?? "Unknown"}`);
         }
     } catch (error) {
-        if (error instanceof TeamsConnectorError) {
+        if (error instanceof ConnectorException) {
             console.log(`Connector error: ${error.message}`);
         } else {
             console.log(`Error: ${error}`);
@@ -109,7 +104,7 @@ async function example3ListChannels(): Promise<void> {
             }
         }
     } catch (error) {
-        if (error instanceof TeamsConnectorError) {
+        if (error instanceof ConnectorException) {
             console.log(`Connector error: ${error.message}`);
         } else {
             console.log(`Error: ${error}`);
@@ -137,7 +132,7 @@ async function example4GetTeamDetails(): Promise<void> {
         console.log(`  Archived: ${team.isArchived ?? false}`);
         console.log(`  Web URL: ${team.webUrl ?? "N/A"}`);
     } catch (error) {
-        if (error instanceof TeamsConnectorError) {
+        if (error instanceof ConnectorException) {
             console.log(`Connector error: ${error.message}`);
         } else {
             console.log(`Error: ${error}`);
@@ -170,7 +165,7 @@ async function example5GetChannelMessages(): Promise<void> {
             console.log(`    Content: ${(body?.content as string)?.substring(0, 80) ?? "N/A"}`);
         }
     } catch (error) {
-        if (error instanceof TeamsConnectorError) {
+        if (error instanceof ConnectorException) {
             console.log(`Connector error: ${error.message}`);
         } else {
             console.log(`Error: ${error}`);
@@ -188,7 +183,7 @@ async function example6ErrorHandling(): Promise<void> {
         const team = await client.getTeamAsync(invalidTeamId);
         console.log(`Unexpected success: ${JSON.stringify(team)}`);
     } catch (error) {
-        if (error instanceof TeamsConnectorError) {
+        if (error instanceof ConnectorException) {
             console.log("Expected error caught:");
             console.log(`  Message: ${error.message}`);
         } else {

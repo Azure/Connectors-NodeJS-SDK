@@ -25,8 +25,9 @@
 import { DefaultAzureCredential } from "@azure/identity";
 import {
     SharepointonlineClient,
-    SharepointonlineConnectorError,
 } from "@azure/azure-connectors/generated/SharepointonlineExtensions";
+import { ConnectorException } from "@azure/azure-connectors/azureConnectors/connectorException";
+import { ManagedIdentityTokenProvider } from "@azure/azure-connectors/azureConnectors/authentication";
 
 // Connection runtime URL format:
 // https://[region].azure-apihub.net/apim/sharepointonline/[connection-id]
@@ -37,15 +38,9 @@ const CONNECTION_RUNTIME_URL = process.env.SHAREPOINT_CONNECTION_URL ?? "";
 const SHAREPOINT_SITE_URL = process.env.SHAREPOINT_SITE_URL ?? "";
 
 function createClient(): SharepointonlineClient {
-    const credential = new DefaultAzureCredential();
+    const tokenProvider = new ManagedIdentityTokenProvider();
 
-    return new SharepointonlineClient({
-        connectionRuntimeUrl: CONNECTION_RUNTIME_URL,
-        getToken: async () => {
-            const token = await credential.getToken("https://logic-apis-westus.azure-apihub.net/.default");
-            return token.token;
-        },
-    });
+    return new SharepointonlineClient(CONNECTION_RUNTIME_URL, tokenProvider);
 }
 
 async function example1GetLists(): Promise<void> {
@@ -66,7 +61,7 @@ async function example1GetLists(): Promise<void> {
             console.log("No lists found or unexpected response format.");
         }
     } catch (error) {
-        if (error instanceof SharepointonlineConnectorError) {
+        if (error instanceof ConnectorException) {
             console.log(`Connector error: ${error.message}`);
         } else {
             console.log(`Error: ${error}`);
@@ -97,7 +92,7 @@ async function example2GetListItems(): Promise<void> {
             console.log("Note: Set TEST_LIST_NAME environment variable to query a different list");
         }
     } catch (error) {
-        if (error instanceof SharepointonlineConnectorError) {
+        if (error instanceof ConnectorException) {
             console.log(`Connector error: ${error.message}`);
             if (error.statusCode === 404) {
                 console.log(`Hint: List '${listName}' may not exist. Check the list name.`);
@@ -135,7 +130,7 @@ async function example3CreateListItem(): Promise<void> {
             console.log("Item created but no ID returned.");
         }
     } catch (error) {
-        if (error instanceof SharepointonlineConnectorError) {
+        if (error instanceof ConnectorException) {
             console.log(`Connector error: ${error.message}`);
             if (error.statusCode === 404) {
                 console.log(`Hint: List '${listName}' may not exist.`);
@@ -189,7 +184,7 @@ async function example4UpdateListItem(): Promise<void> {
 
         console.log("Full CRUD cycle completed successfully!");
     } catch (error) {
-        if (error instanceof SharepointonlineConnectorError) {
+        if (error instanceof ConnectorException) {
             console.log(`Connector error: ${error.message}`);
         } else {
             console.log(`Error: ${error}`);
@@ -219,7 +214,7 @@ async function example5GetFileMetadata(): Promise<void> {
             console.log(`No files found in '${libraryName}' library.`);
         }
     } catch (error) {
-        if (error instanceof SharepointonlineConnectorError) {
+        if (error instanceof ConnectorException) {
             console.log(`Connector error: ${error.message}`);
         } else {
             console.log(`Error: ${error}`);
@@ -237,7 +232,7 @@ async function example6ErrorHandling(): Promise<void> {
         const items = await client.getItemsAsync(SHAREPOINT_SITE_URL, nonExistentList);
         console.log(`Unexpected success: ${JSON.stringify(items)}`);
     } catch (error) {
-        if (error instanceof SharepointonlineConnectorError) {
+        if (error instanceof ConnectorException) {
             console.log("Expected error caught:");
             console.log(`  Message: ${error.message}`);
             console.log(`  Status: ${error.statusCode}`);

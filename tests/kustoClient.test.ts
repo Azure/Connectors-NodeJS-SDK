@@ -2,8 +2,6 @@
 
 import {
     KustoClient,
-    KustoConnectorError,
-    KustoClientOptions,
     QueryAndListSchema,
     ControlCommandAndListSchema,
     QueryAndVisualizeSchema,
@@ -14,6 +12,8 @@ import {
     MCPQueryRequest,
     MCPQueryResponse,
 } from "../src/generated/KustoExtensions";
+import { ConnectorException } from "../src/azureConnectors/connectorException";
+import { TokenProvider } from "../src/azureConnectors/authentication";
 import { ConnectorNames } from "../src/generated/connectorNames";
 import { availableConnectors } from "../src/generated/ManagedConnectors";
 
@@ -23,10 +23,9 @@ import { availableConnectors } from "../src/generated/ManagedConnectors";
 
 const TestConnectionUrl = "https://connection-runtime.azure.com/apim/kusto/abc123";
 
-function createMockOptions(): KustoClientOptions {
+function createMockTokenProvider(): TokenProvider {
     return {
-        connectionRuntimeUrl: TestConnectionUrl,
-        getToken: async () => "mock-bearer-token",
+        getAccessTokenAsync: async () => "mock-bearer-token",
     };
 }
 
@@ -35,6 +34,7 @@ function mockFetchResponse(body: unknown, status = 200): void {
         ok: status >= 200 && status < 300,
         status,
         text: async () => (body !== undefined && body !== null ? JSON.stringify(body) : ""),
+        headers: new Headers(),
     } as Response);
 }
 
@@ -43,6 +43,7 @@ function mockFetchError(status: number, errorBody: string): void {
         ok: false,
         status,
         text: async () => errorBody,
+        headers: new Headers(),
     } as Response);
 }
 
@@ -88,15 +89,13 @@ const _mcpRequest: MCPQueryRequest = {
 
 describe("KustoClient — constructor", () => {
     it("should construct with valid options", () => {
-        const client = new KustoClient(createMockOptions());
+        const client = new KustoClient(TestConnectionUrl, createMockTokenProvider());
         expect(client).toBeDefined();
         expect(client).toBeInstanceOf(KustoClient);
     });
 
     it("should strip trailing slashes from connection URL", () => {
-        const options = createMockOptions();
-        options.connectionRuntimeUrl = TestConnectionUrl + "///";
-        const client = new KustoClient(options);
+        const client = new KustoClient(TestConnectionUrl + "///", createMockTokenProvider());
         expect(client).toBeDefined();
     });
 });
@@ -110,7 +109,7 @@ describe("KustoClient — listKustoResultsAsync", () => {
         const mockTable: Table = { columns: ["col1"], rows: [["val1"]] };
         mockFetchResponse(mockTable);
 
-        const client = new KustoClient(createMockOptions());
+        const client = new KustoClient(TestConnectionUrl, createMockTokenProvider());
         const input: QueryAndListSchema = {
             csl: {},
             db: {},
@@ -140,7 +139,7 @@ describe("KustoClient — listKustoShowCommandResultsAsync", () => {
         const mockTable: Table = { columns: ["name"], rows: [["MyTable"]] };
         mockFetchResponse(mockTable);
 
-        const client = new KustoClient(createMockOptions());
+        const client = new KustoClient(TestConnectionUrl, createMockTokenProvider());
         const input: ControlCommandAndListSchema = {
             csl: ".show tables",
             db: {},
@@ -166,7 +165,7 @@ describe("KustoClient — runKustoQueryAndVisualizeResultsAsync", () => {
         const mockResult: VisualizeResults = { chart: "bar" };
         mockFetchResponse(mockResult);
 
-        const client = new KustoClient(createMockOptions());
+        const client = new KustoClient(TestConnectionUrl, createMockTokenProvider());
         const input: QueryAndVisualizeSchema = {
             csl: {},
             db: {},
@@ -191,7 +190,7 @@ describe("KustoClient — runKustoCommandAndVisualizeResultsAsync", () => {
         const mockResult: VisualizeResults = { chart: "pie" };
         mockFetchResponse(mockResult);
 
-        const client = new KustoClient(createMockOptions());
+        const client = new KustoClient(TestConnectionUrl, createMockTokenProvider());
         const input: CommandAndVisualizeSchema = {
             csl: ".show tables",
             db: {},
@@ -216,7 +215,7 @@ describe("KustoClient — runAsyncControlCommandAndWaitAsync", () => {
         const mockResult: AsyncCommandResult = { state: "Completed" };
         mockFetchResponse(mockResult);
 
-        const client = new KustoClient(createMockOptions());
+        const client = new KustoClient(TestConnectionUrl, createMockTokenProvider());
         const input: ControlCommandAndListSchema = {
             csl: ".set-or-append async TargetTable <| SourceTable",
             db: {},
@@ -241,7 +240,7 @@ describe("KustoClient — mcpKustoQueryManagementAsync", () => {
         const mockResponse: MCPQueryResponse = { result: "ok" };
         mockFetchResponse(mockResponse);
 
-        const client = new KustoClient(createMockOptions());
+        const client = new KustoClient(TestConnectionUrl, createMockTokenProvider());
         const input: MCPQueryRequest = {
             jsonrpc: "2.0",
             id: "1",
@@ -259,7 +258,7 @@ describe("KustoClient — mcpKustoQueryManagementAsync", () => {
     it("should include sessionId query parameter when provided", async () => {
         mockFetchResponse({});
 
-        const client = new KustoClient(createMockOptions());
+        const client = new KustoClient(TestConnectionUrl, createMockTokenProvider());
         const input: MCPQueryRequest = {
             jsonrpc: "2.0",
             id: "2",
@@ -275,7 +274,7 @@ describe("KustoClient — mcpKustoQueryManagementAsync", () => {
     it("should URL-encode sessionId when it contains special characters", async () => {
         mockFetchResponse({});
 
-        const client = new KustoClient(createMockOptions());
+        const client = new KustoClient(TestConnectionUrl, createMockTokenProvider());
         await client.mcpKustoQueryManagementAsync(
             { jsonrpc: "2.0", id: "3", method: "tools/call" },
             "session with spaces",
@@ -292,27 +291,27 @@ describe("KustoClient — error handling", () => {
         jest.restoreAllMocks();
     });
 
-    it("should throw KustoConnectorError on non-OK response", async () => {
+    it("should throw ConnectorException on non-OK response", async () => {
         mockFetchError(401, "Unauthorized");
 
-        const client = new KustoClient(createMockOptions());
+        const client = new KustoClient(TestConnectionUrl, createMockTokenProvider());
         await expect(
             client.listKustoResultsAsync({ csl: {}, db: {}, cluster: {} }),
-        ).rejects.toThrow(KustoConnectorError);
+        ).rejects.toThrow(ConnectorException);
     });
 
     it("should include status code and response body in error", async () => {
         const errorBody = '{"code": "Forbidden", "message": "Access denied"}';
         mockFetchError(403, errorBody);
 
-        const client = new KustoClient(createMockOptions());
+        const client = new KustoClient(TestConnectionUrl, createMockTokenProvider());
 
         try {
             await client.listKustoResultsAsync({ csl: {}, db: {}, cluster: {} });
-            fail("Expected KustoConnectorError to be thrown");
+            fail("Expected ConnectorException to be thrown");
         } catch (error) {
-            expect(error).toBeInstanceOf(KustoConnectorError);
-            const connectorError = error as KustoConnectorError;
+            expect(error).toBeInstanceOf(ConnectorException);
+            const connectorError = error as ConnectorException;
             expect(connectorError.statusCode).toBe(403);
             expect(connectorError.responseBody).toBe(errorBody);
             expect(connectorError.operation).toContain("POST");
@@ -320,20 +319,20 @@ describe("KustoClient — error handling", () => {
     });
 });
 
-describe("KustoConnectorError", () => {
+describe("ConnectorException", () => {
     it("should include status code and response body", () => {
         const errorBody = '{"code": "Forbidden"}';
-        const error = new KustoConnectorError("GET /test", 403, errorBody);
+        const error = new ConnectorException("GET /test", 403, errorBody);
 
         expect(error.statusCode).toBe(403);
         expect(error.responseBody).toBe(errorBody);
         expect(error.operation).toBe("GET /test");
-        expect(error.name).toBe("KustoConnectorError");
+        expect(error.name).toBe("ConnectorException");
     });
 
     it("should truncate long error response bodies in message", () => {
         const longBody = "x".repeat(3000);
-        const error = new KustoConnectorError("GET /test", 500, longBody);
+        const error = new ConnectorException("GET /test", 500, longBody);
 
         expect(error.message).toContain("...[truncated]");
         expect(error.responseBody).toBe(longBody);
@@ -341,7 +340,7 @@ describe("KustoConnectorError", () => {
     });
 
     it("should handle empty response body", () => {
-        const error = new KustoConnectorError("POST /query", 500, "");
+        const error = new ConnectorException("POST /query", 500, "");
 
         expect(error.message).toContain("POST /query");
         expect(error.responseBody).toBe("");

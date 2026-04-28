@@ -79,15 +79,7 @@ export class ConnectorHttpClient {
             init.body = JSON.stringify(body);
         }
 
-        const abortController = new AbortController();
-        const timeoutId = setTimeout(() => abortController.abort(), this.options.timeoutMs);
-        init.signal = abortController.signal;
-
-        try {
-            return await this.sendWithRetry<TValue>(url, init, 0);
-        } finally {
-            clearTimeout(timeoutId);
-        }
+        return this.sendWithRetry<TValue>(url, init, 0);
     }
 
     /**
@@ -98,8 +90,11 @@ export class ConnectorHttpClient {
         init: RequestInit,
         attempt: number,
     ): Promise<ConnectorResponse<TValue>> {
+        const abortController = new AbortController();
+        const timeoutId = setTimeout(() => abortController.abort(), this.options.timeoutMs);
+
         try {
-            const response = await fetch(url, init);
+            const response = await fetch(url, { ...init, signal: abortController.signal });
             const text = await response.text();
 
             const responseHeaders: Record<string, string> = {};
@@ -124,6 +119,11 @@ export class ConnectorHttpClient {
                 isSuccessStatusCode: response.ok,
             };
         } catch (error) {
+            // Don't retry on non-transient programming errors.
+            if (error instanceof TypeError || error instanceof SyntaxError) {
+                throw error;
+            }
+
             if (attempt < this.options.maxRetryAttempts - 1) {
                 const delay = this.options.useExponentialBackoff
                     ? this.options.initialRetryDelayMs * Math.pow(2, attempt)
@@ -133,6 +133,8 @@ export class ConnectorHttpClient {
             }
 
             throw error;
+        } finally {
+            clearTimeout(timeoutId);
         }
     }
 }
