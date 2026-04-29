@@ -43,7 +43,7 @@
         "markdownlint-cli2": "^0.22.1",
         "ts-jest": "^29.1.0",
         "tsconfig-paths": "^4.2.0",
-        "typescript": "^5.4.0",
+        "typescript": "^6.0.3",
         "typescript-eslint": "^8.59.1"
     },
     "engines": {
