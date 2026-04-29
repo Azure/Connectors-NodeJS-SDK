@@ -289,7 +289,7 @@ test("methodName should return expected result when given valid input", async ()
 - Use `describe()` to group related tests
 - Use async/await in tests, never `.then()`
 - Jest framework with ts-jest preset
-- Run with `npm test` or `npx jest --verbose`
+- Run with `npm test` or `npx jest --config config/jest.config.js --verbose`
 
 ## Git Workflow
 

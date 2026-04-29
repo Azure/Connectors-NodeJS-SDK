@@ -45,7 +45,7 @@ jobs:
       run: npm run build
 
     - name: Test
-      run: npx jest --verbose
+      run: npm test
 
     - name: Set package version
       run: npm version ${{ steps.version.outputs.VERSION }} --no-git-tag-version

@@ -65,7 +65,7 @@ This project follows the coding conventions documented in [.github/copilot-instr
 Coding standards are enforced automatically in CI — PRs that violate them will not pass:
 
 - **`npm run typecheck`** (lint job) — TypeScript strict mode type checking across source and samples
-- **`jest --verbose`** (test job) — all unit tests must pass on Node.js 18, 20, and 22 across Ubuntu and Windows
+- **`npm test`** (test job) — all unit tests must pass on Node.js 20 and 22 across Ubuntu and Windows
 - **Markdown linting** (lint job) — `markdownlint-cli2` checks all `.md` files
 
 Run `npm run typecheck` locally before pushing to catch type errors early.

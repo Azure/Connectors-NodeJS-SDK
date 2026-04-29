@@ -67,7 +67,7 @@ The connection is created in an **unauthenticated** state. You must complete OAu
 
 #### A3. OAuth Consent via AI Gateway Manager Portal
 
-1. Open the [AI Gateway Manager Portal](https://nice-desert-04d03581e.2.azurestaticapps.net/)
+1. Open the **AI Gateway Manager Portal** referenced in your environment's provisioning workflow or latest setup documentation
 2. Run the command shown on the portal to get an ARM token, paste it, and save
 3. Select your AI Gateway — the connections will appear
 4. Click **Authorize** on the connection requiring consent
