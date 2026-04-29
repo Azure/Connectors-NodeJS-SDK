@@ -389,5 +389,4 @@ The endpoint path may be incorrect. Check the connector's swagger/OpenAPI spec f
 
 ## See Also
 
-- [scripts/Setup-Connection.ps1](../scripts/Setup-Connection.ps1) - Automated setup script
 - [ROADMAP.md](../ROADMAP.md) - Connector generation progress and lessons learned
