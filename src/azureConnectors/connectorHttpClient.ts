@@ -8,7 +8,6 @@
 
 import { TokenProvider } from "./authentication";
 import { ConnectorClientOptions, DefaultConnectorClientOptions } from "./options";
-import { ConnectorException } from "./connectorException";
 
 /**
  * Represents a response from a connector operation.
