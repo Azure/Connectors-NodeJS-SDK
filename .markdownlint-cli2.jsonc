@@ -1,0 +1,6 @@
+// markdownlint-cli2 configuration — delegates to config/markdownlint.json
+{
+  "config": {
+    "extends": "config/markdownlint.json"
+  }
+}

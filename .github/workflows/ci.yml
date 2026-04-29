@@ -25,6 +25,9 @@ jobs:
     - name: TypeScript type check
       run: npm run typecheck
 
+    - name: Lint code
+      run: npm run lint
+
     - name: Lint Markdown
       run: npx markdownlint-cli2 '**/*.md'
 
@@ -52,7 +55,7 @@ jobs:
       run: npm run build
 
     - name: Test with coverage
-      run: npx jest --verbose --coverage
+      run: npx jest --config config/jest.config.js --verbose --coverage
 
     - name: Upload coverage
       if: matrix.os == 'ubuntu-latest' && matrix.node-version == 20

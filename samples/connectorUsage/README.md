@@ -5,7 +5,9 @@ This directory contains samples demonstrating how to use the Azure Workflows Con
 ## Samples
 
 ### 1. Office 365 Connector (`sampleOffice365.ts`)
+
 Demonstrates Office 365 Outlook operations:
+
 - Getting Outlook categories
 - Sending emails
 - Retrieving emails from inbox
@@ -13,12 +15,15 @@ Demonstrates Office 365 Outlook operations:
 - Error handling patterns
 
 **Run:**
+
 ```bash
 npx ts-node sampleOffice365.ts
 ```
 
 ### 2. SharePoint Online Connector (`sampleSharepoint.ts`)
+
 Demonstrates SharePoint Online operations:
+
 - Listing all lists and libraries
 - Getting items from a list
 - Creating list items
@@ -27,12 +32,15 @@ Demonstrates SharePoint Online operations:
 - Error handling patterns
 
 **Run:**
+
 ```bash
 npx ts-node sampleSharepoint.ts
 ```
 
 ### 3. Microsoft Teams Connector (`sampleTeams.ts`)
+
 Demonstrates Microsoft Teams operations:
+
 - Listing joined teams
 - Listing associated teams
 - Listing channels for a team
@@ -41,6 +49,7 @@ Demonstrates Microsoft Teams operations:
 - Error handling patterns
 
 **Run:**
+
 ```bash
 npx ts-node sampleTeams.ts
 ```
@@ -49,14 +58,19 @@ npx ts-node sampleTeams.ts
 
 1. **Node.js 18+** - Required for native `fetch` support
 2. **Azure Connectors SDK** - Install via npm:
+
    ```bash
    npm install @azure/azure-connectors
    ```
+
 3. **Azure Identity** - For authentication:
+
    ```bash
    npm install @azure/identity
    ```
+
 4. **ts-node** (for running samples directly):
+
    ```bash
    npm install -D ts-node
    ```
@@ -188,17 +202,20 @@ See [GENERATION.md](../../GENERATION.md) for complete documentation.
 The generator supports ~1,500 Azure managed connectors. Popular ones include:
 
 **Microsoft 365 & Office:**
+
 - `office365` - Office 365 Outlook
 - `teams` - Microsoft Teams
 - `sharepointonline` - SharePoint Online
 - `onedriveforbusiness` - OneDrive for Business
 
 **Cloud Storage:**
+
 - `azureblob` - Azure Blob Storage
 - `googledrive` - Google Drive
 - `dropbox` - Dropbox
 
 **Databases:**
+
 - `sql` - SQL Server
 - `dataverse` - Microsoft Dataverse
 - `cosmosdb` - Azure Cosmos DB
