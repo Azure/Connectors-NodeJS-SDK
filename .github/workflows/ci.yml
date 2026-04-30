@@ -55,7 +55,7 @@ jobs:
       run: npm run build
 
     - name: Test with coverage
-      run: npx jest --config config/jest.config.js --verbose --coverage
+      run: npx jest --config config/jest.config.cjs --verbose --coverage
 
     - name: Upload coverage
       if: matrix.os == 'ubuntu-latest' && matrix.node-version == 20
