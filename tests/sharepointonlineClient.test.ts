@@ -157,7 +157,7 @@ describe("SharepointonlineClient — error handling", () => {
 
         try {
             await client.getTablesAsync("https://contoso.sharepoint.com");
-            fail("Expected ConnectorException to be thrown");
+            throw new Error("Expected ConnectorException to be thrown");
         } catch (error) {
             expect(error).toBeInstanceOf(ConnectorException);
             const connectorError = error as ConnectorException;

@@ -17,16 +17,16 @@ export interface Table {
 }
 
 /**
- * Response for Run KQL query and render a chart
+ * Response for Run async control command
  */
-export interface VisualizeResults {
+export interface AsyncCommandResult {
     [key: string]: unknown;
 }
 
 /**
- * Response for Run async control command
+ * Response for Run KQL query and render a chart
  */
-export interface AsyncCommandResult {
+export interface VisualizeResults {
     [key: string]: unknown;
 }
 
@@ -38,57 +38,10 @@ export interface MCPQueryResponse {
 }
 
 /**
- * Definition: Object
+ * Definition: ChartType
  */
-export interface ObjectEntity {
+export interface ChartType {
     [key: string]: unknown;
-}
-
-/**
- * Definition: Row
- */
-export interface Row {
-    [key: string]: unknown;
-}
-
-/**
- * Definition: QueryAndVisualizeSchema
- */
-export interface QueryAndVisualizeSchema {
-    cluster: ClusterName;
-    db: DatabaseName;
-    csl: Query;
-    chartType: ChartType;
-}
-
-/**
- * Definition: CommandAndVisualizeSchema
- */
-export interface CommandAndVisualizeSchema {
-    cluster: ClusterName;
-    db: DatabaseName;
-    /** Specify the control command you would like to run */
-    csl: string;
-    chartType: ChartType;
-}
-
-/**
- * Definition: QueryAndListSchema
- */
-export interface QueryAndListSchema {
-    cluster: ClusterName;
-    db: DatabaseName;
-    csl: Query;
-}
-
-/**
- * Definition: ControlCommandAndListSchema
- */
-export interface ControlCommandAndListSchema {
-    cluster: ClusterName;
-    db: DatabaseName;
-    /** Specify the show control command you would like to run */
-    csl: string;
 }
 
 /**
@@ -99,9 +52,50 @@ export interface ClusterName {
 }
 
 /**
+ * Definition: CommandAndVisualizeSchema
+ */
+export interface CommandAndVisualizeSchema {
+    chartType: ChartType;
+    cluster: ClusterName;
+    /** Specify the control command you would like to run */
+    csl: string;
+    db: DatabaseName;
+}
+
+/**
+ * Definition: ControlCommandAndListSchema
+ */
+export interface ControlCommandAndListSchema {
+    cluster: ClusterName;
+    /** Specify the show control command you would like to run */
+    csl: string;
+    db: DatabaseName;
+}
+
+/**
  * Definition: DatabaseName
  */
 export interface DatabaseName {
+    [key: string]: unknown;
+}
+
+/**
+ * Definition: MCPQueryRequest
+ */
+export interface MCPQueryRequest {
+    callbackEndpoint?: string;
+    error?: Record<string, unknown>;
+    id?: string;
+    jsonrpc?: string;
+    method?: string;
+    params?: Record<string, unknown>;
+    result?: Record<string, unknown>;
+}
+
+/**
+ * Definition: Object
+ */
+export interface ObjectEntity {
     [key: string]: unknown;
 }
 
@@ -113,23 +107,29 @@ export interface Query {
 }
 
 /**
- * Definition: ChartType
+ * Definition: QueryAndListSchema
  */
-export interface ChartType {
-    [key: string]: unknown;
+export interface QueryAndListSchema {
+    cluster: ClusterName;
+    csl: Query;
+    db: DatabaseName;
 }
 
 /**
- * Definition: MCPQueryRequest
+ * Definition: QueryAndVisualizeSchema
  */
-export interface MCPQueryRequest {
-    jsonrpc?: string;
-    id?: string;
-    method?: string;
-    params?: Record<string, unknown>;
-    result?: Record<string, unknown>;
-    error?: Record<string, unknown>;
-    callbackEndpoint?: string;
+export interface QueryAndVisualizeSchema {
+    chartType: ChartType;
+    cluster: ClusterName;
+    csl: Query;
+    db: DatabaseName;
+}
+
+/**
+ * Definition: Row
+ */
+export interface Row {
+    [key: string]: unknown;
 }
 // #endregion Types
 
@@ -189,6 +189,22 @@ export class KustoClient extends ConnectorClientBase {
     }
 
     /**
+     * Run async control command
+     * @remarks Runs control command in async mode and returns its ID, state and status on completion. Command can run for maximum 1 hour. The 'async' keyword is mandatory e.g .set-or-append async TargetTable <| SourceTable.
+     */
+    public async runAsyncControlCommandAndWaitAsync(input: ControlCommandAndListSchema): Promise<AsyncCommandResult> {
+        const requestPath = `/RunAsyncControlCommandAndWait`;
+        const url = `${this.connectionRuntimeUrl}${requestPath}`;
+        const httpResponse = await this.httpClient.sendAsync<AsyncCommandResult>("POST", url, undefined, input);
+
+        if (!httpResponse.isSuccessStatusCode) {
+            throw new ConnectorException(`POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+        }
+
+        return httpResponse.value as AsyncCommandResult;
+    }
+
+    /**
      * Run KQL query and render a chart
      * @remarks Runs the KQL query and returns result as a chart of your choice e.g TableName | where Timestamp > ago(1h) | project timestamp, value.
      */
@@ -218,22 +234,6 @@ export class KustoClient extends ConnectorClientBase {
         }
 
         return httpResponse.value as VisualizeResults;
-    }
-
-    /**
-     * Run async control command
-     * @remarks Runs control command in async mode and returns its ID, state and status on completion. Command can run for maximum 1 hour. The 'async' keyword is mandatory e.g .set-or-append async TargetTable <| SourceTable.
-     */
-    public async runAsyncControlCommandAndWaitAsync(input: ControlCommandAndListSchema): Promise<AsyncCommandResult> {
-        const requestPath = `/RunAsyncControlCommandAndWait`;
-        const url = `${this.connectionRuntimeUrl}${requestPath}`;
-        const httpResponse = await this.httpClient.sendAsync<AsyncCommandResult>("POST", url, undefined, input);
-
-        if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(`POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
-        }
-
-        return httpResponse.value as AsyncCommandResult;
     }
 
     /**

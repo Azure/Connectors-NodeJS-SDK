@@ -23,9 +23,9 @@
 import { DefaultAzureCredential } from "@azure/identity";
 import {
     TeamsClient,
-} from "@azure/azure-connectors/generated/TeamsExtensions";
-import { ConnectorException } from "@azure/azure-connectors/azureConnectors/connectorException";
-import { ManagedIdentityTokenProvider } from "@azure/azure-connectors/azureConnectors/authentication";
+} from "../../src/generated/TeamsExtensions.js";
+import { ConnectorException } from "../../src/azureConnectors/connectorException.js";
+import { ManagedIdentityTokenProvider } from "../../src/azureConnectors/authentication.js";
 
 // Connection runtime URL format:
 // https://[region].azure-apihub.net/apim/teams/[connection-id]

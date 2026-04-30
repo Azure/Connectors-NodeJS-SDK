@@ -25,9 +25,9 @@ import {
     Office365Client,
     ClientSendHtmlMessage,
     ClientDraftHtmlMessage,
-} from "@azure/azure-connectors/generated/Office365Extensions";
-import { ConnectorException } from "@azure/azure-connectors/azureConnectors/connectorException";
-import { ManagedIdentityTokenProvider } from "@azure/azure-connectors/azureConnectors/authentication";
+} from "../../src/generated/Office365Extensions.js";
+import { ConnectorException } from "../../src/azureConnectors/connectorException.js";
+import { ManagedIdentityTokenProvider } from "../../src/azureConnectors/authentication.js";
 
 // Connection runtime URL format:
 // https://[region].azure-apihub.net/apim/office365/[connection-id]
