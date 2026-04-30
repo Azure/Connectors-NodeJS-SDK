@@ -2,6 +2,7 @@
     "name": "connector-sdk-samples",
     "version": "0.0.0",
     "private": true,
+    "type": "module",
     "description": "Samples for @azure/azure-connectors SDK",
     "scripts": {
         "typecheck": "tsc --noEmit"
@@ -12,6 +13,6 @@
     },
     "devDependencies": {
         "typescript": "^6.0.3",
-        "ts-node": "^10.9.0"
+        "tsx": "^4.0.0"
     }
 }

@@ -17,7 +17,7 @@
  *     Set environment variable:
  *     $env:OFFICE365_CONNECTION_URL = "https://[region].azure-apihub.net/apim/office365/[connection-id]"
  *
- *     npx ts-node sampleOffice365.ts
+ *     npx tsx sampleOffice365.ts
  */
 
 import { DefaultAzureCredential } from "@azure/identity";
@@ -25,9 +25,9 @@ import {
     Office365Client,
     ClientSendHtmlMessage,
     ClientDraftHtmlMessage,
-} from "../../src/generated/Office365Extensions.js";
-import { ConnectorException } from "../../src/azureConnectors/connectorException.js";
-import { ManagedIdentityTokenProvider } from "../../src/azureConnectors/authentication.js";
+} from "../../src/generated/Office365Extensions";
+import { ConnectorException } from "../../src/azureConnectors/connectorException";
+import { ManagedIdentityTokenProvider } from "../../src/azureConnectors/authentication";
 
 // Connection runtime URL format:
 // https://[region].azure-apihub.net/apim/office365/[connection-id]

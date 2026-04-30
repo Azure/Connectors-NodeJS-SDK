@@ -25,9 +25,9 @@
 import { DefaultAzureCredential } from "@azure/identity";
 import {
     SharepointonlineClient,
-} from "../../src/generated/SharepointonlineExtensions.js";
-import { ConnectorException } from "../../src/azureConnectors/connectorException.js";
-import { ManagedIdentityTokenProvider } from "../../src/azureConnectors/authentication.js";
+} from "../../src/generated/SharepointonlineExtensions";
+import { ConnectorException } from "../../src/azureConnectors/connectorException";
+import { ManagedIdentityTokenProvider } from "../../src/azureConnectors/authentication";
 
 // Connection runtime URL format:
 // https://[region].azure-apihub.net/apim/sharepointonline/[connection-id]
