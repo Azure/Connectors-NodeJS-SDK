@@ -6,8 +6,8 @@
  * Mirrors the Python SDK's http_client.py. Uses the Node.js built-in fetch API (Node 18+).
  */
 
-import { TokenProvider } from "./authentication";
-import { ConnectorClientOptions, DefaultConnectorClientOptions } from "./options";
+import { TokenProvider } from "./authentication.ts";
+import { ConnectorClientOptions, DefaultConnectorClientOptions } from "./options.ts";
 
 /**
  * Represents a response from a connector operation.

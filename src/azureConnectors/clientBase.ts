@@ -6,9 +6,9 @@
  * Mirrors the Python SDK's client_base.py.
  */
 
-import { TokenProvider } from "./authentication";
-import { ConnectorHttpClient } from "./connectorHttpClient";
-import { ConnectorClientOptions } from "./options";
+import { TokenProvider } from "./authentication.ts";
+import { ConnectorHttpClient } from "./connectorHttpClient.ts";
+import { ConnectorClientOptions } from "./options.ts";
 
 /**
  * Abstract base class for generated connector clients.

@@ -1,6 +1,6 @@
 // Copyright (c) Microsoft Corporation.  All rights reserved.
 
-import { ConnectorException } from "../src/azureConnectors/connectorException";
+import { ConnectorException } from "../src/azureConnectors/connectorException.ts";
 
 describe("ConnectorException", () => {
     it("should create error with correct properties", () => {

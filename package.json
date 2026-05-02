@@ -3,21 +3,34 @@
     "version": "0.1.0",
     "description": "Azure Logic Apps Connector SDK for TypeScript / Node.js",
     "type": "module",
-    "main": "dist/azureConnectors/index.js",
-    "types": "dist/azureConnectors/index.d.ts",
+    "main": "dist/cjs/azureConnectors/index.js",
+    "module": "dist/esm/azureConnectors/index.js",
+    "types": "dist/esm/azureConnectors/index.d.ts",
     "sideEffects": false,
     "exports": {
         ".": {
-            "types": "./dist/azureConnectors/index.d.ts",
-            "default": "./dist/azureConnectors/index.js"
+            "import": {
+                "types": "./dist/esm/azureConnectors/index.d.ts",
+                "default": "./dist/esm/azureConnectors/index.js"
+            },
+            "require": {
+                "types": "./dist/cjs/azureConnectors/index.d.ts",
+                "default": "./dist/cjs/azureConnectors/index.js"
+            }
         },
         "./generated/*": {
-            "types": "./dist/generated/*.d.ts",
-            "default": "./dist/generated/*.js"
+            "import": {
+                "types": "./dist/esm/generated/*.d.ts",
+                "default": "./dist/esm/generated/*.js"
+            },
+            "require": {
+                "types": "./dist/cjs/generated/*.d.ts",
+                "default": "./dist/cjs/generated/*.js"
+            }
         }
     },
     "scripts": {
-        "build": "tsc && tsc -p samples/tsconfig.json --noEmit",
+        "build": "tsc && tsc -p tsconfig.cjs.json && node -e \"require('fs').writeFileSync('dist/cjs/package.json','{\\\"type\\\":\\\"commonjs\\\"}\\n')\" && tsc -p samples/tsconfig.json --noEmit",
         "test": "jest --config config/jest.config.cjs --verbose",
         "typecheck": "tsc --noEmit && tsc -p samples/tsconfig.json --noEmit",
         "typecheck:samples": "tsc -p samples/tsconfig.json --noEmit",

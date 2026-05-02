@@ -1,0 +1,13 @@
+{
+    "name": "sample-cjs-javascript",
+    "version": "0.0.0",
+    "private": true,
+    "description": "CommonJS JavaScript sample for @azure/azure-connectors SDK",
+    "scripts": {
+        "start": "node sampleOffice365.cjs"
+    },
+    "dependencies": {
+        "@azure/azure-connectors": "file:../../..",
+        "@azure/identity": "^4.0.0"
+    }
+}

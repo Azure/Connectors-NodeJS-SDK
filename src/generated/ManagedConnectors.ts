@@ -17,7 +17,7 @@ export const availableConnectors: string[] = [
     "teams",
 ];
 
-export { KustoClient } from './KustoExtensions';
-export { Office365Client } from './Office365Extensions';
-export { SharepointonlineClient } from './SharepointonlineExtensions';
-export { TeamsClient } from './TeamsExtensions';
+export { KustoClient } from './KustoExtensions.ts';
+export { Office365Client } from './Office365Extensions.ts';
+export { SharepointonlineClient } from './SharepointonlineExtensions.ts';
+export { TeamsClient } from './TeamsExtensions.ts';

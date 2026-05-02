@@ -1,0 +1,21 @@
+{
+    "name": "sample-esm-typescript",
+    "version": "0.0.0",
+    "private": true,
+    "type": "module",
+    "description": "ESM TypeScript sample for @azure/azure-connectors SDK",
+    "scripts": {
+        "build": "tsc",
+        "start": "node dist/sampleOffice365.js",
+        "dev": "npx tsx sampleOffice365.ts"
+    },
+    "dependencies": {
+        "@azure/azure-connectors": "file:../../..",
+        "@azure/identity": "^4.0.0"
+    },
+    "devDependencies": {
+        "@types/node": "^20.0.0",
+        "typescript": "^6.0.3",
+        "tsx": "^4.0.0"
+    }
+}

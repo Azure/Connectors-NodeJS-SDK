@@ -9,11 +9,11 @@ import {
     CreateChannelInput,
     CreateChannelResponse,
     GetTagsResponseSchema,
-} from "../src/generated/TeamsExtensions";
-import { ConnectorException } from "../src/azureConnectors/connectorException";
-import { TokenProvider } from "../src/azureConnectors/authentication";
-import { ConnectorNames } from "../src/generated/connectorNames";
-import { availableConnectors } from "../src/generated/ManagedConnectors";
+} from "../src/generated/TeamsExtensions.ts";
+import { ConnectorException } from "../src/azureConnectors/connectorException.ts";
+import { TokenProvider } from "../src/azureConnectors/authentication.ts";
+import { ConnectorNames } from "../src/generated/connectorNames.ts";
+import { availableConnectors } from "../src/generated/ManagedConnectors.ts";
 
 // ──────────────────────────────────────────────
 // Test helpers

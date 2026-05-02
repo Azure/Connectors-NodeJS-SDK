@@ -1,8 +1,9 @@
 {
     "compilerOptions": {
         "target": "ES2023",
-        "module": "ESNext",
-        "moduleResolution": "bundler",
+        "module": "nodenext",
+        "moduleResolution": "nodenext",
+        "rewriteRelativeImportExtensions": true,
         "strict": true,
         "esModuleInterop": true,
         "skipLibCheck": true,
@@ -10,7 +11,7 @@
         "declaration": true,
         "declarationMap": true,
         "sourceMap": true,
-        "outDir": "./dist",
+        "outDir": "./dist/esm",
         "rootDir": "./src",
         "lib": ["ES2023"]
     },

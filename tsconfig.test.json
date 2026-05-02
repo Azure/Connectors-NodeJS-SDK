@@ -3,7 +3,10 @@
     "compilerOptions": {
         "noEmit": true,
         "rootDir": ".",
-        "types": ["jest", "node"]
+        "outDir": null,
+        "types": ["jest", "node"],
+        "rewriteRelativeImportExtensions": false,
+        "allowImportingTsExtensions": true
     },
     "include": ["src/**/*.ts", "tests/**/*.ts"]
 }
