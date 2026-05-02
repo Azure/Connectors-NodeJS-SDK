@@ -52,29 +52,29 @@ function mockFetchError(status: number, errorBody: string): void {
 // ──────────────────────────────────────────────
 
 const _queryInput: QueryAndListSchema = {
-    csl: {},
-    db: {},
-    cluster: {},
+    csl: "TestTable | take 10",
+    db: "testdb",
+    cluster: "testcluster",
 };
 
 const _commandInput: ControlCommandAndListSchema = {
     csl: ".show tables",
-    db: {},
-    cluster: {},
+    db: "testdb",
+    cluster: "testcluster",
 };
 
 const _visualizeInput: QueryAndVisualizeSchema = {
-    csl: {},
-    db: {},
-    cluster: {},
-    chartType: {},
+    csl: "TestTable | take 10",
+    db: "testdb",
+    cluster: "testcluster",
+    chartType: "bar",
 };
 
 const _commandVisualizeInput: CommandAndVisualizeSchema = {
     csl: ".show tables",
-    db: {},
-    cluster: {},
-    chartType: {},
+    db: "testdb",
+    cluster: "testcluster",
+    chartType: "bar",
 };
 
 const _mcpRequest: MCPQueryRequest = {
@@ -111,9 +111,9 @@ describe("KustoClient — listKustoResultsAsync", () => {
 
         const client = new KustoClient(TestConnectionUrl, createMockTokenProvider());
         const input: QueryAndListSchema = {
-            csl: {},
-            db: {},
-            cluster: {},
+            csl: "TestTable | take 10",
+            db: "testdb",
+            cluster: "testcluster",
         };
 
         const result = await client.listKustoResultsAsync(input);
@@ -142,8 +142,8 @@ describe("KustoClient — listKustoShowCommandResultsAsync", () => {
         const client = new KustoClient(TestConnectionUrl, createMockTokenProvider());
         const input: ControlCommandAndListSchema = {
             csl: ".show tables",
-            db: {},
-            cluster: {},
+            db: "testdb",
+            cluster: "testcluster",
         };
 
         const result = await client.listKustoShowCommandResultsAsync(input);
@@ -167,10 +167,10 @@ describe("KustoClient — runKustoQueryAndVisualizeResultsAsync", () => {
 
         const client = new KustoClient(TestConnectionUrl, createMockTokenProvider());
         const input: QueryAndVisualizeSchema = {
-            csl: {},
-            db: {},
-            cluster: {},
-            chartType: {},
+            csl: "TestTable | take 10",
+            db: "testdb",
+            cluster: "testcluster",
+            chartType: "bar",
         };
 
         const result = await client.runKustoQueryAndVisualizeResultsAsync(input);
@@ -193,9 +193,9 @@ describe("KustoClient — runKustoCommandAndVisualizeResultsAsync", () => {
         const client = new KustoClient(TestConnectionUrl, createMockTokenProvider());
         const input: CommandAndVisualizeSchema = {
             csl: ".show tables",
-            db: {},
-            cluster: {},
-            chartType: {},
+            db: "testdb",
+            cluster: "testcluster",
+            chartType: "bar",
         };
 
         const result = await client.runKustoCommandAndVisualizeResultsAsync(input);
@@ -218,8 +218,8 @@ describe("KustoClient — runAsyncControlCommandAndWaitAsync", () => {
         const client = new KustoClient(TestConnectionUrl, createMockTokenProvider());
         const input: ControlCommandAndListSchema = {
             csl: ".set-or-append async TargetTable <| SourceTable",
-            db: {},
-            cluster: {},
+            db: "testdb",
+            cluster: "testcluster",
         };
 
         const result = await client.runAsyncControlCommandAndWaitAsync(input);
@@ -296,7 +296,7 @@ describe("KustoClient — error handling", () => {
 
         const client = new KustoClient(TestConnectionUrl, createMockTokenProvider());
         await expect(
-            client.listKustoResultsAsync({ csl: {}, db: {}, cluster: {} }),
+            client.listKustoResultsAsync({ csl: "test", db: "testdb", cluster: "testcluster" }),
         ).rejects.toThrow(ConnectorException);
     });
 
@@ -307,7 +307,7 @@ describe("KustoClient — error handling", () => {
         const client = new KustoClient(TestConnectionUrl, createMockTokenProvider());
 
         try {
-            await client.listKustoResultsAsync({ csl: {}, db: {}, cluster: {} });
+            await client.listKustoResultsAsync({ csl: "test", db: "testdb", cluster: "testcluster" });
             throw new Error("Expected ConnectorException to be thrown");
         } catch (error) {
             expect(error).toBeInstanceOf(ConnectorException);

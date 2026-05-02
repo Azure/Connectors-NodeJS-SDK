@@ -53,9 +53,9 @@ async function main() {
     console.log(`Query: ${kqlQuery}`);
     try {
         const input = {
-            cluster: { [CLUSTER]: CLUSTER },
-            csl: { [kqlQuery]: kqlQuery },
-            db: { [DATABASE]: DATABASE },
+            cluster: CLUSTER,
+            csl: kqlQuery,
+            db: DATABASE,
         };
         const result = await client.listKustoResultsAsync(input);
 
@@ -79,9 +79,9 @@ async function main() {
     console.log("\n--- Run Show Control Command ---");
     try {
         const controlInput = {
-            cluster: { [CLUSTER]: CLUSTER },
+            cluster: CLUSTER,
             csl: ".show databases",
-            db: { [DATABASE]: DATABASE },
+            db: DATABASE,
         };
         const controlResult = await client.listKustoShowCommandResultsAsync(controlInput);
 
@@ -105,9 +105,9 @@ async function main() {
     console.log("\n--- Error Handling ---");
     try {
         const badInput = {
-            cluster: { [CLUSTER]: CLUSTER },
-            csl: { "INVALID_QUERY_!!!": "INVALID_QUERY_!!!" },
-            db: { [DATABASE]: DATABASE },
+            cluster: CLUSTER,
+            csl: "INVALID_QUERY_!!!",
+            db: DATABASE,
         };
         await client.listKustoResultsAsync(badInput);
         console.log("Unexpected success.");

@@ -40,16 +40,12 @@ export interface MCPQueryResponse {
 /**
  * Definition: ChartType
  */
-export interface ChartType {
-    [key: string]: unknown;
-}
+export type ChartType = string;
 
 /**
  * Definition: ClusterName
  */
-export interface ClusterName {
-    [key: string]: unknown;
-}
+export type ClusterName = string;
 
 /**
  * Definition: CommandAndVisualizeSchema
@@ -75,9 +71,7 @@ export interface ControlCommandAndListSchema {
 /**
  * Definition: DatabaseName
  */
-export interface DatabaseName {
-    [key: string]: unknown;
-}
+export type DatabaseName = string;
 
 /**
  * Definition: MCPQueryRequest
@@ -102,9 +96,7 @@ export interface ObjectEntity {
 /**
  * Definition: Query
  */
-export interface Query {
-    [key: string]: unknown;
-}
+export type Query = string;
 
 /**
  * Definition: QueryAndListSchema
