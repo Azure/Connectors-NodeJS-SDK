@@ -52,7 +52,7 @@ async function main(): Promise<void> {
     console.log("\n--- Get All Lists and Libraries ---");
     try {
         const tables: TablesList = await client.getAllTablesAsync(SITE_URL);
-        const lists = tables.value ?? [];
+        const lists = (tables.value ?? []) as Array<Record<string, unknown>>;
 
         if (lists.length > 0) {
             console.log(`Found ${lists.length} lists and libraries:`);
@@ -75,7 +75,7 @@ async function main(): Promise<void> {
     console.log(`\n--- Get List Items (${listName}) ---`);
     try {
         const items: ItemsList = await client.getItemsAsync(SITE_URL, listName);
-        const itemValues = items.value ?? [];
+        const itemValues = (items.value ?? []) as Array<Record<string, unknown>>;
 
         if (itemValues.length > 0) {
             console.log(`Found ${itemValues.length} items:`);
@@ -98,7 +98,7 @@ async function main(): Promise<void> {
     console.log(`\n--- Get File Properties (${listName}) ---`);
     try {
         const files: ItemsList = await client.getFileItemsAsync(SITE_URL, listName);
-        const fileValues = files.value ?? [];
+        const fileValues = (files.value ?? []) as Array<Record<string, unknown>>;
 
         if (fileValues.length > 0) {
             console.log(`Found ${fileValues.length} files:`);
