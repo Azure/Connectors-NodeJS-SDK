@@ -7,7 +7,7 @@
         "start": "node sampleOffice365.cjs"
     },
     "dependencies": {
-        "@azure/connectors": "file:../../..",
+        "@azure/connectors": "0.1.0-preview",
         "@azure/identity": "^4.0.0"
     }
 }
