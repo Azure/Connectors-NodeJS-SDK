@@ -22,8 +22,8 @@
  *     node dist/sampleTeams.js
  */
 
-import { ManagedIdentityTokenProvider, ConnectorException } from "@azure/azure-connectors";
-import { TeamsClient, GetAllTeamsResponse, GetChannelsForGroupResponse } from "@azure/azure-connectors/generated/TeamsExtensions";
+import { ManagedIdentityTokenProvider, ConnectorException } from "@azure/connectors";
+import { TeamsClient, GetAllTeamsResponse, GetChannelsForGroupResponse } from "@azure/connectors/generated/TeamsExtensions";
 
 const CONNECTION_URL = process.env.TEAMS_CONNECTION_URL ?? "";
 

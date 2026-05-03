@@ -21,8 +21,8 @@
  *     npm run kusto
  */
 
-import { ManagedIdentityTokenProvider, ConnectorException } from "@azure/azure-connectors";
-import { KustoClient } from "@azure/azure-connectors/generated/KustoExtensions";
+import { ManagedIdentityTokenProvider, ConnectorException } from "@azure/connectors";
+import { KustoClient } from "@azure/connectors/generated/KustoExtensions";
 
 const CONNECTION_URL = process.env.KUSTO_CONNECTION_URL ?? "";
 const CLUSTER = process.env.KUSTO_CLUSTER ?? "";

@@ -24,8 +24,8 @@
  *     node dist/sharepoint.js
  */
 
-import { ManagedIdentityTokenProvider, ConnectorException } from "@azure/azure-connectors";
-import { SharepointonlineClient, TablesList, ItemsList, PostItemResponse, GetItemResponse } from "@azure/azure-connectors/generated/SharepointonlineExtensions";
+import { ManagedIdentityTokenProvider, ConnectorException } from "@azure/connectors";
+import { SharepointonlineClient, TablesList, ItemsList, PostItemResponse, GetItemResponse } from "@azure/connectors/generated/SharepointonlineExtensions";
 
 const CONNECTION_URL = process.env.SHAREPOINT_CONNECTION_URL ?? "";
 const SITE_URL = process.env.SHAREPOINT_SITE_URL ?? "";

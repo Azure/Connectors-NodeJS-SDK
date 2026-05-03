@@ -25,8 +25,8 @@
  *     node dist/kusto.js
  */
 
-import { ManagedIdentityTokenProvider, ConnectorException } from "@azure/azure-connectors";
-import { KustoClient, Table, QueryAndListSchema, ControlCommandAndListSchema } from "@azure/azure-connectors/generated/KustoExtensions";
+import { ManagedIdentityTokenProvider, ConnectorException } from "@azure/connectors";
+import { KustoClient, Table, QueryAndListSchema, ControlCommandAndListSchema } from "@azure/connectors/generated/KustoExtensions";
 
 const CONNECTION_URL = process.env.KUSTO_CONNECTION_URL ?? "";
 const CLUSTER = process.env.KUSTO_CLUSTER ?? "";

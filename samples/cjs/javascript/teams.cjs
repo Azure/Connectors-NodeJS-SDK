@@ -20,8 +20,8 @@
 
 "use strict";
 
-const { ManagedIdentityTokenProvider, ConnectorException } = require("@azure/azure-connectors");
-const { TeamsClient } = require("@azure/azure-connectors/generated/TeamsExtensions");
+const { ManagedIdentityTokenProvider, ConnectorException } = require("@azure/connectors");
+const { TeamsClient } = require("@azure/connectors/generated/TeamsExtensions");
 
 const CONNECTION_URL = process.env.TEAMS_CONNECTION_URL ?? "";
 

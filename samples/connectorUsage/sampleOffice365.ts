@@ -11,7 +11,7 @@
  * 3. Connection runtime URL from Azure Portal
  *
  * Installation:
- *     npm install @azure/azure-connectors
+ *     npm install @azure/connectors
  *
  * Usage:
  *     Set environment variable:

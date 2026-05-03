@@ -12,7 +12,7 @@
  * 4. SharePoint site URL
  *
  * Installation:
- *     npm install @azure/azure-connectors
+ *     npm install @azure/connectors
  *
  * Usage:
  *     Set environment variables:

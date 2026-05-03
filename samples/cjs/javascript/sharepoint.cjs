@@ -22,8 +22,8 @@
 
 "use strict";
 
-const { ManagedIdentityTokenProvider, ConnectorException } = require("@azure/azure-connectors");
-const { SharepointonlineClient } = require("@azure/azure-connectors/generated/SharepointonlineExtensions");
+const { ManagedIdentityTokenProvider, ConnectorException } = require("@azure/connectors");
+const { SharepointonlineClient } = require("@azure/connectors/generated/SharepointonlineExtensions");
 
 const CONNECTION_URL = process.env.SHAREPOINT_CONNECTION_URL ?? "";
 const SITE_URL = process.env.SHAREPOINT_SITE_URL ?? "";

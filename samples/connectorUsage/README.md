@@ -60,7 +60,7 @@ npx ts-node sampleTeams.ts
 2. **Azure Connectors SDK** - Install via npm:
 
    ```bash
-   npm install @azure/azure-connectors
+   npm install @azure/connectors
    ```
 
 3. **Azure Identity** - For authentication:
@@ -98,7 +98,7 @@ import { DefaultAzureCredential } from "@azure/identity";
 import {
     Office365Client,
     SendEmailInput,
-} from "@azure/azure-connectors/generated/Office365Extensions";
+} from "@azure/connectors/generated/Office365Extensions";
 
 async function sendEmail(): Promise<void> {
     const credential = new DefaultAzureCredential();
@@ -133,7 +133,7 @@ import { DefaultAzureCredential } from "@azure/identity";
 import {
     Office365Client,
     SendEmailInput,
-} from "@azure/azure-connectors/generated/Office365Extensions";
+} from "@azure/connectors/generated/Office365Extensions";
 
 app.http("send-email", {
     methods: ["POST"],
@@ -173,7 +173,7 @@ The SDK provides typed error classes for each connector:
 import {
     Office365Client,
     Office365ConnectorError,
-} from "@azure/azure-connectors/generated/Office365Extensions";
+} from "@azure/connectors/generated/Office365Extensions";
 
 try {
     await client.getEmailAsync("invalid-id");
@@ -225,6 +225,6 @@ See [GENERATION.md](../../GENERATION.md) for the complete list.
 ## Next Steps
 
 1. Generate connector code for your needed connectors
-2. Install the SDK: `npm install @azure/azure-connectors`
+2. Install the SDK: `npm install @azure/connectors`
 3. Get connection runtime URL from Azure Portal
 4. Set up authentication via Azure Identity

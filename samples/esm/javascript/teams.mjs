@@ -18,8 +18,8 @@
  *     npm run teams
  */
 
-import { ManagedIdentityTokenProvider, ConnectorException } from "@azure/azure-connectors";
-import { TeamsClient } from "@azure/azure-connectors/generated/TeamsExtensions";
+import { ManagedIdentityTokenProvider, ConnectorException } from "@azure/connectors";
+import { TeamsClient } from "@azure/connectors/generated/TeamsExtensions";
 
 const CONNECTION_URL = process.env.TEAMS_CONNECTION_URL ?? "";
 

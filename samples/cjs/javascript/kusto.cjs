@@ -23,8 +23,8 @@
 
 "use strict";
 
-const { ManagedIdentityTokenProvider, ConnectorException } = require("@azure/azure-connectors");
-const { KustoClient } = require("@azure/azure-connectors/generated/KustoExtensions");
+const { ManagedIdentityTokenProvider, ConnectorException } = require("@azure/connectors");
+const { KustoClient } = require("@azure/connectors/generated/KustoExtensions");
 
 const CONNECTION_URL = process.env.KUSTO_CONNECTION_URL ?? "";
 const CLUSTER = process.env.KUSTO_CLUSTER ?? "";

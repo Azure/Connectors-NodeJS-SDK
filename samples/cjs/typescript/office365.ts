@@ -22,8 +22,8 @@
  *     npm start
  */
 
-import { ManagedIdentityTokenProvider, ConnectorException } from "@azure/azure-connectors";
-import { Office365Client, ClientSendHtmlMessage } from "@azure/azure-connectors/generated/Office365Extensions";
+import { ManagedIdentityTokenProvider, ConnectorException } from "@azure/connectors";
+import { Office365Client, ClientSendHtmlMessage } from "@azure/connectors/generated/Office365Extensions";
 
 const CONNECTION_URL = process.env.OFFICE365_CONNECTION_URL ?? "";
 

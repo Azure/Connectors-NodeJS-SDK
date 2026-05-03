@@ -20,8 +20,8 @@
 
 "use strict";
 
-const { ManagedIdentityTokenProvider, ConnectorException } = require("@azure/azure-connectors");
-const { Office365Client } = require("@azure/azure-connectors/generated/Office365Extensions");
+const { ManagedIdentityTokenProvider, ConnectorException } = require("@azure/connectors");
+const { Office365Client } = require("@azure/connectors/generated/Office365Extensions");
 
 const CONNECTION_URL = process.env.OFFICE365_CONNECTION_URL ?? "";
 

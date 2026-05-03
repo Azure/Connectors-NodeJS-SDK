@@ -3,12 +3,12 @@
     "version": "0.0.0",
     "private": true,
     "type": "module",
-    "description": "Samples for @azure/azure-connectors SDK",
+    "description": "Samples for @azure/connectors SDK",
     "scripts": {
         "typecheck": "tsc --noEmit"
     },
     "dependencies": {
-        "@azure/azure-connectors": "file:..",
+        "@azure/connectors": "file:..",
         "@azure/identity": "^4.0.0"
     },
     "devDependencies": {
