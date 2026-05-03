@@ -30,9 +30,9 @@
         }
     },
     "scripts": {
-        "build": "tsc && tsc -p tsconfig.cjs.json && node -e \"require('fs').writeFileSync('dist/cjs/package.json','{\\\"type\\\":\\\"commonjs\\\"}\\n')\" && tsc -p samples/tsconfig.json --noEmit",
+        "build": "tsc && tsc -p tsconfig.cjs.json && node -e \"require('fs').writeFileSync('dist/cjs/package.json','{\\\"type\\\":\\\"commonjs\\\"}\\n')\"",
         "test": "jest --config config/jest.config.cjs --verbose",
-        "typecheck": "tsc --noEmit && tsc -p samples/tsconfig.json --noEmit",
+        "typecheck": "tsc --noEmit",
         "typecheck:samples": "tsc -p samples/tsconfig.json --noEmit",
         "lint": "eslint --config config/eslint.config.cjs src/",
         "lint:md": "markdownlint-cli2 **/*.md #node_modules #dist #samples/node_modules"
