@@ -47,9 +47,7 @@ export interface SubscriptionResponse {
 /**
  * Send an HTTP request
  */
-export interface HttpRequestInput {
-    [key: string]: unknown;
-}
+export type HttpRequestInput = string;
 
 /**
  * Response for Send an HTTP request
@@ -61,9 +59,7 @@ export interface ObjectWithoutType {
 /**
  * Update my contact's photo
  */
-export interface UpdateMyContactPhotoInput {
-    [key: string]: unknown;
-}
+export type UpdateMyContactPhotoInput = string;
 
 /**
  * Response for Contact Management MCP Server

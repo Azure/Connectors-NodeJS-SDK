@@ -201,9 +201,7 @@ export interface GetChatsResponse {
 /**
  * Send a Microsoft Graph HTTP request
  */
-export interface HttpRequestInput {
-    [key: string]: unknown;
-}
+export type HttpRequestInput = string;
 
 /**
  * Response for Send a Microsoft Graph HTTP request
@@ -326,9 +324,7 @@ export interface AtMentionUserV1 {
 /**
  * Definition: BotIdForChat
  */
-export interface BotIdForChat {
-    [key: string]: unknown;
-}
+export type BotIdForChat = string;
 
 /**
  * Definition: BotMentionRequest
@@ -353,9 +349,7 @@ export interface CardResponseTriggerMetadata {
 /**
  * Definition: ChannelIdForTeam
  */
-export interface ChannelIdForTeam {
-    [key: string]: unknown;
-}
+export type ChannelIdForTeam = string;
 
 /**
  * Definition: ChannelIds
@@ -374,9 +368,7 @@ export interface ChannelWithOwnerTeamId {
 /**
  * Definition: ChatId
  */
-export interface ChatId {
-    [key: string]: unknown;
-}
+export type ChatId = string;
 
 /**
  * Definition: ChatMessage
@@ -1112,9 +1104,7 @@ export interface SwapShiftsChangeRequestResponse {
 /**
  * Definition: ThemeEditor
  */
-export interface ThemeEditor {
-    [key: string]: unknown;
-}
+export type ThemeEditor = string;
 
 /**
  * Definition: TimeOffRequestResponse

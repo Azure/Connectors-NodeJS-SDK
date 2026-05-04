@@ -54,16 +54,12 @@ export interface BlobMetadata {
 /**
  * Create file
  */
-export interface CreateFileInput {
-    [key: string]: unknown;
-}
+export type CreateFileInput = string;
 
 /**
  * Update file
  */
-export interface UpdateFileInput {
-    [key: string]: unknown;
-}
+export type UpdateFileInput = string;
 
 /**
  * Response for Update file
@@ -194,9 +190,7 @@ export interface SPListItemAttachment {
 /**
  * Add attachment
  */
-export interface CreateAttachmentInput {
-    [key: string]: unknown;
-}
+export type CreateAttachmentInput = string;
 
 /**
  * Response for When a file is deleted

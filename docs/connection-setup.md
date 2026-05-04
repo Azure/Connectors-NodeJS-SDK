@@ -320,7 +320,7 @@ The generated connector clients (e.g., `Office365Client`, `TeamsClient`) authent
 Uses `DefaultAzureCredential` under the hood, which tries multiple sources automatically — Azure CLI, environment variables, and managed identity.
 
 ```typescript
-import { ManagedIdentityTokenProvider } from "@azure/connectors/azureConnectors/authentication";
+import { ManagedIdentityTokenProvider } from "@azure/connectors";
 import { Office365Client } from "@azure/connectors/generated/Office365Extensions";
 
 const tokenProvider = new ManagedIdentityTokenProvider();
@@ -345,7 +345,7 @@ Use this when multiple apps share a single identity, or when you need the identi
 For scenarios where a pre-configured API key is available:
 
 ```typescript
-import { ConnectionStringTokenProvider } from "@azure/connectors/azureConnectors/authentication";
+import { ConnectionStringTokenProvider } from "@azure/connectors";
 
 const tokenProvider = new ConnectionStringTokenProvider(apiKey);
 const client = new Office365Client(connectionRuntimeUrl, tokenProvider);
