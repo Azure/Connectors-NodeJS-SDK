@@ -106,7 +106,7 @@ describe("KustoClient — listKustoResultsAsync", () => {
     });
 
     it("should POST to /ListKustoResults/false with correct body and headers", async () => {
-        const mockTable: Table = { columns: ["col1"], rows: [["val1"]] };
+        const mockTable: Table = { value: [{ value: ["val1"] }] };
         mockFetchResponse(mockTable);
 
         const client = new KustoClient(TestConnectionUrl, createMockTokenProvider());
@@ -136,7 +136,7 @@ describe("KustoClient — listKustoShowCommandResultsAsync", () => {
     });
 
     it("should POST to /ListKustoShowCommandResults", async () => {
-        const mockTable: Table = { columns: ["name"], rows: [["MyTable"]] };
+        const mockTable: Table = { value: [{ value: ["MyTable"] }] };
         mockFetchResponse(mockTable);
 
         const client = new KustoClient(TestConnectionUrl, createMockTokenProvider());
@@ -162,7 +162,7 @@ describe("KustoClient — runKustoQueryAndVisualizeResultsAsync", () => {
     });
 
     it("should POST to /RunKustoAndVisualizeResults/false", async () => {
-        const mockResult: VisualizeResults = { chart: "bar" };
+        const mockResult: VisualizeResults = { body: "bar-chart-data" };
         mockFetchResponse(mockResult);
 
         const client = new KustoClient(TestConnectionUrl, createMockTokenProvider());
@@ -187,7 +187,7 @@ describe("KustoClient — runKustoCommandAndVisualizeResultsAsync", () => {
     });
 
     it("should POST to /RunKustoAndVisualizeResults/true", async () => {
-        const mockResult: VisualizeResults = { chart: "pie" };
+        const mockResult: VisualizeResults = { body: "pie-chart-data" };
         mockFetchResponse(mockResult);
 
         const client = new KustoClient(TestConnectionUrl, createMockTokenProvider());
@@ -237,7 +237,7 @@ describe("KustoClient — mcpKustoQueryManagementAsync", () => {
     });
 
     it("should POST to /mcp/KustoQueryManagement without session ID", async () => {
-        const mockResponse: MCPQueryResponse = { result: "ok" };
+        const mockResponse: MCPQueryResponse = { result: { status: "ok" } };
         mockFetchResponse(mockResponse);
 
         const client = new KustoClient(TestConnectionUrl, createMockTokenProvider());

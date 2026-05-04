@@ -10,44 +10,9 @@ import { TokenProvider } from "../azureConnectors/authentication.ts";
 // #region Types
 
 /**
- * Response for Get file metadata using path
- */
-export interface SPBlobMetadataResponse {
-    [key: string]: unknown;
-}
-
-/**
  * Agreements Solution - Generate document within Agreements Solution workspace
  */
 export interface CreateAgreementsSolutionDocumentInput {
-    [key: string]: unknown;
-}
-
-/**
- * Response for Get all lists and libraries
- */
-export interface TablesList {
-    [key: string]: unknown;
-}
-
-/**
- * Response for Approve hub site join request
- */
-export interface ApproveHubSiteJoinResponse {
-    [key: string]: unknown;
-}
-
-/**
- * Response for Create sharing link for a file or folder
- */
-export interface SharingLinkPermission {
-    [key: string]: unknown;
-}
-
-/**
- * Response for Copy file (deprecated)
- */
-export interface BlobMetadata {
     [key: string]: unknown;
 }
 
@@ -62,13 +27,6 @@ export type CreateFileInput = string;
 export type UpdateFileInput = string;
 
 /**
- * Response for Update file
- */
-export interface BlobMetadataResponse {
-    [key: string]: unknown;
-}
-
-/**
  * Response for Create new document set
  */
 export interface CreateNewDocumentSetResponse {
@@ -79,20 +37,6 @@ export interface CreateNewDocumentSetResponse {
  * Response for Create new folder
  */
 export interface CreateNewFolderResponse {
-    [key: string]: unknown;
-}
-
-/**
- * Response for Resolve person
- */
-export interface SPListExpandedUser {
-    [key: string]: unknown;
-}
-
-/**
- * Response for Get files (properties only)
- */
-export interface ItemsList {
     [key: string]: unknown;
 }
 
@@ -139,23 +83,9 @@ export interface CreateApprovalRequestInput {
 }
 
 /**
- * Response for Create an approval request for an item or file
- */
-export interface ApprovalData {
-    [key: string]: unknown;
-}
-
-/**
  * Response for Get changes for an item or a file (properties only)
  */
 export interface GetItemChangesResponse {
-    [key: string]: unknown;
-}
-
-/**
- * Response for Get file properties
- */
-export interface Item {
     [key: string]: unknown;
 }
 
@@ -174,30 +104,9 @@ export interface PatchFileItemResponse {
 }
 
 /**
- * Response for Set content approval status
- */
-export interface SetApprovalStatusOutput {
-    [key: string]: unknown;
-}
-
-/**
- * Response for Get attachments
- */
-export interface SPListItemAttachment {
-    [key: string]: unknown;
-}
-
-/**
  * Add attachment
  */
 export type CreateAttachmentInput = string;
-
-/**
- * Response for When a file is deleted
- */
-export interface DeletedItemList {
-    [key: string]: unknown;
-}
 
 /**
  * Generate document using Microsoft Syntex (preview)
@@ -207,18 +116,27 @@ export interface CreateContentAssemblyDocumentInput {
 }
 
 /**
- * Response for Get list views
- */
-export interface Table {
-    [key: string]: unknown;
-}
-
-/**
  * Definition: ApplicationPermissionIdentity
  */
 export interface ApplicationPermissionIdentity {
     /** Application display name */
     displayName?: string;
+}
+
+/**
+ * Definition: ApprovalData
+ */
+export interface ApprovalData {
+    /** The ID of the approval request created */
+    ApprovalId: string;
+}
+
+/**
+ * Definition: ApproveHubSiteJoinResponse
+ */
+export interface ApproveHubSiteJoinResponse {
+    /** Approval Token */
+    ApprovalToken?: string;
 }
 
 /**
@@ -234,11 +152,63 @@ export interface BlobDataSetsMetadata {
 }
 
 /**
+ * Definition: BlobMetadata
+ */
+export interface BlobMetadata {
+    /** The display name of the file or folder. */
+    DisplayName?: string;
+    /** The etag of the file or folder. */
+    ETag?: string;
+    /** The filelocator of the file or folder. */
+    FileLocator?: string;
+    /** The unique id of the file or folder. */
+    Id?: string;
+    /** A boolean value (true, false) to indicate whether or not the blob is a folder. */
+    IsFolder?: boolean;
+    /** The date and time the file or folder was last modified. */
+    LastModified?: string;
+    /** The media type of the file or folder. */
+    MediaType?: string;
+    /** The name of the file or folder. */
+    Name?: string;
+    /** The path of the file or folder. */
+    Path?: string;
+    /** The size of the file or folder. */
+    Size?: number;
+}
+
+/**
  * Definition: BlobMetadataPage
  */
 export interface BlobMetadataPage {
     /** Blob metadata collection. */
     value?: Array<BlobMetadata>;
+}
+
+/**
+ * Definition: BlobMetadataResponse
+ */
+export interface BlobMetadataResponse {
+    /** The display name of the file or folder. */
+    DisplayName?: string;
+    /** The etag of the file or folder. */
+    ETag?: string;
+    /** The filelocator of the file or folder. */
+    FileLocator?: string;
+    /** The unique id of the file or folder. */
+    Id?: string;
+    /** A boolean value (true, false) to indicate whether or not the blob is a folder. */
+    IsFolder?: boolean;
+    /** The date and time the file or folder was last modified. */
+    LastModified?: string;
+    /** The media type of the file or folder. */
+    MediaType?: string;
+    /** The name of the file or folder. */
+    Name?: string;
+    /** The path of the file or folder. */
+    Path?: string;
+    /** The size of the file or folder. */
+    Size?: number;
 }
 
 /**
@@ -335,6 +305,14 @@ export interface DeletedItem {
 }
 
 /**
+ * Definition: DeletedItemList
+ */
+export interface DeletedItemList {
+    /** List of Deleted Items */
+    value?: Array<DeletedItem>;
+}
+
+/**
  * Definition: FileCheckInParameters
  */
 export interface FileCheckInParameters {
@@ -371,6 +349,13 @@ export interface HubSiteJoinApprovalOutput {
     RequestingSiteTitle?: string;
     /** Requesting Site Url */
     RequestingSiteUrl?: string;
+}
+
+/**
+ * Definition: Item
+ */
+export interface Item {
+    dynamicProperties?: Record<string, unknown>;
 }
 
 /**
@@ -440,6 +425,14 @@ export interface ItemReference {
     /** Path that can be used to navigate to the parent item */
     path?: string;
     sharepointIds?: SharePointIds;
+}
+
+/**
+ * Definition: ItemsList
+ */
+export interface ItemsList {
+    /** List of Items */
+    value?: Array<Item>;
 }
 
 /**
@@ -547,6 +540,34 @@ export interface PublishedResult {
 }
 
 /**
+ * Definition: SPBlobMetadataResponse
+ */
+export interface SPBlobMetadataResponse {
+    /** The display name of the file or folder. */
+    DisplayName?: string;
+    /** The etag of the file or folder. */
+    ETag?: string;
+    /** The filelocator of the file or folder. */
+    FileLocator?: string;
+    /** The unique id of the file or folder. */
+    Id?: string;
+    /** A boolean value (true, false) to indicate whether or not the blob is a folder. */
+    IsFolder?: boolean;
+    /** The value that can be used to Get or Update file properties in libraries. */
+    ItemId?: number;
+    /** The date and time the file or folder was last modified. */
+    LastModified?: string;
+    /** The media type of the file or folder. */
+    MediaType?: string;
+    /** The name of the file or folder. */
+    Name?: string;
+    /** The path of the file or folder. */
+    Path?: string;
+    /** The size of the file or folder. */
+    Size?: number;
+}
+
+/**
  * Definition: SPContentType
  */
 export interface SPContentType {
@@ -576,6 +597,53 @@ export interface SPListEntity {
     EntityType?: string;
     /** The Id of the SPField */
     Id?: string;
+}
+
+/**
+ * Definition: SPListExpandedUser
+ */
+export interface SPListExpandedUser {
+    "@odata.type"?: string;
+    /** user claims */
+    Claims?: string;
+    /** user department */
+    Department?: string;
+    /** user title */
+    DisplayName?: string;
+    /** user email */
+    Email?: string;
+    /** user job title */
+    JobTitle?: string;
+    /** user picture */
+    Picture?: string;
+}
+
+/**
+ * Definition: SPListItemAttachment
+ */
+export interface SPListItemAttachment {
+    /** Link to attachment */
+    AbsoluteUri?: string;
+    /** Name */
+    DisplayName?: string;
+    /** File identifier */
+    Id?: string;
+}
+
+/**
+ * Definition: SetApprovalStatusOutput
+ */
+export interface SetApprovalStatusOutput {
+    /** A link to the item that needs approval */
+    ApprovalLink?: string;
+    /** The content approval status of the list item */
+    ContentApprovalStatus?: string;
+    /** ETag of the item after the approval status was set */
+    ETag?: string;
+    /** Date time at which the item will be Published */
+    PublishStartDate?: string;
+    /** The version of the item that has been scheduled */
+    ScheduledVersion?: string;
 }
 
 /**
@@ -631,6 +699,13 @@ export interface SharingLink {
 }
 
 /**
+ * Definition: SharingLinkPermission
+ */
+export interface SharingLinkPermission {
+    link?: SharingLink;
+}
+
+/**
  * Definition: SharingLinkPermissionIdentitySet
  */
 export interface SharingLinkPermissionIdentitySet {
@@ -645,6 +720,18 @@ export interface SharingLinkUserPermissionIdentity {
     displayName?: string;
     /** User email */
     email?: string;
+}
+
+/**
+ * Definition: Table
+ */
+export interface Table {
+    /** The display name of the table. */
+    DisplayName?: string;
+    /** Additional table properties provided by the connector to the clients. */
+    DynamicProperties?: Record<string, unknown>;
+    /** The name of the table. The name is used at runtime. */
+    Name?: string;
 }
 
 /**
@@ -709,6 +796,14 @@ export interface TableSortRestrictionsMetadata {
     sortable?: boolean;
     /** List of unsortable properties */
     unsortableProperties?: Array<string>;
+}
+
+/**
+ * Definition: TablesList
+ */
+export interface TablesList {
+    /** List of Tables */
+    value?: Array<Table>;
 }
 
 /**

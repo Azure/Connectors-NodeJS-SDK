@@ -10,31 +10,15 @@ import { TokenProvider } from "../azureConnectors/authentication.ts";
 // #region Types
 
 /**
- * Response for Run KQL query
- */
-export interface Table {
-    [key: string]: unknown;
-}
-
-/**
- * Response for Run async control command
+ * Definition: AsyncCommandResult
  */
 export interface AsyncCommandResult {
-    [key: string]: unknown;
-}
-
-/**
- * Response for Run KQL query and render a chart
- */
-export interface VisualizeResults {
-    [key: string]: unknown;
-}
-
-/**
- * Response for Kusto Query MCP Server
- */
-export interface MCPQueryResponse {
-    [key: string]: unknown;
+    /** The operation ID of the control command */
+    operationId?: string;
+    /** The state of the command. */
+    state?: string;
+    /** The status of the command. */
+    status?: string;
 }
 
 /**
@@ -87,6 +71,18 @@ export interface MCPQueryRequest {
 }
 
 /**
+ * Definition: MCPQueryResponse
+ */
+export interface MCPQueryResponse {
+    error?: Record<string, unknown>;
+    id?: string;
+    jsonrpc?: string;
+    method?: string;
+    params?: Record<string, unknown>;
+    result?: Record<string, unknown>;
+}
+
+/**
  * Definition: Object
  */
 export interface ObjectEntity {
@@ -122,6 +118,29 @@ export interface QueryAndVisualizeSchema {
  */
 export interface Row {
     [key: string]: unknown;
+}
+
+/**
+ * Definition: Table
+ */
+export interface Table {
+    value?: Array<Row>;
+}
+
+/**
+ * Definition: VisualizeResults
+ */
+export interface VisualizeResults {
+    /** The content of the attachment. */
+    attachmentContent?: string;
+    /** The name of the attachment file. */
+    attachmentName?: string;
+    /** The body of the result in base64 encoding. */
+    body?: string;
+    /** The body of the result in html encoding. */
+    bodyHtml?: string;
+    /** Links to run the query in Kusto tools, for instance in KustoExplorer. */
+    kustoDeepLink?: string;
 }
 // #endregion Types
 
