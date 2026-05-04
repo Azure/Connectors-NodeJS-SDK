@@ -31,6 +31,7 @@
     },
     "scripts": {
         "build": "tsc && tsc -p tsconfig.cjs.json && node -e \"require('fs').writeFileSync('dist/cjs/package.json','{\\\"type\\\":\\\"commonjs\\\"}\\n')\"",
+        "smoke": "node --input-type=module -e \"import { ConnectorClientBase } from './dist/esm/azureConnectors/index.js'; console.log('ESM OK:', ConnectorClientBase.name)\" && node -e \"const sdk = require('./dist/cjs/azureConnectors/index.js'); console.log('CJS OK:', Object.keys(sdk).length, 'exports')\"",
         "test": "jest --config config/jest.config.cjs --verbose",
         "typecheck": "tsc --noEmit",
         "typecheck:samples": "tsc -p samples/tsconfig.json --noEmit",

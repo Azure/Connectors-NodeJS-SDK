@@ -56,6 +56,12 @@ jobs:
     - name: Build
       run: npm run build
 
+    - name: Smoke test ESM
+      run: node --input-type=module -e "import { ConnectorClientBase } from './dist/esm/azureConnectors/index.js'; console.log('ESM OK:', ConnectorClientBase.name)"
+
+    - name: Smoke test CJS
+      run: node -e "const sdk = require('./dist/cjs/azureConnectors/index.js'); console.log('CJS OK:', Object.keys(sdk).length, 'exports')"
+
     - name: Test with coverage
       run: npx jest --config config/jest.config.cjs --verbose --coverage
 
