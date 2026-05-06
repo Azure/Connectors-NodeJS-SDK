@@ -67,14 +67,14 @@ const _visualizeInput: QueryAndVisualizeSchema = {
     csl: "TestTable | take 10",
     db: "testdb",
     cluster: "testcluster",
-    chartType: "bar",
+    chartType: "Bar Chart",
 };
 
 const _commandVisualizeInput: CommandAndVisualizeSchema = {
     csl: ".show tables",
     db: "testdb",
     cluster: "testcluster",
-    chartType: "bar",
+    chartType: "Bar Chart",
 };
 
 const _mcpRequest: MCPQueryRequest = {
@@ -170,7 +170,7 @@ describe("KustoClient — runKustoQueryAndVisualizeResultsAsync", () => {
             csl: "TestTable | take 10",
             db: "testdb",
             cluster: "testcluster",
-            chartType: "bar",
+            chartType: "Bar Chart",
         };
 
         const result = await client.runKustoQueryAndVisualizeResultsAsync(input);
@@ -195,7 +195,7 @@ describe("KustoClient — runKustoCommandAndVisualizeResultsAsync", () => {
             csl: ".show tables",
             db: "testdb",
             cluster: "testcluster",
-            chartType: "bar",
+            chartType: "Bar Chart",
         };
 
         const result = await client.runKustoCommandAndVisualizeResultsAsync(input);
