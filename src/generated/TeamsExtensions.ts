@@ -3,7 +3,6 @@
 
 import { ConnectorClientBase } from "../azureConnectors/clientBase.ts";
 import { ConnectorException } from "../azureConnectors/connectorException.ts";
-import { ConnectorHttpClient } from "../azureConnectors/connectorHttpClient.ts";
 import { ConnectorClientOptions } from "../azureConnectors/options.ts";
 import { TokenProvider } from "../azureConnectors/authentication.ts";
 
@@ -1215,7 +1214,7 @@ export interface SwapShiftsChangeRequestResponse {
 /**
  * Definition: ThemeEditor
  */
-export type ThemeEditor = string;
+export type ThemeEditor = "white" | "blue" | "green" | "purple" | "pink" | "yellow" | "gray" | "darkblue" | "darkgreen" | "darkpurple" | "darkpink" | "darkyellow";
 
 /**
  * Definition: TimeOffRequestResponse

@@ -3,7 +3,6 @@
 
 import { ConnectorClientBase } from "../azureConnectors/clientBase.ts";
 import { ConnectorException } from "../azureConnectors/connectorException.ts";
-import { ConnectorHttpClient } from "../azureConnectors/connectorHttpClient.ts";
 import { ConnectorClientOptions } from "../azureConnectors/options.ts";
 import { TokenProvider } from "../azureConnectors/authentication.ts";
 
@@ -24,7 +23,7 @@ export interface AsyncCommandResult {
 /**
  * Definition: ChartType
  */
-export type ChartType = string;
+export type ChartType = "Html Table" | "Pie Chart" | "Time Chart" | "Bar Chart";
 
 /**
  * Definition: ClusterName
