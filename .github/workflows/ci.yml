@@ -18,12 +18,16 @@ jobs:
       with:
         node-version: 20
         cache: npm
+        cache-dependency-path: package-lock.json
 
     - name: Install dependencies
       run: npm ci
 
     - name: TypeScript type check
       run: npm run typecheck
+
+    - name: TypeScript type check (samples)
+      run: npm run typecheck:samples
 
     - name: Lint code
       run: npm run lint
@@ -47,6 +51,7 @@ jobs:
       with:
         node-version: ${{ matrix.node-version }}
         cache: npm
+        cache-dependency-path: package-lock.json
 
     - name: Install dependencies
       run: npm ci
@@ -54,8 +59,14 @@ jobs:
     - name: Build
       run: npm run build
 
+    - name: Smoke test ESM
+      run: node --input-type=module -e "import { ConnectorClientBase } from './dist/esm/azureConnectors/index.js'; console.log('ESM OK:', ConnectorClientBase.name)"
+
+    - name: Smoke test CJS
+      run: node -e "const sdk = require('./dist/cjs/azureConnectors/index.js'); console.log('CJS OK:', Object.keys(sdk).length, 'exports')"
+
     - name: Test with coverage
-      run: npx jest --config config/jest.config.js --verbose --coverage
+      run: npx jest --config config/jest.config.cjs --verbose --coverage
 
     - name: Upload coverage
       if: matrix.os == 'ubuntu-latest' && matrix.node-version == 20
@@ -76,6 +87,7 @@ jobs:
       with:
         node-version: 20
         cache: npm
+        cache-dependency-path: package-lock.json
 
     - name: Install dependencies
       run: npm ci

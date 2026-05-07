@@ -4,6 +4,6 @@
  * Generated connector clients barrel export.
  */
 
-export { ConnectorNames } from "./connectorNames";
-export type { ConnectorName } from "./connectorNames";
-export { availableConnectors, KustoClient, Office365Client, SharepointonlineClient, TeamsClient } from "./ManagedConnectors";
+export { ConnectorNames } from "./connectorNames.ts";
+export type { ConnectorName } from "./connectorNames.ts";
+export { availableConnectors, KustoClient, Office365Client, SharepointonlineClient, TeamsClient } from "./ManagedConnectors.ts";

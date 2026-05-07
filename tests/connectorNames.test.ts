@@ -1,6 +1,6 @@
 // Copyright (c) Microsoft Corporation.  All rights reserved.
 
-import { ConnectorNames, ConnectorName } from "../src/generated/connectorNames";
+import { ConnectorNames, ConnectorName } from "../src/generated/connectorNames.ts";
 
 describe("ConnectorNames", () => {
     it("should expose Kusto with correct API name", () => {

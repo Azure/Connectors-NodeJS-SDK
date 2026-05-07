@@ -1,6 +1,6 @@
 // Copyright (c) Microsoft Corporation.  All rights reserved.
 
-import { ConnectionStringTokenProvider } from "../src/azureConnectors/authentication";
+import { ConnectionStringTokenProvider } from "../src/azureConnectors/authentication.ts";
 
 describe("ConnectionStringTokenProvider", () => {
     it("should throw when API key is empty", () => {

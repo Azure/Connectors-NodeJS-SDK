@@ -6,8 +6,8 @@ import {
     Office365Client,
     SharepointonlineClient,
     TeamsClient,
-} from "../src/generated/ManagedConnectors";
-import { ConnectorNames } from "../src/generated/connectorNames";
+} from "../src/generated/ManagedConnectors.ts";
+import { ConnectorNames } from "../src/generated/connectorNames.ts";
 
 describe("availableConnectors", () => {
     it("should be an array of strings", () => {

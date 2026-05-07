@@ -1,17 +1,19 @@
 {
-    "name": "connector-sdk-samples",
+    "name": "sample-cjs-typescript",
     "version": "0.0.0",
     "private": true,
-    "type": "module",
-    "description": "Samples for @azure/connectors SDK",
+    "description": "CommonJS TypeScript sample for @azure/connectors SDK",
     "scripts": {
-        "typecheck": "tsc --noEmit"
+        "build": "tsc",
+        "start": "node dist/sampleOffice365.js",
+        "dev": "npx tsx sampleOffice365.ts"
     },
     "dependencies": {
         "@azure/connectors": "0.1.0-preview",
         "@azure/identity": "^4.0.0"
     },
     "devDependencies": {
+        "@types/node": "^20.0.0",
         "typescript": "^6.0.3",
         "tsx": "^4.0.0"
     }

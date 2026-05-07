@@ -2,18 +2,18 @@
 
 import {
     Office365Client,
-    ClientDraftHtmlMessage,
+    DraftEmailInput,
     OutlookReceiveMessage,
     GraphOutlookCategory,
-    ClientSendHtmlMessage,
+    SendEmailInput,
     GraphClientReceiveMessage,
     GraphCalendarEventClientReceive,
     GraphCalendarEventListClientReceive,
-} from "../src/generated/Office365Extensions";
-import { ConnectorException } from "../src/azureConnectors/connectorException";
-import { TokenProvider } from "../src/azureConnectors/authentication";
-import { ConnectorNames } from "../src/generated/connectorNames";
-import { availableConnectors } from "../src/generated/ManagedConnectors";
+} from "../src/generated/Office365Extensions.ts";
+import { ConnectorException } from "../src/azureConnectors/connectorException.ts";
+import { TokenProvider } from "../src/azureConnectors/authentication.ts";
+import { ConnectorNames } from "../src/generated/connectorNames.ts";
+import { availableConnectors } from "../src/generated/ManagedConnectors.ts";
 
 // ──────────────────────────────────────────────
 // Test helpers
@@ -49,13 +49,13 @@ function mockFetchError(status: number, errorBody: string): void {
 // Type-level compile-time checks
 // ──────────────────────────────────────────────
 
-const _sendInput: ClientSendHtmlMessage = {
+const _sendInput: SendEmailInput = {
     To: "user@example.com",
     Subject: "Test Subject",
     Body: "<p>Hello</p>",
 };
 
-const _draftInput: ClientDraftHtmlMessage = {
+const _draftInput: DraftEmailInput = {
     To: "user@example.com",
     Subject: "Draft Subject",
     Body: "Draft body",
@@ -98,7 +98,7 @@ describe("Office365Client — sendEmailAsync", () => {
         mockFetchResponse(null);
 
         const client = new Office365Client(TestConnectionUrl, createMockTokenProvider());
-        const input: ClientSendHtmlMessage = {
+        const input: SendEmailInput = {
             To: "user@example.com",
             Subject: "Test",
             Body: "Hello",
@@ -159,7 +159,7 @@ describe("Office365Client — draftEmailAsync", () => {
         mockFetchResponse(draftedMessage);
 
         const client = new Office365Client(TestConnectionUrl, createMockTokenProvider());
-        const input: ClientDraftHtmlMessage = { To: "user@example.com", Subject: "Draft", Body: "<p>Hello</p>" };
+        const input: DraftEmailInput = { To: "user@example.com", Subject: "Draft", Body: "<p>Hello</p>" };
 
         const result = await client.draftEmailAsync(input, "parent-msg-id", "reply");
 

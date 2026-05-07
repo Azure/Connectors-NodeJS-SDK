@@ -8,13 +8,13 @@
  * and strongly-typed generated connector clients.
  */
 
-export { ConnectorClientBase } from "./clientBase";
-export { ConnectorClientOptions, DefaultConnectorClientOptions } from "./options";
+export { ConnectorClientBase } from "./clientBase.ts";
+export { ConnectorClientOptions, DefaultConnectorClientOptions } from "./options.ts";
 export {
     TokenProvider,
     ManagedIdentityTokenProvider,
     ConnectionStringTokenProvider,
-} from "./authentication";
-export { ConnectorException } from "./connectorException";
-export { ConnectorHttpClient, ConnectorResponse } from "./connectorHttpClient";
-export { TriggerCallbackPayload, TriggerCallbackBody } from "./triggerPayload";
+} from "./authentication.ts";
+export { ConnectorException } from "./connectorException.ts";
+export { ConnectorHttpClient, ConnectorResponse } from "./connectorHttpClient.ts";
+export { TriggerCallbackPayload, TriggerCallbackBody } from "./triggerPayload.ts";

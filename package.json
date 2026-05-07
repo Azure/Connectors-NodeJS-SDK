@@ -1,25 +1,41 @@
 {
-    "name": "@azure/azure-connectors",
-    "version": "0.1.0",
+    "name": "@azure/connectors",
+    "version": "0.1.1-preview",
     "description": "Azure Logic Apps Connector SDK for TypeScript / Node.js",
-    "main": "dist/index.js",
-    "types": "dist/index.d.ts",
+    "type": "module",
+    "main": "dist/cjs/azureConnectors/index.js",
+    "module": "dist/esm/azureConnectors/index.js",
+    "types": "dist/esm/azureConnectors/index.d.ts",
+    "sideEffects": false,
     "exports": {
         ".": {
-            "types": "./dist/index.d.ts",
-            "default": "./dist/index.js"
+            "import": {
+                "types": "./dist/esm/azureConnectors/index.d.ts",
+                "default": "./dist/esm/azureConnectors/index.js"
+            },
+            "require": {
+                "types": "./dist/cjs/azureConnectors/index.d.ts",
+                "default": "./dist/cjs/azureConnectors/index.js"
+            }
         },
         "./generated/*": {
-            "types": "./dist/generated/*.d.ts",
-            "default": "./dist/generated/*.js"
+            "import": {
+                "types": "./dist/esm/generated/*.d.ts",
+                "default": "./dist/esm/generated/*.js"
+            },
+            "require": {
+                "types": "./dist/cjs/generated/*.d.ts",
+                "default": "./dist/cjs/generated/*.js"
+            }
         }
     },
     "scripts": {
-        "build": "tsc && tsc -p samples/tsconfig.json --noEmit",
-        "test": "jest --config config/jest.config.js --verbose",
-        "typecheck": "tsc --noEmit && tsc -p samples/tsconfig.json --noEmit",
+        "build": "tsc && tsc -p tsconfig.cjs.json && node -e \"require('fs').writeFileSync('dist/cjs/package.json','{\\\"type\\\":\\\"commonjs\\\"}\\n')\"",
+        "smoke": "node --input-type=module -e \"import { ConnectorClientBase } from './dist/esm/azureConnectors/index.js'; console.log('ESM OK:', ConnectorClientBase.name)\" && node -e \"const sdk = require('./dist/cjs/azureConnectors/index.js'); console.log('CJS OK:', Object.keys(sdk).length, 'exports')\"",
+        "test": "jest --config config/jest.config.cjs --verbose",
+        "typecheck": "tsc --noEmit",
         "typecheck:samples": "tsc -p samples/tsconfig.json --noEmit",
-        "lint": "eslint --config config/eslint.config.js src/",
+        "lint": "eslint --config config/eslint.config.cjs src/",
         "lint:md": "markdownlint-cli2 **/*.md #node_modules #dist #samples/node_modules"
     },
     "keywords": [
@@ -42,12 +58,11 @@
         "jest": "^30.3.0",
         "markdownlint-cli2": "^0.22.1",
         "ts-jest": "^29.1.0",
-        "tsconfig-paths": "^4.2.0",
-        "typescript": "^5.4.0",
+        "typescript": "^6.0.3",
         "typescript-eslint": "^8.59.1"
     },
     "engines": {
-        "node": ">=18.18.0"
+        "node": ">=20.0.0"
     },
     "files": [
         "dist/",

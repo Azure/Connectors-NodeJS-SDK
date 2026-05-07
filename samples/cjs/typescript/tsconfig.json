@@ -1,0 +1,16 @@
+{
+    "compilerOptions": {
+        "target": "ES2023",
+        "module": "commonjs",
+        "moduleResolution": "bundler",
+        "strict": true,
+        "esModuleInterop": true,
+        "skipLibCheck": true,
+        "forceConsistentCasingInFileNames": true,
+        "outDir": "./dist",
+        "declaration": true,
+        "types": ["node"],
+        "lib": ["ES2023"]
+    },
+    "include": ["*.ts"]
+}

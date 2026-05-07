@@ -1,7 +1,7 @@
 // Copyright (c) Microsoft Corporation.  All rights reserved.
 
-import { TriggerCallbackPayload, TriggerCallbackBody } from "../src/azureConnectors/triggerPayload";
-import { GraphClientReceiveMessage } from "../src/generated/Office365Extensions";
+import { TriggerCallbackPayload, TriggerCallbackBody } from "../src/azureConnectors/triggerPayload.ts";
+import { GraphClientReceiveMessage } from "../src/generated/Office365Extensions.ts";
 
 describe("TriggerCallbackPayload", () => {
     it("should match AI Gateway trigger callback structure", () => {
