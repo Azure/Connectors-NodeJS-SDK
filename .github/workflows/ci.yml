@@ -26,6 +26,9 @@ jobs:
     - name: TypeScript type check
       run: npm run typecheck
 
+    - name: TypeScript type check (samples)
+      run: npm run typecheck:samples
+
     - name: Lint code
       run: npm run lint
 
