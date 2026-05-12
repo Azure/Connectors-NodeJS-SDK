@@ -1,4 +1,4 @@
-[![CI](https://dev.azure.com/azfunc/public/_apis/build/status%2Fazure%2Fconnectors-nodejs-sdk%2Fnodejs-connectors.public?repoName=Azure%2Fconnectors-nodejs-sdk&branchName=main)](https://dev.azure.com/azfunc/public/_build/latest?definitionId=1724&repoName=Azure%2Fconnectors-nodejs-sdk&branchName=main)
+[![CI](https://github.com/Azure/Connectors-NodeJS-SDK/actions/workflows/ci.yml/badge.svg)](https://github.com/Azure/Connectors-NodeJS-SDK/actions/runs/25761945479)
 [![npm version](https://badge.fury.io/js/%40azure%2Fconnectors.svg)](https://badge.fury.io/js/%40azure%2Fconnectors)
 [![Node.js versions](https://img.shields.io/node/v/@azure/connectors.svg)](https://www.npmjs.com/package/@azure/connectors)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
@@ -388,8 +388,8 @@ See [docs/connection-setup.md](docs/connection-setup.md) for instructions on cre
 
 ## Related Projects
 
-- **[Connectors Python SDK](https://github.com/Azure/Connectors-Python-SDK)** — Python implementation of this SDK
 - **[Connectors .NET SDK](https://github.com/Azure/Connectors-NET-SDK)** — .NET implementation of this SDK
+- **[Azure Functions Connector Extension](https://github.com/Azure/azure-functions-connector-extension)** - An Azure Functions trigger extension for receiving webhook callbacks from Connector Namespace
 
 ## Contributing
 
