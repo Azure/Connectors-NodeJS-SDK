@@ -7,7 +7,37 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-## [0.1.0-preview.1] - 2026-05-04
+## [0.1.2-preview] - 2026-05-15
+
+### Added
+
+- Azure Resource Manager (ARM) connector client
+- Azure Blob Storage connector client
+- Azure Monitor Logs connector client
+- IBM MQ connector client
+- Microsoft Graph Groups & Users connector client
+- Office 365 Users connector client
+- OneDrive for Business connector client
+- SMTP connector client
+- Comprehensive test suites for all 12 connector clients (188 tests across 19 suites)
+- Samples for all 12 connectors in 4 module formats (ESM TypeScript, ESM JavaScript, CJS TypeScript, CJS JavaScript)
+
+### Changed
+
+- Regenerated existing connector clients (Kusto, Office 365, SharePoint Online, Teams) from latest CodefulSdkGenerator output
+- Updated connector registry (`ConnectorNames`, `ManagedConnectors`) to include all 12 connectors
+- Updated README with full connector table and sample directory listing
+
+## [0.1.1-preview] - 2026-05-07
+
+### Changed
+
+- Migrated package to dual ESM/CJS format with separate entry points
+- Updated package exports for `@azure/connectors` and `@azure/connectors/generated/*` subpath imports
+- Bumped devDependencies (npm-minor-patch group)
+- Updated README and CI workflow
+
+## [0.1.0-preview] - 2026-05-04
 
 ### Added
 
