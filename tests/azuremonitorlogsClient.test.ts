@@ -77,6 +77,11 @@ describe("AzuremonitorlogsClient — constructor", () => {
         const client = new AzuremonitorlogsClient(TestConnectionUrl + "///", createMockTokenProvider());
         expect(client).toBeDefined();
     });
+
+    it("should construct with an empty connection URL", () => {
+        const client = new AzuremonitorlogsClient("", createMockTokenProvider());
+        expect(client).toBeDefined();
+    });
 });
 
 describe("AzuremonitorlogsClient — queryDataAsync", () => {

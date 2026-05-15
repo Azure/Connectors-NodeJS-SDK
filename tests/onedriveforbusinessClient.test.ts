@@ -73,6 +73,11 @@ describe("OnedriveforbusinessClient — constructor", () => {
         const client = new OnedriveforbusinessClient(TestConnectionUrl + "///", createMockTokenProvider());
         expect(client).toBeDefined();
     });
+
+    it("should construct with an empty connection URL", () => {
+        const client = new OnedriveforbusinessClient("", createMockTokenProvider());
+        expect(client).toBeDefined();
+    });
 });
 
 describe("OnedriveforbusinessClient — listRootFolderAsync", () => {

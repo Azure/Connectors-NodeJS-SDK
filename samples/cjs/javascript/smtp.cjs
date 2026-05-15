@@ -61,7 +61,29 @@ async function main() {
         }
     }
 
-    // Example 2: Error handling — invalid address
+    // Example 2: Send email with CC
+    const ccAddress = process.env.SMTP_CC;
+    if (ccAddress) {
+        console.log("\n--- Send Email with CC ---");
+        try {
+            await client.sendEmailAsync({
+                From: FROM_ADDRESS,
+                To: TO_ADDRESS,
+                CC: ccAddress,
+                Subject: `CC Test from SMTP SDK Sample (${new Date().toISOString()})`,
+                Body: "<p>This email has a CC recipient.</p>",
+            });
+            console.log("Email with CC sent successfully.");
+        } catch (error) {
+            if (error instanceof ConnectorException) {
+                console.log(`Connector error (${error.statusCode}): ${error.message}`);
+            } else {
+                throw error;
+            }
+        }
+    }
+
+    // Example 3: Error handling — invalid address
     console.log("\n--- Error Handling ---");
     try {
         await client.sendEmailAsync({

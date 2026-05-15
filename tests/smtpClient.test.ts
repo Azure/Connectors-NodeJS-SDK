@@ -88,6 +88,11 @@ describe("SmtpClient — constructor", () => {
         const client = new SmtpClient(TestConnectionUrl + "///", createMockTokenProvider());
         expect(client).toBeDefined();
     });
+
+    it("should construct with an empty connection URL", () => {
+        const client = new SmtpClient("", createMockTokenProvider());
+        expect(client).toBeDefined();
+    });
 });
 
 describe("SmtpClient — sendEmailAsync", () => {

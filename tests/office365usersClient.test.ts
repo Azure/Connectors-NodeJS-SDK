@@ -75,6 +75,11 @@ describe("Office365usersClient — constructor", () => {
         const client = new Office365usersClient(TestConnectionUrl + "///", createMockTokenProvider());
         expect(client).toBeDefined();
     });
+
+    it("should construct with an empty connection URL", () => {
+        const client = new Office365usersClient("", createMockTokenProvider());
+        expect(client).toBeDefined();
+    });
 });
 
 describe("Office365usersClient — myProfileAsync", () => {

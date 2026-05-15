@@ -83,6 +83,11 @@ describe("AzureblobClient — constructor", () => {
         const client = new AzureblobClient(TestConnectionUrl + "///", createMockTokenProvider());
         expect(client).toBeDefined();
     });
+
+    it("should construct with an empty connection URL", () => {
+        const client = new AzureblobClient("", createMockTokenProvider());
+        expect(client).toBeDefined();
+    });
 });
 
 describe("AzureblobClient — listRootFolderAsync", () => {

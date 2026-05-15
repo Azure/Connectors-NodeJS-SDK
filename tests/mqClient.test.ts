@@ -80,6 +80,11 @@ describe("MqClient — constructor", () => {
         const client = new MqClient(TestConnectionUrl + "///", createMockTokenProvider());
         expect(client).toBeDefined();
     });
+
+    it("should construct with an empty connection URL", () => {
+        const client = new MqClient("", createMockTokenProvider());
+        expect(client).toBeDefined();
+    });
 });
 
 describe("MqClient — sendAsync", () => {

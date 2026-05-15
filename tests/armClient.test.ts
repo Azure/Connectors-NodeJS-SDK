@@ -92,6 +92,11 @@ describe("ArmClient — constructor", () => {
         const client = new ArmClient(TestConnectionUrl + "///", createMockTokenProvider());
         expect(client).toBeDefined();
     });
+
+    it("should construct with an empty connection URL", () => {
+        const client = new ArmClient("", createMockTokenProvider());
+        expect(client).toBeDefined();
+    });
 });
 
 describe("ArmClient — subscriptionsListAsync", () => {
