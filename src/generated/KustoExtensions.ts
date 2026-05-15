@@ -3,32 +3,53 @@
 
 import { ConnectorClientBase } from "../azureConnectors/clientBase.ts";
 import { ConnectorException } from "../azureConnectors/connectorException.ts";
+import { ConnectorHttpClient } from "../azureConnectors/connectorHttpClient.ts";
 import { ConnectorClientOptions } from "../azureConnectors/options.ts";
 import { TokenProvider } from "../azureConnectors/authentication.ts";
 
 // #region Types
 
 /**
- * Definition: AsyncCommandResult
+ * Response for Run KQL query
+ */
+export interface Table {
+    [key: string]: unknown;
+}
+
+/**
+ * Response for Run async control command
  */
 export interface AsyncCommandResult {
-    /** The operation ID of the control command */
-    operationId?: string;
-    /** The state of the command. */
-    state?: string;
-    /** The status of the command. */
-    status?: string;
+    [key: string]: unknown;
+}
+
+/**
+ * Response for Run KQL query and render a chart
+ */
+export interface VisualizeResults {
+    [key: string]: unknown;
+}
+
+/**
+ * Response for Kusto Query MCP Server
+ */
+export interface MCPQueryResponse {
+    [key: string]: unknown;
 }
 
 /**
  * Definition: ChartType
  */
-export type ChartType = "Html Table" | "Pie Chart" | "Time Chart" | "Bar Chart";
+export interface ChartType {
+    [key: string]: unknown;
+}
 
 /**
  * Definition: ClusterName
  */
-export type ClusterName = string;
+export interface ClusterName {
+    [key: string]: unknown;
+}
 
 /**
  * Definition: CommandAndVisualizeSchema
@@ -54,25 +75,15 @@ export interface ControlCommandAndListSchema {
 /**
  * Definition: DatabaseName
  */
-export type DatabaseName = string;
+export interface DatabaseName {
+    [key: string]: unknown;
+}
 
 /**
  * Definition: MCPQueryRequest
  */
 export interface MCPQueryRequest {
     callbackEndpoint?: string;
-    error?: Record<string, unknown>;
-    id?: string;
-    jsonrpc?: string;
-    method?: string;
-    params?: Record<string, unknown>;
-    result?: Record<string, unknown>;
-}
-
-/**
- * Definition: MCPQueryResponse
- */
-export interface MCPQueryResponse {
     error?: Record<string, unknown>;
     id?: string;
     jsonrpc?: string;
@@ -91,7 +102,9 @@ export interface ObjectEntity {
 /**
  * Definition: Query
  */
-export type Query = string;
+export interface Query {
+    [key: string]: unknown;
+}
 
 /**
  * Definition: QueryAndListSchema
@@ -117,29 +130,6 @@ export interface QueryAndVisualizeSchema {
  */
 export interface Row {
     [key: string]: unknown;
-}
-
-/**
- * Definition: Table
- */
-export interface Table {
-    value?: Array<Row>;
-}
-
-/**
- * Definition: VisualizeResults
- */
-export interface VisualizeResults {
-    /** The content of the attachment. */
-    attachmentContent?: string;
-    /** The name of the attachment file. */
-    attachmentName?: string;
-    /** The body of the result in base64 encoding. */
-    body?: string;
-    /** The body of the result in html encoding. */
-    bodyHtml?: string;
-    /** Links to run the query in Kusto tools, for instance in KustoExplorer. */
-    kustoDeepLink?: string;
 }
 // #endregion Types
 

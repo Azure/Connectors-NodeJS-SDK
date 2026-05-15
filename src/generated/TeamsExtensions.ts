@@ -3,10 +3,25 @@
 
 import { ConnectorClientBase } from "../azureConnectors/clientBase.ts";
 import { ConnectorException } from "../azureConnectors/connectorException.ts";
+import { ConnectorHttpClient } from "../azureConnectors/connectorHttpClient.ts";
 import { ConnectorClientOptions } from "../azureConnectors/options.ts";
 import { TokenProvider } from "../azureConnectors/authentication.ts";
 
 // #region Types
+
+/**
+ * Response for Create a chat
+ */
+export interface NewChatResponse {
+    [key: string]: unknown;
+}
+
+/**
+ * Response for Get messages in a chat
+ */
+export interface GetMessagesFromConversationResponse {
+    [key: string]: unknown;
+}
 
 /**
  * Response for List channels
@@ -68,12 +83,47 @@ export interface CreateATeamInput {
 }
 
 /**
+ * Response for Create a team
+ */
+export interface CreateATeamResponse {
+    [key: string]: unknown;
+}
+
+/**
+ * Response for Post message in a chat or channel
+ */
+export interface PostToConversationResponse {
+    [key: string]: unknown;
+}
+
+/**
+ * Response for Get message details
+ */
+export interface DynamicGetMessageDetailsResponseSchema {
+    [key: string]: unknown;
+}
+
+/**
  * Response for List all channels
  */
 export interface GetAllChannelsForTeamResponse {
     "@odata.context"?: string;
     /** List of one or more channels for a specific team */
     value?: Array<ChannelWithOwnerTeamId>;
+}
+
+/**
+ * Response for Get details for a specific channel in a team
+ */
+export interface GetChannelResponse {
+    [key: string]: unknown;
+}
+
+/**
+ * Response for List all tags for a team
+ */
+export interface GetTagsResponseSchema {
+    [key: string]: unknown;
 }
 
 /**
@@ -87,11 +137,46 @@ export interface CreateTagInput {
 }
 
 /**
+ * Response for Create a tag for a team
+ */
+export interface CreateTagResponseSchema {
+    [key: string]: unknown;
+}
+
+/**
+ * Response for Get an @mention token for a team tag
+ */
+export interface AtMentionTagResponse {
+    [key: string]: unknown;
+}
+
+/**
+ * Response for List the members of a team tag
+ */
+export interface GetTagMembersResponseSchema {
+    [key: string]: unknown;
+}
+
+/**
  * Add a member to a team tag
  */
 export interface AddMemberToTagInput {
     /** The user's ID of the member to add to the tag, must be in a format like '550e8400-e29b-41d4-a716-446655440000'. */
     userId: string;
+}
+
+/**
+ * Response for Add a member to a team tag
+ */
+export interface AddMemberToTagResponseSchema {
+    [key: string]: unknown;
+}
+
+/**
+ * Response for Get a team
+ */
+export interface GetTeamResponse {
+    [key: string]: unknown;
 }
 
 /**
@@ -116,7 +201,37 @@ export interface GetChatsResponse {
 /**
  * Send a Microsoft Graph HTTP request
  */
-export type HttpRequestInput = string;
+export interface HttpRequestInput {
+    [key: string]: unknown;
+}
+
+/**
+ * Response for Send a Microsoft Graph HTTP request
+ */
+export interface ObjectWithoutType {
+    [key: string]: unknown;
+}
+
+/**
+ * Response for When a new channel message is added
+ */
+export interface ChatMessageList {
+    [key: string]: unknown;
+}
+
+/**
+ * Response for When a new team member is added
+ */
+export interface OnGroupMemberChangeResponse {
+    [key: string]: unknown;
+}
+
+/**
+ * Response for Create a Teams meeting
+ */
+export interface NewMeetingRespone {
+    [key: string]: unknown;
+}
 
 /**
  * Response for List associated teams
@@ -136,6 +251,20 @@ export interface PostCardAndWaitForResponseInput {
 }
 
 /**
+ * Response for Post adaptive card and wait for a response
+ */
+export interface DynamicPostGatherInputToConversationResponse {
+    [key: string]: unknown;
+}
+
+/**
+ * Response for List members
+ */
+export interface ListMembersResponseSchema {
+    [key: string]: unknown;
+}
+
+/**
  * Add a member to a channel
  */
 export interface AddMemberToChannelInput {
@@ -146,18 +275,24 @@ export interface AddMemberToChannelInput {
 }
 
 /**
- * Definition: Activities
+ * Response for List replies of a channel message
  */
-export interface Activities {
+export interface ListRepliesResponseSchema {
     [key: string]: unknown;
 }
 
 /**
- * Definition: AddMemberToTagResponseSchema
+ * Response for Get an @mention token for a user
  */
-export interface AddMemberToTagResponseSchema {
-    /** User ID of the member added to the tag */
-    userId?: string;
+export interface AtMentionUser {
+    [key: string]: unknown;
+}
+
+/**
+ * Definition: Activities
+ */
+export interface Activities {
+    [key: string]: unknown;
 }
 
 /**
@@ -181,17 +316,9 @@ export interface AtMentionBotResponse {
 }
 
 /**
- * Definition: AtMentionTagResponse
- */
-export interface AtMentionTagResponse {
-    /** A token for the tag to @mention. It can be inserted into messages and adaptive cards sent from a person */
-    atMention?: string;
-}
-
-/**
  * Definition: AtMentionUser_V1
  */
-export interface AtMentionUser {
+export interface AtMentionUserV1 {
     /** An @mention token for the user. This property can be inserted into messages */
     atMention?: string;
 }
@@ -199,7 +326,9 @@ export interface AtMentionUser {
 /**
  * Definition: BotIdForChat
  */
-export type BotIdForChat = string;
+export interface BotIdForChat {
+    [key: string]: unknown;
+}
 
 /**
  * Definition: BotMentionRequest
@@ -224,7 +353,9 @@ export interface CardResponseTriggerMetadata {
 /**
  * Definition: ChannelIdForTeam
  */
-export type ChannelIdForTeam = string;
+export interface ChannelIdForTeam {
+    [key: string]: unknown;
+}
 
 /**
  * Definition: ChannelIds
@@ -243,7 +374,9 @@ export interface ChannelWithOwnerTeamId {
 /**
  * Definition: ChatId
  */
-export type ChatId = string;
+export interface ChatId {
+    [key: string]: unknown;
+}
 
 /**
  * Definition: ChatMessage
@@ -284,13 +417,6 @@ export interface ChatMessage {
 }
 
 /**
- * Definition: ChatMessageList
- */
-export interface ChatMessageList {
-    [key: string]: unknown;
-}
-
-/**
  * Definition: ChatMessageWebhookResponseSchema
  */
 export interface ChatMessageWebhookResponseSchema {
@@ -313,29 +439,6 @@ export interface ConnectorMetadata {
     activitytype?: string;
     metadatatype?: string;
     schema?: ObjectEntity;
-}
-
-/**
- * Definition: CreateATeamResponse
- */
-export interface CreateATeamResponse {
-    /** Team ID of the team that was just created */
-    newTeamId?: string;
-}
-
-/**
- * Definition: CreateTagResponseSchema
- */
-export interface CreateTagResponseSchema {
-    "@odata.type"?: string;
-    /** The name of the tag as it appears to the user in Microsoft Teams. */
-    displayName?: string;
-    /** Unique identifier of the tag */
-    id?: string;
-    /** The number of users assigned to the tag */
-    memberCount?: number;
-    /** ID of the team in which the tag is defined */
-    teamId?: string;
 }
 
 /**
@@ -432,13 +535,6 @@ export interface DynamicGatherInputSubscriptionResult {
 }
 
 /**
- * Definition: DynamicGetMessageDetailsResponseSchema
- */
-export interface DynamicGetMessageDetailsResponseSchema {
-    [key: string]: unknown;
-}
-
-/**
  * Definition: DynamicGetMessageDetailsSchema
  */
 export interface DynamicGetMessageDetailsSchema {
@@ -491,13 +587,6 @@ export interface DynamicPostConversationNotificationRequest {
  * Definition: DynamicPostFeedNotificationRequest
  */
 export interface DynamicPostFeedNotificationRequest {
-    [key: string]: unknown;
-}
-
-/**
- * Definition: DynamicPostGatherInputToConversationResponse
- */
-export interface DynamicPostGatherInputToConversationResponse {
     [key: string]: unknown;
 }
 
@@ -616,85 +705,10 @@ export interface FunSettings {
 }
 
 /**
- * Definition: GetChannelResponse
- */
-export interface GetChannelResponse {
-    /** Timestamp at which the channel was created. Read only */
-    createdDateTime?: string;
-    /** The description of the channel, optional */
-    description?: string;
-    /** The name of the channel */
-    displayName?: string;
-    /** The email address for sending messages to the channel */
-    email?: string;
-    /** The SharePoint folder URL of the channel */
-    filesFolderWebUrl?: string;
-    /** The unique identifier of the channel */
-    id?: string;
-    /** The channel membership type */
-    membershipType?: string;
-    /** The ID of the Microsoft Entra tenant. */
-    tenantId?: string;
-    /** A hyperlink for the channel in Microsoft Teams */
-    webUrl?: string;
-}
-
-/**
  * Definition: GetMessageDetailsSchema
  */
 export interface GetMessageDetailsSchema {
     schema?: ObjectEntity;
-}
-
-/**
- * Definition: GetMessagesFromConversation_Response
- */
-export interface GetMessagesFromConversationResponse {
-    /** @odata.context */
-    "@odata.context"?: string;
-    /** @odata.count */
-    "@odata.count"?: number;
-    /** @odata.nextLink */
-    "@odata.nextLink"?: string;
-    value?: ChatMessageList;
-}
-
-/**
- * Definition: GetTagMembersResponseSchema
- */
-export interface GetTagMembersResponseSchema {
-    value?: Array<Record<string, unknown>>;
-}
-
-/**
- * Definition: GetTagsResponseSchema
- */
-export interface GetTagsResponseSchema {
-    "@odata.context"?: string;
-    value?: Array<Record<string, unknown>>;
-}
-
-/**
- * Definition: GetTeamResponse
- */
-export interface GetTeamResponse {
-    /** The description of the team, optional */
-    description?: string;
-    discoverySettings?: DiscoverySettings;
-    /** The name of the team */
-    displayName?: string;
-    funSettings?: FunSettings;
-    guestSettings?: GuestSettings;
-    /** The unique identifier of the team */
-    id?: string;
-    /** The internal ID of the team */
-    internalId?: string;
-    /** Whether this team is in read-only mode */
-    isArchived?: boolean;
-    memberSettings?: MemberSettings;
-    messagingSettings?: MessagingSettings;
-    /** A hyperlink that will go to the team in the Microsoft Teams client */
-    webUrl?: string;
 }
 
 /**
@@ -731,26 +745,10 @@ export interface LastModifiedBy {
 }
 
 /**
- * Definition: ListMembersResponseSchema
- */
-export interface ListMembersResponseSchema {
-    /** List members response */
-    value?: Array<Record<string, unknown>>;
-}
-
-/**
  * Definition: ListMembersSchema
  */
 export interface ListMembersSchema {
     schema?: ObjectEntity;
-}
-
-/**
- * Definition: ListRepliesResponseSchema
- */
-export interface ListRepliesResponseSchema {
-    /** List replies response */
-    value?: Array<Record<string, unknown>>;
 }
 
 /**
@@ -827,14 +825,6 @@ export interface NewChat {
 }
 
 /**
- * Definition: NewChatResponse
- */
-export interface NewChatResponse {
-    /** The chat's unique identifier */
-    id?: string;
-}
-
-/**
  * Definition: NewMeeting
  */
 export interface NewMeeting {
@@ -873,82 +863,9 @@ export interface NewMeeting {
 }
 
 /**
- * Definition: NewMeetingRespone
- */
-export interface NewMeetingRespone {
-    /** True if the meeting organizer allows invitees to propose a new time when responding */
-    allowNewTimeProposals?: boolean;
-    /** The collection of attendees for the event */
-    attendees?: Array<Record<string, unknown>>;
-    /** The body of the message associated with the event */
-    body?: Record<string, unknown>;
-    /** The preview of the message associated with the event */
-    bodyPreview?: string;
-    /** The categories associated with the event */
-    categories?: Array<unknown>;
-    /** Timestamp the event was created */
-    createdDateTime?: string;
-    /** The date, time, and time zone that the event ends */
-    end?: Record<string, unknown>;
-    /** Set to true if the event has attachments */
-    hasAttachments?: boolean;
-    /** Unique identifier for the event */
-    id?: string;
-    /** The importance of the event. The possible values are: low, normal, high */
-    importance?: string;
-    /** Set to true if the event lasts all day */
-    isAllDay?: boolean;
-    /** Set to true if the event has been canceled */
-    isCancelled?: boolean;
-    /** Set to true if the calendar owner is the organizer of the event */
-    isOrganizer?: boolean;
-    /** Set to true if an alert is set to remind the user of the event */
-    isReminderOn?: boolean;
-    /** Timestamp the event was last modified */
-    lastModifiedDateTime?: string;
-    /** The location of the event */
-    location?: Record<string, unknown>;
-    /** Details for an attendee to join the meeting online. */
-    onlineMeeting?: Record<string, unknown>;
-    /** A URL for an online meeting */
-    onlineMeetingUrl?: string;
-    /** Organizer */
-    organizer?: Record<string, unknown>;
-    /** The recurrence pattern for the event */
-    recurrence?: Record<string, unknown>;
-    /** The number of minutes before the event start time that the reminder alert occurs */
-    reminderMinutesBeforeStart?: number;
-    /** The organizer would like an invitee to send a response to the event */
-    responseRequested?: boolean;
-    /** Indicates the type of response sent in response to an event message */
-    responseStatus?: Record<string, unknown>;
-    /** Sensitivity of the event */
-    sensitivity?: string;
-    /** The status to show. Possible values are: free, tentative, busy, oof, workingElsewhere, unknown. */
-    showAs?: string;
-    /** The start date, time, and time zone of the event */
-    start?: Record<string, unknown>;
-    /** The text of the event's subject line */
-    subject?: string;
-    /** Time zone of the event */
-    timeZone?: string;
-    /** The event type. Possible values are: singleInstance, occurrence, exception, seriesMaster */
-    type?: string;
-    /** The URL to open the event in Outlook on the web. */
-    webLink?: string;
-}
-
-/**
  * Definition: Object
  */
 export interface ObjectEntity {
-    [key: string]: unknown;
-}
-
-/**
- * Definition: ObjectWithoutType
- */
-export interface ObjectWithoutType {
     [key: string]: unknown;
 }
 
@@ -986,13 +903,6 @@ export interface OfferShiftRequestResponse {
     senderUserId?: string;
     /** 'approved', 'pending' or 'declined' */
     state?: string;
-}
-
-/**
- * Definition: OnGroupMemberChange_Response
- */
-export interface OnGroupMemberChangeResponse {
-    [key: string]: unknown;
 }
 
 /**
@@ -1068,18 +978,6 @@ export interface PostFeedSchema {
  */
 export interface PostMessageSchema {
     schema?: ObjectEntity;
-}
-
-/**
- * Definition: PostToConversationResponse
- */
-export interface PostToConversationResponse {
-    /** The chat's unique identifier */
-    conversationId?: string;
-    /** Unique message ID */
-    id?: string;
-    /** Link to the message in Microsoft Teams */
-    messageLink?: string;
 }
 
 /**
@@ -1214,7 +1112,9 @@ export interface SwapShiftsChangeRequestResponse {
 /**
  * Definition: ThemeEditor
  */
-export type ThemeEditor = "white" | "blue" | "green" | "purple" | "pink" | "yellow" | "gray" | "darkblue" | "darkgreen" | "darkpurple" | "darkpink" | "darkyellow";
+export interface ThemeEditor {
+    [key: string]: unknown;
+}
 
 /**
  * Definition: TimeOffRequestResponse

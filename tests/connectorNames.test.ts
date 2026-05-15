@@ -19,9 +19,9 @@ describe("ConnectorNames", () => {
         expect(ConnectorNames.Teams).toBe("teams");
     });
 
-    it("should contain exactly 4 connector entries", () => {
+    it("should contain exactly 12 connector entries", () => {
         const keys = Object.keys(ConnectorNames);
-        expect(keys).toHaveLength(4);
+        expect(keys).toHaveLength(12);
     });
 
     it("should have all values as lowercase strings", () => {
