@@ -73,7 +73,7 @@ async function main(): Promise<void> {
             const email: EmailV3 = {
                 From: FROM_ADDRESS,
                 To: TO_ADDRESS,
-                Cc: ccAddress,
+                CC: ccAddress,
                 Subject: `CC Test from SMTP SDK Sample (${new Date().toISOString()})`,
                 Body: "<p>This email has a CC recipient.</p>",
             };

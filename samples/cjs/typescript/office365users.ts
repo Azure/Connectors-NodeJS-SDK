@@ -84,7 +84,7 @@ async function main(): Promise<void> {
     // Example 3: Get my direct reports
     console.log("\n--- My Direct Reports ---");
     try {
-        const reports: DirectReportsResponse = await client.directReportsAsync();
+        const reports: DirectReportsResponse = await client.directReportsAsync("me");
         const reportValues = reports.value ?? [];
 
         if (reportValues.length > 0) {
@@ -110,13 +110,13 @@ async function main(): Promise<void> {
         console.log(`\n--- Search for User ("${searchUser}") ---`);
         try {
             const results = await client.searchUserAsync(searchUser);
-            const users = results.value ?? [];
+            const resultsRecord = results as Record<string, unknown>;
+            const users = (resultsRecord.value ?? []) as Array<Record<string, unknown>>;
 
             if (users.length > 0) {
                 console.log(`Found ${users.length} matching users:`);
                 for (const user of users.slice(0, 5)) {
-                    const record = user as Record<string, unknown>;
-                    console.log(`  - ${record.DisplayName ?? "Unknown"} (${record.Mail ?? "no email"})`);
+                    console.log(`  - ${user.DisplayName ?? "Unknown"} (${user.Mail ?? "no email"})`);
                 }
             } else {
                 console.log("No matching users found.");

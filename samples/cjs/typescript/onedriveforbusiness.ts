@@ -91,7 +91,7 @@ async function main(): Promise<void> {
         console.log(`\n--- List Folder Contents ---`);
         try {
             const contents = await client.listFolderAsync(folderId);
-            const contentList = contents as Array<Record<string, unknown>> ?? [];
+            const contentList = (contents as unknown as Array<Record<string, unknown>>) ?? [];
 
             if (contentList.length > 0) {
                 console.log(`Found ${contentList.length} items:`);
@@ -116,7 +116,7 @@ async function main(): Promise<void> {
     if (fileId) {
         console.log(`\n--- Get File Thumbnail ---`);
         try {
-            const thumbnail = await client.getThumbnailAsync(fileId);
+            const thumbnail = await client.getFileThumbnailAsync(fileId);
             const record = thumbnail as Record<string, unknown>;
             console.log(`  Thumbnail URL: ${String(record.Url ?? record.url ?? "none").substring(0, 80)}...`);
         } catch (error) {

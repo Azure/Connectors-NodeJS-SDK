@@ -45,13 +45,13 @@ async function main(): Promise<void> {
     console.log("\n--- List Subscriptions ---");
     try {
         const subscriptions: SubscriptionListResult = await client.subscriptionsListAsync();
-        const subs = subscriptions.value ?? [];
+        const subsRecord = subscriptions as Record<string, unknown>;
+        const subs = (subsRecord.value ?? []) as Array<Record<string, unknown>>;
 
         if (subs.length > 0) {
             console.log(`Found ${subs.length} subscriptions:`);
             for (const sub of subs.slice(0, 5)) {
-                const record = sub as Record<string, unknown>;
-                console.log(`  - ${record.displayName ?? "Unknown"} (${record.subscriptionId})`);
+                console.log(`  - ${sub.displayName ?? "Unknown"} (${sub.subscriptionId})`);
             }
         } else {
             console.log("No subscriptions found.");
@@ -69,13 +69,13 @@ async function main(): Promise<void> {
         console.log("\n--- List Locations ---");
         try {
             const locations: LocationListResult = await client.subscriptionsListLocationsAsync(SUBSCRIPTION_ID);
-            const locs = locations.value ?? [];
+            const locsRecord = locations as Record<string, unknown>;
+            const locs = (locsRecord.value ?? []) as Array<Record<string, unknown>>;
 
             if (locs.length > 0) {
                 console.log(`Found ${locs.length} locations:`);
                 for (const loc of locs.slice(0, 10)) {
-                    const record = loc as Record<string, unknown>;
-                    console.log(`  - ${record.displayName ?? "Unknown"} (${record.name})`);
+                    console.log(`  - ${loc.displayName ?? "Unknown"} (${loc.name})`);
                 }
             } else {
                 console.log("No locations found.");

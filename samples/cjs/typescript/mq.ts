@@ -48,7 +48,7 @@ async function main(): Promise<void> {
     try {
         const sendResult: SendResponse = await client.sendAsync({
             Queue: QUEUE_NAME,
-            MessageData: `Hello from SDK sample! (${new Date().toISOString()})`,
+            Message: `Hello from SDK sample! (${new Date().toISOString()})`,
         });
         const record = sendResult as Record<string, unknown>;
         sentMessageId = record.MessageId as string;
@@ -68,7 +68,7 @@ async function main(): Promise<void> {
     try {
         const readOptions: SingleGetValidOptions = {
             Queue: QUEUE_NAME,
-            Timeout: 5,
+            Timeout: "5",
         };
         const message: Item = await client.readAsync(readOptions);
         const messageRecord = message as Record<string, unknown>;
@@ -88,8 +88,8 @@ async function main(): Promise<void> {
     try {
         const receiveOptions: MultipleGetValidOptions = {
             Queue: QUEUE_NAME,
-            MaxCount: 5,
-            Timeout: 5,
+            BatchSize: 5,
+            Timeout: "5",
         };
         const messages = await client.receiveAllAsync(receiveOptions);
         const messageList = (messages as Record<string, unknown>).value as Array<Record<string, unknown>> ?? [];

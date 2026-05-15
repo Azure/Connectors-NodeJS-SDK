@@ -25,7 +25,7 @@
  */
 
 import { ManagedIdentityTokenProvider, ConnectorException } from "@azure/connectors";
-import { AzureblobClient, BlobMetadata, BlobMetadataPage } from "@azure/connectors/generated/AzureblobExtensions";
+import { AzureblobClient, BlobMetadata, SharedAccessSignature, SharedAccessSignatureBlobPolicy } from "@azure/connectors/generated/AzureblobExtensions";
 
 const CONNECTION_URL = process.env.AZUREBLOB_CONNECTION_URL ?? "";
 const STORAGE_ACCOUNT = process.env.BLOB_STORAGE_ACCOUNT ?? "";
@@ -47,14 +47,14 @@ async function main(): Promise<void> {
     if (CONTAINER) {
         console.log(`\n--- List Blobs (${CONTAINER}) ---`);
         try {
-            const blobs: BlobMetadataPage = await client.listFolderV2Async(CONTAINER);
-            const blobValues = blobs.value ?? [];
+            const blobs = await client.listFolderAsync(CONTAINER, "/");
+            const blobsRecord = blobs as Record<string, unknown>;
+            const blobValues = (blobsRecord.value ?? []) as Array<Record<string, unknown>>;
 
             if (blobValues.length > 0) {
                 console.log(`Found ${blobValues.length} blobs:`);
                 for (const blob of blobValues.slice(0, 10)) {
-                    const record = blob as Record<string, unknown>;
-                    console.log(`  - ${record.DisplayName ?? record.Name ?? "Unknown"} (${record.Size ?? "?"} bytes)`);
+                    console.log(`  - ${blob.DisplayName ?? blob.Name ?? "Unknown"} (${blob.Size ?? "?"} bytes)`);
                 }
             } else {
                 console.log("No blobs found.");
@@ -89,18 +89,19 @@ async function main(): Promise<void> {
         }
     }
 
-    // Example 3: Get SAS URI for a blob
+    // Example 3: Create a share link for a blob
     if (STORAGE_ACCOUNT && blobPath) {
-        console.log("\n--- Get SAS URI ---");
+        console.log("\n--- Create Share Link ---");
         try {
-            const sas = await client.createSasUriAsync(
+            const policy: SharedAccessSignatureBlobPolicy = {};
+            const sas: SharedAccessSignature = await client.createShareLinkByPathAsync(
+                policy,
                 STORAGE_ACCOUNT,
-                CONTAINER,
                 blobPath,
             );
             const sasRecord = sas as Record<string, unknown>;
-            const webUrl = sasRecord.WebUrl as string ?? "";
-            console.log(`  SAS URI: ${webUrl.substring(0, 80)}...`);
+            const webUrl = String(sasRecord.WebUrl ?? "");
+            console.log(`  Share Link: ${webUrl.substring(0, 80)}...`);
         } catch (error) {
             if (error instanceof ConnectorException) {
                 console.log(`Connector error (${error.statusCode}): ${error.message}`);

@@ -26,7 +26,7 @@
  */
 
 import { ManagedIdentityTokenProvider, ConnectorException } from "@azure/connectors";
-import { KustoClient, Table, QueryAndListSchema, ControlCommandAndListSchema } from "@azure/connectors/generated/KustoExtensions";
+import { KustoClient, Table, QueryAndListSchema, ControlCommandAndListSchema, ClusterName, Query, DatabaseName } from "@azure/connectors/generated/KustoExtensions";
 
 const CONNECTION_URL = process.env.KUSTO_CONNECTION_URL ?? "";
 const CLUSTER = process.env.KUSTO_CLUSTER ?? "";
@@ -55,9 +55,9 @@ async function main(): Promise<void> {
     console.log(`Query: ${kqlQuery}`);
     try {
         const input: QueryAndListSchema = {
-            cluster: CLUSTER,
-            csl: kqlQuery,
-            db: DATABASE,
+            cluster: CLUSTER as unknown as ClusterName,
+            csl: kqlQuery as unknown as Query,
+            db: DATABASE as unknown as DatabaseName,
         };
         const result: Table = await client.listKustoResultsAsync(input);
         const resultRecord = result as Record<string, unknown>;
@@ -83,9 +83,9 @@ async function main(): Promise<void> {
     console.log("\n--- Run Show Control Command ---");
     try {
         const controlInput: ControlCommandAndListSchema = {
-            cluster: CLUSTER,
+            cluster: CLUSTER as unknown as ClusterName,
             csl: ".show databases",
-            db: DATABASE,
+            db: DATABASE as unknown as DatabaseName,
         };
         const controlResult: Table = await client.listKustoShowCommandResultsAsync(controlInput);
         const controlRecord = controlResult as Record<string, unknown>;
@@ -111,9 +111,9 @@ async function main(): Promise<void> {
     console.log("\n--- Error Handling ---");
     try {
         const badInput: QueryAndListSchema = {
-            cluster: CLUSTER,
-            csl: "INVALID_QUERY_!!!",
-            db: DATABASE,
+            cluster: CLUSTER as unknown as ClusterName,
+            csl: "INVALID_QUERY_!!!" as unknown as Query,
+            db: DATABASE as unknown as DatabaseName,
         };
         await client.listKustoResultsAsync(badInput);
         console.log("Unexpected success.");

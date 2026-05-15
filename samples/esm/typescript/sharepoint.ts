@@ -25,7 +25,7 @@
  */
 
 import { ManagedIdentityTokenProvider, ConnectorException } from "@azure/connectors";
-import { SharepointonlineClient, TablesList, ItemsList, PostItemResponse, GetItemResponse } from "@azure/connectors/generated/SharepointonlineExtensions";
+import { SharepointonlineClient, TablesList, ItemsList, PostItemResponse, GetItemResponse, SPBlobMetadataResponse } from "@azure/connectors/generated/SharepointonlineExtensions";
 
 const CONNECTION_URL = process.env.SHAREPOINT_CONNECTION_URL ?? "";
 const SITE_URL = process.env.SHAREPOINT_SITE_URL ?? "";
@@ -117,17 +117,17 @@ async function main(): Promise<void> {
         }
     }
 
-    // Example 4: List root folder files
-    console.log("\n--- List Root Folder ---");
+    // Example 4: Get root folder metadata
+    console.log("\n--- Get Root Folder Metadata ---");
     try {
-        const rootFiles = await client.listRootFolderAsync(SITE_URL);
+        const rootFolder: SPBlobMetadataResponse = await client.getFolderMetadataByPathAsync(SITE_URL);
+        const rootRecord = rootFolder as Record<string, unknown>;
 
-        if (rootFiles && rootFiles.length > 0) {
-            console.log(`Found ${rootFiles.length} items in root folder:`);
-            for (const file of rootFiles.slice(0, 5)) {
-                const record = file as Record<string, unknown>;
-                console.log(`  - ${record.DisplayName ?? record.Name ?? "Unknown"} (folder: ${record.IsFolder ?? false})`);
-            }
+        if (rootRecord) {
+            console.log(`Root folder metadata:`);
+            console.log(`  - Name: ${rootRecord.DisplayName ?? rootRecord.Name ?? "Unknown"}`);
+            console.log(`  - Path: ${rootRecord.Path ?? "Unknown"}`);
+            console.log(`  - Is Folder: ${rootRecord.IsFolder ?? true}`);
         } else {
             console.log("No items in root folder.");
         }
