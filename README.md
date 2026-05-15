@@ -5,7 +5,7 @@
 
 # Azure Connectors Node.js SDK
 
-Type-safe TypeScript/JavaScript clients for [Azure connectors](https://learn.microsoft.com/connectors/connector-reference/) — call Office 365, SharePoint, Teams, Kusto, and 1,000+ connectors directly from Azure Functions and other Node.js apps.
+Type-safe TypeScript/JavaScript clients for [Azure connectors](https://learn.microsoft.com/connectors/connector-reference/) — call Office 365, SharePoint, Teams, Azure Resource Manager, Azure Blob Storage, and 1,000+ connectors directly from Azure Functions and other Node.js apps.
 
 > [!CAUTION]
 > **Early Preview — Not for Production Use**
@@ -229,12 +229,20 @@ The following connectors have been generated and validated with comprehensive te
 
 | Connector | Import Path | Status | Tests |
 |-----------|-------------|--------|-------|
-| **Office 365 Outlook** | `@azure/connectors/generated/Office365Extensions` | ✅ Complete | 24 tests |
-| **SharePoint Online** | `@azure/connectors/generated/SharepointonlineExtensions` | ✅ Complete | 16 tests |
+| **Azure Resource Manager** | `@azure/connectors/generated/ArmExtensions` | ✅ Complete | 16 tests |
+| **Azure Blob Storage** | `@azure/connectors/generated/AzureblobExtensions` | ✅ Complete | 13 tests |
+| **Azure Monitor Logs** | `@azure/connectors/generated/AzuremonitorlogsExtensions` | ✅ Complete | 10 tests |
+| **Azure Data Explorer** | `@azure/connectors/generated/KustoExtensions` | ✅ Complete | 17 tests |
+| **IBM MQ** | `@azure/connectors/generated/MqExtensions` | ✅ Complete | 13 tests |
+| **MS Graph Groups & Users** | `@azure/connectors/generated/MsgraphgroupsanduserExtensions` | ✅ Complete | 13 tests |
+| **Office 365 Outlook** | `@azure/connectors/generated/Office365Extensions` | ✅ Complete | 14 tests |
+| **Office 365 Users** | `@azure/connectors/generated/Office365usersExtensions` | ✅ Complete | 14 tests |
+| **OneDrive for Business** | `@azure/connectors/generated/OnedriveforbusinessExtensions` | ✅ Complete | 15 tests |
+| **SharePoint Online** | `@azure/connectors/generated/SharepointonlineExtensions` | ✅ Complete | 12 tests |
+| **SMTP** | `@azure/connectors/generated/SmtpExtensions` | ✅ Complete | 9 tests |
 | **Microsoft Teams** | `@azure/connectors/generated/TeamsExtensions` | ✅ Complete | 14 tests |
-| **Azure Data Explorer** | `@azure/connectors/generated/KustoExtensions` | ✅ Complete | 12 tests |
 
-**Total:** 85 tests (all passing) across connector clients and SDK infrastructure
+**Total:** 188 tests (all passing) across 19 test suites
 
 ## Authentication
 
@@ -353,10 +361,18 @@ try {
 │   ├── connectorException.ts       # Exception types
 │   └── triggerPayload.ts           # Trigger callback types
 ├── src/generated/                  # Auto-generated connector clients
-│   ├── Office365Extensions.ts      # Office 365 client
-│   ├── SharepointonlineExtensions.ts # SharePoint client
-│   ├── TeamsExtensions.ts          # Teams client
-│   ├── KustoExtensions.ts          # Kusto client
+│   ├── ArmExtensions.ts           # Azure Resource Manager client
+│   ├── AzureblobExtensions.ts     # Azure Blob Storage client
+│   ├── AzuremonitorlogsExtensions.ts # Azure Monitor Logs client
+│   ├── KustoExtensions.ts         # Azure Data Explorer client
+│   ├── MqExtensions.ts            # IBM MQ client
+│   ├── MsgraphgroupsanduserExtensions.ts # MS Graph Groups & Users client
+│   ├── Office365Extensions.ts     # Office 365 Outlook client
+│   ├── Office365usersExtensions.ts # Office 365 Users client
+│   ├── OnedriveforbusinessExtensions.ts # OneDrive for Business client
+│   ├── SharepointonlineExtensions.ts # SharePoint Online client
+│   ├── SmtpExtensions.ts          # SMTP client
+│   ├── TeamsExtensions.ts         # Microsoft Teams client
 │   ├── connectorNames.ts          # Connector name constants
 │   └── ManagedConnectors.ts       # Connector registry
 ├── tests/                          # Jest test suite
@@ -372,16 +388,29 @@ Complete working samples are included for both TypeScript and JavaScript in ESM 
 samples/
 ├── esm/
 │   ├── typescript/         # TypeScript ESM samples
+│   │   ├── arm.ts
+│   │   ├── azureblob.ts
+│   │   ├── azuremonitorlogs.ts
+│   │   ├── kusto.ts
+│   │   ├── mq.ts
+│   │   ├── msgraphgroupsanduser.ts
 │   │   ├── office365.ts
+│   │   ├── office365users.ts
+│   │   ├── onedriveforbusiness.ts
 │   │   ├── sharepoint.ts
-│   │   ├── teams.ts
-│   │   └── kusto.ts
-│   └── javascript/         # JavaScript ESM samples
-│       ├── office365.mjs
-│       ├── sharepoint.mjs
-│       ├── teams.mjs
-│       └── kusto.mjs
-└── cjs/                    # CommonJS samples
+│   │   ├── smtp.ts
+│   │   └── teams.ts
+│   └── javascript/         # JavaScript ESM samples (.mjs)
+│       ├── arm.mjs
+│       ├── azureblob.mjs
+│       └── ... (12 connectors)
+└── cjs/
+    ├── typescript/         # TypeScript CJS samples
+    │   ├── arm.ts
+    │   └── ... (12 connectors)
+    └── javascript/         # JavaScript CJS samples (.cjs)
+        ├── arm.cjs
+        └── ... (12 connectors)
 ```
 
 See [docs/connection-setup.md](docs/connection-setup.md) for instructions on creating the Azure connections required to run the samples.
