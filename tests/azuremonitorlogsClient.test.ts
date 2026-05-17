@@ -82,6 +82,16 @@ describe("AzuremonitorlogsClient — constructor", () => {
         const client = new AzuremonitorlogsClient("", createMockTokenProvider());
         expect(client).toBeDefined();
     });
+
+    it("should throw on null connection URL", () => {
+        expect(() => new AzuremonitorlogsClient(null as unknown as string, createMockTokenProvider()))
+            .toThrow("Parameter 'connectionRuntimeUrl' cannot be null or undefined.");
+    });
+
+    it("should throw on undefined connection URL", () => {
+        expect(() => new AzuremonitorlogsClient(undefined as unknown as string, createMockTokenProvider()))
+            .toThrow("Parameter 'connectionRuntimeUrl' cannot be null or undefined.");
+    });
 });
 
 describe("AzuremonitorlogsClient — queryDataAsync", () => {

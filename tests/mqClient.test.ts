@@ -85,6 +85,16 @@ describe("MqClient — constructor", () => {
         const client = new MqClient("", createMockTokenProvider());
         expect(client).toBeDefined();
     });
+
+    it("should throw on null connection URL", () => {
+        expect(() => new MqClient(null as unknown as string, createMockTokenProvider()))
+            .toThrow("Parameter 'connectionRuntimeUrl' cannot be null or undefined.");
+    });
+
+    it("should throw on undefined connection URL", () => {
+        expect(() => new MqClient(undefined as unknown as string, createMockTokenProvider()))
+            .toThrow("Parameter 'connectionRuntimeUrl' cannot be null or undefined.");
+    });
 });
 
 describe("MqClient — sendAsync", () => {

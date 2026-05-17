@@ -51,6 +51,16 @@ describe("SharepointonlineClient — constructor", () => {
         const client = new SharepointonlineClient(TestConnectionUrl + "///", createMockTokenProvider());
         expect(client).toBeDefined();
     });
+
+    it("should throw on null connection URL", () => {
+        expect(() => new SharepointonlineClient(null as unknown as string, createMockTokenProvider()))
+            .toThrow("Parameter 'connectionRuntimeUrl' cannot be null or undefined.");
+    });
+
+    it("should throw on undefined connection URL", () => {
+        expect(() => new SharepointonlineClient(undefined as unknown as string, createMockTokenProvider()))
+            .toThrow("Parameter 'connectionRuntimeUrl' cannot be null or undefined.");
+    });
 });
 
 describe("SharepointonlineClient — getTablesAsync", () => {

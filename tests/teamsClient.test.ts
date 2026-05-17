@@ -79,6 +79,16 @@ describe("TeamsClient — constructor", () => {
         const client = new TeamsClient(TestConnectionUrl + "///", createMockTokenProvider());
         expect(client).toBeDefined();
     });
+
+    it("should throw on null connection URL", () => {
+        expect(() => new TeamsClient(null as unknown as string, createMockTokenProvider()))
+            .toThrow("Parameter 'connectionRuntimeUrl' cannot be null or undefined.");
+    });
+
+    it("should throw on undefined connection URL", () => {
+        expect(() => new TeamsClient(undefined as unknown as string, createMockTokenProvider()))
+            .toThrow("Parameter 'connectionRuntimeUrl' cannot be null or undefined.");
+    });
 });
 
 describe("TeamsClient — getAllTeamsAsync", () => {

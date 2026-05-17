@@ -78,6 +78,16 @@ describe("OnedriveforbusinessClient — constructor", () => {
         const client = new OnedriveforbusinessClient("", createMockTokenProvider());
         expect(client).toBeDefined();
     });
+
+    it("should throw on null connection URL", () => {
+        expect(() => new OnedriveforbusinessClient(null as unknown as string, createMockTokenProvider()))
+            .toThrow("Parameter 'connectionRuntimeUrl' cannot be null or undefined.");
+    });
+
+    it("should throw on undefined connection URL", () => {
+        expect(() => new OnedriveforbusinessClient(undefined as unknown as string, createMockTokenProvider()))
+            .toThrow("Parameter 'connectionRuntimeUrl' cannot be null or undefined.");
+    });
 });
 
 describe("OnedriveforbusinessClient — listRootFolderAsync", () => {
