@@ -25,7 +25,7 @@
  */
 
 import { ManagedIdentityTokenProvider, ConnectorException } from "@azure/connectors";
-import { AzureblobClient, BlobMetadata, SharedAccessSignature, SharedAccessSignatureBlobPolicy } from "@azure/connectors/generated/AzureblobExtensions";
+import { AzureblobClient, BlobMetadata, SharedAccessSignature, SharedAccessSignatureBlobPolicy, ListOfBlobsWithSensitivityLabels } from "@azure/connectors/generated/AzureblobExtensions";
 
 const CONNECTION_URL = process.env.AZUREBLOB_CONNECTION_URL ?? "";
 const STORAGE_ACCOUNT = process.env.BLOB_STORAGE_ACCOUNT ?? "";
@@ -47,9 +47,8 @@ async function main(): Promise<void> {
     if (CONTAINER) {
         console.log(`\n--- List Blobs (${CONTAINER}) ---`);
         try {
-            const blobs = await client.listFolderAsync(CONTAINER, "/");
-            const blobsRecord = blobs as Record<string, unknown>;
-            const blobValues = (blobsRecord.value ?? []) as Array<Record<string, unknown>>;
+            const blobs: ListOfBlobsWithSensitivityLabels = await client.listFolderAsync(CONTAINER, "/");
+            const blobValues = blobs.value ?? [];
 
             if (blobValues.length > 0) {
                 console.log(`Found ${blobValues.length} blobs:`);
@@ -74,12 +73,11 @@ async function main(): Promise<void> {
         console.log(`\n--- Get Blob Metadata (${blobPath}) ---`);
         try {
             const metadata: BlobMetadata = await client.getFileMetadataAsync(CONTAINER, blobPath);
-            const record = metadata as Record<string, unknown>;
 
-            console.log(`  Name: ${record.DisplayName ?? record.Name}`);
-            console.log(`  Size: ${record.Size ?? "unknown"} bytes`);
-            console.log(`  Last Modified: ${record.LastModified ?? "unknown"}`);
-            console.log(`  Content Type: ${record.MediaType ?? "unknown"}`);
+            console.log(`  Name: ${metadata.DisplayName ?? metadata.Name}`);
+            console.log(`  Size: ${metadata.Size ?? "unknown"} bytes`);
+            console.log(`  Last Modified: ${metadata.LastModified ?? "unknown"}`);
+            console.log(`  Content Type: ${metadata.MediaType ?? "unknown"}`);
         } catch (error) {
             if (error instanceof ConnectorException) {
                 console.log(`Connector error (${error.statusCode}): ${error.message}`);
@@ -99,8 +97,7 @@ async function main(): Promise<void> {
                 STORAGE_ACCOUNT,
                 blobPath,
             );
-            const sasRecord = sas as Record<string, unknown>;
-            const webUrl = String(sasRecord.WebUrl ?? "");
+            const webUrl = sas.WebUrl ?? "";
             console.log(`  Share Link: ${webUrl.substring(0, 80)}...`);
         } catch (error) {
             if (error instanceof ConnectorException) {

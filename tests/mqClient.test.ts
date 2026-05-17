@@ -133,7 +133,7 @@ describe("MqClient — receiveAsync", () => {
     });
 
     it("should POST to /v2/receive", async () => {
-        const mockItem: Item = {};
+        const mockItem: Item = { MessageData: "test-data" };
         mockFetchResponse(mockItem);
 
         const client = new MqClient(TestConnectionUrl, createMockTokenProvider());
@@ -174,7 +174,7 @@ describe("MqClient — readAsync", () => {
     });
 
     it("should POST to /v2/read", async () => {
-        const mockItem: Item = {};
+        const mockItem: Item = { MessageData: "test-data" };
         mockFetchResponse(mockItem);
 
         const client = new MqClient(TestConnectionUrl, createMockTokenProvider());
@@ -210,7 +210,7 @@ describe("MqClient — deleteAsync", () => {
     });
 
     it("should POST to /v2/delete", async () => {
-        const mockItem: Item = {};
+        const mockItem: Item = { MessageData: "test-data" };
         mockFetchResponse(mockItem);
 
         const client = new MqClient(TestConnectionUrl, createMockTokenProvider());

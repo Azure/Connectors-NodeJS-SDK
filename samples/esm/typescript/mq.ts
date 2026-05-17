@@ -50,11 +50,10 @@ async function main(): Promise<void> {
             Queue: QUEUE_NAME,
             Message: `Hello from SDK sample! (${new Date().toISOString()})`,
         });
-        const record = sendResult as Record<string, unknown>;
-        sentMessageId = record.MessageId as string;
+        sentMessageId = sendResult.MessageId;
         console.log(`Message sent successfully.`);
         console.log(`  MessageId: ${sentMessageId ?? "unknown"}`);
-        console.log(`  CorrelationId: ${record.CorrelationId ?? "none"}`);
+        console.log(`  CorrelationId: ${sendResult.CorrelationId ?? "none"}`);
     } catch (error) {
         if (error instanceof ConnectorException) {
             console.log(`Connector error (${error.statusCode}): ${error.message}`);
@@ -71,10 +70,9 @@ async function main(): Promise<void> {
             Timeout: "5",
         };
         const message: Item = await client.readAsync(readOptions);
-        const messageRecord = message as Record<string, unknown>;
         console.log(`Message read successfully:`);
-        console.log(`  MessageId: ${messageRecord.MessageId ?? "unknown"}`);
-        console.log(`  Data: ${messageRecord.MessageData ?? "empty"}`);
+        console.log(`  MessageId: ${message.MessageId ?? "unknown"}`);
+        console.log(`  Data: ${message.MessageData ?? "empty"}`);
     } catch (error) {
         if (error instanceof ConnectorException) {
             console.log(`Connector error (${error.statusCode}): ${error.message}`);
@@ -92,7 +90,7 @@ async function main(): Promise<void> {
             Timeout: "5",
         };
         const messages = await client.receiveAllAsync(receiveOptions);
-        const messageList = (messages as Record<string, unknown>).value as Array<Record<string, unknown>> ?? [];
+        const messageList = messages.value ?? [];
         console.log(`Received ${messageList.length} messages:`);
         for (const msg of messageList.slice(0, 5)) {
             console.log(`  - [${msg.MessageId}] ${msg.MessageData ?? "empty"}`);

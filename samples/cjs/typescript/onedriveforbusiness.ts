@@ -69,13 +69,12 @@ async function main(): Promise<void> {
         console.log(`\n--- Get File Metadata (${fileId}) ---`);
         try {
             const metadata: BlobMetadata = await client.getFileMetadataAsync(fileId);
-            const record = metadata as Record<string, unknown>;
 
-            console.log(`  Name: ${record.DisplayName ?? record.Name}`);
-            console.log(`  Size: ${record.Size ?? "unknown"} bytes`);
-            console.log(`  Last Modified: ${record.LastModified ?? "unknown"}`);
-            console.log(`  Media Type: ${record.MediaType ?? "unknown"}`);
-            console.log(`  Path: ${record.Path ?? "unknown"}`);
+            console.log(`  Name: ${metadata.DisplayName ?? metadata.Name}`);
+            console.log(`  Size: ${metadata.Size ?? "unknown"} bytes`);
+            console.log(`  Last Modified: ${metadata.LastModified ?? "unknown"}`);
+            console.log(`  Media Type: ${metadata.MediaType ?? "unknown"}`);
+            console.log(`  Path: ${metadata.Path ?? "unknown"}`);
         } catch (error) {
             if (error instanceof ConnectorException) {
                 console.log(`Connector error (${error.statusCode}): ${error.message}`);
@@ -91,7 +90,7 @@ async function main(): Promise<void> {
         console.log(`\n--- List Folder Contents ---`);
         try {
             const contents = await client.listFolderAsync(folderId);
-            const contentList = (contents as unknown as Array<Record<string, unknown>>) ?? [];
+            const contentList = contents.value ?? [];
 
             if (contentList.length > 0) {
                 console.log(`Found ${contentList.length} items:`);
@@ -117,8 +116,7 @@ async function main(): Promise<void> {
         console.log(`\n--- Get File Thumbnail ---`);
         try {
             const thumbnail = await client.getFileThumbnailAsync(fileId);
-            const record = thumbnail as Record<string, unknown>;
-            console.log(`  Thumbnail URL: ${String(record.Url ?? record.url ?? "none").substring(0, 80)}...`);
+            console.log(`  Thumbnail URL: ${String(thumbnail.Url ?? "none").substring(0, 80)}...`);
         } catch (error) {
             if (error instanceof ConnectorException) {
                 console.log(`Connector error (${error.statusCode}): ${error.message}`);

@@ -53,7 +53,7 @@ const _queryInput: QueryDataInput = {
 };
 
 const _table: Table = {
-    value: "query-results",
+    value: [],
 };
 
 const _visualizeInput: VisualizeQueryInput = {
@@ -100,7 +100,7 @@ describe("AzuremonitorlogsClient — queryDataAsync", () => {
     });
 
     it("should POST to /queryDataV2 with correct body and headers", async () => {
-        const mockTable: Table = { value: "results" };
+        const mockTable: Table = { value: [] };
         mockFetchResponse(mockTable);
 
         const client = new AzuremonitorlogsClient(TestConnectionUrl, createMockTokenProvider());

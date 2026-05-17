@@ -43,12 +43,11 @@ async function main(): Promise<void> {
     console.log("\n--- My Profile ---");
     try {
         const profile = await client.myProfileAsync();
-        const record = profile as Record<string, unknown>;
 
-        console.log(`  Display Name: ${record.DisplayName ?? record.displayName ?? "Unknown"}`);
-        console.log(`  Email: ${record.Mail ?? record.mail ?? "Unknown"}`);
-        console.log(`  Job Title: ${record.JobTitle ?? record.jobTitle ?? "Unknown"}`);
-        console.log(`  Department: ${record.Department ?? record.department ?? "Unknown"}`);
+        console.log(`  Display Name: ${profile.displayName ?? "Unknown"}`);
+        console.log(`  Email: ${profile.mail ?? "Unknown"}`);
+        console.log(`  Job Title: ${profile.jobTitle ?? "Unknown"}`);
+        console.log(`  Department: ${profile.department ?? "Unknown"}`);
     } catch (error) {
         if (error instanceof ConnectorException) {
             console.log(`Connector error: ${error.message}`);
@@ -66,9 +65,8 @@ async function main(): Promise<void> {
         if (docs.length > 0) {
             console.log(`Found ${docs.length} trending documents:`);
             for (const doc of docs.slice(0, 5)) {
-                const record = doc as Record<string, unknown>;
-                const resource = record.resourceVisualization as Record<string, unknown> ?? {};
-                console.log(`  - ${resource.title ?? "Untitled"} (${resource.type ?? "unknown type"})`);
+                const resource = doc.resourceVisualization;
+                console.log(`  - ${resource?.title ?? "Untitled"} (${resource?.type ?? "unknown type"})`);
             }
         } else {
             console.log("No trending documents found.");
@@ -90,8 +88,7 @@ async function main(): Promise<void> {
         if (reportValues.length > 0) {
             console.log(`Found ${reportValues.length} direct reports:`);
             for (const report of reportValues.slice(0, 5)) {
-                const record = report as Record<string, unknown>;
-                console.log(`  - ${record.DisplayName ?? record.displayName ?? "Unknown"} (${record.Mail ?? record.mail ?? "no email"})`);
+                console.log(`  - ${report.displayName ?? "Unknown"} (${report.mail ?? "no email"})`);
             }
         } else {
             console.log("No direct reports found.");
@@ -110,8 +107,7 @@ async function main(): Promise<void> {
         console.log(`\n--- Search for User ("${searchUser}") ---`);
         try {
             const results = await client.searchUserAsync(searchUser);
-            const resultsRecord = results as Record<string, unknown>;
-            const users = (resultsRecord.value ?? []) as Array<Record<string, unknown>>;
+            const users = results.value ?? [];
 
             if (users.length > 0) {
                 console.log(`Found ${users.length} matching users:`);

@@ -48,8 +48,7 @@ async function main(): Promise<void> {
         if (users.length > 0) {
             console.log(`Found ${users.length} users:`);
             for (const user of users.slice(0, 5)) {
-                const record = user as Record<string, unknown>;
-                console.log(`  - ${record.displayName ?? "Unknown"} (${record.userPrincipalName ?? "no UPN"})`);
+                console.log(`  - ${user.displayName ?? "Unknown"} (${user.userPrincipalName ?? "no UPN"})`);
             }
         } else {
             console.log("No users found.");
@@ -74,8 +73,7 @@ async function main(): Promise<void> {
         if (groups.length > 0) {
             console.log(`Found ${groups.length} groups:`);
             for (const group of groups.slice(0, 5)) {
-                const record = group as Record<string, unknown>;
-                console.log(`  - ${record.displayName ?? "Unknown"} (${record.id})`);
+                console.log(`  - ${group.displayName ?? "Unknown"} (${group.id})`);
             }
         } else {
             console.log("No groups found.");
@@ -97,8 +95,7 @@ async function main(): Promise<void> {
         if (skus.length > 0) {
             console.log(`Found ${skus.length} subscribed SKUs:`);
             for (const sku of skus.slice(0, 5)) {
-                const record = sku as Record<string, unknown>;
-                console.log(`  - ${record.skuPartNumber ?? "Unknown"} (consumed: ${record.consumedUnits ?? "?"})`);
+                console.log(`  - ${sku.skuPartNumber ?? "Unknown"} (consumed: ${sku.consumedUnits ?? "?"})`);
             }
         } else {
             console.log("No SKUs found.");

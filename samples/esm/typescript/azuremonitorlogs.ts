@@ -59,10 +59,9 @@ async function main(): Promise<void> {
             SUBSCRIPTIONS || undefined,
             RESOURCE_GROUPS || undefined,
         );
-        const resultRecord = result as Record<string, unknown>;
 
-        if (resultRecord.value && Array.isArray(resultRecord.value)) {
-            const rows = resultRecord.value as Array<Record<string, unknown>>;
+        const rows = result.value ?? [];
+        if (rows.length > 0) {
             console.log(`Returned ${rows.length} rows:`);
             for (const row of rows.slice(0, 10)) {
                 console.log(`  ${JSON.stringify(row)}`);
@@ -95,7 +94,7 @@ async function main(): Promise<void> {
             undefined,
             "piechart",
         );
-        const visRecord = visResult as Record<string, unknown>;
+        const visRecord = visResult;
         console.log("Visualization result keys:", Object.keys(visRecord).join(", "));
     } catch (error) {
         if (error instanceof ConnectorException) {

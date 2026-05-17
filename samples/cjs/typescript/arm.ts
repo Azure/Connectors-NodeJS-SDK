@@ -24,7 +24,7 @@
  */
 
 import { ManagedIdentityTokenProvider, ConnectorException } from "@azure/connectors";
-import { ArmClient, SubscriptionListResult, LocationListResult } from "@azure/connectors/generated/ArmExtensions";
+import { ArmClient, SubscriptionListResult, LocationListResult, ResourceGroupListResult } from "@azure/connectors/generated/ArmExtensions";
 
 const CONNECTION_URL = process.env.ARM_CONNECTION_URL ?? "";
 const SUBSCRIPTION_ID = process.env.ARM_SUBSCRIPTION_ID ?? "";
@@ -45,8 +45,7 @@ async function main(): Promise<void> {
     console.log("\n--- List Subscriptions ---");
     try {
         const subscriptions: SubscriptionListResult = await client.subscriptionsListAsync();
-        const subsRecord = subscriptions as Record<string, unknown>;
-        const subs = (subsRecord.value ?? []) as Array<Record<string, unknown>>;
+        const subs = subscriptions.value ?? [];
 
         if (subs.length > 0) {
             console.log(`Found ${subs.length} subscriptions:`);
@@ -69,8 +68,7 @@ async function main(): Promise<void> {
         console.log("\n--- List Locations ---");
         try {
             const locations: LocationListResult = await client.subscriptionsListLocationsAsync(SUBSCRIPTION_ID);
-            const locsRecord = locations as Record<string, unknown>;
-            const locs = (locsRecord.value ?? []) as Array<Record<string, unknown>>;
+            const locs = locations.value ?? [];
 
             if (locs.length > 0) {
                 console.log(`Found ${locs.length} locations:`);
@@ -91,8 +89,8 @@ async function main(): Promise<void> {
         // Example 3: List resource groups
         console.log("\n--- List Resource Groups ---");
         try {
-            const groups = await client.resourceGroupsListAsync(SUBSCRIPTION_ID);
-            const groupValues = (groups as Record<string, unknown>).value as Array<Record<string, unknown>> ?? [];
+            const groups: ResourceGroupListResult = await client.resourceGroupsListAsync(SUBSCRIPTION_ID);
+            const groupValues = groups.value ?? [];
 
             if (groupValues.length > 0) {
                 console.log(`Found ${groupValues.length} resource groups:`);

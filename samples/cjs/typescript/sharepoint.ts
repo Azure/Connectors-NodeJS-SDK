@@ -52,13 +52,12 @@ async function main(): Promise<void> {
     console.log("\n--- Get All Lists and Libraries ---");
     try {
         const tables: TablesList = await client.getAllTablesAsync(SITE_URL);
-        const lists = (tables.value ?? []) as Array<Record<string, unknown>>;
+        const lists = tables.value ?? [];
 
         if (lists.length > 0) {
             console.log(`Found ${lists.length} lists and libraries:`);
             for (const listItem of lists.slice(0, 5)) {
-                const record = listItem as Record<string, unknown>;
-                console.log(`  - ${record.DisplayName ?? "Unknown"} (${record.Name ?? "Unknown"})`);
+                console.log(`  - ${listItem.DisplayName ?? "Unknown"} (${listItem.Name ?? "Unknown"})`);
             }
         } else {
             console.log("No lists found.");
@@ -75,13 +74,12 @@ async function main(): Promise<void> {
     console.log(`\n--- Get List Items (${listName}) ---`);
     try {
         const items: ItemsList = await client.getItemsAsync(SITE_URL, listName);
-        const itemValues = (items.value ?? []) as Array<Record<string, unknown>>;
+        const itemValues = items.value ?? [];
 
         if (itemValues.length > 0) {
             console.log(`Found ${itemValues.length} items:`);
             for (const item of itemValues.slice(0, 5)) {
-                const record = item as Record<string, unknown>;
-                console.log(`  - [${record.ID ?? "?"}] ${record.Title ?? record.FileLeafRef ?? "No Title"}`);
+                console.log(`  - [${item.dynamicProperties?.ID ?? "?"}] ${item.dynamicProperties?.Title ?? item.dynamicProperties?.FileLeafRef ?? "No Title"}`);
             }
         } else {
             console.log(`No items found in '${listName}'.`);
@@ -98,13 +96,12 @@ async function main(): Promise<void> {
     console.log(`\n--- Get File Properties (${listName}) ---`);
     try {
         const files: ItemsList = await client.getFileItemsAsync(SITE_URL, listName);
-        const fileValues = (files.value ?? []) as Array<Record<string, unknown>>;
+        const fileValues = files.value ?? [];
 
         if (fileValues.length > 0) {
             console.log(`Found ${fileValues.length} files:`);
             for (const file of fileValues.slice(0, 5)) {
-                const record = file as Record<string, unknown>;
-                console.log(`  - ${record.FileLeafRef ?? record.Title ?? "Unknown"} (ID: ${record.ID ?? "?"})`);
+                console.log(`  - ${file.dynamicProperties?.FileLeafRef ?? file.dynamicProperties?.Title ?? "Unknown"} (ID: ${file.dynamicProperties?.ID ?? "?"})`);
             }
         } else {
             console.log(`No files found in '${listName}'.`);
@@ -121,13 +118,12 @@ async function main(): Promise<void> {
     console.log("\n--- Get Root Folder Metadata ---");
     try {
         const rootFolder: SPBlobMetadataResponse = await client.getFolderMetadataByPathAsync(SITE_URL);
-        const rootRecord = rootFolder as Record<string, unknown>;
 
-        if (rootRecord) {
+        if (rootFolder) {
             console.log(`Root folder metadata:`);
-            console.log(`  - Name: ${rootRecord.DisplayName ?? rootRecord.Name ?? "Unknown"}`);
-            console.log(`  - Path: ${rootRecord.Path ?? "Unknown"}`);
-            console.log(`  - Is Folder: ${rootRecord.IsFolder ?? true}`);
+            console.log(`  - Name: ${rootFolder.DisplayName ?? rootFolder.Name ?? "Unknown"}`);
+            console.log(`  - Path: ${rootFolder.Path ?? "Unknown"}`);
+            console.log(`  - Is Folder: ${rootFolder.IsFolder ?? true}`);
         } else {
             console.log("No items in root folder.");
         }
@@ -151,15 +147,13 @@ async function main(): Promise<void> {
                 SITE_URL,
                 crudListName,
             );
-            const createdRecord = created as Record<string, unknown>;
-            const itemId = String(createdRecord.ID);
-            console.log(`  Created item ${itemId}: ${createdRecord.Title}`);
+            const itemId = String(created.ID);
+            console.log(`  Created item ${itemId}: ${created.Title}`);
 
             // READ
             console.log("Reading item...");
             const item: GetItemResponse = await client.getItemAsync(SITE_URL, crudListName, itemId);
-            const itemRecord = item as Record<string, unknown>;
-            console.log(`  Read item ${itemId}: ${itemRecord.Title}`);
+            console.log(`  Read item ${itemId}: ${item.Title}`);
 
             // UPDATE
             console.log("Updating item...");
@@ -170,8 +164,7 @@ async function main(): Promise<void> {
                 itemId,
             );
             const updated: GetItemResponse = await client.getItemAsync(SITE_URL, crudListName, itemId);
-            const updatedRecord = updated as Record<string, unknown>;
-            console.log(`  Updated item ${itemId}: ${updatedRecord.Title}`);
+            console.log(`  Updated item ${itemId}: ${updated.Title}`);
 
             // DELETE
             console.log("Deleting item...");

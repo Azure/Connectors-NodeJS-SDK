@@ -50,8 +50,8 @@ function mockFetchError(status: number, errorBody: string): void {
 // ──────────────────────────────────────────────
 
 const _user: GraphUser = {
-    DisplayName: "John Doe",
-    Mail: "john@contoso.com",
+    displayName: "John Doe",
+    mail: "john@contoso.com",
 };
 
 const _updateInput: GraphUserUpdateableV1 = {
@@ -99,8 +99,8 @@ describe("Office365usersClient — myProfileAsync", () => {
 
     it("should GET /codeless/v1.0/me", async () => {
         const mockProfile: GraphUser = {
-            DisplayName: "Jane Doe",
-            Mail: "jane@contoso.com",
+            displayName: "Jane Doe",
+            mail: "jane@contoso.com",
         };
         mockFetchResponse(mockProfile);
 
@@ -132,7 +132,7 @@ describe("Office365usersClient — searchUserAsync", () => {
 
     it("should GET /v2/users with search term", async () => {
         const mockResponse: EntityListResponseIReadOnlyListUser = {
-            value: [{ DisplayName: "John" }],
+            value: [{ Id: "user-1", DisplayName: "John" }],
         };
         mockFetchResponse(mockResponse);
 
@@ -152,7 +152,7 @@ describe("Office365usersClient — managerAsync", () => {
     });
 
     it("should GET manager for a user", async () => {
-        const mockManager: GraphUser = { DisplayName: "Boss Person" };
+        const mockManager: GraphUser = { displayName: "Boss Person" };
         mockFetchResponse(mockManager);
 
         const client = new Office365usersClient(TestConnectionUrl, createMockTokenProvider());
@@ -211,7 +211,7 @@ describe("Office365usersClient — relevantPeopleAsync", () => {
 
     it("should GET relevant people for a user", async () => {
         const mockResponse: LinklessEntityListResponseListPerson = {
-            value: [{ DisplayName: "Colleague" }],
+            value: [{ displayName: "Colleague" }],
         };
         mockFetchResponse(mockResponse);
 

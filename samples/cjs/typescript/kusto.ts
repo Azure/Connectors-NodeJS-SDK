@@ -60,10 +60,9 @@ async function main(): Promise<void> {
             db: DATABASE as unknown as DatabaseName,
         };
         const result: Table = await client.listKustoResultsAsync(input);
-        const resultRecord = result as Record<string, unknown>;
 
-        if (resultRecord.value && Array.isArray(resultRecord.value)) {
-            const rows = resultRecord.value as Array<Record<string, unknown>>;
+        const rows = result.value ?? [];
+        if (rows.length > 0) {
             console.log(`Returned ${rows.length} rows:`);
             for (const row of rows.slice(0, 10)) {
                 console.log(`  ${JSON.stringify(row)}`);
@@ -88,13 +87,13 @@ async function main(): Promise<void> {
             db: DATABASE as unknown as DatabaseName,
         };
         const controlResult: Table = await client.listKustoShowCommandResultsAsync(controlInput);
-        const controlRecord = controlResult as Record<string, unknown>;
 
-        if (controlRecord.value && Array.isArray(controlRecord.value)) {
-            const rows = controlRecord.value as Array<Record<string, unknown>>;
-            console.log(`Found ${rows.length} databases:`);
-            for (const row of rows.slice(0, 10)) {
-                console.log(`  - ${row.DatabaseName ?? row.Name ?? JSON.stringify(row)}`);
+        const controlRows = controlResult.value ?? [];
+        if (controlRows.length > 0) {
+            console.log(`Found ${controlRows.length} databases:`);
+            for (const row of controlRows.slice(0, 10)) {
+                const rowRecord = row as Record<string, unknown>;
+                console.log(`  - ${rowRecord.DatabaseName ?? rowRecord.Name ?? JSON.stringify(row)}`);
             }
         } else {
             console.log("Result:", JSON.stringify(controlResult, null, 2));
