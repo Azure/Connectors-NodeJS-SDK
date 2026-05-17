@@ -176,7 +176,6 @@ export interface TimeRangeItem {
  * Typed client for the azuremonitorlogs connector.
  */
 export class AzuremonitorlogsClient extends ConnectorClientBase {
-    private readonly connectionRuntimeUrl: string;
 
     /**
      * Creates a new AzuremonitorlogsClient.
@@ -185,12 +184,7 @@ export class AzuremonitorlogsClient extends ConnectorClientBase {
      * @param options Optional connector client options.
      */
     constructor(connectionRuntimeUrl: string, tokenProvider: TokenProvider, options?: ConnectorClientOptions) {
-        super(tokenProvider, options);
-        if (!connectionRuntimeUrl && connectionRuntimeUrl !== "") {
-            throw new Error("Parameter 'connectionRuntimeUrl' cannot be null or undefined.");
-        }
-
-        this.connectionRuntimeUrl = connectionRuntimeUrl.replace(/\/+$/, "");
+        super(connectionRuntimeUrl, tokenProvider, options);
     }
 
     public get connectorName(): string {
@@ -216,7 +210,7 @@ export class AzuremonitorlogsClient extends ConnectorClientBase {
             queryParams.push(`resourcename=${encodeURIComponent(String(resourcename))}`);
         }
         const requestPath = `/queryDataV2` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
-        const url = `${this.connectionRuntimeUrl}${requestPath}`;
+        const url = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<Table>("POST", url, undefined, input);
 
         if (!httpResponse.isSuccessStatusCode) {
@@ -248,7 +242,7 @@ export class AzuremonitorlogsClient extends ConnectorClientBase {
             queryParams.push(`visType=${encodeURIComponent(String(visType))}`);
         }
         const requestPath = `/visualizeQueryV2` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
-        const url = `${this.connectionRuntimeUrl}${requestPath}`;
+        const url = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<VisualizeResults>("POST", url, undefined, input);
 
         if (!httpResponse.isSuccessStatusCode) {

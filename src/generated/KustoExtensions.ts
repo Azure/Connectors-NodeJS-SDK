@@ -158,7 +158,6 @@ export interface Row {
  * Typed client for the kusto connector.
  */
 export class KustoClient extends ConnectorClientBase {
-    private readonly connectionRuntimeUrl: string;
 
     /**
      * Creates a new KustoClient.
@@ -167,12 +166,7 @@ export class KustoClient extends ConnectorClientBase {
      * @param options Optional connector client options.
      */
     constructor(connectionRuntimeUrl: string, tokenProvider: TokenProvider, options?: ConnectorClientOptions) {
-        super(tokenProvider, options);
-        if (!connectionRuntimeUrl && connectionRuntimeUrl !== "") {
-            throw new Error("Parameter 'connectionRuntimeUrl' cannot be null or undefined.");
-        }
-
-        this.connectionRuntimeUrl = connectionRuntimeUrl.replace(/\/+$/, "");
+        super(connectionRuntimeUrl, tokenProvider, options);
     }
 
     public get connectorName(): string {
@@ -185,7 +179,7 @@ export class KustoClient extends ConnectorClientBase {
      */
     public async listKustoResultsAsync(input: QueryAndListSchema): Promise<Table> {
         const requestPath = `/ListKustoResults/false`;
-        const url = `${this.connectionRuntimeUrl}${requestPath}`;
+        const url = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<Table>("POST", url, undefined, input);
 
         if (!httpResponse.isSuccessStatusCode) {
@@ -201,7 +195,7 @@ export class KustoClient extends ConnectorClientBase {
      */
     public async listKustoShowCommandResultsAsync(input: ControlCommandAndListSchema): Promise<Table> {
         const requestPath = `/ListKustoShowCommandResults`;
-        const url = `${this.connectionRuntimeUrl}${requestPath}`;
+        const url = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<Table>("POST", url, undefined, input);
 
         if (!httpResponse.isSuccessStatusCode) {
@@ -217,7 +211,7 @@ export class KustoClient extends ConnectorClientBase {
      */
     public async runAsyncControlCommandAndWaitAsync(input: ControlCommandAndListSchema): Promise<AsyncCommandResult> {
         const requestPath = `/RunAsyncControlCommandAndWait`;
-        const url = `${this.connectionRuntimeUrl}${requestPath}`;
+        const url = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<AsyncCommandResult>("POST", url, undefined, input);
 
         if (!httpResponse.isSuccessStatusCode) {
@@ -233,7 +227,7 @@ export class KustoClient extends ConnectorClientBase {
      */
     public async runKustoQueryAndVisualizeResultsAsync(input: QueryAndVisualizeSchema): Promise<VisualizeResults> {
         const requestPath = `/RunKustoAndVisualizeResults/false`;
-        const url = `${this.connectionRuntimeUrl}${requestPath}`;
+        const url = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<VisualizeResults>("POST", url, undefined, input);
 
         if (!httpResponse.isSuccessStatusCode) {
@@ -249,7 +243,7 @@ export class KustoClient extends ConnectorClientBase {
      */
     public async runKustoCommandAndVisualizeResultsAsync(input: CommandAndVisualizeSchema): Promise<VisualizeResults> {
         const requestPath = `/RunKustoAndVisualizeResults/true`;
-        const url = `${this.connectionRuntimeUrl}${requestPath}`;
+        const url = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<VisualizeResults>("POST", url, undefined, input);
 
         if (!httpResponse.isSuccessStatusCode) {
@@ -269,7 +263,7 @@ export class KustoClient extends ConnectorClientBase {
             queryParams.push(`sessionId=${encodeURIComponent(String(sessionId))}`);
         }
         const requestPath = `/mcp/KustoQueryManagement` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
-        const url = `${this.connectionRuntimeUrl}${requestPath}`;
+        const url = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<MCPQueryResponse>("POST", url, undefined, input);
 
         if (!httpResponse.isSuccessStatusCode) {

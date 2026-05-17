@@ -1307,7 +1307,6 @@ export interface WebhookTriggerSchema {
  * Typed client for the teams connector.
  */
 export class TeamsClient extends ConnectorClientBase {
-    private readonly connectionRuntimeUrl: string;
 
     /**
      * Creates a new TeamsClient.
@@ -1316,12 +1315,7 @@ export class TeamsClient extends ConnectorClientBase {
      * @param options Optional connector client options.
      */
     constructor(connectionRuntimeUrl: string, tokenProvider: TokenProvider, options?: ConnectorClientOptions) {
-        super(tokenProvider, options);
-        if (!connectionRuntimeUrl && connectionRuntimeUrl !== "") {
-            throw new Error("Parameter 'connectionRuntimeUrl' cannot be null or undefined.");
-        }
-
-        this.connectionRuntimeUrl = connectionRuntimeUrl.replace(/\/+$/, "");
+        super(connectionRuntimeUrl, tokenProvider, options);
     }
 
     public get connectorName(): string {
@@ -1334,7 +1328,7 @@ export class TeamsClient extends ConnectorClientBase {
      */
     public async createChatAsync(input: NewChat): Promise<NewChatResponse> {
         const requestPath = `/beta/chats`;
-        const url = `${this.connectionRuntimeUrl}${requestPath}`;
+        const url = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<NewChatResponse>("POST", url, undefined, input);
 
         if (!httpResponse.isSuccessStatusCode) {
@@ -1360,7 +1354,7 @@ export class TeamsClient extends ConnectorClientBase {
             queryParams.push(`$top=${encodeURIComponent(String(top))}`);
         }
         const requestPath = `/beta/chats/${chatId}/messages` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
-        const url = `${this.connectionRuntimeUrl}${requestPath}`;
+        const url = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<GetMessagesFromConversationResponse>("GET", url);
 
         if (!httpResponse.isSuccessStatusCode) {
@@ -1383,7 +1377,7 @@ export class TeamsClient extends ConnectorClientBase {
             queryParams.push(`$orderby=${encodeURIComponent(String(orderby))}`);
         }
         const requestPath = `/beta/groups/${groupId}/channels` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
-        const url = `${this.connectionRuntimeUrl}${requestPath}`;
+        const url = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<GetChannelsForGroupResponse>("GET", url);
 
         if (!httpResponse.isSuccessStatusCode) {
@@ -1399,7 +1393,7 @@ export class TeamsClient extends ConnectorClientBase {
      */
     public async createChannelAsync(input: CreateChannelInput, groupId: string): Promise<CreateChannelResponse> {
         const requestPath = `/beta/groups/${groupId}/channels`;
-        const url = `${this.connectionRuntimeUrl}${requestPath}`;
+        const url = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<CreateChannelResponse>("POST", url, undefined, input);
 
         if (!httpResponse.isSuccessStatusCode) {
@@ -1415,7 +1409,7 @@ export class TeamsClient extends ConnectorClientBase {
      */
     public async getAllTeamsAsync(): Promise<GetAllTeamsResponse> {
         const requestPath = `/beta/me/joinedTeams`;
-        const url = `${this.connectionRuntimeUrl}${requestPath}`;
+        const url = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<GetAllTeamsResponse>("GET", url);
 
         if (!httpResponse.isSuccessStatusCode) {
@@ -1431,7 +1425,7 @@ export class TeamsClient extends ConnectorClientBase {
      */
     public async webhookAtMentionTriggerAsync(input: DynamicWebhookTriggerRequestSchema, threadType: string): Promise<void> {
         const requestPath = `/beta/subscriptions/atmentiontrigger/threadType/${threadType}`;
-        const url = `${this.connectionRuntimeUrl}${requestPath}`;
+        const url = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<void>("POST", url, undefined, input);
 
         if (!httpResponse.isSuccessStatusCode) {
@@ -1445,7 +1439,7 @@ export class TeamsClient extends ConnectorClientBase {
      */
     public async webhookChatMessageTriggerAsync(input: WebhookChatMessageTriggerInput): Promise<void> {
         const requestPath = `/beta/subscriptions/chatmessagetrigger`;
-        const url = `${this.connectionRuntimeUrl}${requestPath}`;
+        const url = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<void>("POST", url, undefined, input);
 
         if (!httpResponse.isSuccessStatusCode) {
@@ -1463,7 +1457,7 @@ export class TeamsClient extends ConnectorClientBase {
             queryParams.push(`$search=${encodeURIComponent(String(search))}`);
         }
         const requestPath = `/beta/subscriptions/keywordtrigger/threadType/${threadType}` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
-        const url = `${this.connectionRuntimeUrl}${requestPath}`;
+        const url = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<void>("POST", url, undefined, input);
 
         if (!httpResponse.isSuccessStatusCode) {
@@ -1487,7 +1481,7 @@ export class TeamsClient extends ConnectorClientBase {
             queryParams.push(`runningPolicy=${encodeURIComponent(String(runningPolicy))}`);
         }
         const requestPath = `/beta/subscriptions/messagereactiontrigger/threadType/${threadType}` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
-        const url = `${this.connectionRuntimeUrl}${requestPath}`;
+        const url = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<void>("POST", url, undefined, input);
 
         if (!httpResponse.isSuccessStatusCode) {
@@ -1501,7 +1495,7 @@ export class TeamsClient extends ConnectorClientBase {
      */
     public async webhookNewMessageTriggerAsync(input: DynamicWebhookTriggerRequestSchema, threadType: string): Promise<void> {
         const requestPath = `/beta/subscriptions/newmessagetrigger/threadType/${threadType}`;
-        const url = `${this.connectionRuntimeUrl}${requestPath}`;
+        const url = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<void>("POST", url, undefined, input);
 
         if (!httpResponse.isSuccessStatusCode) {
@@ -1515,7 +1509,7 @@ export class TeamsClient extends ConnectorClientBase {
      */
     public async createATeamAsync(input: CreateATeamInput): Promise<CreateATeamResponse> {
         const requestPath = `/beta/teams`;
-        const url = `${this.connectionRuntimeUrl}${requestPath}`;
+        const url = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<CreateATeamResponse>("POST", url, undefined, input);
 
         if (!httpResponse.isSuccessStatusCode) {
@@ -1531,7 +1525,7 @@ export class TeamsClient extends ConnectorClientBase {
      */
     public async postMessageToConversationAsync(input: DynamicPostMessageRequest, poster: string, location: string): Promise<PostToConversationResponse> {
         const requestPath = `/beta/teams/conversation/message/poster/${poster}/location/${location}`;
-        const url = `${this.connectionRuntimeUrl}${requestPath}`;
+        const url = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<PostToConversationResponse>("POST", url, undefined, input);
 
         if (!httpResponse.isSuccessStatusCode) {
@@ -1547,7 +1541,7 @@ export class TeamsClient extends ConnectorClientBase {
      */
     public async getMessageDetailsAsync(input: DynamicGetMessageDetailsSchema, messageId: string, threadType: string): Promise<DynamicGetMessageDetailsResponseSchema> {
         const requestPath = `/beta/teams/messages/${messageId}/messageType/${threadType}`;
-        const url = `${this.connectionRuntimeUrl}${requestPath}`;
+        const url = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<DynamicGetMessageDetailsResponseSchema>("POST", url, undefined, input);
 
         if (!httpResponse.isSuccessStatusCode) {
@@ -1570,7 +1564,7 @@ export class TeamsClient extends ConnectorClientBase {
             queryParams.push(`$orderby=${encodeURIComponent(String(orderby))}`);
         }
         const requestPath = `/beta/teams/${groupId}/allChannels` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
-        const url = `${this.connectionRuntimeUrl}${requestPath}`;
+        const url = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<GetAllChannelsForTeamResponse>("GET", url);
 
         if (!httpResponse.isSuccessStatusCode) {
@@ -1586,7 +1580,7 @@ export class TeamsClient extends ConnectorClientBase {
      */
     public async getChannelAsync(groupId: string, channelId: string): Promise<GetChannelResponse> {
         const requestPath = `/beta/teams/${groupId}/channels/${channelId}`;
-        const url = `${this.connectionRuntimeUrl}${requestPath}`;
+        const url = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<GetChannelResponse>("GET", url);
 
         if (!httpResponse.isSuccessStatusCode) {
@@ -1602,7 +1596,7 @@ export class TeamsClient extends ConnectorClientBase {
      */
     public async getMessagesFromChannelAsync(groupId: string, channelId: string): Promise<GetMessagesFromConversationResponse> {
         const requestPath = `/beta/teams/${groupId}/channels/${channelId}/messages`;
-        const url = `${this.connectionRuntimeUrl}${requestPath}`;
+        const url = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<GetMessagesFromConversationResponse>("GET", url);
 
         if (!httpResponse.isSuccessStatusCode) {
@@ -1618,7 +1612,7 @@ export class TeamsClient extends ConnectorClientBase {
      */
     public async getTagsAsync(groupId: string): Promise<GetTagsResponseSchema> {
         const requestPath = `/beta/teams/${groupId}/tags`;
-        const url = `${this.connectionRuntimeUrl}${requestPath}`;
+        const url = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<GetTagsResponseSchema>("GET", url);
 
         if (!httpResponse.isSuccessStatusCode) {
@@ -1634,7 +1628,7 @@ export class TeamsClient extends ConnectorClientBase {
      */
     public async createTagAsync(input: CreateTagInput, groupId: string): Promise<CreateTagResponseSchema> {
         const requestPath = `/beta/teams/${groupId}/tags`;
-        const url = `${this.connectionRuntimeUrl}${requestPath}`;
+        const url = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<CreateTagResponseSchema>("POST", url, undefined, input);
 
         if (!httpResponse.isSuccessStatusCode) {
@@ -1650,7 +1644,7 @@ export class TeamsClient extends ConnectorClientBase {
      */
     public async deleteTagAsync(groupId: string, tagId: string): Promise<void> {
         const requestPath = `/beta/teams/${groupId}/tags/${tagId}`;
-        const url = `${this.connectionRuntimeUrl}${requestPath}`;
+        const url = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<void>("DELETE", url);
 
         if (!httpResponse.isSuccessStatusCode) {
@@ -1664,7 +1658,7 @@ export class TeamsClient extends ConnectorClientBase {
      */
     public async atMentionTagAsync(groupId: string, tagId: string): Promise<AtMentionTagResponse> {
         const requestPath = `/beta/teams/${groupId}/tags/${tagId}`;
-        const url = `${this.connectionRuntimeUrl}${requestPath}`;
+        const url = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<AtMentionTagResponse>("GET", url);
 
         if (!httpResponse.isSuccessStatusCode) {
@@ -1680,7 +1674,7 @@ export class TeamsClient extends ConnectorClientBase {
      */
     public async getTagMembersAsync(groupId: string, tagId: string): Promise<GetTagMembersResponseSchema> {
         const requestPath = `/beta/teams/${groupId}/tags/${tagId}/members`;
-        const url = `${this.connectionRuntimeUrl}${requestPath}`;
+        const url = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<GetTagMembersResponseSchema>("GET", url);
 
         if (!httpResponse.isSuccessStatusCode) {
@@ -1696,7 +1690,7 @@ export class TeamsClient extends ConnectorClientBase {
      */
     public async addMemberToTagAsync(input: AddMemberToTagInput, groupId: string, tagId: string): Promise<AddMemberToTagResponseSchema> {
         const requestPath = `/beta/teams/${groupId}/tags/${tagId}/members`;
-        const url = `${this.connectionRuntimeUrl}${requestPath}`;
+        const url = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<AddMemberToTagResponseSchema>("POST", url, undefined, input);
 
         if (!httpResponse.isSuccessStatusCode) {
@@ -1712,7 +1706,7 @@ export class TeamsClient extends ConnectorClientBase {
      */
     public async deleteTagMemberAsync(groupId: string, tagId: string, tagMemberId: string): Promise<void> {
         const requestPath = `/beta/teams/${groupId}/tags/${tagId}/members/${tagMemberId}`;
-        const url = `${this.connectionRuntimeUrl}${requestPath}`;
+        const url = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<void>("DELETE", url);
 
         if (!httpResponse.isSuccessStatusCode) {
@@ -1726,7 +1720,7 @@ export class TeamsClient extends ConnectorClientBase {
      */
     public async getTeamAsync(teamId: string): Promise<GetTeamResponse> {
         const requestPath = `/beta/teams/${teamId}`;
-        const url = `${this.connectionRuntimeUrl}${requestPath}`;
+        const url = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<GetTeamResponse>("GET", url);
 
         if (!httpResponse.isSuccessStatusCode) {
@@ -1742,7 +1736,7 @@ export class TeamsClient extends ConnectorClientBase {
      */
     public async addMemberToTeamAsync(input: AddMemberToTeamInput, teamId: string): Promise<void> {
         const requestPath = `/beta/teams/${teamId}/members`;
-        const url = `${this.connectionRuntimeUrl}${requestPath}`;
+        const url = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<void>("POST", url, undefined, input);
 
         if (!httpResponse.isSuccessStatusCode) {
@@ -1756,7 +1750,7 @@ export class TeamsClient extends ConnectorClientBase {
      */
     public async getChatsAsync(chatType: string, topic: string): Promise<GetChatsResponse> {
         const requestPath = `/flowbot/actions/listchats/chattypes/${chatType}/topic/${topic}/expandmembers/false`;
-        const url = `${this.connectionRuntimeUrl}${requestPath}`;
+        const url = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<GetChatsResponse>("GET", url);
 
         if (!httpResponse.isSuccessStatusCode) {
@@ -1772,7 +1766,7 @@ export class TeamsClient extends ConnectorClientBase {
      */
     public async subscribeUserMessageWithOptionsAsync(input: DynamicUserMessageWithOptionsSubscriptionRequest): Promise<void> {
         const requestPath = `/flowbot/actions/messagewithoptions/recipienttypes/user/$subscriptions`;
-        const url = `${this.connectionRuntimeUrl}${requestPath}`;
+        const url = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<void>("POST", url, undefined, input);
 
         if (!httpResponse.isSuccessStatusCode) {
@@ -1786,7 +1780,7 @@ export class TeamsClient extends ConnectorClientBase {
      */
     public async postFeedNotificationAsync(input: DynamicPostFeedNotificationRequest, poster: string, notificationType: string): Promise<void> {
         const requestPath = `/flowbot/feednotification/poster/${poster}/notificationType/${notificationType}`;
-        const url = `${this.connectionRuntimeUrl}${requestPath}`;
+        const url = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<void>("POST", url, undefined, input);
 
         if (!httpResponse.isSuccessStatusCode) {
@@ -1800,7 +1794,7 @@ export class TeamsClient extends ConnectorClientBase {
      */
     public async httpRequestAsync(input: HttpRequestInput): Promise<ObjectWithoutType> {
         const requestPath = `/httprequest`;
-        const url = `${this.connectionRuntimeUrl}${requestPath}`;
+        const url = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<ObjectWithoutType>("POST", url, undefined, input);
 
         if (!httpResponse.isSuccessStatusCode) {
@@ -1820,7 +1814,7 @@ export class TeamsClient extends ConnectorClientBase {
             queryParams.push(`$top=${encodeURIComponent(String(top))}`);
         }
         const requestPath = `/trigger/beta/teams/${groupId}/channels/${channelId}/messages` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
-        const url = `${this.connectionRuntimeUrl}${requestPath}`;
+        const url = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<Array<ChatMessage>>("GET", url);
 
         if (!httpResponse.isSuccessStatusCode) {
@@ -1840,7 +1834,7 @@ export class TeamsClient extends ConnectorClientBase {
             queryParams.push(`$top=${encodeURIComponent(String(top))}`);
         }
         const requestPath = `/trigger/beta/teams/${groupId}/channels/${channelId}/messages_mentioningme` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
-        const url = `${this.connectionRuntimeUrl}${requestPath}`;
+        const url = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<Array<ChatMessage>>("GET", url);
 
         if (!httpResponse.isSuccessStatusCode) {
@@ -1863,7 +1857,7 @@ export class TeamsClient extends ConnectorClientBase {
             queryParams.push(`$select=${encodeURIComponent(String(select))}`);
         }
         const requestPath = `/trigger/v1.0/groups/delta` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
-        const url = `${this.connectionRuntimeUrl}${requestPath}`;
+        const url = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<Array<Record<string, unknown>>>("GET", url);
 
         if (!httpResponse.isSuccessStatusCode) {
@@ -1886,7 +1880,7 @@ export class TeamsClient extends ConnectorClientBase {
             queryParams.push(`$select=${encodeURIComponent(String(select))}`);
         }
         const requestPath = `/trigger/v1.0/groups/removal` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
-        const url = `${this.connectionRuntimeUrl}${requestPath}`;
+        const url = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<Array<Record<string, unknown>>>("GET", url);
 
         if (!httpResponse.isSuccessStatusCode) {
@@ -1902,7 +1896,7 @@ export class TeamsClient extends ConnectorClientBase {
      */
     public async createTeamsMeetingAsync(input: NewMeeting, calendarid: string): Promise<NewMeetingRespone> {
         const requestPath = `/v1.0/me/calendars/${calendarid}/events`;
-        const url = `${this.connectionRuntimeUrl}${requestPath}`;
+        const url = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<NewMeetingRespone>("POST", url, undefined, input);
 
         if (!httpResponse.isSuccessStatusCode) {
@@ -1918,7 +1912,7 @@ export class TeamsClient extends ConnectorClientBase {
      */
     public async getAllAssociatedTeamsAsync(): Promise<GetAllAssociatedTeamsResponse> {
         const requestPath = `/v1.0/me/teamwork/associatedTeams`;
-        const url = `${this.connectionRuntimeUrl}${requestPath}`;
+        const url = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<GetAllAssociatedTeamsResponse>("GET", url);
 
         if (!httpResponse.isSuccessStatusCode) {
@@ -1934,7 +1928,7 @@ export class TeamsClient extends ConnectorClientBase {
      */
     public async postCardToConversationAsync(input: DynamicPostCardRequest, poster: string, location: string): Promise<PostToConversationResponse> {
         const requestPath = `/v1.0/teams/conversation/adaptivecard/poster/${poster}/location/${location}`;
-        const url = `${this.connectionRuntimeUrl}${requestPath}`;
+        const url = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<PostToConversationResponse>("POST", url, undefined, input);
 
         if (!httpResponse.isSuccessStatusCode) {
@@ -1950,7 +1944,7 @@ export class TeamsClient extends ConnectorClientBase {
      */
     public async postCardAndWaitForResponseAsync(input: PostCardAndWaitForResponseInput, poster: string, location: string): Promise<DynamicPostGatherInputToConversationResponse> {
         const requestPath = `/v1.0/teams/conversation/gatherinput/poster/${poster}/location/${location}/$subscriptions`;
-        const url = `${this.connectionRuntimeUrl}${requestPath}`;
+        const url = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<DynamicPostGatherInputToConversationResponse>("POST", url, undefined, input);
 
         if (!httpResponse.isSuccessStatusCode) {
@@ -1966,7 +1960,7 @@ export class TeamsClient extends ConnectorClientBase {
      */
     public async replyWithCardToConversationAsync(input: DynamicReplyCardRequest, poster: string, location: string): Promise<PostToConversationResponse> {
         const requestPath = `/v1.0/teams/conversation/replyWithAdaptivecard/poster/${poster}/location/${location}`;
-        const url = `${this.connectionRuntimeUrl}${requestPath}`;
+        const url = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<PostToConversationResponse>("POST", url, undefined, input);
 
         if (!httpResponse.isSuccessStatusCode) {
@@ -1982,7 +1976,7 @@ export class TeamsClient extends ConnectorClientBase {
      */
     public async replyWithMessageToConversationAsync(input: DynamicReplyMessageRequest, poster: string, location: string): Promise<PostToConversationResponse> {
         const requestPath = `/v1.0/teams/conversation/replyWithMessage/poster/${poster}/location/${location}`;
-        const url = `${this.connectionRuntimeUrl}${requestPath}`;
+        const url = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<PostToConversationResponse>("POST", url, undefined, input);
 
         if (!httpResponse.isSuccessStatusCode) {
@@ -1998,7 +1992,7 @@ export class TeamsClient extends ConnectorClientBase {
      */
     public async updateCardInConversationAsync(input: DynamicUpdateCardRequest, poster: string, location: string): Promise<PostToConversationResponse> {
         const requestPath = `/v1.0/teams/conversation/updateAdaptivecard/poster/${poster}/location/${location}`;
-        const url = `${this.connectionRuntimeUrl}${requestPath}`;
+        const url = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<PostToConversationResponse>("POST", url, undefined, input);
 
         if (!httpResponse.isSuccessStatusCode) {
@@ -2018,7 +2012,7 @@ export class TeamsClient extends ConnectorClientBase {
             queryParams.push(`$filter=${encodeURIComponent(String(filter))}`);
         }
         const requestPath = `/v1.0/teams/listmembers/threadType/${threadType}` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
-        const url = `${this.connectionRuntimeUrl}${requestPath}`;
+        const url = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<ListMembersResponseSchema>("POST", url, undefined, input);
 
         if (!httpResponse.isSuccessStatusCode) {
@@ -2034,7 +2028,7 @@ export class TeamsClient extends ConnectorClientBase {
      */
     public async addMemberToChannelAsync(input: AddMemberToChannelInput, groupId: string, channelId: string): Promise<void> {
         const requestPath = `/v1.0/teams/${groupId}/channels/${channelId}/members`;
-        const url = `${this.connectionRuntimeUrl}${requestPath}`;
+        const url = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<void>("POST", url, undefined, input);
 
         if (!httpResponse.isSuccessStatusCode) {
@@ -2048,7 +2042,7 @@ export class TeamsClient extends ConnectorClientBase {
      */
     public async removeMemberFromChannelAsync(groupId: string, channelId: string, membershipId: string): Promise<void> {
         const requestPath = `/v1.0/teams/${groupId}/channels/${channelId}/members/${membershipId}`;
-        const url = `${this.connectionRuntimeUrl}${requestPath}`;
+        const url = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<void>("DELETE", url);
 
         if (!httpResponse.isSuccessStatusCode) {
@@ -2066,7 +2060,7 @@ export class TeamsClient extends ConnectorClientBase {
             queryParams.push(`$top=${encodeURIComponent(String(top))}`);
         }
         const requestPath = `/v1.0/teams/${groupId}/channels/${channelId}/messages/${messageId}/replies` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
-        const url = `${this.connectionRuntimeUrl}${requestPath}`;
+        const url = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<ListRepliesResponseSchema>("GET", url);
 
         if (!httpResponse.isSuccessStatusCode) {
@@ -2082,7 +2076,7 @@ export class TeamsClient extends ConnectorClientBase {
      */
     public async atMentionUserAsync(userId: string): Promise<AtMentionUser> {
         const requestPath = `/v1.0/users/${userId}`;
-        const url = `${this.connectionRuntimeUrl}${requestPath}`;
+        const url = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<AtMentionUser>("GET", url);
 
         if (!httpResponse.isSuccessStatusCode) {

@@ -160,7 +160,6 @@ export interface GetMemberGroupsResponse {
  * Typed client for the msgraphgroupsanduser connector.
  */
 export class MsgraphgroupsanduserClient extends ConnectorClientBase {
-    private readonly connectionRuntimeUrl: string;
 
     /**
      * Creates a new MsgraphgroupsanduserClient.
@@ -169,12 +168,7 @@ export class MsgraphgroupsanduserClient extends ConnectorClientBase {
      * @param options Optional connector client options.
      */
     constructor(connectionRuntimeUrl: string, tokenProvider: TokenProvider, options?: ConnectorClientOptions) {
-        super(tokenProvider, options);
-        if (!connectionRuntimeUrl && connectionRuntimeUrl !== "") {
-            throw new Error("Parameter 'connectionRuntimeUrl' cannot be null or undefined.");
-        }
-
-        this.connectionRuntimeUrl = connectionRuntimeUrl.replace(/\/+$/, "");
+        super(connectionRuntimeUrl, tokenProvider, options);
     }
 
     public get connectorName(): string {
@@ -187,7 +181,7 @@ export class MsgraphgroupsanduserClient extends ConnectorClientBase {
      */
     public async listUsersAsync(): Promise<ListUsersResponse> {
         const requestPath = `/v1.0/users`;
-        const url = `${this.connectionRuntimeUrl}${requestPath}`;
+        const url = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<ListUsersResponse>("GET", url);
 
         if (!httpResponse.isSuccessStatusCode) {
@@ -210,7 +204,7 @@ export class MsgraphgroupsanduserClient extends ConnectorClientBase {
             queryParams.push(`$count=${encodeURIComponent(String(count))}`);
         }
         const requestPath = `/v1.0/groups` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
-        const url = `${this.connectionRuntimeUrl}${requestPath}`;
+        const url = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<ListGroupsByDisplayNameSearchResponse>("GET", url);
 
         if (!httpResponse.isSuccessStatusCode) {
@@ -226,7 +220,7 @@ export class MsgraphgroupsanduserClient extends ConnectorClientBase {
      */
     public async listSubscribedSkusAsync(): Promise<ListSubscribedSkusResponse> {
         const requestPath = `/v1.0/subscribedSkus`;
-        const url = `${this.connectionRuntimeUrl}${requestPath}`;
+        const url = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<ListSubscribedSkusResponse>("GET", url);
 
         if (!httpResponse.isSuccessStatusCode) {
@@ -252,7 +246,7 @@ export class MsgraphgroupsanduserClient extends ConnectorClientBase {
             queryParams.push(`$count=${encodeURIComponent(String(count))}`);
         }
         const requestPath = `/v1.0/groups/${groupId}/members` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
-        const url = `${this.connectionRuntimeUrl}${requestPath}`;
+        const url = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<ListDirectGroupMembersResponse>("GET", url);
 
         if (!httpResponse.isSuccessStatusCode) {
@@ -272,7 +266,7 @@ export class MsgraphgroupsanduserClient extends ConnectorClientBase {
             queryParams.push(`$select=${encodeURIComponent(String(select))}`);
         }
         const requestPath = `/v1.0/users/${id}/licenseDetails` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
-        const url = `${this.connectionRuntimeUrl}${requestPath}`;
+        const url = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<GetMemberLicenseDetailsResponse>("GET", url);
 
         if (!httpResponse.isSuccessStatusCode) {
@@ -288,7 +282,7 @@ export class MsgraphgroupsanduserClient extends ConnectorClientBase {
      */
     public async getGroupPropertiesAsync(groupId: string): Promise<GetGroupPropertiesResponse> {
         const requestPath = `/v1.0/groups/${groupId}`;
-        const url = `${this.connectionRuntimeUrl}${requestPath}`;
+        const url = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<GetGroupPropertiesResponse>("GET", url);
 
         if (!httpResponse.isSuccessStatusCode) {
@@ -304,7 +298,7 @@ export class MsgraphgroupsanduserClient extends ConnectorClientBase {
      */
     public async getMemberGroupsAsync(input: GetMemberGroupsInput, memberId: string): Promise<GetMemberGroupsResponse> {
         const requestPath = `/v1.0/users/${memberId}/getMemberGroups`;
-        const url = `${this.connectionRuntimeUrl}${requestPath}`;
+        const url = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<GetMemberGroupsResponse>("POST", url, undefined, input);
 
         if (!httpResponse.isSuccessStatusCode) {

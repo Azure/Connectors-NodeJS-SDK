@@ -158,7 +158,6 @@ export interface SendValidDataOptionsArray {
  * Typed client for the mq connector.
  */
 export class MqClient extends ConnectorClientBase {
-    private readonly connectionRuntimeUrl: string;
 
     /**
      * Creates a new MqClient.
@@ -167,12 +166,7 @@ export class MqClient extends ConnectorClientBase {
      * @param options Optional connector client options.
      */
     constructor(connectionRuntimeUrl: string, tokenProvider: TokenProvider, options?: ConnectorClientOptions) {
-        super(tokenProvider, options);
-        if (!connectionRuntimeUrl && connectionRuntimeUrl !== "") {
-            throw new Error("Parameter 'connectionRuntimeUrl' cannot be null or undefined.");
-        }
-
-        this.connectionRuntimeUrl = connectionRuntimeUrl.replace(/\/+$/, "");
+        super(connectionRuntimeUrl, tokenProvider, options);
     }
 
     public get connectorName(): string {
@@ -185,7 +179,7 @@ export class MqClient extends ConnectorClientBase {
      */
     public async deleteAsync(input: SingleGetValidOptions): Promise<Item> {
         const requestPath = `/v2/delete`;
-        const url = `${this.connectionRuntimeUrl}${requestPath}`;
+        const url = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<Item>("POST", url, undefined, input);
 
         if (!httpResponse.isSuccessStatusCode) {
@@ -201,7 +195,7 @@ export class MqClient extends ConnectorClientBase {
      */
     public async deleteAllAsync(input: MultipleGetValidOptions): Promise<ItemsList> {
         const requestPath = `/v2/deleteall`;
-        const url = `${this.connectionRuntimeUrl}${requestPath}`;
+        const url = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<ItemsList>("POST", url, undefined, input);
 
         if (!httpResponse.isSuccessStatusCode) {
@@ -217,7 +211,7 @@ export class MqClient extends ConnectorClientBase {
      */
     public async readAsync(input: SingleGetValidOptions): Promise<Item> {
         const requestPath = `/v2/read`;
-        const url = `${this.connectionRuntimeUrl}${requestPath}`;
+        const url = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<Item>("POST", url, undefined, input);
 
         if (!httpResponse.isSuccessStatusCode) {
@@ -233,7 +227,7 @@ export class MqClient extends ConnectorClientBase {
      */
     public async readAllAsync(input: MultipleGetValidOptions): Promise<ItemsList> {
         const requestPath = `/v2/readall`;
-        const url = `${this.connectionRuntimeUrl}${requestPath}`;
+        const url = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<ItemsList>("POST", url, undefined, input);
 
         if (!httpResponse.isSuccessStatusCode) {
@@ -249,7 +243,7 @@ export class MqClient extends ConnectorClientBase {
      */
     public async receiveAsync(input: SingleGetValidOptions): Promise<Item> {
         const requestPath = `/v2/receive`;
-        const url = `${this.connectionRuntimeUrl}${requestPath}`;
+        const url = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<Item>("POST", url, undefined, input);
 
         if (!httpResponse.isSuccessStatusCode) {
@@ -265,7 +259,7 @@ export class MqClient extends ConnectorClientBase {
      */
     public async receiveAllAsync(input: MultipleGetValidOptions): Promise<ItemsList> {
         const requestPath = `/v2/receiveall`;
-        const url = `${this.connectionRuntimeUrl}${requestPath}`;
+        const url = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<ItemsList>("POST", url, undefined, input);
 
         if (!httpResponse.isSuccessStatusCode) {
@@ -281,7 +275,7 @@ export class MqClient extends ConnectorClientBase {
      */
     public async sendAsync(input: SendValidDataOptions): Promise<SendResponse> {
         const requestPath = `/v2/send`;
-        const url = `${this.connectionRuntimeUrl}${requestPath}`;
+        const url = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<SendResponse>("POST", url, undefined, input);
 
         if (!httpResponse.isSuccessStatusCode) {

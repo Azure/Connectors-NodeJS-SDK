@@ -418,7 +418,6 @@ export interface GraphUserV1 {
  * Typed client for the office365users connector.
  */
 export class Office365usersClient extends ConnectorClientBase {
-    private readonly connectionRuntimeUrl: string;
 
     /**
      * Creates a new Office365usersClient.
@@ -427,12 +426,7 @@ export class Office365usersClient extends ConnectorClientBase {
      * @param options Optional connector client options.
      */
     constructor(connectionRuntimeUrl: string, tokenProvider: TokenProvider, options?: ConnectorClientOptions) {
-        super(tokenProvider, options);
-        if (!connectionRuntimeUrl && connectionRuntimeUrl !== "") {
-            throw new Error("Parameter 'connectionRuntimeUrl' cannot be null or undefined.");
-        }
-
-        this.connectionRuntimeUrl = connectionRuntimeUrl.replace(/\/+$/, "");
+        super(connectionRuntimeUrl, tokenProvider, options);
     }
 
     public get connectorName(): string {
@@ -445,7 +439,7 @@ export class Office365usersClient extends ConnectorClientBase {
      */
     public async updateMyProfileAsync(input: GraphUserUpdateableV1): Promise<void> {
         const requestPath = `/codeless/v1.0/me`;
-        const url = `${this.connectionRuntimeUrl}${requestPath}`;
+        const url = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<void>("PATCH", url, undefined, input);
 
         if (!httpResponse.isSuccessStatusCode) {
@@ -459,7 +453,7 @@ export class Office365usersClient extends ConnectorClientBase {
      */
     public async updateMyPhotoAsync(input: UpdateMyPhotoInput): Promise<void> {
         const requestPath = `/codeless/v1.0/me/photo/$value`;
-        const url = `${this.connectionRuntimeUrl}${requestPath}`;
+        const url = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<void>("PUT", url, undefined, input);
 
         if (!httpResponse.isSuccessStatusCode) {
@@ -483,7 +477,7 @@ export class Office365usersClient extends ConnectorClientBase {
             queryParams.push(`fetchSensitivityLabelMetadata=${encodeURIComponent(String(fetchSensitivityLabelMetadata))}`);
         }
         const requestPath = `/codeless/beta/me/insights/trending` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
-        const url = `${this.connectionRuntimeUrl}${requestPath}`;
+        const url = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<MyTrendingDocumentsResponse>("GET", url);
 
         if (!httpResponse.isSuccessStatusCode) {
@@ -499,7 +493,7 @@ export class Office365usersClient extends ConnectorClientBase {
      */
     public async relevantPeopleAsync(userId: string): Promise<LinklessEntityListResponseListPerson> {
         const requestPath = `/users/${userId}/relevantpeople`;
-        const url = `${this.connectionRuntimeUrl}${requestPath}`;
+        const url = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<LinklessEntityListResponseListPerson>("GET", url);
 
         if (!httpResponse.isSuccessStatusCode) {
@@ -519,7 +513,7 @@ export class Office365usersClient extends ConnectorClientBase {
             queryParams.push(`userId=${encodeURIComponent(String(userId))}`);
         }
         const requestPath = `/users/photo` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
-        const url = `${this.connectionRuntimeUrl}${requestPath}`;
+        const url = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<ClientPhotoMetadata>("GET", url);
 
         if (!httpResponse.isSuccessStatusCode) {
@@ -545,7 +539,7 @@ export class Office365usersClient extends ConnectorClientBase {
             queryParams.push(`fetchSensitivityLabelMetadata=${encodeURIComponent(String(fetchSensitivityLabelMetadata))}`);
         }
         const requestPath = `/codeless/beta/users/${id}/insights/trending` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
-        const url = `${this.connectionRuntimeUrl}${requestPath}`;
+        const url = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<TrendingDocumentsResponse>("GET", url);
 
         if (!httpResponse.isSuccessStatusCode) {
@@ -561,7 +555,7 @@ export class Office365usersClient extends ConnectorClientBase {
      */
     public async httpRequestAsync(input: HttpRequestInput): Promise<ObjectWithoutType> {
         const requestPath = `/codeless/httprequest`;
-        const url = `${this.connectionRuntimeUrl}${requestPath}`;
+        const url = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<ObjectWithoutType>("POST", url, undefined, input);
 
         if (!httpResponse.isSuccessStatusCode) {
@@ -584,7 +578,7 @@ export class Office365usersClient extends ConnectorClientBase {
             queryParams.push(`$top=${encodeURIComponent(String(top))}`);
         }
         const requestPath = `/codeless/v1.0/users/${id}/directReports` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
-        const url = `${this.connectionRuntimeUrl}${requestPath}`;
+        const url = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<DirectReportsResponse>("GET", url);
 
         if (!httpResponse.isSuccessStatusCode) {
@@ -604,7 +598,7 @@ export class Office365usersClient extends ConnectorClientBase {
             queryParams.push(`$select=${encodeURIComponent(String(select))}`);
         }
         const requestPath = `/codeless/v1.0/users/${id}/manager` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
-        const url = `${this.connectionRuntimeUrl}${requestPath}`;
+        const url = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<GraphUser>("GET", url);
 
         if (!httpResponse.isSuccessStatusCode) {
@@ -624,7 +618,7 @@ export class Office365usersClient extends ConnectorClientBase {
             queryParams.push(`$select=${encodeURIComponent(String(select))}`);
         }
         const requestPath = `/codeless/v1.0/me` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
-        const url = `${this.connectionRuntimeUrl}${requestPath}`;
+        const url = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<GraphUser>("GET", url);
 
         if (!httpResponse.isSuccessStatusCode) {
@@ -653,7 +647,7 @@ export class Office365usersClient extends ConnectorClientBase {
             queryParams.push(`skipToken=${encodeURIComponent(String(skipToken))}`);
         }
         const requestPath = `/v2/users` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
-        const url = `${this.connectionRuntimeUrl}${requestPath}`;
+        const url = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<EntityListResponseIReadOnlyListUser>("GET", url);
 
         if (!httpResponse.isSuccessStatusCode) {
@@ -669,7 +663,7 @@ export class Office365usersClient extends ConnectorClientBase {
      */
     public async userPhotoAsync(id: string): Promise<Blob> {
         const requestPath = `/codeless/v1.0/users/${id}/photo/$value`;
-        const url = `${this.connectionRuntimeUrl}${requestPath}`;
+        const url = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<Blob>("GET", url);
 
         if (!httpResponse.isSuccessStatusCode) {
@@ -689,7 +683,7 @@ export class Office365usersClient extends ConnectorClientBase {
             queryParams.push(`$select=${encodeURIComponent(String(select))}`);
         }
         const requestPath = `/codeless/v1.0/users/${id}` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
-        const url = `${this.connectionRuntimeUrl}${requestPath}`;
+        const url = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<GraphUser>("GET", url);
 
         if (!httpResponse.isSuccessStatusCode) {

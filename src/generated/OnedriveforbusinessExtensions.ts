@@ -144,7 +144,6 @@ export interface ForASelectedFileResponse {
  * Typed client for the onedriveforbusiness connector.
  */
 export class OnedriveforbusinessClient extends ConnectorClientBase {
-    private readonly connectionRuntimeUrl: string;
 
     /**
      * Creates a new OnedriveforbusinessClient.
@@ -153,12 +152,7 @@ export class OnedriveforbusinessClient extends ConnectorClientBase {
      * @param options Optional connector client options.
      */
     constructor(connectionRuntimeUrl: string, tokenProvider: TokenProvider, options?: ConnectorClientOptions) {
-        super(tokenProvider, options);
-        if (!connectionRuntimeUrl && connectionRuntimeUrl !== "") {
-            throw new Error("Parameter 'connectionRuntimeUrl' cannot be null or undefined.");
-        }
-
-        this.connectionRuntimeUrl = connectionRuntimeUrl.replace(/\/+$/, "");
+        super(connectionRuntimeUrl, tokenProvider, options);
     }
 
     public get connectorName(): string {
@@ -171,7 +165,7 @@ export class OnedriveforbusinessClient extends ConnectorClientBase {
      */
     public async getFileMetadataAsync(id: string): Promise<BlobMetadata> {
         const requestPath = `/datasets/default/files/${id}`;
-        const url = `${this.connectionRuntimeUrl}${requestPath}`;
+        const url = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<BlobMetadata>("GET", url);
 
         if (!httpResponse.isSuccessStatusCode) {
@@ -187,7 +181,7 @@ export class OnedriveforbusinessClient extends ConnectorClientBase {
      */
     public async updateFileAsync(input: UpdateFileInput, id: string): Promise<BlobMetadata> {
         const requestPath = `/datasets/default/files/${id}`;
-        const url = `${this.connectionRuntimeUrl}${requestPath}`;
+        const url = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<BlobMetadata>("PUT", url, undefined, input);
 
         if (!httpResponse.isSuccessStatusCode) {
@@ -203,7 +197,7 @@ export class OnedriveforbusinessClient extends ConnectorClientBase {
      */
     public async deleteFileAsync(id: string): Promise<void> {
         const requestPath = `/datasets/default/files/${id}`;
-        const url = `${this.connectionRuntimeUrl}${requestPath}`;
+        const url = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<void>("DELETE", url);
 
         if (!httpResponse.isSuccessStatusCode) {
@@ -221,7 +215,7 @@ export class OnedriveforbusinessClient extends ConnectorClientBase {
             queryParams.push(`path=${encodeURIComponent(String(path))}`);
         }
         const requestPath = `/datasets/default/GetFileByPath` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
-        const url = `${this.connectionRuntimeUrl}${requestPath}`;
+        const url = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<BlobMetadata>("GET", url);
 
         if (!httpResponse.isSuccessStatusCode) {
@@ -244,7 +238,7 @@ export class OnedriveforbusinessClient extends ConnectorClientBase {
             queryParams.push(`inferContentType=${encodeURIComponent(String(inferContentType))}`);
         }
         const requestPath = `/datasets/default/GetFileContentByPath` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
-        const url = `${this.connectionRuntimeUrl}${requestPath}`;
+        const url = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<Blob>("GET", url);
 
         if (!httpResponse.isSuccessStatusCode) {
@@ -264,7 +258,7 @@ export class OnedriveforbusinessClient extends ConnectorClientBase {
             queryParams.push(`inferContentType=${encodeURIComponent(String(inferContentType))}`);
         }
         const requestPath = `/datasets/default/files/${id}/content` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
-        const url = `${this.connectionRuntimeUrl}${requestPath}`;
+        const url = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<Blob>("GET", url);
 
         if (!httpResponse.isSuccessStatusCode) {
@@ -287,7 +281,7 @@ export class OnedriveforbusinessClient extends ConnectorClientBase {
             queryParams.push(`name=${encodeURIComponent(String(name))}`);
         }
         const requestPath = `/datasets/default/files` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
-        const url = `${this.connectionRuntimeUrl}${requestPath}`;
+        const url = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<BlobMetadata>("POST", url, undefined, input);
 
         if (!httpResponse.isSuccessStatusCode) {
@@ -313,7 +307,7 @@ export class OnedriveforbusinessClient extends ConnectorClientBase {
             queryParams.push(`overwrite=${encodeURIComponent(String(overwrite))}`);
         }
         const requestPath = `/datasets/default/copyFile` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
-        const url = `${this.connectionRuntimeUrl}${requestPath}`;
+        const url = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<BlobMetadata>("POST", url);
 
         if (!httpResponse.isSuccessStatusCode) {
@@ -336,7 +330,7 @@ export class OnedriveforbusinessClient extends ConnectorClientBase {
             queryParams.push(`overwrite=${encodeURIComponent(String(overwrite))}`);
         }
         const requestPath = `/datasets/default/files/${id}/copy` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
-        const url = `${this.connectionRuntimeUrl}${requestPath}`;
+        const url = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<BlobMetadata>("POST", url);
 
         if (!httpResponse.isSuccessStatusCode) {
@@ -362,7 +356,7 @@ export class OnedriveforbusinessClient extends ConnectorClientBase {
             queryParams.push(`overwrite=${encodeURIComponent(String(overwrite))}`);
         }
         const requestPath = `/datasets/default/CopyFileByPath` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
-        const url = `${this.connectionRuntimeUrl}${requestPath}`;
+        const url = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<BlobMetadata>("POST", url);
 
         if (!httpResponse.isSuccessStatusCode) {
@@ -385,7 +379,7 @@ export class OnedriveforbusinessClient extends ConnectorClientBase {
             queryParams.push(`overwrite=${encodeURIComponent(String(overwrite))}`);
         }
         const requestPath = `/datasets/default/files/${id}/move` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
-        const url = `${this.connectionRuntimeUrl}${requestPath}`;
+        const url = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<BlobMetadata>("POST", url);
 
         if (!httpResponse.isSuccessStatusCode) {
@@ -411,7 +405,7 @@ export class OnedriveforbusinessClient extends ConnectorClientBase {
             queryParams.push(`overwrite=${encodeURIComponent(String(overwrite))}`);
         }
         const requestPath = `/datasets/default/MoveFileByPath` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
-        const url = `${this.connectionRuntimeUrl}${requestPath}`;
+        const url = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<BlobMetadata>("POST", url);
 
         if (!httpResponse.isSuccessStatusCode) {
@@ -431,7 +425,7 @@ export class OnedriveforbusinessClient extends ConnectorClientBase {
             queryParams.push(`type=${encodeURIComponent(String(type))}`);
         }
         const requestPath = `/datasets/default/files/${id}/convert` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
-        const url = `${this.connectionRuntimeUrl}${requestPath}`;
+        const url = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<Blob>("GET", url);
 
         if (!httpResponse.isSuccessStatusCode) {
@@ -454,7 +448,7 @@ export class OnedriveforbusinessClient extends ConnectorClientBase {
             queryParams.push(`type=${encodeURIComponent(String(type))}`);
         }
         const requestPath = `/datasets/default/ConvertFileByPath` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
-        const url = `${this.connectionRuntimeUrl}${requestPath}`;
+        const url = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<Blob>("GET", url);
 
         if (!httpResponse.isSuccessStatusCode) {
@@ -474,7 +468,7 @@ export class OnedriveforbusinessClient extends ConnectorClientBase {
             queryParams.push(`size=${encodeURIComponent(String(size))}`);
         }
         const requestPath = `/datasets/default/files/${id}/thumbnail` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
-        const url = `${this.connectionRuntimeUrl}${requestPath}`;
+        const url = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<Thumbnail>("GET", url);
 
         if (!httpResponse.isSuccessStatusCode) {
@@ -490,7 +484,7 @@ export class OnedriveforbusinessClient extends ConnectorClientBase {
      */
     public async listRootFolderAsync(): Promise<Array<BlobMetadata>> {
         const requestPath = `/datasets/default/folders`;
-        const url = `${this.connectionRuntimeUrl}${requestPath}`;
+        const url = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<Array<BlobMetadata>>("GET", url);
 
         if (!httpResponse.isSuccessStatusCode) {
@@ -516,7 +510,7 @@ export class OnedriveforbusinessClient extends ConnectorClientBase {
             queryParams.push(`maxFileCount=${encodeURIComponent(String(maxFileCount))}`);
         }
         const requestPath = `/datasets/default/folders/${id}/search` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
-        const url = `${this.connectionRuntimeUrl}${requestPath}`;
+        const url = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<Array<BlobMetadata>>("GET", url);
 
         if (!httpResponse.isSuccessStatusCode) {
@@ -545,7 +539,7 @@ export class OnedriveforbusinessClient extends ConnectorClientBase {
             queryParams.push(`maxFileCount=${encodeURIComponent(String(maxFileCount))}`);
         }
         const requestPath = `/datasets/default/findFile` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
-        const url = `${this.connectionRuntimeUrl}${requestPath}`;
+        const url = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<Array<BlobMetadata>>("GET", url);
 
         if (!httpResponse.isSuccessStatusCode) {
@@ -568,7 +562,7 @@ export class OnedriveforbusinessClient extends ConnectorClientBase {
             queryParams.push(`scope=${encodeURIComponent(String(scope))}`);
         }
         const requestPath = `/datasets/default/files/${id}/shareV2` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
-        const url = `${this.connectionRuntimeUrl}${requestPath}`;
+        const url = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<SharingLink>("POST", url);
 
         if (!httpResponse.isSuccessStatusCode) {
@@ -594,7 +588,7 @@ export class OnedriveforbusinessClient extends ConnectorClientBase {
             queryParams.push(`scope=${encodeURIComponent(String(scope))}`);
         }
         const requestPath = `/datasets/default/CreateShareLinkByPathV2` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
-        const url = `${this.connectionRuntimeUrl}${requestPath}`;
+        const url = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<SharingLink>("POST", url);
 
         if (!httpResponse.isSuccessStatusCode) {
@@ -620,7 +614,7 @@ export class OnedriveforbusinessClient extends ConnectorClientBase {
             queryParams.push(`overwrite=${encodeURIComponent(String(overwrite))}`);
         }
         const requestPath = `/datasets/default/extractFolderV2` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
-        const url = `${this.connectionRuntimeUrl}${requestPath}`;
+        const url = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<Array<BlobMetadata>>("POST", url);
 
         if (!httpResponse.isSuccessStatusCode) {
@@ -643,7 +637,7 @@ export class OnedriveforbusinessClient extends ConnectorClientBase {
             queryParams.push(`top=${encodeURIComponent(String(top))}`);
         }
         const requestPath = `/datasets/default/foldersV2/${id}` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
-        const url = `${this.connectionRuntimeUrl}${requestPath}`;
+        const url = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<BlobMetadataPage>("GET", url);
 
         if (!httpResponse.isSuccessStatusCode) {
@@ -672,7 +666,7 @@ export class OnedriveforbusinessClient extends ConnectorClientBase {
             queryParams.push(`simulate=${encodeURIComponent(String(simulate))}`);
         }
         const requestPath = `/datasets/default/triggers/onnewfilev2` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
-        const url = `${this.connectionRuntimeUrl}${requestPath}`;
+        const url = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<Blob>("GET", url);
 
         if (!httpResponse.isSuccessStatusCode) {
@@ -701,7 +695,7 @@ export class OnedriveforbusinessClient extends ConnectorClientBase {
             queryParams.push(`simulate=${encodeURIComponent(String(simulate))}`);
         }
         const requestPath = `/datasets/default/triggers/batch/onnewfilesv2` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
-        const url = `${this.connectionRuntimeUrl}${requestPath}`;
+        const url = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<Array<BlobMetadata>>("GET", url);
 
         if (!httpResponse.isSuccessStatusCode) {
@@ -733,7 +727,7 @@ export class OnedriveforbusinessClient extends ConnectorClientBase {
             queryParams.push(`simulate=${encodeURIComponent(String(simulate))}`);
         }
         const requestPath = `/datasets/default/triggers/onupdatedfilev2` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
-        const url = `${this.connectionRuntimeUrl}${requestPath}`;
+        const url = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<Blob>("GET", url);
 
         if (!httpResponse.isSuccessStatusCode) {
@@ -762,7 +756,7 @@ export class OnedriveforbusinessClient extends ConnectorClientBase {
             queryParams.push(`simulate=${encodeURIComponent(String(simulate))}`);
         }
         const requestPath = `/datasets/default/triggers/batch/onupdatedfilesv2` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
-        const url = `${this.connectionRuntimeUrl}${requestPath}`;
+        const url = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<Array<BlobMetadata>>("GET", url);
 
         if (!httpResponse.isSuccessStatusCode) {

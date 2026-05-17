@@ -2353,7 +2353,6 @@ export interface SensitivityLabelMetadata {
  * Typed client for the office365 connector.
  */
 export class Office365Client extends ConnectorClientBase {
-    private readonly connectionRuntimeUrl: string;
 
     /**
      * Creates a new Office365Client.
@@ -2362,12 +2361,7 @@ export class Office365Client extends ConnectorClientBase {
      * @param options Optional connector client options.
      */
     constructor(connectionRuntimeUrl: string, tokenProvider: TokenProvider, options?: ConnectorClientOptions) {
-        super(tokenProvider, options);
-        if (!connectionRuntimeUrl && connectionRuntimeUrl !== "") {
-            throw new Error("Parameter 'connectionRuntimeUrl' cannot be null or undefined.");
-        }
-
-        this.connectionRuntimeUrl = connectionRuntimeUrl.replace(/\/+$/, "");
+        super(connectionRuntimeUrl, tokenProvider, options);
     }
 
     public get connectorName(): string {
@@ -2380,7 +2374,7 @@ export class Office365Client extends ConnectorClientBase {
      */
     public async getOutlookCategoryNamesAsync(): Promise<Array<GraphOutlookCategory>> {
         const requestPath = `/Categories`;
-        const url = `${this.connectionRuntimeUrl}${requestPath}`;
+        const url = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<Array<GraphOutlookCategory>>("GET", url);
 
         if (!httpResponse.isSuccessStatusCode) {
@@ -2400,7 +2394,7 @@ export class Office365Client extends ConnectorClientBase {
             queryParams.push(`messageId=${encodeURIComponent(String(messageId))}`);
         }
         const requestPath = `/Draft` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
-        const url = `${this.connectionRuntimeUrl}${requestPath}`;
+        const url = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<void>("PATCH", url, undefined, input);
 
         if (!httpResponse.isSuccessStatusCode) {
@@ -2424,7 +2418,7 @@ export class Office365Client extends ConnectorClientBase {
             queryParams.push(`comment=${encodeURIComponent(String(comment))}`);
         }
         const requestPath = `/Draft` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
-        const url = `${this.connectionRuntimeUrl}${requestPath}`;
+        const url = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<OutlookReceiveMessage>("POST", url, undefined, input);
 
         if (!httpResponse.isSuccessStatusCode) {
@@ -2440,7 +2434,7 @@ export class Office365Client extends ConnectorClientBase {
      */
     public async sendDraftEmailAsync(messageId: string): Promise<void> {
         const requestPath = `/Draft/Send/${messageId}`;
-        const url = `${this.connectionRuntimeUrl}${requestPath}`;
+        const url = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<void>("POST", url);
 
         if (!httpResponse.isSuccessStatusCode) {
@@ -2461,7 +2455,7 @@ export class Office365Client extends ConnectorClientBase {
             queryParams.push(`category=${encodeURIComponent(String(category))}`);
         }
         const requestPath = `/Mail/Category` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
-        const url = `${this.connectionRuntimeUrl}${requestPath}`;
+        const url = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<void>("POST", url);
 
         if (!httpResponse.isSuccessStatusCode) {
@@ -2475,7 +2469,7 @@ export class Office365Client extends ConnectorClientBase {
      */
     public async assignCategoryBulkAsync(input: AssignCategoryBulkInput, categoryName: string): Promise<BatchOperationResult> {
         const requestPath = `/Mail/Category/Bulk/${categoryName}`;
-        const url = `${this.connectionRuntimeUrl}${requestPath}`;
+        const url = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<BatchOperationResult>("POST", url, undefined, input);
 
         if (!httpResponse.isSuccessStatusCode) {
@@ -2491,7 +2485,7 @@ export class Office365Client extends ConnectorClientBase {
      */
     public async sendApprovalMailAsync(input: ApprovalEmailSubscription): Promise<SubscriptionResponse> {
         const requestPath = `/approvalmail/$subscriptions`;
-        const url = `${this.connectionRuntimeUrl}${requestPath}`;
+        const url = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<SubscriptionResponse>("POST", url, undefined, input);
 
         if (!httpResponse.isSuccessStatusCode) {
@@ -2507,7 +2501,7 @@ export class Office365Client extends ConnectorClientBase {
      */
     public async httpRequestAsync(input: HttpRequestInput): Promise<ObjectWithoutType> {
         const requestPath = `/codeless/httprequest`;
-        const url = `${this.connectionRuntimeUrl}${requestPath}`;
+        const url = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<ObjectWithoutType>("POST", url, undefined, input);
 
         if (!httpResponse.isSuccessStatusCode) {
@@ -2523,7 +2517,7 @@ export class Office365Client extends ConnectorClientBase {
      */
     public async updateMyContactPhotoAsync(input: UpdateMyContactPhotoInput, folder: string, id: string): Promise<void> {
         const requestPath = `/codeless/v1.0/me/contactFolders/${folder}/contacts/${id}/photo/$value`;
-        const url = `${this.connectionRuntimeUrl}${requestPath}`;
+        const url = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<void>("PUT", url, undefined, input);
 
         if (!httpResponse.isSuccessStatusCode) {
@@ -2537,7 +2531,7 @@ export class Office365Client extends ConnectorClientBase {
      */
     public async sendMailWithOptionsAsync(input: OptionsEmailSubscription): Promise<SubscriptionResponse> {
         const requestPath = `/mailwithoptions/$subscriptions`;
-        const url = `${this.connectionRuntimeUrl}${requestPath}`;
+        const url = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<SubscriptionResponse>("POST", url, undefined, input);
 
         if (!httpResponse.isSuccessStatusCode) {
@@ -2557,7 +2551,7 @@ export class Office365Client extends ConnectorClientBase {
             queryParams.push(`sessionId=${encodeURIComponent(String(sessionId))}`);
         }
         const requestPath = `/mcp/ContactsManagement` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
-        const url = `${this.connectionRuntimeUrl}${requestPath}`;
+        const url = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<MCPQueryResponse>("POST", url, undefined, input);
 
         if (!httpResponse.isSuccessStatusCode) {
@@ -2577,7 +2571,7 @@ export class Office365Client extends ConnectorClientBase {
             queryParams.push(`sessionId=${encodeURIComponent(String(sessionId))}`);
         }
         const requestPath = `/mcp/EmailsManagement` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
-        const url = `${this.connectionRuntimeUrl}${requestPath}`;
+        const url = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<MCPQueryResponse>("POST", url, undefined, input);
 
         if (!httpResponse.isSuccessStatusCode) {
@@ -2597,7 +2591,7 @@ export class Office365Client extends ConnectorClientBase {
             queryParams.push(`sessionId=${encodeURIComponent(String(sessionId))}`);
         }
         const requestPath = `/mcp/MeetingManagement` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
-        const url = `${this.connectionRuntimeUrl}${requestPath}`;
+        const url = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<MCPQueryResponse>("POST", url, undefined, input);
 
         if (!httpResponse.isSuccessStatusCode) {
@@ -2613,7 +2607,7 @@ export class Office365Client extends ConnectorClientBase {
      */
     public async calendarDeleteItemAsync(calendar: string, event_: string): Promise<void> {
         const requestPath = `/codeless/v1.0/me/calendars/${calendar}/events/${event_}`;
-        const url = `${this.connectionRuntimeUrl}${requestPath}`;
+        const url = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<void>("DELETE", url);
 
         if (!httpResponse.isSuccessStatusCode) {
@@ -2627,7 +2621,7 @@ export class Office365Client extends ConnectorClientBase {
      */
     public async calendarGetItemAsync(table: string, id: string): Promise<GraphCalendarEventClientReceive> {
         const requestPath = `/datasets/calendars/v3/tables/${table}/items/${id}`;
-        const url = `${this.connectionRuntimeUrl}${requestPath}`;
+        const url = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<GraphCalendarEventClientReceive>("GET", url);
 
         if (!httpResponse.isSuccessStatusCode) {
@@ -2656,7 +2650,7 @@ export class Office365Client extends ConnectorClientBase {
             queryParams.push(`$skip=${encodeURIComponent(String(skip))}`);
         }
         const requestPath = `/datasets/calendars/v4/tables/${table}/items` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
-        const url = `${this.connectionRuntimeUrl}${requestPath}`;
+        const url = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<GraphCalendarEventListClientReceive>("GET", url);
 
         if (!httpResponse.isSuccessStatusCode) {
@@ -2679,7 +2673,7 @@ export class Office365Client extends ConnectorClientBase {
             queryParams.push(`pastDays=${encodeURIComponent(String(pastDays))}`);
         }
         const requestPath = `/datasets/calendars/v3/tables/${table}/onchangeditems` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
-        const url = `${this.connectionRuntimeUrl}${requestPath}`;
+        const url = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<GraphCalendarEventListWithActionType>("GET", url);
 
         if (!httpResponse.isSuccessStatusCode) {
@@ -2708,7 +2702,7 @@ export class Office365Client extends ConnectorClientBase {
             queryParams.push(`$skip=${encodeURIComponent(String(skip))}`);
         }
         const requestPath = `/datasets/calendars/v3/tables/${table}/onnewitems` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
-        const url = `${this.connectionRuntimeUrl}${requestPath}`;
+        const url = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<GraphCalendarEventListClientReceive>("GET", url);
 
         if (!httpResponse.isSuccessStatusCode) {
@@ -2737,7 +2731,7 @@ export class Office365Client extends ConnectorClientBase {
             queryParams.push(`$skip=${encodeURIComponent(String(skip))}`);
         }
         const requestPath = `/datasets/calendars/v3/tables/${table}/onupdateditems` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
-        const url = `${this.connectionRuntimeUrl}${requestPath}`;
+        const url = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<GraphCalendarEventListClientReceive>("GET", url);
 
         if (!httpResponse.isSuccessStatusCode) {
@@ -2763,7 +2757,7 @@ export class Office365Client extends ConnectorClientBase {
             queryParams.push(`orderBy=${encodeURIComponent(String(orderBy))}`);
         }
         const requestPath = `/codeless/v1.0/me/calendars` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
-        const url = `${this.connectionRuntimeUrl}${requestPath}`;
+        const url = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<CalendarGetTablesResponse>("GET", url);
 
         if (!httpResponse.isSuccessStatusCode) {
@@ -2779,7 +2773,7 @@ export class Office365Client extends ConnectorClientBase {
      */
     public async calendarPatchItemAsync(input: GraphCalendarEventClient, table: string, id: string): Promise<GraphCalendarEventClientReceive> {
         const requestPath = `/datasets/calendars/v4/tables/${table}/items/${id}`;
-        const url = `${this.connectionRuntimeUrl}${requestPath}`;
+        const url = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<GraphCalendarEventClientReceive>("PATCH", url, undefined, input);
 
         if (!httpResponse.isSuccessStatusCode) {
@@ -2795,7 +2789,7 @@ export class Office365Client extends ConnectorClientBase {
      */
     public async calendarPostItemAsync(input: GraphCalendarEventClient, table: string): Promise<GraphCalendarEventClientReceive> {
         const requestPath = `/datasets/calendars/v4/tables/${table}/items`;
-        const url = `${this.connectionRuntimeUrl}${requestPath}`;
+        const url = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<GraphCalendarEventClientReceive>("POST", url, undefined, input);
 
         if (!httpResponse.isSuccessStatusCode) {
@@ -2811,7 +2805,7 @@ export class Office365Client extends ConnectorClientBase {
      */
     public async contactDeleteItemAsync(folder: string, id: string): Promise<void> {
         const requestPath = `/codeless/v1.0/me/contactFolders/${folder}/contacts/${id}`;
-        const url = `${this.connectionRuntimeUrl}${requestPath}`;
+        const url = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<void>("DELETE", url);
 
         if (!httpResponse.isSuccessStatusCode) {
@@ -2825,7 +2819,7 @@ export class Office365Client extends ConnectorClientBase {
      */
     public async contactGetItemAsync(folder: string, id: string): Promise<ContactResponse> {
         const requestPath = `/codeless/v1.0/me/contactFolders/${folder}/contacts/${id}`;
-        const url = `${this.connectionRuntimeUrl}${requestPath}`;
+        const url = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<ContactResponse>("GET", url);
 
         if (!httpResponse.isSuccessStatusCode) {
@@ -2854,7 +2848,7 @@ export class Office365Client extends ConnectorClientBase {
             queryParams.push(`$skip=${encodeURIComponent(String(skip))}`);
         }
         const requestPath = `/codeless/v1.0/me/contactFolders/${folder}/contacts` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
-        const url = `${this.connectionRuntimeUrl}${requestPath}`;
+        const url = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<EntityListResponseContactResponse>("GET", url);
 
         if (!httpResponse.isSuccessStatusCode) {
@@ -2870,7 +2864,7 @@ export class Office365Client extends ConnectorClientBase {
      */
     public async contactGetTablesAsync(): Promise<EntityListResponseGraphContactFolder> {
         const requestPath = `/v2/datasets/contacts/tables`;
-        const url = `${this.connectionRuntimeUrl}${requestPath}`;
+        const url = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<EntityListResponseGraphContactFolder>("GET", url);
 
         if (!httpResponse.isSuccessStatusCode) {
@@ -2886,7 +2880,7 @@ export class Office365Client extends ConnectorClientBase {
      */
     public async contactPatchItemAsync(input: ContactV2, folder: string, id: string): Promise<ContactResponse> {
         const requestPath = `/codeless/v1.0/me/contactFolders/${folder}/contacts/${id}`;
-        const url = `${this.connectionRuntimeUrl}${requestPath}`;
+        const url = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<ContactResponse>("PATCH", url, undefined, input);
 
         if (!httpResponse.isSuccessStatusCode) {
@@ -2902,7 +2896,7 @@ export class Office365Client extends ConnectorClientBase {
      */
     public async contactPostItemAsync(input: ContactV2, folder: string): Promise<ContactResponse> {
         const requestPath = `/codeless/v1.0/me/contactFolders/${folder}/contacts`;
-        const url = `${this.connectionRuntimeUrl}${requestPath}`;
+        const url = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<ContactResponse>("POST", url, undefined, input);
 
         if (!httpResponse.isSuccessStatusCode) {
@@ -2922,7 +2916,7 @@ export class Office365Client extends ConnectorClientBase {
             queryParams.push(`mailboxAddress=${encodeURIComponent(String(mailboxAddress))}`);
         }
         const requestPath = `/codeless/v1.0/me/messages/${messageId}` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
-        const url = `${this.connectionRuntimeUrl}${requestPath}`;
+        const url = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<void>("DELETE", url);
 
         if (!httpResponse.isSuccessStatusCode) {
@@ -2940,7 +2934,7 @@ export class Office365Client extends ConnectorClientBase {
             queryParams.push(`mailboxAddress=${encodeURIComponent(String(mailboxAddress))}`);
         }
         const requestPath = `/codeless/beta/me/messages/${messageId}/$value` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
-        const url = `${this.connectionRuntimeUrl}${requestPath}`;
+        const url = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<Blob>("GET", url);
 
         if (!httpResponse.isSuccessStatusCode) {
@@ -2956,7 +2950,7 @@ export class Office365Client extends ConnectorClientBase {
      */
     public async findMeetingTimesAsync(input: FindMeetingTimesInput): Promise<FindMeetingTimesResponse> {
         const requestPath = `/codeless/beta/me/findMeetingTimes`;
-        const url = `${this.connectionRuntimeUrl}${requestPath}`;
+        const url = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<FindMeetingTimesResponse>("POST", url, undefined, input);
 
         if (!httpResponse.isSuccessStatusCode) {
@@ -2976,7 +2970,7 @@ export class Office365Client extends ConnectorClientBase {
             queryParams.push(`mailboxAddress=${encodeURIComponent(String(mailboxAddress))}`);
         }
         const requestPath = `/codeless/v1.0/me/messages/${messageId}/flag` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
-        const url = `${this.connectionRuntimeUrl}${requestPath}`;
+        const url = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<void>("PATCH", url, undefined, input);
 
         if (!httpResponse.isSuccessStatusCode) {
@@ -2994,7 +2988,7 @@ export class Office365Client extends ConnectorClientBase {
             queryParams.push(`mailboxAddress=${encodeURIComponent(String(mailboxAddress))}`);
         }
         const requestPath = `/codeless/v1.0/me/messages/${messageId}/forward` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
-        const url = `${this.connectionRuntimeUrl}${requestPath}`;
+        const url = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<void>("POST", url, undefined, input);
 
         if (!httpResponse.isSuccessStatusCode) {
@@ -3018,7 +3012,7 @@ export class Office365Client extends ConnectorClientBase {
             queryParams.push(`fetchSensitivityLabelMetadata=${encodeURIComponent(String(fetchSensitivityLabelMetadata))}`);
         }
         const requestPath = `/codeless/v1.0/me/messages/${messageId}/attachments/${attachmentId}` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
-        const url = `${this.connectionRuntimeUrl}${requestPath}`;
+        const url = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<GetAttachmentResponse>("GET", url);
 
         if (!httpResponse.isSuccessStatusCode) {
@@ -3050,7 +3044,7 @@ export class Office365Client extends ConnectorClientBase {
             queryParams.push(`fetchSensitivityLabelMetadata=${encodeURIComponent(String(fetchSensitivityLabelMetadata))}`);
         }
         const requestPath = `/v2/Mail/${messageId}` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
-        const url = `${this.connectionRuntimeUrl}${requestPath}`;
+        const url = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<GraphClientReceiveMessage>("GET", url);
 
         if (!httpResponse.isSuccessStatusCode) {
@@ -3109,7 +3103,7 @@ export class Office365Client extends ConnectorClientBase {
             queryParams.push(`top=${encodeURIComponent(String(top))}`);
         }
         const requestPath = `/v3/Mail` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
-        const url = `${this.connectionRuntimeUrl}${requestPath}`;
+        const url = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<BatchResponseGraphClientReceiveMessage>("GET", url);
 
         if (!httpResponse.isSuccessStatusCode) {
@@ -3150,7 +3144,7 @@ export class Office365Client extends ConnectorClientBase {
             queryParams.push(`search=${encodeURIComponent(String(search))}`);
         }
         const requestPath = `/datasets/calendars/v3/tables/items/calendarview` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
-        const url = `${this.connectionRuntimeUrl}${requestPath}`;
+        const url = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<EntityListResponseGraphCalendarEventClientReceive>("GET", url);
 
         if (!httpResponse.isSuccessStatusCode) {
@@ -3166,7 +3160,7 @@ export class Office365Client extends ConnectorClientBase {
      */
     public async getMailTipsAsync(input: GetMailTipsInput): Promise<GetMailTipsResponse> {
         const requestPath = `/codeless/v1.0/me/getMailTips`;
-        const url = `${this.connectionRuntimeUrl}${requestPath}`;
+        const url = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<GetMailTipsResponse>("POST", url, undefined, input);
 
         if (!httpResponse.isSuccessStatusCode) {
@@ -3182,7 +3176,7 @@ export class Office365Client extends ConnectorClientBase {
      */
     public async getRoomListsAsync(): Promise<GetRoomListsResponse> {
         const requestPath = `/codeless/beta/me/findRoomLists`;
-        const url = `${this.connectionRuntimeUrl}${requestPath}`;
+        const url = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<GetRoomListsResponse>("GET", url);
 
         if (!httpResponse.isSuccessStatusCode) {
@@ -3198,7 +3192,7 @@ export class Office365Client extends ConnectorClientBase {
      */
     public async getRoomsAsync(): Promise<GetRoomsResponse> {
         const requestPath = `/codeless/beta/me/findRooms`;
-        const url = `${this.connectionRuntimeUrl}${requestPath}`;
+        const url = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<GetRoomsResponse>("GET", url);
 
         if (!httpResponse.isSuccessStatusCode) {
@@ -3214,7 +3208,7 @@ export class Office365Client extends ConnectorClientBase {
      */
     public async getRoomsInRoomListAsync(roomList: string): Promise<GetRoomsInRoomListResponse> {
         const requestPath = `/codeless/beta/me/findRooms(RoomList='${roomList}')`;
-        const url = `${this.connectionRuntimeUrl}${requestPath}`;
+        const url = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<GetRoomsInRoomListResponse>("GET", url);
 
         if (!httpResponse.isSuccessStatusCode) {
@@ -3234,7 +3228,7 @@ export class Office365Client extends ConnectorClientBase {
             queryParams.push(`mailboxAddress=${encodeURIComponent(String(mailboxAddress))}`);
         }
         const requestPath = `/codeless/v3/v1.0/me/messages/${messageId}/markAsRead` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
-        const url = `${this.connectionRuntimeUrl}${requestPath}`;
+        const url = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<void>("PATCH", url, undefined, input);
 
         if (!httpResponse.isSuccessStatusCode) {
@@ -3255,7 +3249,7 @@ export class Office365Client extends ConnectorClientBase {
             queryParams.push(`mailboxAddress=${encodeURIComponent(String(mailboxAddress))}`);
         }
         const requestPath = `/v2/Mail/Move/${messageId}` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
-        const url = `${this.connectionRuntimeUrl}${requestPath}`;
+        const url = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<GraphClientReceiveMessage>("POST", url);
 
         if (!httpResponse.isSuccessStatusCode) {
@@ -3299,7 +3293,7 @@ export class Office365Client extends ConnectorClientBase {
             queryParams.push(`subjectFilter=${encodeURIComponent(String(subjectFilter))}`);
         }
         const requestPath = `/v4/Mail/OnFlaggedEmail` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
-        const url = `${this.connectionRuntimeUrl}${requestPath}`;
+        const url = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<TriggerBatchResponseGraphClientReceiveMessage>("GET", url);
 
         if (!httpResponse.isSuccessStatusCode) {
@@ -3343,7 +3337,7 @@ export class Office365Client extends ConnectorClientBase {
             queryParams.push(`subjectFilter=${encodeURIComponent(String(subjectFilter))}`);
         }
         const requestPath = `/v3/Mail/OnNewEmail` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
-        const url = `${this.connectionRuntimeUrl}${requestPath}`;
+        const url = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<TriggerBatchResponseGraphClientReceiveMessage>("GET", url);
 
         if (!httpResponse.isSuccessStatusCode) {
@@ -3390,7 +3384,7 @@ export class Office365Client extends ConnectorClientBase {
             queryParams.push(`subjectFilter=${encodeURIComponent(String(subjectFilter))}`);
         }
         const requestPath = `/v3/Mail/OnNewMentionMeEmail` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
-        const url = `${this.connectionRuntimeUrl}${requestPath}`;
+        const url = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<TriggerBatchResponseGraphClientReceiveMessage>("GET", url);
 
         if (!httpResponse.isSuccessStatusCode) {
@@ -3413,7 +3407,7 @@ export class Office365Client extends ConnectorClientBase {
             queryParams.push(`lookAheadTimeInMinutes=${encodeURIComponent(String(lookAheadTimeInMinutes))}`);
         }
         const requestPath = `/v3/Events/OnUpcomingEvents` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
-        const url = `${this.connectionRuntimeUrl}${requestPath}`;
+        const url = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<GraphCalendarEventListClientReceive>("GET", url);
 
         if (!httpResponse.isSuccessStatusCode) {
@@ -3433,7 +3427,7 @@ export class Office365Client extends ConnectorClientBase {
             queryParams.push(`mailboxAddress=${encodeURIComponent(String(mailboxAddress))}`);
         }
         const requestPath = `/v3/Mail/ReplyTo/${messageId}` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
-        const url = `${this.connectionRuntimeUrl}${requestPath}`;
+        const url = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<void>("POST", url, undefined, input);
 
         if (!httpResponse.isSuccessStatusCode) {
@@ -3447,7 +3441,7 @@ export class Office365Client extends ConnectorClientBase {
      */
     public async respondToEventAsync(input: ResponseToEventInvite, eventId: string, response: string): Promise<void> {
         const requestPath = `/codeless/v1.0/me/events/${eventId}/${response}`;
-        const url = `${this.connectionRuntimeUrl}${requestPath}`;
+        const url = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<void>("POST", url, undefined, input);
 
         if (!httpResponse.isSuccessStatusCode) {
@@ -3461,7 +3455,7 @@ export class Office365Client extends ConnectorClientBase {
      */
     public async sendEmailAsync(input: ClientSendHtmlMessage): Promise<void> {
         const requestPath = `/v2/Mail`;
-        const url = `${this.connectionRuntimeUrl}${requestPath}`;
+        const url = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<void>("POST", url, undefined, input);
 
         if (!httpResponse.isSuccessStatusCode) {
@@ -3475,7 +3469,7 @@ export class Office365Client extends ConnectorClientBase {
      */
     public async setAutomaticRepliesSettingAsync(input: SetAutomaticRepliesSettingInput): Promise<SetAutomaticRepliesSettingResponse> {
         const requestPath = `/codeless/v1.0/me/mailboxSettings`;
-        const url = `${this.connectionRuntimeUrl}${requestPath}`;
+        const url = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<SetAutomaticRepliesSettingResponse>("PATCH", url, undefined, input);
 
         if (!httpResponse.isSuccessStatusCode) {
@@ -3522,7 +3516,7 @@ export class Office365Client extends ConnectorClientBase {
             queryParams.push(`subjectFilter=${encodeURIComponent(String(subjectFilter))}`);
         }
         const requestPath = `/v2/SharedMailbox/Mail/OnNewEmail` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
-        const url = `${this.connectionRuntimeUrl}${requestPath}`;
+        const url = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<TriggerBatchResponseGraphClientReceiveMessage>("GET", url);
 
         if (!httpResponse.isSuccessStatusCode) {
@@ -3538,7 +3532,7 @@ export class Office365Client extends ConnectorClientBase {
      */
     public async sharedMailboxSendEmailAsync(input: SharedMailboxClientSendHtmlMessage): Promise<void> {
         const requestPath = `/v2/SharedMailbox/Mail`;
-        const url = `${this.connectionRuntimeUrl}${requestPath}`;
+        const url = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<void>("POST", url, undefined, input);
 
         if (!httpResponse.isSuccessStatusCode) {

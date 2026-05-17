@@ -128,7 +128,6 @@ export interface EmailV3 {
  * Typed client for the smtp connector.
  */
 export class SmtpClient extends ConnectorClientBase {
-    private readonly connectionRuntimeUrl: string;
 
     /**
      * Creates a new SmtpClient.
@@ -137,12 +136,7 @@ export class SmtpClient extends ConnectorClientBase {
      * @param options Optional connector client options.
      */
     constructor(connectionRuntimeUrl: string, tokenProvider: TokenProvider, options?: ConnectorClientOptions) {
-        super(tokenProvider, options);
-        if (!connectionRuntimeUrl && connectionRuntimeUrl !== "") {
-            throw new Error("Parameter 'connectionRuntimeUrl' cannot be null or undefined.");
-        }
-
-        this.connectionRuntimeUrl = connectionRuntimeUrl.replace(/\/+$/, "");
+        super(connectionRuntimeUrl, tokenProvider, options);
     }
 
     public get connectorName(): string {
@@ -155,7 +149,7 @@ export class SmtpClient extends ConnectorClientBase {
      */
     public async sendEmailAsync(input: EmailV3): Promise<void> {
         const requestPath = `/SendEmailV3`;
-        const url = `${this.connectionRuntimeUrl}${requestPath}`;
+        const url = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<void>("POST", url, undefined, input);
 
         if (!httpResponse.isSuccessStatusCode) {
