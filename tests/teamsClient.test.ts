@@ -276,7 +276,7 @@ describe("TeamsClient — error handling", () => {
 
     it("should truncate long error response bodies in message", () => {
         const longBody = "x".repeat(3000);
-        const error = new ConnectorException("GET /test", 500, longBody);
+        const error = new ConnectorException("teams", "GET /test", 500, longBody);
 
         expect(error.message).toContain("...[truncated]");
         expect(error.responseBody).toBe(longBody);

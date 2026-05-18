@@ -57,12 +57,14 @@ export class ConnectorHttpClient {
      * @param url The request URL.
      * @param scopes The authentication scopes. Defaults to API Hub scopes.
      * @param body Optional request body (will be JSON-serialized).
+     * @param abortSignal Optional abort signal for caller-initiated cancellation.
      */
     public async sendAsync<TValue = unknown>(
         method: string,
         url: string,
         scopes?: string[],
         body?: unknown,
+        abortSignal?: AbortSignal,
     ): Promise<ConnectorResponse<TValue>> {
         const effectiveScopes = scopes ?? ConnectorHttpClient.ApiHubScopes;
         const token = await this.tokenProvider.getAccessTokenAsync(effectiveScopes);
@@ -78,7 +80,7 @@ export class ConnectorHttpClient {
             init.body = JSON.stringify(body);
         }
 
-        return this.sendWithRetry<TValue>(url, init, 0);
+        return this.sendWithRetry<TValue>(url, init, 0, abortSignal);
     }
 
     /**
@@ -88,9 +90,21 @@ export class ConnectorHttpClient {
         url: string,
         init: RequestInit,
         attempt: number,
+        callerSignal?: AbortSignal,
     ): Promise<ConnectorResponse<TValue>> {
         const abortController = new AbortController();
         const timeoutId = setTimeout(() => abortController.abort(), this.options.timeoutMs);
+
+        // NOTE(swapnilnagar): Merge caller-provided abort signal with the internal timeout controller.
+        // When the caller aborts, abort the internal controller as well.
+        const onCallerAbort = (): void => abortController.abort();
+        if (callerSignal) {
+            if (callerSignal.aborted) {
+                abortController.abort();
+            } else {
+                callerSignal.addEventListener("abort", onCallerAbort, { once: true });
+            }
+        }
 
         try {
             const response = await fetch(url, { ...init, signal: abortController.signal });
@@ -128,12 +142,15 @@ export class ConnectorHttpClient {
                     ? this.options.initialRetryDelayMs * Math.pow(2, attempt)
                     : this.options.initialRetryDelayMs;
                 await new Promise<void>((resolve) => setTimeout(resolve, delay));
-                return this.sendWithRetry<TValue>(url, init, attempt + 1);
+                return this.sendWithRetry<TValue>(url, init, attempt + 1, callerSignal);
             }
 
             throw error;
         } finally {
             clearTimeout(timeoutId);
+            if (callerSignal) {
+                callerSignal.removeEventListener("abort", onCallerAbort);
+            }
         }
     }
 }

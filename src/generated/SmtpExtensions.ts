@@ -147,13 +147,13 @@ export class SmtpClient extends ConnectorClientBase {
      * Send Email (V3)
      * @remarks This operation sends an email to one or more recipients.
      */
-    public async sendEmailAsync(input: EmailV3): Promise<void> {
+    public async sendEmailAsync(input: EmailV3, abortSignal?: AbortSignal): Promise<void> {
         const requestPath = `/SendEmailV3`;
         const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<void>("POST", url, undefined, input);
+        const httpResponse = await this.httpClient.sendAsync<void>("POST", url, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(`POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
     }
 

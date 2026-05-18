@@ -588,17 +588,17 @@ export class ArmClient extends ConnectorClientBase {
      * Lists the subscription locations
      * @remarks Lists the locations available for the subscription.
      */
-    public async subscriptionsListLocationsAsync(subscriptionId: string, xMsApiVersion?: string): Promise<LocationListResult> {
+    public async subscriptionsListLocationsAsync(subscriptionId: string, xMsApiVersion?: string, abortSignal?: AbortSignal): Promise<LocationListResult> {
         const queryParams: string[] = [];
         if (xMsApiVersion !== undefined) {
             queryParams.push(`x-ms-api-version=${encodeURIComponent(String(xMsApiVersion))}`);
         }
         const requestPath = `/subscriptions/${subscriptionId}/locations` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<LocationListResult>("GET", url);
+        const httpResponse = await this.httpClient.sendAsync<LocationListResult>("GET", url, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(`GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as LocationListResult;
@@ -608,17 +608,17 @@ export class ArmClient extends ConnectorClientBase {
      * Read a subscription
      * @remarks Reads the details for a particular subscription.
      */
-    public async subscriptionsGetAsync(subscriptionId: string, xMsApiVersion?: string): Promise<Subscription> {
+    public async subscriptionsGetAsync(subscriptionId: string, xMsApiVersion?: string, abortSignal?: AbortSignal): Promise<Subscription> {
         const queryParams: string[] = [];
         if (xMsApiVersion !== undefined) {
             queryParams.push(`x-ms-api-version=${encodeURIComponent(String(xMsApiVersion))}`);
         }
         const requestPath = `/subscriptions/${subscriptionId}` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<Subscription>("GET", url);
+        const httpResponse = await this.httpClient.sendAsync<Subscription>("GET", url, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(`GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as Subscription;
@@ -628,17 +628,17 @@ export class ArmClient extends ConnectorClientBase {
      * List subscriptions
      * @remarks Gets a list of all the subscriptions to which the principal has access.
      */
-    public async subscriptionsListAsync(xMsApiVersion?: string): Promise<SubscriptionListResult> {
+    public async subscriptionsListAsync(xMsApiVersion?: string, abortSignal?: AbortSignal): Promise<SubscriptionListResult> {
         const queryParams: string[] = [];
         if (xMsApiVersion !== undefined) {
             queryParams.push(`x-ms-api-version=${encodeURIComponent(String(xMsApiVersion))}`);
         }
         const requestPath = `/subscriptions` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<SubscriptionListResult>("GET", url);
+        const httpResponse = await this.httpClient.sendAsync<SubscriptionListResult>("GET", url, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(`GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as SubscriptionListResult;
@@ -648,7 +648,7 @@ export class ArmClient extends ConnectorClientBase {
      * Read a template deployment
      * @remarks Reads a template deployment within a resource group.
      */
-    public async deploymentsGetAsync(subscriptionId: string, resourceGroupName: string, deploymentName: string, xMsApiVersion?: string, wait?: string): Promise<DeploymentExtended> {
+    public async deploymentsGetAsync(subscriptionId: string, resourceGroupName: string, deploymentName: string, xMsApiVersion?: string, wait?: string, abortSignal?: AbortSignal): Promise<DeploymentExtended> {
         const queryParams: string[] = [];
         if (xMsApiVersion !== undefined) {
             queryParams.push(`x-ms-api-version=${encodeURIComponent(String(xMsApiVersion))}`);
@@ -658,10 +658,10 @@ export class ArmClient extends ConnectorClientBase {
         }
         const requestPath = `/subscriptions/${subscriptionId}/resourcegroups/${resourceGroupName}/providers/Microsoft.Resources/deployments/${deploymentName}` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<DeploymentExtended>("GET", url);
+        const httpResponse = await this.httpClient.sendAsync<DeploymentExtended>("GET", url, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(`GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as DeploymentExtended;
@@ -671,7 +671,7 @@ export class ArmClient extends ConnectorClientBase {
      * Create or update a template deployment
      * @remarks Create or update a named resource group template deployment. A template and parameters are expected for the request to succeed.
      */
-    public async deploymentsCreateOrUpdateAsync(input: Deployment, subscriptionId: string, resourceGroupName: string, deploymentName: string, xMsApiVersion?: string, wait?: string): Promise<DeploymentExtended> {
+    public async deploymentsCreateOrUpdateAsync(input: Deployment, subscriptionId: string, resourceGroupName: string, deploymentName: string, xMsApiVersion?: string, wait?: string, abortSignal?: AbortSignal): Promise<DeploymentExtended> {
         const queryParams: string[] = [];
         if (xMsApiVersion !== undefined) {
             queryParams.push(`x-ms-api-version=${encodeURIComponent(String(xMsApiVersion))}`);
@@ -681,10 +681,10 @@ export class ArmClient extends ConnectorClientBase {
         }
         const requestPath = `/subscriptions/${subscriptionId}/resourcegroups/${resourceGroupName}/providers/Microsoft.Resources/deployments/${deploymentName}` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<DeploymentExtended>("PUT", url, undefined, input);
+        const httpResponse = await this.httpClient.sendAsync<DeploymentExtended>("PUT", url, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(`PUT ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorException(this.connectorName, `PUT ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as DeploymentExtended;
@@ -694,17 +694,17 @@ export class ArmClient extends ConnectorClientBase {
      * Delete template deployment
      * @remarks Deletes a resource group template deployment. The resources will not be deleted; only the metadata about the template deployment.
      */
-    public async deploymentsDeleteAsync(subscriptionId: string, resourceGroupName: string, deploymentName: string, xMsApiVersion?: string): Promise<void> {
+    public async deploymentsDeleteAsync(subscriptionId: string, resourceGroupName: string, deploymentName: string, xMsApiVersion?: string, abortSignal?: AbortSignal): Promise<void> {
         const queryParams: string[] = [];
         if (xMsApiVersion !== undefined) {
             queryParams.push(`x-ms-api-version=${encodeURIComponent(String(xMsApiVersion))}`);
         }
         const requestPath = `/subscriptions/${subscriptionId}/resourcegroups/${resourceGroupName}/providers/Microsoft.Resources/deployments/${deploymentName}` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<void>("DELETE", url);
+        const httpResponse = await this.httpClient.sendAsync<void>("DELETE", url, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(`DELETE ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorException(this.connectorName, `DELETE ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
     }
 
@@ -712,17 +712,17 @@ export class ArmClient extends ConnectorClientBase {
      * Cancel a template deployment
      * @remarks Cancel a currently running template deployment. All pending template operations will be suspended.
      */
-    public async deploymentsCancelAsync(subscriptionId: string, resourceGroupName: string, deploymentName: string, xMsApiVersion?: string): Promise<void> {
+    public async deploymentsCancelAsync(subscriptionId: string, resourceGroupName: string, deploymentName: string, xMsApiVersion?: string, abortSignal?: AbortSignal): Promise<void> {
         const queryParams: string[] = [];
         if (xMsApiVersion !== undefined) {
             queryParams.push(`x-ms-api-version=${encodeURIComponent(String(xMsApiVersion))}`);
         }
         const requestPath = `/subscriptions/${subscriptionId}/resourcegroups/${resourceGroupName}/providers/Microsoft.Resources/deployments/${deploymentName}/cancel` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<void>("POST", url);
+        const httpResponse = await this.httpClient.sendAsync<void>("POST", url, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(`POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
     }
 
@@ -730,17 +730,17 @@ export class ArmClient extends ConnectorClientBase {
      * Validate a template deployment
      * @remarks Validates a deployment template. This operation does not have side effects and can be used to test a template deployment for syntax or logical errors.
      */
-    public async deploymentsValidateAsync(input: Deployment, subscriptionId: string, resourceGroupName: string, deploymentName: string, xMsApiVersion?: string): Promise<DeploymentValidateResult> {
+    public async deploymentsValidateAsync(input: Deployment, subscriptionId: string, resourceGroupName: string, deploymentName: string, xMsApiVersion?: string, abortSignal?: AbortSignal): Promise<DeploymentValidateResult> {
         const queryParams: string[] = [];
         if (xMsApiVersion !== undefined) {
             queryParams.push(`x-ms-api-version=${encodeURIComponent(String(xMsApiVersion))}`);
         }
         const requestPath = `/subscriptions/${subscriptionId}/resourcegroups/${resourceGroupName}/providers/Microsoft.Resources/deployments/${deploymentName}/validate` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<DeploymentValidateResult>("POST", url, undefined, input);
+        const httpResponse = await this.httpClient.sendAsync<DeploymentValidateResult>("POST", url, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(`POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as DeploymentValidateResult;
@@ -750,17 +750,17 @@ export class ArmClient extends ConnectorClientBase {
      * Export deployment template
      * @remarks Exports a template from a past resource group deployment.
      */
-    public async deploymentsExportTemplateAsync(subscriptionId: string, resourceGroupName: string, deploymentName: string, xMsApiVersion?: string): Promise<DeploymentExportResult> {
+    public async deploymentsExportTemplateAsync(subscriptionId: string, resourceGroupName: string, deploymentName: string, xMsApiVersion?: string, abortSignal?: AbortSignal): Promise<DeploymentExportResult> {
         const queryParams: string[] = [];
         if (xMsApiVersion !== undefined) {
             queryParams.push(`x-ms-api-version=${encodeURIComponent(String(xMsApiVersion))}`);
         }
         const requestPath = `/subscriptions/${subscriptionId}/resourcegroups/${resourceGroupName}/providers/Microsoft.Resources/deployments/${deploymentName}/exportTemplate` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<DeploymentExportResult>("POST", url);
+        const httpResponse = await this.httpClient.sendAsync<DeploymentExportResult>("POST", url, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(`POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as DeploymentExportResult;
@@ -770,7 +770,7 @@ export class ArmClient extends ConnectorClientBase {
      * List template deployments
      * @remarks Lists all the resource group template deployments. This operation is useful to know what has been provisioned thus far.
      */
-    public async deploymentsListAsync(subscriptionId: string, resourceGroupName: string, filter?: string, top?: string, xMsApiVersion?: string): Promise<DeploymentListResult> {
+    public async deploymentsListAsync(subscriptionId: string, resourceGroupName: string, filter?: string, top?: string, xMsApiVersion?: string, abortSignal?: AbortSignal): Promise<DeploymentListResult> {
         const queryParams: string[] = [];
         if (filter !== undefined) {
             queryParams.push(`$filter=${encodeURIComponent(String(filter))}`);
@@ -783,10 +783,10 @@ export class ArmClient extends ConnectorClientBase {
         }
         const requestPath = `/subscriptions/${subscriptionId}/resourcegroups/${resourceGroupName}/providers/Microsoft.Resources/deployments` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<DeploymentListResult>("GET", url);
+        const httpResponse = await this.httpClient.sendAsync<DeploymentListResult>("GET", url, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(`GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as DeploymentListResult;
@@ -796,17 +796,17 @@ export class ArmClient extends ConnectorClientBase {
      * Read a template deployment operation
      * @remarks Reads a particular resource group template deployment operation. This is useful for troubleshooting failed template deployments.
      */
-    public async deploymentOperationsGetAsync(subscriptionId: string, resourceGroupName: string, deploymentName: string, operationId: string, xMsApiVersion?: string): Promise<DeploymentOperation> {
+    public async deploymentOperationsGetAsync(subscriptionId: string, resourceGroupName: string, deploymentName: string, operationId: string, xMsApiVersion?: string, abortSignal?: AbortSignal): Promise<DeploymentOperation> {
         const queryParams: string[] = [];
         if (xMsApiVersion !== undefined) {
             queryParams.push(`x-ms-api-version=${encodeURIComponent(String(xMsApiVersion))}`);
         }
         const requestPath = `/subscriptions/${subscriptionId}/resourcegroups/${resourceGroupName}/deployments/${deploymentName}/operations/${operationId}` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<DeploymentOperation>("GET", url);
+        const httpResponse = await this.httpClient.sendAsync<DeploymentOperation>("GET", url, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(`GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as DeploymentOperation;
@@ -816,7 +816,7 @@ export class ArmClient extends ConnectorClientBase {
      * Lists template deployment operations
      * @remarks Lists all the template deployment operations. This is useful for troubleshooting failed template deployments.
      */
-    public async deploymentOperationsListAsync(subscriptionId: string, resourceGroupName: string, deploymentName: string, top?: string, xMsApiVersion?: string): Promise<DeploymentOperationsListResult> {
+    public async deploymentOperationsListAsync(subscriptionId: string, resourceGroupName: string, deploymentName: string, top?: string, xMsApiVersion?: string, abortSignal?: AbortSignal): Promise<DeploymentOperationsListResult> {
         const queryParams: string[] = [];
         if (top !== undefined) {
             queryParams.push(`$top=${encodeURIComponent(String(top))}`);
@@ -826,10 +826,10 @@ export class ArmClient extends ConnectorClientBase {
         }
         const requestPath = `/subscriptions/${subscriptionId}/resourcegroups/${resourceGroupName}/deployments/${deploymentName}/operations` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<DeploymentOperationsListResult>("GET", url);
+        const httpResponse = await this.httpClient.sendAsync<DeploymentOperationsListResult>("GET", url, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(`GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as DeploymentOperationsListResult;
@@ -839,17 +839,17 @@ export class ArmClient extends ConnectorClientBase {
      * Unregister resource provider
      * @remarks Unregisters provider from a subscription. This operation will fail if there are any resources from that resource provider in the subscription.
      */
-    public async providersUnregisterAsync(subscriptionId: string, resourceProviderNamespace: string, xMsApiVersion?: string): Promise<Provider> {
+    public async providersUnregisterAsync(subscriptionId: string, resourceProviderNamespace: string, xMsApiVersion?: string, abortSignal?: AbortSignal): Promise<Provider> {
         const queryParams: string[] = [];
         if (xMsApiVersion !== undefined) {
             queryParams.push(`x-ms-api-version=${encodeURIComponent(String(xMsApiVersion))}`);
         }
         const requestPath = `/subscriptions/${subscriptionId}/providers/${resourceProviderNamespace}/unregister` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<Provider>("POST", url);
+        const httpResponse = await this.httpClient.sendAsync<Provider>("POST", url, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(`POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as Provider;
@@ -859,17 +859,17 @@ export class ArmClient extends ConnectorClientBase {
      * Register resource provider
      * @remarks Registers a resource provider to be used with a subscription. This will provision permissions for the service into your subscription.
      */
-    public async providersRegisterAsync(subscriptionId: string, resourceProviderNamespace: string, xMsApiVersion?: string): Promise<Provider> {
+    public async providersRegisterAsync(subscriptionId: string, resourceProviderNamespace: string, xMsApiVersion?: string, abortSignal?: AbortSignal): Promise<Provider> {
         const queryParams: string[] = [];
         if (xMsApiVersion !== undefined) {
             queryParams.push(`x-ms-api-version=${encodeURIComponent(String(xMsApiVersion))}`);
         }
         const requestPath = `/subscriptions/${subscriptionId}/providers/${resourceProviderNamespace}/register` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<Provider>("POST", url);
+        const httpResponse = await this.httpClient.sendAsync<Provider>("POST", url, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(`POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as Provider;
@@ -879,7 +879,7 @@ export class ArmClient extends ConnectorClientBase {
      * List resource providers
      * @remarks Lists the resource providers available for the subscription.
      */
-    public async providersListAsync(subscriptionId: string, top?: string, expand?: string, xMsApiVersion?: string): Promise<ProviderListResult> {
+    public async providersListAsync(subscriptionId: string, top?: string, expand?: string, xMsApiVersion?: string, abortSignal?: AbortSignal): Promise<ProviderListResult> {
         const queryParams: string[] = [];
         if (top !== undefined) {
             queryParams.push(`$top=${encodeURIComponent(String(top))}`);
@@ -892,10 +892,10 @@ export class ArmClient extends ConnectorClientBase {
         }
         const requestPath = `/subscriptions/${subscriptionId}/providers` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<ProviderListResult>("GET", url);
+        const httpResponse = await this.httpClient.sendAsync<ProviderListResult>("GET", url, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(`GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as ProviderListResult;
@@ -905,7 +905,7 @@ export class ArmClient extends ConnectorClientBase {
      * Read resource provider
      * @remarks Reads a particular resource provider within the subscription.
      */
-    public async providersGetAsync(subscriptionId: string, resourceProviderNamespace: string, expand?: string, xMsApiVersion?: string): Promise<Provider> {
+    public async providersGetAsync(subscriptionId: string, resourceProviderNamespace: string, expand?: string, xMsApiVersion?: string, abortSignal?: AbortSignal): Promise<Provider> {
         const queryParams: string[] = [];
         if (expand !== undefined) {
             queryParams.push(`$expand=${encodeURIComponent(String(expand))}`);
@@ -915,10 +915,10 @@ export class ArmClient extends ConnectorClientBase {
         }
         const requestPath = `/subscriptions/${subscriptionId}/providers/${resourceProviderNamespace}` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<Provider>("GET", url);
+        const httpResponse = await this.httpClient.sendAsync<Provider>("GET", url, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(`GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as Provider;
@@ -928,7 +928,7 @@ export class ArmClient extends ConnectorClientBase {
      * List resources by resource group
      * @remarks Lists all the resources under a resource group.
      */
-    public async resourceGroupsListResourcesAsync(subscriptionId: string, resourceGroupName: string, xMsApiVersion?: string, filter?: string, expand?: string, top?: string): Promise<ResourceListResult> {
+    public async resourceGroupsListResourcesAsync(subscriptionId: string, resourceGroupName: string, xMsApiVersion?: string, filter?: string, expand?: string, top?: string, abortSignal?: AbortSignal): Promise<ResourceListResult> {
         const queryParams: string[] = [];
         if (xMsApiVersion !== undefined) {
             queryParams.push(`x-ms-api-version=${encodeURIComponent(String(xMsApiVersion))}`);
@@ -944,10 +944,10 @@ export class ArmClient extends ConnectorClientBase {
         }
         const requestPath = `/subscriptions/${subscriptionId}/resourceGroups/${resourceGroupName}/resources` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<ResourceListResult>("GET", url);
+        const httpResponse = await this.httpClient.sendAsync<ResourceListResult>("GET", url, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(`GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as ResourceListResult;
@@ -957,17 +957,17 @@ export class ArmClient extends ConnectorClientBase {
      * Read a resource group
      * @remarks Reads a particular resource group within the subscription.
      */
-    public async resourceGroupsGetAsync(subscriptionId: string, resourceGroupName: string, xMsApiVersion?: string): Promise<ResourceGroup> {
+    public async resourceGroupsGetAsync(subscriptionId: string, resourceGroupName: string, xMsApiVersion?: string, abortSignal?: AbortSignal): Promise<ResourceGroup> {
         const queryParams: string[] = [];
         if (xMsApiVersion !== undefined) {
             queryParams.push(`x-ms-api-version=${encodeURIComponent(String(xMsApiVersion))}`);
         }
         const requestPath = `/subscriptions/${subscriptionId}/resourcegroups/${resourceGroupName}` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<ResourceGroup>("GET", url);
+        const httpResponse = await this.httpClient.sendAsync<ResourceGroup>("GET", url, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(`GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as ResourceGroup;
@@ -977,17 +977,17 @@ export class ArmClient extends ConnectorClientBase {
      * Create or update a resource group
      * @remarks Creates or updates a resource group. The response code can be used to distinguish between a create (201) or update (200).
      */
-    public async resourceGroupsCreateOrUpdateAsync(input: ResourceGroup, subscriptionId: string, resourceGroupName: string, xMsApiVersion?: string): Promise<ResourceGroup> {
+    public async resourceGroupsCreateOrUpdateAsync(input: ResourceGroup, subscriptionId: string, resourceGroupName: string, xMsApiVersion?: string, abortSignal?: AbortSignal): Promise<ResourceGroup> {
         const queryParams: string[] = [];
         if (xMsApiVersion !== undefined) {
             queryParams.push(`x-ms-api-version=${encodeURIComponent(String(xMsApiVersion))}`);
         }
         const requestPath = `/subscriptions/${subscriptionId}/resourcegroups/${resourceGroupName}` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<ResourceGroup>("PUT", url, undefined, input);
+        const httpResponse = await this.httpClient.sendAsync<ResourceGroup>("PUT", url, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(`PUT ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorException(this.connectorName, `PUT ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as ResourceGroup;
@@ -997,17 +997,17 @@ export class ArmClient extends ConnectorClientBase {
      * Delete a resource group
      * @remarks Delete a particular resource group within the subscription.
      */
-    public async resourceGroupsDeleteAsync(subscriptionId: string, resourceGroupName: string, xMsApiVersion?: string): Promise<void> {
+    public async resourceGroupsDeleteAsync(subscriptionId: string, resourceGroupName: string, xMsApiVersion?: string, abortSignal?: AbortSignal): Promise<void> {
         const queryParams: string[] = [];
         if (xMsApiVersion !== undefined) {
             queryParams.push(`x-ms-api-version=${encodeURIComponent(String(xMsApiVersion))}`);
         }
         const requestPath = `/subscriptions/${subscriptionId}/resourcegroups/${resourceGroupName}` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<void>("DELETE", url);
+        const httpResponse = await this.httpClient.sendAsync<void>("DELETE", url, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(`DELETE ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorException(this.connectorName, `DELETE ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
     }
 
@@ -1015,17 +1015,17 @@ export class ArmClient extends ConnectorClientBase {
      * Update an existing resource group
      * @remarks Updates an existing resource group. If the resource does not exist, this request will fail.
      */
-    public async resourceGroupsPatchAsync(input: ResourceGroup, subscriptionId: string, resourceGroupName: string, xMsApiVersion?: string): Promise<ResourceGroup> {
+    public async resourceGroupsPatchAsync(input: ResourceGroup, subscriptionId: string, resourceGroupName: string, xMsApiVersion?: string, abortSignal?: AbortSignal): Promise<ResourceGroup> {
         const queryParams: string[] = [];
         if (xMsApiVersion !== undefined) {
             queryParams.push(`x-ms-api-version=${encodeURIComponent(String(xMsApiVersion))}`);
         }
         const requestPath = `/subscriptions/${subscriptionId}/resourcegroups/${resourceGroupName}` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<ResourceGroup>("PATCH", url, undefined, input);
+        const httpResponse = await this.httpClient.sendAsync<ResourceGroup>("PATCH", url, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(`PATCH ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorException(this.connectorName, `PATCH ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as ResourceGroup;
@@ -1035,17 +1035,17 @@ export class ArmClient extends ConnectorClientBase {
      * Export a resource group template
      * @remarks Exports a deployment template from an existing resource group. This can only be successful if the underlying resources have a schema defined by Microsoft.
      */
-    public async resourceGroupsExportTemplateAsync(input: ExportTemplateRequest, subscriptionId: string, resourceGroupName: string, xMsApiVersion?: string): Promise<ResourceGroupExportResult> {
+    public async resourceGroupsExportTemplateAsync(input: ExportTemplateRequest, subscriptionId: string, resourceGroupName: string, xMsApiVersion?: string, abortSignal?: AbortSignal): Promise<ResourceGroupExportResult> {
         const queryParams: string[] = [];
         if (xMsApiVersion !== undefined) {
             queryParams.push(`x-ms-api-version=${encodeURIComponent(String(xMsApiVersion))}`);
         }
         const requestPath = `/subscriptions/${subscriptionId}/resourcegroups/${resourceGroupName}/exportTemplate` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<ResourceGroupExportResult>("POST", url, undefined, input);
+        const httpResponse = await this.httpClient.sendAsync<ResourceGroupExportResult>("POST", url, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(`POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as ResourceGroupExportResult;
@@ -1055,7 +1055,7 @@ export class ArmClient extends ConnectorClientBase {
      * List resource groups
      * @remarks Lists all the resource groups within the subscription. The results are paginated at 1,000+ records.
      */
-    public async resourceGroupsListAsync(subscriptionId: string, xMsApiVersion?: string, filter?: string, top?: string): Promise<ResourceGroupListResult> {
+    public async resourceGroupsListAsync(subscriptionId: string, xMsApiVersion?: string, filter?: string, top?: string, abortSignal?: AbortSignal): Promise<ResourceGroupListResult> {
         const queryParams: string[] = [];
         if (xMsApiVersion !== undefined) {
             queryParams.push(`x-ms-api-version=${encodeURIComponent(String(xMsApiVersion))}`);
@@ -1068,10 +1068,10 @@ export class ArmClient extends ConnectorClientBase {
         }
         const requestPath = `/subscriptions/${subscriptionId}/resourcegroups` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<ResourceGroupListResult>("GET", url);
+        const httpResponse = await this.httpClient.sendAsync<ResourceGroupListResult>("GET", url, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(`GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as ResourceGroupListResult;
@@ -1081,7 +1081,7 @@ export class ArmClient extends ConnectorClientBase {
      * List resources by subscription
      * @remarks Reads all of the resources under a particular subscription. The results are paginated at 1,000+ records.
      */
-    public async resourcesListAsync(subscriptionId: string, filter?: string, expand?: string, top?: string, xMsApiVersion?: string): Promise<ResourceListResult> {
+    public async resourcesListAsync(subscriptionId: string, filter?: string, expand?: string, top?: string, xMsApiVersion?: string, abortSignal?: AbortSignal): Promise<ResourceListResult> {
         const queryParams: string[] = [];
         if (filter !== undefined) {
             queryParams.push(`$filter=${encodeURIComponent(String(filter))}`);
@@ -1097,10 +1097,10 @@ export class ArmClient extends ConnectorClientBase {
         }
         const requestPath = `/subscriptions/${subscriptionId}/resources` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<ResourceListResult>("GET", url);
+        const httpResponse = await this.httpClient.sendAsync<ResourceListResult>("GET", url, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(`GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as ResourceListResult;
@@ -1110,17 +1110,17 @@ export class ArmClient extends ConnectorClientBase {
      * Read a resource
      * @remarks Reads a resource object.
      */
-    public async resourcesGetByIdAsync(subscriptionId: string, resourceGroupName: string, resourceProviderNamespace: string, shortResourceId: string, xMsApiVersion?: string): Promise<GenericResource> {
+    public async resourcesGetByIdAsync(subscriptionId: string, resourceGroupName: string, resourceProviderNamespace: string, shortResourceId: string, xMsApiVersion?: string, abortSignal?: AbortSignal): Promise<GenericResource> {
         const queryParams: string[] = [];
         if (xMsApiVersion !== undefined) {
             queryParams.push(`x-ms-api-version=${encodeURIComponent(String(xMsApiVersion))}`);
         }
         const requestPath = `/subscriptions/${subscriptionId}/resourcegroups/${resourceGroupName}/providers/${resourceProviderNamespace}/${shortResourceId}` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<GenericResource>("GET", url);
+        const httpResponse = await this.httpClient.sendAsync<GenericResource>("GET", url, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(`GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as GenericResource;
@@ -1130,17 +1130,17 @@ export class ArmClient extends ConnectorClientBase {
      * Create or update a resource
      * @remarks Creates or updates a resource. The response code can be used to distinguish between a create (201) or update (200).
      */
-    public async resourcesCreateOrUpdateByIdAsync(input: GenericResource, subscriptionId: string, resourceGroupName: string, resourceProviderNamespace: string, shortResourceId: string, xMsApiVersion?: string): Promise<GenericResource> {
+    public async resourcesCreateOrUpdateByIdAsync(input: GenericResource, subscriptionId: string, resourceGroupName: string, resourceProviderNamespace: string, shortResourceId: string, xMsApiVersion?: string, abortSignal?: AbortSignal): Promise<GenericResource> {
         const queryParams: string[] = [];
         if (xMsApiVersion !== undefined) {
             queryParams.push(`x-ms-api-version=${encodeURIComponent(String(xMsApiVersion))}`);
         }
         const requestPath = `/subscriptions/${subscriptionId}/resourcegroups/${resourceGroupName}/providers/${resourceProviderNamespace}/${shortResourceId}` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<GenericResource>("PUT", url, undefined, input);
+        const httpResponse = await this.httpClient.sendAsync<GenericResource>("PUT", url, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(`PUT ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorException(this.connectorName, `PUT ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as GenericResource;
@@ -1150,17 +1150,17 @@ export class ArmClient extends ConnectorClientBase {
      * Delete a resource
      * @remarks Deletes a resource.
      */
-    public async resourcesDeleteByIdAsync(subscriptionId: string, resourceGroupName: string, resourceProviderNamespace: string, shortResourceId: string, xMsApiVersion?: string): Promise<void> {
+    public async resourcesDeleteByIdAsync(subscriptionId: string, resourceGroupName: string, resourceProviderNamespace: string, shortResourceId: string, xMsApiVersion?: string, abortSignal?: AbortSignal): Promise<void> {
         const queryParams: string[] = [];
         if (xMsApiVersion !== undefined) {
             queryParams.push(`x-ms-api-version=${encodeURIComponent(String(xMsApiVersion))}`);
         }
         const requestPath = `/subscriptions/${subscriptionId}/resourcegroups/${resourceGroupName}/providers/${resourceProviderNamespace}/${shortResourceId}` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<void>("DELETE", url);
+        const httpResponse = await this.httpClient.sendAsync<void>("DELETE", url, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(`DELETE ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorException(this.connectorName, `DELETE ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
     }
 
@@ -1168,17 +1168,17 @@ export class ArmClient extends ConnectorClientBase {
      * Invoke resource operation
      * @remarks Invokes an operation on an Azure resource.
      */
-    public async resourcesInvokeAsync(input: ResourcesInvokeInput, subscriptionId: string, resourceGroupName: string, resourceProviderNamespace: string, shortResourceId: string, actionName: string, xMsApiVersion?: string): Promise<ResourcesInvokeResponse> {
+    public async resourcesInvokeAsync(input: ResourcesInvokeInput, subscriptionId: string, resourceGroupName: string, resourceProviderNamespace: string, shortResourceId: string, actionName: string, xMsApiVersion?: string, abortSignal?: AbortSignal): Promise<ResourcesInvokeResponse> {
         const queryParams: string[] = [];
         if (xMsApiVersion !== undefined) {
             queryParams.push(`x-ms-api-version=${encodeURIComponent(String(xMsApiVersion))}`);
         }
         const requestPath = `/subscriptions/${subscriptionId}/resourcegroups/${resourceGroupName}/providers/${resourceProviderNamespace}/${shortResourceId}/${actionName}` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<ResourcesInvokeResponse>("POST", url, undefined, input);
+        const httpResponse = await this.httpClient.sendAsync<ResourcesInvokeResponse>("POST", url, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(`POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as ResourcesInvokeResponse;
@@ -1188,17 +1188,17 @@ export class ArmClient extends ConnectorClientBase {
      * Read a resource in provider
      * @remarks Reads a resource object.
      */
-    public async providerResourcesGetByIdAsync(subscriptionId: string, resourceProviderNamespace: string, shortResourceId: string, xMsApiVersion?: string): Promise<GenericResource> {
+    public async providerResourcesGetByIdAsync(subscriptionId: string, resourceProviderNamespace: string, shortResourceId: string, xMsApiVersion?: string, abortSignal?: AbortSignal): Promise<GenericResource> {
         const queryParams: string[] = [];
         if (xMsApiVersion !== undefined) {
             queryParams.push(`x-ms-api-version=${encodeURIComponent(String(xMsApiVersion))}`);
         }
         const requestPath = `/subscriptions/${subscriptionId}/providers/${resourceProviderNamespace}/${shortResourceId}` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<GenericResource>("GET", url);
+        const httpResponse = await this.httpClient.sendAsync<GenericResource>("GET", url, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(`GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as GenericResource;
@@ -1208,17 +1208,17 @@ export class ArmClient extends ConnectorClientBase {
      * Invoke resource operation in provider
      * @remarks Invokes an operation on an Azure resource.
      */
-    public async providerResourcesInvokeAsync(input: ProviderResourcesInvokeInput, subscriptionId: string, resourceProviderNamespace: string, shortResourceId: string, xMsApiVersion?: string): Promise<ProviderResourcesInvokeResponse> {
+    public async providerResourcesInvokeAsync(input: ProviderResourcesInvokeInput, subscriptionId: string, resourceProviderNamespace: string, shortResourceId: string, xMsApiVersion?: string, abortSignal?: AbortSignal): Promise<ProviderResourcesInvokeResponse> {
         const queryParams: string[] = [];
         if (xMsApiVersion !== undefined) {
             queryParams.push(`x-ms-api-version=${encodeURIComponent(String(xMsApiVersion))}`);
         }
         const requestPath = `/subscriptions/${subscriptionId}/providers/${resourceProviderNamespace}/${shortResourceId}` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<ProviderResourcesInvokeResponse>("POST", url, undefined, input);
+        const httpResponse = await this.httpClient.sendAsync<ProviderResourcesInvokeResponse>("POST", url, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(`POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as ProviderResourcesInvokeResponse;
@@ -1228,17 +1228,17 @@ export class ArmClient extends ConnectorClientBase {
      * Create or update a subscription resource tag value
      * @remarks Create or update a subscription resource tag value.
      */
-    public async tagsCreateOrUpdateValueAsync(subscriptionId: string, tagName: string, tagValue: string, xMsApiVersion?: string): Promise<TagValue> {
+    public async tagsCreateOrUpdateValueAsync(subscriptionId: string, tagName: string, tagValue: string, xMsApiVersion?: string, abortSignal?: AbortSignal): Promise<TagValue> {
         const queryParams: string[] = [];
         if (xMsApiVersion !== undefined) {
             queryParams.push(`x-ms-api-version=${encodeURIComponent(String(xMsApiVersion))}`);
         }
         const requestPath = `/subscriptions/${subscriptionId}/tagNames/${tagName}/tagValues/${tagValue}` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<TagValue>("PUT", url);
+        const httpResponse = await this.httpClient.sendAsync<TagValue>("PUT", url, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(`PUT ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorException(this.connectorName, `PUT ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as TagValue;
@@ -1248,17 +1248,17 @@ export class ArmClient extends ConnectorClientBase {
      * Delete a subscription resource tag value
      * @remarks Delete a subscription resource tag value.
      */
-    public async tagsDeleteValueAsync(subscriptionId: string, tagName: string, tagValue: string, xMsApiVersion?: string): Promise<void> {
+    public async tagsDeleteValueAsync(subscriptionId: string, tagName: string, tagValue: string, xMsApiVersion?: string, abortSignal?: AbortSignal): Promise<void> {
         const queryParams: string[] = [];
         if (xMsApiVersion !== undefined) {
             queryParams.push(`x-ms-api-version=${encodeURIComponent(String(xMsApiVersion))}`);
         }
         const requestPath = `/subscriptions/${subscriptionId}/tagNames/${tagName}/tagValues/${tagValue}` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<void>("DELETE", url);
+        const httpResponse = await this.httpClient.sendAsync<void>("DELETE", url, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(`DELETE ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorException(this.connectorName, `DELETE ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
     }
 
@@ -1266,17 +1266,17 @@ export class ArmClient extends ConnectorClientBase {
      * Create or update a subscription resource tag name
      * @remarks Create or update a subscription resource tag name.
      */
-    public async tagsCreateOrUpdateAsync(subscriptionId: string, tagName: string, xMsApiVersion?: string): Promise<TagDetails> {
+    public async tagsCreateOrUpdateAsync(subscriptionId: string, tagName: string, xMsApiVersion?: string, abortSignal?: AbortSignal): Promise<TagDetails> {
         const queryParams: string[] = [];
         if (xMsApiVersion !== undefined) {
             queryParams.push(`x-ms-api-version=${encodeURIComponent(String(xMsApiVersion))}`);
         }
         const requestPath = `/subscriptions/${subscriptionId}/tagNames/${tagName}` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<TagDetails>("PUT", url);
+        const httpResponse = await this.httpClient.sendAsync<TagDetails>("PUT", url, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(`PUT ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorException(this.connectorName, `PUT ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as TagDetails;
@@ -1286,17 +1286,17 @@ export class ArmClient extends ConnectorClientBase {
      * Delete a subscription resource tag name
      * @remarks Delete a subscription resource tag name.
      */
-    public async tagsDeleteAsync(subscriptionId: string, tagName: string, xMsApiVersion?: string): Promise<void> {
+    public async tagsDeleteAsync(subscriptionId: string, tagName: string, xMsApiVersion?: string, abortSignal?: AbortSignal): Promise<void> {
         const queryParams: string[] = [];
         if (xMsApiVersion !== undefined) {
             queryParams.push(`x-ms-api-version=${encodeURIComponent(String(xMsApiVersion))}`);
         }
         const requestPath = `/subscriptions/${subscriptionId}/tagNames/${tagName}` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<void>("DELETE", url);
+        const httpResponse = await this.httpClient.sendAsync<void>("DELETE", url, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(`DELETE ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorException(this.connectorName, `DELETE ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
     }
 
@@ -1304,17 +1304,17 @@ export class ArmClient extends ConnectorClientBase {
      * List subscription resource tags
      * @remarks Lists all the subscription resource tags.
      */
-    public async tagsListAsync(subscriptionId: string, xMsApiVersion?: string): Promise<TagsListResult> {
+    public async tagsListAsync(subscriptionId: string, xMsApiVersion?: string, abortSignal?: AbortSignal): Promise<TagsListResult> {
         const queryParams: string[] = [];
         if (xMsApiVersion !== undefined) {
             queryParams.push(`x-ms-api-version=${encodeURIComponent(String(xMsApiVersion))}`);
         }
         const requestPath = `/subscriptions/${subscriptionId}/tagNames` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<TagsListResult>("GET", url);
+        const httpResponse = await this.httpClient.sendAsync<TagsListResult>("GET", url, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(`GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as TagsListResult;

@@ -864,7 +864,7 @@ export class SharepointonlineClient extends ConnectorClientBase {
      * Get file metadata using path
      * @remarks Gets information about the file such as size, etag, created date, etc. Uses a file path to pick the file. Use "Get file properties" action to get to the values stored in the columns in the library.
      */
-    public async getFileMetadataByPathAsync(dataset: string, path?: string, queryParametersSingleEncoded?: string): Promise<SPBlobMetadataResponse> {
+    public async getFileMetadataByPathAsync(dataset: string, path?: string, queryParametersSingleEncoded?: string, abortSignal?: AbortSignal): Promise<SPBlobMetadataResponse> {
         const queryParams: string[] = [];
         if (path !== undefined) {
             queryParams.push(`path=${encodeURIComponent(String(path))}`);
@@ -874,10 +874,10 @@ export class SharepointonlineClient extends ConnectorClientBase {
         }
         const requestPath = `/datasets/${encodeURIComponent(String(dataset))}/GetFileByPath` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<SPBlobMetadataResponse>("GET", url);
+        const httpResponse = await this.httpClient.sendAsync<SPBlobMetadataResponse>("GET", url, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(`GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as SPBlobMetadataResponse;
@@ -887,7 +887,7 @@ export class SharepointonlineClient extends ConnectorClientBase {
      * Get file content using path
      * @remarks Gets file contents using the file path.
      */
-    public async getFileContentByPathAsync(dataset: string, path?: string, inferContentType?: string, queryParametersSingleEncoded?: string): Promise<Blob> {
+    public async getFileContentByPathAsync(dataset: string, path?: string, inferContentType?: string, queryParametersSingleEncoded?: string, abortSignal?: AbortSignal): Promise<Blob> {
         const queryParams: string[] = [];
         if (path !== undefined) {
             queryParams.push(`path=${encodeURIComponent(String(path))}`);
@@ -900,10 +900,10 @@ export class SharepointonlineClient extends ConnectorClientBase {
         }
         const requestPath = `/datasets/${encodeURIComponent(String(dataset))}/GetFileContentByPath` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<Blob>("GET", url);
+        const httpResponse = await this.httpClient.sendAsync<Blob>("GET", url, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(`GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as Blob;
@@ -913,17 +913,17 @@ export class SharepointonlineClient extends ConnectorClientBase {
      * Get folder metadata
      * @remarks Gets information about the folder. Uses a file identifier to pick the folder.
      */
-    public async getFolderMetadataAsync(dataset: string, id?: string): Promise<SPBlobMetadataResponse> {
+    public async getFolderMetadataAsync(dataset: string, id?: string, abortSignal?: AbortSignal): Promise<SPBlobMetadataResponse> {
         const queryParams: string[] = [];
         if (id !== undefined) {
             queryParams.push(`id=${encodeURIComponent(String(id))}`);
         }
         const requestPath = `/datasets/${encodeURIComponent(String(dataset))}/GetFolder` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<SPBlobMetadataResponse>("GET", url);
+        const httpResponse = await this.httpClient.sendAsync<SPBlobMetadataResponse>("GET", url, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(`GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as SPBlobMetadataResponse;
@@ -933,7 +933,7 @@ export class SharepointonlineClient extends ConnectorClientBase {
      * Get folder metadata using path
      * @remarks Gets information about the folder. Uses a folder path to pick the folder.
      */
-    public async getFolderMetadataByPathAsync(dataset: string, path?: string, queryParametersSingleEncoded?: string): Promise<SPBlobMetadataResponse> {
+    public async getFolderMetadataByPathAsync(dataset: string, path?: string, queryParametersSingleEncoded?: string, abortSignal?: AbortSignal): Promise<SPBlobMetadataResponse> {
         const queryParams: string[] = [];
         if (path !== undefined) {
             queryParams.push(`path=${encodeURIComponent(String(path))}`);
@@ -943,10 +943,10 @@ export class SharepointonlineClient extends ConnectorClientBase {
         }
         const requestPath = `/datasets/${encodeURIComponent(String(dataset))}/GetFolderByPath` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<SPBlobMetadataResponse>("GET", url);
+        const httpResponse = await this.httpClient.sendAsync<SPBlobMetadataResponse>("GET", url, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(`GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as SPBlobMetadataResponse;
@@ -956,7 +956,7 @@ export class SharepointonlineClient extends ConnectorClientBase {
      * Agreements Solution - Generate document within Agreements Solution workspace
      * @remarks Use this action to create documents based on modern templates in a Agreements Solution workspace. This is behind a payment wall currently in planning (either license or PayG).
      */
-    public async createAgreementsSolutionDocumentAsync(input: CreateAgreementsSolutionDocumentInput, dataset: string, template: string, documentName?: string, table?: string, view?: string): Promise<SPBlobMetadataResponse> {
+    public async createAgreementsSolutionDocumentAsync(input: CreateAgreementsSolutionDocumentInput, dataset: string, template: string, documentName?: string, table?: string, view?: string, abortSignal?: AbortSignal): Promise<SPBlobMetadataResponse> {
         const queryParams: string[] = [];
         if (documentName !== undefined) {
             queryParams.push(`documentName=${encodeURIComponent(String(documentName))}`);
@@ -969,10 +969,10 @@ export class SharepointonlineClient extends ConnectorClientBase {
         }
         const requestPath = `/datasets/${encodeURIComponent(String(dataset))}/agreements/templates/${template}/createnewdocument` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<SPBlobMetadataResponse>("POST", url, undefined, input);
+        const httpResponse = await this.httpClient.sendAsync<SPBlobMetadataResponse>("POST", url, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(`POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as SPBlobMetadataResponse;
@@ -982,13 +982,13 @@ export class SharepointonlineClient extends ConnectorClientBase {
      * Get all lists and libraries
      * @remarks Get all lists and libraries.
      */
-    public async getAllTablesAsync(dataset: string): Promise<TablesList> {
+    public async getAllTablesAsync(dataset: string, abortSignal?: AbortSignal): Promise<TablesList> {
         const requestPath = `/datasets/${encodeURIComponent(String(dataset))}/alltables`;
         const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<TablesList>("GET", url);
+        const httpResponse = await this.httpClient.sendAsync<TablesList>("GET", url, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(`GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as TablesList;
@@ -998,17 +998,17 @@ export class SharepointonlineClient extends ConnectorClientBase {
      * Approve hub site join request
      * @remarks Approve hub site join request. This will return an approval token that can be used to complete the join request using the join hub site action.
      */
-    public async approveHubSiteJoinAsync(dataset: string, joiningSiteId?: string): Promise<ApproveHubSiteJoinResponse> {
+    public async approveHubSiteJoinAsync(dataset: string, joiningSiteId?: string, abortSignal?: AbortSignal): Promise<ApproveHubSiteJoinResponse> {
         const queryParams: string[] = [];
         if (joiningSiteId !== undefined) {
             queryParams.push(`joiningSiteId=${encodeURIComponent(String(joiningSiteId))}`);
         }
         const requestPath = `/datasets/${encodeURIComponent(String(dataset))}/approvehubsitejoin` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<ApproveHubSiteJoinResponse>("POST", url);
+        const httpResponse = await this.httpClient.sendAsync<ApproveHubSiteJoinResponse>("POST", url, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(`POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as ApproveHubSiteJoinResponse;
@@ -1018,17 +1018,17 @@ export class SharepointonlineClient extends ConnectorClientBase {
      * Cancel hub site join request
      * @remarks Cancel hub join request. If applicable, you should specify the same Approval Correlation Id as used in the "Set hub site join status to pending" action.
      */
-    public async cancelHubSiteJoinApprovalAsync(dataset: string, approvalCorrelationId?: string): Promise<void> {
+    public async cancelHubSiteJoinApprovalAsync(dataset: string, approvalCorrelationId?: string, abortSignal?: AbortSignal): Promise<void> {
         const queryParams: string[] = [];
         if (approvalCorrelationId !== undefined) {
             queryParams.push(`approvalCorrelationId=${encodeURIComponent(String(approvalCorrelationId))}`);
         }
         const requestPath = `/datasets/${encodeURIComponent(String(dataset))}/cancelhubsitejoinapproval` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<void>("POST", url);
+        const httpResponse = await this.httpClient.sendAsync<void>("POST", url, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(`POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
     }
 
@@ -1036,13 +1036,13 @@ export class SharepointonlineClient extends ConnectorClientBase {
      * Create sharing link for a file or folder
      * @remarks Create sharing link for a file or folder.
      */
-    public async createSharingLinkAsync(input: ItemPermissionCreateLinkBody, dataset: string, table: string, id: string): Promise<SharingLinkPermission> {
+    public async createSharingLinkAsync(input: ItemPermissionCreateLinkBody, dataset: string, table: string, id: string, abortSignal?: AbortSignal): Promise<SharingLinkPermission> {
         const requestPath = `/datasets/${encodeURIComponent(String(dataset))}/codeless/_api/v2.0/sites/root/lists/${table}/items/${id}/driveItem/createLink`;
         const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<SharingLinkPermission>("POST", url, undefined, input);
+        const httpResponse = await this.httpClient.sendAsync<SharingLinkPermission>("POST", url, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(`POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as SharingLinkPermission;
@@ -1052,7 +1052,7 @@ export class SharepointonlineClient extends ConnectorClientBase {
      * Copy file (deprecated)
      * @remarks Copies a file to a SharePoint site.
      */
-    public async copyFileAsync(dataset: string, source?: string, destination?: string, overwrite?: string, queryParametersSingleEncoded?: string): Promise<BlobMetadata> {
+    public async copyFileAsync(dataset: string, source?: string, destination?: string, overwrite?: string, queryParametersSingleEncoded?: string, abortSignal?: AbortSignal): Promise<BlobMetadata> {
         const queryParams: string[] = [];
         if (source !== undefined) {
             queryParams.push(`source=${encodeURIComponent(String(source))}`);
@@ -1068,10 +1068,10 @@ export class SharepointonlineClient extends ConnectorClientBase {
         }
         const requestPath = `/datasets/${encodeURIComponent(String(dataset))}/copyFile` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<BlobMetadata>("POST", url);
+        const httpResponse = await this.httpClient.sendAsync<BlobMetadata>("POST", url, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(`POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as BlobMetadata;
@@ -1081,13 +1081,13 @@ export class SharepointonlineClient extends ConnectorClientBase {
      * Copy folder
      * @remarks Copies a folder. Works in a similar way to the "Copy to" command in SharePoint libraries. Returns information about the new folder after copy.
      */
-    public async copyFolderAsync(input: CopyFolderParameters, dataset: string): Promise<SPBlobMetadataResponse> {
+    public async copyFolderAsync(input: CopyFolderParameters, dataset: string, abortSignal?: AbortSignal): Promise<SPBlobMetadataResponse> {
         const requestPath = `/datasets/${encodeURIComponent(String(dataset))}/copyFolderAsync`;
         const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<SPBlobMetadataResponse>("POST", url, undefined, input);
+        const httpResponse = await this.httpClient.sendAsync<SPBlobMetadataResponse>("POST", url, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(`POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as SPBlobMetadataResponse;
@@ -1097,7 +1097,7 @@ export class SharepointonlineClient extends ConnectorClientBase {
      * Create file
      * @remarks Uploads a file to a SharePoint site. Make sure to pick an existing library.
      */
-    public async createFileAsync(input: CreateFileInput, dataset: string, folderPath?: string, name?: string, queryParametersSingleEncoded?: string): Promise<SPBlobMetadataResponse> {
+    public async createFileAsync(input: CreateFileInput, dataset: string, folderPath?: string, name?: string, queryParametersSingleEncoded?: string, abortSignal?: AbortSignal): Promise<SPBlobMetadataResponse> {
         const queryParams: string[] = [];
         if (folderPath !== undefined) {
             queryParams.push(`folderPath=${encodeURIComponent(String(folderPath))}`);
@@ -1110,10 +1110,10 @@ export class SharepointonlineClient extends ConnectorClientBase {
         }
         const requestPath = `/datasets/${encodeURIComponent(String(dataset))}/files` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<SPBlobMetadataResponse>("POST", url, undefined, input);
+        const httpResponse = await this.httpClient.sendAsync<SPBlobMetadataResponse>("POST", url, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(`POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as SPBlobMetadataResponse;
@@ -1123,13 +1123,13 @@ export class SharepointonlineClient extends ConnectorClientBase {
      * Delete file
      * @remarks Deletes the file specified by the file identifier.
      */
-    public async deleteFileAsync(dataset: string, id: string): Promise<void> {
+    public async deleteFileAsync(dataset: string, id: string, abortSignal?: AbortSignal): Promise<void> {
         const requestPath = `/datasets/${encodeURIComponent(String(dataset))}/files/${id}`;
         const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<void>("DELETE", url);
+        const httpResponse = await this.httpClient.sendAsync<void>("DELETE", url, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(`DELETE ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorException(this.connectorName, `DELETE ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
     }
 
@@ -1137,13 +1137,13 @@ export class SharepointonlineClient extends ConnectorClientBase {
      * Get file metadata
      * @remarks Gets information about the file such as size, etag, created date, etc. Uses a file identifier to pick the file. Use "Get file properties" action to get to the values stored in the columns in the library.
      */
-    public async getFileMetadataAsync(dataset: string, id: string): Promise<SPBlobMetadataResponse> {
+    public async getFileMetadataAsync(dataset: string, id: string, abortSignal?: AbortSignal): Promise<SPBlobMetadataResponse> {
         const requestPath = `/datasets/${encodeURIComponent(String(dataset))}/files/${id}`;
         const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<SPBlobMetadataResponse>("GET", url);
+        const httpResponse = await this.httpClient.sendAsync<SPBlobMetadataResponse>("GET", url, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(`GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as SPBlobMetadataResponse;
@@ -1153,13 +1153,13 @@ export class SharepointonlineClient extends ConnectorClientBase {
      * Update file
      * @remarks Updates the contents of the file specified by the file identifier.
      */
-    public async updateFileAsync(input: UpdateFileInput, dataset: string, id: string): Promise<BlobMetadataResponse> {
+    public async updateFileAsync(input: UpdateFileInput, dataset: string, id: string, abortSignal?: AbortSignal): Promise<BlobMetadataResponse> {
         const requestPath = `/datasets/${encodeURIComponent(String(dataset))}/files/${id}`;
         const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<BlobMetadataResponse>("PUT", url, undefined, input);
+        const httpResponse = await this.httpClient.sendAsync<BlobMetadataResponse>("PUT", url, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(`PUT ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorException(this.connectorName, `PUT ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as BlobMetadataResponse;
@@ -1169,17 +1169,17 @@ export class SharepointonlineClient extends ConnectorClientBase {
      * Get file content
      * @remarks Gets file contents using the file identifier. The contents can be copied somewhere else, or be used as an attachment.
      */
-    public async getFileContentAsync(dataset: string, id: string, inferContentType?: string): Promise<Blob> {
+    public async getFileContentAsync(dataset: string, id: string, inferContentType?: string, abortSignal?: AbortSignal): Promise<Blob> {
         const queryParams: string[] = [];
         if (inferContentType !== undefined) {
             queryParams.push(`inferContentType=${encodeURIComponent(String(inferContentType))}`);
         }
         const requestPath = `/datasets/${encodeURIComponent(String(dataset))}/files/${id}/content` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<Blob>("GET", url);
+        const httpResponse = await this.httpClient.sendAsync<Blob>("GET", url, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(`GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as Blob;
@@ -1189,13 +1189,13 @@ export class SharepointonlineClient extends ConnectorClientBase {
      * Send an HTTP request to SharePoint
      * @remarks Construct a SharePoint REST API to invoke. Note û This action may execute any SharePoint REST API you have access to. Please proceed with caution.
      */
-    public async httpRequestAsync(input: SharePointHttpRequestBodyParameters, dataset: string): Promise<void> {
+    public async httpRequestAsync(input: SharePointHttpRequestBodyParameters, dataset: string, abortSignal?: AbortSignal): Promise<void> {
         const requestPath = `/datasets/${encodeURIComponent(String(dataset))}/httprequest`;
         const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<void>("POST", url, undefined, input);
+        const httpResponse = await this.httpClient.sendAsync<void>("POST", url, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(`POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
     }
 
@@ -1203,7 +1203,7 @@ export class SharepointonlineClient extends ConnectorClientBase {
      * Join hub site
      * @remarks Join the requested site to the hub site. An Approval Token is required to complete the join successfully if that hub requires approval. If applicable, you should specify the same Approval Correlation Id as used in the "Set hub site join status to pending" action.
      */
-    public async joinHubSiteAsync(dataset: string, hubSiteId?: string, approvalToken?: string, approvalCorrelationId?: string): Promise<void> {
+    public async joinHubSiteAsync(dataset: string, hubSiteId?: string, approvalToken?: string, approvalCorrelationId?: string, abortSignal?: AbortSignal): Promise<void> {
         const queryParams: string[] = [];
         if (hubSiteId !== undefined) {
             queryParams.push(`hubSiteId=${encodeURIComponent(String(hubSiteId))}`);
@@ -1216,10 +1216,10 @@ export class SharepointonlineClient extends ConnectorClientBase {
         }
         const requestPath = `/datasets/${encodeURIComponent(String(dataset))}/joinhubsite` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<void>("POST", url);
+        const httpResponse = await this.httpClient.sendAsync<void>("POST", url, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(`POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
     }
 
@@ -1227,13 +1227,13 @@ export class SharepointonlineClient extends ConnectorClientBase {
      * Move file
      * @remarks Moves a file. Works in a similar way to the "Move to" command in SharePoint libraries. Returns information about the new file after move.
      */
-    public async moveFileAsync(input: MoveFileParameters, dataset: string): Promise<SPBlobMetadataResponse> {
+    public async moveFileAsync(input: MoveFileParameters, dataset: string, abortSignal?: AbortSignal): Promise<SPBlobMetadataResponse> {
         const requestPath = `/datasets/${encodeURIComponent(String(dataset))}/moveFileAsync`;
         const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<SPBlobMetadataResponse>("POST", url, undefined, input);
+        const httpResponse = await this.httpClient.sendAsync<SPBlobMetadataResponse>("POST", url, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(`POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as SPBlobMetadataResponse;
@@ -1243,13 +1243,13 @@ export class SharepointonlineClient extends ConnectorClientBase {
      * Move folder
      * @remarks Moves a folder. Works in a similar way to the "Move to" command in SharePoint libraries. Returns information about the new folder after move.
      */
-    public async moveFolderAsync(input: MoveFolderParameters, dataset: string): Promise<SPBlobMetadataResponse> {
+    public async moveFolderAsync(input: MoveFolderParameters, dataset: string, abortSignal?: AbortSignal): Promise<SPBlobMetadataResponse> {
         const requestPath = `/datasets/${encodeURIComponent(String(dataset))}/moveFolderAsync`;
         const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<SPBlobMetadataResponse>("POST", url, undefined, input);
+        const httpResponse = await this.httpClient.sendAsync<SPBlobMetadataResponse>("POST", url, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(`POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as SPBlobMetadataResponse;
@@ -1259,17 +1259,17 @@ export class SharepointonlineClient extends ConnectorClientBase {
      * Set hub site join status to pending
      * @remarks Set the requested site's hub join request status to pending. The Approval Correlation Id is an optional parameter that helps SharePoint identify a particular hub join request. The requesting site can only have one pending request at a given time.
      */
-    public async notifyHubSiteJoinApprovalStartedAsync(dataset: string, approvalCorrelationId?: string): Promise<void> {
+    public async notifyHubSiteJoinApprovalStartedAsync(dataset: string, approvalCorrelationId?: string, abortSignal?: AbortSignal): Promise<void> {
         const queryParams: string[] = [];
         if (approvalCorrelationId !== undefined) {
             queryParams.push(`approvalCorrelationId=${encodeURIComponent(String(approvalCorrelationId))}`);
         }
         const requestPath = `/datasets/${encodeURIComponent(String(dataset))}/notifyhubsitejoinapprovalstarted` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<void>("POST", url);
+        const httpResponse = await this.httpClient.sendAsync<void>("POST", url, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(`POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
     }
 
@@ -1277,13 +1277,13 @@ export class SharepointonlineClient extends ConnectorClientBase {
      * Get lists
      * @remarks Gets SharePoint lists from a site.
      */
-    public async getTablesAsync(dataset: string): Promise<TablesList> {
+    public async getTablesAsync(dataset: string, abortSignal?: AbortSignal): Promise<TablesList> {
         const requestPath = `/datasets/${encodeURIComponent(String(dataset))}/tables`;
         const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<TablesList>("GET", url);
+        const httpResponse = await this.httpClient.sendAsync<TablesList>("GET", url, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(`GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as TablesList;
@@ -1293,13 +1293,13 @@ export class SharepointonlineClient extends ConnectorClientBase {
      * Create new document set
      * @remarks Creates a new document set list item.
      */
-    public async createNewDocumentSetAsync(input: CreateNewDocumentSetParameters, dataset: string, table: string): Promise<CreateNewDocumentSetResponse> {
+    public async createNewDocumentSetAsync(input: CreateNewDocumentSetParameters, dataset: string, table: string, abortSignal?: AbortSignal): Promise<CreateNewDocumentSetResponse> {
         const requestPath = `/datasets/${encodeURIComponent(String(dataset))}/tables/${table}/createnewdocumentset`;
         const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<CreateNewDocumentSetResponse>("POST", url, undefined, input);
+        const httpResponse = await this.httpClient.sendAsync<CreateNewDocumentSetResponse>("POST", url, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(`POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as CreateNewDocumentSetResponse;
@@ -1309,17 +1309,17 @@ export class SharepointonlineClient extends ConnectorClientBase {
      * Create new folder
      * @remarks Creates a new folder or folder path.
      */
-    public async createNewFolderAsync(input: CreateNewFolderParameters, dataset: string, table: string, view?: string): Promise<CreateNewFolderResponse> {
+    public async createNewFolderAsync(input: CreateNewFolderParameters, dataset: string, table: string, view?: string, abortSignal?: AbortSignal): Promise<CreateNewFolderResponse> {
         const queryParams: string[] = [];
         if (view !== undefined) {
             queryParams.push(`view=${encodeURIComponent(String(view))}`);
         }
         const requestPath = `/datasets/${encodeURIComponent(String(dataset))}/tables/${table}/createnewfolder` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<CreateNewFolderResponse>("POST", url, undefined, input);
+        const httpResponse = await this.httpClient.sendAsync<CreateNewFolderResponse>("POST", url, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(`POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as CreateNewFolderResponse;
@@ -1329,7 +1329,7 @@ export class SharepointonlineClient extends ConnectorClientBase {
      * Resolve person
      * @remarks Returns a single matching user value so it can be assigned to a column of type person. If there are no matches, or multiple matches, this action will error out.
      */
-    public async searchForUserAsync(dataset: string, table: string, entityId: string, searchValue?: string, view?: string): Promise<SPListExpandedUser> {
+    public async searchForUserAsync(dataset: string, table: string, entityId: string, searchValue?: string, view?: string, abortSignal?: AbortSignal): Promise<SPListExpandedUser> {
         const queryParams: string[] = [];
         if (searchValue !== undefined) {
             queryParams.push(`searchValue=${encodeURIComponent(String(searchValue))}`);
@@ -1339,10 +1339,10 @@ export class SharepointonlineClient extends ConnectorClientBase {
         }
         const requestPath = `/datasets/${encodeURIComponent(String(dataset))}/tables/${table}/entities/${entityId}/searchforuser` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<SPListExpandedUser>("GET", url);
+        const httpResponse = await this.httpClient.sendAsync<SPListExpandedUser>("GET", url, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(`GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as SPListExpandedUser;
@@ -1352,7 +1352,7 @@ export class SharepointonlineClient extends ConnectorClientBase {
      * Get files (properties only)
      * @remarks Gets the properties saved in the columns in the library for all folders and files stored in the library.             You can also filter down to the items that match a condition. An "Apply to each" section is usually used to work with the output from this action.             When using this with the On-Premises Data Gateway, the name of the library to connect to may need to be entered manually.
      */
-    public async getFileItemsAsync(dataset: string, table: string, filter?: string, orderby?: string, top?: string, folderPath?: string, viewScopeOption?: string, view?: string): Promise<ItemsList> {
+    public async getFileItemsAsync(dataset: string, table: string, filter?: string, orderby?: string, top?: string, folderPath?: string, viewScopeOption?: string, view?: string, abortSignal?: AbortSignal): Promise<ItemsList> {
         const queryParams: string[] = [];
         if (filter !== undefined) {
             queryParams.push(`$filter=${encodeURIComponent(String(filter))}`);
@@ -1374,10 +1374,10 @@ export class SharepointonlineClient extends ConnectorClientBase {
         }
         const requestPath = `/datasets/${encodeURIComponent(String(dataset))}/tables/${table}/getfileitems` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<ItemsList>("GET", url);
+        const httpResponse = await this.httpClient.sendAsync<ItemsList>("GET", url, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(`GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as ItemsList;
@@ -1387,7 +1387,7 @@ export class SharepointonlineClient extends ConnectorClientBase {
      * Get items
      * @remarks Gets items from a SharePoint list.
      */
-    public async getItemsAsync(dataset: string, table: string, filter?: string, orderby?: string, top?: string, folderPath?: string, viewScopeOption?: string, view?: string): Promise<ItemsList> {
+    public async getItemsAsync(dataset: string, table: string, filter?: string, orderby?: string, top?: string, folderPath?: string, viewScopeOption?: string, view?: string, abortSignal?: AbortSignal): Promise<ItemsList> {
         const queryParams: string[] = [];
         if (filter !== undefined) {
             queryParams.push(`$filter=${encodeURIComponent(String(filter))}`);
@@ -1409,10 +1409,10 @@ export class SharepointonlineClient extends ConnectorClientBase {
         }
         const requestPath = `/datasets/${encodeURIComponent(String(dataset))}/tables/${table}/items` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<ItemsList>("GET", url);
+        const httpResponse = await this.httpClient.sendAsync<ItemsList>("GET", url, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(`GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as ItemsList;
@@ -1422,17 +1422,17 @@ export class SharepointonlineClient extends ConnectorClientBase {
      * Create item
      * @remarks Creates a new item in a SharePoint list.
      */
-    public async postItemAsync(input: PostItemInput, dataset: string, table: string, view?: string): Promise<PostItemResponse> {
+    public async postItemAsync(input: PostItemInput, dataset: string, table: string, view?: string, abortSignal?: AbortSignal): Promise<PostItemResponse> {
         const queryParams: string[] = [];
         if (view !== undefined) {
             queryParams.push(`view=${encodeURIComponent(String(view))}`);
         }
         const requestPath = `/datasets/${encodeURIComponent(String(dataset))}/tables/${table}/items` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<PostItemResponse>("POST", url, undefined, input);
+        const httpResponse = await this.httpClient.sendAsync<PostItemResponse>("POST", url, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(`POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as PostItemResponse;
@@ -1442,13 +1442,13 @@ export class SharepointonlineClient extends ConnectorClientBase {
      * Delete item
      * @remarks Deletes an item from a SharePoint list.
      */
-    public async deleteItemAsync(dataset: string, table: string, id: string): Promise<void> {
+    public async deleteItemAsync(dataset: string, table: string, id: string, abortSignal?: AbortSignal): Promise<void> {
         const requestPath = `/datasets/${encodeURIComponent(String(dataset))}/tables/${table}/items/${id}`;
         const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<void>("DELETE", url);
+        const httpResponse = await this.httpClient.sendAsync<void>("DELETE", url, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(`DELETE ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorException(this.connectorName, `DELETE ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
     }
 
@@ -1456,17 +1456,17 @@ export class SharepointonlineClient extends ConnectorClientBase {
      * Get item
      * @remarks Gets a single item by its id from a SharePoint list.
      */
-    public async getItemAsync(dataset: string, table: string, id: string, view?: string): Promise<GetItemResponse> {
+    public async getItemAsync(dataset: string, table: string, id: string, view?: string, abortSignal?: AbortSignal): Promise<GetItemResponse> {
         const queryParams: string[] = [];
         if (view !== undefined) {
             queryParams.push(`view=${encodeURIComponent(String(view))}`);
         }
         const requestPath = `/datasets/${encodeURIComponent(String(dataset))}/tables/${table}/items/${id}` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<GetItemResponse>("GET", url);
+        const httpResponse = await this.httpClient.sendAsync<GetItemResponse>("GET", url, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(`GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as GetItemResponse;
@@ -1476,17 +1476,17 @@ export class SharepointonlineClient extends ConnectorClientBase {
      * Update item
      * @remarks Updates an item in a SharePoint list.
      */
-    public async patchItemAsync(input: PatchItemInput, dataset: string, table: string, id: string, view?: string): Promise<PatchItemResponse> {
+    public async patchItemAsync(input: PatchItemInput, dataset: string, table: string, id: string, view?: string, abortSignal?: AbortSignal): Promise<PatchItemResponse> {
         const queryParams: string[] = [];
         if (view !== undefined) {
             queryParams.push(`view=${encodeURIComponent(String(view))}`);
         }
         const requestPath = `/datasets/${encodeURIComponent(String(dataset))}/tables/${table}/items/${id}` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<PatchItemResponse>("PATCH", url, undefined, input);
+        const httpResponse = await this.httpClient.sendAsync<PatchItemResponse>("PATCH", url, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(`PATCH ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorException(this.connectorName, `PATCH ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as PatchItemResponse;
@@ -1496,17 +1496,17 @@ export class SharepointonlineClient extends ConnectorClientBase {
      * Create an approval request for an item or file
      * @remarks Creates an approval request for an item or file.
      */
-    public async createApprovalRequestAsync(input: CreateApprovalRequestInput, dataset: string, table: string, id: string, approvalType?: string): Promise<ApprovalData> {
+    public async createApprovalRequestAsync(input: CreateApprovalRequestInput, dataset: string, table: string, id: string, approvalType?: string, abortSignal?: AbortSignal): Promise<ApprovalData> {
         const queryParams: string[] = [];
         if (approvalType !== undefined) {
             queryParams.push(`approvalType=${encodeURIComponent(String(approvalType))}`);
         }
         const requestPath = `/datasets/${encodeURIComponent(String(dataset))}/tables/${table}/items/${id}/approval` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<ApprovalData>("POST", url, undefined, input);
+        const httpResponse = await this.httpClient.sendAsync<ApprovalData>("POST", url, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(`POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as ApprovalData;
@@ -1516,7 +1516,7 @@ export class SharepointonlineClient extends ConnectorClientBase {
      * Get changes for an item or a file (properties only)
      * @remarks Returns information about columns that have changed within a given time window. Note: The list must have Versioning turned on.
      */
-    public async getItemChangesAsync(dataset: string, table: string, id: string, since?: string, until?: string, includeDrafts?: string, view?: string): Promise<GetItemChangesResponse> {
+    public async getItemChangesAsync(dataset: string, table: string, id: string, since?: string, until?: string, includeDrafts?: string, view?: string, abortSignal?: AbortSignal): Promise<GetItemChangesResponse> {
         const queryParams: string[] = [];
         if (since !== undefined) {
             queryParams.push(`since=${encodeURIComponent(String(since))}`);
@@ -1532,10 +1532,10 @@ export class SharepointonlineClient extends ConnectorClientBase {
         }
         const requestPath = `/datasets/${encodeURIComponent(String(dataset))}/tables/${table}/items/${id}/changes` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<GetItemChangesResponse>("POST", url);
+        const httpResponse = await this.httpClient.sendAsync<GetItemChangesResponse>("POST", url, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(`POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as GetItemChangesResponse;
@@ -1545,13 +1545,13 @@ export class SharepointonlineClient extends ConnectorClientBase {
      * Check in file
      * @remarks Check in a checked out file in a document library, which makes the version of the document available to others.
      */
-    public async checkInFileAsync(input: FileCheckInParameters, dataset: string, table: string, id: string): Promise<void> {
+    public async checkInFileAsync(input: FileCheckInParameters, dataset: string, table: string, id: string, abortSignal?: AbortSignal): Promise<void> {
         const requestPath = `/datasets/${encodeURIComponent(String(dataset))}/tables/${table}/items/${id}/checkinfile`;
         const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<void>("POST", url, undefined, input);
+        const httpResponse = await this.httpClient.sendAsync<void>("POST", url, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(`POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
     }
 
@@ -1559,13 +1559,13 @@ export class SharepointonlineClient extends ConnectorClientBase {
      * Check out file
      * @remarks Check out a file in a document library to prevent others from editing the document, and your changes from being visible until the documented is checked in.
      */
-    public async checkOutFileAsync(dataset: string, table: string, id: string): Promise<void> {
+    public async checkOutFileAsync(dataset: string, table: string, id: string, abortSignal?: AbortSignal): Promise<void> {
         const requestPath = `/datasets/${encodeURIComponent(String(dataset))}/tables/${table}/items/${id}/checkoutfile`;
         const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<void>("POST", url);
+        const httpResponse = await this.httpClient.sendAsync<void>("POST", url, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(`POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
     }
 
@@ -1573,13 +1573,13 @@ export class SharepointonlineClient extends ConnectorClientBase {
      * Discard check out
      * @remarks If you check out a file and donÆt make changes to it, or you make changes that you donÆt want to keep, you can simply discard the checkout, rather than saving the file. If your organization tracks versions, a new version is created each time you check a file back into the library. By discarding the checkout, you can avoid making new versions when you havenÆt made any changes to the file.
      */
-    public async discardFileCheckOutAsync(dataset: string, table: string, id: string): Promise<void> {
+    public async discardFileCheckOutAsync(dataset: string, table: string, id: string, abortSignal?: AbortSignal): Promise<void> {
         const requestPath = `/datasets/${encodeURIComponent(String(dataset))}/tables/${table}/items/${id}/discardfilecheckout`;
         const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<void>("POST", url);
+        const httpResponse = await this.httpClient.sendAsync<void>("POST", url, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(`POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
     }
 
@@ -1587,17 +1587,17 @@ export class SharepointonlineClient extends ConnectorClientBase {
      * Get file properties
      * @remarks Gets the properties saved in the columns in the library for the item specified by the item id.             You can add a "Get file content" step and use the "File identifier" property returned by this action to get to the contents of the file.             When using this with the On-Premises Data Gateway, the name of the library to connect to may need to be entered manually.
      */
-    public async getFileItemAsync(dataset: string, table: string, id: string, view?: string): Promise<Item> {
+    public async getFileItemAsync(dataset: string, table: string, id: string, view?: string, abortSignal?: AbortSignal): Promise<Item> {
         const queryParams: string[] = [];
         if (view !== undefined) {
             queryParams.push(`view=${encodeURIComponent(String(view))}`);
         }
         const requestPath = `/datasets/${encodeURIComponent(String(dataset))}/tables/${table}/items/${id}/getfileitem` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<Item>("GET", url);
+        const httpResponse = await this.httpClient.sendAsync<Item>("GET", url, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(`GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as Item;
@@ -1607,13 +1607,13 @@ export class SharepointonlineClient extends ConnectorClientBase {
      * Grant access to an item or a folder
      * @remarks Grant access to an item or a folder in SharePoint to specific people.
      */
-    public async grantAccessAsync(input: ItemGrantAccessBody, dataset: string, table: string, id: string): Promise<void> {
+    public async grantAccessAsync(input: ItemGrantAccessBody, dataset: string, table: string, id: string, abortSignal?: AbortSignal): Promise<void> {
         const requestPath = `/datasets/${encodeURIComponent(String(dataset))}/tables/${table}/items/${id}/grantaccess`;
         const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<void>("POST", url, undefined, input);
+        const httpResponse = await this.httpClient.sendAsync<void>("POST", url, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(`POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
     }
 
@@ -1621,17 +1621,17 @@ export class SharepointonlineClient extends ConnectorClientBase {
      * Update file properties
      * @remarks Updates the properties stored in columns in a library for the item specified by the item id. Use "Update file" action to update file contents.             When using this with the On-Premises Data Gateway, the name of the library to connect to may need to be entered manually.
      */
-    public async patchFileItemAsync(input: PatchFileItemInput, dataset: string, table: string, id: string, view?: string): Promise<PatchFileItemResponse> {
+    public async patchFileItemAsync(input: PatchFileItemInput, dataset: string, table: string, id: string, view?: string, abortSignal?: AbortSignal): Promise<PatchFileItemResponse> {
         const queryParams: string[] = [];
         if (view !== undefined) {
             queryParams.push(`view=${encodeURIComponent(String(view))}`);
         }
         const requestPath = `/datasets/${encodeURIComponent(String(dataset))}/tables/${table}/items/${id}/patchfileitem` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<PatchFileItemResponse>("PATCH", url, undefined, input);
+        const httpResponse = await this.httpClient.sendAsync<PatchFileItemResponse>("PATCH", url, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(`PATCH ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorException(this.connectorName, `PATCH ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as PatchFileItemResponse;
@@ -1641,13 +1641,13 @@ export class SharepointonlineClient extends ConnectorClientBase {
      * Update file properties using AI Builder model results
      * @remarks Updates the values stored in library columns for a file analyzed by the model specified by the ModelId.
      */
-    public async patchFileItemWithPredictedValuesAsync(input: PatchFileItemWithPredictedValuesParameters, dataset: string, table: string, id: string): Promise<Item> {
+    public async patchFileItemWithPredictedValuesAsync(input: PatchFileItemWithPredictedValuesParameters, dataset: string, table: string, id: string, abortSignal?: AbortSignal): Promise<Item> {
         const requestPath = `/datasets/${encodeURIComponent(String(dataset))}/tables/${table}/items/${id}/patchfileitemwithpredictedvalues`;
         const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<Item>("POST", url, undefined, input);
+        const httpResponse = await this.httpClient.sendAsync<Item>("POST", url, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(`POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as Item;
@@ -1657,7 +1657,7 @@ export class SharepointonlineClient extends ConnectorClientBase {
      * Set content approval status
      * @remarks Sets the content approval status for an item in a list or library that has content approval turned on. You must provide an ETag for pages and files. You can get the ETag using the Get File Metadata action. This action is only available for SharePoint Online and SharePoint 2019.
      */
-    public async setApprovalStatusAsync(dataset: string, table: string, id: string, approvalAction?: string, comments?: string, entityTag?: string): Promise<SetApprovalStatusOutput> {
+    public async setApprovalStatusAsync(dataset: string, table: string, id: string, approvalAction?: string, comments?: string, entityTag?: string, abortSignal?: AbortSignal): Promise<SetApprovalStatusOutput> {
         const queryParams: string[] = [];
         if (approvalAction !== undefined) {
             queryParams.push(`approvalAction=${encodeURIComponent(String(approvalAction))}`);
@@ -1670,10 +1670,10 @@ export class SharepointonlineClient extends ConnectorClientBase {
         }
         const requestPath = `/datasets/${encodeURIComponent(String(dataset))}/tables/${table}/items/${id}/setapprovalstatus` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<SetApprovalStatusOutput>("POST", url);
+        const httpResponse = await this.httpClient.sendAsync<SetApprovalStatusOutput>("POST", url, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(`POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as SetApprovalStatusOutput;
@@ -1683,13 +1683,13 @@ export class SharepointonlineClient extends ConnectorClientBase {
      * Stop sharing an item or a file
      * @remarks Delete all links giving access to an item or a file and remove all people with direct access except for owners.
      */
-    public async unshareItemAsync(dataset: string, table: string, id: string): Promise<void> {
+    public async unshareItemAsync(dataset: string, table: string, id: string, abortSignal?: AbortSignal): Promise<void> {
         const requestPath = `/datasets/${encodeURIComponent(String(dataset))}/tables/${table}/items/${id}/unshare`;
         const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<void>("POST", url);
+        const httpResponse = await this.httpClient.sendAsync<void>("POST", url, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(`POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
     }
 
@@ -1697,13 +1697,13 @@ export class SharepointonlineClient extends ConnectorClientBase {
      * Get attachments
      * @remarks Returns the list of attachments for the specified list item. You can add a "Get attachment content" step and use the "File identifier" property returned by this action to get to the contents of the file.
      */
-    public async getItemAttachmentsAsync(dataset: string, table: string, itemId: string): Promise<Array<SPListItemAttachment>> {
+    public async getItemAttachmentsAsync(dataset: string, table: string, itemId: string, abortSignal?: AbortSignal): Promise<Array<SPListItemAttachment>> {
         const requestPath = `/datasets/${encodeURIComponent(String(dataset))}/tables/${table}/items/${itemId}/attachments`;
         const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<Array<SPListItemAttachment>>("GET", url);
+        const httpResponse = await this.httpClient.sendAsync<Array<SPListItemAttachment>>("GET", url, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(`GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as Array<SPListItemAttachment>;
@@ -1713,17 +1713,17 @@ export class SharepointonlineClient extends ConnectorClientBase {
      * Add attachment
      * @remarks Adds a new attachment to the specified list item.
      */
-    public async createAttachmentAsync(input: CreateAttachmentInput, dataset: string, table: string, itemId: string, displayName?: string): Promise<SPListItemAttachment> {
+    public async createAttachmentAsync(input: CreateAttachmentInput, dataset: string, table: string, itemId: string, displayName?: string, abortSignal?: AbortSignal): Promise<SPListItemAttachment> {
         const queryParams: string[] = [];
         if (displayName !== undefined) {
             queryParams.push(`displayName=${encodeURIComponent(String(displayName))}`);
         }
         const requestPath = `/datasets/${encodeURIComponent(String(dataset))}/tables/${table}/items/${itemId}/attachments` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<SPListItemAttachment>("POST", url, undefined, input);
+        const httpResponse = await this.httpClient.sendAsync<SPListItemAttachment>("POST", url, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(`POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as SPListItemAttachment;
@@ -1733,13 +1733,13 @@ export class SharepointonlineClient extends ConnectorClientBase {
      * Delete attachment
      * @remarks Deletes the specified attachment.
      */
-    public async deleteAttachmentAsync(dataset: string, table: string, itemId: string, attachmentId: string): Promise<void> {
+    public async deleteAttachmentAsync(dataset: string, table: string, itemId: string, attachmentId: string, abortSignal?: AbortSignal): Promise<void> {
         const requestPath = `/datasets/${encodeURIComponent(String(dataset))}/tables/${table}/items/${itemId}/attachments/${attachmentId}`;
         const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<void>("DELETE", url);
+        const httpResponse = await this.httpClient.sendAsync<void>("DELETE", url, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(`DELETE ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorException(this.connectorName, `DELETE ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
     }
 
@@ -1747,13 +1747,13 @@ export class SharepointonlineClient extends ConnectorClientBase {
      * Get attachment content
      * @remarks Returns file contents using the file identifier. The contents can be copied somewhere else, or be used as an attachment.
      */
-    public async getAttachmentContentAsync(dataset: string, table: string, itemId: string, attachmentId: string): Promise<Blob> {
+    public async getAttachmentContentAsync(dataset: string, table: string, itemId: string, attachmentId: string, abortSignal?: AbortSignal): Promise<Blob> {
         const requestPath = `/datasets/${encodeURIComponent(String(dataset))}/tables/${table}/items/${itemId}/attachments/${attachmentId}/$value`;
         const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<Blob>("GET", url);
+        const httpResponse = await this.httpClient.sendAsync<Blob>("GET", url, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(`GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as Blob;
@@ -1763,7 +1763,7 @@ export class SharepointonlineClient extends ConnectorClientBase {
      * When an item or a file is modified
      * @remarks Triggers when an item is modified (but not when it is created).
      */
-    public async getOnChangedItemsAsync(dataset: string, table: string, folderPath?: string, view?: string): Promise<ItemsList> {
+    public async getOnChangedItemsAsync(dataset: string, table: string, folderPath?: string, view?: string, abortSignal?: AbortSignal): Promise<ItemsList> {
         const queryParams: string[] = [];
         if (folderPath !== undefined) {
             queryParams.push(`folderPath=${encodeURIComponent(String(folderPath))}`);
@@ -1773,10 +1773,10 @@ export class SharepointonlineClient extends ConnectorClientBase {
         }
         const requestPath = `/datasets/${encodeURIComponent(String(dataset))}/tables/${table}/onchangeditems` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<ItemsList>("GET", url);
+        const httpResponse = await this.httpClient.sendAsync<ItemsList>("GET", url, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(`GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as ItemsList;
@@ -1786,17 +1786,17 @@ export class SharepointonlineClient extends ConnectorClientBase {
      * When a file is deleted
      * @remarks Triggers when a file is deleted in a library. You can optionally specify a folder to watch as well. When a folder is deleted, the trigger will fire only once for the deleted folder. This can only be used by site collection admins of the site where the list is located.
      */
-    public async getOnDeletedFileItemsAsync(dataset: string, table: string, folderPath?: string): Promise<DeletedItemList> {
+    public async getOnDeletedFileItemsAsync(dataset: string, table: string, folderPath?: string, abortSignal?: AbortSignal): Promise<DeletedItemList> {
         const queryParams: string[] = [];
         if (folderPath !== undefined) {
             queryParams.push(`folderPath=${encodeURIComponent(String(folderPath))}`);
         }
         const requestPath = `/datasets/${encodeURIComponent(String(dataset))}/tables/${table}/ondeletedfileitems` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<DeletedItemList>("GET", url);
+        const httpResponse = await this.httpClient.sendAsync<DeletedItemList>("GET", url, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(`GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as DeletedItemList;
@@ -1806,13 +1806,13 @@ export class SharepointonlineClient extends ConnectorClientBase {
      * When an item is deleted
      * @remarks Triggers when an item is deleted in a list. This can only be used by site collection admins of the site where the list is located.
      */
-    public async getOnDeletedItemsAsync(dataset: string, table: string): Promise<DeletedItemList> {
+    public async getOnDeletedItemsAsync(dataset: string, table: string, abortSignal?: AbortSignal): Promise<DeletedItemList> {
         const requestPath = `/datasets/${encodeURIComponent(String(dataset))}/tables/${table}/ondeleteditems`;
         const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<DeletedItemList>("GET", url);
+        const httpResponse = await this.httpClient.sendAsync<DeletedItemList>("GET", url, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(`GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as DeletedItemList;
@@ -1822,7 +1822,7 @@ export class SharepointonlineClient extends ConnectorClientBase {
      * When a file is created (properties only)
      * @remarks Triggers when an item is created in a library. Returns only the properties stored in the library columns.             You can add a "Get file content" step and use the "File identifier" property returned by this action to get to the contents of the file.             When using this with the On-Premises Data Gateway, the name of the library to connect to may need to be entered manually.
      */
-    public async getOnNewFileItemsAsync(dataset: string, table: string, folderPath?: string, view?: string): Promise<ItemsList> {
+    public async getOnNewFileItemsAsync(dataset: string, table: string, folderPath?: string, view?: string, abortSignal?: AbortSignal): Promise<ItemsList> {
         const queryParams: string[] = [];
         if (folderPath !== undefined) {
             queryParams.push(`folderPath=${encodeURIComponent(String(folderPath))}`);
@@ -1832,10 +1832,10 @@ export class SharepointonlineClient extends ConnectorClientBase {
         }
         const requestPath = `/datasets/${encodeURIComponent(String(dataset))}/tables/${table}/onnewfileitems` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<ItemsList>("GET", url);
+        const httpResponse = await this.httpClient.sendAsync<ItemsList>("GET", url, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(`GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as ItemsList;
@@ -1845,17 +1845,17 @@ export class SharepointonlineClient extends ConnectorClientBase {
      * When an item is created
      * @remarks Triggers when an item is created.
      */
-    public async getOnNewItemsAsync(dataset: string, table: string, view?: string): Promise<ItemsList> {
+    public async getOnNewItemsAsync(dataset: string, table: string, view?: string, abortSignal?: AbortSignal): Promise<ItemsList> {
         const queryParams: string[] = [];
         if (view !== undefined) {
             queryParams.push(`view=${encodeURIComponent(String(view))}`);
         }
         const requestPath = `/datasets/${encodeURIComponent(String(dataset))}/tables/${table}/onnewitems` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<ItemsList>("GET", url);
+        const httpResponse = await this.httpClient.sendAsync<ItemsList>("GET", url, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(`GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as ItemsList;
@@ -1865,7 +1865,7 @@ export class SharepointonlineClient extends ConnectorClientBase {
      * When a file is classified by a Microsoft Syntex model
      * @remarks Triggers a flow when Microsoft Syntex changes the classification date of any file in the library. The date changes when a document processing model classifies or extracts information.
      */
-    public async getOnUpdatedFileClassifiedTimesAsync(dataset: string, table: string, folderPath?: string, view?: string): Promise<ItemsList> {
+    public async getOnUpdatedFileClassifiedTimesAsync(dataset: string, table: string, folderPath?: string, view?: string, abortSignal?: AbortSignal): Promise<ItemsList> {
         const queryParams: string[] = [];
         if (folderPath !== undefined) {
             queryParams.push(`folderPath=${encodeURIComponent(String(folderPath))}`);
@@ -1875,10 +1875,10 @@ export class SharepointonlineClient extends ConnectorClientBase {
         }
         const requestPath = `/datasets/${encodeURIComponent(String(dataset))}/tables/${table}/onupdatedfileclassifiedtimes` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<ItemsList>("GET", url);
+        const httpResponse = await this.httpClient.sendAsync<ItemsList>("GET", url, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(`GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as ItemsList;
@@ -1888,7 +1888,7 @@ export class SharepointonlineClient extends ConnectorClientBase {
      * When a file is created or modified (properties only)
      * @remarks Triggers when an item is created, or modified in a library. Returns only the properties stored in the library columns.             You can add a "Get file content" step and use the "File identifier" property returned by this action to get to the contents of the file.             When using this with the On-Premises Data Gateway, the name of the library to connect to may need to be entered manually.
      */
-    public async getOnUpdatedFileItemsAsync(dataset: string, table: string, folderPath?: string, view?: string): Promise<ItemsList> {
+    public async getOnUpdatedFileItemsAsync(dataset: string, table: string, folderPath?: string, view?: string, abortSignal?: AbortSignal): Promise<ItemsList> {
         const queryParams: string[] = [];
         if (folderPath !== undefined) {
             queryParams.push(`folderPath=${encodeURIComponent(String(folderPath))}`);
@@ -1898,10 +1898,10 @@ export class SharepointonlineClient extends ConnectorClientBase {
         }
         const requestPath = `/datasets/${encodeURIComponent(String(dataset))}/tables/${table}/onupdatedfileitems` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<ItemsList>("GET", url);
+        const httpResponse = await this.httpClient.sendAsync<ItemsList>("GET", url, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(`GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as ItemsList;
@@ -1911,17 +1911,17 @@ export class SharepointonlineClient extends ConnectorClientBase {
      * When an item is created or modified
      * @remarks Triggers when an item is created, and also each time it is modified.
      */
-    public async getOnUpdatedItemsAsync(dataset: string, table: string, view?: string): Promise<ItemsList> {
+    public async getOnUpdatedItemsAsync(dataset: string, table: string, view?: string, abortSignal?: AbortSignal): Promise<ItemsList> {
         const queryParams: string[] = [];
         if (view !== undefined) {
             queryParams.push(`view=${encodeURIComponent(String(view))}`);
         }
         const requestPath = `/datasets/${encodeURIComponent(String(dataset))}/tables/${table}/onupdateditems` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<ItemsList>("GET", url);
+        const httpResponse = await this.httpClient.sendAsync<ItemsList>("GET", url, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(`GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as ItemsList;
@@ -1931,7 +1931,7 @@ export class SharepointonlineClient extends ConnectorClientBase {
      * Generate document using Microsoft Syntex (preview)
      * @remarks Use this action to create documents based on modern templates from Microsoft Syntex. This preview requires a Syntex license. Pricing is subject to change. For more info see: https://docs.microsoft.com/en-us/microsoft-365/contentunderstanding/content-assembly.
      */
-    public async createContentAssemblyDocumentAsync(input: CreateContentAssemblyDocumentInput, dataset: string, table: string, template: string, folderPath?: string, fileName?: string, view?: string): Promise<SPBlobMetadataResponse> {
+    public async createContentAssemblyDocumentAsync(input: CreateContentAssemblyDocumentInput, dataset: string, table: string, template: string, folderPath?: string, fileName?: string, view?: string, abortSignal?: AbortSignal): Promise<SPBlobMetadataResponse> {
         const queryParams: string[] = [];
         if (folderPath !== undefined) {
             queryParams.push(`folderPath=${encodeURIComponent(String(folderPath))}`);
@@ -1944,10 +1944,10 @@ export class SharepointonlineClient extends ConnectorClientBase {
         }
         const requestPath = `/datasets/${encodeURIComponent(String(dataset))}/tables/${table}/templates/${template}/createnewdocument` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<SPBlobMetadataResponse>("POST", url, undefined, input);
+        const httpResponse = await this.httpClient.sendAsync<SPBlobMetadataResponse>("POST", url, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(`POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as SPBlobMetadataResponse;
@@ -1957,13 +1957,13 @@ export class SharepointonlineClient extends ConnectorClientBase {
      * Get list views
      * @remarks Gets views from a SharePoint list.
      */
-    public async getTableViewsAsync(dataset: string, table: string): Promise<Array<Table>> {
+    public async getTableViewsAsync(dataset: string, table: string, abortSignal?: AbortSignal): Promise<Array<Table>> {
         const requestPath = `/datasets/${encodeURIComponent(String(dataset))}/tables/${table}/views`;
         const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<Array<Table>>("GET", url);
+        const httpResponse = await this.httpClient.sendAsync<Array<Table>>("GET", url, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(`GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as Array<Table>;
@@ -1973,7 +1973,7 @@ export class SharepointonlineClient extends ConnectorClientBase {
      * When a file is created in a folder (deprecated)
      * @remarks Triggers when a file is created in a SharePoint folder. The trigger does not fire if a file is added/updated in a subfolder. If it is required to trigger on subfolders, multiple triggers should be created.
      */
-    public async onNewFileAsync(dataset: string, folderId?: string, inferContentType?: string, queryParametersSingleEncoded?: string): Promise<Blob> {
+    public async onNewFileAsync(dataset: string, folderId?: string, inferContentType?: string, queryParametersSingleEncoded?: string, abortSignal?: AbortSignal): Promise<Blob> {
         const queryParams: string[] = [];
         if (folderId !== undefined) {
             queryParams.push(`folderId=${encodeURIComponent(String(folderId))}`);
@@ -1986,10 +1986,10 @@ export class SharepointonlineClient extends ConnectorClientBase {
         }
         const requestPath = `/datasets/${encodeURIComponent(String(dataset))}/triggers/onnewfile` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<Blob>("GET", url);
+        const httpResponse = await this.httpClient.sendAsync<Blob>("GET", url, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(`GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as Blob;
@@ -1999,7 +1999,7 @@ export class SharepointonlineClient extends ConnectorClientBase {
      * When a file is created or modified in a folder (deprecated)
      * @remarks Triggers when a file is created, and also each time it is modified in a SharePoint folder. The trigger does not fire if a file is added/updated in a subfolder. If it is required to trigger on subfolders, multiple triggers should be created.
      */
-    public async onUpdatedFileAsync(dataset: string, folderId?: string, includeFileContent?: string, inferContentType?: string, queryParametersSingleEncoded?: string): Promise<Blob> {
+    public async onUpdatedFileAsync(dataset: string, folderId?: string, includeFileContent?: string, inferContentType?: string, queryParametersSingleEncoded?: string, abortSignal?: AbortSignal): Promise<Blob> {
         const queryParams: string[] = [];
         if (folderId !== undefined) {
             queryParams.push(`folderId=${encodeURIComponent(String(folderId))}`);
@@ -2015,10 +2015,10 @@ export class SharepointonlineClient extends ConnectorClientBase {
         }
         const requestPath = `/datasets/${encodeURIComponent(String(dataset))}/triggers/onupdatedfile` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<Blob>("GET", url);
+        const httpResponse = await this.httpClient.sendAsync<Blob>("GET", url, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(`GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as Blob;
@@ -2028,7 +2028,7 @@ export class SharepointonlineClient extends ConnectorClientBase {
      * Extract folder
      * @remarks Extracts an archive file into a SharePoint folder (example: .zip).
      */
-    public async extractFolderAsync(dataset: string, source?: string, destination?: string, overwrite?: string, queryParametersSingleEncoded?: string): Promise<Array<BlobMetadata>> {
+    public async extractFolderAsync(dataset: string, source?: string, destination?: string, overwrite?: string, queryParametersSingleEncoded?: string, abortSignal?: AbortSignal): Promise<Array<BlobMetadata>> {
         const queryParams: string[] = [];
         if (source !== undefined) {
             queryParams.push(`source=${encodeURIComponent(String(source))}`);
@@ -2044,10 +2044,10 @@ export class SharepointonlineClient extends ConnectorClientBase {
         }
         const requestPath = `/datasets/${encodeURIComponent(String(dataset))}/extractFolderV2` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<Array<BlobMetadata>>("POST", url);
+        const httpResponse = await this.httpClient.sendAsync<Array<BlobMetadata>>("POST", url, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(`POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as Array<BlobMetadata>;

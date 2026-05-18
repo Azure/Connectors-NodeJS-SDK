@@ -437,13 +437,13 @@ export class Office365usersClient extends ConnectorClientBase {
      * Update my profile
      * @remarks Updates the profile of the current user
      */
-    public async updateMyProfileAsync(input: GraphUserUpdateableV1): Promise<void> {
+    public async updateMyProfileAsync(input: GraphUserUpdateableV1, abortSignal?: AbortSignal): Promise<void> {
         const requestPath = `/codeless/v1.0/me`;
         const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<void>("PATCH", url, undefined, input);
+        const httpResponse = await this.httpClient.sendAsync<void>("PATCH", url, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(`PATCH ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorException(this.connectorName, `PATCH ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
     }
 
@@ -451,13 +451,13 @@ export class Office365usersClient extends ConnectorClientBase {
      * Update my profile photo
      * @remarks Updates the profile photo of the current user. The size of the photo must be less than 4 MB.
      */
-    public async updateMyPhotoAsync(input: UpdateMyPhotoInput): Promise<void> {
+    public async updateMyPhotoAsync(input: UpdateMyPhotoInput, abortSignal?: AbortSignal): Promise<void> {
         const requestPath = `/codeless/v1.0/me/photo/$value`;
         const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<void>("PUT", url, undefined, input);
+        const httpResponse = await this.httpClient.sendAsync<void>("PUT", url, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(`PUT ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorException(this.connectorName, `PUT ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
     }
 
@@ -465,7 +465,7 @@ export class Office365usersClient extends ConnectorClientBase {
      * Get my trending documents
      * @remarks Retrieves the trending documents for the signed in user
      */
-    public async myTrendingDocumentsAsync(filter?: string, extractSensitivityLabel?: string, fetchSensitivityLabelMetadata?: string): Promise<MyTrendingDocumentsResponse> {
+    public async myTrendingDocumentsAsync(filter?: string, extractSensitivityLabel?: string, fetchSensitivityLabelMetadata?: string, abortSignal?: AbortSignal): Promise<MyTrendingDocumentsResponse> {
         const queryParams: string[] = [];
         if (filter !== undefined) {
             queryParams.push(`$filter=${encodeURIComponent(String(filter))}`);
@@ -478,10 +478,10 @@ export class Office365usersClient extends ConnectorClientBase {
         }
         const requestPath = `/codeless/beta/me/insights/trending` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<MyTrendingDocumentsResponse>("GET", url);
+        const httpResponse = await this.httpClient.sendAsync<MyTrendingDocumentsResponse>("GET", url, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(`GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as MyTrendingDocumentsResponse;
@@ -491,13 +491,13 @@ export class Office365usersClient extends ConnectorClientBase {
      * Get relevant people
      * @remarks Get relevant people.
      */
-    public async relevantPeopleAsync(userId: string): Promise<LinklessEntityListResponseListPerson> {
+    public async relevantPeopleAsync(userId: string, abortSignal?: AbortSignal): Promise<LinklessEntityListResponseListPerson> {
         const requestPath = `/users/${userId}/relevantpeople`;
         const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<LinklessEntityListResponseListPerson>("GET", url);
+        const httpResponse = await this.httpClient.sendAsync<LinklessEntityListResponseListPerson>("GET", url, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(`GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as LinklessEntityListResponseListPerson;
@@ -507,17 +507,17 @@ export class Office365usersClient extends ConnectorClientBase {
      * Get user photo metadata
      * @remarks Get user photo metadata.
      */
-    public async userPhotoMetadataAsync(userId?: string): Promise<ClientPhotoMetadata> {
+    public async userPhotoMetadataAsync(userId?: string, abortSignal?: AbortSignal): Promise<ClientPhotoMetadata> {
         const queryParams: string[] = [];
         if (userId !== undefined) {
             queryParams.push(`userId=${encodeURIComponent(String(userId))}`);
         }
         const requestPath = `/users/photo` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<ClientPhotoMetadata>("GET", url);
+        const httpResponse = await this.httpClient.sendAsync<ClientPhotoMetadata>("GET", url, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(`GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as ClientPhotoMetadata;
@@ -527,7 +527,7 @@ export class Office365usersClient extends ConnectorClientBase {
      * Get trending documents
      * @remarks Retrieves the trending documents for a user
      */
-    public async trendingDocumentsAsync(id: string, filter?: string, extractSensitivityLabel?: string, fetchSensitivityLabelMetadata?: string): Promise<TrendingDocumentsResponse> {
+    public async trendingDocumentsAsync(id: string, filter?: string, extractSensitivityLabel?: string, fetchSensitivityLabelMetadata?: string, abortSignal?: AbortSignal): Promise<TrendingDocumentsResponse> {
         const queryParams: string[] = [];
         if (filter !== undefined) {
             queryParams.push(`$filter=${encodeURIComponent(String(filter))}`);
@@ -540,10 +540,10 @@ export class Office365usersClient extends ConnectorClientBase {
         }
         const requestPath = `/codeless/beta/users/${id}/insights/trending` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<TrendingDocumentsResponse>("GET", url);
+        const httpResponse = await this.httpClient.sendAsync<TrendingDocumentsResponse>("GET", url, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(`GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as TrendingDocumentsResponse;
@@ -553,13 +553,13 @@ export class Office365usersClient extends ConnectorClientBase {
      * Send an HTTP request
      * @remarks Construct a Microsoft Graph REST API request to invoke. These segments are supported: 1st segement: /me, /users/<userId> 2nd segment: messages, mailFolders, events, calendar, calendars, outlook, inferenceClassification. Learn more: https://docs.microsoft.com/en-us/graph/use-the-api.
      */
-    public async httpRequestAsync(input: HttpRequestInput): Promise<ObjectWithoutType> {
+    public async httpRequestAsync(input: HttpRequestInput, abortSignal?: AbortSignal): Promise<ObjectWithoutType> {
         const requestPath = `/codeless/httprequest`;
         const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<ObjectWithoutType>("POST", url, undefined, input);
+        const httpResponse = await this.httpClient.sendAsync<ObjectWithoutType>("POST", url, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(`POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as ObjectWithoutType;
@@ -569,7 +569,7 @@ export class Office365usersClient extends ConnectorClientBase {
      * Get direct reports (V2)
      * @remarks Retrieves the user profiles of the specified user's direct reports. Learn more about available fields to select: https://developer.microsoft.com/en-us/graph/docs/api-reference/v1.0/resources/user#properties
      */
-    public async directReportsAsync(id: string, select?: string, top?: string): Promise<DirectReportsResponse> {
+    public async directReportsAsync(id: string, select?: string, top?: string, abortSignal?: AbortSignal): Promise<DirectReportsResponse> {
         const queryParams: string[] = [];
         if (select !== undefined) {
             queryParams.push(`$select=${encodeURIComponent(String(select))}`);
@@ -579,10 +579,10 @@ export class Office365usersClient extends ConnectorClientBase {
         }
         const requestPath = `/codeless/v1.0/users/${id}/directReports` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<DirectReportsResponse>("GET", url);
+        const httpResponse = await this.httpClient.sendAsync<DirectReportsResponse>("GET", url, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(`GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as DirectReportsResponse;
@@ -592,17 +592,17 @@ export class Office365usersClient extends ConnectorClientBase {
      * Get manager (V2)
      * @remarks Retrieves the profile of the specified user's manager. Learn more about available fields to select: https://developer.microsoft.com/en-us/graph/docs/api-reference/v1.0/resources/user#properties
      */
-    public async managerAsync(id: string, select?: string): Promise<GraphUser> {
+    public async managerAsync(id: string, select?: string, abortSignal?: AbortSignal): Promise<GraphUser> {
         const queryParams: string[] = [];
         if (select !== undefined) {
             queryParams.push(`$select=${encodeURIComponent(String(select))}`);
         }
         const requestPath = `/codeless/v1.0/users/${id}/manager` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<GraphUser>("GET", url);
+        const httpResponse = await this.httpClient.sendAsync<GraphUser>("GET", url, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(`GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as GraphUser;
@@ -612,17 +612,17 @@ export class Office365usersClient extends ConnectorClientBase {
      * Get my profile (V2)
      * @remarks Retrieves the profile of the current user. Learn more about available fields to select: https://developer.microsoft.com/en-us/graph/docs/api-reference/v1.0/resources/user#properties
      */
-    public async myProfileAsync(select?: string): Promise<GraphUser> {
+    public async myProfileAsync(select?: string, abortSignal?: AbortSignal): Promise<GraphUser> {
         const queryParams: string[] = [];
         if (select !== undefined) {
             queryParams.push(`$select=${encodeURIComponent(String(select))}`);
         }
         const requestPath = `/codeless/v1.0/me` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<GraphUser>("GET", url);
+        const httpResponse = await this.httpClient.sendAsync<GraphUser>("GET", url, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(`GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as GraphUser;
@@ -632,7 +632,7 @@ export class Office365usersClient extends ConnectorClientBase {
      * Search for users (V2)
      * @remarks Retrieves the user profiles that match the search term (V2).
      */
-    public async searchUserAsync(searchTerm?: string, top?: string, isSearchTermRequired?: string, skipToken?: string): Promise<EntityListResponseIReadOnlyListUser> {
+    public async searchUserAsync(searchTerm?: string, top?: string, isSearchTermRequired?: string, skipToken?: string, abortSignal?: AbortSignal): Promise<EntityListResponseIReadOnlyListUser> {
         const queryParams: string[] = [];
         if (searchTerm !== undefined) {
             queryParams.push(`searchTerm=${encodeURIComponent(String(searchTerm))}`);
@@ -648,10 +648,10 @@ export class Office365usersClient extends ConnectorClientBase {
         }
         const requestPath = `/v2/users` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<EntityListResponseIReadOnlyListUser>("GET", url);
+        const httpResponse = await this.httpClient.sendAsync<EntityListResponseIReadOnlyListUser>("GET", url, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(`GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as EntityListResponseIReadOnlyListUser;
@@ -661,13 +661,13 @@ export class Office365usersClient extends ConnectorClientBase {
      * Get user photo (V2)
      * @remarks Retrieves the photo of the specified user if they have one
      */
-    public async userPhotoAsync(id: string): Promise<Blob> {
+    public async userPhotoAsync(id: string, abortSignal?: AbortSignal): Promise<Blob> {
         const requestPath = `/codeless/v1.0/users/${id}/photo/$value`;
         const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<Blob>("GET", url);
+        const httpResponse = await this.httpClient.sendAsync<Blob>("GET", url, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(`GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as Blob;
@@ -677,17 +677,17 @@ export class Office365usersClient extends ConnectorClientBase {
      * Get user profile (V2)
      * @remarks Retrieves the profile of a specific user. Learn more about available fields to select: https://developer.microsoft.com/en-us/graph/docs/api-reference/v1.0/resources/user#properties
      */
-    public async userProfileAsync(id: string, select?: string): Promise<GraphUser> {
+    public async userProfileAsync(id: string, select?: string, abortSignal?: AbortSignal): Promise<GraphUser> {
         const queryParams: string[] = [];
         if (select !== undefined) {
             queryParams.push(`$select=${encodeURIComponent(String(select))}`);
         }
         const requestPath = `/codeless/v1.0/users/${id}` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<GraphUser>("GET", url);
+        const httpResponse = await this.httpClient.sendAsync<GraphUser>("GET", url, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(`GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as GraphUser;

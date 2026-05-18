@@ -259,7 +259,7 @@ describe("Office365Client — deleteEmailAsync", () => {
 describe("ConnectorException", () => {
     it("should include status code and response body", () => {
         const errorBody = '{"code": "Forbidden"}';
-        const error = new ConnectorException("GET /test", 403, errorBody);
+        const error = new ConnectorException("office365", "GET /test", 403, errorBody);
 
         expect(error.statusCode).toBe(403);
         expect(error.responseBody).toBe(errorBody);
@@ -269,7 +269,7 @@ describe("ConnectorException", () => {
 
     it("should truncate long error response bodies in message", () => {
         const longBody = "x".repeat(3000);
-        const error = new ConnectorException("GET /test", 500, longBody);
+        const error = new ConnectorException("office365", "GET /test", 500, longBody);
 
         expect(error.message).toContain("...[truncated]");
         expect(error.responseBody).toBe(longBody);
