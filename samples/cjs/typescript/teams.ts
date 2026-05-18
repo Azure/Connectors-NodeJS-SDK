@@ -49,11 +49,10 @@ async function main(): Promise<void> {
         if (teams.length > 0) {
             console.log(`Found ${teams.length} joined teams:`);
             for (const team of teams.slice(0, 5)) {
-                const teamRecord = team as Record<string, unknown>;
-                console.log(`  - ${teamRecord.displayName ?? "Unknown"} (id: ${teamRecord.id})`);
+                console.log(`  - ${team.displayName ?? "Unknown"} (id: ${team.id})`);
             }
 
-            firstTeamId = (teams[0] as Record<string, unknown>).id as string;
+            firstTeamId = teams[0].id as string;
         } else {
             console.log("No joined teams found.");
         }
@@ -76,11 +75,10 @@ async function main(): Promise<void> {
             if (channels.length > 0) {
                 console.log(`Found ${channels.length} channels:`);
                 for (const channel of channels.slice(0, 5)) {
-                    const channelRecord = channel as Record<string, unknown>;
-                    console.log(`  - ${channelRecord.displayName ?? "Unknown"} (id: ${channelRecord.id})`);
+                    console.log(`  - ${channel.displayName ?? "Unknown"} (id: ${channel.id})`);
                 }
 
-                firstChannelId = (channels[0] as Record<string, unknown>).id as string;
+                firstChannelId = channels[0].id;
             } else {
                 console.log("No channels found.");
             }
@@ -108,8 +106,7 @@ async function main(): Promise<void> {
                 "user",
                 "channel",
             );
-            const posted = result as Record<string, unknown>;
-            console.log(`Message posted successfully (id: ${posted.id ?? "unknown"}).`);
+            console.log(`Message posted successfully (id: ${result.id ?? "unknown"}).`);
         } catch (error) {
             if (error instanceof ConnectorException) {
                 console.log(`Connector error: ${error.message}`);
@@ -123,8 +120,10 @@ async function main(): Promise<void> {
     if (firstTeamId && firstChannelId) {
         console.log("\n--- Get Channel Messages ---");
         try {
-            const messagesResponse = await client.getMessagesFromChannelAsync(firstTeamId, firstChannelId) as Record<string, unknown>;
-            const messages = (messagesResponse.value ?? []) as Array<Record<string, unknown>>;
+            const messagesResponse = await client.getMessagesFromChannelAsync(firstTeamId, firstChannelId);
+            // NOTE: ChatMessageList is typed as [key: string]: unknown; at runtime value is an array
+            const rawValue = messagesResponse.value as unknown;
+            const messages = (Array.isArray(rawValue) ? rawValue : []) as Array<Record<string, unknown>>;
 
             if (messages.length > 0) {
                 console.log(`Found ${messages.length} messages:`);
@@ -153,14 +152,12 @@ async function main(): Promise<void> {
         console.log("\n--- Trigger: Poll for New Channel Messages ---");
         try {
             const triggerResponse = await client.onNewChannelMessageAsync(firstTeamId, firstChannelId);
-            const triggerResult = (triggerResponse ?? {}) as Record<string, unknown>;
-            const triggerMessages = (Array.isArray(triggerResult.value) ? triggerResult.value : []) as Array<Record<string, unknown>>;
+            const triggerMessages = triggerResponse ?? [];
 
             if (triggerMessages.length > 0) {
                 console.log(`Trigger returned ${triggerMessages.length} new messages:`);
                 for (const message of triggerMessages.slice(0, 3)) {
-                    const body = message.body as Record<string, unknown> | undefined;
-                    const content = body?.content as string | undefined;
+                    const content = message.body?.content as string | undefined;
                     const preview = content
                         ? content.replace(/<[^>]+>/g, "").slice(0, 60)
                         : "No content";

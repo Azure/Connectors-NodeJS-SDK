@@ -6,4 +6,4 @@
 
 export { ConnectorNames } from "./connectorNames.ts";
 export type { ConnectorName } from "./connectorNames.ts";
-export { availableConnectors, KustoClient, Office365Client, SharepointonlineClient, TeamsClient } from "./ManagedConnectors.ts";
+export { availableConnectors, ArmClient, AzureblobClient, AzuremonitorlogsClient, KustoClient, MqClient, MsgraphgroupsanduserClient, Office365Client, Office365usersClient, OnedriveforbusinessClient, SharepointonlineClient, SmtpClient, TeamsClient } from "./ManagedConnectors.ts";

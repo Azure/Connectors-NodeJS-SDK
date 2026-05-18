@@ -1,6 +1,6 @@
 {
     "name": "@azure/connectors",
-    "version": "0.1.1-preview",
+    "version": "0.1.2-preview",
     "description": "Azure Logic Apps Connector SDK for TypeScript / Node.js",
     "type": "module",
     "main": "dist/cjs/azureConnectors/index.js",
@@ -40,6 +40,7 @@
     },
     "keywords": [
         "azure",
+        "cloud",
         "logic-apps",
         "connectors",
         "sdk",
@@ -48,6 +49,14 @@
     ],
     "author": "Microsoft Corporation",
     "license": "MIT",
+    "homepage": "https://github.com/Azure/Connectors-NodeJS-SDK#readme",
+    "bugs": {
+        "url": "https://github.com/Azure/Connectors-NodeJS-SDK/issues"
+    },
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/Azure/Connectors-NodeJS-SDK.git"
+    },
     "dependencies": {
         "@azure/identity": "^4.0.0"
     },

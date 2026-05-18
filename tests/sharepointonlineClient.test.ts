@@ -51,6 +51,16 @@ describe("SharepointonlineClient — constructor", () => {
         const client = new SharepointonlineClient(TestConnectionUrl + "///", createMockTokenProvider());
         expect(client).toBeDefined();
     });
+
+    it("should throw on null connection URL", () => {
+        expect(() => new SharepointonlineClient(null as unknown as string, createMockTokenProvider()))
+            .toThrow("Parameter 'connectionRuntimeUrl' cannot be null or undefined.");
+    });
+
+    it("should throw on undefined connection URL", () => {
+        expect(() => new SharepointonlineClient(undefined as unknown as string, createMockTokenProvider()))
+            .toThrow("Parameter 'connectionRuntimeUrl' cannot be null or undefined.");
+    });
 });
 
 describe("SharepointonlineClient — getTablesAsync", () => {
@@ -169,7 +179,7 @@ describe("SharepointonlineClient — error handling", () => {
 
     it("should truncate long error response bodies in message", () => {
         const longBody = "x".repeat(3000);
-        const error = new ConnectorException("GET /test", 500, longBody);
+        const error = new ConnectorException("sharepointonline", "GET /test", 500, longBody);
 
         expect(error.message).toContain("...[truncated]");
         expect(error.responseBody).toBe(longBody);

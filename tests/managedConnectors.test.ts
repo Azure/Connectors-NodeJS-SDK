@@ -2,9 +2,17 @@
 
 import {
     availableConnectors,
+    ArmClient,
+    AzureblobClient,
+    AzuremonitorlogsClient,
     KustoClient,
+    MqClient,
+    MsgraphgroupsanduserClient,
     Office365Client,
+    Office365usersClient,
+    OnedriveforbusinessClient,
     SharepointonlineClient,
+    SmtpClient,
     TeamsClient,
 } from "../src/generated/ManagedConnectors.ts";
 import { ConnectorNames } from "../src/generated/connectorNames.ts";
@@ -18,8 +26,8 @@ describe("availableConnectors", () => {
         }
     });
 
-    it("should contain exactly 4 connectors", () => {
-        expect(availableConnectors).toHaveLength(4);
+    it("should contain exactly 12 connectors", () => {
+        expect(availableConnectors).toHaveLength(12);
     });
 
     it("should include all ConnectorNames values", () => {
@@ -35,9 +43,34 @@ describe("availableConnectors", () => {
 });
 
 describe("ManagedConnectors — re-exports", () => {
+    it("should re-export ArmClient", () => {
+        expect(ArmClient).toBeDefined();
+        expect(typeof ArmClient).toBe("function");
+    });
+
+    it("should re-export AzureblobClient", () => {
+        expect(AzureblobClient).toBeDefined();
+        expect(typeof AzureblobClient).toBe("function");
+    });
+
+    it("should re-export AzuremonitorlogsClient", () => {
+        expect(AzuremonitorlogsClient).toBeDefined();
+        expect(typeof AzuremonitorlogsClient).toBe("function");
+    });
+
     it("should re-export KustoClient", () => {
         expect(KustoClient).toBeDefined();
         expect(typeof KustoClient).toBe("function");
+    });
+
+    it("should re-export MqClient", () => {
+        expect(MqClient).toBeDefined();
+        expect(typeof MqClient).toBe("function");
+    });
+
+    it("should re-export MsgraphgroupsanduserClient", () => {
+        expect(MsgraphgroupsanduserClient).toBeDefined();
+        expect(typeof MsgraphgroupsanduserClient).toBe("function");
     });
 
     it("should re-export Office365Client", () => {
@@ -45,9 +78,24 @@ describe("ManagedConnectors — re-exports", () => {
         expect(typeof Office365Client).toBe("function");
     });
 
+    it("should re-export Office365usersClient", () => {
+        expect(Office365usersClient).toBeDefined();
+        expect(typeof Office365usersClient).toBe("function");
+    });
+
+    it("should re-export OnedriveforbusinessClient", () => {
+        expect(OnedriveforbusinessClient).toBeDefined();
+        expect(typeof OnedriveforbusinessClient).toBe("function");
+    });
+
     it("should re-export SharepointonlineClient", () => {
         expect(SharepointonlineClient).toBeDefined();
         expect(typeof SharepointonlineClient).toBe("function");
+    });
+
+    it("should re-export SmtpClient", () => {
+        expect(SmtpClient).toBeDefined();
+        expect(typeof SmtpClient).toBe("function");
     });
 
     it("should re-export TeamsClient", () => {

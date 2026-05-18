@@ -2,6 +2,10 @@
 
 import {
     KustoClient,
+    Query,
+    DatabaseName,
+    ClusterName,
+    ChartType,
     QueryAndListSchema,
     ControlCommandAndListSchema,
     QueryAndVisualizeSchema,
@@ -52,29 +56,29 @@ function mockFetchError(status: number, errorBody: string): void {
 // ──────────────────────────────────────────────
 
 const _queryInput: QueryAndListSchema = {
-    csl: "TestTable | take 10",
-    db: "testdb",
-    cluster: "testcluster",
+    csl: "TestTable | take 10" as unknown as Query,
+    db: "testdb" as unknown as DatabaseName,
+    cluster: "testcluster" as unknown as ClusterName,
 };
 
 const _commandInput: ControlCommandAndListSchema = {
     csl: ".show tables",
-    db: "testdb",
-    cluster: "testcluster",
+    db: "testdb" as unknown as DatabaseName,
+    cluster: "testcluster" as unknown as ClusterName,
 };
 
 const _visualizeInput: QueryAndVisualizeSchema = {
-    csl: "TestTable | take 10",
-    db: "testdb",
-    cluster: "testcluster",
-    chartType: "Bar Chart",
+    csl: "TestTable | take 10" as unknown as Query,
+    db: "testdb" as unknown as DatabaseName,
+    cluster: "testcluster" as unknown as ClusterName,
+    chartType: "Bar Chart" as unknown as ChartType,
 };
 
 const _commandVisualizeInput: CommandAndVisualizeSchema = {
     csl: ".show tables",
-    db: "testdb",
-    cluster: "testcluster",
-    chartType: "Bar Chart",
+    db: "testdb" as unknown as DatabaseName,
+    cluster: "testcluster" as unknown as ClusterName,
+    chartType: "Bar Chart" as unknown as ChartType,
 };
 
 const _mcpRequest: MCPQueryRequest = {
@@ -98,6 +102,16 @@ describe("KustoClient — constructor", () => {
         const client = new KustoClient(TestConnectionUrl + "///", createMockTokenProvider());
         expect(client).toBeDefined();
     });
+
+    it("should throw on null connection URL", () => {
+        expect(() => new KustoClient(null as unknown as string, createMockTokenProvider()))
+            .toThrow("Parameter 'connectionRuntimeUrl' cannot be null or undefined.");
+    });
+
+    it("should throw on undefined connection URL", () => {
+        expect(() => new KustoClient(undefined as unknown as string, createMockTokenProvider()))
+            .toThrow("Parameter 'connectionRuntimeUrl' cannot be null or undefined.");
+    });
 });
 
 describe("KustoClient — listKustoResultsAsync", () => {
@@ -111,9 +125,9 @@ describe("KustoClient — listKustoResultsAsync", () => {
 
         const client = new KustoClient(TestConnectionUrl, createMockTokenProvider());
         const input: QueryAndListSchema = {
-            csl: "TestTable | take 10",
-            db: "testdb",
-            cluster: "testcluster",
+            csl: "TestTable | take 10" as unknown as Query,
+            db: "testdb" as unknown as DatabaseName,
+            cluster: "testcluster" as unknown as ClusterName,
         };
 
         const result = await client.listKustoResultsAsync(input);
@@ -142,8 +156,8 @@ describe("KustoClient — listKustoShowCommandResultsAsync", () => {
         const client = new KustoClient(TestConnectionUrl, createMockTokenProvider());
         const input: ControlCommandAndListSchema = {
             csl: ".show tables",
-            db: "testdb",
-            cluster: "testcluster",
+            db: "testdb" as unknown as DatabaseName,
+            cluster: "testcluster" as unknown as ClusterName,
         };
 
         const result = await client.listKustoShowCommandResultsAsync(input);
@@ -167,10 +181,10 @@ describe("KustoClient — runKustoQueryAndVisualizeResultsAsync", () => {
 
         const client = new KustoClient(TestConnectionUrl, createMockTokenProvider());
         const input: QueryAndVisualizeSchema = {
-            csl: "TestTable | take 10",
-            db: "testdb",
-            cluster: "testcluster",
-            chartType: "Bar Chart",
+            csl: "TestTable | take 10" as unknown as Query,
+            db: "testdb" as unknown as DatabaseName,
+            cluster: "testcluster" as unknown as ClusterName,
+            chartType: "Bar Chart" as unknown as ChartType,
         };
 
         const result = await client.runKustoQueryAndVisualizeResultsAsync(input);
@@ -193,9 +207,9 @@ describe("KustoClient — runKustoCommandAndVisualizeResultsAsync", () => {
         const client = new KustoClient(TestConnectionUrl, createMockTokenProvider());
         const input: CommandAndVisualizeSchema = {
             csl: ".show tables",
-            db: "testdb",
-            cluster: "testcluster",
-            chartType: "Bar Chart",
+            db: "testdb" as unknown as DatabaseName,
+            cluster: "testcluster" as unknown as ClusterName,
+            chartType: "Bar Chart" as unknown as ChartType,
         };
 
         const result = await client.runKustoCommandAndVisualizeResultsAsync(input);
@@ -218,8 +232,8 @@ describe("KustoClient — runAsyncControlCommandAndWaitAsync", () => {
         const client = new KustoClient(TestConnectionUrl, createMockTokenProvider());
         const input: ControlCommandAndListSchema = {
             csl: ".set-or-append async TargetTable <| SourceTable",
-            db: "testdb",
-            cluster: "testcluster",
+            db: "testdb" as unknown as DatabaseName,
+            cluster: "testcluster" as unknown as ClusterName,
         };
 
         const result = await client.runAsyncControlCommandAndWaitAsync(input);
@@ -296,7 +310,7 @@ describe("KustoClient — error handling", () => {
 
         const client = new KustoClient(TestConnectionUrl, createMockTokenProvider());
         await expect(
-            client.listKustoResultsAsync({ csl: "test", db: "testdb", cluster: "testcluster" }),
+            client.listKustoResultsAsync({ csl: "test" as unknown as Query, db: "testdb" as unknown as DatabaseName, cluster: "testcluster" as unknown as ClusterName }),
         ).rejects.toThrow(ConnectorException);
     });
 
@@ -307,7 +321,7 @@ describe("KustoClient — error handling", () => {
         const client = new KustoClient(TestConnectionUrl, createMockTokenProvider());
 
         try {
-            await client.listKustoResultsAsync({ csl: "test", db: "testdb", cluster: "testcluster" });
+            await client.listKustoResultsAsync({ csl: "test" as unknown as Query, db: "testdb" as unknown as DatabaseName, cluster: "testcluster" as unknown as ClusterName });
             throw new Error("Expected ConnectorException to be thrown");
         } catch (error) {
             expect(error).toBeInstanceOf(ConnectorException);
@@ -322,7 +336,7 @@ describe("KustoClient — error handling", () => {
 describe("ConnectorException", () => {
     it("should include status code and response body", () => {
         const errorBody = '{"code": "Forbidden"}';
-        const error = new ConnectorException("GET /test", 403, errorBody);
+        const error = new ConnectorException("kusto", "GET /test", 403, errorBody);
 
         expect(error.statusCode).toBe(403);
         expect(error.responseBody).toBe(errorBody);
@@ -332,7 +346,7 @@ describe("ConnectorException", () => {
 
     it("should truncate long error response bodies in message", () => {
         const longBody = "x".repeat(3000);
-        const error = new ConnectorException("GET /test", 500, longBody);
+        const error = new ConnectorException("kusto", "GET /test", 500, longBody);
 
         expect(error.message).toContain("...[truncated]");
         expect(error.responseBody).toBe(longBody);
@@ -340,7 +354,7 @@ describe("ConnectorException", () => {
     });
 
     it("should handle empty response body", () => {
-        const error = new ConnectorException("POST /query", 500, "");
+        const error = new ConnectorException("kusto", "POST /query", 500, "");
 
         expect(error.message).toContain("POST /query");
         expect(error.responseBody).toBe("");
