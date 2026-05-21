@@ -7,6 +7,39 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.2.0-preview] - 2026-05-21
+
+### Changed (BREAKING)
+
+- Renamed every `ConnectorNames` key to its display-name PascalCase form
+  (string values unchanged): `Arm` → `AzureResourceManager`, `Azureblob` →
+  `AzureBlobStorage`, `Azuremonitorlogs` → `AzureMonitorLogs`, `Kusto` →
+  `AzureDataExplorer`, `Mq` → `MQ`, `Msgraphgroupsanduser` →
+  `MSGraphGroupsAndUsers`, `Office365` → `Office365Outlook`,
+  `Office365users` → `Office365Users`, `Onedriveforbusiness` →
+  `OneDriveForBusiness`, `Sharepointonline` → `SharePoint`, `Smtp` →
+  `SMTP`, `Teams` → `MicrosoftTeams`.
+- Renamed exported generated types: `EmailV3` → `Email`, `AttachmentV2` →
+  `Attachment` (Smtp); `ClientSendHtmlMessage` → `SendEmailInput`,
+  `ClientDraftHtmlMessage` → `DraftEmailInput` (Office365);
+  `GraphUserUpdateableV1` → `GraphUserUpdateable` (Office365users); and
+  similar simplifications across other clients.
+- `CreateBlockBlobInput`, `CreateFileInput`, and `UpdateFileInput` are now
+  `string` aliases (previously empty object types).
+
+### Added
+
+- `ManagedIdentityTokenProvider` test suite covering both constructor
+  variants, scope validation, null-token handling, and the success path.
+- `ConnectorHttpClient` retry/backoff/abort test coverage: transient
+  retry, retry exhaustion, exponential backoff, no-retry on `TypeError` /
+  `SyntaxError`, pre-aborted signal, and mid-flight abort.
+
+### Changed
+
+- Regenerated all 12 connector extensions in `src/generated/` from the
+  latest AzureUX-BPM swagger via `LogicAppsCompiler.exe`.
+
 ## [0.1.2-preview] - 2026-05-15
 
 ### Added
