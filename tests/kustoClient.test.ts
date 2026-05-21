@@ -363,7 +363,7 @@ describe("ConnectorException", () => {
 
 describe("Kusto — connector registry", () => {
     it("should have kusto in ConnectorNames", () => {
-        expect(ConnectorNames.Kusto).toBe("kusto");
+        expect(ConnectorNames.AzureDataExplorer).toBe("kusto");
     });
 
     it("should include kusto in availableConnectors", () => {

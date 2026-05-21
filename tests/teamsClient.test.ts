@@ -285,7 +285,7 @@ describe("TeamsClient — error handling", () => {
 
 describe("Teams — connector registry", () => {
     it("should have teams in ConnectorNames", () => {
-        expect(ConnectorNames.Teams).toBe("teams");
+        expect(ConnectorNames.MicrosoftTeams).toBe("teams");
     });
 
     it("should include teams in availableConnectors", () => {

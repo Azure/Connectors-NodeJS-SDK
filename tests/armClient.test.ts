@@ -356,7 +356,7 @@ describe("ArmClient — error handling", () => {
 
 describe("Arm — connector registry", () => {
     it("should have arm in ConnectorNames", () => {
-        expect(ConnectorNames.Arm).toBe("arm");
+        expect(ConnectorNames.AzureResourceManager).toBe("arm");
     });
 
     it("should include arm in availableConnectors", () => {

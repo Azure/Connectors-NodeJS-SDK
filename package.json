@@ -1,6 +1,6 @@
 {
     "name": "@azure/connectors",
-    "version": "0.1.2-preview",
+    "version": "0.2.0-preview",
     "description": "Azure Logic Apps Connector SDK for TypeScript / Node.js",
     "type": "module",
     "main": "dist/cjs/azureConnectors/index.js",

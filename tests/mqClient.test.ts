@@ -277,7 +277,7 @@ describe("MqClient — error handling", () => {
 
 describe("Mq — connector registry", () => {
     it("should have mq in ConnectorNames", () => {
-        expect(ConnectorNames.Mq).toBe("mq");
+        expect(ConnectorNames.MQ).toBe("mq");
     });
 
     it("should include mq in availableConnectors", () => {

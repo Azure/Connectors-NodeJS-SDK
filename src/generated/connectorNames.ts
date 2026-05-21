@@ -5,18 +5,18 @@
  * Well-known connector names for connectors with SDK-generated clients.
  */
 export const ConnectorNames = {
-    Arm: "arm",
-    Azureblob: "azureblob",
-    Azuremonitorlogs: "azuremonitorlogs",
-    Kusto: "kusto",
-    Mq: "mq",
-    Msgraphgroupsanduser: "msgraphgroupsanduser",
-    Office365: "office365",
-    Office365users: "office365users",
-    Onedriveforbusiness: "onedriveforbusiness",
-    Sharepointonline: "sharepointonline",
-    Smtp: "smtp",
-    Teams: "teams",
+    AzureResourceManager: "arm",
+    AzureBlobStorage: "azureblob",
+    AzureMonitorLogs: "azuremonitorlogs",
+    AzureDataExplorer: "kusto",
+    MQ: "mq",
+    MSGraphGroupsAndUsers: "msgraphgroupsanduser",
+    Office365Outlook: "office365",
+    Office365Users: "office365users",
+    OneDriveForBusiness: "onedriveforbusiness",
+    SharePoint: "sharepointonline",
+    SMTP: "smtp",
+    MicrosoftTeams: "teams",
 } as const;
 
 export type ConnectorName = typeof ConnectorNames[keyof typeof ConnectorNames];

@@ -2,10 +2,10 @@
 
 import {
     Office365Client,
-    ClientDraftHtmlMessage,
+    DraftEmailInput,
     OutlookReceiveMessage,
     GraphOutlookCategory,
-    ClientSendHtmlMessage,
+    SendEmailInput,
     GraphClientReceiveMessage,
     GraphCalendarEventClientReceive,
     GraphCalendarEventListClientReceive,
@@ -49,13 +49,13 @@ function mockFetchError(status: number, errorBody: string): void {
 // Type-level compile-time checks
 // ──────────────────────────────────────────────
 
-const _sendInput: ClientSendHtmlMessage = {
+const _sendInput: SendEmailInput = {
     To: "user@example.com",
     Subject: "Test Subject",
     Body: "<p>Hello</p>",
 };
 
-const _draftInput: ClientDraftHtmlMessage = {
+const _draftInput: DraftEmailInput = {
     To: "user@example.com",
     Subject: "Draft Subject",
     Body: "Draft body",
@@ -108,7 +108,7 @@ describe("Office365Client — sendEmailAsync", () => {
         mockFetchResponse(null);
 
         const client = new Office365Client(TestConnectionUrl, createMockTokenProvider());
-        const input: ClientSendHtmlMessage = {
+        const input: SendEmailInput = {
             To: "user@example.com",
             Subject: "Test",
             Body: "Hello",
@@ -169,7 +169,7 @@ describe("Office365Client — draftEmailAsync", () => {
         mockFetchResponse(draftedMessage);
 
         const client = new Office365Client(TestConnectionUrl, createMockTokenProvider());
-        const input: ClientDraftHtmlMessage = { To: "user@example.com", Subject: "Draft", Body: "<p>Hello</p>" };
+        const input: DraftEmailInput = { To: "user@example.com", Subject: "Draft", Body: "<p>Hello</p>" };
 
         const result = await client.draftEmailAsync(input, "parent-msg-id", "reply");
 
@@ -279,7 +279,7 @@ describe("ConnectorException", () => {
 
 describe("Office365 — connector registry", () => {
     it("should have office365 in ConnectorNames", () => {
-        expect(ConnectorNames.Office365).toBe("office365");
+        expect(ConnectorNames.Office365Outlook).toBe("office365");
     });
 
     it("should include office365 in availableConnectors", () => {

@@ -2,10 +2,8 @@
 
 import {
     SmtpClient,
-    EmailV3,
     Email,
     Attachment,
-    AttachmentV2,
 } from "../src/generated/SmtpExtensions.ts";
 import { ConnectorException } from "../src/azureConnectors/connectorException.ts";
 import { TokenProvider } from "../src/azureConnectors/authentication.ts";
@@ -53,24 +51,11 @@ const _email: Email = {
     Body: "Hello from SMTP",
 };
 
-const _emailV3: EmailV3 = {
-    From: "sender@contoso.com",
-    To: "recipient@contoso.com",
-    Subject: "Test Email V3",
-    Body: "<p>Hello from SMTP</p>",
-};
-
 const _attachment: Attachment = {
     FileName: "report.pdf",
     ContentData: "base64data==",
     ContentType: "application/pdf",
     ContentTransferEncoding: "base64",
-};
-
-const _attachmentV2: AttachmentV2 = {
-    FileName: "report.pdf",
-    ContentData: "base64data==",
-    ContentType: "application/pdf",
 };
 
 // ──────────────────────────────────────────────
@@ -114,7 +99,7 @@ describe("SmtpClient — sendEmailAsync", () => {
         mockFetchResponse(null);
 
         const client = new SmtpClient(TestConnectionUrl, createMockTokenProvider());
-        const input: EmailV3 = {
+        const input: Email = {
             From: "sender@contoso.com",
             To: "recipient@contoso.com",
             Subject: "Test",
@@ -137,13 +122,13 @@ describe("SmtpClient — sendEmailAsync", () => {
         mockFetchResponse(null);
 
         const client = new SmtpClient(TestConnectionUrl, createMockTokenProvider());
-        const input: EmailV3 = {
+        const input: Email = {
             From: "sender@contoso.com",
             To: "recipient@contoso.com",
             Subject: "With attachment",
             Body: "See attached",
             Attachments: [
-                { FileName: "doc.pdf", ContentData: "base64==", ContentType: "application/pdf" },
+                { FileName: "doc.pdf", ContentData: "base64==", ContentType: "application/pdf", ContentTransferEncoding: "base64" },
             ],
         };
 
@@ -159,7 +144,7 @@ describe("SmtpClient — sendEmailAsync", () => {
         mockFetchResponse(null);
 
         const client = new SmtpClient(TestConnectionUrl, createMockTokenProvider());
-        const input: EmailV3 = {
+        const input: Email = {
             From: "sender@contoso.com",
             To: "recipient@contoso.com",
             CC: "cc@contoso.com",
@@ -223,7 +208,7 @@ describe("SmtpClient — error handling", () => {
 
 describe("Smtp — connector registry", () => {
     it("should have smtp in ConnectorNames", () => {
-        expect(ConnectorNames.Smtp).toBe("smtp");
+        expect(ConnectorNames.SMTP).toBe("smtp");
     });
 
     it("should include smtp in availableConnectors", () => {
