@@ -3,52 +3,52 @@
 import { ConnectorNames, ConnectorName } from "../src/generated/connectorNames.ts";
 
 describe("ConnectorNames", () => {
-    it("should expose Arm with correct API name", () => {
-        expect(ConnectorNames.Arm).toBe("arm");
+    it("should expose AzureResourceManager with correct API name", () => {
+        expect(ConnectorNames.AzureResourceManager).toBe("arm");
     });
 
-    it("should expose Azureblob with correct API name", () => {
-        expect(ConnectorNames.Azureblob).toBe("azureblob");
+    it("should expose AzureBlobStorage with correct API name", () => {
+        expect(ConnectorNames.AzureBlobStorage).toBe("azureblob");
     });
 
-    it("should expose Azuremonitorlogs with correct API name", () => {
-        expect(ConnectorNames.Azuremonitorlogs).toBe("azuremonitorlogs");
+    it("should expose AzureMonitorLogs with correct API name", () => {
+        expect(ConnectorNames.AzureMonitorLogs).toBe("azuremonitorlogs");
     });
 
-    it("should expose Kusto with correct API name", () => {
-        expect(ConnectorNames.Kusto).toBe("kusto");
+    it("should expose AzureDataExplorer with correct API name", () => {
+        expect(ConnectorNames.AzureDataExplorer).toBe("kusto");
     });
 
-    it("should expose Mq with correct API name", () => {
-        expect(ConnectorNames.Mq).toBe("mq");
+    it("should expose MQ with correct API name", () => {
+        expect(ConnectorNames.MQ).toBe("mq");
     });
 
-    it("should expose Msgraphgroupsanduser with correct API name", () => {
-        expect(ConnectorNames.Msgraphgroupsanduser).toBe("msgraphgroupsanduser");
+    it("should expose MSGraphGroupsAndUsers with correct API name", () => {
+        expect(ConnectorNames.MSGraphGroupsAndUsers).toBe("msgraphgroupsanduser");
     });
 
-    it("should expose Office365 with correct API name", () => {
-        expect(ConnectorNames.Office365).toBe("office365");
+    it("should expose Office365Outlook with correct API name", () => {
+        expect(ConnectorNames.Office365Outlook).toBe("office365");
     });
 
-    it("should expose Office365users with correct API name", () => {
-        expect(ConnectorNames.Office365users).toBe("office365users");
+    it("should expose Office365Users with correct API name", () => {
+        expect(ConnectorNames.Office365Users).toBe("office365users");
     });
 
-    it("should expose Onedriveforbusiness with correct API name", () => {
-        expect(ConnectorNames.Onedriveforbusiness).toBe("onedriveforbusiness");
+    it("should expose OneDriveForBusiness with correct API name", () => {
+        expect(ConnectorNames.OneDriveForBusiness).toBe("onedriveforbusiness");
     });
 
-    it("should expose Sharepointonline with correct API name", () => {
-        expect(ConnectorNames.Sharepointonline).toBe("sharepointonline");
+    it("should expose SharePoint with correct API name", () => {
+        expect(ConnectorNames.SharePoint).toBe("sharepointonline");
     });
 
-    it("should expose Smtp with correct API name", () => {
-        expect(ConnectorNames.Smtp).toBe("smtp");
+    it("should expose SMTP with correct API name", () => {
+        expect(ConnectorNames.SMTP).toBe("smtp");
     });
 
-    it("should expose Teams with correct API name", () => {
-        expect(ConnectorNames.Teams).toBe("teams");
+    it("should expose MicrosoftTeams with correct API name", () => {
+        expect(ConnectorNames.MicrosoftTeams).toBe("teams");
     });
 
     it("should contain exactly 12 connector entries", () => {

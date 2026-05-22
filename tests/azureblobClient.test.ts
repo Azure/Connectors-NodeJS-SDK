@@ -149,7 +149,7 @@ describe("AzureblobClient — createBlockBlobAsync", () => {
         mockFetchResponse(null);
 
         const client = new AzureblobClient(TestConnectionUrl, createMockTokenProvider());
-        const input: CreateBlockBlobInput = {};
+        const input: CreateBlockBlobInput = "file content";
 
         await client.createBlockBlobAsync(input, TestStorageAccount, "/container", "newfile.txt");
 
@@ -210,7 +210,7 @@ describe("AzureblobClient — updateFileAsync", () => {
         mockFetchResponse(mockResult);
 
         const client = new AzureblobClient(TestConnectionUrl, createMockTokenProvider());
-        const input: UpdateFileInput = {};
+        const input: UpdateFileInput = "updated content";
         const result = await client.updateFileAsync(input, TestDataset, "file-id-1");
 
         expect(result).toEqual(mockResult);
@@ -281,7 +281,7 @@ describe("AzureblobClient — error handling", () => {
 
 describe("Azureblob — connector registry", () => {
     it("should have azureblob in ConnectorNames", () => {
-        expect(ConnectorNames.Azureblob).toBe("azureblob");
+        expect(ConnectorNames.AzureBlobStorage).toBe("azureblob");
     });
 
     it("should include azureblob in availableConnectors", () => {

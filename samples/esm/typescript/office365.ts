@@ -23,7 +23,7 @@
  */
 
 import { ManagedIdentityTokenProvider, ConnectorException } from "@azure/connectors";
-import { Office365Client, ClientSendHtmlMessage } from "@azure/connectors/generated/Office365Extensions";
+import { Office365Client, SendEmailInput } from "@azure/connectors/generated/Office365Extensions";
 
 const CONNECTION_URL = process.env.OFFICE365_CONNECTION_URL ?? "";
 
@@ -63,7 +63,7 @@ async function main(): Promise<void> {
     // Example 2: Send Email
     console.log("\n--- Send Email ---");
     try {
-        const email: ClientSendHtmlMessage = {
+        const email: SendEmailInput = {
             To: process.env.TEST_EMAIL_TO ?? "test@example.com",
             Subject: "Test from ESM TypeScript Sample",
             Body: "<p>Hello from the <strong>ESM TypeScript</strong> sample!</p>",

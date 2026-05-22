@@ -145,7 +145,7 @@ describe("OnedriveforbusinessClient — createFileAsync", () => {
         mockFetchResponse(mockResult);
 
         const client = new OnedriveforbusinessClient(TestConnectionUrl, createMockTokenProvider());
-        const input: CreateFileInput = {};
+        const input: CreateFileInput = "file content";
         const result = await client.createFileAsync(input, "/Documents", "newfile.txt");
 
         expect(result).toEqual(mockResult);
@@ -165,7 +165,7 @@ describe("OnedriveforbusinessClient — updateFileAsync", () => {
         mockFetchResponse(mockResult);
 
         const client = new OnedriveforbusinessClient(TestConnectionUrl, createMockTokenProvider());
-        const input: UpdateFileInput = {};
+        const input: UpdateFileInput = "updated content";
         const result = await client.updateFileAsync(input, "file-1");
 
         expect(result).toEqual(mockResult);
@@ -306,7 +306,7 @@ describe("OnedriveforbusinessClient — error handling", () => {
 
 describe("Onedriveforbusiness — connector registry", () => {
     it("should have onedriveforbusiness in ConnectorNames", () => {
-        expect(ConnectorNames.Onedriveforbusiness).toBe("onedriveforbusiness");
+        expect(ConnectorNames.OneDriveForBusiness).toBe("onedriveforbusiness");
     });
 
     it("should include onedriveforbusiness in availableConnectors", () => {

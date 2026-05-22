@@ -25,7 +25,7 @@
  */
 
 import { ManagedIdentityTokenProvider, ConnectorException } from "@azure/connectors";
-import { SmtpClient, EmailV3 } from "@azure/connectors/generated/SmtpExtensions";
+import { SmtpClient, Email } from "@azure/connectors/generated/SmtpExtensions";
 
 const CONNECTION_URL = process.env.SMTP_CONNECTION_URL ?? "";
 const FROM_ADDRESS = process.env.SMTP_FROM ?? "sender@example.com";
@@ -46,7 +46,7 @@ async function main(): Promise<void> {
     // Example 1: Send a simple email
     console.log("\n--- Send Email ---");
     try {
-        const email: EmailV3 = {
+        const email: Email = {
             From: FROM_ADDRESS,
             To: TO_ADDRESS,
             Subject: `Test from SMTP SDK Sample (${new Date().toISOString()})`,
@@ -70,7 +70,7 @@ async function main(): Promise<void> {
     if (ccAddress) {
         console.log("\n--- Send Email with CC ---");
         try {
-            const email: EmailV3 = {
+            const email: Email = {
                 From: FROM_ADDRESS,
                 To: TO_ADDRESS,
                 CC: ccAddress,
@@ -92,7 +92,7 @@ async function main(): Promise<void> {
     // Example 3: Error handling — invalid address
     console.log("\n--- Error Handling ---");
     try {
-        const badEmail: EmailV3 = {
+        const badEmail: Email = {
             From: "",
             To: "",
             Subject: "This should fail",

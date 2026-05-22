@@ -3,7 +3,7 @@
 import {
     Office365usersClient,
     GraphUser,
-    GraphUserUpdateableV1,
+    GraphUserUpdateable,
     EntityListResponseIReadOnlyListUser,
     DirectReportsResponse,
     ClientPhotoMetadata,
@@ -54,7 +54,7 @@ const _user: GraphUser = {
     mail: "john@contoso.com",
 };
 
-const _updateInput: GraphUserUpdateableV1 = {
+const _updateInput: GraphUserUpdateable = {
     aboutMe: "Software engineer",
 };
 
@@ -193,7 +193,7 @@ describe("Office365usersClient — updateMyProfileAsync", () => {
         mockFetchResponse(null);
 
         const client = new Office365usersClient(TestConnectionUrl, createMockTokenProvider());
-        const input: GraphUserUpdateableV1 = { aboutMe: "Updated bio" };
+        const input: GraphUserUpdateable = { aboutMe: "Updated bio" };
 
         await client.updateMyProfileAsync(input);
 
@@ -278,7 +278,7 @@ describe("Office365usersClient — error handling", () => {
 
 describe("Office365users — connector registry", () => {
     it("should have office365users in ConnectorNames", () => {
-        expect(ConnectorNames.Office365users).toBe("office365users");
+        expect(ConnectorNames.Office365Users).toBe("office365users");
     });
 
     it("should include office365users in availableConnectors", () => {
