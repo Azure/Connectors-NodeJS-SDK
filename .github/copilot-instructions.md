@@ -330,14 +330,24 @@ Use when you need to publish without creating a tag or GitHub Release:
 
 ### Re-releasing a Version
 
-If a release fails midway:
+Do not delete or recreate a published release tag as a normal retry path. Release
+tags are part of the supply-chain integrity boundary and are protected by tag
+rulesets. If a release fails after the tag was pushed, use a new version (for
+example the next patch version, or a new pre-release such as
+`v1.2.4-preview.1`) and release from the current reviewed `main` commit.
+
+If a failed release left only a draft GitHub Release and no package was
+published, clean up the draft release if needed, then create a new version tag.
+Deleting or retagging an existing remote tag should be treated as break-glass
+admin work, not the standard process.
+
+Standard retry shape:
 
 ```shell
-gh release delete v1.2.3 --yes     # delete the failed GitHub Release (if one was created)
-git push origin --delete v1.2.3    # delete remote tag
-git tag -d v1.2.3                  # delete local tag
-git tag v1.2.3                     # re-tag on current HEAD
-git push origin v1.2.3             # push to trigger release
+git checkout main
+git pull origin main
+git tag v1.2.4                     # or v1.2.4-preview.1 for a pre-release retry
+git push origin v1.2.4             # push to trigger release
 ```
 
 ### What the Release Workflow Does
