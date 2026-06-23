@@ -27,24 +27,9 @@ jobs:
           versionSpec: $(NODE_VERSION)
         displayName: 'Install Node.js'
 
-      - bash: |
-          cat > $BUILD_SOURCESDIRECTORY/.npmrc <<'EOF'
-          registry=${{ parameters.npmRegistry }}
-          always-auth=true
-          EOF
-          echo "--- generated .npmrc ---"
-          cat $BUILD_SOURCESDIRECTORY/.npmrc
-        displayName: 'Create .npmrc'
-
-      - task: npmAuthenticate@0
-        displayName: 'Authenticate npm registry'
-        inputs:
-          workingFile: $(Build.SourcesDirectory)/.npmrc
-
-      - bash: |
-          cd $BUILD_SOURCESDIRECTORY
-          npm ci --no-audit --no-fund
-        displayName: 'npm ci'
+      - template: /azure-pipelines/templates/steps/npm-setup.yml@self
+        parameters:
+          npmRegistry: ${{ parameters.npmRegistry }}
 
       - script: npm run build
         displayName: npm run build
