@@ -2,20 +2,24 @@ parameters:
   - name: IsPrerelease
     type: boolean
     default: true
+  - name: NodeLtsVersion
+    type: string
+    default: 22.x
+  - name: npmRegistry
+    type: string
+    default: 'https://pkgs.dev.azure.com/azfunc/internal/_packaging/upstream/npm/registry/'
 
 trigger:
   batch: true
   branches:
     include:
       - main
-      - dev
       - release/*
 
 pr:
   branches:
     include:
       - main
-      - dev
       - release/*
 
 resources:
@@ -42,6 +46,9 @@ extends:
         dependsOn: []
         jobs:
           - template: /azure-pipelines/templates/lint.yml@self
+            parameters:
+              NodeVersion: ${{ parameters.NodeLtsVersion }}
+              npmRegistry: ${{ parameters.npmRegistry }}
         pool:
           name: 1es-pool-azfunc
           image: 1es-ubuntu-22.04
@@ -52,12 +59,18 @@ extends:
           - LintAndTypecheck
         jobs:
           - template: /azure-pipelines/templates/test.yml@self
+            parameters:
+              NodeLtsVersion: ${{ parameters.NodeLtsVersion }}
+              npmRegistry: ${{ parameters.npmRegistry }}
 
       - stage: LinuxUnitTests
         dependsOn:
           - LintAndTypecheck
         jobs:
           - template: /azure-pipelines/templates/test.yml@self
+            parameters:
+              NodeLtsVersion: ${{ parameters.NodeLtsVersion }}
+              npmRegistry: ${{ parameters.npmRegistry }}
         pool:
           name: 1es-pool-azfunc
           image: 1es-ubuntu-22.04
@@ -71,3 +84,5 @@ extends:
           - template: /azure-pipelines/templates/build.yml@self
             parameters:
               IsPrerelease: ${{ parameters.IsPrerelease }}
+              NodeVersion: ${{ parameters.NodeLtsVersion }}
+              npmRegistry: ${{ parameters.npmRegistry }}

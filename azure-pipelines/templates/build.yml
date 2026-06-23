@@ -2,6 +2,12 @@ parameters:
   - name: IsPrerelease
     type: boolean
     default: true
+  - name: NodeVersion
+    type: string
+    default: 22.x
+  - name: npmRegistry
+    type: string
+    default: 'https://pkgs.dev.azure.com/azfunc/internal/_packaging/upstream/npm/registry/'
 
 jobs:
   - job: BuildPackage
@@ -13,20 +19,20 @@ jobs:
     steps:
       - task: NodeTool@0
         inputs:
-          versionSpec: 20.x
+          versionSpec: ${{ parameters.NodeVersion }}
         displayName: 'Install Node.js'
 
       - bash: |
           cat > $BUILD_SOURCESDIRECTORY/.npmrc <<'EOF'
-          registry=https://azfunc.pkgs.visualstudio.com/internal/_packaging/upstream/npm/registry/
+          registry=${{ parameters.npmRegistry }}
           always-auth=true
           EOF
           echo "--- generated .npmrc ---"
           cat $BUILD_SOURCESDIRECTORY/.npmrc
-        displayName: 'Create .npmrc (internal feed)'
+        displayName: 'Create .npmrc'
 
       - task: npmAuthenticate@0
-        displayName: 'Authenticate to internal npm feed'
+        displayName: 'Authenticate npm registry'
         inputs:
           workingFile: $(Build.SourcesDirectory)/.npmrc
 
