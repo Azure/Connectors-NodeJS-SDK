@@ -1,5 +1,11 @@
 jobs:
   - job: UnitTests
+    templateContext:
+      outputs:
+        - output: pipelineArtifact
+          path: $(Build.SourcesDirectory)/coverage
+          artifact: coverage-report
+          condition: and(succeededOrFailed(), eq(variables['Agent.OS'], 'Linux'), eq(variables['NODE_VERSION'], '20.x'))
     strategy:
       matrix:
         Node20:
@@ -11,10 +17,26 @@ jobs:
       - task: NodeTool@0
         inputs:
           versionSpec: $(NODE_VERSION)
-        displayName: Install Node.js
+        displayName: 'Install Node.js'
 
-      - script: npm ci
-        displayName: npm ci
+      - bash: |
+          cat > $(EXTENSION_DIRECTORY)/.npmrc <<'EOF'
+          registry=https://azfunc.pkgs.visualstudio.com/internal/_packaging/upstream/npm/registry/
+          always-auth=true
+          EOF
+          echo "--- generated .npmrc ---"
+          cat $(EXTENSION_DIRECTORY)/.npmrc
+        displayName: 'Create .npmrc (internal feed)'
+
+      - task: npmAuthenticate@0
+        displayName: 'Authenticate to internal npm feed'
+        inputs:
+          workingFile: $(EXTENSION_DIRECTORY)/.npmrc
+
+      - bash: |
+          cd $(EXTENSION_DIRECTORY)
+          npm ci --no-audit --no-fund
+        displayName: 'npm ci'
 
       - script: npm run build
         displayName: npm run build
@@ -24,10 +46,3 @@ jobs:
 
       - script: npx jest --config config/jest.config.cjs --verbose --coverage
         displayName: Run tests with coverage
-
-      - task: PublishPipelineArtifact@1
-        displayName: Publish coverage artifact
-        condition: and(succeededOrFailed(), eq(variables['Agent.OS'], 'Linux'), eq(variables['NODE_VERSION'], '20.x'))
-        inputs:
-          targetPath: $(Build.SourcesDirectory)/coverage
-          artifactName: coverage-report
