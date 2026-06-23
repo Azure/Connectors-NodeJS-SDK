@@ -4,7 +4,7 @@ parameters:
     default: true
 
 jobs:
-  - job:
+  - job: BuildPackage
     templateContext:
       outputs:
         - output: pipelineArtifact
@@ -37,6 +37,24 @@ jobs:
 
       - script: npm run build
         displayName: npm run build
+
+      - ${{ if eq(parameters.IsPrerelease, true) }}:
+        - bash: |
+            cd $BUILD_SOURCESDIRECTORY
+            baseVersion=$(node -p "require('./package.json').version.split('-')[0]")
+            utcDate=$(date -u +%Y%m%d)
+            prereleaseVersion="${baseVersion}-prerelease.${utcDate}"
+            npm version "$prereleaseVersion" --no-git-tag-version
+            echo "Using prerelease package version: $prereleaseVersion"
+          displayName: Set prerelease package version
+
+      - ${{ if ne(parameters.IsPrerelease, true) }}:
+        - bash: |
+            cd $BUILD_SOURCESDIRECTORY
+            stableVersion=$(node -p "require('./package.json').version.split('-')[0]")
+            npm version "$stableVersion" --no-git-tag-version
+            echo "Using stable package version: $stableVersion"
+          displayName: Set stable package version
 
       - script: npm pack
         displayName: npm pack
