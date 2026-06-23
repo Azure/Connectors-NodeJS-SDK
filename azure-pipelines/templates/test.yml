@@ -20,12 +20,12 @@ jobs:
         displayName: 'Install Node.js'
 
       - bash: |
-          cat > $(Build.SourcesDirectory)/.npmrc <<'EOF'
+          cat > $BUILD_SOURCESDIRECTORY/.npmrc <<'EOF'
           registry=https://azfunc.pkgs.visualstudio.com/internal/_packaging/upstream/npm/registry/
           always-auth=true
           EOF
           echo "--- generated .npmrc ---"
-          cat $(Build.SourcesDirectory)/.npmrc
+          cat $BUILD_SOURCESDIRECTORY/.npmrc
         displayName: 'Create .npmrc (internal feed)'
 
       - task: npmAuthenticate@0
@@ -34,7 +34,7 @@ jobs:
           workingFile: $(Build.SourcesDirectory)/.npmrc
 
       - bash: |
-          cd $(Build.SourcesDirectory)
+          cd $BUILD_SOURCESDIRECTORY
           npm ci --no-audit --no-fund
         displayName: 'npm ci'
 
