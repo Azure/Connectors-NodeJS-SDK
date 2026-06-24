@@ -4,7 +4,7 @@ parameters:
     default: 22.x
   - name: npmRegistry
     type: string
-    default: 'https://pkgs.dev.azure.com/azfunc/public/_packaging/upstream/npm/registry/'
+    default: 'https://pkgs.dev.azure.com/azfunc/internal/_packaging/upstream/npm/registry/'
 
 trigger:
   batch: true
