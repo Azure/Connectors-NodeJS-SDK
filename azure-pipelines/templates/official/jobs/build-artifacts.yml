@@ -1,0 +1,60 @@
+parameters:
+  - name: libraryVersion
+    type: string
+    default: ''
+    displayName: 'Library version to build (e.g., 0.2.0). When provided, checks out the release/x.y.z branch.'
+  - name: nodeLtsVersion
+    type: string
+    default: 22.x
+    displayName: 'Node.js LTS version used to build release artifacts'
+  - name: npmRegistry
+    type: string
+    default: 'https://pkgs.dev.azure.com/azfunc/internal/_packaging/upstream/npm/registry/'
+    displayName: 'NPM registry used for build dependencies'
+
+jobs:
+  - job: Build
+    displayName: 'Build npm package'
+    pool:
+      name: 1es-pool-azfunc
+      image: 1es-ubuntu-22.04
+      os: linux
+    templateContext:
+      outputParentDirectory: $(Build.ArtifactStagingDirectory)
+      outputs:
+        - output: pipelineArtifact
+          targetPath: $(Build.ArtifactStagingDirectory)/dropOutput
+          artifactName: azure-connectors-nodejs
+    steps:
+      - checkout: self
+        persistCredentials: true
+
+      - ${{ if ne(parameters.libraryVersion, '') }}:
+        - bash: |
+            git fetch origin "release/${{ parameters.libraryVersion }}"
+            git checkout "origin/release/${{ parameters.libraryVersion }}"
+          displayName: 'Checkout release/${{ parameters.libraryVersion }} branch'
+
+      - task: NodeTool@0
+        inputs:
+          versionSpec: ${{ parameters.nodeLtsVersion }}
+        displayName: 'Install Node.js'
+
+      - template: /azure-pipelines/templates/steps/npm-setup.yml@self
+        parameters:
+          npmRegistry: ${{ parameters.npmRegistry }}
+
+      - script: npm run build
+        displayName: npm run build
+
+      - script: npm pack
+        displayName: npm pack
+
+      - task: CopyFiles@2
+        displayName: 'Copy npm package to dropOutput'
+        inputs:
+          sourceFolder: $(Build.SourcesDirectory)
+          contents: |
+            *.tgz
+          targetFolder: $(Build.ArtifactStagingDirectory)/dropOutput
+          cleanTargetFolder: true

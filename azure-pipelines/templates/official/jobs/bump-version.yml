@@ -1,0 +1,65 @@
+parameters:
+  - name: libraryVersion
+    type: string
+    displayName: 'Library version to release (e.g., 0.2.0, 0.2.0-rc.1, 0.2.0-preview.1)'
+  - name: githubOrg
+    type: string
+    default: 'Azure'
+    displayName: 'GitHub organization'
+  - name: githubRepo
+    type: string
+    default: 'Connectors-NodeJS-SDK'
+    displayName: 'GitHub repository name'
+
+jobs:
+  - job: CreateReleaseBranch
+    displayName: 'Create Release Branch'
+    pool:
+      name: 1es-pool-azfunc
+      image: 1es-ubuntu-22.04
+      os: linux
+    steps:
+      - pwsh: |
+          $githubUser = "$(GithubUser)"
+          $githubToken = "$(GithubPat)"
+          $newLibraryVersion = "${{ parameters.libraryVersion }}"
+
+          if ($newLibraryVersion -notmatch '^\d+\.\d+\.\d+(-[0-9A-Za-z]+(\.[0-9A-Za-z]+)*)?$') {
+            Write-Host "Library version '$newLibraryVersion' is malformed (examples: 1.2.3, 1.2.3-rc.1, 1.2.3-preview.1)."
+            exit -1
+          }
+
+          git config --global user.name "AzureConnectors"
+          git config --global user.email "azurelogicapps@microsoft.com"
+          git remote set-url origin "https://${githubUser}:${githubToken}@github.com/${{ parameters.githubOrg }}/${{ parameters.githubRepo }}.git"
+
+          Write-Host "Operating based on ${{ parameters.githubRepo }}"
+          git checkout -b "release/$newLibraryVersion"
+
+          Write-Host "Updating package.json version to '$newLibraryVersion'."
+          npm version "$newLibraryVersion" --no-git-tag-version
+
+          git add package.json
+          if (Test-Path "package-lock.json") {
+            git add package-lock.json
+          }
+
+          git commit -m "build: update NodeJS Connectors SDK version to $newLibraryVersion"
+
+          Write-Host "Creating release branch release/$newLibraryVersion"
+          git push origin "release/$newLibraryVersion"
+        displayName: 'Push release/x.y.z'
+
+  - job: CheckReleaseBranch
+    dependsOn: CreateReleaseBranch
+    displayName: '(Manual) Check Release Branch'
+    pool: server
+    steps:
+      - task: ManualValidation@1
+        displayName: '(Optional) Modify release/x.y.z branch'
+        inputs:
+          notifyUsers: ''
+          instructions: |
+            1. Check if https://github.com/${{ parameters.githubOrg }}/${{ parameters.githubRepo }}/tree/release/${{ parameters.libraryVersion }} build succeeds and passes all unit tests.
+            2. If needed, modify the release/${{ parameters.libraryVersion }} branch.
+            3. Ensure release/${{ parameters.libraryVersion }} branch contains all necessary changes.
