@@ -1,0 +1,70 @@
+parameters:
+  - name: libraryVersion
+    type: string
+    displayName: 'Library version to release (e.g., 0.2.0, 0.2.0-rc.1, 0.2.0-post.1)'
+  - name: blobPath
+    type: string
+    default: 'azure-connectors/nodejs/connector-sdk'
+    displayName: 'Blob path prefix under drops container'
+  - name: githubOrg
+    type: string
+    default: 'Azure'
+    displayName: 'GitHub organization'
+  - name: githubRepo
+    type: string
+    default: 'Connectors-NodeJS-SDK'
+    displayName: 'GitHub repository name'
+  - name: nodeLtsVersion
+    type: string
+    default: 22.x
+    displayName: 'Node.js LTS version used to build release artifacts'
+  - name: npmRegistry
+    type: string
+    default: 'https://pkgs.dev.azure.com/azfunc/internal/_packaging/upstream/npm/registry/'
+    displayName: 'NPM registry used for build dependencies'
+
+resources:
+  repositories:
+    - repository: 1es
+      type: git
+      name: 1ESPipelineTemplates/1ESPipelineTemplates
+      ref: refs/tags/release
+
+extends:
+  template: v1/1ES.Official.PipelineTemplate.yml@1es
+  parameters:
+    pool:
+      name: 1es-pool-azfunc
+      image: 1es-windows-2022
+      os: windows
+
+    stages:
+      - stage: BumpVersion
+        displayName: 'Bump Version'
+        jobs:
+          - template: /azure-pipelines/templates/official/jobs/bump-version.yml@self
+            parameters:
+              libraryVersion: ${{ parameters.libraryVersion }}
+              githubOrg: ${{ parameters.githubOrg }}
+              githubRepo: ${{ parameters.githubRepo }}
+
+      - stage: Build
+        displayName: 'Build Connectors SDK'
+        dependsOn: BumpVersion
+        jobs:
+          - template: /azure-pipelines/templates/official/jobs/build-artifacts.yml@self
+            parameters:
+              libraryVersion: ${{ parameters.libraryVersion }}
+              nodeLtsVersion: ${{ parameters.nodeLtsVersion }}
+              npmRegistry: ${{ parameters.npmRegistry }}
+
+      - stage: Release
+        displayName: 'Release Connectors SDK'
+        dependsOn: Build
+        jobs:
+          - template: /azure-pipelines/templates/official/jobs/publish-release.yml@self
+            parameters:
+              libraryVersion: ${{ parameters.libraryVersion }}
+              blobPath: ${{ parameters.blobPath }}
+              githubOrg: ${{ parameters.githubOrg }}
+              githubRepo: ${{ parameters.githubRepo }}
