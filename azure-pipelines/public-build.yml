@@ -1,22 +1,29 @@
 parameters:
-  - name: IsPrerelease
-    type: boolean
-    default: true
   - name: NodeLtsVersion
     type: string
     default: 22.x
   - name: npmRegistry
     type: string
-    default: 'https://pkgs.dev.azure.com/azfunc/internal/_packaging/upstream/npm/registry/'
+    default: 'https://pkgs.dev.azure.com/azfunc/public/_packaging/upstream/npm/registry/'
 
 trigger:
   batch: true
   branches:
     include:
       - main
-      - release/*
 
-pr: none
+pr:
+  branches:
+    include:
+      - main
+
+schedules:
+  - cron: '0 0 * * *'
+    displayName: At 12:00 AM, every day
+    branches:
+      include:
+        - main
+    always: true
 
 resources:
   repositories:
@@ -26,10 +33,10 @@ resources:
       ref: refs/tags/release
 
 extends:
-  template: v1/1ES.Official.PipelineTemplate.yml@1es
+  template: v1/1ES.Unofficial.PipelineTemplate.yml@1es
   parameters:
     pool:
-      name: 1es-pool-azfunc
+      name: 1es-pool-azfunc-public
       image: 1es-windows-2022
       os: windows
 
@@ -46,7 +53,7 @@ extends:
               NodeVersion: ${{ parameters.NodeLtsVersion }}
               npmRegistry: ${{ parameters.npmRegistry }}
         pool:
-          name: 1es-pool-azfunc
+          name: 1es-pool-azfunc-public
           image: 1es-ubuntu-22.04
           os: linux
 
@@ -68,17 +75,6 @@ extends:
               NodeLtsVersion: ${{ parameters.NodeLtsVersion }}
               npmRegistry: ${{ parameters.npmRegistry }}
         pool:
-          name: 1es-pool-azfunc
+          name: 1es-pool-azfunc-public
           image: 1es-ubuntu-22.04
           os: linux
-
-      - stage: Build
-        dependsOn:
-          - WindowsUnitTests
-          - LinuxUnitTests
-        jobs:
-          - template: /azure-pipelines/templates/build.yml@self
-            parameters:
-              IsPrerelease: ${{ parameters.IsPrerelease }}
-              NodeVersion: ${{ parameters.NodeLtsVersion }}
-              npmRegistry: ${{ parameters.npmRegistry }}
