@@ -1,0 +1,31 @@
+parameters:
+  - name: NodeVersion
+    type: string
+    default: 22.x
+  - name: npmRegistry
+    type: string
+    default: 'https://pkgs.dev.azure.com/azfunc/internal/_packaging/upstream/npm/registry/'
+
+jobs:
+  - job: LintAndTypecheck
+    steps:
+      - task: NodeTool@0
+        inputs:
+          versionSpec: ${{ parameters.NodeVersion }}
+        displayName: 'Install Node.js'
+
+      - template: /azure-pipelines/templates/steps/npm-setup.yml@self
+        parameters:
+          npmRegistry: ${{ parameters.npmRegistry }}
+
+      - script: npm run typecheck
+        displayName: npm run typecheck
+
+      - script: npm run typecheck:samples
+        displayName: npm run typecheck:samples
+
+      - script: npm run lint
+        displayName: npm run lint
+
+      - script: npm run lint:md
+        displayName: npm run lint:md

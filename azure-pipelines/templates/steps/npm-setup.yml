@@ -1,0 +1,24 @@
+parameters:
+  - name: npmRegistry
+    type: string
+    default: 'https://pkgs.dev.azure.com/azfunc/internal/_packaging/upstream/npm/registry/'
+
+steps:
+  - bash: |
+      cat > $BUILD_SOURCESDIRECTORY/.npmrc <<'EOF'
+      registry=${{ parameters.npmRegistry }}
+      always-auth=true
+      EOF
+      echo "--- generated .npmrc ---"
+      cat $BUILD_SOURCESDIRECTORY/.npmrc
+    displayName: 'Create .npmrc'
+
+  - task: npmAuthenticate@0
+    displayName: 'Authenticate npm registry'
+    inputs:
+      workingFile: $(Build.SourcesDirectory)/.npmrc
+
+  - bash: |
+      cd $BUILD_SOURCESDIRECTORY
+      npm ci --no-audit --no-fund
+    displayName: 'npm ci'

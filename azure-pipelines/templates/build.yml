@@ -1,0 +1,60 @@
+parameters:
+  - name: IsPrerelease
+    type: boolean
+    default: true
+  - name: NodeVersion
+    type: string
+    default: 22.x
+  - name: npmRegistry
+    type: string
+    default: 'https://pkgs.dev.azure.com/azfunc/internal/_packaging/upstream/npm/registry/'
+
+jobs:
+  - job: BuildPackage
+    templateContext:
+      outputs:
+        - output: pipelineArtifact
+          path: $(Build.ArtifactStagingDirectory)/dropOutput
+          artifact: drop
+    steps:
+      - task: NodeTool@0
+        inputs:
+          versionSpec: ${{ parameters.NodeVersion }}
+        displayName: 'Install Node.js'
+
+      - template: /azure-pipelines/templates/steps/npm-setup.yml@self
+        parameters:
+          npmRegistry: ${{ parameters.npmRegistry }}
+
+      - script: npm run build
+        displayName: npm run build
+
+      - ${{ if eq(parameters.IsPrerelease, true) }}:
+        - bash: |
+            cd $BUILD_SOURCESDIRECTORY
+            baseVersion=$(node -p "require('./package.json').version.split('-')[0]")
+            utcDate=$(date -u +%Y%m%d)
+            prereleaseVersion="${baseVersion}-prerelease.${utcDate}"
+            npm version "$prereleaseVersion" --no-git-tag-version
+            echo "Using prerelease package version: $prereleaseVersion"
+          displayName: Set prerelease package version
+
+      - ${{ if ne(parameters.IsPrerelease, true) }}:
+        - bash: |
+            cd $BUILD_SOURCESDIRECTORY
+            stableVersion=$(node -p "require('./package.json').version.split('-')[0]")
+            npm version "$stableVersion" --no-git-tag-version
+            echo "Using stable package version: $stableVersion"
+          displayName: Set stable package version
+
+      - script: npm pack
+        displayName: npm pack
+
+      - task: CopyFiles@2
+        displayName: Copy npm package to dropOutput
+        inputs:
+          sourceFolder: $(Build.SourcesDirectory)
+          contents: |
+            *.tgz
+          targetFolder: $(Build.ArtifactStagingDirectory)/dropOutput
+          cleanTargetFolder: true

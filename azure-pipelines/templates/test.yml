@@ -1,0 +1,41 @@
+parameters:
+  - name: NodeLtsVersion
+    type: string
+    default: 22.x
+  - name: npmRegistry
+    type: string
+    default: 'https://pkgs.dev.azure.com/azfunc/internal/_packaging/upstream/npm/registry/'
+
+jobs:
+  - job: UnitTests
+    templateContext:
+      outputs:
+        - output: pipelineArtifact
+          path: $(Build.SourcesDirectory)/coverage
+          artifact: coverage-report
+          condition: and(succeededOrFailed(), eq(variables['Agent.OS'], 'Linux'), eq(variables['NODE_VERSION'], '20.x'))
+    strategy:
+      matrix:
+        Node20:
+          NODE_VERSION: 20.x
+        NodeLts:
+          NODE_VERSION: ${{ parameters.NodeLtsVersion }}
+
+    steps:
+      - task: NodeTool@0
+        inputs:
+          versionSpec: $(NODE_VERSION)
+        displayName: 'Install Node.js'
+
+      - template: /azure-pipelines/templates/steps/npm-setup.yml@self
+        parameters:
+          npmRegistry: ${{ parameters.npmRegistry }}
+
+      - script: npm run build
+        displayName: npm run build
+
+      - script: npm run smoke
+        displayName: npm run smoke
+
+      - script: npx jest --config config/jest.config.cjs --verbose --coverage
+        displayName: Run tests with coverage
