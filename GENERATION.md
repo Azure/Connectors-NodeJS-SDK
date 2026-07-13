@@ -45,24 +45,49 @@ LogicAppsCompiler.exe <output-directory> unused --directClientTypeScript
 # Generate specific connectors only
 LogicAppsCompiler.exe <output-directory> unused --directClientTypeScript --connectors=office365
 
+# Equivalent older syntax (depending on LogicAppsCompiler version)
+LogicAppsCompiler.exe <output-directory> unused --directClient --language=typescript --connectors=office365
+
 # Example: Generate to this SDK repo's generated folder
 LogicAppsCompiler.exe "<path-to-Connectors-NodeJS-SDK>/src/generated" unused --directClientTypeScript --connectors=office365
 ```
 
 **Output structure per connector:**
 
-- `{Connector}Client.ts` - Combined types and client in one file
+- `{Connector}Extensions.ts` - Combined typed models and client methods for a connector
 
 ### Output files
 
 | File | Purpose |
 |------|---------|
-| `office365Client.ts` | Generated typed client for a connector |
-| `connectors.ts` | Navigator module listing all generated connectors |
+| `Office365Extensions.ts` | Generated typed client + models for a connector |
+| `ManagedConnectors.ts` | Registry of available connector API names |
 | `connectorNames.ts` | String constants for connector names |
+| `index.ts` | Barrel exports for generated connectors |
 
 ## Rules
 
 - **Never hand-edit generated files.** Fix bugs in the generator, not in generated output.
 - Generated files are in `src/generated/` and marked with a "Do not edit" header.
 - Runtime infrastructure files in `src/azureConnectors/` are hand-written.
+
+## Important Notes
+
+- Regeneration updates shared generated registry files (`ManagedConnectors.ts`,
+   `connectorNames.ts`, and `index.ts`). If you generate with a filtered
+   connector set, those registries will reflect only that subset.
+- For release-ready updates in this repo, run generation with the complete
+   intended connector set to avoid unintentionally dropping existing connectors.
+- If ARMClient is not installed at the default Chocolatey path, set
+   `ARMCLIENT_PATH` before running generation.
+
+## Post-Generation Validation
+
+Run these checks from the `Connectors-NodeJS-SDK` repo root:
+
+```powershell
+npm run build
+npm run typecheck
+npm test
+npm run typecheck:samples
+```

@@ -52,7 +52,7 @@ Remove-Item $tempFile -ErrorAction SilentlyContinue
 
 ### Step 2: Create Connection
 
-Supported SDK connector names: `kusto`, `office365`, `sharepointonline`, `teams` (and any `Microsoft.Web/connections` connector name).
+Supported SDK connector names: `azuremonitorlogs`, `docusign`, `github`, `jira`, `kusto`, `microsoftforms`, `office365`, `powerbi`, `salesforce`, `sharepointonline`, `shifts`, `slack`, `teams`, `todo` (and any `Microsoft.Web/connections` connector name).
 
 ```powershell
 $connectorName = "<connector-name>"      # e.g., "office365", "sharepointonline", "teams"

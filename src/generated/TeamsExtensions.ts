@@ -875,7 +875,7 @@ export interface NewMeeting {
 /**
  * Definition: NewMeetingRespone
  */
-export interface NewMeetingRespone {
+export interface NewMeetingResponse {
     /** True if the meeting organizer allows invitees to propose a new time when responding */
     allowNewTimeProposals?: boolean;
     /** The collection of attendees for the event */
@@ -1875,16 +1875,16 @@ export class TeamsClient extends ConnectorClientBase {
      * Create a Teams meeting
      * @remarks Create a meeting with a link at the bottom of the invite to join the meeting online on Microsoft Teams.
      */
-    public async createTeamsMeetingAsync(input: NewMeeting, calendarid: string, abortSignal?: AbortSignal): Promise<NewMeetingRespone> {
+    public async createTeamsMeetingAsync(input: NewMeeting, calendarid: string, abortSignal?: AbortSignal): Promise<NewMeetingResponse> {
         const requestPath = `/v1.0/me/calendars/${calendarid}/events`;
         const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<NewMeetingRespone>("POST", url, undefined, input, abortSignal);
+        const httpResponse = await this.httpClient.sendAsync<NewMeetingResponse>("POST", url, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
             throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
-        return httpResponse.value as NewMeetingRespone;
+        return httpResponse.value as NewMeetingResponse;
     }
 
     /**

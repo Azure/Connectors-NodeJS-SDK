@@ -241,8 +241,17 @@ The following connectors have been generated and validated with comprehensive te
 | **SharePoint Online** | `@azure/connectors/generated/SharepointonlineExtensions` | ✅ Complete | 12 tests |
 | **SMTP** | `@azure/connectors/generated/SmtpExtensions` | ✅ Complete | 9 tests |
 | **Microsoft Teams** | `@azure/connectors/generated/TeamsExtensions` | ✅ Complete | 14 tests |
+| **DocuSign** | `@azure/connectors/generated/DocusignExtensions` | ✅ Complete | 6 tests |
+| **GitHub** | `@azure/connectors/generated/GithubExtensions` | ✅ Complete | 6 tests |
+| **Jira** | `@azure/connectors/generated/JiraExtensions` | ✅ Complete | 6 tests |
+| **Microsoft Forms** | `@azure/connectors/generated/MicrosoftformsExtensions` | ✅ Complete | 6 tests |
+| **Power BI** | `@azure/connectors/generated/PowerbiExtensions` | ✅ Complete | 6 tests |
+| **Salesforce** | `@azure/connectors/generated/SalesforceExtensions` | ✅ Complete | 6 tests |
+| **Shifts for Microsoft Teams** | `@azure/connectors/generated/ShiftsExtensions` | ✅ Complete | 6 tests |
+| **Slack** | `@azure/connectors/generated/SlackExtensions` | ✅ Complete | 6 tests |
+| **Microsoft To Do Business** | `@azure/connectors/generated/TodoExtensions` | ✅ Complete | 6 tests |
 
-**Total:** 188 tests (all passing) across 19 test suites
+**Total:** 318 tests (all passing) across 29 test suites and 21 generated connectors
 
 ## Authentication
 
@@ -364,16 +373,26 @@ try {
 │   ├── ArmExtensions.ts           # Azure Resource Manager client
 │   ├── AzureblobExtensions.ts     # Azure Blob Storage client
 │   ├── AzuremonitorlogsExtensions.ts # Azure Monitor Logs client
+│   ├── DocusignExtensions.ts      # DocuSign client
+│   ├── GithubExtensions.ts        # GitHub client
+│   ├── JiraExtensions.ts          # Jira client
 │   ├── KustoExtensions.ts         # Azure Data Explorer client
+│   ├── MicrosoftformsExtensions.ts # Microsoft Forms client
 │   ├── MqExtensions.ts            # IBM MQ client
 │   ├── MsgraphgroupsanduserExtensions.ts # MS Graph Groups & Users client
 │   ├── Office365Extensions.ts     # Office 365 Outlook client
 │   ├── Office365usersExtensions.ts # Office 365 Users client
 │   ├── OnedriveforbusinessExtensions.ts # OneDrive for Business client
+│   ├── PowerbiExtensions.ts       # Power BI client
+│   ├── SalesforceExtensions.ts    # Salesforce client
 │   ├── SharepointonlineExtensions.ts # SharePoint Online client
+│   ├── ShiftsExtensions.ts        # Shifts for Microsoft Teams client
+│   ├── SlackExtensions.ts         # Slack client
 │   ├── SmtpExtensions.ts          # SMTP client
 │   ├── TeamsExtensions.ts         # Microsoft Teams client
+│   ├── TodoExtensions.ts          # Microsoft To Do Business client
 │   ├── connectorNames.ts          # Connector name constants
+│   ├── index.ts                   # Generated export barrel
 │   └── ManagedConnectors.ts       # Connector registry
 ├── tests/                          # Jest test suite
 ├── samples/                        # Usage examples (ESM/CJS, TS/JS)
@@ -391,26 +410,34 @@ samples/
 │   │   ├── arm.ts
 │   │   ├── azureblob.ts
 │   │   ├── azuremonitorlogs.ts
+│   │   ├── docusign.ts
+│   │   ├── github.ts
+│   │   ├── jira.ts
 │   │   ├── kusto.ts
+│   │   ├── microsoftforms.ts
 │   │   ├── mq.ts
 │   │   ├── msgraphgroupsanduser.ts
 │   │   ├── office365.ts
 │   │   ├── office365users.ts
 │   │   ├── onedriveforbusiness.ts
+│   │   ├── powerbi.ts
+│   │   ├── salesforce.ts
 │   │   ├── sharepoint.ts
+│   │   ├── shifts.ts
+│   │   ├── slack.ts
 │   │   ├── smtp.ts
 │   │   └── teams.ts
 │   └── javascript/         # JavaScript ESM samples (.mjs)
 │       ├── arm.mjs
 │       ├── azureblob.mjs
-│       └── ... (12 connectors)
+│       └── ... (21 connectors)
 └── cjs/
     ├── typescript/         # TypeScript CJS samples
     │   ├── arm.ts
-    │   └── ... (12 connectors)
+    │   └── ... (21 connectors)
     └── javascript/         # JavaScript CJS samples (.cjs)
         ├── arm.cjs
-        └── ... (12 connectors)
+        └── ... (21 connectors)
 ```
 
 See [docs/connection-setup.md](docs/connection-setup.md) for instructions on creating the Azure connections required to run the samples.

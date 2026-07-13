@@ -7,6 +7,32 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.3.0-preview] - 2026-07-13
+
+### Added
+
+- Generated 9 additional connector clients in `src/generated/`: DocuSign,
+  GitHub, Jira, Microsoft Forms, Power BI, Salesforce, Shifts for Microsoft
+  Teams, Slack, and Microsoft To Do Business.
+- Added detailed connector-specific Jest suites for all 9 new connectors:
+  `tests/docusignClient.test.ts`, `tests/githubClient.test.ts`,
+  `tests/jiraClient.test.ts`, `tests/microsoftformsClient.test.ts`,
+  `tests/powerbiClient.test.ts`, `tests/salesforceClient.test.ts`,
+  `tests/shiftsClient.test.ts`, `tests/slackClient.test.ts`, and
+  `tests/todoClient.test.ts`.
+- Added ESM/CJS TypeScript sample programs for all 9 new connectors under
+  `samples/esm/typescript/` and `samples/cjs/typescript/`.
+
+### Changed
+
+- Updated generated connector registries (`connectorNames.ts`,
+  `ManagedConnectors.ts`, `index.ts`) to include all 21 generated connectors.
+- Corrected Teams definition type naming from `NewMeetingRespone` to
+  `NewMeetingResponse` in generated output.
+- Updated generator-side TypeScript definition type normalization so
+  swagger typo corrections are applied consistently during generation.
+- Validation baseline now includes 29 passing test suites and 318 passing tests.
+
 ## [0.2.0-preview] - 2026-05-21
 
 ### Changed (BREAKING)
