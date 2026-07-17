@@ -5,6 +5,7 @@ import { ConnectorClientBase } from "../azureConnectors/clientBase.ts";
 import { ConnectorException } from "../azureConnectors/connectorException.ts";
 import { ConnectorClientOptions } from "../azureConnectors/options.ts";
 import { TokenProvider } from "../azureConnectors/authentication.ts";
+import { TriggerCallbackPayload } from "../azureConnectors/triggerPayload.ts";
 
 // #region Types
 
@@ -92,7 +93,32 @@ export interface PostMessageResponse {
     /** Details of the error messages, if any. */
     error?: string;
 }
+
+/**
+ * Typed callback payload for trigger operation 'OnNewFile'.
+ */
+export interface SlackOnNewFileTriggerPayload extends TriggerCallbackPayload<Record<string, unknown>> {}
+
 // #endregion Types
+
+export const SlackTriggerOperations = {
+    OnNewFile: "OnNewFile",
+} as const;
+
+export type SlackTriggerOperation = typeof SlackTriggerOperations[keyof typeof SlackTriggerOperations];
+
+export const SlackTriggerParameters = {
+    OnNewFile: {
+        channel: {
+            name: "channel",
+            type: "string",
+            required: true,
+            description: "The name of the channel.",
+            summary: "Channel",
+            dynamicValuesOperationId: "ListChannels_V2",
+        },
+    },
+} as const;
 
 // #region Client
 
@@ -133,26 +159,6 @@ export class SlackClient extends ConnectorClientBase {
         }
 
         return httpResponse.value as SetDNDResponse;
-    }
-
-    /**
-     * When a file is created
-     * @remarks When a file is created
-     */
-    public async onNewFileAsync(channel?: string, abortSignal?: AbortSignal): Promise<Array<Record<string, unknown>>> {
-        const queryParams: string[] = [];
-        if (channel !== undefined) {
-            queryParams.push(`channel=${encodeURIComponent(String(channel))}`);
-        }
-        const requestPath = `/trigger/files.list` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<Array<Record<string, unknown>>>("GET", url, undefined, undefined, abortSignal);
-
-        if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
-        }
-
-        return httpResponse.value as Array<Record<string, unknown>>;
     }
 
     /**

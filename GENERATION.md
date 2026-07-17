@@ -14,13 +14,11 @@ The **CodefulSdkGenerator** tool generates typed TypeScript clients from managed
 
 ### Tools Required
 
-1. **ARMClient** - For authenticated Azure Resource Manager API calls
-   - Install via Chocolatey: `choco install armclient`
-   - Install via WinGet: `winget install projectkudu.ARMClient`
-   - The generator defaults to `C:\ProgramData\chocolatey\bin\ARMClient.exe`
-   - **If ARMClient is installed elsewhere** (e.g., via WinGet), set the `ARMCLIENT_PATH` environment variable
+1. **Azure Subscription** - Access to an Azure subscription with Logic Apps Standard
 
-2. **Azure Subscription** - Access to an Azure subscription with Logic Apps Standard
+2. **Azure authentication (DefaultAzureCredential)**
+   - Sign in with an identity that can read managed connector metadata in your target subscription.
+   - Typical local setup: run `az login` (and optionally `az account set --subscription <subscription-id>`).
 
 3. **.NET 8 SDK** - For building and running the generator
 
@@ -40,16 +38,13 @@ dotnet build .\src\tools\CodefulSdkGenerator\LogicAppsCompiler.Cli\LogicAppsComp
 
 ```powershell
 # Generate all connectors
-LogicAppsCompiler.exe <output-directory> unused --directClientTypeScript
+LogicAppsCompiler.exe <output-directory> unused --directClient --language=typescript
 
 # Generate specific connectors only
-LogicAppsCompiler.exe <output-directory> unused --directClientTypeScript --connectors=office365
-
-# Equivalent older syntax (depending on LogicAppsCompiler version)
 LogicAppsCompiler.exe <output-directory> unused --directClient --language=typescript --connectors=office365
 
 # Example: Generate to this SDK repo's generated folder
-LogicAppsCompiler.exe "<path-to-Connectors-NodeJS-SDK>/src/generated" unused --directClientTypeScript --connectors=office365
+LogicAppsCompiler.exe "<path-to-Connectors-NodeJS-SDK>/src/generated" unused --directClient --language=typescript --connectors=office365
 ```
 
 **Output structure per connector:**
@@ -78,8 +73,6 @@ LogicAppsCompiler.exe "<path-to-Connectors-NodeJS-SDK>/src/generated" unused --d
    connector set, those registries will reflect only that subset.
 - For release-ready updates in this repo, run generation with the complete
    intended connector set to avoid unintentionally dropping existing connectors.
-- If ARMClient is not installed at the default Chocolatey path, set
-   `ARMCLIENT_PATH` before running generation.
 
 ## Post-Generation Validation
 

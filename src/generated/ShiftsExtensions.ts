@@ -5,6 +5,7 @@ import { ConnectorClientBase } from "../azureConnectors/clientBase.ts";
 import { ConnectorException } from "../azureConnectors/connectorException.ts";
 import { ConnectorClientOptions } from "../azureConnectors/options.ts";
 import { TokenProvider } from "../azureConnectors/authentication.ts";
+import { TriggerCallbackPayload } from "../azureConnectors/triggerPayload.ts";
 
 // #region Types
 
@@ -693,6 +694,69 @@ export interface CreateTimeOffRequest {
     userId: string;
 }
 // #endregion Types
+
+export const ShiftsTriggerOperations = {
+    OnTriggerForOpenShiftChangeRequests: "TriggerForOpenShiftChangeRequests",
+    OnTriggerForSwapShiftsChangeRequests: "TriggerForSwapShiftsChangeRequests",
+    OnTriggerForOfferShiftRequests: "TriggerForOfferShiftRequests",
+    OnTriggerForTimeOffRequests: "TriggerForTimeOffRequests",
+    OnTriggerForShifts: "TriggerForShifts",
+} as const;
+
+export type ShiftsTriggerOperation = typeof ShiftsTriggerOperations[keyof typeof ShiftsTriggerOperations];
+
+export const ShiftsTriggerParameters = {
+    OnTriggerForOpenShiftChangeRequests: {
+        teamId: {
+            name: "teamId",
+            type: "string",
+            required: true,
+            description: "Add Team ID",
+            summary: "Team",
+            dynamicValuesOperationId: "GetAllTeams",
+        },
+    },
+    OnTriggerForSwapShiftsChangeRequests: {
+        teamId: {
+            name: "teamId",
+            type: "string",
+            required: true,
+            description: "Add Team ID",
+            summary: "Team",
+            dynamicValuesOperationId: "GetAllTeams",
+        },
+    },
+    OnTriggerForOfferShiftRequests: {
+        teamId: {
+            name: "teamId",
+            type: "string",
+            required: true,
+            description: "Add Team ID",
+            summary: "Team",
+            dynamicValuesOperationId: "GetAllTeams",
+        },
+    },
+    OnTriggerForTimeOffRequests: {
+        teamId: {
+            name: "teamId",
+            type: "string",
+            required: true,
+            description: "Add Team ID",
+            summary: "Team",
+            dynamicValuesOperationId: "GetAllTeams",
+        },
+    },
+    OnTriggerForShifts: {
+        teamId: {
+            name: "teamId",
+            type: "string",
+            required: true,
+            description: "Add Team ID",
+            summary: "Team",
+            dynamicValuesOperationId: "GetAllTeams",
+        },
+    },
+} as const;
 
 // #region Client
 
@@ -1385,76 +1449,6 @@ export class ShiftsClient extends ConnectorClientBase {
         }
 
         return httpResponse.value as ListTimesOffCrossTeamResponse;
-    }
-
-    /**
-     * When an Open Shift request is created, updated or deleted
-     * @remarks This operation triggers when an Open Shift request is created, updated or deleted.
-     */
-    public async triggerForOpenShiftChangeRequestsAsync(input: WebHookRequest, teamId: string, abortSignal?: AbortSignal): Promise<void> {
-        const requestPath = `/trigger/teams/${teamId}/openshiftchangerequests`;
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<void>("POST", url, undefined, input, abortSignal);
-
-        if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
-        }
-    }
-
-    /**
-     * When a Swap Shifts request is created, updated or deleted
-     * @remarks This operation triggers when a Swap Shifts request is created, updated or deleted.
-     */
-    public async triggerForSwapShiftsChangeRequestsAsync(input: WebHookRequest, teamId: string, abortSignal?: AbortSignal): Promise<void> {
-        const requestPath = `/trigger/teams/${teamId}/swapshiftschangerequests`;
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<void>("POST", url, undefined, input, abortSignal);
-
-        if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
-        }
-    }
-
-    /**
-     * When an Offer Shift request is created, updated or deleted
-     * @remarks This operation triggers when an Offer Shift request is created, updated or deleted.
-     */
-    public async triggerForOfferShiftRequestsAsync(input: WebHookRequest, teamId: string, abortSignal?: AbortSignal): Promise<void> {
-        const requestPath = `/trigger/teams/${teamId}/offershiftrequests`;
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<void>("POST", url, undefined, input, abortSignal);
-
-        if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
-        }
-    }
-
-    /**
-     * When a Time Off request is created, updated or deleted
-     * @remarks This operation triggers when a Time Off request is created, updated or deleted.
-     */
-    public async triggerForTimeOffRequestsAsync(input: WebHookRequest, teamId: string, abortSignal?: AbortSignal): Promise<void> {
-        const requestPath = `/trigger/teams/${teamId}/timeoffrequests`;
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<void>("POST", url, undefined, input, abortSignal);
-
-        if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
-        }
-    }
-
-    /**
-     * When a Shift is created, updated or deleted
-     * @remarks This operation triggers when a Shift is created, updated or deleted.
-     */
-    public async triggerForShiftsAsync(input: WebHookRequest, teamId: string, abortSignal?: AbortSignal): Promise<void> {
-        const requestPath = `/trigger/teams/${teamId}/shifts`;
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<void>("POST", url, undefined, input, abortSignal);
-
-        if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
-        }
     }
 
 }

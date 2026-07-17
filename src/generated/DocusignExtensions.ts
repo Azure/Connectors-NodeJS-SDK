@@ -5,6 +5,7 @@ import { ConnectorClientBase } from "../azureConnectors/clientBase.ts";
 import { ConnectorException } from "../azureConnectors/connectorException.ts";
 import { ConnectorClientOptions } from "../azureConnectors/options.ts";
 import { TokenProvider } from "../azureConnectors/authentication.ts";
+import { TriggerCallbackPayload } from "../azureConnectors/triggerPayload.ts";
 
 // #region Types
 
@@ -1029,6 +1030,36 @@ export interface DeclineReasonWithoutType {
 }
 // #endregion Types
 
+export const DocusignTriggerOperations = {
+    OnCreateOrgHookEnvelope: "CreateOrgHookEnvelope",
+    OnCreateHookEnvelope: "CreateHookEnvelopeV4",
+} as const;
+
+export type DocusignTriggerOperation = typeof DocusignTriggerOperations[keyof typeof DocusignTriggerOperations];
+
+export const DocusignTriggerParameters = {
+    OnCreateOrgHookEnvelope: {
+        organizationId: {
+            name: "organizationId",
+            type: "string",
+            required: true,
+            description: "Enter or select an organization ID.",
+            summary: "Organization ID",
+            dynamicValuesOperationId: "GetOrganizations",
+        },
+    },
+    OnCreateHookEnvelope: {
+        accountId: {
+            name: "accountId",
+            type: "string",
+            required: true,
+            description: "Enter an account ID, or select an account from the dropdown list.",
+            summary: "Account ID",
+            dynamicValuesOperationId: "GetLoginAccounts",
+        },
+    },
+} as const;
+
 // #region Client
 
 /**
@@ -1048,22 +1079,6 @@ export class DocusignClient extends ConnectorClientBase {
 
     public get connectorName(): string {
         return "docusign";
-    }
-
-    /**
-     * When a Docusign Connect event occurs (Organization-level)
-     * @remarks Triggers a new flow when an envelope status changes.
-     */
-    public async createOrgHookEnvelopeAsync(input: CreateOrgHookEnvelopeInput, organizationId: string, abortSignal?: AbortSignal): Promise<CreateOrgHookEnvelopeResponse> {
-        const requestPath = `/Management/v2/organizations/${organizationId}/connect`;
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<CreateOrgHookEnvelopeResponse>("POST", url, undefined, input, abortSignal);
-
-        if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
-        }
-
-        return httpResponse.value as CreateOrgHookEnvelopeResponse;
     }
 
     /**
@@ -2010,22 +2025,6 @@ export class DocusignClient extends ConnectorClientBase {
         }
 
         return httpResponse.value as CreateEnvelopeResponse;
-    }
-
-    /**
-     * When a Docusign Connect event occurs (Account-level)
-     * @remarks Triggers a new flow when an envelope status changes.
-     */
-    public async createHookEnvelopeAsync(input: CreateHookEnvelopeInput, accountId: string, abortSignal?: AbortSignal): Promise<CreateHookEnvelopeResponse> {
-        const requestPath = `/accounts/${accountId}/connectV4`;
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<CreateHookEnvelopeResponse>("POST", url, undefined, input, abortSignal);
-
-        if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
-        }
-
-        return httpResponse.value as CreateHookEnvelopeResponse;
     }
 
     /**

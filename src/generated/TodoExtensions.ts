@@ -5,6 +5,7 @@ import { ConnectorClientBase } from "../azureConnectors/clientBase.ts";
 import { ConnectorException } from "../azureConnectors/connectorException.ts";
 import { ConnectorClientOptions } from "../azureConnectors/options.ts";
 import { TokenProvider } from "../azureConnectors/authentication.ts";
+import { TriggerCallbackPayload } from "../azureConnectors/triggerPayload.ts";
 
 // #region Types
 
@@ -239,7 +240,48 @@ export interface CreateToDoList {
     /** List name */
     displayName: string;
 }
+
+/**
+ * Typed callback payload for trigger operation 'OnNewToDoInFolderV2'.
+ */
+export interface TodoOnNewToDoInFolderTriggerPayload extends TriggerCallbackPayload<ToDo> {}
+
+/**
+ * Typed callback payload for trigger operation 'OnUpdateToDoInFolderV2'.
+ */
+export interface TodoOnUpdateToDoInFolderTriggerPayload extends TriggerCallbackPayload<ToDo> {}
+
 // #endregion Types
+
+export const TodoTriggerOperations = {
+    OnNewToDoInFolder: "OnNewToDoInFolderV2",
+    OnUpdateToDoInFolder: "OnUpdateToDoInFolderV2",
+} as const;
+
+export type TodoTriggerOperation = typeof TodoTriggerOperations[keyof typeof TodoTriggerOperations];
+
+export const TodoTriggerParameters = {
+    OnNewToDoInFolder: {
+        folderId: {
+            name: "folderId",
+            type: "string",
+            required: true,
+            description: "To-do list",
+            summary: "To-do List",
+            dynamicValuesOperationId: "GetAllTodoListsV2",
+        },
+    },
+    OnUpdateToDoInFolder: {
+        folderId: {
+            name: "folderId",
+            type: "string",
+            required: true,
+            description: "To-do list",
+            summary: "To-do List",
+            dynamicValuesOperationId: "GetAllTodoListsV2",
+        },
+    },
+} as const;
 
 // #region Client
 
@@ -396,38 +438,6 @@ export class TodoClient extends ConnectorClientBase {
             queryParams.push(`$top=${encodeURIComponent(String(top))}`);
         }
         const requestPath = `/lists/${folderId}/tasks` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<Array<ToDo>>("GET", url, undefined, undefined, abortSignal);
-
-        if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
-        }
-
-        return httpResponse.value as Array<ToDo>;
-    }
-
-    /**
-     * When a new to-do in a specific folder is created (V2)
-     * @remarks Triggers when a new to-do in a specific folder is created.
-     */
-    public async onNewToDoInFolderAsync(folderId: string, abortSignal?: AbortSignal): Promise<Array<ToDo>> {
-        const requestPath = `/v2/trigger/onNewToDoInFolder/${folderId}`;
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<Array<ToDo>>("GET", url, undefined, undefined, abortSignal);
-
-        if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
-        }
-
-        return httpResponse.value as Array<ToDo>;
-    }
-
-    /**
-     * When a to-do in a specific folder is updated (V2)
-     * @remarks Triggers when a to-do in a specific folder is updated.
-     */
-    public async onUpdateToDoInFolderAsync(folderId: string, abortSignal?: AbortSignal): Promise<Array<ToDo>> {
-        const requestPath = `/v2/trigger/onUpdateToDoInFolder/${folderId}`;
         const url = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<Array<ToDo>>("GET", url, undefined, undefined, abortSignal);
 

@@ -5,6 +5,7 @@ import { ConnectorClientBase } from "../azureConnectors/clientBase.ts";
 import { ConnectorException } from "../azureConnectors/connectorException.ts";
 import { ConnectorClientOptions } from "../azureConnectors/options.ts";
 import { TokenProvider } from "../azureConnectors/authentication.ts";
+import { TriggerCallbackPayload } from "../azureConnectors/triggerPayload.ts";
 
 // #region Types
 
@@ -446,7 +447,160 @@ export interface MCPQueryResponse {
     result?: Record<string, unknown>;
     error?: Record<string, unknown>;
 }
+
+/**
+ * Typed callback payload for trigger operation 'OnNewIssue_Datacenter'.
+ */
+export interface JiraOnNewIssueDatacenterTriggerPayload extends TriggerCallbackPayload<FullIssue> {}
+
+/**
+ * Typed callback payload for trigger operation 'OnCloseIssue_Datacenter'.
+ */
+export interface JiraOnCloseIssueDatacenterTriggerPayload extends TriggerCallbackPayload<FullIssue> {}
+
+/**
+ * Typed callback payload for trigger operation 'OnNewIssueJQL_Datacenter'.
+ */
+export interface JiraOnNewIssueJQLDatacenterTriggerPayload extends TriggerCallbackPayload<FullIssue> {}
+
+/**
+ * Typed callback payload for trigger operation 'OnCloseIssue_V2'.
+ */
+export interface JiraOnCloseIssueTriggerPayload extends TriggerCallbackPayload<FullIssue> {}
+
+/**
+ * Typed callback payload for trigger operation 'OnNewIssue_V2'.
+ */
+export interface JiraOnNewIssueTriggerPayload extends TriggerCallbackPayload<FullIssue> {}
+
+/**
+ * Typed callback payload for trigger operation 'OnNewIssueJQL_V2'.
+ */
+export interface JiraOnNewIssueJQLTriggerPayload extends TriggerCallbackPayload<FullIssue> {}
+
 // #endregion Types
+
+export const JiraTriggerOperations = {
+    OnNewIssueDatacenter: "OnNewIssue_Datacenter",
+    OnCloseIssueDatacenter: "OnCloseIssue_Datacenter",
+    OnNewIssueJQLDatacenter: "OnNewIssueJQL_Datacenter",
+    OnCloseIssue: "OnCloseIssue_V2",
+    OnNewIssue: "OnNewIssue_V2",
+    OnNewIssueJQL: "OnNewIssueJQL_V2",
+} as const;
+
+export type JiraTriggerOperation = typeof JiraTriggerOperations[keyof typeof JiraTriggerOperations];
+
+export const JiraTriggerParameters = {
+    OnNewIssueDatacenter: {
+        xRequestJirainstance: {
+            name: "X-Request-Jirainstance",
+            type: "string",
+            required: false,
+            description: "The url where your Jira instance is hosted (must support https). ",
+            summary: "Jira instance",
+            dynamicValuesOperationId: "ListResources",
+        },
+        projectKey: {
+            name: "projectKey",
+            type: "string",
+            required: true,
+            description: "Unique key of the project to look for new issues.",
+            summary: "Project",
+            dynamicValuesOperationId: "ListProjects_V3",
+        },
+    },
+    OnCloseIssueDatacenter: {
+        xRequestJirainstance: {
+            name: "X-Request-Jirainstance",
+            type: "string",
+            required: false,
+            description: "The url where your Jira instance is hosted (must support https). ",
+            summary: "Jira instance",
+            dynamicValuesOperationId: "ListResources",
+        },
+        projectKey: {
+            name: "projectKey",
+            type: "string",
+            required: true,
+            description: "Unique key of the project to look for new issues.",
+            summary: "Project",
+            dynamicValuesOperationId: "ListProjects_V3",
+        },
+    },
+    OnNewIssueJQLDatacenter: {
+        xRequestJirainstance: {
+            name: "X-Request-Jirainstance",
+            type: "string",
+            required: false,
+            description: "The url where your Jira instance is hosted (must support https). ",
+            summary: "Jira instance",
+            dynamicValuesOperationId: "ListResources",
+        },
+        jql: {
+            name: "jql",
+            type: "string",
+            required: true,
+            description: "Query to use.",
+            summary: "JQL Query",
+            defaultValue: "",
+        },
+    },
+    OnCloseIssue: {
+        xRequestJirainstance: {
+            name: "X-Request-Jirainstance",
+            type: "string",
+            required: false,
+            description: "The url where your Jira instance is hosted (must support https). ",
+            summary: "Jira instance",
+            dynamicValuesOperationId: "ListResources",
+        },
+        projectKey: {
+            name: "projectKey",
+            type: "string",
+            required: true,
+            description: "Unique key of the project to look for new issues.",
+            summary: "Project",
+            dynamicValuesOperationId: "ListProjects_V3",
+        },
+    },
+    OnNewIssue: {
+        xRequestJirainstance: {
+            name: "X-Request-Jirainstance",
+            type: "string",
+            required: false,
+            description: "The url where your Jira instance is hosted (must support https). ",
+            summary: "Jira instance",
+            dynamicValuesOperationId: "ListResources",
+        },
+        projectKey: {
+            name: "projectKey",
+            type: "string",
+            required: true,
+            description: "Unique key of the project to look for new issues.",
+            summary: "Project",
+            dynamicValuesOperationId: "ListProjects_V3",
+        },
+    },
+    OnNewIssueJQL: {
+        xRequestJirainstance: {
+            name: "X-Request-Jirainstance",
+            type: "string",
+            required: false,
+            description: "The url where your Jira instance is hosted (must support https). ",
+            summary: "Jira instance",
+            dynamicValuesOperationId: "ListResources",
+        },
+        jql: {
+            name: "jql",
+            type: "string",
+            required: true,
+            description: "Query to use.",
+            summary: "JQL Query",
+            defaultValue: "",
+        },
+    },
+} as const;
 
 // #region Client
 
@@ -577,75 +731,6 @@ export class JiraClient extends ConnectorClientBase {
         }
 
         return httpResponse.value as GetCurrentUserResponse;
-    }
-
-    /**
-     * When a new issue is created (Datacenter)
-     * @remarks This operation triggers when a new issue is added to the given project.
-     */
-    public async onNewIssueDatacenterAsync(xRequestJirainstance?: string, projectKey?: string, abortSignal?: AbortSignal): Promise<Array<FullIssue>> {
-        const queryParams: string[] = [];
-        if (xRequestJirainstance !== undefined) {
-            queryParams.push(`X-Request-Jirainstance=${encodeURIComponent(String(xRequestJirainstance))}`);
-        }
-        if (projectKey !== undefined) {
-            queryParams.push(`projectKey=${encodeURIComponent(String(projectKey))}`);
-        }
-        const requestPath = `/datacenter/new_issue_trigger/search` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<Array<FullIssue>>("GET", url, undefined, undefined, abortSignal);
-
-        if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
-        }
-
-        return httpResponse.value as Array<FullIssue>;
-    }
-
-    /**
-     * When an issue is closed (Datacenter)
-     * @remarks This operation triggers when an existing issue is closed in the given project.
-     */
-    public async onCloseIssueDatacenterAsync(xRequestJirainstance?: string, projectKey?: string, abortSignal?: AbortSignal): Promise<Array<FullIssue>> {
-        const queryParams: string[] = [];
-        if (xRequestJirainstance !== undefined) {
-            queryParams.push(`X-Request-Jirainstance=${encodeURIComponent(String(xRequestJirainstance))}`);
-        }
-        if (projectKey !== undefined) {
-            queryParams.push(`projectKey=${encodeURIComponent(String(projectKey))}`);
-        }
-        const requestPath = `/datacenter/close_issue_trigger/search` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<Array<FullIssue>>("GET", url, undefined, undefined, abortSignal);
-
-        if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
-        }
-
-        return httpResponse.value as Array<FullIssue>;
-    }
-
-    /**
-     * When a new issue is returned by a JQL query (Datacenter)
-     * @remarks This operation triggers when a new issue appears in the latest 100 results of a JQL query.
-     */
-    public async onNewIssueJQLDatacenterAsync(xRequestJirainstance?: string, jql?: string, abortSignal?: AbortSignal): Promise<Array<FullIssue>> {
-        const queryParams: string[] = [];
-        if (xRequestJirainstance !== undefined) {
-            queryParams.push(`X-Request-Jirainstance=${encodeURIComponent(String(xRequestJirainstance))}`);
-        }
-        if (jql !== undefined) {
-            queryParams.push(`jql=${encodeURIComponent(String(jql))}`);
-        }
-        const requestPath = `/datacenter/new_issue_jql_trigger/search` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<Array<FullIssue>>("GET", url, undefined, undefined, abortSignal);
-
-        if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
-        }
-
-        return httpResponse.value as Array<FullIssue>;
     }
 
     /**
@@ -920,75 +1005,6 @@ export class JiraClient extends ConnectorClientBase {
         }
 
         return httpResponse.value as Array<Record<string, unknown>>;
-    }
-
-    /**
-     * When an issue is closed (V2)
-     * @remarks This operation triggers when an existing issue is closed in the given project.
-     */
-    public async onCloseIssueAsync(xRequestJirainstance?: string, projectKey?: string, abortSignal?: AbortSignal): Promise<Array<FullIssue>> {
-        const queryParams: string[] = [];
-        if (xRequestJirainstance !== undefined) {
-            queryParams.push(`X-Request-Jirainstance=${encodeURIComponent(String(xRequestJirainstance))}`);
-        }
-        if (projectKey !== undefined) {
-            queryParams.push(`projectKey=${encodeURIComponent(String(projectKey))}`);
-        }
-        const requestPath = `/v2/close_issue_trigger/search` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<Array<FullIssue>>("GET", url, undefined, undefined, abortSignal);
-
-        if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
-        }
-
-        return httpResponse.value as Array<FullIssue>;
-    }
-
-    /**
-     * When a new issue is created (V2)
-     * @remarks This operation triggers when a new issue is added to the given project.
-     */
-    public async onNewIssueAsync(xRequestJirainstance?: string, projectKey?: string, abortSignal?: AbortSignal): Promise<Array<FullIssue>> {
-        const queryParams: string[] = [];
-        if (xRequestJirainstance !== undefined) {
-            queryParams.push(`X-Request-Jirainstance=${encodeURIComponent(String(xRequestJirainstance))}`);
-        }
-        if (projectKey !== undefined) {
-            queryParams.push(`projectKey=${encodeURIComponent(String(projectKey))}`);
-        }
-        const requestPath = `/v2/new_issue_trigger/search` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<Array<FullIssue>>("GET", url, undefined, undefined, abortSignal);
-
-        if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
-        }
-
-        return httpResponse.value as Array<FullIssue>;
-    }
-
-    /**
-     * When a new issue is returned by a JQL query (V2)
-     * @remarks This operation triggers when a new issue appears in the latest 100 results of a JQL query.
-     */
-    public async onNewIssueJQLAsync(xRequestJirainstance?: string, jql?: string, abortSignal?: AbortSignal): Promise<Array<FullIssue>> {
-        const queryParams: string[] = [];
-        if (xRequestJirainstance !== undefined) {
-            queryParams.push(`X-Request-Jirainstance=${encodeURIComponent(String(xRequestJirainstance))}`);
-        }
-        if (jql !== undefined) {
-            queryParams.push(`jql=${encodeURIComponent(String(jql))}`);
-        }
-        const requestPath = `/v2/new_issue_jql_trigger/search` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<Array<FullIssue>>("GET", url, undefined, undefined, abortSignal);
-
-        if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
-        }
-
-        return httpResponse.value as Array<FullIssue>;
     }
 
     /**

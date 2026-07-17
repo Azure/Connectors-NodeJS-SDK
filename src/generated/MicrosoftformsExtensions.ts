@@ -5,6 +5,7 @@ import { ConnectorClientBase } from "../azureConnectors/clientBase.ts";
 import { ConnectorException } from "../azureConnectors/connectorException.ts";
 import { ConnectorClientOptions } from "../azureConnectors/options.ts";
 import { TokenProvider } from "../azureConnectors/authentication.ts";
+import { TriggerCallbackPayload } from "../azureConnectors/triggerPayload.ts";
 
 // #region Types
 
@@ -65,6 +66,25 @@ export interface GetFormDetailsByIdResult {
 }
 // #endregion Types
 
+export const MicrosoftformsTriggerOperations = {
+    OnCreateFormWebhook: "CreateFormWebhook",
+} as const;
+
+export type MicrosoftformsTriggerOperation = typeof MicrosoftformsTriggerOperations[keyof typeof MicrosoftformsTriggerOperations];
+
+export const MicrosoftformsTriggerParameters = {
+    OnCreateFormWebhook: {
+        formId: {
+            name: "form_id",
+            type: "string",
+            required: true,
+            description: "Pick a form.",
+            summary: "Form Id",
+            dynamicValuesOperationId: "ListForms",
+        },
+    },
+} as const;
+
 // #region Client
 
 /**
@@ -84,20 +104,6 @@ export class MicrosoftformsClient extends ConnectorClientBase {
 
     public get connectorName(): string {
         return "microsoftforms";
-    }
-
-    /**
-     * When a new response is submitted
-     * @remarks This operation triggers a flow when a new response is submitted.
-     */
-    public async createFormWebhookAsync(input: WebhookRequestBody, formId: string, abortSignal?: AbortSignal): Promise<void> {
-        const requestPath = `/formapi/api/forms/${formId}/webhooks`;
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<void>("POST", url, undefined, input, abortSignal);
-
-        if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
-        }
     }
 
     /**

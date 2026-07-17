@@ -5,6 +5,7 @@ import { ConnectorClientBase } from "../azureConnectors/clientBase.ts";
 import { ConnectorException } from "../azureConnectors/connectorException.ts";
 import { ConnectorClientOptions } from "../azureConnectors/options.ts";
 import { TokenProvider } from "../azureConnectors/authentication.ts";
+import { TriggerCallbackPayload } from "../azureConnectors/triggerPayload.ts";
 
 // #region Types
 
@@ -936,7 +937,57 @@ export interface QueryRequest {
     result?: Record<string, unknown>;
     error?: Record<string, unknown>;
 }
+
+/**
+ * Typed callback payload for trigger operation 'IssueOpened'.
+ */
+export interface GithubOnIssueOpenedTriggerPayload extends TriggerCallbackPayload<IssueDetailsModel> {}
+
+/**
+ * Typed callback payload for trigger operation 'IssueClosed'.
+ */
+export interface GithubOnIssueClosedTriggerPayload extends TriggerCallbackPayload<IssueDetailsModel> {}
+
+/**
+ * Typed callback payload for trigger operation 'IssueAssigned'.
+ */
+export interface GithubOnIssueAssignedTriggerPayload extends TriggerCallbackPayload<IssueDetailsModel> {}
+
 // #endregion Types
+
+export const GithubTriggerOperations = {
+    OnWebhookPullRequestTrigger: "WebhookPullRequestTrigger",
+    OnIssueOpened: "IssueOpened",
+    OnIssueClosed: "IssueClosed",
+    OnIssueAssigned: "IssueAssigned",
+} as const;
+
+export type GithubTriggerOperation = typeof GithubTriggerOperations[keyof typeof GithubTriggerOperations];
+
+export const GithubTriggerParameters = {
+    OnWebhookPullRequestTrigger: {
+        repositoryOwner: {
+            name: "repositoryOwner",
+            type: "string",
+            required: true,
+            description: "Name of the repository owner.",
+            summary: "Repository Owner",
+        },
+        repositoryName: {
+            name: "repositoryName",
+            type: "string",
+            required: true,
+            description: "Name of the repository.",
+            summary: "Repository Name",
+        },
+        accept: {
+            name: "Accept",
+            type: "string",
+            required: true,
+            defaultValue: "application/vnd.github.v3+json",
+        },
+    },
+} as const;
 
 // #region Client
 
@@ -1324,22 +1375,6 @@ export class GithubClient extends ConnectorClientBase {
     }
 
     /**
-     * When a pull request is created or modified
-     * @remarks Creates a GitHub Webhook for Pull Requests
-     */
-    public async webhookPullRequestTriggerAsync(input: WebhookRequestBody, repositoryOwner: string, repositoryName: string, abortSignal?: AbortSignal): Promise<WebhookCreationResponse> {
-        const requestPath = `/repos/${repositoryOwner}/${repositoryName}/hooks`;
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<WebhookCreationResponse>("POST", url, undefined, input, abortSignal);
-
-        if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
-        }
-
-        return httpResponse.value as WebhookCreationResponse;
-    }
-
-    /**
      * Deletes a GitHub Webhook
      * @remarks Deletes a GitHub Webhook
      */
@@ -1351,54 +1386,6 @@ export class GithubClient extends ConnectorClientBase {
         if (!httpResponse.isSuccessStatusCode) {
             throw new ConnectorException(this.connectorName, `DELETE ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
-    }
-
-    /**
-     * When a new issue is opened and assigned to me
-     * @remarks This operation triggers when an issue is opened and assigned to the logged in user.
-     */
-    public async issueOpenedAsync(abortSignal?: AbortSignal): Promise<Array<IssueDetailsModel>> {
-        const requestPath = `/trigger/issueOpened`;
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<Array<IssueDetailsModel>>("GET", url, undefined, undefined, abortSignal);
-
-        if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
-        }
-
-        return httpResponse.value as Array<IssueDetailsModel>;
-    }
-
-    /**
-     * When an issue assigned to me is closed
-     * @remarks This operation triggers when an issue assigned to the logged in user is closed.
-     */
-    public async issueClosedAsync(abortSignal?: AbortSignal): Promise<Array<IssueDetailsModel>> {
-        const requestPath = `/trigger/issueClosed`;
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<Array<IssueDetailsModel>>("GET", url, undefined, undefined, abortSignal);
-
-        if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
-        }
-
-        return httpResponse.value as Array<IssueDetailsModel>;
-    }
-
-    /**
-     * When an issue is assigned to me
-     * @remarks This operation triggers when an issue is assigned to the logged in user.
-     */
-    public async issueAssignedAsync(abortSignal?: AbortSignal): Promise<Array<IssueDetailsModel>> {
-        const requestPath = `/trigger/issueAssigned`;
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<Array<IssueDetailsModel>>("GET", url, undefined, undefined, abortSignal);
-
-        if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
-        }
-
-        return httpResponse.value as Array<IssueDetailsModel>;
     }
 
     /**

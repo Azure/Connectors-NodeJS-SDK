@@ -5,6 +5,7 @@ import { ConnectorClientBase } from "../azureConnectors/clientBase.ts";
 import { ConnectorException } from "../azureConnectors/connectorException.ts";
 import { ConnectorClientOptions } from "../azureConnectors/options.ts";
 import { TokenProvider } from "../azureConnectors/authentication.ts";
+import { TriggerCallbackPayload } from "../azureConnectors/triggerPayload.ts";
 
 // #region Types
 
@@ -516,7 +517,90 @@ export interface MCPQueryResponse {
     result?: Record<string, unknown>;
     error?: Record<string, unknown>;
 }
+
+/**
+ * Typed callback payload for trigger operation 'GetOnNewItems'.
+ */
+export interface SalesforceOnNewItemsTriggerPayload extends TriggerCallbackPayload<Item> {}
+
+/**
+ * Typed callback payload for trigger operation 'GetOnUpdatedItems'.
+ */
+export interface SalesforceOnUpdatedItemsTriggerPayload extends TriggerCallbackPayload<Item> {}
+
 // #endregion Types
+
+export const SalesforceTriggerOperations = {
+    OnNewItems: "GetOnNewItems",
+    OnUpdatedItems: "GetOnUpdatedItems",
+} as const;
+
+export type SalesforceTriggerOperation = typeof SalesforceTriggerOperations[keyof typeof SalesforceTriggerOperations];
+
+export const SalesforceTriggerParameters = {
+    OnNewItems: {
+        table: {
+            name: "table",
+            type: "string",
+            required: true,
+            description: "The Salesforce object type like 'Leads'.",
+            summary: "Salesforce Object Type",
+            dynamicValuesOperationId: "GetTables",
+        },
+        filter: {
+            name: "$filter",
+            type: "string",
+            required: false,
+            description: "An ODATA filter query to restrict the entries returned (e.g. stringColumn eq 'string' OR numberColumn lt 123).",
+            summary: "Filter Query",
+        },
+        orderby: {
+            name: "$orderby",
+            type: "string",
+            required: false,
+            description: "An ODATA orderBy query for specifying the order of entries.",
+            summary: "Order By",
+        },
+        select: {
+            name: "$select",
+            type: "string",
+            required: false,
+            description: "Specific fields to retrieve from entries (default = all).",
+            summary: "Select Query",
+        },
+    },
+    OnUpdatedItems: {
+        table: {
+            name: "table",
+            type: "string",
+            required: true,
+            description: "The Salesforce object type like 'Leads'.",
+            summary: "Salesforce Object Type",
+            dynamicValuesOperationId: "GetTables",
+        },
+        filter: {
+            name: "$filter",
+            type: "string",
+            required: false,
+            description: "An ODATA filter query to restrict the entries returned (e.g. stringColumn eq 'string' OR numberColumn lt 123).",
+            summary: "Filter Query",
+        },
+        orderby: {
+            name: "$orderby",
+            type: "string",
+            required: false,
+            description: "An ODATA orderBy query for specifying the order of entries.",
+            summary: "Order By",
+        },
+        select: {
+            name: "$select",
+            type: "string",
+            required: false,
+            description: "Specific fields to retrieve from entries (default = all).",
+            summary: "Select Query",
+        },
+    },
+} as const;
 
 // #region Client
 
@@ -807,58 +891,6 @@ export class SalesforceClient extends ConnectorClientBase {
         if (!httpResponse.isSuccessStatusCode) {
             throw new ConnectorException(this.connectorName, `DELETE ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
-    }
-
-    /**
-     * When a record is created
-     * @remarks This operation triggers when there are newly created records.
-     */
-    public async getOnNewItemsAsync(table: string, filter?: string, orderby?: string, select?: string, abortSignal?: AbortSignal): Promise<ItemsList> {
-        const queryParams: string[] = [];
-        if (filter !== undefined) {
-            queryParams.push(`$filter=${encodeURIComponent(String(filter))}`);
-        }
-        if (orderby !== undefined) {
-            queryParams.push(`$orderby=${encodeURIComponent(String(orderby))}`);
-        }
-        if (select !== undefined) {
-            queryParams.push(`$select=${encodeURIComponent(String(select))}`);
-        }
-        const requestPath = `/datasets/default/tables/${table}/onnewitems` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<ItemsList>("GET", url, undefined, undefined, abortSignal);
-
-        if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
-        }
-
-        return httpResponse.value as ItemsList;
-    }
-
-    /**
-     * When a record is modified
-     * @remarks This operation triggers when there are newly modified records.
-     */
-    public async getOnUpdatedItemsAsync(table: string, filter?: string, orderby?: string, select?: string, abortSignal?: AbortSignal): Promise<ItemsList> {
-        const queryParams: string[] = [];
-        if (filter !== undefined) {
-            queryParams.push(`$filter=${encodeURIComponent(String(filter))}`);
-        }
-        if (orderby !== undefined) {
-            queryParams.push(`$orderby=${encodeURIComponent(String(orderby))}`);
-        }
-        if (select !== undefined) {
-            queryParams.push(`$select=${encodeURIComponent(String(select))}`);
-        }
-        const requestPath = `/datasets/default/tables/${table}/onupdateditems` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<ItemsList>("GET", url, undefined, undefined, abortSignal);
-
-        if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
-        }
-
-        return httpResponse.value as ItemsList;
     }
 
     /**

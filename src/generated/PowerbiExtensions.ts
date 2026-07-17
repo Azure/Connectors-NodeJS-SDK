@@ -5,6 +5,7 @@ import { ConnectorClientBase } from "../azureConnectors/clientBase.ts";
 import { ConnectorException } from "../azureConnectors/connectorException.ts";
 import { ConnectorClientOptions } from "../azureConnectors/options.ts";
 import { TokenProvider } from "../azureConnectors/authentication.ts";
+import { TriggerCallbackPayload } from "../azureConnectors/triggerPayload.ts";
 
 // #region Types
 
@@ -514,6 +515,308 @@ export interface PowerBiButtonClickedOutputs {
 }
 // #endregion Types
 
+export const PowerbiTriggerOperations = {
+    OnGoalsAssignedTrigger: "GoalsAssignedTrigger",
+    OnGoalChangeTrigger: "GoalChangeTrigger",
+    OnGoalStatusChangeTrigger: "GoalStatusChangeTrigger",
+    OnGoalValueChangeTrigger: "GoalValueChangeTrigger",
+    OnGoalRefreshFailedTrigger: "GoalRefreshFailedTrigger",
+    OnGoalValueOrNoteUpsertTrigger: "GoalValueOrNoteUpsertTrigger",
+    OnCheckAlertStatus: "CheckAlertStatus",
+} as const;
+
+export type PowerbiTriggerOperation = typeof PowerbiTriggerOperations[keyof typeof PowerbiTriggerOperations];
+
+export const PowerbiTriggerParameters = {
+    OnGoalsAssignedTrigger: {
+        groupid: {
+            name: "groupid",
+            type: "string",
+            required: true,
+            description: "The unique identifier of the workspace.",
+            summary: "Workspace",
+            dynamicValuesOperationId: "ListGroups",
+        },
+        scorecardId: {
+            name: "scorecardId",
+            type: "string",
+            required: true,
+            description: "The unique identifier of the scorecard.",
+            summary: "Scorecard id",
+            dynamicValuesOperationId: "GetScorecards",
+        },
+        owner: {
+            name: "owner",
+            type: "string",
+            required: false,
+            description: "E-mail of an owner. Can be yours. Can be empty when tracking any owner.",
+            summary: "Owner",
+        },
+        pollingInterval: {
+            name: "pollingInterval",
+            type: "number",
+            required: true,
+            description: "Number of seconds between checks for new data. Minimum is 300.",
+            summary: "Polling interval (sec)",
+            defaultValue: "14400",
+        },
+        pbiSource: {
+            name: "pbi_source",
+            type: "string",
+            required: false,
+            description: "Source of the call for tracing",
+            summary: "pbi_source",
+            defaultValue: "powerAutomate",
+        },
+    },
+    OnGoalChangeTrigger: {
+        groupid: {
+            name: "groupid",
+            type: "string",
+            required: true,
+            description: "The unique identifier of the workspace.",
+            summary: "Workspace",
+            dynamicValuesOperationId: "ListGroups",
+        },
+        scorecardId: {
+            name: "scorecardId",
+            type: "string",
+            required: true,
+            description: "The unique identifier of the scorecard.",
+            summary: "Scorecard id",
+            dynamicValuesOperationId: "GetScorecards",
+        },
+        goalId: {
+            name: "goalId",
+            type: "string",
+            required: true,
+            description: "The unique identifier of the goal.",
+            summary: "Goal id",
+            dynamicValuesOperationId: "GetMultipleGoals",
+        },
+        pollingInterval: {
+            name: "pollingInterval",
+            type: "number",
+            required: true,
+            description: "Number of seconds between checks for new data. Minimum is 300.",
+            summary: "Polling interval (sec)",
+            defaultValue: "14400",
+        },
+        pbiSource: {
+            name: "pbi_source",
+            type: "string",
+            required: false,
+            description: "Source of the call for tracing",
+            summary: "pbi_source",
+            defaultValue: "powerAutomate",
+        },
+    },
+    OnGoalStatusChangeTrigger: {
+        groupid: {
+            name: "groupid",
+            type: "string",
+            required: true,
+            description: "The unique identifier of the workspace.",
+            summary: "Workspace",
+            dynamicValuesOperationId: "ListGroups",
+        },
+        scorecardId: {
+            name: "scorecardId",
+            type: "string",
+            required: true,
+            description: "The unique identifier of the scorecard.",
+            summary: "Scorecard id",
+            dynamicValuesOperationId: "GetScorecards",
+        },
+        goalId: {
+            name: "goalId",
+            type: "string",
+            required: true,
+            description: "The unique identifier of the goal.",
+            summary: "Goal id",
+            dynamicValuesOperationId: "GetMultipleGoals",
+        },
+        pollingInterval: {
+            name: "pollingInterval",
+            type: "number",
+            required: true,
+            description: "Number of seconds between checks for new data. Minimum is 300.",
+            summary: "Polling interval (sec)",
+            defaultValue: "14400",
+        },
+        pbiSource: {
+            name: "pbi_source",
+            type: "string",
+            required: false,
+            description: "Source of the call for tracing",
+            summary: "pbi_source",
+            defaultValue: "powerAutomate",
+        },
+    },
+    OnGoalValueChangeTrigger: {
+        groupid: {
+            name: "groupid",
+            type: "string",
+            required: true,
+            description: "The unique identifier of the workspace.",
+            summary: "Workspace",
+            dynamicValuesOperationId: "ListGroups",
+        },
+        scorecardId: {
+            name: "scorecardId",
+            type: "string",
+            required: true,
+            description: "The unique identifier of the scorecard.",
+            summary: "Scorecard id",
+            dynamicValuesOperationId: "GetScorecards",
+        },
+        goalId: {
+            name: "goalId",
+            type: "string",
+            required: true,
+            description: "The unique identifier of the goal.",
+            summary: "Goal id",
+            dynamicValuesOperationId: "GetMultipleGoals",
+        },
+        pollingInterval: {
+            name: "pollingInterval",
+            type: "number",
+            required: true,
+            description: "Number of seconds between checks for new data. Minimum is 300.",
+            summary: "Polling interval (sec)",
+            defaultValue: "14400",
+        },
+        pbiSource: {
+            name: "pbi_source",
+            type: "string",
+            required: false,
+            description: "Source of the call for tracing",
+            summary: "pbi_source",
+            defaultValue: "powerAutomate",
+        },
+    },
+    OnGoalRefreshFailedTrigger: {
+        groupid: {
+            name: "groupid",
+            type: "string",
+            required: true,
+            description: "The unique identifier of the workspace.",
+            summary: "Workspace",
+            dynamicValuesOperationId: "ListGroups",
+        },
+        scorecardId: {
+            name: "scorecardId",
+            type: "string",
+            required: true,
+            description: "The unique identifier of the scorecard.",
+            summary: "Scorecard id",
+            dynamicValuesOperationId: "GetScorecards",
+        },
+        goalId: {
+            name: "goalId",
+            type: "string",
+            required: true,
+            description: "The unique identifier of the goal.",
+            summary: "Goal id",
+            dynamicValuesOperationId: "GetMultipleGoals",
+        },
+        trackTargetSource: {
+            name: "trackTargetSource",
+            type: "string",
+            required: true,
+            description: "Will track the link for the goal's target.",
+            summary: "Track target source",
+            defaultValue: "Yes",
+            allowedValues: ["Yes", "No"],
+        },
+        trackValueSource: {
+            name: "trackValueSource",
+            type: "string",
+            required: true,
+            description: "Will track the link for the goal's value.",
+            summary: "Track value source",
+            defaultValue: "Yes",
+            allowedValues: ["Yes", "No"],
+        },
+        pollingInterval: {
+            name: "pollingInterval",
+            type: "number",
+            required: true,
+            description: "Number of seconds between checks for new data. Minimum is 300.",
+            summary: "Polling interval (sec)",
+            defaultValue: "14400",
+        },
+        pbiSource: {
+            name: "pbi_source",
+            type: "string",
+            required: false,
+            description: "Source of the call for tracing",
+            summary: "pbi_source",
+            defaultValue: "powerAutomate",
+        },
+    },
+    OnGoalValueOrNoteUpsertTrigger: {
+        groupid: {
+            name: "groupid",
+            type: "string",
+            required: true,
+            description: "The unique identifier of the workspace.",
+            summary: "Workspace",
+            dynamicValuesOperationId: "ListGroups",
+        },
+        scorecardId: {
+            name: "scorecardId",
+            type: "string",
+            required: true,
+            description: "The unique identifier of the scorecard.",
+            summary: "Scorecard id",
+            dynamicValuesOperationId: "GetScorecards",
+        },
+        goalId: {
+            name: "goalId",
+            type: "string",
+            required: true,
+            description: "The unique identifier of the goal.",
+            summary: "Goal id",
+            dynamicValuesOperationId: "GetMultipleGoals",
+        },
+        pollingInterval: {
+            name: "pollingInterval",
+            type: "number",
+            required: true,
+            description: "Number of seconds between checks for new data. Minimum is 300.",
+            summary: "Polling interval (sec)",
+            defaultValue: "14400",
+        },
+        pbiSource: {
+            name: "pbi_source",
+            type: "string",
+            required: false,
+            description: "Source of the call for tracing",
+            summary: "pbi_source",
+            defaultValue: "powerAutomate",
+        },
+    },
+    OnCheckAlertStatus: {
+        alertId: {
+            name: "alertId",
+            type: "string",
+            required: true,
+            description: "The alert id to track.",
+            summary: "Alert Id",
+            dynamicValuesOperationId: "GetAlerts",
+        },
+        pbiSource: {
+            name: "pbi_source",
+            type: "string",
+            required: false,
+            description: "Source of the call for tracing",
+            summary: "pbi_source",
+            defaultValue: "powerAutomate",
+        },
+    },
+} as const;
+
 // #region Client
 
 /**
@@ -657,173 +960,6 @@ export class PowerbiClient extends ConnectorClientBase {
         if (!httpResponse.isSuccessStatusCode) {
             throw new ConnectorException(this.connectorName, `PATCH ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
-    }
-
-    /**
-     * When someone assigns a new owner to a goal
-     * @remarks When someone assigns a new owner to a Power BI goal.
-     */
-    public async goalsAssignedTriggerAsync(groupid: string, scorecardId: string, owner?: string, pollingInterval?: string, pbiSource?: string, abortSignal?: AbortSignal): Promise<GoalsAssigned> {
-        const queryParams: string[] = [];
-        if (owner !== undefined) {
-            queryParams.push(`owner=${encodeURIComponent(String(owner))}`);
-        }
-        if (pollingInterval !== undefined) {
-            queryParams.push(`pollingInterval=${encodeURIComponent(String(pollingInterval))}`);
-        }
-        if (pbiSource !== undefined) {
-            queryParams.push(`pbi_source=${encodeURIComponent(String(pbiSource))}`);
-        }
-        const requestPath = `/internalFlowTriggerGoalChange/v1.0/myOrg/groups/${groupid}/internalScorecards(${scorecardId})/goals` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<GoalsAssigned>("GET", url, undefined, undefined, abortSignal);
-
-        if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
-        }
-
-        return httpResponse.value as GoalsAssigned;
-    }
-
-    /**
-     * When a goal changes
-     * @remarks When a property of some Power BI goal changes.
-     */
-    public async goalChangeTriggerAsync(groupid: string, scorecardId: string, goalId: string, pollingInterval?: string, pbiSource?: string, abortSignal?: AbortSignal): Promise<GoalChanged> {
-        const queryParams: string[] = [];
-        if (pollingInterval !== undefined) {
-            queryParams.push(`pollingInterval=${encodeURIComponent(String(pollingInterval))}`);
-        }
-        if (pbiSource !== undefined) {
-            queryParams.push(`pbi_source=${encodeURIComponent(String(pbiSource))}`);
-        }
-        const requestPath = `/internalFlowTriggerGoalChange/v1.0/myOrg/groups/${groupid}/internalScorecards(${scorecardId})/goals(${goalId})` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<GoalChanged>("GET", url, undefined, undefined, abortSignal);
-
-        if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
-        }
-
-        return httpResponse.value as GoalChanged;
-    }
-
-    /**
-     * When status of a goal changes
-     * @remarks When status of some Power BI goal changes.
-     */
-    public async goalStatusChangeTriggerAsync(groupid: string, scorecardId: string, goalId: string, pollingInterval?: string, pbiSource?: string, abortSignal?: AbortSignal): Promise<GoalStatusChanged> {
-        const queryParams: string[] = [];
-        if (pollingInterval !== undefined) {
-            queryParams.push(`pollingInterval=${encodeURIComponent(String(pollingInterval))}`);
-        }
-        if (pbiSource !== undefined) {
-            queryParams.push(`pbi_source=${encodeURIComponent(String(pbiSource))}`);
-        }
-        const requestPath = `/internalFlowTriggerGoalChange/v1.0/myOrg/groups/${groupid}/internalScorecards(${scorecardId})/goals(${goalId})/GetFlowTriggerStatus` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<GoalStatusChanged>("GET", url, undefined, undefined, abortSignal);
-
-        if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
-        }
-
-        return httpResponse.value as GoalStatusChanged;
-    }
-
-    /**
-     * When current value of a goal changes
-     * @remarks When current value of some Power BI goal changes.
-     */
-    public async goalValueChangeTriggerAsync(groupid: string, scorecardId: string, goalId: string, pollingInterval?: string, pbiSource?: string, abortSignal?: AbortSignal): Promise<GoalValueChanged> {
-        const queryParams: string[] = [];
-        if (pollingInterval !== undefined) {
-            queryParams.push(`pollingInterval=${encodeURIComponent(String(pollingInterval))}`);
-        }
-        if (pbiSource !== undefined) {
-            queryParams.push(`pbi_source=${encodeURIComponent(String(pbiSource))}`);
-        }
-        const requestPath = `/internalFlowTriggerGoalChange/v1.0/myOrg/groups/${groupid}/internalScorecards(${scorecardId})/goals(${goalId})/GetFlowTriggerValue` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<GoalValueChanged>("GET", url, undefined, undefined, abortSignal);
-
-        if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
-        }
-
-        return httpResponse.value as GoalValueChanged;
-    }
-
-    /**
-     * When a data refresh for a goal fails
-     * @remarks When a data refresh for a Power BI goal fails.
-     */
-    public async goalRefreshFailedTriggerAsync(groupid: string, scorecardId: string, goalId: string, trackTargetSource?: string, trackValueSource?: string, pollingInterval?: string, pbiSource?: string, abortSignal?: AbortSignal): Promise<GoalRefreshIssues> {
-        const queryParams: string[] = [];
-        if (trackTargetSource !== undefined) {
-            queryParams.push(`trackTargetSource=${encodeURIComponent(String(trackTargetSource))}`);
-        }
-        if (trackValueSource !== undefined) {
-            queryParams.push(`trackValueSource=${encodeURIComponent(String(trackValueSource))}`);
-        }
-        if (pollingInterval !== undefined) {
-            queryParams.push(`pollingInterval=${encodeURIComponent(String(pollingInterval))}`);
-        }
-        if (pbiSource !== undefined) {
-            queryParams.push(`pbi_source=${encodeURIComponent(String(pbiSource))}`);
-        }
-        const requestPath = `/internalFlowTriggerGoalChange/v1.0/myOrg/groups/${groupid}/internalScorecards(${scorecardId})/goals(${goalId})/GetRefreshHistory` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<GoalRefreshIssues>("GET", url, undefined, undefined, abortSignal);
-
-        if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
-        }
-
-        return httpResponse.value as GoalRefreshIssues;
-    }
-
-    /**
-     * When someone adds or edits a goal check-in
-     * @remarks Trigger for some Power BI goal check-in or note changes.
-     */
-    public async goalValueOrNoteUpsertTriggerAsync(groupid: string, scorecardId: string, goalId: string, pollingInterval?: string, pbiSource?: string, abortSignal?: AbortSignal): Promise<GoalValueOrNoteUpserted> {
-        const queryParams: string[] = [];
-        if (pollingInterval !== undefined) {
-            queryParams.push(`pollingInterval=${encodeURIComponent(String(pollingInterval))}`);
-        }
-        if (pbiSource !== undefined) {
-            queryParams.push(`pbi_source=${encodeURIComponent(String(pbiSource))}`);
-        }
-        const requestPath = `/internalFlowTriggerGoalChange/v1.0/myOrg/groups/${groupid}/internalScorecards(${scorecardId})/goals(${goalId})/goalValues` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<GoalValueOrNoteUpserted>("GET", url, undefined, undefined, abortSignal);
-
-        if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
-        }
-
-        return httpResponse.value as GoalValueOrNoteUpserted;
-    }
-
-    /**
-     * When a data driven alert is triggered
-     * @remarks Return the details of the specified data driven alert from Power BI when the alert triggered.
-     */
-    public async checkAlertStatusAsync(alertId: string, pbiSource?: string, abortSignal?: AbortSignal): Promise<EvaluatedAlert> {
-        const queryParams: string[] = [];
-        if (pbiSource !== undefined) {
-            queryParams.push(`pbi_source=${encodeURIComponent(String(pbiSource))}`);
-        }
-        const requestPath = `/metadata/v201606/alerts/${alertId}/status` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<EvaluatedAlert>("GET", url, undefined, undefined, abortSignal);
-
-        if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
-        }
-
-        return httpResponse.value as EvaluatedAlert;
     }
 
     /**
