@@ -97,7 +97,7 @@ export interface PostMessageResponse {
 /**
  * Typed callback payload for trigger operation 'OnNewFile'.
  */
-export interface SlackOnNewFileTriggerPayload extends TriggerCallbackPayload<Record<string, unknown>> {}
+export type SlackOnNewFileTriggerPayload = TriggerCallbackPayload<Record<string, unknown>>;
 
 // #endregion Types
 
