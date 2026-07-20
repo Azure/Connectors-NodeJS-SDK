@@ -5,6 +5,7 @@ import { ConnectorClientBase } from "../azureConnectors/clientBase.ts";
 import { ConnectorException } from "../azureConnectors/connectorException.ts";
 import { ConnectorClientOptions } from "../azureConnectors/options.ts";
 import { TokenProvider } from "../azureConnectors/authentication.ts";
+import { TriggerCallbackPayload } from "../azureConnectors/triggerPayload.ts";
 
 // #region Types
 
@@ -2100,7 +2101,498 @@ export interface SensitivityLabelMetadata {
     /** SensitivityLabel details on tooltip. */
     tooltip?: string;
 }
+
+/**
+ * Typed callback payload for trigger operation 'CalendarGetOnChangedItemsV3'.
+ */
+export type Office365OnCalendarChangedItemsTriggerPayload = TriggerCallbackPayload<GraphCalendarEventClientWithActionType> ;
+
+/**
+ * Typed callback payload for trigger operation 'CalendarGetOnNewItemsV3'.
+ */
+export type Office365OnCalendarNewItemsTriggerPayload = TriggerCallbackPayload<GraphCalendarEventClientReceive> ;
+
+/**
+ * Typed callback payload for trigger operation 'CalendarGetOnUpdatedItemsV3'.
+ */
+export type Office365OnCalendarUpdatedItemsTriggerPayload = TriggerCallbackPayload<GraphCalendarEventClientReceive> ;
+
+/**
+ * Typed callback payload for trigger operation 'OnFlaggedEmailV4'.
+ */
+export type Office365OnFlaggedEmailTriggerPayload = TriggerCallbackPayload<GraphClientReceiveMessage> ;
+
+/**
+ * Typed callback payload for trigger operation 'OnNewEmailV3'.
+ */
+export type Office365OnNewEmailTriggerPayload = TriggerCallbackPayload<GraphClientReceiveMessage> ;
+
+/**
+ * Typed callback payload for trigger operation 'OnNewMentionMeEmailV3'.
+ */
+export type Office365OnNewEmailMentioningMeTriggerPayload = TriggerCallbackPayload<GraphClientReceiveMessage> ;
+
+/**
+ * Typed callback payload for trigger operation 'OnUpcomingEventsV3'.
+ */
+export type Office365OnUpcomingEventsTriggerPayload = TriggerCallbackPayload<GraphCalendarEventClientReceive> ;
+
+/**
+ * Typed callback payload for trigger operation 'SharedMailboxOnNewEmailV2'.
+ */
+export type Office365OnSharedMailboxNewEmailTriggerPayload = TriggerCallbackPayload<GraphClientReceiveMessage> ;
+
 // #endregion Types
+
+export const Office365TriggerOperations = {
+    OnCalendarChangedItems: "CalendarGetOnChangedItemsV3",
+    OnCalendarNewItems: "CalendarGetOnNewItemsV3",
+    OnCalendarUpdatedItems: "CalendarGetOnUpdatedItemsV3",
+    OnFlaggedEmail: "OnFlaggedEmailV4",
+    OnNewEmail: "OnNewEmailV3",
+    OnNewEmailMentioningMe: "OnNewMentionMeEmailV3",
+    OnUpcomingEvents: "OnUpcomingEventsV3",
+    OnSharedMailboxNewEmail: "SharedMailboxOnNewEmailV2",
+} as const;
+
+export type Office365TriggerOperation = typeof Office365TriggerOperations[keyof typeof Office365TriggerOperations];
+
+export const Office365TriggerParameters = {
+    OnCalendarChangedItems: {
+        table: {
+            name: "table",
+            type: "string",
+            required: true,
+            description: "Select a calendar",
+            summary: "Calendar id",
+            dynamicValuesOperationId: "CalendarGetTables_V2",
+        },
+        incomingDays: {
+            name: "incomingDays",
+            type: "integer",
+            required: false,
+            description: "Number of incoming days in calendar to be tracked",
+            summary: "Incoming Days Tracked",
+            defaultValue: "300",
+        },
+        pastDays: {
+            name: "pastDays",
+            type: "integer",
+            required: false,
+            description: "Number of past days in calendar to be tracked",
+            summary: "Past Days Tracked",
+            defaultValue: "50",
+        },
+    },
+    OnCalendarNewItems: {
+        table: {
+            name: "table",
+            type: "string",
+            required: true,
+            description: "Select a calendar",
+            summary: "Calendar id",
+            dynamicValuesOperationId: "CalendarGetTables_V2",
+        },
+        filter: {
+            name: "$filter",
+            type: "string",
+            required: false,
+            description: "An ODATA filter query to restrict the entries returned (e.g. stringColumn eq 'string' OR numberColumn lt 123).",
+            summary: "Filter Query",
+        },
+        orderby: {
+            name: "$orderby",
+            type: "string",
+            required: false,
+            description: "An ODATA orderBy query for specifying the order of entries.",
+            summary: "Order By",
+        },
+        top: {
+            name: "$top",
+            type: "integer",
+            required: false,
+            description: "Total number of entries to retrieve (default = all).",
+            summary: "Top Count",
+        },
+        skip: {
+            name: "$skip",
+            type: "integer",
+            required: false,
+            description: "The number of entries to skip (default = 0).",
+            summary: "Skip Count",
+        },
+        xMsOperationContext: {
+            name: "x-ms-operation-context",
+            type: "string",
+            required: false,
+            description: "Special header to enable operation simulation.",
+            summary: "x-ms-operation-context",
+        },
+    },
+    OnCalendarUpdatedItems: {
+        table: {
+            name: "table",
+            type: "string",
+            required: true,
+            description: "Select a calendar",
+            summary: "Calendar id",
+            dynamicValuesOperationId: "CalendarGetTables_V2",
+        },
+        filter: {
+            name: "$filter",
+            type: "string",
+            required: false,
+            description: "An ODATA filter query to restrict the entries returned (e.g. stringColumn eq 'string' OR numberColumn lt 123).",
+            summary: "Filter Query",
+        },
+        orderby: {
+            name: "$orderby",
+            type: "string",
+            required: false,
+            description: "An ODATA orderBy query for specifying the order of entries.",
+            summary: "Order By",
+        },
+        top: {
+            name: "$top",
+            type: "integer",
+            required: false,
+            description: "Total number of entries to retrieve (default = all).",
+            summary: "Top Count",
+        },
+        skip: {
+            name: "$skip",
+            type: "integer",
+            required: false,
+            description: "The number of entries to skip (default = 0).",
+            summary: "Skip Count",
+        },
+    },
+    OnFlaggedEmail: {
+        folderPath: {
+            name: "folderPath",
+            type: "string",
+            required: false,
+            description: "Mail folder to check for new emails.",
+            summary: "Folder",
+            defaultValue: "Inbox",
+        },
+        to: {
+            name: "to",
+            type: "string",
+            required: false,
+            description: "Recipient email addresses separated by semicolons (If any match, the trigger will run).",
+            summary: "To",
+        },
+        cc: {
+            name: "cc",
+            type: "string",
+            required: false,
+            description: "CC recipient email addresses separated by semicolons (If any match, the trigger will run).",
+            summary: "CC",
+        },
+        toOrCc: {
+            name: "toOrCc",
+            type: "string",
+            required: false,
+            description: "To or CC recipient email addresses separated by semicolons (If any match, the trigger will run).",
+            summary: "To or CC",
+        },
+        from: {
+            name: "from",
+            type: "string",
+            required: false,
+            description: "Sender email addresses separated by semicolons (If any match, the trigger will run).",
+            summary: "From",
+        },
+        importance: {
+            name: "importance",
+            type: "string",
+            required: false,
+            description: "Importance of the email (Any, High, Normal, Low).",
+            summary: "Importance",
+            defaultValue: "Any",
+            allowedValues: ["Any", "Low", "Normal", "High"],
+        },
+        fetchOnlyWithAttachment: {
+            name: "fetchOnlyWithAttachment",
+            type: "boolean",
+            required: false,
+            description: "If set to true, only emails with an attachment will be retrieved. Emails without any attachments will be skipped. If set to false, all emails will be retrieved.",
+            summary: "Only with Attachments",
+            defaultValue: "false",
+        },
+        includeAttachments: {
+            name: "includeAttachments",
+            type: "boolean",
+            required: false,
+            description: "Should the response of the trigger include the attachments content.",
+            summary: "Include Attachments",
+            defaultValue: "false",
+        },
+        subjectFilter: {
+            name: "subjectFilter",
+            type: "string",
+            required: false,
+            description: "String to look for in the subject line.",
+            summary: "Subject Filter",
+        },
+    },
+    OnNewEmail: {
+        folderPath: {
+            name: "folderPath",
+            type: "string",
+            required: false,
+            description: "Mail folder to check for new emails.",
+            summary: "Folder",
+            defaultValue: "Inbox",
+        },
+        to: {
+            name: "to",
+            type: "string",
+            required: false,
+            description: "Recipient email addresses separated by semicolons (If any match, the trigger will run).",
+            summary: "To",
+        },
+        cc: {
+            name: "cc",
+            type: "string",
+            required: false,
+            description: "CC recipient email addresses separated by semicolons (If any match, the trigger will run).",
+            summary: "CC",
+        },
+        toOrCc: {
+            name: "toOrCc",
+            type: "string",
+            required: false,
+            description: "To or CC recipient email addresses separated by semicolons (If any match, the trigger will run).",
+            summary: "To or CC",
+        },
+        from: {
+            name: "from",
+            type: "string",
+            required: false,
+            description: "Sender email addresses separated by semicolons (If any match, the trigger will run).",
+            summary: "From",
+        },
+        importance: {
+            name: "importance",
+            type: "string",
+            required: false,
+            description: "Importance of the email (Any, High, Normal, Low).",
+            summary: "Importance",
+            defaultValue: "Any",
+            allowedValues: ["Any", "Low", "Normal", "High"],
+        },
+        fetchOnlyWithAttachment: {
+            name: "fetchOnlyWithAttachment",
+            type: "boolean",
+            required: false,
+            description: "If set to true, only emails with an attachment will be retrieved. Emails without any attachments will be skipped. If set to false, all emails will be retrieved.",
+            summary: "Only with Attachments",
+            defaultValue: "false",
+        },
+        includeAttachments: {
+            name: "includeAttachments",
+            type: "boolean",
+            required: false,
+            description: "Should the response of the trigger include the attachments content.",
+            summary: "Include Attachments",
+            defaultValue: "false",
+        },
+        subjectFilter: {
+            name: "subjectFilter",
+            type: "string",
+            required: false,
+            description: "String to look for in the subject line.",
+            summary: "Subject Filter",
+        },
+        xMsOperationContext: {
+            name: "x-ms-operation-context",
+            type: "string",
+            required: false,
+            description: "Special header to enable operation simulation.",
+            summary: "x-ms-operation-context",
+        },
+    },
+    OnNewEmailMentioningMe: {
+        messageIdToFireOnFirstTriggerRun: {
+            name: "messageIdToFireOnFirstTriggerRun",
+            type: "string",
+            required: false,
+            description: "Id of message to fire on first trigger run if supplied.",
+            summary: "Message Id to Fire on First Trigger Run",
+        },
+        folderPath: {
+            name: "folderPath",
+            type: "string",
+            required: false,
+            description: "Mail folder to check for new emails.",
+            summary: "Folder",
+        },
+        to: {
+            name: "to",
+            type: "string",
+            required: false,
+            description: "Recipient email addresses separated by semicolons (If any match, the trigger will run).",
+            summary: "To",
+        },
+        cc: {
+            name: "cc",
+            type: "string",
+            required: false,
+            description: "CC recipient email addresses separated by semicolons (If any match, the trigger will run).",
+            summary: "CC",
+        },
+        toOrCc: {
+            name: "toOrCc",
+            type: "string",
+            required: false,
+            description: "To or CC recipient email addresses separated by semicolons (If any match, the trigger will run).",
+            summary: "To or CC",
+        },
+        from: {
+            name: "from",
+            type: "string",
+            required: false,
+            description: "Sender email addresses separated by semicolons (If any match, the trigger will run).",
+            summary: "From",
+        },
+        importance: {
+            name: "importance",
+            type: "string",
+            required: false,
+            description: "Importance of the email (Any, High, Normal, Low).",
+            summary: "Importance",
+            defaultValue: "Any",
+            allowedValues: ["Any", "Low", "Normal", "High"],
+        },
+        fetchOnlyWithAttachment: {
+            name: "fetchOnlyWithAttachment",
+            type: "boolean",
+            required: false,
+            description: "If set to true, only emails with an attachment will be retrieved. Emails without any attachments will be skipped. If set to false, all emails will be retrieved.",
+            summary: "Only with Attachments",
+            defaultValue: "false",
+        },
+        includeAttachments: {
+            name: "includeAttachments",
+            type: "boolean",
+            required: false,
+            description: "Should the response of the trigger include the attachments content.",
+            summary: "Include Attachments",
+            defaultValue: "false",
+        },
+        subjectFilter: {
+            name: "subjectFilter",
+            type: "string",
+            required: false,
+            description: "String to look for in the subject line.",
+            summary: "Subject Filter",
+        },
+    },
+    OnUpcomingEvents: {
+        table: {
+            name: "table",
+            type: "string",
+            required: true,
+            description: "Unique identifier of the calendar.",
+            summary: "Calendar Id",
+            dynamicValuesOperationId: "CalendarGetTables_V2",
+        },
+        lookAheadTimeInMinutes: {
+            name: "lookAheadTimeInMinutes",
+            type: "integer",
+            required: false,
+            description: "Time (in minutes) to look ahead for upcoming events.",
+            summary: "Look-Ahead Time",
+            defaultValue: "15",
+        },
+    },
+    OnSharedMailboxNewEmail: {
+        mailboxAddress: {
+            name: "mailboxAddress",
+            type: "string",
+            required: true,
+            description: "Address of the shared mailbox.",
+            summary: "Original Mailbox Address",
+        },
+        folderId: {
+            name: "folderId",
+            type: "string",
+            required: false,
+            description: "Mail folder to check for new emails.",
+            summary: "Folder",
+            defaultValue: "Inbox",
+        },
+        to: {
+            name: "to",
+            type: "string",
+            required: false,
+            description: "Recipient email addresses separated by semicolons (If any match, the trigger will run).",
+            summary: "To",
+        },
+        cc: {
+            name: "cc",
+            type: "string",
+            required: false,
+            description: "CC recipient email addresses separated by semicolons (If any match, the trigger will run).",
+            summary: "CC",
+        },
+        toOrCc: {
+            name: "toOrCc",
+            type: "string",
+            required: false,
+            description: "To or CC recipient email addresses separated by semicolons (If any match, the trigger will run).",
+            summary: "To or CC",
+        },
+        from: {
+            name: "from",
+            type: "string",
+            required: false,
+            description: "Sender email addresses separated by semicolons (If any match, the trigger will run).",
+            summary: "From",
+        },
+        importance: {
+            name: "importance",
+            type: "string",
+            required: false,
+            description: "Importance of the email (Any, High, Normal, Low).",
+            summary: "Importance",
+            defaultValue: "Any",
+            allowedValues: ["Any", "Low", "Normal", "High"],
+        },
+        hasAttachments: {
+            name: "hasAttachments",
+            type: "boolean",
+            required: false,
+            description: "If set to true, only emails with an attachment will be retrieved. Emails without any attachments will be skipped. If set to false, all emails will be retrieved.",
+            summary: "Only with Attachments",
+            defaultValue: "false",
+        },
+        includeAttachments: {
+            name: "includeAttachments",
+            type: "boolean",
+            required: false,
+            description: "Should the response of the trigger include the attachments content.",
+            summary: "Include Attachments",
+            defaultValue: "false",
+        },
+        subjectFilter: {
+            name: "subjectFilter",
+            type: "string",
+            required: false,
+            description: "String to look for in the subject line.",
+            summary: "Subject Filter",
+        },
+        xMsOperationContext: {
+            name: "x-ms-operation-context",
+            type: "string",
+            required: false,
+            description: "Special header to enable operation simulation.",
+            summary: "x-ms-operation-context",
+        },
+    },
+} as const;
 
 // #region Client
 
@@ -2405,87 +2897,6 @@ export class Office365Client extends ConnectorClientBase {
             queryParams.push(`$skip=${encodeURIComponent(String(skip))}`);
         }
         const requestPath = `/datasets/calendars/v4/tables/${table}/items` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<GraphCalendarEventListClientReceive>("GET", url, undefined, undefined, abortSignal);
-
-        if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
-        }
-
-        return httpResponse.value as GraphCalendarEventListClientReceive;
-    }
-
-    /**
-     * When an event is added, updated or deleted (V3)
-     * @remarks This operation triggers a flow when an event is added, updated or deleted in a calendar. (V3) This is not available in Mooncake.
-     */
-    public async calendarGetOnChangedItemsAsync(table: string, incomingDays?: string, pastDays?: string, abortSignal?: AbortSignal): Promise<GraphCalendarEventListWithActionType> {
-        const queryParams: string[] = [];
-        if (incomingDays !== undefined) {
-            queryParams.push(`incomingDays=${encodeURIComponent(String(incomingDays))}`);
-        }
-        if (pastDays !== undefined) {
-            queryParams.push(`pastDays=${encodeURIComponent(String(pastDays))}`);
-        }
-        const requestPath = `/datasets/calendars/v3/tables/${table}/onchangeditems` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<GraphCalendarEventListWithActionType>("GET", url, undefined, undefined, abortSignal);
-
-        if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
-        }
-
-        return httpResponse.value as GraphCalendarEventListWithActionType;
-    }
-
-    /**
-     * When a new event is created (V3)
-     * @remarks This operation triggers a flow when a new event is created in a calendar. (V3)
-     */
-    public async calendarGetOnNewItemsAsync(table: string, filter?: string, orderby?: string, top?: string, skip?: string, abortSignal?: AbortSignal): Promise<GraphCalendarEventListClientReceive> {
-        const queryParams: string[] = [];
-        if (filter !== undefined) {
-            queryParams.push(`$filter=${encodeURIComponent(String(filter))}`);
-        }
-        if (orderby !== undefined) {
-            queryParams.push(`$orderby=${encodeURIComponent(String(orderby))}`);
-        }
-        if (top !== undefined) {
-            queryParams.push(`$top=${encodeURIComponent(String(top))}`);
-        }
-        if (skip !== undefined) {
-            queryParams.push(`$skip=${encodeURIComponent(String(skip))}`);
-        }
-        const requestPath = `/datasets/calendars/v3/tables/${table}/onnewitems` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<GraphCalendarEventListClientReceive>("GET", url, undefined, undefined, abortSignal);
-
-        if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
-        }
-
-        return httpResponse.value as GraphCalendarEventListClientReceive;
-    }
-
-    /**
-     * When an event is modified (V3)
-     * @remarks This operation triggers a flow when an event is modified in a calendar. (V3)
-     */
-    public async calendarGetOnUpdatedItemsAsync(table: string, filter?: string, orderby?: string, top?: string, skip?: string, abortSignal?: AbortSignal): Promise<GraphCalendarEventListClientReceive> {
-        const queryParams: string[] = [];
-        if (filter !== undefined) {
-            queryParams.push(`$filter=${encodeURIComponent(String(filter))}`);
-        }
-        if (orderby !== undefined) {
-            queryParams.push(`$orderby=${encodeURIComponent(String(orderby))}`);
-        }
-        if (top !== undefined) {
-            queryParams.push(`$top=${encodeURIComponent(String(top))}`);
-        }
-        if (skip !== undefined) {
-            queryParams.push(`$skip=${encodeURIComponent(String(skip))}`);
-        }
-        const requestPath = `/datasets/calendars/v3/tables/${table}/onupdateditems` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const url = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<GraphCalendarEventListClientReceive>("GET", url, undefined, undefined, abortSignal);
 
@@ -3015,164 +3426,6 @@ export class Office365Client extends ConnectorClientBase {
     }
 
     /**
-     * When an email is flagged (V4)
-     * @remarks This operation triggers a flow when an email is flagged.
-     */
-    public async onFlaggedEmailAsync(folderPath?: string, to?: string, cc?: string, toOrCc?: string, from?: string, importance?: string, fetchOnlyWithAttachment?: string, includeAttachments?: string, subjectFilter?: string, abortSignal?: AbortSignal): Promise<TriggerBatchResponseGraphClientReceiveMessage> {
-        const queryParams: string[] = [];
-        if (folderPath !== undefined) {
-            queryParams.push(`folderPath=${encodeURIComponent(String(folderPath))}`);
-        }
-        if (to !== undefined) {
-            queryParams.push(`to=${encodeURIComponent(String(to))}`);
-        }
-        if (cc !== undefined) {
-            queryParams.push(`cc=${encodeURIComponent(String(cc))}`);
-        }
-        if (toOrCc !== undefined) {
-            queryParams.push(`toOrCc=${encodeURIComponent(String(toOrCc))}`);
-        }
-        if (from !== undefined) {
-            queryParams.push(`from=${encodeURIComponent(String(from))}`);
-        }
-        if (importance !== undefined) {
-            queryParams.push(`importance=${encodeURIComponent(String(importance))}`);
-        }
-        if (fetchOnlyWithAttachment !== undefined) {
-            queryParams.push(`fetchOnlyWithAttachment=${encodeURIComponent(String(fetchOnlyWithAttachment))}`);
-        }
-        if (includeAttachments !== undefined) {
-            queryParams.push(`includeAttachments=${encodeURIComponent(String(includeAttachments))}`);
-        }
-        if (subjectFilter !== undefined) {
-            queryParams.push(`subjectFilter=${encodeURIComponent(String(subjectFilter))}`);
-        }
-        const requestPath = `/v4/Mail/OnFlaggedEmail` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<TriggerBatchResponseGraphClientReceiveMessage>("GET", url, undefined, undefined, abortSignal);
-
-        if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
-        }
-
-        return httpResponse.value as TriggerBatchResponseGraphClientReceiveMessage;
-    }
-
-    /**
-     * When a new email arrives (V3)
-     * @remarks This operation triggers a flow when a new email arrives. It will skip any email that has a total message size greater than the limit put by your Exchange Admin or 50 MB, whichever is less. It may also skip protected emails and emails with invalid body or attachments.
-     */
-    public async onNewEmailAsync(folderPath?: string, to?: string, cc?: string, toOrCc?: string, from?: string, importance?: string, fetchOnlyWithAttachment?: string, includeAttachments?: string, subjectFilter?: string, abortSignal?: AbortSignal): Promise<TriggerBatchResponseGraphClientReceiveMessage> {
-        const queryParams: string[] = [];
-        if (folderPath !== undefined) {
-            queryParams.push(`folderPath=${encodeURIComponent(String(folderPath))}`);
-        }
-        if (to !== undefined) {
-            queryParams.push(`to=${encodeURIComponent(String(to))}`);
-        }
-        if (cc !== undefined) {
-            queryParams.push(`cc=${encodeURIComponent(String(cc))}`);
-        }
-        if (toOrCc !== undefined) {
-            queryParams.push(`toOrCc=${encodeURIComponent(String(toOrCc))}`);
-        }
-        if (from !== undefined) {
-            queryParams.push(`from=${encodeURIComponent(String(from))}`);
-        }
-        if (importance !== undefined) {
-            queryParams.push(`importance=${encodeURIComponent(String(importance))}`);
-        }
-        if (fetchOnlyWithAttachment !== undefined) {
-            queryParams.push(`fetchOnlyWithAttachment=${encodeURIComponent(String(fetchOnlyWithAttachment))}`);
-        }
-        if (includeAttachments !== undefined) {
-            queryParams.push(`includeAttachments=${encodeURIComponent(String(includeAttachments))}`);
-        }
-        if (subjectFilter !== undefined) {
-            queryParams.push(`subjectFilter=${encodeURIComponent(String(subjectFilter))}`);
-        }
-        const requestPath = `/v3/Mail/OnNewEmail` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<TriggerBatchResponseGraphClientReceiveMessage>("GET", url, undefined, undefined, abortSignal);
-
-        if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
-        }
-
-        return httpResponse.value as TriggerBatchResponseGraphClientReceiveMessage;
-    }
-
-    /**
-     * When a new email mentioning me arrives (V3)
-     * @remarks This operation triggers a flow when a new email mentioning me arrives. It will skip any email that has a total message size greater than the limit put by your Exchange Admin or 50 MB, whichever is less. It may also skip protected emails and emails with invalid body or attachments.
-     */
-    public async onNewMentionMeEmailAsync(messageIdToFireOnFirstTriggerRun?: string, folderPath?: string, to?: string, cc?: string, toOrCc?: string, from?: string, importance?: string, fetchOnlyWithAttachment?: string, includeAttachments?: string, subjectFilter?: string, abortSignal?: AbortSignal): Promise<TriggerBatchResponseGraphClientReceiveMessage> {
-        const queryParams: string[] = [];
-        if (messageIdToFireOnFirstTriggerRun !== undefined) {
-            queryParams.push(`messageIdToFireOnFirstTriggerRun=${encodeURIComponent(String(messageIdToFireOnFirstTriggerRun))}`);
-        }
-        if (folderPath !== undefined) {
-            queryParams.push(`folderPath=${encodeURIComponent(String(folderPath))}`);
-        }
-        if (to !== undefined) {
-            queryParams.push(`to=${encodeURIComponent(String(to))}`);
-        }
-        if (cc !== undefined) {
-            queryParams.push(`cc=${encodeURIComponent(String(cc))}`);
-        }
-        if (toOrCc !== undefined) {
-            queryParams.push(`toOrCc=${encodeURIComponent(String(toOrCc))}`);
-        }
-        if (from !== undefined) {
-            queryParams.push(`from=${encodeURIComponent(String(from))}`);
-        }
-        if (importance !== undefined) {
-            queryParams.push(`importance=${encodeURIComponent(String(importance))}`);
-        }
-        if (fetchOnlyWithAttachment !== undefined) {
-            queryParams.push(`fetchOnlyWithAttachment=${encodeURIComponent(String(fetchOnlyWithAttachment))}`);
-        }
-        if (includeAttachments !== undefined) {
-            queryParams.push(`includeAttachments=${encodeURIComponent(String(includeAttachments))}`);
-        }
-        if (subjectFilter !== undefined) {
-            queryParams.push(`subjectFilter=${encodeURIComponent(String(subjectFilter))}`);
-        }
-        const requestPath = `/v3/Mail/OnNewMentionMeEmail` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<TriggerBatchResponseGraphClientReceiveMessage>("GET", url, undefined, undefined, abortSignal);
-
-        if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
-        }
-
-        return httpResponse.value as TriggerBatchResponseGraphClientReceiveMessage;
-    }
-
-    /**
-     * When an upcoming event is starting soon (V3)
-     * @remarks This operation triggers a flow when an upcoming calendar event is starting.
-     */
-    public async onUpcomingEventsAsync(table?: string, lookAheadTimeInMinutes?: string, abortSignal?: AbortSignal): Promise<GraphCalendarEventListClientReceive> {
-        const queryParams: string[] = [];
-        if (table !== undefined) {
-            queryParams.push(`table=${encodeURIComponent(String(table))}`);
-        }
-        if (lookAheadTimeInMinutes !== undefined) {
-            queryParams.push(`lookAheadTimeInMinutes=${encodeURIComponent(String(lookAheadTimeInMinutes))}`);
-        }
-        const requestPath = `/v3/Events/OnUpcomingEvents` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<GraphCalendarEventListClientReceive>("GET", url, undefined, undefined, abortSignal);
-
-        if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
-        }
-
-        return httpResponse.value as GraphCalendarEventListClientReceive;
-    }
-
-    /**
      * Reply to email (V3)
      * @remarks This operation replies to an email.
      */
@@ -3232,53 +3485,6 @@ export class Office365Client extends ConnectorClientBase {
         }
 
         return httpResponse.value as SetAutomaticRepliesSettingResponse;
-    }
-
-    /**
-     * When a new email arrives in a shared mailbox (V2)
-     * @remarks This operation triggers a flow when a new email arrives in a shared mailbox. Your account should have permission to access the mailbox for this operation to succeed. It will skip any email that has a total message size greater than the limit put by your Exchange Admin or 50 MB, whichever is less. It may also skip protected emails and emails with invalid body or attachments.
-     */
-    public async sharedMailboxOnNewEmailAsync(mailboxAddress?: string, folderId?: string, to?: string, cc?: string, toOrCc?: string, from?: string, importance?: string, hasAttachments?: string, includeAttachments?: string, subjectFilter?: string, abortSignal?: AbortSignal): Promise<TriggerBatchResponseGraphClientReceiveMessage> {
-        const queryParams: string[] = [];
-        if (mailboxAddress !== undefined) {
-            queryParams.push(`mailboxAddress=${encodeURIComponent(String(mailboxAddress))}`);
-        }
-        if (folderId !== undefined) {
-            queryParams.push(`folderId=${encodeURIComponent(String(folderId))}`);
-        }
-        if (to !== undefined) {
-            queryParams.push(`to=${encodeURIComponent(String(to))}`);
-        }
-        if (cc !== undefined) {
-            queryParams.push(`cc=${encodeURIComponent(String(cc))}`);
-        }
-        if (toOrCc !== undefined) {
-            queryParams.push(`toOrCc=${encodeURIComponent(String(toOrCc))}`);
-        }
-        if (from !== undefined) {
-            queryParams.push(`from=${encodeURIComponent(String(from))}`);
-        }
-        if (importance !== undefined) {
-            queryParams.push(`importance=${encodeURIComponent(String(importance))}`);
-        }
-        if (hasAttachments !== undefined) {
-            queryParams.push(`hasAttachments=${encodeURIComponent(String(hasAttachments))}`);
-        }
-        if (includeAttachments !== undefined) {
-            queryParams.push(`includeAttachments=${encodeURIComponent(String(includeAttachments))}`);
-        }
-        if (subjectFilter !== undefined) {
-            queryParams.push(`subjectFilter=${encodeURIComponent(String(subjectFilter))}`);
-        }
-        const requestPath = `/v2/SharedMailbox/Mail/OnNewEmail` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<TriggerBatchResponseGraphClientReceiveMessage>("GET", url, undefined, undefined, abortSignal);
-
-        if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
-        }
-
-        return httpResponse.value as TriggerBatchResponseGraphClientReceiveMessage;
     }
 
     /**

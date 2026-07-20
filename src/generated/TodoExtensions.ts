@@ -244,12 +244,12 @@ export interface CreateToDoList {
 /**
  * Typed callback payload for trigger operation 'OnNewToDoInFolderV2'.
  */
-export type TodoOnNewToDoInFolderTriggerPayload = TriggerCallbackPayload<ToDo>;
+export type TodoOnNewToDoInFolderTriggerPayload = TriggerCallbackPayload<ToDo> ;
 
 /**
  * Typed callback payload for trigger operation 'OnUpdateToDoInFolderV2'.
  */
-export type TodoOnUpdateToDoInFolderTriggerPayload = TriggerCallbackPayload<ToDo>;
+export type TodoOnUpdateToDoInFolderTriggerPayload = TriggerCallbackPayload<ToDo> ;
 
 // #endregion Types
 

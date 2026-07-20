@@ -451,32 +451,32 @@ export interface MCPQueryResponse {
 /**
  * Typed callback payload for trigger operation 'OnNewIssue_Datacenter'.
  */
-export type JiraOnNewIssueDatacenterTriggerPayload = TriggerCallbackPayload<FullIssue>;
+export type JiraOnNewIssueDatacenterTriggerPayload = TriggerCallbackPayload<FullIssue> ;
 
 /**
  * Typed callback payload for trigger operation 'OnCloseIssue_Datacenter'.
  */
-export type JiraOnCloseIssueDatacenterTriggerPayload = TriggerCallbackPayload<FullIssue>;
+export type JiraOnCloseIssueDatacenterTriggerPayload = TriggerCallbackPayload<FullIssue> ;
 
 /**
  * Typed callback payload for trigger operation 'OnNewIssueJQL_Datacenter'.
  */
-export type JiraOnNewIssueJQLDatacenterTriggerPayload = TriggerCallbackPayload<FullIssue>;
+export type JiraOnNewIssueJQLDatacenterTriggerPayload = TriggerCallbackPayload<FullIssue> ;
 
 /**
  * Typed callback payload for trigger operation 'OnCloseIssue_V2'.
  */
-export type JiraOnCloseIssueTriggerPayload = TriggerCallbackPayload<FullIssue>;
+export type JiraOnCloseIssueTriggerPayload = TriggerCallbackPayload<FullIssue> ;
 
 /**
  * Typed callback payload for trigger operation 'OnNewIssue_V2'.
  */
-export type JiraOnNewIssueTriggerPayload = TriggerCallbackPayload<FullIssue>;
+export type JiraOnNewIssueTriggerPayload = TriggerCallbackPayload<FullIssue> ;
 
 /**
  * Typed callback payload for trigger operation 'OnNewIssueJQL_V2'.
  */
-export type JiraOnNewIssueJQLTriggerPayload = TriggerCallbackPayload<FullIssue>;
+export type JiraOnNewIssueJQLTriggerPayload = TriggerCallbackPayload<FullIssue> ;
 
 // #endregion Types
 

@@ -5,6 +5,7 @@ import { ConnectorClientBase } from "../azureConnectors/clientBase.ts";
 import { ConnectorException } from "../azureConnectors/connectorException.ts";
 import { ConnectorClientOptions } from "../azureConnectors/options.ts";
 import { TokenProvider } from "../azureConnectors/authentication.ts";
+import { TriggerCallbackPayload } from "../azureConnectors/triggerPayload.ts";
 
 // #region Types
 
@@ -1280,7 +1281,199 @@ export interface WebhookRequest {
 export interface WebhookTriggerSchema {
     schema?: ObjectEntity;
 }
+
+/**
+ * Typed callback payload for trigger operation 'OnNewChannelMessage'.
+ */
+export type TeamsOnNewChannelMessageTriggerPayload = TriggerCallbackPayload<ChatMessage> ;
+
+/**
+ * Typed callback payload for trigger operation 'OnNewChannelMessageMentioningMe'.
+ */
+export type TeamsOnNewChannelMessageMentioningMeTriggerPayload = TriggerCallbackPayload<ChatMessage> ;
+
+/**
+ * Typed callback payload for trigger operation 'OnGroupMembershipAdd'.
+ */
+export type TeamsOnTeamMemberAddedTriggerPayload = TriggerCallbackPayload<Record<string, unknown>> ;
+
+/**
+ * Typed callback payload for trigger operation 'OnGroupMembershipRemoval'.
+ */
+export type TeamsOnTeamMemberRemovedTriggerPayload = TriggerCallbackPayload<Record<string, unknown>> ;
+
 // #endregion Types
+
+export const TeamsTriggerOperations = {
+    OnWebhookAtMentionTrigger: "WebhookAtMentionTrigger",
+    OnWebhookChatMessageTrigger: "WebhookChatMessageTrigger",
+    OnWebhookKeywordTrigger: "WebhookKeywordTrigger",
+    OnWebhookMessageReactionTrigger: "WebhookMessageReactionTrigger",
+    OnWebhookNewMessageTrigger: "WebhookNewMessageTrigger",
+    OnNewChannelMessage: "OnNewChannelMessage",
+    OnNewChannelMessageMentioningMe: "OnNewChannelMessageMentioningMe",
+    OnTeamMemberAdded: "OnGroupMembershipAdd",
+    OnTeamMemberRemoved: "OnGroupMembershipRemoval",
+} as const;
+
+export type TeamsTriggerOperation = typeof TeamsTriggerOperations[keyof typeof TeamsTriggerOperations];
+
+export const TeamsTriggerParameters = {
+    OnWebhookAtMentionTrigger: {
+        threadType: {
+            name: "threadType",
+            type: "string",
+            required: true,
+            description: "Choose message type",
+            summary: "Message type",
+            allowedValues: ["groupchat", "channel"],
+        },
+    },
+    OnWebhookKeywordTrigger: {
+        threadType: {
+            name: "threadType",
+            type: "string",
+            required: true,
+            description: "Choose message type",
+            summary: "Message type",
+            allowedValues: ["groupchat", "channel"],
+        },
+        search: {
+            name: "$search",
+            type: "string",
+            required: true,
+            description: "A comma separated list of keywords to search for",
+            summary: "Keywords to search for",
+        },
+    },
+    OnWebhookMessageReactionTrigger: {
+        reactionKey: {
+            name: "reactionKey",
+            type: "string",
+            required: true,
+            description: "Choose emoji to monitor for message reactions",
+            summary: "Emoji to Track",
+        },
+        frequency: {
+            name: "frequency",
+            type: "string",
+            required: true,
+            description: "Whether the flow should be triggered by every reaction or only the first reaction on a particular message",
+            summary: "Trigger Frequency",
+            allowedValues: ["Multiple", "Once"],
+        },
+        runningPolicy: {
+            name: "runningPolicy",
+            type: "string",
+            required: true,
+            description: "Specify who can trigger this workflow",
+            summary: "Who can trigger?",
+            allowedValues: ["Myself", "Everyone"],
+        },
+        threadType: {
+            name: "threadType",
+            type: "string",
+            required: true,
+            description: "Choose message type",
+            summary: "Message type",
+            allowedValues: ["groupchat", "channel"],
+        },
+    },
+    OnWebhookNewMessageTrigger: {
+        threadType: {
+            name: "threadType",
+            type: "string",
+            required: true,
+            description: "Choose message type",
+            summary: "Message type",
+            allowedValues: ["groupchat", "channel"],
+        },
+    },
+    OnNewChannelMessage: {
+        groupId: {
+            name: "groupId",
+            type: "string",
+            required: true,
+            description: "Select team",
+            summary: "Team",
+            dynamicValuesOperationId: "GetAllTeams",
+        },
+        channelId: {
+            name: "channelId",
+            type: "string",
+            required: true,
+            description: "Channel ID",
+            summary: "Channel",
+            dynamicValuesOperationId: "GetChannelsForGroup",
+        },
+        top: {
+            name: "$top",
+            type: "integer",
+            required: false,
+            summary: "Top",
+            defaultValue: "50",
+        },
+    },
+    OnNewChannelMessageMentioningMe: {
+        groupId: {
+            name: "groupId",
+            type: "string",
+            required: true,
+            description: "Select team",
+            summary: "Team",
+            dynamicValuesOperationId: "GetAllTeams",
+        },
+        channelId: {
+            name: "channelId",
+            type: "string",
+            required: true,
+            description: "Channel ID",
+            summary: "Channel",
+            dynamicValuesOperationId: "GetChannelsForGroup",
+        },
+        top: {
+            name: "$top",
+            type: "integer",
+            required: false,
+            summary: "Top",
+            defaultValue: "50",
+        },
+    },
+    OnTeamMemberAdded: {
+        groupId: {
+            name: "groupId",
+            type: "string",
+            required: true,
+            description: "Select team",
+            summary: "Team",
+            dynamicValuesOperationId: "GetAllTeams",
+        },
+        select: {
+            name: "$select",
+            type: "string",
+            required: false,
+            summary: "Select",
+            defaultValue: "members",
+        },
+    },
+    OnTeamMemberRemoved: {
+        groupId: {
+            name: "groupId",
+            type: "string",
+            required: true,
+            description: "Select team",
+            summary: "Team",
+            dynamicValuesOperationId: "GetAllTeams",
+        },
+        select: {
+            name: "$select",
+            type: "string",
+            required: false,
+            summary: "Select",
+            defaultValue: "members",
+        },
+    },
+} as const;
 
 // #region Client
 
@@ -1398,90 +1591,6 @@ export class TeamsClient extends ConnectorClientBase {
         }
 
         return httpResponse.value as GetAllTeamsResponse;
-    }
-
-    /**
-     * When I'm @mentioned
-     * @remarks Triggers when a new message that @mentions the current user is added to a specified chat or channel.
-     */
-    public async webhookAtMentionTriggerAsync(input: DynamicWebhookTriggerRequestSchema, threadType: string, abortSignal?: AbortSignal): Promise<void> {
-        const requestPath = `/beta/subscriptions/atmentiontrigger/threadType/${threadType}`;
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<void>("POST", url, undefined, input, abortSignal);
-
-        if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
-        }
-    }
-
-    /**
-     * When a new chat message is added
-     * @remarks Triggers when a new message is posted in any chat the user is a part of.
-     */
-    public async webhookChatMessageTriggerAsync(input: WebhookChatMessageTriggerInput, abortSignal?: AbortSignal): Promise<void> {
-        const requestPath = `/beta/subscriptions/chatmessagetrigger`;
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<void>("POST", url, undefined, input, abortSignal);
-
-        if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
-        }
-    }
-
-    /**
-     * When keywords are mentioned
-     * @remarks Triggers when a keyword is mentioned in a specified chat or channel. Does not trigger if a message is edited.
-     */
-    public async webhookKeywordTriggerAsync(input: DynamicWebhookTriggerRequestSchema, threadType: string, search?: string, abortSignal?: AbortSignal): Promise<void> {
-        const queryParams: string[] = [];
-        if (search !== undefined) {
-            queryParams.push(`$search=${encodeURIComponent(String(search))}`);
-        }
-        const requestPath = `/beta/subscriptions/keywordtrigger/threadType/${threadType}` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<void>("POST", url, undefined, input, abortSignal);
-
-        if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
-        }
-    }
-
-    /**
-     * When someone reacted to a message in chat
-     * @remarks Triggers when someone reacts to a message in a specified chat or channel.
-     */
-    public async webhookMessageReactionTriggerAsync(input: DynamicWebhookTriggerRequestSchema, threadType: string, reactionKey?: string, frequency?: string, runningPolicy?: string, abortSignal?: AbortSignal): Promise<void> {
-        const queryParams: string[] = [];
-        if (reactionKey !== undefined) {
-            queryParams.push(`reactionKey=${encodeURIComponent(String(reactionKey))}`);
-        }
-        if (frequency !== undefined) {
-            queryParams.push(`frequency=${encodeURIComponent(String(frequency))}`);
-        }
-        if (runningPolicy !== undefined) {
-            queryParams.push(`runningPolicy=${encodeURIComponent(String(runningPolicy))}`);
-        }
-        const requestPath = `/beta/subscriptions/messagereactiontrigger/threadType/${threadType}` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<void>("POST", url, undefined, input, abortSignal);
-
-        if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
-        }
-    }
-
-    /**
-     * When a new message is added to a chat or channel
-     * @remarks Triggers when a new message is posted in a specified chat or channel. Does not trigger if a message is edited.
-     */
-    public async webhookNewMessageTriggerAsync(input: DynamicWebhookTriggerRequestSchema, threadType: string, abortSignal?: AbortSignal): Promise<void> {
-        const requestPath = `/beta/subscriptions/newmessagetrigger/threadType/${threadType}`;
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<void>("POST", url, undefined, input, abortSignal);
-
-        if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
-        }
     }
 
     /**
@@ -1783,92 +1892,6 @@ export class TeamsClient extends ConnectorClientBase {
         }
 
         return httpResponse.value as ObjectWithoutType;
-    }
-
-    /**
-     * When a new channel message is added
-     * @remarks Triggers when a new message is posted to a channel in a team. Note that this trigger only fires when a root messages is added in the channel. Replies to an existing channel message will not result in the trigger event firing. For shared channels, the team ID must refer to the host team, which is the team that owns the shared channel.
-     */
-    public async onNewChannelMessageAsync(groupId: string, channelId: string, top?: string, abortSignal?: AbortSignal): Promise<Array<ChatMessage>> {
-        const queryParams: string[] = [];
-        if (top !== undefined) {
-            queryParams.push(`$top=${encodeURIComponent(String(top))}`);
-        }
-        const requestPath = `/trigger/beta/teams/${groupId}/channels/${channelId}/messages` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<Array<ChatMessage>>("GET", url, undefined, undefined, abortSignal);
-
-        if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
-        }
-
-        return httpResponse.value as Array<ChatMessage>;
-    }
-
-    /**
-     * When I am mentioned in a channel message
-     * @remarks Triggers when a new message that @mentions the current user is added to a channel in a team. For shared channels, the team ID must refer to the host team, which is the team that owns the shared channel.
-     */
-    public async onNewChannelMessageMentioningMeAsync(groupId: string, channelId: string, top?: string, abortSignal?: AbortSignal): Promise<Array<ChatMessage>> {
-        const queryParams: string[] = [];
-        if (top !== undefined) {
-            queryParams.push(`$top=${encodeURIComponent(String(top))}`);
-        }
-        const requestPath = `/trigger/beta/teams/${groupId}/channels/${channelId}/messages_mentioningme` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<Array<ChatMessage>>("GET", url, undefined, undefined, abortSignal);
-
-        if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
-        }
-
-        return httpResponse.value as Array<ChatMessage>;
-    }
-
-    /**
-     * When a new team member is added
-     * @remarks Triggers when a member is added to the given team
-     */
-    public async onGroupMembershipAddAsync(groupId?: string, select?: string, abortSignal?: AbortSignal): Promise<Array<Record<string, unknown>>> {
-        const queryParams: string[] = [];
-        if (groupId !== undefined) {
-            queryParams.push(`groupId=${encodeURIComponent(String(groupId))}`);
-        }
-        if (select !== undefined) {
-            queryParams.push(`$select=${encodeURIComponent(String(select))}`);
-        }
-        const requestPath = `/trigger/v1.0/groups/delta` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<Array<Record<string, unknown>>>("GET", url, undefined, undefined, abortSignal);
-
-        if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
-        }
-
-        return httpResponse.value as Array<Record<string, unknown>>;
-    }
-
-    /**
-     * When a new team member is removed
-     * @remarks Triggers when a member is removed from the specified team
-     */
-    public async onGroupMembershipRemovalAsync(groupId?: string, select?: string, abortSignal?: AbortSignal): Promise<Array<Record<string, unknown>>> {
-        const queryParams: string[] = [];
-        if (groupId !== undefined) {
-            queryParams.push(`groupId=${encodeURIComponent(String(groupId))}`);
-        }
-        if (select !== undefined) {
-            queryParams.push(`$select=${encodeURIComponent(String(select))}`);
-        }
-        const requestPath = `/trigger/v1.0/groups/removal` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<Array<Record<string, unknown>>>("GET", url, undefined, undefined, abortSignal);
-
-        if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
-        }
-
-        return httpResponse.value as Array<Record<string, unknown>>;
     }
 
     /**

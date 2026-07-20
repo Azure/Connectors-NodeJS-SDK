@@ -5,6 +5,7 @@ import { ConnectorClientBase } from "../azureConnectors/clientBase.ts";
 import { ConnectorException } from "../azureConnectors/connectorException.ts";
 import { ConnectorClientOptions } from "../azureConnectors/options.ts";
 import { TokenProvider } from "../azureConnectors/authentication.ts";
+import { TriggerCallbackPayload } from "../azureConnectors/triggerPayload.ts";
 
 // #region Types
 
@@ -235,7 +236,55 @@ export interface BlobDataSetsMetadata {
     /** Blob dataset url encoding */
     urlEncoding?: string;
 }
+
+/**
+ * Typed callback payload for trigger operation 'OnUpdatedFiles_V2'.
+ */
+export type AzureblobOnUpdatedFilesTriggerPayload = TriggerCallbackPayload<BlobMetadata> ;
+
 // #endregion Types
+
+export const AzureblobTriggerOperations = {
+    OnUpdatedFiles: "OnUpdatedFiles_V2",
+} as const;
+
+export type AzureblobTriggerOperation = typeof AzureblobTriggerOperations[keyof typeof AzureblobTriggerOperations];
+
+export const AzureblobTriggerParameters = {
+    OnUpdatedFiles: {
+        dataset: {
+            name: "dataset",
+            type: "string",
+            required: true,
+            description: "Azure Storage account name or blob endpoint.",
+            summary: "Storage account name or blob endpoint",
+            dynamicValuesOperationId: "GetDataSets",
+        },
+        folderId: {
+            name: "folderId",
+            type: "string",
+            required: true,
+            description: "Select a container.",
+            summary: "Container",
+        },
+        maxFileCount: {
+            name: "maxFileCount",
+            type: "integer",
+            required: false,
+            description: "Maximum number of blobs to return from the trigger (1-100).",
+            summary: "Number of blobs to return",
+            defaultValue: "10",
+        },
+        checkBothCreatedAndModifiedDateTime: {
+            name: "checkBothCreatedAndModifiedDateTime",
+            type: "boolean",
+            required: false,
+            description: "If the flag is set to true, the trigger will check the file's created date and time and the file's last modified date and time. If the flag is set to false, the trigger will only check the file's last modified date and time.",
+            summary: "Check Created and Modified Time",
+            defaultValue: "false",
+        },
+    },
+} as const;
 
 // #region Client
 
@@ -577,32 +626,6 @@ export class AzureblobClient extends ConnectorClientBase {
         }
 
         return httpResponse.value as BlobMetadataPage;
-    }
-
-    /**
-     * When a blob is added or modified (properties only) (V2)
-     * @remarks This operation triggers a flow when one or more blobs are added or modified in a container. This trigger will only fetch the file metadata. To get the file content, you can use the \"Get file content\" operation. The trigger does not fire if a file is added/updated in a subfolder. If it is required to trigger on subfolders, multiple triggers should be created.
-     */
-    public async onUpdatedFilesAsync(dataset: string, folderId?: string, maxFileCount?: string, checkBothCreatedAndModifiedDateTime?: string, abortSignal?: AbortSignal): Promise<Array<BlobMetadata>> {
-        const queryParams: string[] = [];
-        if (folderId !== undefined) {
-            queryParams.push(`folderId=${encodeURIComponent(String(folderId))}`);
-        }
-        if (maxFileCount !== undefined) {
-            queryParams.push(`maxFileCount=${encodeURIComponent(String(maxFileCount))}`);
-        }
-        if (checkBothCreatedAndModifiedDateTime !== undefined) {
-            queryParams.push(`checkBothCreatedAndModifiedDateTime=${encodeURIComponent(String(checkBothCreatedAndModifiedDateTime))}`);
-        }
-        const requestPath = `/v2/datasets/${encodeURIComponent(String(dataset))}/triggers/batch/onupdatedfile` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<Array<BlobMetadata>>("GET", url, undefined, undefined, abortSignal);
-
-        if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
-        }
-
-        return httpResponse.value as Array<BlobMetadata>;
     }
 
     /**

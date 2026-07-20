@@ -147,29 +147,30 @@ async function main(): Promise<void> {
         }
     }
 
-    // Example 5: Polling trigger — check for new channel messages
+    // Example 5: Poll for channel updates by re-reading recent messages
     if (firstTeamId && firstChannelId) {
-        console.log("\n--- Trigger: Poll for New Channel Messages ---");
+        console.log("\n--- Poll Channel Messages ---");
         try {
-            const triggerResponse = await client.onNewChannelMessageAsync(firstTeamId, firstChannelId);
-            const triggerMessages = triggerResponse ?? [];
+            const messagesResponse = await client.getMessagesFromChannelAsync(firstTeamId, firstChannelId);
+            const rawValue = messagesResponse.value as unknown;
+            const polledMessages = (Array.isArray(rawValue) ? rawValue : []) as Array<Record<string, unknown>>;
 
-            if (triggerMessages.length > 0) {
-                console.log(`Trigger returned ${triggerMessages.length} new messages:`);
-                for (const message of triggerMessages.slice(0, 3)) {
-                    const content = message.body?.content as string | undefined;
+            if (polledMessages.length > 0) {
+                console.log(`Poll returned ${polledMessages.length} messages:`);
+                for (const message of polledMessages.slice(0, 3)) {
+                    const body = message.body as Record<string, unknown> | undefined;
+                    const content = body?.content as string | undefined;
                     const preview = content
                         ? content.replace(/<[^>]+>/g, "").slice(0, 60)
                         : "No content";
                     console.log(`  - [${message.createdDateTime ?? ""}] ${preview}`);
                 }
             } else {
-                console.log("No new messages from trigger poll.");
+                console.log("No messages returned from poll.");
             }
         } catch (error) {
             if (error instanceof ConnectorException) {
-                // 202 or 304 are normal for polling triggers when no new data
-                console.log(`Trigger poll response (${error.statusCode}): No new messages available.`);
+                console.log(`Polling response (${error.statusCode}): No messages available.`);
             } else {
                 throw error;
             }
