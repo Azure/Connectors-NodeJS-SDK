@@ -14,13 +14,11 @@ The **CodefulSdkGenerator** tool generates typed TypeScript clients from managed
 
 ### Tools Required
 
-1. **ARMClient** - For authenticated Azure Resource Manager API calls
-   - Install via Chocolatey: `choco install armclient`
-   - Install via WinGet: `winget install projectkudu.ARMClient`
-   - The generator defaults to `C:\ProgramData\chocolatey\bin\ARMClient.exe`
-   - **If ARMClient is installed elsewhere** (e.g., via WinGet), set the `ARMCLIENT_PATH` environment variable
+1. **Azure Subscription** - Access to an Azure subscription with Logic Apps Standard
 
-2. **Azure Subscription** - Access to an Azure subscription with Logic Apps Standard
+2. **Azure authentication (DefaultAzureCredential)**
+   - Sign in with an identity that can read managed connector metadata in your target subscription.
+   - Typical local setup: run `az login` (and optionally `az account set --subscription <subscription-id>`).
 
 3. **.NET 8 SDK** - For building and running the generator
 
@@ -40,29 +38,49 @@ dotnet build .\src\tools\CodefulSdkGenerator\LogicAppsCompiler.Cli\LogicAppsComp
 
 ```powershell
 # Generate all connectors
-LogicAppsCompiler.exe <output-directory> unused --directClientTypeScript
+LogicAppsCompiler.exe <output-directory> unused --directClient --language=typescript
 
 # Generate specific connectors only
-LogicAppsCompiler.exe <output-directory> unused --directClientTypeScript --connectors=office365
+LogicAppsCompiler.exe <output-directory> unused --directClient --language=typescript --connectors=office365
 
 # Example: Generate to this SDK repo's generated folder
-LogicAppsCompiler.exe "<path-to-Connectors-NodeJS-SDK>/src/generated" unused --directClientTypeScript --connectors=office365
+LogicAppsCompiler.exe "<path-to-Connectors-NodeJS-SDK>/src/generated" unused --directClient --language=typescript --connectors=office365
 ```
 
 **Output structure per connector:**
 
-- `{Connector}Client.ts` - Combined types and client in one file
+- `{Connector}Extensions.ts` - Combined typed models and client methods for a connector
 
 ### Output files
 
 | File | Purpose |
 |------|---------|
-| `office365Client.ts` | Generated typed client for a connector |
-| `connectors.ts` | Navigator module listing all generated connectors |
+| `Office365Extensions.ts` | Generated typed client + models for a connector |
+| `ManagedConnectors.ts` | Registry of available connector API names |
 | `connectorNames.ts` | String constants for connector names |
+| `index.ts` | Barrel exports for generated connectors |
 
 ## Rules
 
 - **Never hand-edit generated files.** Fix bugs in the generator, not in generated output.
 - Generated files are in `src/generated/` and marked with a "Do not edit" header.
 - Runtime infrastructure files in `src/azureConnectors/` are hand-written.
+
+## Important Notes
+
+- Regeneration updates shared generated registry files (`ManagedConnectors.ts`,
+   `connectorNames.ts`, and `index.ts`). If you generate with a filtered
+   connector set, those registries will reflect only that subset.
+- For release-ready updates in this repo, run generation with the complete
+   intended connector set to avoid unintentionally dropping existing connectors.
+
+## Post-Generation Validation
+
+Run these checks from the `Connectors-NodeJS-SDK` repo root:
+
+```powershell
+npm run build
+npm run typecheck
+npm test
+npm run typecheck:samples
+```

@@ -3,7 +3,7 @@
 import {
     TeamsClient,
     NewMeeting,
-    NewMeetingRespone,
+    NewMeetingResponse,
     GetAllTeamsResponse,
     GetChannelsForGroupResponse,
     CreateChannelInput,
@@ -59,7 +59,7 @@ const _meeting: NewMeeting = {
     onlineMeetingProvider: "teamsForBusiness",
 };
 
-const _meetingResponse: NewMeetingRespone = {
+const _meetingResponse: NewMeetingResponse = {
     id: "meeting-1",
     subject: "Team Standup",
 };
@@ -119,7 +119,7 @@ describe("TeamsClient — createTeamsMeetingAsync", () => {
     });
 
     it("should POST meeting with body to calendar endpoint", async () => {
-        const mockResponse: NewMeetingRespone = {
+        const mockResponse: NewMeetingResponse = {
             id: "event-1",
             subject: "Standup",
         };

@@ -51,9 +51,9 @@ describe("ConnectorNames", () => {
         expect(ConnectorNames.MicrosoftTeams).toBe("teams");
     });
 
-    it("should contain exactly 12 connector entries", () => {
+    it("should contain exactly 21 connector entries", () => {
         const keys = Object.keys(ConnectorNames);
-        expect(keys).toHaveLength(12);
+        expect(keys).toHaveLength(21);
     });
 
     it("should have all values as lowercase strings", () => {

@@ -225,4 +225,61 @@ describe("ConnectorHttpClient", () => {
 
         await expect(sendPromise).rejects.toThrow();
     });
+
+    it("should abort on request timeout", async () => {
+        global.fetch = jest.fn(async (_input: string | URL | Request, init?: RequestInit) => {
+            return new Promise((_resolve, reject) => {
+                const signal = init?.signal;
+                if (signal?.aborted) {
+                    reject(new Error("AbortError"));
+                    return;
+                }
+
+                signal?.addEventListener("abort", () => reject(new Error("AbortError")));
+            });
+        }) as unknown as typeof fetch;
+
+        const client = new ConnectorHttpClient(new MockTokenProvider(), {
+            maxRetryAttempts: 1,
+            timeoutMs: 1,
+            initialRetryDelayMs: 1,
+        });
+
+        await expect(client.sendAsync("GET", "https://example.com/slow")).rejects.toThrow("AbortError");
+    });
+
+    it("should abort internal signal when caller aborts after listener registration", async () => {
+        global.fetch = jest.fn(async (_input: string | URL | Request, init?: RequestInit) => {
+            return new Promise((_resolve, reject) => {
+                const signal = init?.signal;
+                if (signal?.aborted) {
+                    reject(new Error("AbortError"));
+                    return;
+                }
+
+                signal?.addEventListener("abort", () => reject(new Error("AbortError")));
+            });
+        }) as unknown as typeof fetch;
+
+        const controller = new AbortController();
+        const client = new ConnectorHttpClient(new MockTokenProvider(), {
+            maxRetryAttempts: 1,
+            initialRetryDelayMs: 1,
+            timeoutMs: 1000,
+        });
+
+        const sendPromise = client.sendAsync(
+            "GET",
+            "https://example.com/api/items",
+            undefined,
+            undefined,
+            controller.signal,
+        );
+
+        // Ensure sendWithRetry has attached the caller abort listener before aborting.
+        await Promise.resolve();
+        controller.abort();
+
+        await expect(sendPromise).rejects.toThrow("AbortError");
+    });
 });
