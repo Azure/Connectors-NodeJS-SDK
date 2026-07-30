@@ -127,12 +127,12 @@ export interface BlobMetadataPage {
 /**
  * Typed callback payload for trigger operation 'OnNewFilesV2'.
  */
-export interface BoxOnNewFilesTriggerPayload extends TriggerCallbackPayload<BlobMetadata> {}
+export type BoxOnNewFilesTriggerPayload = TriggerCallbackPayload<BlobMetadata>;
 
 /**
  * Typed callback payload for trigger operation 'OnUpdatedFilesV2'.
  */
-export interface BoxOnUpdatedFilesTriggerPayload extends TriggerCallbackPayload<BlobMetadata> {}
+export type BoxOnUpdatedFilesTriggerPayload = TriggerCallbackPayload<BlobMetadata>;
 
 // #endregion Types
 

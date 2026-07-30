@@ -125,12 +125,12 @@ export interface BlobMetadataPage {
 /**
  * Typed callback payload for trigger operation 'OnNewFiles'.
  */
-export interface DropboxOnNewFilesTriggerPayload extends TriggerCallbackPayload<BlobMetadata> {}
+export type DropboxOnNewFilesTriggerPayload = TriggerCallbackPayload<BlobMetadata>;
 
 /**
  * Typed callback payload for trigger operation 'OnUpdatedFiles'.
  */
-export interface DropboxOnUpdatedFilesTriggerPayload extends TriggerCallbackPayload<BlobMetadata> {}
+export type DropboxOnUpdatedFilesTriggerPayload = TriggerCallbackPayload<BlobMetadata>;
 
 // #endregion Types
 
