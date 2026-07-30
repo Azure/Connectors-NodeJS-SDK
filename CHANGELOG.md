@@ -19,6 +19,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   `tests/googlecalendarClient.test.ts`, `tests/googledriveClient.test.ts`,
   `tests/googletasksClient.test.ts`, `tests/office365groupsmailClient.test.ts`,
   and `tests/rssClient.test.ts`.
+- Added ESM/CJS TypeScript sample programs for the 9 new connectors under
+  `samples/esm/typescript/` and `samples/cjs/typescript/`.
 
 ### Changed
 
