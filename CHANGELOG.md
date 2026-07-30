@@ -7,6 +7,26 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- Generated 9 additional connector clients in `src/generated/`: Box, Dropbox,
+  Excel Online, FTP, Google Calendar, Google Drive, Google Tasks, Office 365
+  Groups Mail, and RSS (Phase 2 connector rollout, mirroring the Python SDK's
+  Phase 2 set).
+- Added connector-specific Jest suites for the 9 new connectors:
+  `tests/boxClient.test.ts`, `tests/dropboxClient.test.ts`,
+  `tests/excelonlineClient.test.ts`, `tests/ftpClient.test.ts`,
+  `tests/googlecalendarClient.test.ts`, `tests/googledriveClient.test.ts`,
+  `tests/googletasksClient.test.ts`, `tests/office365groupsmailClient.test.ts`,
+  and `tests/rssClient.test.ts`.
+
+### Changed
+
+- Updated generated connector registries (`connectorNames.ts`,
+  `ManagedConnectors.ts`, `index.ts`) to include all 30 generated connectors.
+- Extended `tests/connectorNames.test.ts` and `tests/managedConnectors.test.ts`
+  to cover the 9 new connectors (registry count now 30).
+
 ### Fixed
 
 - Regenerated the 21 TypeScript connector clients under `src/generated/` against
