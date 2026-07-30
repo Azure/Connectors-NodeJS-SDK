@@ -240,7 +240,7 @@ export interface BlobDataSetsMetadata {
 /**
  * Typed callback payload for trigger operation 'OnUpdatedFiles_V2'.
  */
-export type AzureblobOnUpdatedFilesTriggerPayload = TriggerCallbackPayload<BlobMetadata> ;
+export interface AzureblobOnUpdatedFilesTriggerPayload extends TriggerCallbackPayload<BlobMetadata> {}
 
 // #endregion Types
 

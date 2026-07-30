@@ -1,0 +1,45 @@
+{
+    "_comment": "Provenance record for the generated clients under src/generated/. It exists so a regeneration can be reproduced byte-for-byte and any cross-language surface delta can be attributed to a specific generator revision and Swagger input. The generation tooling MUST repopulate this file on every run (see the 'Provenance & Reproducibility' section of GENERATION.md). 'status' is 'template' until a run records real values; a filled manifest sets it to 'generated'.",
+    "manifestVersion": 1,
+    "status": "template",
+    "generatedAtUtc": null,
+    "generator": {
+        "repository": "https://msazure.visualstudio.com/One/_git/AzureUX-BPM",
+        "tool": "CodefulSdkGenerator (LogicAppsCompiler)",
+        "projectPath": "src/tools/CodefulSdkGenerator/LogicAppsCompiler.Cli/LogicAppsCompiler.Cli.csproj",
+        "bpmCommit": null,
+        "bpmBranch": null,
+        "assemblyVersion": null
+    },
+    "command": "LogicAppsCompiler.exe <output-directory> unused --directClient --language=typescript",
+    "swaggerSource": {
+        "_comment": "How the connector Swagger inputs were obtained. For live ARM metadata, record the subscription id (or a non-identifying label), the API version, and the UTC time the snapshots were pulled. Persist each snapshot under swaggerCacheDirectory so the SHA-256 values below are verifiable.",
+        "kind": "live-arm-metadata",
+        "apiVersion": null,
+        "capturedAtUtc": null,
+        "swaggerCacheDirectory": "swagger-cache/"
+    },
+    "connectors": [
+        { "apiName": "arm", "outputFile": "src/generated/ArmExtensions.ts", "swaggerSnapshot": "swagger-cache/arm.swagger.json", "swaggerSha256": null },
+        { "apiName": "azureblob", "outputFile": "src/generated/AzureblobExtensions.ts", "swaggerSnapshot": "swagger-cache/azureblob.swagger.json", "swaggerSha256": null },
+        { "apiName": "azuremonitorlogs", "outputFile": "src/generated/AzuremonitorlogsExtensions.ts", "swaggerSnapshot": "swagger-cache/azuremonitorlogs.swagger.json", "swaggerSha256": null },
+        { "apiName": "docusign", "outputFile": "src/generated/DocusignExtensions.ts", "swaggerSnapshot": "swagger-cache/docusign.swagger.json", "swaggerSha256": null },
+        { "apiName": "github", "outputFile": "src/generated/GithubExtensions.ts", "swaggerSnapshot": "swagger-cache/github.swagger.json", "swaggerSha256": null },
+        { "apiName": "jira", "outputFile": "src/generated/JiraExtensions.ts", "swaggerSnapshot": "swagger-cache/jira.swagger.json", "swaggerSha256": null },
+        { "apiName": "kusto", "outputFile": "src/generated/KustoExtensions.ts", "swaggerSnapshot": "swagger-cache/kusto.swagger.json", "swaggerSha256": null },
+        { "apiName": "microsoftforms", "outputFile": "src/generated/MicrosoftformsExtensions.ts", "swaggerSnapshot": "swagger-cache/microsoftforms.swagger.json", "swaggerSha256": null },
+        { "apiName": "mq", "outputFile": "src/generated/MqExtensions.ts", "swaggerSnapshot": "swagger-cache/mq.swagger.json", "swaggerSha256": null },
+        { "apiName": "msgraphgroupsanduser", "outputFile": "src/generated/MsgraphgroupsanduserExtensions.ts", "swaggerSnapshot": "swagger-cache/msgraphgroupsanduser.swagger.json", "swaggerSha256": null },
+        { "apiName": "office365", "outputFile": "src/generated/Office365Extensions.ts", "swaggerSnapshot": "swagger-cache/office365.swagger.json", "swaggerSha256": null },
+        { "apiName": "office365users", "outputFile": "src/generated/Office365usersExtensions.ts", "swaggerSnapshot": "swagger-cache/office365users.swagger.json", "swaggerSha256": null },
+        { "apiName": "onedriveforbusiness", "outputFile": "src/generated/OnedriveforbusinessExtensions.ts", "swaggerSnapshot": "swagger-cache/onedriveforbusiness.swagger.json", "swaggerSha256": null },
+        { "apiName": "powerbi", "outputFile": "src/generated/PowerbiExtensions.ts", "swaggerSnapshot": "swagger-cache/powerbi.swagger.json", "swaggerSha256": null },
+        { "apiName": "salesforce", "outputFile": "src/generated/SalesforceExtensions.ts", "swaggerSnapshot": "swagger-cache/salesforce.swagger.json", "swaggerSha256": null },
+        { "apiName": "sharepointonline", "outputFile": "src/generated/SharepointonlineExtensions.ts", "swaggerSnapshot": "swagger-cache/sharepointonline.swagger.json", "swaggerSha256": null },
+        { "apiName": "shifts", "outputFile": "src/generated/ShiftsExtensions.ts", "swaggerSnapshot": "swagger-cache/shifts.swagger.json", "swaggerSha256": null },
+        { "apiName": "slack", "outputFile": "src/generated/SlackExtensions.ts", "swaggerSnapshot": "swagger-cache/slack.swagger.json", "swaggerSha256": null },
+        { "apiName": "smtp", "outputFile": "src/generated/SmtpExtensions.ts", "swaggerSnapshot": "swagger-cache/smtp.swagger.json", "swaggerSha256": null },
+        { "apiName": "teams", "outputFile": "src/generated/TeamsExtensions.ts", "swaggerSnapshot": "swagger-cache/teams.swagger.json", "swaggerSha256": null },
+        { "apiName": "todo", "outputFile": "src/generated/TodoExtensions.ts", "swaggerSnapshot": "swagger-cache/todo.swagger.json", "swaggerSha256": null }
+    ]
+}

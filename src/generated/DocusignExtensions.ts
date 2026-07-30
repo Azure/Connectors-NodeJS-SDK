@@ -5,7 +5,6 @@ import { ConnectorClientBase } from "../azureConnectors/clientBase.ts";
 import { ConnectorException } from "../azureConnectors/connectorException.ts";
 import { ConnectorClientOptions } from "../azureConnectors/options.ts";
 import { TokenProvider } from "../azureConnectors/authentication.ts";
-import { TriggerCallbackPayload } from "../azureConnectors/triggerPayload.ts";
 
 // #region Types
 

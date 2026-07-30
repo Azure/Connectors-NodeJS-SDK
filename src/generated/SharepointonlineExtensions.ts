@@ -835,42 +835,42 @@ export interface UserPermissionIdentity {
 /**
  * Typed callback payload for trigger operation 'GetOnChangedItems'.
  */
-export type SharepointonlineOnChangedItemsTriggerPayload = TriggerCallbackPayload<Item> ;
+export interface SharepointonlineOnChangedItemsTriggerPayload extends TriggerCallbackPayload<Item> {}
 
 /**
  * Typed callback payload for trigger operation 'GetOnDeletedFileItems'.
  */
-export type SharepointonlineOnDeletedFileItemsTriggerPayload = TriggerCallbackPayload<DeletedItem> ;
+export interface SharepointonlineOnDeletedFileItemsTriggerPayload extends TriggerCallbackPayload<DeletedItem> {}
 
 /**
  * Typed callback payload for trigger operation 'GetOnDeletedItems'.
  */
-export type SharepointonlineOnDeletedItemsTriggerPayload = TriggerCallbackPayload<DeletedItem> ;
+export interface SharepointonlineOnDeletedItemsTriggerPayload extends TriggerCallbackPayload<DeletedItem> {}
 
 /**
  * Typed callback payload for trigger operation 'GetOnNewFileItems'.
  */
-export type SharepointonlineOnNewFileItemsTriggerPayload = TriggerCallbackPayload<Item> ;
+export interface SharepointonlineOnNewFileItemsTriggerPayload extends TriggerCallbackPayload<Item> {}
 
 /**
  * Typed callback payload for trigger operation 'GetOnNewItems'.
  */
-export type SharepointonlineOnNewItemsTriggerPayload = TriggerCallbackPayload<Item> ;
+export interface SharepointonlineOnNewItemsTriggerPayload extends TriggerCallbackPayload<Item> {}
 
 /**
  * Typed callback payload for trigger operation 'GetOnUpdatedFileClassifiedTimes'.
  */
-export type SharepointonlineOnUpdatedFileClassifiedTimesTriggerPayload = TriggerCallbackPayload<Item> ;
+export interface SharepointonlineOnUpdatedFileClassifiedTimesTriggerPayload extends TriggerCallbackPayload<Item> {}
 
 /**
  * Typed callback payload for trigger operation 'GetOnUpdatedFileItems'.
  */
-export type SharepointonlineOnUpdatedFileItemsTriggerPayload = TriggerCallbackPayload<Item> ;
+export interface SharepointonlineOnUpdatedFileItemsTriggerPayload extends TriggerCallbackPayload<Item> {}
 
 /**
  * Typed callback payload for trigger operation 'GetOnUpdatedItems'.
  */
-export type SharepointonlineOnUpdatedItemsTriggerPayload = TriggerCallbackPayload<Item> ;
+export interface SharepointonlineOnUpdatedItemsTriggerPayload extends TriggerCallbackPayload<Item> {}
 
 // #endregion Types
 
@@ -1428,6 +1428,22 @@ export class SharepointonlineClient extends ConnectorClientBase {
     }
 
     /**
+     * Copy file
+     * @remarks Copies a file. Works in a similar way to the "Copy to" command in SharePoint libraries. Returns information about the new file after copy.
+     */
+    public async copyFile2Async(input: CopyFileParameters, dataset: string, abortSignal?: AbortSignal): Promise<SPBlobMetadataResponse> {
+        const requestPath = `/datasets/${encodeURIComponent(String(dataset))}/copyFileAsync`;
+        const url = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<SPBlobMetadataResponse>("POST", url, undefined, input, abortSignal);
+
+        if (!httpResponse.isSuccessStatusCode) {
+            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+        }
+
+        return httpResponse.value as SPBlobMetadataResponse;
+    }
+
+    /**
      * Copy folder
      * @remarks Copies a folder. Works in a similar way to the "Copy to" command in SharePoint libraries. Returns information about the new folder after copy.
      */
@@ -1533,6 +1549,38 @@ export class SharepointonlineClient extends ConnectorClientBase {
         }
 
         return httpResponse.value as Blob;
+    }
+
+    /**
+     * List root folder
+     * @remarks Returns files in the root SharePoint folder.
+     */
+    public async listRootFolderAsync(dataset: string, abortSignal?: AbortSignal): Promise<Array<BlobMetadata>> {
+        const requestPath = `/datasets/${encodeURIComponent(String(dataset))}/folders`;
+        const url = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<Array<BlobMetadata>>("GET", url, undefined, undefined, abortSignal);
+
+        if (!httpResponse.isSuccessStatusCode) {
+            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+        }
+
+        return httpResponse.value as Array<BlobMetadata>;
+    }
+
+    /**
+     * List folder
+     * @remarks Returns files contained in a SharePoint folder.
+     */
+    public async listFolderAsync(dataset: string, id: string, abortSignal?: AbortSignal): Promise<Array<BlobMetadata>> {
+        const requestPath = `/datasets/${encodeURIComponent(String(dataset))}/folders/${id}`;
+        const url = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<Array<BlobMetadata>>("GET", url, undefined, undefined, abortSignal);
+
+        if (!httpResponse.isSuccessStatusCode) {
+            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+        }
+
+        return httpResponse.value as Array<BlobMetadata>;
     }
 
     /**

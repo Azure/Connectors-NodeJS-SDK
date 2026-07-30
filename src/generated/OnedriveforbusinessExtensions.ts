@@ -136,12 +136,12 @@ export interface BlobMetadataPage {
 /**
  * Typed callback payload for trigger operation 'OnNewFilesV2'.
  */
-export type OnedriveforbusinessOnNewFilesTriggerPayload = TriggerCallbackPayload<BlobMetadata> ;
+export interface OnedriveforbusinessOnNewFilesTriggerPayload extends TriggerCallbackPayload<BlobMetadata> {}
 
 /**
  * Typed callback payload for trigger operation 'OnUpdatedFilesV2'.
  */
-export type OnedriveforbusinessOnUpdatedFilesTriggerPayload = TriggerCallbackPayload<BlobMetadata> ;
+export interface OnedriveforbusinessOnUpdatedFilesTriggerPayload extends TriggerCallbackPayload<BlobMetadata> {}
 
 // #endregion Types
 

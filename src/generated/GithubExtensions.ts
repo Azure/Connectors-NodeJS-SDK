@@ -941,17 +941,17 @@ export interface QueryRequest {
 /**
  * Typed callback payload for trigger operation 'IssueOpened'.
  */
-export type GithubOnIssueOpenedTriggerPayload = TriggerCallbackPayload<IssueDetailsModel> ;
+export interface GithubOnIssueOpenedTriggerPayload extends TriggerCallbackPayload<IssueDetailsModel> {}
 
 /**
  * Typed callback payload for trigger operation 'IssueClosed'.
  */
-export type GithubOnIssueClosedTriggerPayload = TriggerCallbackPayload<IssueDetailsModel> ;
+export interface GithubOnIssueClosedTriggerPayload extends TriggerCallbackPayload<IssueDetailsModel> {}
 
 /**
  * Typed callback payload for trigger operation 'IssueAssigned'.
  */
-export type GithubOnIssueAssignedTriggerPayload = TriggerCallbackPayload<IssueDetailsModel> ;
+export interface GithubOnIssueAssignedTriggerPayload extends TriggerCallbackPayload<IssueDetailsModel> {}
 
 // #endregion Types
 

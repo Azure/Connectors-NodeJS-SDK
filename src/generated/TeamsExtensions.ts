@@ -1285,22 +1285,22 @@ export interface WebhookTriggerSchema {
 /**
  * Typed callback payload for trigger operation 'OnNewChannelMessage'.
  */
-export type TeamsOnNewChannelMessageTriggerPayload = TriggerCallbackPayload<ChatMessage> ;
+export interface TeamsOnNewChannelMessageTriggerPayload extends TriggerCallbackPayload<ChatMessage> {}
 
 /**
  * Typed callback payload for trigger operation 'OnNewChannelMessageMentioningMe'.
  */
-export type TeamsOnNewChannelMessageMentioningMeTriggerPayload = TriggerCallbackPayload<ChatMessage> ;
+export interface TeamsOnNewChannelMessageMentioningMeTriggerPayload extends TriggerCallbackPayload<ChatMessage> {}
 
 /**
  * Typed callback payload for trigger operation 'OnGroupMembershipAdd'.
  */
-export type TeamsOnTeamMemberAddedTriggerPayload = TriggerCallbackPayload<Record<string, unknown>> ;
+export interface TeamsOnTeamMemberAddedTriggerPayload extends TriggerCallbackPayload<Record<string, unknown>> {}
 
 /**
  * Typed callback payload for trigger operation 'OnGroupMembershipRemoval'.
  */
-export type TeamsOnTeamMemberRemovedTriggerPayload = TriggerCallbackPayload<Record<string, unknown>> ;
+export interface TeamsOnTeamMemberRemovedTriggerPayload extends TriggerCallbackPayload<Record<string, unknown>> {}
 
 // #endregion Types
 
