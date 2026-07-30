@@ -125,7 +125,7 @@ export interface BlobMetadataPage {
 /**
  * Typed callback payload for trigger operation 'OnUpdatedFiles'.
  */
-export interface FtpOnUpdatedFilesTriggerPayload extends TriggerCallbackPayload<BlobMetadata> {}
+export type FtpOnUpdatedFilesTriggerPayload = TriggerCallbackPayload<BlobMetadata>;
 
 // #endregion Types
 

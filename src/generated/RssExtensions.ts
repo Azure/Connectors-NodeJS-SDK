@@ -44,7 +44,7 @@ export interface FeedItem {
 /**
  * Typed callback payload for trigger operation 'OnNewFeed'.
  */
-export interface RssOnNewFeedTriggerPayload extends TriggerCallbackPayload<FeedItem> {}
+export type RssOnNewFeedTriggerPayload = TriggerCallbackPayload<FeedItem>;
 
 // #endregion Types
 

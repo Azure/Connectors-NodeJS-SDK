@@ -306,7 +306,7 @@ export interface ObjectWithoutType {
 /**
  * Typed callback payload for trigger operation 'OnNewEmailInGroup'.
  */
-export interface Office365groupsmailOnNewEmailInGroupTriggerPayload extends TriggerCallbackPayload<ConversationTriggerResponse> {}
+export type Office365groupsmailOnNewEmailInGroupTriggerPayload = TriggerCallbackPayload<ConversationTriggerResponse>;
 
 // #endregion Types
 
