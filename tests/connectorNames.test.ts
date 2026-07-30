@@ -51,9 +51,45 @@ describe("ConnectorNames", () => {
         expect(ConnectorNames.MicrosoftTeams).toBe("teams");
     });
 
-    it("should contain exactly 21 connector entries", () => {
+    it("should expose Box with correct API name", () => {
+        expect(ConnectorNames.Box).toBe("box");
+    });
+
+    it("should expose Dropbox with correct API name", () => {
+        expect(ConnectorNames.Dropbox).toBe("dropbox");
+    });
+
+    it("should expose ExcelOnlineOneDrive with correct API name", () => {
+        expect(ConnectorNames.ExcelOnlineOneDrive).toBe("excelonline");
+    });
+
+    it("should expose FTP with correct API name", () => {
+        expect(ConnectorNames.FTP).toBe("ftp");
+    });
+
+    it("should expose GoogleCalendar with correct API name", () => {
+        expect(ConnectorNames.GoogleCalendar).toBe("googlecalendar");
+    });
+
+    it("should expose GoogleDrive with correct API name", () => {
+        expect(ConnectorNames.GoogleDrive).toBe("googledrive");
+    });
+
+    it("should expose GoogleTasks with correct API name", () => {
+        expect(ConnectorNames.GoogleTasks).toBe("googletasks");
+    });
+
+    it("should expose Office365GroupsMail with correct API name", () => {
+        expect(ConnectorNames.Office365GroupsMail).toBe("office365groupsmail");
+    });
+
+    it("should expose RSS with correct API name", () => {
+        expect(ConnectorNames.RSS).toBe("rss");
+    });
+
+    it("should contain exactly 30 connector entries", () => {
         const keys = Object.keys(ConnectorNames);
-        expect(keys).toHaveLength(21);
+        expect(keys).toHaveLength(30);
     });
 
     it("should have all values as lowercase strings", () => {

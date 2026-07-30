@@ -5,17 +5,26 @@
 //   import { ArmClient } from './ArmExtensions.ts';
 //   import { AzureblobClient } from './AzureblobExtensions.ts';
 //   import { AzuremonitorlogsClient } from './AzuremonitorlogsExtensions.ts';
+//   import { BoxClient } from './BoxExtensions.ts';
 //   import { DocusignClient } from './DocusignExtensions.ts';
+//   import { DropboxClient } from './DropboxExtensions.ts';
+//   import { ExcelonlineClient } from './ExcelonlineExtensions.ts';
+//   import { FtpClient } from './FtpExtensions.ts';
 //   import { GithubClient } from './GithubExtensions.ts';
+//   import { GooglecalendarClient } from './GooglecalendarExtensions.ts';
+//   import { GoogledriveClient } from './GoogledriveExtensions.ts';
+//   import { GoogletasksClient } from './GoogletasksExtensions.ts';
 //   import { JiraClient } from './JiraExtensions.ts';
 //   import { KustoClient } from './KustoExtensions.ts';
 //   import { MicrosoftformsClient } from './MicrosoftformsExtensions.ts';
 //   import { MqClient } from './MqExtensions.ts';
 //   import { MsgraphgroupsanduserClient } from './MsgraphgroupsanduserExtensions.ts';
 //   import { Office365Client } from './Office365Extensions.ts';
+//   import { Office365groupsmailClient } from './Office365groupsmailExtensions.ts';
 //   import { Office365usersClient } from './Office365usersExtensions.ts';
 //   import { OnedriveforbusinessClient } from './OnedriveforbusinessExtensions.ts';
 //   import { PowerbiClient } from './PowerbiExtensions.ts';
+//   import { RssClient } from './RssExtensions.ts';
 //   import { SalesforceClient } from './SalesforceExtensions.ts';
 //   import { SharepointonlineClient } from './SharepointonlineExtensions.ts';
 //   import { ShiftsClient } from './ShiftsExtensions.ts';
@@ -31,17 +40,26 @@ export const availableConnectors: string[] = [
     "arm",
     "azureblob",
     "azuremonitorlogs",
+    "box",
     "docusign",
+    "dropbox",
+    "excelonline",
+    "ftp",
     "github",
+    "googlecalendar",
+    "googledrive",
+    "googletasks",
     "jira",
     "kusto",
     "microsoftforms",
     "mq",
     "msgraphgroupsanduser",
     "office365",
+    "office365groupsmail",
     "office365users",
     "onedriveforbusiness",
     "powerbi",
+    "rss",
     "salesforce",
     "sharepointonline",
     "shifts",
@@ -54,17 +72,26 @@ export const availableConnectors: string[] = [
 export { ArmClient } from './ArmExtensions.ts';
 export { AzureblobClient } from './AzureblobExtensions.ts';
 export { AzuremonitorlogsClient } from './AzuremonitorlogsExtensions.ts';
+export { BoxClient } from './BoxExtensions.ts';
 export { DocusignClient } from './DocusignExtensions.ts';
+export { DropboxClient } from './DropboxExtensions.ts';
+export { ExcelonlineClient } from './ExcelonlineExtensions.ts';
+export { FtpClient } from './FtpExtensions.ts';
 export { GithubClient } from './GithubExtensions.ts';
+export { GooglecalendarClient } from './GooglecalendarExtensions.ts';
+export { GoogledriveClient } from './GoogledriveExtensions.ts';
+export { GoogletasksClient } from './GoogletasksExtensions.ts';
 export { JiraClient } from './JiraExtensions.ts';
 export { KustoClient } from './KustoExtensions.ts';
 export { MicrosoftformsClient } from './MicrosoftformsExtensions.ts';
 export { MqClient } from './MqExtensions.ts';
 export { MsgraphgroupsanduserClient } from './MsgraphgroupsanduserExtensions.ts';
 export { Office365Client } from './Office365Extensions.ts';
+export { Office365groupsmailClient } from './Office365groupsmailExtensions.ts';
 export { Office365usersClient } from './Office365usersExtensions.ts';
 export { OnedriveforbusinessClient } from './OnedriveforbusinessExtensions.ts';
 export { PowerbiClient } from './PowerbiExtensions.ts';
+export { RssClient } from './RssExtensions.ts';
 export { SalesforceClient } from './SalesforceExtensions.ts';
 export { SharepointonlineClient } from './SharepointonlineExtensions.ts';
 export { ShiftsClient } from './ShiftsExtensions.ts';

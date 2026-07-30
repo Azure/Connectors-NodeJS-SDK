@@ -1,0 +1,102 @@
+// Copyright (c) Microsoft Corporation.  All rights reserved.
+
+import { Office365groupsmailClient } from "../src/generated/Office365groupsmailExtensions.ts";
+import { ConnectorException } from "../src/azureConnectors/connectorException.ts";
+import { TokenProvider } from "../src/azureConnectors/authentication.ts";
+import { ConnectorNames } from "../src/generated/connectorNames.ts";
+import { availableConnectors } from "../src/generated/ManagedConnectors.ts";
+
+// ──────────────────────────────────────────────
+// Test helpers
+// ──────────────────────────────────────────────
+
+const TestConnectionUrl = "https://connection-runtime.azure.com/apim/office365groupsmail/abc123";
+
+function createMockTokenProvider(): TokenProvider {
+    return {
+        getAccessTokenAsync: async () => "mock-bearer-token",
+    };
+}
+
+function mockFetchResponse(body: unknown, status = 200): void {
+    global.fetch = jest.fn().mockResolvedValue({
+        ok: status >= 200 && status < 300,
+        status,
+        text: async () => (body !== undefined && body !== null ? JSON.stringify(body) : ""),
+        headers: new Headers(),
+    } as Response);
+}
+
+function mockFetchError(status: number, errorBody: string): void {
+    global.fetch = jest.fn().mockResolvedValue({
+        ok: false,
+        status,
+        text: async () => errorBody,
+        headers: new Headers(),
+    } as Response);
+}
+
+// ──────────────────────────────────────────────
+// Runtime tests
+// ──────────────────────────────────────────────
+
+describe("Office365groupsmailClient — constructor", () => {
+    it("should construct with valid options", () => {
+        const client = new Office365groupsmailClient(TestConnectionUrl, createMockTokenProvider());
+        expect(client).toBeDefined();
+        expect(client).toBeInstanceOf(Office365groupsmailClient);
+    });
+
+    it("should strip trailing slashes from connection URL", () => {
+        const client = new Office365groupsmailClient(TestConnectionUrl + "///", createMockTokenProvider());
+        expect(client).toBeDefined();
+    });
+
+    it("should throw on null connection URL", () => {
+        expect(() => new Office365groupsmailClient(null as unknown as string, createMockTokenProvider()))
+            .toThrow("Parameter 'connectionRuntimeUrl' cannot be null or undefined.");
+    });
+
+    it("should throw on undefined connection URL", () => {
+        expect(() => new Office365groupsmailClient(undefined as unknown as string, createMockTokenProvider()))
+            .toThrow("Parameter 'connectionRuntimeUrl' cannot be null or undefined.");
+    });
+});
+
+describe("Office365groupsmailClient — listConversationsAsync", () => {
+    afterEach(() => {
+        jest.restoreAllMocks();
+    });
+
+    it("should GET conversations for a group and return the deserialized response", async () => {
+        const conversations = { value: [{ id: "conv1", topic: "Welcome" }] };
+        mockFetchResponse(conversations);
+
+        const client = new Office365groupsmailClient(TestConnectionUrl, createMockTokenProvider());
+        const result = await client.listConversationsAsync("group1");
+
+        expect(result).toEqual(conversations);
+        expect(global.fetch).toHaveBeenCalledTimes(1);
+        const [url, init] = (global.fetch as jest.Mock).mock.calls[0];
+        expect(init.method).toBe("GET");
+        expect(init.headers["Authorization"]).toBe("Bearer mock-bearer-token");
+        expect(url).toContain("/groups/group1/conversations");
+    });
+
+    it("should throw ConnectorException on non-OK response", async () => {
+        mockFetchError(403, "Forbidden");
+
+        const client = new Office365groupsmailClient(TestConnectionUrl, createMockTokenProvider());
+        await expect(client.listConversationsAsync("group1")).rejects.toThrow(ConnectorException);
+    });
+});
+
+describe("Office365groupsmail — connector registry", () => {
+    it("should expose Office365GroupsMail in ConnectorNames", () => {
+        expect(ConnectorNames.Office365GroupsMail).toBe("office365groupsmail");
+    });
+
+    it("should include office365groupsmail in availableConnectors", () => {
+        expect(availableConnectors).toContain("office365groupsmail");
+    });
+});

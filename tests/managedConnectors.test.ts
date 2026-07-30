@@ -5,12 +5,21 @@ import {
     ArmClient,
     AzureblobClient,
     AzuremonitorlogsClient,
+    BoxClient,
+    DropboxClient,
+    ExcelonlineClient,
+    FtpClient,
+    GooglecalendarClient,
+    GoogledriveClient,
+    GoogletasksClient,
     KustoClient,
     MqClient,
     MsgraphgroupsanduserClient,
     Office365Client,
+    Office365groupsmailClient,
     Office365usersClient,
     OnedriveforbusinessClient,
+    RssClient,
     SharepointonlineClient,
     SmtpClient,
     TeamsClient,
@@ -26,8 +35,8 @@ describe("availableConnectors", () => {
         }
     });
 
-    it("should contain exactly 21 connectors", () => {
-        expect(availableConnectors).toHaveLength(21);
+    it("should contain exactly 30 connectors", () => {
+        expect(availableConnectors).toHaveLength(30);
     });
 
     it("should include all ConnectorNames values", () => {
@@ -101,5 +110,50 @@ describe("ManagedConnectors — re-exports", () => {
     it("should re-export TeamsClient", () => {
         expect(TeamsClient).toBeDefined();
         expect(typeof TeamsClient).toBe("function");
+    });
+
+    it("should re-export BoxClient", () => {
+        expect(BoxClient).toBeDefined();
+        expect(typeof BoxClient).toBe("function");
+    });
+
+    it("should re-export DropboxClient", () => {
+        expect(DropboxClient).toBeDefined();
+        expect(typeof DropboxClient).toBe("function");
+    });
+
+    it("should re-export ExcelonlineClient", () => {
+        expect(ExcelonlineClient).toBeDefined();
+        expect(typeof ExcelonlineClient).toBe("function");
+    });
+
+    it("should re-export FtpClient", () => {
+        expect(FtpClient).toBeDefined();
+        expect(typeof FtpClient).toBe("function");
+    });
+
+    it("should re-export GooglecalendarClient", () => {
+        expect(GooglecalendarClient).toBeDefined();
+        expect(typeof GooglecalendarClient).toBe("function");
+    });
+
+    it("should re-export GoogledriveClient", () => {
+        expect(GoogledriveClient).toBeDefined();
+        expect(typeof GoogledriveClient).toBe("function");
+    });
+
+    it("should re-export GoogletasksClient", () => {
+        expect(GoogletasksClient).toBeDefined();
+        expect(typeof GoogletasksClient).toBe("function");
+    });
+
+    it("should re-export Office365groupsmailClient", () => {
+        expect(Office365groupsmailClient).toBeDefined();
+        expect(typeof Office365groupsmailClient).toBe("function");
+    });
+
+    it("should re-export RssClient", () => {
+        expect(RssClient).toBeDefined();
+        expect(typeof RssClient).toBe("function");
     });
 });
