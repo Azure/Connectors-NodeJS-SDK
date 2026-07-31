@@ -1,0 +1,5 @@
+# The swagger snapshots under swagger-cache/ are hashed (SHA-256) for build provenance
+# by tests/generationManifest.test.ts and generation.manifest.json. Pin them to LF so the
+# hash is identical on every platform. Without this, Windows core.autocrlf rewrites them to
+# CRLF and the recorded hashes stop matching what Linux CI computes.
+swagger-cache/*.swagger.json text eol=lf
