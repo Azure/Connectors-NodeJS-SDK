@@ -29,7 +29,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   `ManagedConnectors.ts`, `index.ts`) to include all 21 generated connectors.
 - Regenerated the 21-connector TypeScript DirectClient outputs in
   `src/generated/` using AzureUX-BPM `CodefulSdkGenerator`
-  (`--typescriptDirectClient`).
+  (`--directClient --language=typescript`).
 - Replaced generated empty trigger marker interfaces with type aliases to pass
   `@typescript-eslint/no-empty-object-type`.
 - Updated Teams TypeScript samples to use
@@ -39,7 +39,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   `NewMeetingResponse` in generated output.
 - Updated generator-side TypeScript definition type normalization so
   swagger typo corrections are applied consistently during generation.
-- Validation baseline now includes 30 passing test suites and 322 passing tests.
+- Validation baseline now includes 32 passing test suites and 378 passing tests.
+
+### Removed
+
+- Trigger operations are no longer exposed as data-plane client methods on the
+  generated clients (Office 365 Outlook, SharePoint, Microsoft Teams, OneDrive
+  for Business, and Azure Blob Storage), matching the .NET SDK convention where a
+  trigger is a configuration surface rather than a callable action. Migrate from
+  the former `on*Async` / trigger `*Async` methods to the generated
+  `*TriggerOperations` (operation IDs), `*TriggerParameters` (trigger configuration
+  metadata), and `*TriggerPayload` (typed callback payload) exports for each
+  connector.
 
 ## [0.2.0-preview] - 2026-05-21
 

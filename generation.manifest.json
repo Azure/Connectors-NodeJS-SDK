@@ -11,7 +11,7 @@
         "bpmBranch": "swapnil/TsGeneratorForXMsTriggerOperation",
         "assemblyVersion": "1.183.0.52"
     },
-    "command": "LogicAppsCompiler.exe <output-directory> unused --directClient --language=typescript --connectors=arm,azureblob,azuremonitorlogs,docusign,github,jira,kusto,microsoftforms,mq,msgraphgroupsanduser,office365,office365users,onedriveforbusiness,powerbi,salesforce,sharepointonline,shifts,slack,smtp,teams,todo",
+    "command": "LogicAppsCompiler.exe <output-directory> --directClient --language=typescript --connectors=arm,azureblob,azuremonitorlogs,docusign,github,jira,kusto,microsoftforms,mq,msgraphgroupsanduser,office365,office365users,onedriveforbusiness,powerbi,salesforce,sharepointonline,shifts,slack,smtp,teams,todo",
     "swaggerSource": {
         "_comment": "How the connector Swagger inputs were obtained. The generator reads the regional managedApis ARM endpoint selected by subscriptionId + location (AZURE_SUBSCRIPTION_ID / AZURE_LOCATION; defaults f34b22a3-2202-4fb1-b040-1332bd928c84 / westus in LogicAppsCompiler.Cli/Program.cs). Each snapshot is persisted under swaggerCacheDirectory so the SHA-256 values below are verifiable.",
         "kind": "live-arm-metadata",

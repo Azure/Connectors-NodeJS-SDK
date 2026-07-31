@@ -38,13 +38,13 @@ dotnet build .\src\tools\CodefulSdkGenerator\LogicAppsCompiler.Cli\LogicAppsComp
 
 ```powershell
 # Generate all connectors
-LogicAppsCompiler.exe <output-directory> unused --directClient --language=typescript
+LogicAppsCompiler.exe <output-directory> --directClient --language=typescript
 
 # Generate specific connectors only
-LogicAppsCompiler.exe <output-directory> unused --directClient --language=typescript --connectors=office365
+LogicAppsCompiler.exe <output-directory> --directClient --language=typescript --connectors=office365
 
 # Example: Generate to this SDK repo's generated folder
-LogicAppsCompiler.exe "<path-to-Connectors-NodeJS-SDK>/src/generated" unused --directClient --language=typescript --connectors=office365
+LogicAppsCompiler.exe "<path-to-Connectors-NodeJS-SDK>/src/generated" --directClient --language=typescript --connectors=office365
 ```
 
 **Output structure per connector:**
