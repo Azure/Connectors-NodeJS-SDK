@@ -96,6 +96,8 @@ inputs it consumed.
 | `generator.bpmCommit` | Immutable BPM commit SHA the generator was built from. |
 | `generator.bpmBranch` | BPM branch the commit was on (informational). |
 | `generator.assemblyVersion` | File version of the built `Microsoft.Azure.Workflows.CodefulSdkGenerator.dll`. |
+| `swaggerSource.subscriptionId` | Azure subscription whose regional managed-connector metadata was read (`AZURE_SUBSCRIPTION_ID`). |
+| `swaggerSource.location` | Azure region whose `managedApis` endpoint was read (`AZURE_LOCATION`). |
 | `swaggerSource.apiVersion` | Managed-connector API version used to read metadata. |
 | `swaggerSource.capturedAtUtc` | UTC time the Swagger snapshots were pulled. |
 | `swaggerSource.swaggerCacheDirectory` | Directory holding the content-addressed Swagger snapshots. |
@@ -119,6 +121,8 @@ $manifest.generator.bpmBranch = (git -C $bpmRepoRoot rev-parse --abbrev-ref HEAD
 $dll = Join-Path $bpmRepoRoot "src/tools/CodefulSdkGenerator/bin/Release/net8.0/Microsoft.Azure.Workflows.CodefulSdkGenerator.dll"
 if (Test-Path $dll) { $manifest.generator.assemblyVersion = (Get-Item $dll).VersionInfo.FileVersion }
 
+$manifest.swaggerSource.subscriptionId = if ($env:AZURE_SUBSCRIPTION_ID) { $env:AZURE_SUBSCRIPTION_ID } else { "f34b22a3-2202-4fb1-b040-1332bd928c84" }
+$manifest.swaggerSource.location = if ($env:AZURE_LOCATION) { $env:AZURE_LOCATION } else { "westus" }
 $manifest.swaggerSource.capturedAtUtc = $manifest.generatedAtUtc
 foreach ($connector in $manifest.connectors) {
     if (Test-Path $connector.swaggerSnapshot) {
@@ -137,6 +141,10 @@ $manifest | ConvertTo-Json -Depth 6 | Set-Content generation.manifest.json -Enco
   cache) so the recorded `swaggerSha256` values are verifiable by a reviewer.
 - **Do not hand-edit** the manifest's generated values; let the tooling write them so
   they always match the actual run.
+- **The `tests/generationManifest.test.ts` guard runs in CI** and fails the build unless
+  `status` is `generated`, `generator.bpmCommit` is populated, and every
+  `connectors[].swaggerSha256` matches the SHA-256 of its committed `swagger-cache/`
+  snapshot. Regenerate rather than hand-editing so the guard stays green.
 
 ## Post-Generation Validation
 

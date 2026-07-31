@@ -521,12 +521,12 @@ export interface MCPQueryResponse {
 /**
  * Typed callback payload for trigger operation 'GetOnNewItems'.
  */
-export interface SalesforceOnNewItemsTriggerPayload extends TriggerCallbackPayload<Item> {}
+export type SalesforceOnNewItemsTriggerPayload = TriggerCallbackPayload<Item>;
 
 /**
  * Typed callback payload for trigger operation 'GetOnUpdatedItems'.
  */
-export interface SalesforceOnUpdatedItemsTriggerPayload extends TriggerCallbackPayload<Item> {}
+export type SalesforceOnUpdatedItemsTriggerPayload = TriggerCallbackPayload<Item>;
 
 // #endregion Types
 

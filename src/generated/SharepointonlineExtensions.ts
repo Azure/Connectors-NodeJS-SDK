@@ -835,42 +835,42 @@ export interface UserPermissionIdentity {
 /**
  * Typed callback payload for trigger operation 'GetOnChangedItems'.
  */
-export interface SharepointonlineOnChangedItemsTriggerPayload extends TriggerCallbackPayload<Item> {}
+export type SharepointonlineOnChangedItemsTriggerPayload = TriggerCallbackPayload<Item>;
 
 /**
  * Typed callback payload for trigger operation 'GetOnDeletedFileItems'.
  */
-export interface SharepointonlineOnDeletedFileItemsTriggerPayload extends TriggerCallbackPayload<DeletedItem> {}
+export type SharepointonlineOnDeletedFileItemsTriggerPayload = TriggerCallbackPayload<DeletedItem>;
 
 /**
  * Typed callback payload for trigger operation 'GetOnDeletedItems'.
  */
-export interface SharepointonlineOnDeletedItemsTriggerPayload extends TriggerCallbackPayload<DeletedItem> {}
+export type SharepointonlineOnDeletedItemsTriggerPayload = TriggerCallbackPayload<DeletedItem>;
 
 /**
  * Typed callback payload for trigger operation 'GetOnNewFileItems'.
  */
-export interface SharepointonlineOnNewFileItemsTriggerPayload extends TriggerCallbackPayload<Item> {}
+export type SharepointonlineOnNewFileItemsTriggerPayload = TriggerCallbackPayload<Item>;
 
 /**
  * Typed callback payload for trigger operation 'GetOnNewItems'.
  */
-export interface SharepointonlineOnNewItemsTriggerPayload extends TriggerCallbackPayload<Item> {}
+export type SharepointonlineOnNewItemsTriggerPayload = TriggerCallbackPayload<Item>;
 
 /**
  * Typed callback payload for trigger operation 'GetOnUpdatedFileClassifiedTimes'.
  */
-export interface SharepointonlineOnUpdatedFileClassifiedTimesTriggerPayload extends TriggerCallbackPayload<Item> {}
+export type SharepointonlineOnUpdatedFileClassifiedTimesTriggerPayload = TriggerCallbackPayload<Item>;
 
 /**
  * Typed callback payload for trigger operation 'GetOnUpdatedFileItems'.
  */
-export interface SharepointonlineOnUpdatedFileItemsTriggerPayload extends TriggerCallbackPayload<Item> {}
+export type SharepointonlineOnUpdatedFileItemsTriggerPayload = TriggerCallbackPayload<Item>;
 
 /**
  * Typed callback payload for trigger operation 'GetOnUpdatedItems'.
  */
-export interface SharepointonlineOnUpdatedItemsTriggerPayload extends TriggerCallbackPayload<Item> {}
+export type SharepointonlineOnUpdatedItemsTriggerPayload = TriggerCallbackPayload<Item>;
 
 // #endregion Types
 
@@ -1430,6 +1430,7 @@ export class SharepointonlineClient extends ConnectorClientBase {
     /**
      * Copy file
      * @remarks Copies a file. Works in a similar way to the "Copy to" command in SharePoint libraries. Returns information about the new file after copy.
+     * @remarks Disambiguated from a method-name collision; maps to operationId 'CopyFileAsync'.
      */
     public async copyFile2Async(input: CopyFileParameters, dataset: string, abortSignal?: AbortSignal): Promise<SPBlobMetadataResponse> {
         const requestPath = `/datasets/${encodeURIComponent(String(dataset))}/copyFileAsync`;

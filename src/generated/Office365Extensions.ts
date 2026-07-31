@@ -2105,42 +2105,42 @@ export interface SensitivityLabelMetadata {
 /**
  * Typed callback payload for trigger operation 'CalendarGetOnChangedItemsV3'.
  */
-export interface Office365OnCalendarChangedItemsTriggerPayload extends TriggerCallbackPayload<GraphCalendarEventClientWithActionType> {}
+export type Office365OnCalendarChangedItemsTriggerPayload = TriggerCallbackPayload<GraphCalendarEventClientWithActionType>;
 
 /**
  * Typed callback payload for trigger operation 'CalendarGetOnNewItemsV3'.
  */
-export interface Office365OnCalendarNewItemsTriggerPayload extends TriggerCallbackPayload<GraphCalendarEventClientReceive> {}
+export type Office365OnCalendarNewItemsTriggerPayload = TriggerCallbackPayload<GraphCalendarEventClientReceive>;
 
 /**
  * Typed callback payload for trigger operation 'CalendarGetOnUpdatedItemsV3'.
  */
-export interface Office365OnCalendarUpdatedItemsTriggerPayload extends TriggerCallbackPayload<GraphCalendarEventClientReceive> {}
+export type Office365OnCalendarUpdatedItemsTriggerPayload = TriggerCallbackPayload<GraphCalendarEventClientReceive>;
 
 /**
  * Typed callback payload for trigger operation 'OnFlaggedEmailV4'.
  */
-export interface Office365OnFlaggedEmailTriggerPayload extends TriggerCallbackPayload<GraphClientReceiveMessage> {}
+export type Office365OnFlaggedEmailTriggerPayload = TriggerCallbackPayload<GraphClientReceiveMessage>;
 
 /**
  * Typed callback payload for trigger operation 'OnNewEmailV3'.
  */
-export interface Office365OnNewEmailTriggerPayload extends TriggerCallbackPayload<GraphClientReceiveMessage> {}
+export type Office365OnNewEmailTriggerPayload = TriggerCallbackPayload<GraphClientReceiveMessage>;
 
 /**
  * Typed callback payload for trigger operation 'OnNewMentionMeEmailV3'.
  */
-export interface Office365OnNewEmailMentioningMeTriggerPayload extends TriggerCallbackPayload<GraphClientReceiveMessage> {}
+export type Office365OnNewEmailMentioningMeTriggerPayload = TriggerCallbackPayload<GraphClientReceiveMessage>;
 
 /**
  * Typed callback payload for trigger operation 'OnUpcomingEventsV3'.
  */
-export interface Office365OnUpcomingEventsTriggerPayload extends TriggerCallbackPayload<GraphCalendarEventClientReceive> {}
+export type Office365OnUpcomingEventsTriggerPayload = TriggerCallbackPayload<GraphCalendarEventClientReceive>;
 
 /**
  * Typed callback payload for trigger operation 'SharedMailboxOnNewEmailV2'.
  */
-export interface Office365OnSharedMailboxNewEmailTriggerPayload extends TriggerCallbackPayload<GraphClientReceiveMessage> {}
+export type Office365OnSharedMailboxNewEmailTriggerPayload = TriggerCallbackPayload<GraphClientReceiveMessage>;
 
 // #endregion Types
 
