@@ -194,6 +194,10 @@ describe("Generated clients — no trigger operation is invoked as a data-plane 
         const methodNames = new Set(extractClientMethodNames(docusign!.content));
         const triggerMethodCandidates = extractTriggerOperationIdentifiers(docusign!.content).map(toClientMethodName);
 
+        // NOTE(swapnilnagar): Anchor the naming convention — round-tripping a known action operationId through
+        // toClientMethodName must land on a real emitted method. Otherwise a convention drift leaves
+        // triggerMethodCandidates matching nothing and the violations check passes vacuously.
+        expect(methodNames.has(toClientMethodName("TriggerMaestroFlow"))).toBe(true);
         expect(methodNames.has("triggerMaestroFlowAsync")).toBe(true);
         expect(triggerMethodCandidates).not.toContain("triggerMaestroFlowAsync");
     });

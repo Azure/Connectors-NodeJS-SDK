@@ -64,6 +64,10 @@ describe("generation.manifest.json provenance", () => {
         expect((manifest.generator.bpmCommit ?? "").length).toBeGreaterThan(0);
     });
 
+    it("should record the BPM generator commit as a 40-character hex SHA", () => {
+        expect(manifest.generator.bpmCommit ?? "").toMatch(/^[0-9a-f]{40}$/);
+    });
+
     it("should list at least one connector", () => {
         expect(manifest.connectors.length).toBeGreaterThan(0);
     });
@@ -76,7 +80,21 @@ describe("generation.manifest.json provenance", () => {
         "should match the committed swagger snapshot hash for '%s'",
         (_apiName: string, connector: ManifestConnectorEntry) => {
             expect(fs.existsSync(path.join(RepositoryRoot, connector.swaggerSnapshot))).toBe(true);
+            expect(fs.existsSync(path.join(RepositoryRoot, connector.outputFile))).toBe(true);
             expect(computeSha256(connector.swaggerSnapshot)).toBe(connector.swaggerSha256);
         },
     );
+
+    it("should be a bijection between manifest connectors and generated *Extensions.ts files", () => {
+        const manifestOutputFiles = manifest.connectors
+            .map(connector => connector.outputFile)
+            .sort();
+        const generatedExtensionFiles = fs
+            .readdirSync(path.join(RepositoryRoot, "src", "generated"))
+            .filter(entry => entry.endsWith("Extensions.ts"))
+            .map(entry => `src/generated/${entry}`)
+            .sort();
+
+        expect(manifestOutputFiles).toEqual(generatedExtensionFiles);
+    });
 });

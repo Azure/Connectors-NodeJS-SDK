@@ -2,14 +2,14 @@
     "_comment": "Provenance record for the generated clients under src/generated/. It lets a regeneration be reproduced and any cross-language surface delta be attributed to a specific generator revision and Swagger input. Regenerate and repopulate this file on every run (see the 'Provenance & Reproducibility' section of GENERATION.md). A reviewable regeneration PR must have status 'generated' with non-null provenance and swaggerSha256 values that match the committed swagger-cache/ snapshots; the tests/generationManifest.test.ts guard enforces this.",
     "manifestVersion": 1,
     "status": "generated",
-    "generatedAtUtc": "2026-07-30T18:19:13Z",
+    "generatedAtUtc": "2026-08-03T22:51:12Z",
     "generator": {
         "repository": "https://msazure.visualstudio.com/One/_git/AzureUX-BPM",
         "tool": "CodefulSdkGenerator (LogicAppsCompiler)",
         "projectPath": "src/tools/CodefulSdkGenerator/LogicAppsCompiler.Cli/LogicAppsCompiler.Cli.csproj",
-        "bpmCommit": "f8b9f07cb45e6627818e51b4737e5a5c92934955",
+        "bpmCommit": "21025b5e1fe5988c7c12071a7a029a7ac13529de",
         "bpmBranch": "swapnil/TsGeneratorForXMsTriggerOperation",
-        "assemblyVersion": "1.183.0.52"
+        "assemblyVersion": "1.184.0.14"
     },
     "command": "LogicAppsCompiler.exe <output-directory> --directClient --language=typescript --connectors=arm,azureblob,azuremonitorlogs,docusign,github,jira,kusto,microsoftforms,mq,msgraphgroupsanduser,office365,office365users,onedriveforbusiness,powerbi,salesforce,sharepointonline,shifts,slack,smtp,teams,todo",
     "swaggerSource": {
