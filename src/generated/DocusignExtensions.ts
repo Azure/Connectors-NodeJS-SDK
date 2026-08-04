@@ -1030,23 +1030,13 @@ export interface DeclineReasonWithoutType {
 // #endregion Types
 
 export const DocusignTriggerOperations = {
-    OnCreateOrgHookEnvelope: "CreateOrgHookEnvelope",
     OnCreateHookEnvelope: "CreateHookEnvelopeV4",
+    OnCreateOrgHookEnvelope: "CreateOrgHookEnvelope",
 } as const;
 
 export type DocusignTriggerOperation = typeof DocusignTriggerOperations[keyof typeof DocusignTriggerOperations];
 
 export const DocusignTriggerParameters = {
-    OnCreateOrgHookEnvelope: {
-        organizationId: {
-            name: "organizationId",
-            type: "string",
-            required: true,
-            description: "Enter or select an organization ID.",
-            summary: "Organization ID",
-            dynamicValuesOperationId: "GetOrganizations",
-        },
-    },
     OnCreateHookEnvelope: {
         accountId: {
             name: "accountId",
@@ -1055,6 +1045,16 @@ export const DocusignTriggerParameters = {
             description: "Enter an account ID, or select an account from the dropdown list.",
             summary: "Account ID",
             dynamicValuesOperationId: "GetLoginAccounts",
+        },
+    },
+    OnCreateOrgHookEnvelope: {
+        organizationId: {
+            name: "organizationId",
+            type: "string",
+            required: true,
+            description: "Enter or select an organization ID.",
+            summary: "Organization ID",
+            dynamicValuesOperationId: "GetOrganizations",
         },
     },
 } as const;

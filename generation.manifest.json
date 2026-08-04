@@ -2,12 +2,12 @@
     "_comment": "Provenance record for the generated clients under src/generated/. It lets a regeneration be reproduced and any cross-language surface delta be attributed to a specific generator revision and Swagger input. Regenerate and repopulate this file on every run (see the 'Provenance & Reproducibility' section of GENERATION.md). A reviewable regeneration PR must have status 'generated' with non-null provenance and swaggerSha256 values that match the committed swagger-cache/ snapshots; the tests/generationManifest.test.ts guard enforces this.",
     "manifestVersion": 1,
     "status": "generated",
-    "generatedAtUtc": "2026-08-03T22:51:12Z",
+    "generatedAtUtc": "2026-08-04T17:19:34Z",
     "generator": {
         "repository": "https://msazure.visualstudio.com/One/_git/AzureUX-BPM",
         "tool": "CodefulSdkGenerator (LogicAppsCompiler)",
         "projectPath": "src/tools/CodefulSdkGenerator/LogicAppsCompiler.Cli/LogicAppsCompiler.Cli.csproj",
-        "bpmCommit": "0069ca0644df84c982235dc6a335a2072c640aa1",
+        "bpmCommit": "8214ab0310539df1295f718e042c2444936ccfba",
         "bpmBranch": "swapnil/TsGeneratorForXMsTriggerOperation",
         "assemblyVersion": "1.184.0.14"
     },

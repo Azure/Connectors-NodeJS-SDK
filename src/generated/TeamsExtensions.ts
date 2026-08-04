@@ -1305,90 +1305,20 @@ export type TeamsOnTeamMemberRemovedTriggerPayload = TriggerCallbackPayload<Reco
 // #endregion Types
 
 export const TeamsTriggerOperations = {
+    OnNewChannelMessage: "OnNewChannelMessage",
+    OnNewChannelMessageMentioningMe: "OnNewChannelMessageMentioningMe",
+    OnTeamMemberAdded: "OnGroupMembershipAdd",
+    OnTeamMemberRemoved: "OnGroupMembershipRemoval",
     OnWebhookAtMentionTrigger: "WebhookAtMentionTrigger",
     OnWebhookChatMessageTrigger: "WebhookChatMessageTrigger",
     OnWebhookKeywordTrigger: "WebhookKeywordTrigger",
     OnWebhookMessageReactionTrigger: "WebhookMessageReactionTrigger",
     OnWebhookNewMessageTrigger: "WebhookNewMessageTrigger",
-    OnNewChannelMessage: "OnNewChannelMessage",
-    OnNewChannelMessageMentioningMe: "OnNewChannelMessageMentioningMe",
-    OnTeamMemberAdded: "OnGroupMembershipAdd",
-    OnTeamMemberRemoved: "OnGroupMembershipRemoval",
 } as const;
 
 export type TeamsTriggerOperation = typeof TeamsTriggerOperations[keyof typeof TeamsTriggerOperations];
 
 export const TeamsTriggerParameters = {
-    OnWebhookAtMentionTrigger: {
-        threadType: {
-            name: "threadType",
-            type: "string",
-            required: true,
-            description: "Choose message type",
-            summary: "Message type",
-            allowedValues: ["groupchat", "channel"],
-        },
-    },
-    OnWebhookKeywordTrigger: {
-        threadType: {
-            name: "threadType",
-            type: "string",
-            required: true,
-            description: "Choose message type",
-            summary: "Message type",
-            allowedValues: ["groupchat", "channel"],
-        },
-        search: {
-            name: "$search",
-            type: "string",
-            required: true,
-            description: "A comma separated list of keywords to search for",
-            summary: "Keywords to search for",
-        },
-    },
-    OnWebhookMessageReactionTrigger: {
-        reactionKey: {
-            name: "reactionKey",
-            type: "string",
-            required: true,
-            description: "Choose emoji to monitor for message reactions",
-            summary: "Emoji to Track",
-        },
-        frequency: {
-            name: "frequency",
-            type: "string",
-            required: true,
-            description: "Whether the flow should be triggered by every reaction or only the first reaction on a particular message",
-            summary: "Trigger Frequency",
-            allowedValues: ["Multiple", "Once"],
-        },
-        runningPolicy: {
-            name: "runningPolicy",
-            type: "string",
-            required: true,
-            description: "Specify who can trigger this workflow",
-            summary: "Who can trigger?",
-            allowedValues: ["Myself", "Everyone"],
-        },
-        threadType: {
-            name: "threadType",
-            type: "string",
-            required: true,
-            description: "Choose message type",
-            summary: "Message type",
-            allowedValues: ["groupchat", "channel"],
-        },
-    },
-    OnWebhookNewMessageTrigger: {
-        threadType: {
-            name: "threadType",
-            type: "string",
-            required: true,
-            description: "Choose message type",
-            summary: "Message type",
-            allowedValues: ["groupchat", "channel"],
-        },
-    },
     OnNewChannelMessage: {
         groupId: {
             name: "groupId",
@@ -1471,6 +1401,76 @@ export const TeamsTriggerParameters = {
             required: false,
             summary: "Select",
             defaultValue: "members",
+        },
+    },
+    OnWebhookAtMentionTrigger: {
+        threadType: {
+            name: "threadType",
+            type: "string",
+            required: true,
+            description: "Choose message type",
+            summary: "Message type",
+            allowedValues: ["groupchat", "channel"],
+        },
+    },
+    OnWebhookKeywordTrigger: {
+        threadType: {
+            name: "threadType",
+            type: "string",
+            required: true,
+            description: "Choose message type",
+            summary: "Message type",
+            allowedValues: ["groupchat", "channel"],
+        },
+        search: {
+            name: "$search",
+            type: "string",
+            required: true,
+            description: "A comma separated list of keywords to search for",
+            summary: "Keywords to search for",
+        },
+    },
+    OnWebhookMessageReactionTrigger: {
+        reactionKey: {
+            name: "reactionKey",
+            type: "string",
+            required: true,
+            description: "Choose emoji to monitor for message reactions",
+            summary: "Emoji to Track",
+        },
+        frequency: {
+            name: "frequency",
+            type: "string",
+            required: true,
+            description: "Whether the flow should be triggered by every reaction or only the first reaction on a particular message",
+            summary: "Trigger Frequency",
+            allowedValues: ["Multiple", "Once"],
+        },
+        runningPolicy: {
+            name: "runningPolicy",
+            type: "string",
+            required: true,
+            description: "Specify who can trigger this workflow",
+            summary: "Who can trigger?",
+            allowedValues: ["Myself", "Everyone"],
+        },
+        threadType: {
+            name: "threadType",
+            type: "string",
+            required: true,
+            description: "Choose message type",
+            summary: "Message type",
+            allowedValues: ["groupchat", "channel"],
+        },
+    },
+    OnWebhookNewMessageTrigger: {
+        threadType: {
+            name: "threadType",
+            type: "string",
+            required: true,
+            description: "Choose message type",
+            summary: "Message type",
+            allowedValues: ["groupchat", "channel"],
         },
     },
 } as const;

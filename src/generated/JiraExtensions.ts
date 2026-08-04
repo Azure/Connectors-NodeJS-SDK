@@ -449,9 +449,9 @@ export interface MCPQueryResponse {
 }
 
 /**
- * Typed callback payload for trigger operation 'OnNewIssue_Datacenter'.
+ * Typed callback payload for trigger operation 'OnCloseIssue_V2'.
  */
-export type JiraOnNewIssueDatacenterTriggerPayload = TriggerCallbackPayload<FullIssue>;
+export type JiraOnCloseIssueTriggerPayload = TriggerCallbackPayload<FullIssue>;
 
 /**
  * Typed callback payload for trigger operation 'OnCloseIssue_Datacenter'.
@@ -459,40 +459,40 @@ export type JiraOnNewIssueDatacenterTriggerPayload = TriggerCallbackPayload<Full
 export type JiraOnCloseIssueDatacenterTriggerPayload = TriggerCallbackPayload<FullIssue>;
 
 /**
- * Typed callback payload for trigger operation 'OnNewIssueJQL_Datacenter'.
- */
-export type JiraOnNewIssueJQLDatacenterTriggerPayload = TriggerCallbackPayload<FullIssue>;
-
-/**
- * Typed callback payload for trigger operation 'OnCloseIssue_V2'.
- */
-export type JiraOnCloseIssueTriggerPayload = TriggerCallbackPayload<FullIssue>;
-
-/**
  * Typed callback payload for trigger operation 'OnNewIssue_V2'.
  */
 export type JiraOnNewIssueTriggerPayload = TriggerCallbackPayload<FullIssue>;
+
+/**
+ * Typed callback payload for trigger operation 'OnNewIssue_Datacenter'.
+ */
+export type JiraOnNewIssueDatacenterTriggerPayload = TriggerCallbackPayload<FullIssue>;
 
 /**
  * Typed callback payload for trigger operation 'OnNewIssueJQL_V2'.
  */
 export type JiraOnNewIssueJQLTriggerPayload = TriggerCallbackPayload<FullIssue>;
 
+/**
+ * Typed callback payload for trigger operation 'OnNewIssueJQL_Datacenter'.
+ */
+export type JiraOnNewIssueJQLDatacenterTriggerPayload = TriggerCallbackPayload<FullIssue>;
+
 // #endregion Types
 
 export const JiraTriggerOperations = {
-    OnNewIssueDatacenter: "OnNewIssue_Datacenter",
-    OnCloseIssueDatacenter: "OnCloseIssue_Datacenter",
-    OnNewIssueJQLDatacenter: "OnNewIssueJQL_Datacenter",
     OnCloseIssue: "OnCloseIssue_V2",
+    OnCloseIssueDatacenter: "OnCloseIssue_Datacenter",
     OnNewIssue: "OnNewIssue_V2",
+    OnNewIssueDatacenter: "OnNewIssue_Datacenter",
     OnNewIssueJQL: "OnNewIssueJQL_V2",
+    OnNewIssueJQLDatacenter: "OnNewIssueJQL_Datacenter",
 } as const;
 
 export type JiraTriggerOperation = typeof JiraTriggerOperations[keyof typeof JiraTriggerOperations];
 
 export const JiraTriggerParameters = {
-    OnNewIssueDatacenter: {
+    OnCloseIssue: {
         xRequestJirainstance: {
             name: "X-Request-Jirainstance",
             type: "string",
@@ -528,42 +528,6 @@ export const JiraTriggerParameters = {
             dynamicValuesOperationId: "ListProjects_V3",
         },
     },
-    OnNewIssueJQLDatacenter: {
-        xRequestJirainstance: {
-            name: "X-Request-Jirainstance",
-            type: "string",
-            required: false,
-            description: "The url where your Jira instance is hosted (must support https). ",
-            summary: "Jira instance",
-            dynamicValuesOperationId: "ListResources",
-        },
-        jql: {
-            name: "jql",
-            type: "string",
-            required: true,
-            description: "Query to use.",
-            summary: "JQL Query",
-            defaultValue: "",
-        },
-    },
-    OnCloseIssue: {
-        xRequestJirainstance: {
-            name: "X-Request-Jirainstance",
-            type: "string",
-            required: false,
-            description: "The url where your Jira instance is hosted (must support https). ",
-            summary: "Jira instance",
-            dynamicValuesOperationId: "ListResources",
-        },
-        projectKey: {
-            name: "projectKey",
-            type: "string",
-            required: true,
-            description: "Unique key of the project to look for new issues.",
-            summary: "Project",
-            dynamicValuesOperationId: "ListProjects_V3",
-        },
-    },
     OnNewIssue: {
         xRequestJirainstance: {
             name: "X-Request-Jirainstance",
@@ -582,7 +546,43 @@ export const JiraTriggerParameters = {
             dynamicValuesOperationId: "ListProjects_V3",
         },
     },
+    OnNewIssueDatacenter: {
+        xRequestJirainstance: {
+            name: "X-Request-Jirainstance",
+            type: "string",
+            required: false,
+            description: "The url where your Jira instance is hosted (must support https). ",
+            summary: "Jira instance",
+            dynamicValuesOperationId: "ListResources",
+        },
+        projectKey: {
+            name: "projectKey",
+            type: "string",
+            required: true,
+            description: "Unique key of the project to look for new issues.",
+            summary: "Project",
+            dynamicValuesOperationId: "ListProjects_V3",
+        },
+    },
     OnNewIssueJQL: {
+        xRequestJirainstance: {
+            name: "X-Request-Jirainstance",
+            type: "string",
+            required: false,
+            description: "The url where your Jira instance is hosted (must support https). ",
+            summary: "Jira instance",
+            dynamicValuesOperationId: "ListResources",
+        },
+        jql: {
+            name: "jql",
+            type: "string",
+            required: true,
+            description: "Query to use.",
+            summary: "JQL Query",
+            defaultValue: "",
+        },
+    },
+    OnNewIssueJQLDatacenter: {
         xRequestJirainstance: {
             name: "X-Request-Jirainstance",
             type: "string",

@@ -1051,6 +1051,14 @@ export interface EmailAddress {
 }
 
 /**
+ * Definition: EmailAddress_V2
+ */
+export interface EmailAddressV2 {
+    address?: string;
+    name?: string;
+}
+
+/**
  * Definition: EntityListResponse[CalendarEventBackend]
  */
 export interface EntityListResponseCalendarEventBackend {
@@ -2133,14 +2141,14 @@ export type Office365OnNewEmailTriggerPayload = TriggerCallbackPayload<GraphClie
 export type Office365OnNewEmailMentioningMeTriggerPayload = TriggerCallbackPayload<GraphClientReceiveMessage>;
 
 /**
- * Typed callback payload for trigger operation 'OnUpcomingEventsV3'.
- */
-export type Office365OnUpcomingEventsTriggerPayload = TriggerCallbackPayload<GraphCalendarEventClientReceive>;
-
-/**
  * Typed callback payload for trigger operation 'SharedMailboxOnNewEmailV2'.
  */
 export type Office365OnSharedMailboxNewEmailTriggerPayload = TriggerCallbackPayload<GraphClientReceiveMessage>;
+
+/**
+ * Typed callback payload for trigger operation 'OnUpcomingEventsV3'.
+ */
+export type Office365OnUpcomingEventsTriggerPayload = TriggerCallbackPayload<GraphCalendarEventClientReceive>;
 
 // #endregion Types
 
@@ -2151,8 +2159,8 @@ export const Office365TriggerOperations = {
     OnFlaggedEmail: "OnFlaggedEmailV4",
     OnNewEmail: "OnNewEmailV3",
     OnNewEmailMentioningMe: "OnNewMentionMeEmailV3",
-    OnUpcomingEvents: "OnUpcomingEventsV3",
     OnSharedMailboxNewEmail: "SharedMailboxOnNewEmailV2",
+    OnUpcomingEvents: "OnUpcomingEventsV3",
 } as const;
 
 export type Office365TriggerOperation = typeof Office365TriggerOperations[keyof typeof Office365TriggerOperations];
@@ -2490,24 +2498,6 @@ export const Office365TriggerParameters = {
             summary: "Subject Filter",
         },
     },
-    OnUpcomingEvents: {
-        table: {
-            name: "table",
-            type: "string",
-            required: true,
-            description: "Unique identifier of the calendar.",
-            summary: "Calendar Id",
-            dynamicValuesOperationId: "CalendarGetTables_V2",
-        },
-        lookAheadTimeInMinutes: {
-            name: "lookAheadTimeInMinutes",
-            type: "integer",
-            required: false,
-            description: "Time (in minutes) to look ahead for upcoming events.",
-            summary: "Look-Ahead Time",
-            defaultValue: "15",
-        },
-    },
     OnSharedMailboxNewEmail: {
         mailboxAddress: {
             name: "mailboxAddress",
@@ -2590,6 +2580,24 @@ export const Office365TriggerParameters = {
             required: false,
             description: "Special header to enable operation simulation.",
             summary: "x-ms-operation-context",
+        },
+    },
+    OnUpcomingEvents: {
+        table: {
+            name: "table",
+            type: "string",
+            required: true,
+            description: "Unique identifier of the calendar.",
+            summary: "Calendar Id",
+            dynamicValuesOperationId: "CalendarGetTables_V2",
+        },
+        lookAheadTimeInMinutes: {
+            name: "lookAheadTimeInMinutes",
+            type: "integer",
+            required: false,
+            description: "Time (in minutes) to look ahead for upcoming events.",
+            summary: "Look-Ahead Time",
+            defaultValue: "15",
         },
     },
 } as const;

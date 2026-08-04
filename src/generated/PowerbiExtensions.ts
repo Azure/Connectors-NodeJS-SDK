@@ -515,49 +515,26 @@ export interface PowerBiButtonClickedOutputs {
 // #endregion Types
 
 export const PowerbiTriggerOperations = {
-    OnGoalsAssignedTrigger: "GoalsAssignedTrigger",
+    OnCheckAlertStatus: "CheckAlertStatus",
     OnGoalChangeTrigger: "GoalChangeTrigger",
+    OnGoalRefreshFailedTrigger: "GoalRefreshFailedTrigger",
     OnGoalStatusChangeTrigger: "GoalStatusChangeTrigger",
     OnGoalValueChangeTrigger: "GoalValueChangeTrigger",
-    OnGoalRefreshFailedTrigger: "GoalRefreshFailedTrigger",
     OnGoalValueOrNoteUpsertTrigger: "GoalValueOrNoteUpsertTrigger",
-    OnCheckAlertStatus: "CheckAlertStatus",
+    OnGoalsAssignedTrigger: "GoalsAssignedTrigger",
 } as const;
 
 export type PowerbiTriggerOperation = typeof PowerbiTriggerOperations[keyof typeof PowerbiTriggerOperations];
 
 export const PowerbiTriggerParameters = {
-    OnGoalsAssignedTrigger: {
-        groupid: {
-            name: "groupid",
+    OnCheckAlertStatus: {
+        alertId: {
+            name: "alertId",
             type: "string",
             required: true,
-            description: "The unique identifier of the workspace.",
-            summary: "Workspace",
-            dynamicValuesOperationId: "ListGroups",
-        },
-        scorecardId: {
-            name: "scorecardId",
-            type: "string",
-            required: true,
-            description: "The unique identifier of the scorecard.",
-            summary: "Scorecard id",
-            dynamicValuesOperationId: "GetScorecards",
-        },
-        owner: {
-            name: "owner",
-            type: "string",
-            required: false,
-            description: "E-mail of an owner. Can be yours. Can be empty when tracking any owner.",
-            summary: "Owner",
-        },
-        pollingInterval: {
-            name: "pollingInterval",
-            type: "number",
-            required: true,
-            description: "Number of seconds between checks for new data. Minimum is 300.",
-            summary: "Polling interval (sec)",
-            defaultValue: "14400",
+            description: "The alert id to track.",
+            summary: "Alert Id",
+            dynamicValuesOperationId: "GetAlerts",
         },
         pbiSource: {
             name: "pbi_source",
@@ -592,6 +569,66 @@ export const PowerbiTriggerParameters = {
             description: "The unique identifier of the goal.",
             summary: "Goal id",
             dynamicValuesOperationId: "GetMultipleGoals",
+        },
+        pollingInterval: {
+            name: "pollingInterval",
+            type: "number",
+            required: true,
+            description: "Number of seconds between checks for new data. Minimum is 300.",
+            summary: "Polling interval (sec)",
+            defaultValue: "14400",
+        },
+        pbiSource: {
+            name: "pbi_source",
+            type: "string",
+            required: false,
+            description: "Source of the call for tracing",
+            summary: "pbi_source",
+            defaultValue: "powerAutomate",
+        },
+    },
+    OnGoalRefreshFailedTrigger: {
+        groupid: {
+            name: "groupid",
+            type: "string",
+            required: true,
+            description: "The unique identifier of the workspace.",
+            summary: "Workspace",
+            dynamicValuesOperationId: "ListGroups",
+        },
+        scorecardId: {
+            name: "scorecardId",
+            type: "string",
+            required: true,
+            description: "The unique identifier of the scorecard.",
+            summary: "Scorecard id",
+            dynamicValuesOperationId: "GetScorecards",
+        },
+        goalId: {
+            name: "goalId",
+            type: "string",
+            required: true,
+            description: "The unique identifier of the goal.",
+            summary: "Goal id",
+            dynamicValuesOperationId: "GetMultipleGoals",
+        },
+        trackTargetSource: {
+            name: "trackTargetSource",
+            type: "string",
+            required: true,
+            description: "Will track the link for the goal's target.",
+            summary: "Track target source",
+            defaultValue: "Yes",
+            allowedValues: ["Yes", "No"],
+        },
+        trackValueSource: {
+            name: "trackValueSource",
+            type: "string",
+            required: true,
+            description: "Will track the link for the goal's value.",
+            summary: "Track value source",
+            defaultValue: "Yes",
+            allowedValues: ["Yes", "No"],
         },
         pollingInterval: {
             name: "pollingInterval",
@@ -694,66 +731,6 @@ export const PowerbiTriggerParameters = {
             defaultValue: "powerAutomate",
         },
     },
-    OnGoalRefreshFailedTrigger: {
-        groupid: {
-            name: "groupid",
-            type: "string",
-            required: true,
-            description: "The unique identifier of the workspace.",
-            summary: "Workspace",
-            dynamicValuesOperationId: "ListGroups",
-        },
-        scorecardId: {
-            name: "scorecardId",
-            type: "string",
-            required: true,
-            description: "The unique identifier of the scorecard.",
-            summary: "Scorecard id",
-            dynamicValuesOperationId: "GetScorecards",
-        },
-        goalId: {
-            name: "goalId",
-            type: "string",
-            required: true,
-            description: "The unique identifier of the goal.",
-            summary: "Goal id",
-            dynamicValuesOperationId: "GetMultipleGoals",
-        },
-        trackTargetSource: {
-            name: "trackTargetSource",
-            type: "string",
-            required: true,
-            description: "Will track the link for the goal's target.",
-            summary: "Track target source",
-            defaultValue: "Yes",
-            allowedValues: ["Yes", "No"],
-        },
-        trackValueSource: {
-            name: "trackValueSource",
-            type: "string",
-            required: true,
-            description: "Will track the link for the goal's value.",
-            summary: "Track value source",
-            defaultValue: "Yes",
-            allowedValues: ["Yes", "No"],
-        },
-        pollingInterval: {
-            name: "pollingInterval",
-            type: "number",
-            required: true,
-            description: "Number of seconds between checks for new data. Minimum is 300.",
-            summary: "Polling interval (sec)",
-            defaultValue: "14400",
-        },
-        pbiSource: {
-            name: "pbi_source",
-            type: "string",
-            required: false,
-            description: "Source of the call for tracing",
-            summary: "pbi_source",
-            defaultValue: "powerAutomate",
-        },
-    },
     OnGoalValueOrNoteUpsertTrigger: {
         groupid: {
             name: "groupid",
@@ -796,14 +773,37 @@ export const PowerbiTriggerParameters = {
             defaultValue: "powerAutomate",
         },
     },
-    OnCheckAlertStatus: {
-        alertId: {
-            name: "alertId",
+    OnGoalsAssignedTrigger: {
+        groupid: {
+            name: "groupid",
             type: "string",
             required: true,
-            description: "The alert id to track.",
-            summary: "Alert Id",
-            dynamicValuesOperationId: "GetAlerts",
+            description: "The unique identifier of the workspace.",
+            summary: "Workspace",
+            dynamicValuesOperationId: "ListGroups",
+        },
+        scorecardId: {
+            name: "scorecardId",
+            type: "string",
+            required: true,
+            description: "The unique identifier of the scorecard.",
+            summary: "Scorecard id",
+            dynamicValuesOperationId: "GetScorecards",
+        },
+        owner: {
+            name: "owner",
+            type: "string",
+            required: false,
+            description: "E-mail of an owner. Can be yours. Can be empty when tracking any owner.",
+            summary: "Owner",
+        },
+        pollingInterval: {
+            name: "pollingInterval",
+            type: "number",
+            required: true,
+            description: "Number of seconds between checks for new data. Minimum is 300.",
+            summary: "Polling interval (sec)",
+            defaultValue: "14400",
         },
         pbiSource: {
             name: "pbi_source",

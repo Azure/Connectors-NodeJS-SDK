@@ -939,9 +939,9 @@ export interface QueryRequest {
 }
 
 /**
- * Typed callback payload for trigger operation 'IssueOpened'.
+ * Typed callback payload for trigger operation 'IssueAssigned'.
  */
-export type GithubOnIssueOpenedTriggerPayload = TriggerCallbackPayload<IssueDetailsModel>;
+export type GithubOnIssueAssignedTriggerPayload = TriggerCallbackPayload<IssueDetailsModel>;
 
 /**
  * Typed callback payload for trigger operation 'IssueClosed'.
@@ -949,17 +949,17 @@ export type GithubOnIssueOpenedTriggerPayload = TriggerCallbackPayload<IssueDeta
 export type GithubOnIssueClosedTriggerPayload = TriggerCallbackPayload<IssueDetailsModel>;
 
 /**
- * Typed callback payload for trigger operation 'IssueAssigned'.
+ * Typed callback payload for trigger operation 'IssueOpened'.
  */
-export type GithubOnIssueAssignedTriggerPayload = TriggerCallbackPayload<IssueDetailsModel>;
+export type GithubOnIssueOpenedTriggerPayload = TriggerCallbackPayload<IssueDetailsModel>;
 
 // #endregion Types
 
 export const GithubTriggerOperations = {
-    OnWebhookPullRequestTrigger: "WebhookPullRequestTrigger",
-    OnIssueOpened: "IssueOpened",
-    OnIssueClosed: "IssueClosed",
     OnIssueAssigned: "IssueAssigned",
+    OnIssueClosed: "IssueClosed",
+    OnIssueOpened: "IssueOpened",
+    OnWebhookPullRequestTrigger: "WebhookPullRequestTrigger",
 } as const;
 
 export type GithubTriggerOperation = typeof GithubTriggerOperations[keyof typeof GithubTriggerOperations];
