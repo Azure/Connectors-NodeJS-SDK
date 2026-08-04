@@ -7,7 +7,7 @@
         "repository": "https://msazure.visualstudio.com/One/_git/AzureUX-BPM",
         "tool": "CodefulSdkGenerator (LogicAppsCompiler)",
         "projectPath": "src/tools/CodefulSdkGenerator/LogicAppsCompiler.Cli/LogicAppsCompiler.Cli.csproj",
-        "bpmCommit": "d16d41ce55b97a1d56c20bdadb43f3c120f0f6bb",
+        "bpmCommit": "5b0a7e2d214a52a6e7dcfc9b84f161495243178a",
         "bpmBranch": "swapnil/TsGeneratorForXMsTriggerOperation",
         "assemblyVersion": "1.184.0.14"
     },
