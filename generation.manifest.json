@@ -43,5 +43,15 @@
         { "apiName": "smtp", "outputFile": "src/generated/SmtpExtensions.ts", "swaggerSnapshot": "swagger-cache/smtp.swagger.json", "swaggerSha256": "3b5e6b8629607064ad4b76b5e6feaf0bf0bbaf6879464ae3c8379610a2282e3c" },
         { "apiName": "teams", "outputFile": "src/generated/TeamsExtensions.ts", "swaggerSnapshot": "swagger-cache/teams.swagger.json", "swaggerSha256": "dfe2f15e4133e2b84630722cd17170ecf11af70395523149cd40adeba112a1ef" },
         { "apiName": "todo", "outputFile": "src/generated/TodoExtensions.ts", "swaggerSnapshot": "swagger-cache/todo.swagger.json", "swaggerSha256": "ce91e4007d86b687d89bf51bc43bd26873acb8118bbb9a56ea60c188c7468b43" }
-    ]
+    ],
+    "routeIdentityLoss": {
+        "_comment": "Trigger routes the generator drops because their simplified trigger name collides with a newer version kept in their place. Captured from the generator's 'ROUTE IDENTITY LOSS' warnings for this run and verifiable by regeneration; recorded here so a silent catalog drop is reviewable in-repo rather than only on a console. Pre-existing on main — not introduced by this generation. Tracked in AzureUX-BPM PR 16476697.",
+        "droppedTriggerRoutes": [
+            { "connector": "office365", "droppedOperationId": "OnFlaggedEmailV3", "path": "/v3/Mail/OnFlaggedEmail", "keptOperationId": "OnFlaggedEmailV4" },
+            { "connector": "docusign", "droppedOperationId": "CreateHookEnvelopeV3", "path": "/accounts/{accountId}/connectV3", "keptOperationId": "CreateHookEnvelopeV4" },
+            { "connector": "jira", "droppedOperationId": "OnNewIssue", "path": "/new_issue_trigger/search", "keptOperationId": "OnNewIssue_V2" },
+            { "connector": "jira", "droppedOperationId": "OnCloseIssue", "path": "/close_issue_trigger/search", "keptOperationId": "OnCloseIssue_V2" },
+            { "connector": "jira", "droppedOperationId": "OnNewIssueJQL", "path": "/new_issue_jql_trigger/search", "keptOperationId": "OnNewIssueJQL_V2" }
+        ]
+    }
 }

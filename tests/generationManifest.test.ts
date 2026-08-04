@@ -22,6 +22,16 @@ interface ManifestConnectorEntry {
 }
 
 /**
+ * A trigger route the generator dropped because its simplified name collided with a kept newer version.
+ */
+interface ManifestDroppedTriggerRoute {
+    connector: string;
+    droppedOperationId: string;
+    path: string;
+    keptOperationId: string;
+}
+
+/**
  * The provenance record persisted in generation.manifest.json.
  */
 interface GenerationManifest {
@@ -30,6 +40,9 @@ interface GenerationManifest {
         bpmCommit: string | null;
     };
     connectors: ManifestConnectorEntry[];
+    routeIdentityLoss?: {
+        droppedTriggerRoutes: ManifestDroppedTriggerRoute[];
+    };
 }
 
 /**
@@ -96,5 +109,23 @@ describe("generation.manifest.json provenance", () => {
             .sort();
 
         expect(manifestOutputFiles).toEqual(generatedExtensionFiles);
+    });
+
+    it("should record any dropped trigger routes with a well-formed shape", () => {
+        expect(manifest.routeIdentityLoss).toBeDefined();
+        expect(Array.isArray(manifest.routeIdentityLoss?.droppedTriggerRoutes)).toBe(true);
+
+        // NOTE(swapnilnagar): Shape-only, and an empty list is valid — a future regeneration that drops no
+        // routes should still pass. Each recorded entry must be fully populated so the record cannot rot.
+        for (const droppedRoute of manifest.routeIdentityLoss?.droppedTriggerRoutes ?? []) {
+            expect(typeof droppedRoute.connector).toBe("string");
+            expect(droppedRoute.connector.length).toBeGreaterThan(0);
+            expect(typeof droppedRoute.droppedOperationId).toBe("string");
+            expect(droppedRoute.droppedOperationId.length).toBeGreaterThan(0);
+            expect(typeof droppedRoute.path).toBe("string");
+            expect(droppedRoute.path.length).toBeGreaterThan(0);
+            expect(typeof droppedRoute.keptOperationId).toBe("string");
+            expect(droppedRoute.keptOperationId.length).toBeGreaterThan(0);
+        }
     });
 });
