@@ -5,6 +5,7 @@ import { ConnectorClientBase } from "../azureConnectors/clientBase.ts";
 import { ConnectorException } from "../azureConnectors/connectorException.ts";
 import { ConnectorClientOptions } from "../azureConnectors/options.ts";
 import { TokenProvider } from "../azureConnectors/authentication.ts";
+import { TriggerCallbackPayload } from "../azureConnectors/triggerPayload.ts";
 
 // #region Types
 
@@ -830,7 +831,363 @@ export interface UserPermissionIdentity {
     /** User email */
     email?: string;
 }
+
+/**
+ * Typed callback payload for trigger operation 'GetOnChangedItems'.
+ */
+export type SharepointonlineOnChangedItemsTriggerPayload = TriggerCallbackPayload<Item>;
+
+/**
+ * Typed callback payload for trigger operation 'GetOnDeletedFileItems'.
+ */
+export type SharepointonlineOnDeletedFileItemsTriggerPayload = TriggerCallbackPayload<DeletedItem>;
+
+/**
+ * Typed callback payload for trigger operation 'GetOnDeletedItems'.
+ */
+export type SharepointonlineOnDeletedItemsTriggerPayload = TriggerCallbackPayload<DeletedItem>;
+
+/**
+ * Typed callback payload for trigger operation 'GetOnNewFileItems'.
+ */
+export type SharepointonlineOnNewFileItemsTriggerPayload = TriggerCallbackPayload<Item>;
+
+/**
+ * Typed callback payload for trigger operation 'GetOnNewItems'.
+ */
+export type SharepointonlineOnNewItemsTriggerPayload = TriggerCallbackPayload<Item>;
+
+/**
+ * Typed callback payload for trigger operation 'GetOnUpdatedFileClassifiedTimes'.
+ */
+export type SharepointonlineOnUpdatedFileClassifiedTimesTriggerPayload = TriggerCallbackPayload<Item>;
+
+/**
+ * Typed callback payload for trigger operation 'GetOnUpdatedFileItems'.
+ */
+export type SharepointonlineOnUpdatedFileItemsTriggerPayload = TriggerCallbackPayload<Item>;
+
+/**
+ * Typed callback payload for trigger operation 'GetOnUpdatedItems'.
+ */
+export type SharepointonlineOnUpdatedItemsTriggerPayload = TriggerCallbackPayload<Item>;
+
 // #endregion Types
+
+export const SharepointonlineTriggerOperations = {
+    OnChangedItems: "GetOnChangedItems",
+    OnDeletedFileItems: "GetOnDeletedFileItems",
+    OnDeletedItems: "GetOnDeletedItems",
+    OnNewFile: "OnNewFile",
+    OnNewFileItems: "GetOnNewFileItems",
+    OnNewItems: "GetOnNewItems",
+    OnUpdatedFile: "OnUpdatedFile",
+    OnUpdatedFileClassifiedTimes: "GetOnUpdatedFileClassifiedTimes",
+    OnUpdatedFileItems: "GetOnUpdatedFileItems",
+    OnUpdatedItems: "GetOnUpdatedItems",
+} as const;
+
+export type SharepointonlineTriggerOperation = typeof SharepointonlineTriggerOperations[keyof typeof SharepointonlineTriggerOperations];
+
+export const SharepointonlineTriggerParameters = {
+    OnChangedItems: {
+        dataset: {
+            name: "dataset",
+            type: "string",
+            required: true,
+            description: "Example: https://contoso.sharepoint.com/sites/sitename",
+            summary: "Site Address",
+            dynamicValuesOperationId: "GetDataSets",
+        },
+        table: {
+            name: "table",
+            type: "string",
+            required: true,
+            description: "SharePoint list name",
+            summary: "List or Library Name",
+            dynamicValuesOperationId: "GetTablesForListsAndLibraries",
+        },
+        folderPath: {
+            name: "folderPath",
+            type: "string",
+            required: false,
+            description: "Select a folder, or leave blank for the whole library",
+            summary: "Folder",
+        },
+        view: {
+            name: "view",
+            type: "string",
+            required: false,
+            description: "Avoid column threshold issues by only using columns defined in a view",
+            summary: "Limit Columns by View",
+            dynamicValuesOperationId: "GetTableViews",
+        },
+    },
+    OnDeletedFileItems: {
+        dataset: {
+            name: "dataset",
+            type: "string",
+            required: true,
+            description: "Example: https://contoso.sharepoint.com/sites/sitename",
+            summary: "Site Address",
+            dynamicValuesOperationId: "GetDataSets",
+        },
+        table: {
+            name: "table",
+            type: "string",
+            required: true,
+            description: "SharePoint library name",
+            summary: "Library Name",
+            dynamicValuesOperationId: "GetTablesForLibraries",
+        },
+        folderPath: {
+            name: "folderPath",
+            type: "string",
+            required: false,
+            description: "Select a folder, or leave blank for the whole library",
+            summary: "Folder",
+        },
+    },
+    OnDeletedItems: {
+        dataset: {
+            name: "dataset",
+            type: "string",
+            required: true,
+            description: "Example: https://contoso.sharepoint.com/sites/sitename",
+            summary: "Site Address",
+            dynamicValuesOperationId: "GetDataSets",
+        },
+        table: {
+            name: "table",
+            type: "string",
+            required: true,
+            description: "SharePoint list name",
+            summary: "List Name",
+            dynamicValuesOperationId: "GetTables",
+        },
+    },
+    OnNewFile: {
+        dataset: {
+            name: "dataset",
+            type: "string",
+            required: true,
+            description: "Example: https://contoso.sharepoint.com/sites/sitename.",
+            summary: "Site Address",
+            dynamicValuesOperationId: "GetDataSets",
+        },
+        folderId: {
+            name: "folderId",
+            type: "string",
+            required: true,
+            description: "Select a folder.",
+            summary: "Folder Id",
+        },
+        inferContentType: {
+            name: "inferContentType",
+            type: "boolean",
+            required: false,
+            description: "Infer content-type based on extension.",
+            summary: "Infer Content Type",
+            defaultValue: "true",
+        },
+        queryParametersSingleEncoded: {
+            name: "queryParametersSingleEncoded",
+            type: "boolean",
+            required: false,
+            defaultValue: "true",
+        },
+    },
+    OnNewFileItems: {
+        dataset: {
+            name: "dataset",
+            type: "string",
+            required: true,
+            description: "Example: https://contoso.sharepoint.com/sites/sitename",
+            summary: "Site Address",
+            dynamicValuesOperationId: "GetDataSets",
+        },
+        table: {
+            name: "table",
+            type: "string",
+            required: true,
+            description: "SharePoint library name",
+            summary: "Library Name",
+            dynamicValuesOperationId: "GetTablesForLibraries",
+        },
+        folderPath: {
+            name: "folderPath",
+            type: "string",
+            required: false,
+            description: "Select a folder, or leave blank for the whole library",
+            summary: "Folder",
+        },
+        view: {
+            name: "view",
+            type: "string",
+            required: false,
+            description: "Avoid column threshold issues by only using columns defined in a view",
+            summary: "Limit Columns by View",
+            dynamicValuesOperationId: "GetTableViews",
+        },
+    },
+    OnNewItems: {
+        dataset: {
+            name: "dataset",
+            type: "string",
+            required: true,
+            description: "Example: https://contoso.sharepoint.com/sites/sitename",
+            summary: "Site Address",
+            dynamicValuesOperationId: "GetDataSets",
+        },
+        table: {
+            name: "table",
+            type: "string",
+            required: true,
+            description: "SharePoint list name",
+            summary: "List Name",
+            dynamicValuesOperationId: "GetTables",
+        },
+        view: {
+            name: "view",
+            type: "string",
+            required: false,
+            description: "Avoid column threshold issues by only using columns defined in a view",
+            summary: "Limit Columns by View",
+            dynamicValuesOperationId: "GetTableViews",
+        },
+    },
+    OnUpdatedFile: {
+        dataset: {
+            name: "dataset",
+            type: "string",
+            required: true,
+            description: "Example: https://contoso.sharepoint.com/sites/sitename.",
+            summary: "Site Address",
+            dynamicValuesOperationId: "GetDataSets",
+        },
+        folderId: {
+            name: "folderId",
+            type: "string",
+            required: true,
+            description: "Select a folder.",
+            summary: "Folder Id",
+        },
+        includeFileContent: {
+            name: "includeFileContent",
+            type: "boolean",
+            required: false,
+            description: "If set to true, file content will also be retrieved along with the trigger response.",
+            summary: "Include file content",
+            defaultValue: "true",
+        },
+        inferContentType: {
+            name: "inferContentType",
+            type: "boolean",
+            required: false,
+            description: "Infer content-type based on extension.",
+            summary: "Infer Content Type",
+            defaultValue: "true",
+        },
+        queryParametersSingleEncoded: {
+            name: "queryParametersSingleEncoded",
+            type: "boolean",
+            required: false,
+            defaultValue: "true",
+        },
+    },
+    OnUpdatedFileClassifiedTimes: {
+        dataset: {
+            name: "dataset",
+            type: "string",
+            required: true,
+            description: "Example: https://contoso.sharepoint.com/sites/sitename",
+            summary: "Site Address",
+            dynamicValuesOperationId: "GetDataSets",
+        },
+        table: {
+            name: "table",
+            type: "string",
+            required: true,
+            description: "SharePoint library name",
+            summary: "Library Name",
+            dynamicValuesOperationId: "GetTablesForLibraries",
+        },
+        folderPath: {
+            name: "folderPath",
+            type: "string",
+            required: false,
+            description: "Select a folder, or leave blank for the whole library",
+            summary: "Folder",
+        },
+        view: {
+            name: "view",
+            type: "string",
+            required: false,
+            description: "Avoid column threshold issues by only using columns defined in a view",
+            summary: "Limit Columns by View",
+            dynamicValuesOperationId: "GetTableViews",
+        },
+    },
+    OnUpdatedFileItems: {
+        dataset: {
+            name: "dataset",
+            type: "string",
+            required: true,
+            description: "Example: https://contoso.sharepoint.com/sites/sitename",
+            summary: "Site Address",
+            dynamicValuesOperationId: "GetDataSets",
+        },
+        table: {
+            name: "table",
+            type: "string",
+            required: true,
+            description: "SharePoint library name",
+            summary: "Library Name",
+            dynamicValuesOperationId: "GetTablesForLibraries",
+        },
+        folderPath: {
+            name: "folderPath",
+            type: "string",
+            required: false,
+            description: "Select a folder, or leave blank for the whole library",
+            summary: "Folder",
+        },
+        view: {
+            name: "view",
+            type: "string",
+            required: false,
+            description: "Avoid column threshold issues by only using columns defined in a view",
+            summary: "Limit Columns by View",
+            dynamicValuesOperationId: "GetTableViews",
+        },
+    },
+    OnUpdatedItems: {
+        dataset: {
+            name: "dataset",
+            type: "string",
+            required: true,
+            description: "Example: https://contoso.sharepoint.com/sites/sitename",
+            summary: "Site Address",
+            dynamicValuesOperationId: "GetDataSets",
+        },
+        table: {
+            name: "table",
+            type: "string",
+            required: true,
+            description: "SharePoint list name",
+            summary: "List Name",
+            dynamicValuesOperationId: "GetTables",
+        },
+        view: {
+            name: "view",
+            type: "string",
+            required: false,
+            description: "Avoid column threshold issues by only using columns defined in a view",
+            summary: "Limit Columns by View",
+            dynamicValuesOperationId: "GetTableViews",
+        },
+    },
+} as const;
 
 // #region Client
 
@@ -1071,6 +1428,23 @@ export class SharepointonlineClient extends ConnectorClientBase {
     }
 
     /**
+     * Copy file
+     * @remarks Copies a file. Works in a similar way to the "Copy to" command in SharePoint libraries. Returns information about the new file after copy.
+     * @remarks Disambiguated from a method-name collision; maps to operationId 'CopyFileAsync'.
+     */
+    public async copyFile2Async(input: CopyFileParameters, dataset: string, abortSignal?: AbortSignal): Promise<SPBlobMetadataResponse> {
+        const requestPath = `/datasets/${encodeURIComponent(String(dataset))}/copyFileAsync`;
+        const url = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<SPBlobMetadataResponse>("POST", url, undefined, input, abortSignal);
+
+        if (!httpResponse.isSuccessStatusCode) {
+            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+        }
+
+        return httpResponse.value as SPBlobMetadataResponse;
+    }
+
+    /**
      * Copy folder
      * @remarks Copies a folder. Works in a similar way to the "Copy to" command in SharePoint libraries. Returns information about the new folder after copy.
      */
@@ -1176,6 +1550,38 @@ export class SharepointonlineClient extends ConnectorClientBase {
         }
 
         return httpResponse.value as Blob;
+    }
+
+    /**
+     * List root folder
+     * @remarks Returns files in the root SharePoint folder.
+     */
+    public async listRootFolderAsync(dataset: string, abortSignal?: AbortSignal): Promise<Array<BlobMetadata>> {
+        const requestPath = `/datasets/${encodeURIComponent(String(dataset))}/folders`;
+        const url = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<Array<BlobMetadata>>("GET", url, undefined, undefined, abortSignal);
+
+        if (!httpResponse.isSuccessStatusCode) {
+            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+        }
+
+        return httpResponse.value as Array<BlobMetadata>;
+    }
+
+    /**
+     * List folder
+     * @remarks Returns files contained in a SharePoint folder.
+     */
+    public async listFolderAsync(dataset: string, id: string, abortSignal?: AbortSignal): Promise<Array<BlobMetadata>> {
+        const requestPath = `/datasets/${encodeURIComponent(String(dataset))}/folders/${id}`;
+        const url = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<Array<BlobMetadata>>("GET", url, undefined, undefined, abortSignal);
+
+        if (!httpResponse.isSuccessStatusCode) {
+            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+        }
+
+        return httpResponse.value as Array<BlobMetadata>;
     }
 
     /**
@@ -1753,174 +2159,6 @@ export class SharepointonlineClient extends ConnectorClientBase {
     }
 
     /**
-     * When an item or a file is modified
-     * @remarks Triggers when an item is modified (but not when it is created).
-     */
-    public async getOnChangedItemsAsync(dataset: string, table: string, folderPath?: string, view?: string, abortSignal?: AbortSignal): Promise<ItemsList> {
-        const queryParams: string[] = [];
-        if (folderPath !== undefined) {
-            queryParams.push(`folderPath=${encodeURIComponent(String(folderPath))}`);
-        }
-        if (view !== undefined) {
-            queryParams.push(`view=${encodeURIComponent(String(view))}`);
-        }
-        const requestPath = `/datasets/${encodeURIComponent(String(dataset))}/tables/${table}/onchangeditems` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<ItemsList>("GET", url, undefined, undefined, abortSignal);
-
-        if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
-        }
-
-        return httpResponse.value as ItemsList;
-    }
-
-    /**
-     * When a file is deleted
-     * @remarks Triggers when a file is deleted in a library. You can optionally specify a folder to watch as well. When a folder is deleted, the trigger will fire only once for the deleted folder. This can only be used by site collection admins of the site where the list is located.
-     */
-    public async getOnDeletedFileItemsAsync(dataset: string, table: string, folderPath?: string, abortSignal?: AbortSignal): Promise<DeletedItemList> {
-        const queryParams: string[] = [];
-        if (folderPath !== undefined) {
-            queryParams.push(`folderPath=${encodeURIComponent(String(folderPath))}`);
-        }
-        const requestPath = `/datasets/${encodeURIComponent(String(dataset))}/tables/${table}/ondeletedfileitems` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<DeletedItemList>("GET", url, undefined, undefined, abortSignal);
-
-        if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
-        }
-
-        return httpResponse.value as DeletedItemList;
-    }
-
-    /**
-     * When an item is deleted
-     * @remarks Triggers when an item is deleted in a list. This can only be used by site collection admins of the site where the list is located.
-     */
-    public async getOnDeletedItemsAsync(dataset: string, table: string, abortSignal?: AbortSignal): Promise<DeletedItemList> {
-        const requestPath = `/datasets/${encodeURIComponent(String(dataset))}/tables/${table}/ondeleteditems`;
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<DeletedItemList>("GET", url, undefined, undefined, abortSignal);
-
-        if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
-        }
-
-        return httpResponse.value as DeletedItemList;
-    }
-
-    /**
-     * When a file is created (properties only)
-     * @remarks Triggers when an item is created in a library. Returns only the properties stored in the library columns.             You can add a "Get file content" step and use the "File identifier" property returned by this action to get to the contents of the file.             When using this with the On-Premises Data Gateway, the name of the library to connect to may need to be entered manually.
-     */
-    public async getOnNewFileItemsAsync(dataset: string, table: string, folderPath?: string, view?: string, abortSignal?: AbortSignal): Promise<ItemsList> {
-        const queryParams: string[] = [];
-        if (folderPath !== undefined) {
-            queryParams.push(`folderPath=${encodeURIComponent(String(folderPath))}`);
-        }
-        if (view !== undefined) {
-            queryParams.push(`view=${encodeURIComponent(String(view))}`);
-        }
-        const requestPath = `/datasets/${encodeURIComponent(String(dataset))}/tables/${table}/onnewfileitems` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<ItemsList>("GET", url, undefined, undefined, abortSignal);
-
-        if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
-        }
-
-        return httpResponse.value as ItemsList;
-    }
-
-    /**
-     * When an item is created
-     * @remarks Triggers when an item is created.
-     */
-    public async getOnNewItemsAsync(dataset: string, table: string, view?: string, abortSignal?: AbortSignal): Promise<ItemsList> {
-        const queryParams: string[] = [];
-        if (view !== undefined) {
-            queryParams.push(`view=${encodeURIComponent(String(view))}`);
-        }
-        const requestPath = `/datasets/${encodeURIComponent(String(dataset))}/tables/${table}/onnewitems` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<ItemsList>("GET", url, undefined, undefined, abortSignal);
-
-        if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
-        }
-
-        return httpResponse.value as ItemsList;
-    }
-
-    /**
-     * When a file is classified by a Microsoft Syntex model
-     * @remarks Triggers a flow when Microsoft Syntex changes the classification date of any file in the library. The date changes when a document processing model classifies or extracts information.
-     */
-    public async getOnUpdatedFileClassifiedTimesAsync(dataset: string, table: string, folderPath?: string, view?: string, abortSignal?: AbortSignal): Promise<ItemsList> {
-        const queryParams: string[] = [];
-        if (folderPath !== undefined) {
-            queryParams.push(`folderPath=${encodeURIComponent(String(folderPath))}`);
-        }
-        if (view !== undefined) {
-            queryParams.push(`view=${encodeURIComponent(String(view))}`);
-        }
-        const requestPath = `/datasets/${encodeURIComponent(String(dataset))}/tables/${table}/onupdatedfileclassifiedtimes` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<ItemsList>("GET", url, undefined, undefined, abortSignal);
-
-        if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
-        }
-
-        return httpResponse.value as ItemsList;
-    }
-
-    /**
-     * When a file is created or modified (properties only)
-     * @remarks Triggers when an item is created, or modified in a library. Returns only the properties stored in the library columns.             You can add a "Get file content" step and use the "File identifier" property returned by this action to get to the contents of the file.             When using this with the On-Premises Data Gateway, the name of the library to connect to may need to be entered manually.
-     */
-    public async getOnUpdatedFileItemsAsync(dataset: string, table: string, folderPath?: string, view?: string, abortSignal?: AbortSignal): Promise<ItemsList> {
-        const queryParams: string[] = [];
-        if (folderPath !== undefined) {
-            queryParams.push(`folderPath=${encodeURIComponent(String(folderPath))}`);
-        }
-        if (view !== undefined) {
-            queryParams.push(`view=${encodeURIComponent(String(view))}`);
-        }
-        const requestPath = `/datasets/${encodeURIComponent(String(dataset))}/tables/${table}/onupdatedfileitems` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<ItemsList>("GET", url, undefined, undefined, abortSignal);
-
-        if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
-        }
-
-        return httpResponse.value as ItemsList;
-    }
-
-    /**
-     * When an item is created or modified
-     * @remarks Triggers when an item is created, and also each time it is modified.
-     */
-    public async getOnUpdatedItemsAsync(dataset: string, table: string, view?: string, abortSignal?: AbortSignal): Promise<ItemsList> {
-        const queryParams: string[] = [];
-        if (view !== undefined) {
-            queryParams.push(`view=${encodeURIComponent(String(view))}`);
-        }
-        const requestPath = `/datasets/${encodeURIComponent(String(dataset))}/tables/${table}/onupdateditems` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<ItemsList>("GET", url, undefined, undefined, abortSignal);
-
-        if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
-        }
-
-        return httpResponse.value as ItemsList;
-    }
-
-    /**
      * Generate document using Microsoft Syntex (preview)
      * @remarks Use this action to create documents based on modern templates from Microsoft Syntex. This preview requires a Syntex license. Pricing is subject to change. For more info see: https://docs.microsoft.com/en-us/microsoft-365/contentunderstanding/content-assembly.
      */
@@ -1960,61 +2198,6 @@ export class SharepointonlineClient extends ConnectorClientBase {
         }
 
         return httpResponse.value as Array<Table>;
-    }
-
-    /**
-     * When a file is created in a folder (deprecated)
-     * @remarks Triggers when a file is created in a SharePoint folder. The trigger does not fire if a file is added/updated in a subfolder. If it is required to trigger on subfolders, multiple triggers should be created.
-     */
-    public async onNewFileAsync(dataset: string, folderId?: string, inferContentType?: string, queryParametersSingleEncoded?: string, abortSignal?: AbortSignal): Promise<Blob> {
-        const queryParams: string[] = [];
-        if (folderId !== undefined) {
-            queryParams.push(`folderId=${encodeURIComponent(String(folderId))}`);
-        }
-        if (inferContentType !== undefined) {
-            queryParams.push(`inferContentType=${encodeURIComponent(String(inferContentType))}`);
-        }
-        if (queryParametersSingleEncoded !== undefined) {
-            queryParams.push(`queryParametersSingleEncoded=${encodeURIComponent(String(queryParametersSingleEncoded))}`);
-        }
-        const requestPath = `/datasets/${encodeURIComponent(String(dataset))}/triggers/onnewfile` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<Blob>("GET", url, undefined, undefined, abortSignal);
-
-        if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
-        }
-
-        return httpResponse.value as Blob;
-    }
-
-    /**
-     * When a file is created or modified in a folder (deprecated)
-     * @remarks Triggers when a file is created, and also each time it is modified in a SharePoint folder. The trigger does not fire if a file is added/updated in a subfolder. If it is required to trigger on subfolders, multiple triggers should be created.
-     */
-    public async onUpdatedFileAsync(dataset: string, folderId?: string, includeFileContent?: string, inferContentType?: string, queryParametersSingleEncoded?: string, abortSignal?: AbortSignal): Promise<Blob> {
-        const queryParams: string[] = [];
-        if (folderId !== undefined) {
-            queryParams.push(`folderId=${encodeURIComponent(String(folderId))}`);
-        }
-        if (includeFileContent !== undefined) {
-            queryParams.push(`includeFileContent=${encodeURIComponent(String(includeFileContent))}`);
-        }
-        if (inferContentType !== undefined) {
-            queryParams.push(`inferContentType=${encodeURIComponent(String(inferContentType))}`);
-        }
-        if (queryParametersSingleEncoded !== undefined) {
-            queryParams.push(`queryParametersSingleEncoded=${encodeURIComponent(String(queryParametersSingleEncoded))}`);
-        }
-        const requestPath = `/datasets/${encodeURIComponent(String(dataset))}/triggers/onupdatedfile` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<Blob>("GET", url, undefined, undefined, abortSignal);
-
-        if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
-        }
-
-        return httpResponse.value as Blob;
     }
 
     /**

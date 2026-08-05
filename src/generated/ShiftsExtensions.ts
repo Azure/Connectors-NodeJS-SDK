@@ -5,7 +5,6 @@ import { ConnectorClientBase } from "../azureConnectors/clientBase.ts";
 import { ConnectorException } from "../azureConnectors/connectorException.ts";
 import { ConnectorClientOptions } from "../azureConnectors/options.ts";
 import { TokenProvider } from "../azureConnectors/authentication.ts";
-import { TriggerCallbackPayload } from "../azureConnectors/triggerPayload.ts";
 
 // #region Types
 
@@ -696,17 +695,37 @@ export interface CreateTimeOffRequest {
 // #endregion Types
 
 export const ShiftsTriggerOperations = {
-    OnTriggerForOpenShiftChangeRequests: "TriggerForOpenShiftChangeRequests",
-    OnTriggerForSwapShiftsChangeRequests: "TriggerForSwapShiftsChangeRequests",
     OnTriggerForOfferShiftRequests: "TriggerForOfferShiftRequests",
-    OnTriggerForTimeOffRequests: "TriggerForTimeOffRequests",
+    OnTriggerForOpenShiftChangeRequests: "TriggerForOpenShiftChangeRequests",
     OnTriggerForShifts: "TriggerForShifts",
+    OnTriggerForSwapShiftsChangeRequests: "TriggerForSwapShiftsChangeRequests",
+    OnTriggerForTimeOffRequests: "TriggerForTimeOffRequests",
 } as const;
 
 export type ShiftsTriggerOperation = typeof ShiftsTriggerOperations[keyof typeof ShiftsTriggerOperations];
 
 export const ShiftsTriggerParameters = {
+    OnTriggerForOfferShiftRequests: {
+        teamId: {
+            name: "teamId",
+            type: "string",
+            required: true,
+            description: "Add Team ID",
+            summary: "Team",
+            dynamicValuesOperationId: "GetAllTeams",
+        },
+    },
     OnTriggerForOpenShiftChangeRequests: {
+        teamId: {
+            name: "teamId",
+            type: "string",
+            required: true,
+            description: "Add Team ID",
+            summary: "Team",
+            dynamicValuesOperationId: "GetAllTeams",
+        },
+    },
+    OnTriggerForShifts: {
         teamId: {
             name: "teamId",
             type: "string",
@@ -726,27 +745,7 @@ export const ShiftsTriggerParameters = {
             dynamicValuesOperationId: "GetAllTeams",
         },
     },
-    OnTriggerForOfferShiftRequests: {
-        teamId: {
-            name: "teamId",
-            type: "string",
-            required: true,
-            description: "Add Team ID",
-            summary: "Team",
-            dynamicValuesOperationId: "GetAllTeams",
-        },
-    },
     OnTriggerForTimeOffRequests: {
-        teamId: {
-            name: "teamId",
-            type: "string",
-            required: true,
-            description: "Add Team ID",
-            summary: "Team",
-            dynamicValuesOperationId: "GetAllTeams",
-        },
-    },
-    OnTriggerForShifts: {
         teamId: {
             name: "teamId",
             type: "string",

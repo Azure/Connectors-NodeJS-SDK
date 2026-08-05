@@ -5,21 +5,22 @@ import { ConnectorClientBase } from "../azureConnectors/clientBase.ts";
 import { ConnectorException } from "../azureConnectors/connectorException.ts";
 import { ConnectorClientOptions } from "../azureConnectors/options.ts";
 import { TokenProvider } from "../azureConnectors/authentication.ts";
+import { TriggerCallbackPayload } from "../azureConnectors/triggerPayload.ts";
 
 // #region Types
 
 /**
- * Create block blob (V2)
+ * Create block blob
  */
 export type CreateBlockBlobInput = string;
 
 /**
- * Create blob (V2)
+ * Create blob
  */
 export type CreateFileInput = string;
 
 /**
- * Update blob (V2)
+ * Update blob
  */
 export type UpdateFileInput = string;
 
@@ -235,7 +236,55 @@ export interface BlobDataSetsMetadata {
     /** Blob dataset url encoding */
     urlEncoding?: string;
 }
+
+/**
+ * Typed callback payload for trigger operation 'OnUpdatedFiles_V2'.
+ */
+export type AzureblobOnUpdatedFilesTriggerPayload = TriggerCallbackPayload<BlobMetadata>;
+
 // #endregion Types
+
+export const AzureblobTriggerOperations = {
+    OnUpdatedFiles: "OnUpdatedFiles_V2",
+} as const;
+
+export type AzureblobTriggerOperation = typeof AzureblobTriggerOperations[keyof typeof AzureblobTriggerOperations];
+
+export const AzureblobTriggerParameters = {
+    OnUpdatedFiles: {
+        dataset: {
+            name: "dataset",
+            type: "string",
+            required: true,
+            description: "Azure Storage account name or blob endpoint.",
+            summary: "Storage account name or blob endpoint",
+            dynamicValuesOperationId: "GetDataSets",
+        },
+        folderId: {
+            name: "folderId",
+            type: "string",
+            required: true,
+            description: "Select a container.",
+            summary: "Container",
+        },
+        maxFileCount: {
+            name: "maxFileCount",
+            type: "integer",
+            required: false,
+            description: "Maximum number of blobs to return from the trigger (1-100).",
+            summary: "Number of blobs to return",
+            defaultValue: "10",
+        },
+        checkBothCreatedAndModifiedDateTime: {
+            name: "checkBothCreatedAndModifiedDateTime",
+            type: "boolean",
+            required: false,
+            description: "If the flag is set to true, the trigger will check the file's created date and time and the file's last modified date and time. If the flag is set to false, the trigger will only check the file's last modified date and time.",
+            summary: "Check Created and Modified Time",
+            defaultValue: "false",
+        },
+    },
+} as const;
 
 // #region Client
 
@@ -259,7 +308,7 @@ export class AzureblobClient extends ConnectorClientBase {
     }
 
     /**
-     * Copy blob (V2)
+     * Copy blob
      * @remarks This operation copies a blob. If blob is being deleted/renamed on server right after it was copied, connector may return HTTP 404 error by it's design. Please use a delay for 1 minute before deleting or renaming newly created blob. Chunk transfer is not supported in this action. If source and destination are present in same storage account, please use relative path. Otherwise, maximum size of a source for copy blob operation is 50 MB.
      */
     public async copyFileAsync(dataset: string, source?: string, destination?: string, overwrite?: string, queryParametersSingleEncoded?: string, abortSignal?: AbortSignal): Promise<BlobMetadata> {
@@ -288,7 +337,7 @@ export class AzureblobClient extends ConnectorClientBase {
     }
 
     /**
-     * Create block blob (V2)
+     * Create block blob
      * @remarks This operation uploads a block blob to Azure Blob Storage.
      */
     public async createBlockBlobAsync(input: CreateBlockBlobInput, storageAccountName: string, folderPath?: string, name?: string, abortSignal?: AbortSignal): Promise<void> {
@@ -309,7 +358,7 @@ export class AzureblobClient extends ConnectorClientBase {
     }
 
     /**
-     * Create blob (V2)
+     * Create blob
      * @remarks This operation uploads a blob to Azure Blob Storage.
      */
     public async createFileAsync(input: CreateFileInput, dataset: string, folderPath?: string, name?: string, queryParametersSingleEncoded?: string, abortSignal?: AbortSignal): Promise<BlobMetadata> {
@@ -335,7 +384,7 @@ export class AzureblobClient extends ConnectorClientBase {
     }
 
     /**
-     * Create SAS URI by path (V2)
+     * Create SAS URI by path
      * @remarks This operation creates a SAS link for a blob using the path.
      */
     public async createShareLinkByPathAsync(input: SharedAccessSignatureBlobPolicy, storageAccountName: string, path?: string, abortSignal?: AbortSignal): Promise<SharedAccessSignature> {
@@ -355,7 +404,7 @@ export class AzureblobClient extends ConnectorClientBase {
     }
 
     /**
-     * Delete blob (V2)
+     * Delete blob
      * @remarks This operation deletes a blob.
      */
     public async deleteFileAsync(dataset: string, id: string, abortSignal?: AbortSignal): Promise<void> {
@@ -369,7 +418,7 @@ export class AzureblobClient extends ConnectorClientBase {
     }
 
     /**
-     * Extract archive to folder (V2)
+     * Extract archive to folder
      * @remarks This operation extracts an archive blob into a folder (example: .zip).
      */
     public async extractFolderAsync(dataset: string, source?: string, destination?: string, overwrite?: string, queryParametersSingleEncoded?: string, abortSignal?: AbortSignal): Promise<Array<BlobMetadata>> {
@@ -398,7 +447,7 @@ export class AzureblobClient extends ConnectorClientBase {
     }
 
     /**
-     * Get available access policies (V2)
+     * Get available access policies
      * @remarks This operation gets available shared access policies for a blob.
      */
     public async getAccessPoliciesAsync(storageAccountName: string, path?: string, abortSignal?: AbortSignal): Promise<Array<SharedAccessSignatureBlobPolicy>> {
@@ -418,7 +467,7 @@ export class AzureblobClient extends ConnectorClientBase {
     }
 
     /**
-     * Get blob content (V2)
+     * Get blob content
      * @remarks This operation retrieves blob contents using id.
      */
     public async getFileContentAsync(dataset: string, id: string, inferContentType?: string, extractSensitivityLabel?: string, purviewAccountName?: string, abortSignal?: AbortSignal): Promise<Blob> {
@@ -444,7 +493,7 @@ export class AzureblobClient extends ConnectorClientBase {
     }
 
     /**
-     * Get blob content using path (V2)
+     * Get blob content using path
      * @remarks This operation retrieves blob contents using path.
      */
     public async getFileContentByPathAsync(dataset: string, path?: string, inferContentType?: string, queryParametersSingleEncoded?: string, extractSensitivityLabel?: string, purviewAccountName?: string, abortSignal?: AbortSignal): Promise<Blob> {
@@ -476,7 +525,7 @@ export class AzureblobClient extends ConnectorClientBase {
     }
 
     /**
-     * Get Blob Metadata (V2)
+     * Get Blob Metadata
      * @remarks This operation retrieves blob metadata using blob id.
      */
     public async getFileMetadataAsync(dataset: string, id: string, extractSensitivityLabel?: string, purviewAccountName?: string, abortSignal?: AbortSignal): Promise<DataWithSensitivityLabelInfo> {
@@ -499,7 +548,7 @@ export class AzureblobClient extends ConnectorClientBase {
     }
 
     /**
-     * Get Blob Metadata using path (V2)
+     * Get Blob Metadata using path
      * @remarks This operation retrieves blob metadata using path.
      */
     public async getFileMetadataByPathAsync(dataset: string, path?: string, queryParametersSingleEncoded?: string, extractSensitivityLabel?: string, purviewAccountName?: string, abortSignal?: AbortSignal): Promise<DataWithSensitivityLabelInfo> {
@@ -528,7 +577,7 @@ export class AzureblobClient extends ConnectorClientBase {
     }
 
     /**
-     * Lists blobs (V2)
+     * Lists blobs
      * @remarks This operation lists blobs in a container.
      */
     public async listFolderAsync(dataset: string, id: string, nextPageMarker?: string, useFlatListing?: string, extractSensitivityLabel?: string, purviewAccountName?: string, abortSignal?: AbortSignal): Promise<ListOfBlobsWithSensitivityLabels> {
@@ -557,7 +606,7 @@ export class AzureblobClient extends ConnectorClientBase {
     }
 
     /**
-     * Lists blobs in the root folder  (V2)
+     * Lists blobs in the root folder
      * @remarks This operation lists blobs in the Azure Blob Storage root folder.
      */
     public async listRootFolderAsync(dataset: string, nextPageMarker?: string, useFlatListing?: string, abortSignal?: AbortSignal): Promise<BlobMetadataPage> {
@@ -580,33 +629,7 @@ export class AzureblobClient extends ConnectorClientBase {
     }
 
     /**
-     * When a blob is added or modified (properties only) (V2)
-     * @remarks This operation triggers a flow when one or more blobs are added or modified in a container. This trigger will only fetch the file metadata. To get the file content, you can use the \"Get file content\" operation. The trigger does not fire if a file is added/updated in a subfolder. If it is required to trigger on subfolders, multiple triggers should be created.
-     */
-    public async onUpdatedFilesAsync(dataset: string, folderId?: string, maxFileCount?: string, checkBothCreatedAndModifiedDateTime?: string, abortSignal?: AbortSignal): Promise<Array<BlobMetadata>> {
-        const queryParams: string[] = [];
-        if (folderId !== undefined) {
-            queryParams.push(`folderId=${encodeURIComponent(String(folderId))}`);
-        }
-        if (maxFileCount !== undefined) {
-            queryParams.push(`maxFileCount=${encodeURIComponent(String(maxFileCount))}`);
-        }
-        if (checkBothCreatedAndModifiedDateTime !== undefined) {
-            queryParams.push(`checkBothCreatedAndModifiedDateTime=${encodeURIComponent(String(checkBothCreatedAndModifiedDateTime))}`);
-        }
-        const requestPath = `/v2/datasets/${encodeURIComponent(String(dataset))}/triggers/batch/onupdatedfile` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<Array<BlobMetadata>>("GET", url, undefined, undefined, abortSignal);
-
-        if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
-        }
-
-        return httpResponse.value as Array<BlobMetadata>;
-    }
-
-    /**
-     * Set blob tier by path (V2)
+     * Set blob tier by path
      * @remarks This operation sets a tier for a block blob on a standard storage account using the path.
      */
     public async setBlobTierByPathAsync(storageAccountName: string, path?: string, newTier?: string, abortSignal?: AbortSignal): Promise<void> {
@@ -627,7 +650,7 @@ export class AzureblobClient extends ConnectorClientBase {
     }
 
     /**
-     * Update blob (V2)
+     * Update blob
      * @remarks This operation updates a blob in Azure Blob Storage.
      */
     public async updateFileAsync(input: UpdateFileInput, dataset: string, id: string, abortSignal?: AbortSignal): Promise<BlobMetadata> {

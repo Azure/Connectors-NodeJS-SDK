@@ -5,6 +5,7 @@ import { ConnectorClientBase } from "../azureConnectors/clientBase.ts";
 import { ConnectorException } from "../azureConnectors/connectorException.ts";
 import { ConnectorClientOptions } from "../azureConnectors/options.ts";
 import { TokenProvider } from "../azureConnectors/authentication.ts";
+import { TriggerCallbackPayload } from "../azureConnectors/triggerPayload.ts";
 
 // #region Types
 
@@ -131,7 +132,197 @@ export interface BlobMetadataPage {
     /** A URL which can be used to retrieve the next page. */
     nextLink?: string;
 }
+
+/**
+ * Typed callback payload for trigger operation 'OnNewFilesV2'.
+ */
+export type OnedriveforbusinessOnNewFilesTriggerPayload = TriggerCallbackPayload<BlobMetadata>;
+
+/**
+ * Typed callback payload for trigger operation 'OnUpdatedFilesV2'.
+ */
+export type OnedriveforbusinessOnUpdatedFilesTriggerPayload = TriggerCallbackPayload<BlobMetadata>;
+
 // #endregion Types
+
+export const OnedriveforbusinessTriggerOperations = {
+    OnNewFile: "OnNewFileV2",
+    OnNewFiles: "OnNewFilesV2",
+    OnUpdatedFile: "OnUpdatedFileV2",
+    OnUpdatedFiles: "OnUpdatedFilesV2",
+} as const;
+
+export type OnedriveforbusinessTriggerOperation = typeof OnedriveforbusinessTriggerOperations[keyof typeof OnedriveforbusinessTriggerOperations];
+
+export const OnedriveforbusinessTriggerParameters = {
+    OnNewFile: {
+        folderId: {
+            name: "folderId",
+            type: "string",
+            required: true,
+            description: "The unique identifier of the folder.",
+            summary: "Folder",
+        },
+        includeSubfolders: {
+            name: "includeSubfolders",
+            type: "boolean",
+            required: false,
+            description: "Include items in subfolders",
+            summary: "Include subfolders",
+            defaultValue: "false",
+        },
+        inferContentType: {
+            name: "inferContentType",
+            type: "boolean",
+            required: false,
+            description: "A boolean value (true, false) to infer content-type based on extension.",
+            summary: "Infer Content Type",
+            defaultValue: "true",
+        },
+        simulate: {
+            name: "simulate",
+            type: "boolean",
+            required: false,
+            description: "Simulate this call.",
+            summary: "Simulate",
+            defaultValue: "false",
+        },
+        xMsOperationContext: {
+            name: "x-ms-operation-context",
+            type: "string",
+            required: false,
+            description: "Special header to enable operation simulation",
+            summary: "x-ms-operation-context",
+        },
+    },
+    OnNewFiles: {
+        folderId: {
+            name: "folderId",
+            type: "string",
+            required: true,
+            description: "The unique identifier of the folder.",
+            summary: "Folder",
+        },
+        includeSubfolders: {
+            name: "includeSubfolders",
+            type: "boolean",
+            required: false,
+            description: "Include items in subfolders",
+            summary: "Include subfolders",
+            defaultValue: "false",
+        },
+        maxFileCount: {
+            name: "maxFileCount",
+            type: "integer",
+            required: false,
+            description: "Maximum number of files to return by single trigger run (1-100). Note that 'Split On' setting can force trigger to process each item individually.",
+            summary: "Number of files to return",
+            defaultValue: "10",
+        },
+        simulate: {
+            name: "simulate",
+            type: "boolean",
+            required: false,
+            description: "Simulate this call.",
+            summary: "Simulate",
+            defaultValue: "false",
+        },
+        xMsOperationContext: {
+            name: "x-ms-operation-context",
+            type: "string",
+            required: false,
+            description: "Special header to enable operation simulation",
+            summary: "x-ms-operation-context",
+        },
+    },
+    OnUpdatedFile: {
+        folderId: {
+            name: "folderId",
+            type: "string",
+            required: true,
+            description: "The unique identifier of the folder.",
+            summary: "Folder",
+        },
+        includeSubfolders: {
+            name: "includeSubfolders",
+            type: "boolean",
+            required: false,
+            description: "Include items in subfolders",
+            summary: "Include subfolders",
+            defaultValue: "false",
+        },
+        includeFileContent: {
+            name: "includeFileContent",
+            type: "boolean",
+            required: false,
+            summary: "Include file content",
+            defaultValue: "true",
+        },
+        inferContentType: {
+            name: "inferContentType",
+            type: "boolean",
+            required: false,
+            description: "A boolean value (true, false) to infer content-type based on extension.",
+            summary: "Infer Content Type",
+            defaultValue: "true",
+        },
+        simulate: {
+            name: "simulate",
+            type: "boolean",
+            required: false,
+            description: "Simulate this call.",
+            summary: "Simulate",
+            defaultValue: "false",
+        },
+        xMsOperationContext: {
+            name: "x-ms-operation-context",
+            type: "string",
+            required: false,
+            description: "Special header to enable operation simulation",
+            summary: "x-ms-operation-context",
+        },
+    },
+    OnUpdatedFiles: {
+        folderId: {
+            name: "folderId",
+            type: "string",
+            required: true,
+            description: "The unique identifier of the folder.",
+            summary: "Folder",
+        },
+        includeSubfolders: {
+            name: "includeSubfolders",
+            type: "boolean",
+            required: false,
+            description: "Include items in subfolders",
+            summary: "Include subfolders",
+            defaultValue: "false",
+        },
+        maxFileCount: {
+            name: "maxFileCount",
+            type: "integer",
+            required: false,
+            description: "Maximum number of files to return by single trigger run (1-100). Note that 'Split On' setting can force trigger to process each item individually.",
+            summary: "Number of files to return",
+            defaultValue: "10",
+        },
+        simulate: {
+            name: "simulate",
+            type: "boolean",
+            required: false,
+            description: "Simulate this call.",
+            summary: "Simulate",
+            defaultValue: "false",
+        },
+        xMsOperationContext: {
+            name: "x-ms-operation-context",
+            type: "string",
+            required: false,
+            description: "Special header to enable operation simulation",
+            summary: "x-ms-operation-context",
+        },
+    },
+} as const;
 
 // #region Client
 
@@ -640,125 +831,6 @@ export class OnedriveforbusinessClient extends ConnectorClientBase {
         }
 
         return httpResponse.value as BlobMetadataPage;
-    }
-
-    /**
-     * When a file is created
-     * @remarks This operation triggers a flow when a new file is created in a folder. Files larger than 50 MB will be skipped and not returned by this trigger. Files moved within OneDrive are not considered new files.
-     */
-    public async onNewFileAsync(folderId?: string, includeSubfolders?: string, inferContentType?: string, simulate?: string, abortSignal?: AbortSignal): Promise<Blob> {
-        const queryParams: string[] = [];
-        if (folderId !== undefined) {
-            queryParams.push(`folderId=${encodeURIComponent(String(folderId))}`);
-        }
-        if (includeSubfolders !== undefined) {
-            queryParams.push(`includeSubfolders=${encodeURIComponent(String(includeSubfolders))}`);
-        }
-        if (inferContentType !== undefined) {
-            queryParams.push(`inferContentType=${encodeURIComponent(String(inferContentType))}`);
-        }
-        if (simulate !== undefined) {
-            queryParams.push(`simulate=${encodeURIComponent(String(simulate))}`);
-        }
-        const requestPath = `/datasets/default/triggers/onnewfilev2` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<Blob>("GET", url, undefined, undefined, abortSignal);
-
-        if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
-        }
-
-        return httpResponse.value as Blob;
-    }
-
-    /**
-     * When a file is created (properties only)
-     * @remarks This operation triggers a flow when a new file is created in a folder.  Files moved within OneDrive are not considered new files.
-     */
-    public async onNewFilesAsync(folderId?: string, includeSubfolders?: string, maxFileCount?: string, simulate?: string, abortSignal?: AbortSignal): Promise<Array<BlobMetadata>> {
-        const queryParams: string[] = [];
-        if (folderId !== undefined) {
-            queryParams.push(`folderId=${encodeURIComponent(String(folderId))}`);
-        }
-        if (includeSubfolders !== undefined) {
-            queryParams.push(`includeSubfolders=${encodeURIComponent(String(includeSubfolders))}`);
-        }
-        if (maxFileCount !== undefined) {
-            queryParams.push(`maxFileCount=${encodeURIComponent(String(maxFileCount))}`);
-        }
-        if (simulate !== undefined) {
-            queryParams.push(`simulate=${encodeURIComponent(String(simulate))}`);
-        }
-        const requestPath = `/datasets/default/triggers/batch/onnewfilesv2` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<Array<BlobMetadata>>("GET", url, undefined, undefined, abortSignal);
-
-        if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
-        }
-
-        return httpResponse.value as Array<BlobMetadata>;
-    }
-
-    /**
-     * When a file is modified
-     * @remarks This operation triggers a flow when a file is modified in a folder. Files larger than 50 MB will be skipped and not returned by this trigger.
-     */
-    public async onUpdatedFileAsync(folderId?: string, includeSubfolders?: string, includeFileContent?: string, inferContentType?: string, simulate?: string, abortSignal?: AbortSignal): Promise<Blob> {
-        const queryParams: string[] = [];
-        if (folderId !== undefined) {
-            queryParams.push(`folderId=${encodeURIComponent(String(folderId))}`);
-        }
-        if (includeSubfolders !== undefined) {
-            queryParams.push(`includeSubfolders=${encodeURIComponent(String(includeSubfolders))}`);
-        }
-        if (includeFileContent !== undefined) {
-            queryParams.push(`includeFileContent=${encodeURIComponent(String(includeFileContent))}`);
-        }
-        if (inferContentType !== undefined) {
-            queryParams.push(`inferContentType=${encodeURIComponent(String(inferContentType))}`);
-        }
-        if (simulate !== undefined) {
-            queryParams.push(`simulate=${encodeURIComponent(String(simulate))}`);
-        }
-        const requestPath = `/datasets/default/triggers/onupdatedfilev2` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<Blob>("GET", url, undefined, undefined, abortSignal);
-
-        if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
-        }
-
-        return httpResponse.value as Blob;
-    }
-
-    /**
-     * When a file is modified (properties only)
-     * @remarks This operation triggers a flow when a file is modified in a folder.
-     */
-    public async onUpdatedFilesAsync(folderId?: string, includeSubfolders?: string, maxFileCount?: string, simulate?: string, abortSignal?: AbortSignal): Promise<Array<BlobMetadata>> {
-        const queryParams: string[] = [];
-        if (folderId !== undefined) {
-            queryParams.push(`folderId=${encodeURIComponent(String(folderId))}`);
-        }
-        if (includeSubfolders !== undefined) {
-            queryParams.push(`includeSubfolders=${encodeURIComponent(String(includeSubfolders))}`);
-        }
-        if (maxFileCount !== undefined) {
-            queryParams.push(`maxFileCount=${encodeURIComponent(String(maxFileCount))}`);
-        }
-        if (simulate !== undefined) {
-            queryParams.push(`simulate=${encodeURIComponent(String(simulate))}`);
-        }
-        const requestPath = `/datasets/default/triggers/batch/onupdatedfilesv2` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<Array<BlobMetadata>>("GET", url, undefined, undefined, abortSignal);
-
-        if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
-        }
-
-        return httpResponse.value as Array<BlobMetadata>;
     }
 
 }

@@ -221,7 +221,7 @@ export class SlackClient extends ConnectorClientBase {
     }
 
     /**
-     * Post message (V2)
+     * Post message
      * @remarks This operation is used to post a message to the specified channel.
      */
     public async postMessageAsync(input: PostMessageRequest, abortSignal?: AbortSignal): Promise<PostMessageResponse> {

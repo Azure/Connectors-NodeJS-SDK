@@ -31,21 +31,21 @@ export interface GetCurrentUserResponse {
 }
 
 /**
- * Response for Cancel Task (V2)
+ * Response for Cancel Task
  */
 export interface CancelTaskResponse {
     [key: string]: unknown;
 }
 
 /**
- * Create a new issue (V3)
+ * Create a new issue
  */
 export interface CreateIssueInput {
     [key: string]: unknown;
 }
 
 /**
- * Create a new project (V2)
+ * Create a new project
  */
 export interface CreateProjectInput {
     /** The unique key, starts with a capital letter. */
@@ -61,7 +61,7 @@ export interface CreateProjectInput {
 }
 
 /**
- * Create Project Category (V2)
+ * Create Project Category
  */
 export interface CreateProjectCategoryInput {
     /** Name */
@@ -71,14 +71,14 @@ export interface CreateProjectCategoryInput {
 }
 
 /**
- * Response for Create Project Category (V2)
+ * Response for Create Project Category
  */
 export interface CreateProjectCategoryResponse {
     [key: string]: unknown;
 }
 
 /**
- * Edit Issue (V2)
+ * Edit Issue
  */
 export interface EditIssueInput {
     /** Transition */
@@ -94,28 +94,28 @@ export interface EditIssueInput {
 }
 
 /**
- * Response for Edit Issue (V2)
+ * Response for Edit Issue
  */
 export interface EditIssueResponse {
     [key: string]: unknown;
 }
 
 /**
- * Response for Get Task (V2)
+ * Response for Get Task
  */
 export interface GetTaskResponse {
     [key: string]: unknown;
 }
 
 /**
- * Response for Get User (V2)
+ * Response for Get User
  */
 export interface GetUserResponse {
     [key: string]: unknown;
 }
 
 /**
- * Update Project (V2)
+ * Update Project
  */
 export interface UpdateProjectInput {
     /** Key */
@@ -149,7 +149,7 @@ export interface UpdateProjectInput {
 }
 
 /**
- * Response for Update Project (V2)
+ * Response for Update Project
  */
 export interface UpdateProjectResponse {
     [key: string]: unknown;
@@ -449,9 +449,9 @@ export interface MCPQueryResponse {
 }
 
 /**
- * Typed callback payload for trigger operation 'OnNewIssue_Datacenter'.
+ * Typed callback payload for trigger operation 'OnCloseIssue_V2'.
  */
-export type JiraOnNewIssueDatacenterTriggerPayload = TriggerCallbackPayload<FullIssue>;
+export type JiraOnCloseIssueTriggerPayload = TriggerCallbackPayload<FullIssue>;
 
 /**
  * Typed callback payload for trigger operation 'OnCloseIssue_Datacenter'.
@@ -459,40 +459,40 @@ export type JiraOnNewIssueDatacenterTriggerPayload = TriggerCallbackPayload<Full
 export type JiraOnCloseIssueDatacenterTriggerPayload = TriggerCallbackPayload<FullIssue>;
 
 /**
- * Typed callback payload for trigger operation 'OnNewIssueJQL_Datacenter'.
- */
-export type JiraOnNewIssueJQLDatacenterTriggerPayload = TriggerCallbackPayload<FullIssue>;
-
-/**
- * Typed callback payload for trigger operation 'OnCloseIssue_V2'.
- */
-export type JiraOnCloseIssueTriggerPayload = TriggerCallbackPayload<FullIssue>;
-
-/**
  * Typed callback payload for trigger operation 'OnNewIssue_V2'.
  */
 export type JiraOnNewIssueTriggerPayload = TriggerCallbackPayload<FullIssue>;
+
+/**
+ * Typed callback payload for trigger operation 'OnNewIssue_Datacenter'.
+ */
+export type JiraOnNewIssueDatacenterTriggerPayload = TriggerCallbackPayload<FullIssue>;
 
 /**
  * Typed callback payload for trigger operation 'OnNewIssueJQL_V2'.
  */
 export type JiraOnNewIssueJQLTriggerPayload = TriggerCallbackPayload<FullIssue>;
 
+/**
+ * Typed callback payload for trigger operation 'OnNewIssueJQL_Datacenter'.
+ */
+export type JiraOnNewIssueJQLDatacenterTriggerPayload = TriggerCallbackPayload<FullIssue>;
+
 // #endregion Types
 
 export const JiraTriggerOperations = {
-    OnNewIssueDatacenter: "OnNewIssue_Datacenter",
-    OnCloseIssueDatacenter: "OnCloseIssue_Datacenter",
-    OnNewIssueJQLDatacenter: "OnNewIssueJQL_Datacenter",
     OnCloseIssue: "OnCloseIssue_V2",
+    OnCloseIssueDatacenter: "OnCloseIssue_Datacenter",
     OnNewIssue: "OnNewIssue_V2",
+    OnNewIssueDatacenter: "OnNewIssue_Datacenter",
     OnNewIssueJQL: "OnNewIssueJQL_V2",
+    OnNewIssueJQLDatacenter: "OnNewIssueJQL_Datacenter",
 } as const;
 
 export type JiraTriggerOperation = typeof JiraTriggerOperations[keyof typeof JiraTriggerOperations];
 
 export const JiraTriggerParameters = {
-    OnNewIssueDatacenter: {
+    OnCloseIssue: {
         xRequestJirainstance: {
             name: "X-Request-Jirainstance",
             type: "string",
@@ -528,42 +528,6 @@ export const JiraTriggerParameters = {
             dynamicValuesOperationId: "ListProjects_V3",
         },
     },
-    OnNewIssueJQLDatacenter: {
-        xRequestJirainstance: {
-            name: "X-Request-Jirainstance",
-            type: "string",
-            required: false,
-            description: "The url where your Jira instance is hosted (must support https). ",
-            summary: "Jira instance",
-            dynamicValuesOperationId: "ListResources",
-        },
-        jql: {
-            name: "jql",
-            type: "string",
-            required: true,
-            description: "Query to use.",
-            summary: "JQL Query",
-            defaultValue: "",
-        },
-    },
-    OnCloseIssue: {
-        xRequestJirainstance: {
-            name: "X-Request-Jirainstance",
-            type: "string",
-            required: false,
-            description: "The url where your Jira instance is hosted (must support https). ",
-            summary: "Jira instance",
-            dynamicValuesOperationId: "ListResources",
-        },
-        projectKey: {
-            name: "projectKey",
-            type: "string",
-            required: true,
-            description: "Unique key of the project to look for new issues.",
-            summary: "Project",
-            dynamicValuesOperationId: "ListProjects_V3",
-        },
-    },
     OnNewIssue: {
         xRequestJirainstance: {
             name: "X-Request-Jirainstance",
@@ -582,7 +546,43 @@ export const JiraTriggerParameters = {
             dynamicValuesOperationId: "ListProjects_V3",
         },
     },
+    OnNewIssueDatacenter: {
+        xRequestJirainstance: {
+            name: "X-Request-Jirainstance",
+            type: "string",
+            required: false,
+            description: "The url where your Jira instance is hosted (must support https). ",
+            summary: "Jira instance",
+            dynamicValuesOperationId: "ListResources",
+        },
+        projectKey: {
+            name: "projectKey",
+            type: "string",
+            required: true,
+            description: "Unique key of the project to look for new issues.",
+            summary: "Project",
+            dynamicValuesOperationId: "ListProjects_V3",
+        },
+    },
     OnNewIssueJQL: {
+        xRequestJirainstance: {
+            name: "X-Request-Jirainstance",
+            type: "string",
+            required: false,
+            description: "The url where your Jira instance is hosted (must support https). ",
+            summary: "Jira instance",
+            dynamicValuesOperationId: "ListResources",
+        },
+        jql: {
+            name: "jql",
+            type: "string",
+            required: true,
+            description: "Query to use.",
+            summary: "JQL Query",
+            defaultValue: "",
+        },
+    },
+    OnNewIssueJQLDatacenter: {
         xRequestJirainstance: {
             name: "X-Request-Jirainstance",
             type: "string",
@@ -754,7 +754,7 @@ export class JiraClient extends ConnectorClientBase {
     }
 
     /**
-     * Add comment (V2)
+     * Add comment
      * @remarks This operation is used to add a comment to an existing Jira issue.
      */
     public async addCommentAsync(input: Comment, issueKey: string, abortSignal?: AbortSignal): Promise<CommentResponse> {
@@ -770,7 +770,7 @@ export class JiraClient extends ConnectorClientBase {
     }
 
     /**
-     * Cancel Task (V2)
+     * Cancel Task
      * @remarks Cancels a task. Permissions required: either of: Administer Jira or Creator of the task.
      */
     public async cancelTaskAsync(taskId: string, abortSignal?: AbortSignal): Promise<CancelTaskResponse> {
@@ -786,7 +786,7 @@ export class JiraClient extends ConnectorClientBase {
     }
 
     /**
-     * Create a new issue (V3)
+     * Create a new issue
      * @remarks This operation is used to create a new issue.
      */
     public async createIssueAsync(input: CreateIssueInput, projectKey?: string, issueTypeIds?: string, abortSignal?: AbortSignal): Promise<CreateIssueResponse> {
@@ -809,7 +809,7 @@ export class JiraClient extends ConnectorClientBase {
     }
 
     /**
-     * Create a new project (V2)
+     * Create a new project
      * @remarks This operation is used to create a new Jira project.
      */
     public async createProjectAsync(input: CreateProjectInput, abortSignal?: AbortSignal): Promise<CreateProjectResponse> {
@@ -825,7 +825,7 @@ export class JiraClient extends ConnectorClientBase {
     }
 
     /**
-     * Create Project Category (V2)
+     * Create Project Category
      * @remarks Creates a project category. Permissions required: Administer Jira (global permissions)
      */
     public async createProjectCategoryAsync(input: CreateProjectCategoryInput, abortSignal?: AbortSignal): Promise<CreateProjectCategoryResponse> {
@@ -841,7 +841,7 @@ export class JiraClient extends ConnectorClientBase {
     }
 
     /**
-     * Delete Project (V2)
+     * Delete Project
      * @remarks Deletes a project. Permissions required: Administer Jira (global permissions)
      */
     public async deleteProjectAsync(projectIdOrKey: string, enableUndo?: string, abortSignal?: AbortSignal): Promise<void> {
@@ -859,7 +859,7 @@ export class JiraClient extends ConnectorClientBase {
     }
 
     /**
-     * Edit Issue (V2)
+     * Edit Issue
      * @remarks Edits an issue. A transition may be applied and issue properties updated as part of the edit. The edits to the issue's fields are defined using update and fields.
      */
     public async editIssueAsync(input: EditIssueInput, issueIdOrKey: string, notifyUsers?: string, overrideScreenSecurity?: string, overrideEditableFlag?: string, abortSignal?: AbortSignal): Promise<EditIssueResponse> {
@@ -885,7 +885,7 @@ export class JiraClient extends ConnectorClientBase {
     }
 
     /**
-     * Get All Project Categories (V2)
+     * Get All Project Categories
      * @remarks Returns all project categories.
      */
     public async getAllProjectCategoriesAsync(abortSignal?: AbortSignal): Promise<Array<Record<string, unknown>>> {
@@ -901,7 +901,7 @@ export class JiraClient extends ConnectorClientBase {
     }
 
     /**
-     * Get issue by key (V2)
+     * Get issue by key
      * @remarks This operation is used to retrieve the issue object for a given issue Key.
      */
     public async getIssueAsync(issueKey: string, abortSignal?: AbortSignal): Promise<FullIssue> {
@@ -917,7 +917,7 @@ export class JiraClient extends ConnectorClientBase {
     }
 
     /**
-     * Get Task (V2)
+     * Get Task
      * @remarks Returns the status of a long-running asynchronous task. When a task has finished, this operation returns the JSON blob applicable to the task.
      */
     public async getTaskAsync(taskId: string, abortSignal?: AbortSignal): Promise<GetTaskResponse> {
@@ -933,7 +933,7 @@ export class JiraClient extends ConnectorClientBase {
     }
 
     /**
-     * Get User (V2)
+     * Get User
      * @remarks Returns a user. Permissions required: Browse users and groups.
      */
     public async getUserAsync(accountId?: string, expand?: string, abortSignal?: AbortSignal): Promise<GetUserResponse> {
@@ -956,7 +956,7 @@ export class JiraClient extends ConnectorClientBase {
     }
 
     /**
-     * Get list of Filters (V2)
+     * Get list of Filters
      * @remarks This operation returns a list of Filters accessible to user.
      */
     public async listFiltersAsync(abortSignal?: AbortSignal): Promise<ListFiltersResponse> {
@@ -972,7 +972,7 @@ export class JiraClient extends ConnectorClientBase {
     }
 
     /**
-     * Get projects (V2)
+     * Get projects
      * @remarks This operation is used to retrieve a list of projects for your Jira instance.
      */
     public async listProjectsAsync(abortSignal?: AbortSignal): Promise<ListProjectsResponse> {
@@ -988,7 +988,7 @@ export class JiraClient extends ConnectorClientBase {
     }
 
     /**
-     * List users by project (V2)
+     * List users by project
      * @remarks This operation is used to retrieve a list of all users associated with a project.
      */
     public async listProjectUsersAsync(projectKey?: string, abortSignal?: AbortSignal): Promise<Array<Record<string, unknown>>> {
@@ -1008,7 +1008,7 @@ export class JiraClient extends ConnectorClientBase {
     }
 
     /**
-     * Remove Project Category (V2)
+     * Remove Project Category
      * @remarks Deletes a project category. Permissions required: Administer Jira (global permissions)
      */
     public async removeProjectCategoryAsync(id: string, abortSignal?: AbortSignal): Promise<void> {
@@ -1022,7 +1022,7 @@ export class JiraClient extends ConnectorClientBase {
     }
 
     /**
-     * Update Project (V2)
+     * Update Project
      * @remarks Updates the project details of a project.
      */
     public async updateProjectAsync(input: UpdateProjectInput, projectIdOrKey: string, abortSignal?: AbortSignal): Promise<UpdateProjectResponse> {

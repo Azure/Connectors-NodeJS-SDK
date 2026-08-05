@@ -35,7 +35,7 @@ export interface TrendingDocumentsResponse {
 export type HttpRequestInput = string;
 
 /**
- * Response for Get direct reports (V2)
+ * Response for Get direct reports
  */
 export interface DirectReportsResponse {
     /** Value */
@@ -493,7 +493,7 @@ export class Office365usersClient extends ConnectorClientBase {
     }
 
     /**
-     * Get direct reports (V2)
+     * Get direct reports
      * @remarks Retrieves the user profiles of the specified user's direct reports. Learn more about available fields to select: https://developer.microsoft.com/en-us/graph/docs/api-reference/v1.0/resources/user#properties
      */
     public async directReportsAsync(id: string, select?: string, top?: string, abortSignal?: AbortSignal): Promise<DirectReportsResponse> {
@@ -516,7 +516,7 @@ export class Office365usersClient extends ConnectorClientBase {
     }
 
     /**
-     * Get manager (V2)
+     * Get manager
      * @remarks Retrieves the profile of the specified user's manager. Learn more about available fields to select: https://developer.microsoft.com/en-us/graph/docs/api-reference/v1.0/resources/user#properties
      */
     public async managerAsync(id: string, select?: string, abortSignal?: AbortSignal): Promise<GraphUser> {
@@ -536,7 +536,7 @@ export class Office365usersClient extends ConnectorClientBase {
     }
 
     /**
-     * Get my profile (V2)
+     * Get my profile
      * @remarks Retrieves the profile of the current user. Learn more about available fields to select: https://developer.microsoft.com/en-us/graph/docs/api-reference/v1.0/resources/user#properties
      */
     public async myProfileAsync(select?: string, abortSignal?: AbortSignal): Promise<GraphUser> {
@@ -556,7 +556,7 @@ export class Office365usersClient extends ConnectorClientBase {
     }
 
     /**
-     * Search for users (V2)
+     * Search for users
      * @remarks Retrieves the user profiles that match the search term (V2).
      */
     public async searchUserAsync(searchTerm?: string, top?: string, isSearchTermRequired?: string, skipToken?: string, abortSignal?: AbortSignal): Promise<EntityListResponseIReadOnlyListUser> {
@@ -585,7 +585,7 @@ export class Office365usersClient extends ConnectorClientBase {
     }
 
     /**
-     * Get user photo (V2)
+     * Get user photo
      * @remarks Retrieves the photo of the specified user if they have one
      */
     public async userPhotoAsync(id: string, abortSignal?: AbortSignal): Promise<Blob> {
@@ -601,7 +601,7 @@ export class Office365usersClient extends ConnectorClientBase {
     }
 
     /**
-     * Get user profile (V2)
+     * Get user profile
      * @remarks Retrieves the profile of a specific user. Learn more about available fields to select: https://developer.microsoft.com/en-us/graph/docs/api-reference/v1.0/resources/user#properties
      */
     public async userProfileAsync(id: string, select?: string, abortSignal?: AbortSignal): Promise<GraphUser> {
