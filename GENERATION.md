@@ -103,6 +103,7 @@ inputs it consumed.
 | `swaggerSource.swaggerCacheDirectory` | Directory holding the content-addressed Swagger snapshots. |
 | `connectors[].swaggerSnapshot` | Path to the persisted Swagger the run consumed for that connector. |
 | `connectors[].swaggerSha256` | SHA-256 of that snapshot, so byte-level reproduction is verifiable. |
+| `connectors[].outputSha256` | SHA-256 of the generated `outputFile`, so provenance and generated outputs stay atomically bound. |
 
 ### Recording provenance for a run
 
@@ -128,6 +129,10 @@ foreach ($connector in $manifest.connectors) {
     if (Test-Path $connector.swaggerSnapshot) {
         $connector.swaggerSha256 = (Get-FileHash $connector.swaggerSnapshot -Algorithm SHA256).Hash.ToLowerInvariant()
     }
+
+  if (Test-Path $connector.outputFile) {
+    $connector.outputSha256 = (Get-FileHash $connector.outputFile -Algorithm SHA256).Hash.ToLowerInvariant()
+  }
 }
 
 $manifest | ConvertTo-Json -Depth 6 | Set-Content generation.manifest.json -Encoding utf8
@@ -143,8 +148,9 @@ $manifest | ConvertTo-Json -Depth 6 | Set-Content generation.manifest.json -Enco
   they always match the actual run.
 - **The `tests/generationManifest.test.ts` guard runs in CI** and fails the build unless
   `status` is `generated`, `generator.bpmCommit` is populated, and every
-  `connectors[].swaggerSha256` matches the SHA-256 of its committed `swagger-cache/`
-  snapshot. Regenerate rather than hand-editing so the guard stays green.
+  `connectors[].swaggerSha256` and `connectors[].outputSha256` matches the SHA-256 of
+  its committed `swagger-cache/` snapshot and generated output. Regenerate rather than
+  hand-editing so the guard stays green.
 
 ## Post-Generation Validation
 

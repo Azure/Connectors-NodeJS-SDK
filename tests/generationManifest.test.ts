@@ -19,6 +19,7 @@ interface ManifestConnectorEntry {
     outputFile: string;
     swaggerSnapshot: string;
     swaggerSha256: string;
+    outputSha256: string;
 }
 
 /**
@@ -95,6 +96,16 @@ describe("generation.manifest.json provenance", () => {
             expect(fs.existsSync(path.join(RepositoryRoot, connector.swaggerSnapshot))).toBe(true);
             expect(fs.existsSync(path.join(RepositoryRoot, connector.outputFile))).toBe(true);
             expect(computeSha256(connector.swaggerSnapshot)).toBe(connector.swaggerSha256);
+        },
+    );
+
+    it.each(connectorCases)(
+        "should match the committed generated output hash for '%s'",
+        (_apiName: string, connector: ManifestConnectorEntry) => {
+            expect(typeof connector.outputSha256).toBe("string");
+            expect(connector.outputSha256).toMatch(/^[0-9a-f]{64}$/);
+            expect(fs.existsSync(path.join(RepositoryRoot, connector.outputFile))).toBe(true);
+            expect(computeSha256(connector.outputFile)).toBe(connector.outputSha256);
         },
     );
 
