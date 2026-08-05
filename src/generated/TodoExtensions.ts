@@ -335,7 +335,7 @@ export class TodoClient extends ConnectorClientBase {
     }
 
     /**
-     * Add a to-do (V3)
+     * Add a to-do
      * @remarks This operation is used to create a to-do in the specified to-do list.
      */
     public async createToDoAsync(input: CreateToDo, folderId: string, abortSignal?: AbortSignal): Promise<ToDo> {
@@ -351,7 +351,7 @@ export class TodoClient extends ConnectorClientBase {
     }
 
     /**
-     * Create a to-do list (V2)
+     * Create a to-do list
      * @remarks This operation is used to create a new to-do list.
      */
     public async createToDoListAsync(input: CreateToDoList, abortSignal?: AbortSignal): Promise<TodoList> {
@@ -367,7 +367,7 @@ export class TodoClient extends ConnectorClientBase {
     }
 
     /**
-     * Delete to-do (V2)
+     * Delete to-do
      * @remarks This operation is used to delete a task.
      */
     public async deleteToDoAsync(folderId: string, id: string, abortSignal?: AbortSignal): Promise<void> {
@@ -381,7 +381,7 @@ export class TodoClient extends ConnectorClientBase {
     }
 
     /**
-     * List all to-do lists (V2)
+     * List all to-do lists
      * @remarks Returns a list of all the to-do lists.
      */
     public async getAllTodoListsAsync(abortSignal?: AbortSignal): Promise<Array<TodoList>> {
@@ -397,7 +397,7 @@ export class TodoClient extends ConnectorClientBase {
     }
 
     /**
-     * Get a to-do (V3)
+     * Get a to-do
      * @remarks This operation is used to get the to-do with the given Id.
      */
     public async getToDoAsync(folderId: string, id: string, abortSignal?: AbortSignal): Promise<ToDo> {
@@ -413,7 +413,7 @@ export class TodoClient extends ConnectorClientBase {
     }
 
     /**
-     * Get a to-do list (V2)
+     * Get a to-do list
      * @remarks This operation is used to get a specific to-do list.
      */
     public async getToDoListAsync(folderId: string, abortSignal?: AbortSignal): Promise<TodoList> {
@@ -429,7 +429,7 @@ export class TodoClient extends ConnectorClientBase {
     }
 
     /**
-     * List to-do's by folder (V2)
+     * List to-do's by folder
      * @remarks This operation is used to retrieve all to-do's from a specific list.
      */
     public async listToDosByFolderAsync(folderId: string, top?: string, abortSignal?: AbortSignal): Promise<Array<ToDo>> {
@@ -449,7 +449,7 @@ export class TodoClient extends ConnectorClientBase {
     }
 
     /**
-     * Update to-do (V2)
+     * Update to-do
      * @remarks This operation is used to update a specific to-do.
      */
     public async updateToDoAsync(input: UpdateToDo, folderId: string, id: string, abortSignal?: AbortSignal): Promise<ToDo> {

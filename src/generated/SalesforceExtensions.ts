@@ -34,28 +34,28 @@ export interface GetItemResponse {
 }
 
 /**
- * Update record (V3)
+ * Update record
  */
 export interface PatchItemInput {
     [key: string]: unknown;
 }
 
 /**
- * Response for Update record (V3)
+ * Response for Update record
  */
 export interface PatchItemResponse {
     [key: string]: unknown;
 }
 
 /**
- * Insert or Update (Upsert) a Record by External ID (V2)
+ * Insert or Update (Upsert) a Record by External ID
  */
 export interface PatchItemByExternalIdInput {
     [key: string]: unknown;
 }
 
 /**
- * Response for Insert or Update (Upsert) a Record by External ID (V2)
+ * Response for Insert or Update (Upsert) a Record by External ID
  */
 export interface PatchItemByExternalIdResponse {
     [key: string]: unknown;
@@ -1075,7 +1075,7 @@ export class SalesforceClient extends ConnectorClientBase {
     }
 
     /**
-     * Create a job (V2)
+     * Create a job
      * @remarks Creates a job, which represents a bulk operation (and associated data) that is sent to Salesforce for asynchronous processing. Provide job data via an Upload Job Data request.
      */
     public async createJobAsync(input: CreateJobParameters, abortSignal?: AbortSignal): Promise<CreateJobResponse> {
@@ -1111,7 +1111,7 @@ export class SalesforceClient extends ConnectorClientBase {
     }
 
     /**
-     * Update record (V3)
+     * Update record
      * @remarks This operation updates a record and allows null values.
      */
     public async patchItemAsync(input: PatchItemInput, table: string, id: string, select?: string, abortSignal?: AbortSignal): Promise<PatchItemResponse> {
@@ -1131,7 +1131,7 @@ export class SalesforceClient extends ConnectorClientBase {
     }
 
     /**
-     * Insert or Update (Upsert) a Record by External ID (V2)
+     * Insert or Update (Upsert) a Record by External ID
      * @remarks This operation inserts or updates (upserts) a record using an external ID.
      */
     public async patchItemByExternalIdAsync(input: PatchItemByExternalIdInput, table: string, externalIdField: string, externalId: string, abortSignal?: AbortSignal): Promise<PatchItemByExternalIdResponse> {

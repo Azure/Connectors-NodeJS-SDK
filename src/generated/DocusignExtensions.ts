@@ -1945,7 +1945,7 @@ export class DocusignClient extends ConnectorClientBase {
     }
 
     /**
-     * Add recipient to an envelope (V2)
+     * Add recipient to an envelope
      * @remarks Add recipient to an envelope.
      */
     public async addRecipientToEnvelopeAsync(input: AdditionalRecipientParamsSchema, accountId: string, envelopeId: string, recipientType?: string, clientUserId?: string, recipientId?: string, embeddedRecipientStartURL?: string, routingOrder?: string, emailNotificationLanguage?: string, emailNotificationSubject?: string, emailNotificationBody?: string, note?: string, roleName?: string, countryCode?: string, phoneNumber?: string, signingGroupId?: string, signatureType?: string, workflowId?: string, abortSignal?: AbortSignal): Promise<Signer> {
@@ -2007,7 +2007,7 @@ export class DocusignClient extends ConnectorClientBase {
     }
 
     /**
-     * Create envelope (V2)
+     * Create envelope
      * @remarks Create a new blank envelope.
      */
     public async createBlankEnvelopeAsync(input: CombinedEmailBodyAndCustomFields, accountId: string, emailSubject?: string, abortSignal?: AbortSignal): Promise<CreateEnvelopeResponse> {
@@ -2027,8 +2027,8 @@ export class DocusignClient extends ConnectorClientBase {
     }
 
     /**
-     * Generate Embedded Signing URL (V2)
-     * @remarks Generate Embedded Signing URL (V2)
+     * Generate Embedded Signing URL
+     * @remarks Generate Embedded Signing URL
      */
     public async generateEmbeddedSigningURLAsync(input: DynamicSigningUrlFields, accountId: string, envelopeId: string, isInPersonSigner?: string, authenticationMethod?: string, returnUrl?: string, abortSignal?: AbortSignal): Promise<EmbeddedSigningResponse> {
         const queryParams: string[] = [];

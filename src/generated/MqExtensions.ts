@@ -9,7 +9,7 @@ import { TokenProvider } from "../azureConnectors/authentication.ts";
 // #region Types
 
 /**
- * Response for Send message (v2)
+ * Response for Send message
  */
 export interface SendResponse {
     ItemInternalId?: string;
@@ -173,7 +173,7 @@ export class MqClient extends ConnectorClientBase {
     }
 
     /**
-     * Delete message (v2)
+     * Delete message
      * @remarks Deletes one message from the queue, by doing a destructive get.
      */
     public async deleteAsync(input: SingleGetValidOptions, abortSignal?: AbortSignal): Promise<Item> {
@@ -189,7 +189,7 @@ export class MqClient extends ConnectorClientBase {
     }
 
     /**
-     * Delete messages (v2)
+     * Delete messages
      * @remarks Deletes messages from the queue, by doing a destructive get.
      */
     public async deleteAllAsync(input: MultipleGetValidOptions, abortSignal?: AbortSignal): Promise<ItemsList> {
@@ -205,7 +205,7 @@ export class MqClient extends ConnectorClientBase {
     }
 
     /**
-     * Browse message (v2)
+     * Browse message
      * @remarks Browse one message from the queue.
      */
     public async readAsync(input: SingleGetValidOptions, abortSignal?: AbortSignal): Promise<Item> {
@@ -221,7 +221,7 @@ export class MqClient extends ConnectorClientBase {
     }
 
     /**
-     * Browse messages (v2)
+     * Browse messages
      * @remarks Browse messages in a queue.
      */
     public async readAllAsync(input: MultipleGetValidOptions, abortSignal?: AbortSignal): Promise<ItemsList> {
@@ -237,7 +237,7 @@ export class MqClient extends ConnectorClientBase {
     }
 
     /**
-     * Receive message (v2)
+     * Receive message
      * @remarks Returns one message from the queue, by doing a destructive get.
      */
     public async receiveAsync(input: SingleGetValidOptions, abortSignal?: AbortSignal): Promise<Item> {
@@ -253,7 +253,7 @@ export class MqClient extends ConnectorClientBase {
     }
 
     /**
-     * Receive messages (v2)
+     * Receive messages
      * @remarks Returns messages from the queue, by doing a destructive get.
      */
     public async receiveAllAsync(input: MultipleGetValidOptions, abortSignal?: AbortSignal): Promise<ItemsList> {
@@ -269,7 +269,7 @@ export class MqClient extends ConnectorClientBase {
     }
 
     /**
-     * Send message (v2)
+     * Send message
      * @remarks Send a message to a queue.
      */
     public async sendAsync(input: SendValidDataOptions, abortSignal?: AbortSignal): Promise<SendResponse> {

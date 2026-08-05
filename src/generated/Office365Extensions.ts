@@ -27,7 +27,7 @@ export type HttpRequestInput = string;
 export type UpdateMyContactPhotoInput = string;
 
 /**
- * Response for Get calendars (V2)
+ * Response for Get calendars
  */
 export interface CalendarGetTablesResponse {
     /** value */
@@ -35,7 +35,7 @@ export interface CalendarGetTablesResponse {
 }
 
 /**
- * Find meeting times (V2)
+ * Find meeting times
  */
 export interface FindMeetingTimesInput {
     /** Work, Personal, Unrestricted, or Unknown */
@@ -61,7 +61,7 @@ export interface FindMeetingTimesInput {
 }
 
 /**
- * Response for Find meeting times (V2)
+ * Response for Find meeting times
  */
 export interface FindMeetingTimesResponse {
     /** Empty Suggestions Reason */
@@ -70,7 +70,7 @@ export interface FindMeetingTimesResponse {
 }
 
 /**
- * Response for Get Attachment (V2)
+ * Response for Get Attachment
  */
 export interface GetAttachmentResponse {
     /** Content of attachment. */
@@ -93,7 +93,7 @@ export interface GetAttachmentResponse {
 }
 
 /**
- * Get mail tips for a mailbox (V2)
+ * Get mail tips for a mailbox
  */
 export interface GetMailTipsInput {
     /** Address of the mailbox to get mail tips for. */
@@ -103,14 +103,14 @@ export interface GetMailTipsInput {
 }
 
 /**
- * Response for Get mail tips for a mailbox (V2)
+ * Response for Get mail tips for a mailbox
  */
 export interface GetMailTipsResponse {
     value?: Array<MailTipsClientReceive>;
 }
 
 /**
- * Response for Get room lists (V2)
+ * Response for Get room lists
  */
 export interface GetRoomListsResponse {
     /** value */
@@ -118,7 +118,7 @@ export interface GetRoomListsResponse {
 }
 
 /**
- * Response for Get rooms (V2)
+ * Response for Get rooms
  */
 export interface GetRoomsResponse {
     /** value */
@@ -126,7 +126,7 @@ export interface GetRoomsResponse {
 }
 
 /**
- * Response for Get rooms in room list (V2)
+ * Response for Get rooms in room list
  */
 export interface GetRoomsInRoomListResponse {
     /** value */
@@ -134,7 +134,7 @@ export interface GetRoomsInRoomListResponse {
 }
 
 /**
- * Mark as read or unread (V3)
+ * Mark as read or unread
  */
 export interface MarkAsReadInput {
     /** Mark as read/unread. */
@@ -142,14 +142,14 @@ export interface MarkAsReadInput {
 }
 
 /**
- * Set up automatic replies (V2)
+ * Set up automatic replies
  */
 export interface SetAutomaticRepliesSettingInput {
     automaticRepliesSetting?: AutomaticRepliesSettingClient;
 }
 
 /**
- * Response for Set up automatic replies (V2)
+ * Response for Set up automatic replies
  */
 export interface SetAutomaticRepliesSettingResponse {
     automaticRepliesSetting?: AutomaticRepliesSettingClient;
@@ -2857,7 +2857,7 @@ export class Office365Client extends ConnectorClientBase {
     }
 
     /**
-     * Delete event (V2)
+     * Delete event
      * @remarks This operation deletes an event in a calendar.
      */
     public async calendarDeleteItemAsync(calendar: string, event_: string, abortSignal?: AbortSignal): Promise<void> {
@@ -2871,8 +2871,8 @@ export class Office365Client extends ConnectorClientBase {
     }
 
     /**
-     * Get event (V3)
-     * @remarks This operation gets a specific event from a calendar using Graph API. (V3)
+     * Get event
+     * @remarks This operation gets a specific event from a calendar using Graph API.
      */
     public async calendarGetItemAsync(table: string, id: string, abortSignal?: AbortSignal): Promise<GraphCalendarEventClientReceive> {
         const requestPath = `/datasets/calendars/v3/tables/${table}/items/${id}`;
@@ -2887,8 +2887,8 @@ export class Office365Client extends ConnectorClientBase {
     }
 
     /**
-     * Get events (V4)
-     * @remarks This operation gets events from a calendar using Graph API. (V4)
+     * Get events
+     * @remarks This operation gets events from a calendar using Graph API.
      */
     public async calendarGetItemsAsync(table: string, filter?: string, orderby?: string, top?: string, skip?: string, abortSignal?: AbortSignal): Promise<GraphCalendarEventListClientReceive> {
         const queryParams: string[] = [];
@@ -2916,7 +2916,7 @@ export class Office365Client extends ConnectorClientBase {
     }
 
     /**
-     * Get calendars (V2)
+     * Get calendars
      * @remarks This operation lists available calendars.
      */
     public async calendarGetTablesAsync(skip?: string, top?: string, orderBy?: string, abortSignal?: AbortSignal): Promise<CalendarGetTablesResponse> {
@@ -2942,7 +2942,7 @@ export class Office365Client extends ConnectorClientBase {
     }
 
     /**
-     * Update event (V4)
+     * Update event
      * @remarks This operation updates an event in a calendar using Graph API.
      */
     public async calendarPatchItemAsync(input: GraphCalendarEventClient, table: string, id: string, abortSignal?: AbortSignal): Promise<GraphCalendarEventClientReceive> {
@@ -2958,7 +2958,7 @@ export class Office365Client extends ConnectorClientBase {
     }
 
     /**
-     * Create event (V4)
+     * Create event
      * @remarks This operation creates a new event in a calendar.
      */
     public async calendarPostItemAsync(input: GraphCalendarEventClient, table: string, abortSignal?: AbortSignal): Promise<GraphCalendarEventClientReceive> {
@@ -2974,7 +2974,7 @@ export class Office365Client extends ConnectorClientBase {
     }
 
     /**
-     * Delete contact (V2)
+     * Delete contact
      * @remarks This operation deletes a contact from a contacts folder.
      */
     public async contactDeleteItemAsync(folder: string, id: string, abortSignal?: AbortSignal): Promise<void> {
@@ -2988,7 +2988,7 @@ export class Office365Client extends ConnectorClientBase {
     }
 
     /**
-     * Get contact (V2)
+     * Get contact
      * @remarks This operation gets a specific contact from a contacts folder.
      */
     public async contactGetItemAsync(folder: string, id: string, abortSignal?: AbortSignal): Promise<ContactResponse> {
@@ -3004,7 +3004,7 @@ export class Office365Client extends ConnectorClientBase {
     }
 
     /**
-     * Get contacts (V2)
+     * Get contacts
      * @remarks This operation gets contacts from a contacts folder.
      */
     public async contactGetItemsAsync(folder: string, filter?: string, orderby?: string, top?: string, skip?: string, abortSignal?: AbortSignal): Promise<EntityListResponseContactResponse> {
@@ -3033,7 +3033,7 @@ export class Office365Client extends ConnectorClientBase {
     }
 
     /**
-     * Get contact folders (V2)
+     * Get contact folders
      * @remarks This operation lists available contacts folders using Graph API
      */
     public async contactGetTablesAsync(abortSignal?: AbortSignal): Promise<EntityListResponseGraphContactFolder> {
@@ -3049,7 +3049,7 @@ export class Office365Client extends ConnectorClientBase {
     }
 
     /**
-     * Update contact (V2)
+     * Update contact
      * @remarks This operation updates a contact in a contacts folder.
      */
     public async contactPatchItemAsync(input: Contact, folder: string, id: string, abortSignal?: AbortSignal): Promise<ContactResponse> {
@@ -3065,7 +3065,7 @@ export class Office365Client extends ConnectorClientBase {
     }
 
     /**
-     * Create contact (V2)
+     * Create contact
      * @remarks This operation creates a new contact in a contacts folder.
      */
     public async contactPostItemAsync(input: Contact, folder: string, abortSignal?: AbortSignal): Promise<ContactResponse> {
@@ -3081,7 +3081,7 @@ export class Office365Client extends ConnectorClientBase {
     }
 
     /**
-     * Delete email (V2)
+     * Delete email
      * @remarks This operation deletes an email by id.
      */
     public async deleteEmailAsync(messageId: string, mailboxAddress?: string, abortSignal?: AbortSignal): Promise<void> {
@@ -3099,7 +3099,7 @@ export class Office365Client extends ConnectorClientBase {
     }
 
     /**
-     * Export email (V2)
+     * Export email
      * @remarks Export the content of the email in the EML file format.
      */
     public async exportEmailAsync(messageId: string, mailboxAddress?: string, abortSignal?: AbortSignal): Promise<Blob> {
@@ -3119,7 +3119,7 @@ export class Office365Client extends ConnectorClientBase {
     }
 
     /**
-     * Find meeting times (V2)
+     * Find meeting times
      * @remarks Find meeting time suggestions based on organizer, attendee availability, and time or location constraints
      */
     public async findMeetingTimesAsync(input: FindMeetingTimesInput, abortSignal?: AbortSignal): Promise<FindMeetingTimesResponse> {
@@ -3135,7 +3135,7 @@ export class Office365Client extends ConnectorClientBase {
     }
 
     /**
-     * Flag email (V2)
+     * Flag email
      * @remarks This operation updates an email flag.
      */
     public async flagAsync(input: UpdateEmailFlag, messageId: string, mailboxAddress?: string, abortSignal?: AbortSignal): Promise<void> {
@@ -3153,7 +3153,7 @@ export class Office365Client extends ConnectorClientBase {
     }
 
     /**
-     * Forward an email (V2)
+     * Forward an email
      * @remarks Forward an email.
      */
     public async forwardEmailAsync(input: DirectForwardMessage, messageId: string, mailboxAddress?: string, abortSignal?: AbortSignal): Promise<void> {
@@ -3171,7 +3171,7 @@ export class Office365Client extends ConnectorClientBase {
     }
 
     /**
-     * Get Attachment (V2)
+     * Get Attachment
      * @remarks This operation gets an email attachment by id.
      */
     public async getAttachmentAsync(messageId: string, attachmentId: string, mailboxAddress?: string, extractSensitivityLabel?: string, fetchSensitivityLabelMetadata?: string, abortSignal?: AbortSignal): Promise<GetAttachmentResponse> {
@@ -3197,7 +3197,7 @@ export class Office365Client extends ConnectorClientBase {
     }
 
     /**
-     * Get email (V2)
+     * Get email
      * @remarks This operation gets an email by id.
      */
     public async getEmailAsync(messageId: string, mailboxAddress?: string, includeAttachments?: string, internetMessageId?: string, extractSensitivityLabel?: string, fetchSensitivityLabelMetadata?: string, abortSignal?: AbortSignal): Promise<GraphClientReceiveMessage> {
@@ -3229,7 +3229,7 @@ export class Office365Client extends ConnectorClientBase {
     }
 
     /**
-     * Get emails (V3)
+     * Get emails
      * @remarks This operation gets emails from a folder via graph apis. Please note that filtering related to these fields: To, Cc, To Or Cc, From, Importance, Fetch Only With Attachments, Subject Filter, is performed using first 250 items in a given mail folder. To avoid that limitation you can use 'Search Query' field.
      */
     public async getEmailsAsync(folderPath?: string, to?: string, cc?: string, toOrCc?: string, from?: string, importance?: string, fetchOnlyWithAttachment?: string, subjectFilter?: string, fetchOnlyUnread?: string, fetchOnlyFlagged?: string, mailboxAddress?: string, includeAttachments?: string, searchQuery?: string, top?: string, abortSignal?: AbortSignal): Promise<BatchResponseGraphClientReceiveMessage> {
@@ -3288,7 +3288,7 @@ export class Office365Client extends ConnectorClientBase {
     }
 
     /**
-     * Get calendar view of events (V3)
+     * Get calendar view of events
      * @remarks This operation gets all events (including instances of recurrences) in a calendar using Graph API. Recurrence property is null in this case.
      */
     public async getEventsCalendarViewAsync(calendarId?: string, startDateTimeUtc?: string, endDateTimeUtc?: string, filter?: string, orderby?: string, top?: string, skip?: string, search?: string, abortSignal?: AbortSignal): Promise<EntityListResponseGraphCalendarEventClientReceive> {
@@ -3329,7 +3329,7 @@ export class Office365Client extends ConnectorClientBase {
     }
 
     /**
-     * Get mail tips for a mailbox (V2)
+     * Get mail tips for a mailbox
      * @remarks Get mail tips for a mailbox such as automatic replies / OOF message or if the mailbox is full. This is not available in GccHigh and Mooncake.
      */
     public async getMailTipsAsync(input: GetMailTipsInput, abortSignal?: AbortSignal): Promise<GetMailTipsResponse> {
@@ -3345,7 +3345,7 @@ export class Office365Client extends ConnectorClientBase {
     }
 
     /**
-     * Get room lists (V2)
+     * Get room lists
      * @remarks Get all the room lists defined in the user's tenant
      */
     public async getRoomListsAsync(abortSignal?: AbortSignal): Promise<GetRoomListsResponse> {
@@ -3361,7 +3361,7 @@ export class Office365Client extends ConnectorClientBase {
     }
 
     /**
-     * Get rooms (V2)
+     * Get rooms
      * @remarks Get all the meeting rooms defined in the user's tenant
      */
     public async getRoomsAsync(abortSignal?: AbortSignal): Promise<GetRoomsResponse> {
@@ -3377,7 +3377,7 @@ export class Office365Client extends ConnectorClientBase {
     }
 
     /**
-     * Get rooms in room list (V2)
+     * Get rooms in room list
      * @remarks Get the meeting rooms in a specific room list
      */
     public async getRoomsInRoomListAsync(roomList: string, abortSignal?: AbortSignal): Promise<GetRoomsInRoomListResponse> {
@@ -3393,7 +3393,7 @@ export class Office365Client extends ConnectorClientBase {
     }
 
     /**
-     * Mark as read or unread (V3)
+     * Mark as read or unread
      * @remarks This operation marks an email as read/unread.
      */
     public async markAsReadAsync(input: MarkAsReadInput, messageId: string, mailboxAddress?: string, abortSignal?: AbortSignal): Promise<void> {
@@ -3411,7 +3411,7 @@ export class Office365Client extends ConnectorClientBase {
     }
 
     /**
-     * Move email (V2)
+     * Move email
      * @remarks This operation moves an email to the specified folder within the same mailbox.
      */
     public async moveAsync(messageId: string, folderPath?: string, mailboxAddress?: string, abortSignal?: AbortSignal): Promise<GraphClientReceiveMessage> {
@@ -3434,7 +3434,7 @@ export class Office365Client extends ConnectorClientBase {
     }
 
     /**
-     * Reply to email (V3)
+     * Reply to email
      * @remarks This operation replies to an email.
      */
     public async replyToAsync(input: ReplyEmailInput, messageId: string, mailboxAddress?: string, abortSignal?: AbortSignal): Promise<void> {
@@ -3452,7 +3452,7 @@ export class Office365Client extends ConnectorClientBase {
     }
 
     /**
-     * Respond to an event invite (V2)
+     * Respond to an event invite
      * @remarks Respond to an event invite.
      */
     public async respondToEventAsync(input: ResponseToEventInvite, eventId: string, response: string, abortSignal?: AbortSignal): Promise<void> {
@@ -3466,7 +3466,7 @@ export class Office365Client extends ConnectorClientBase {
     }
 
     /**
-     * Send an email (V2)
+     * Send an email
      * @remarks This operation sends an email message.
      */
     public async sendEmailAsync(input: SendEmailInput, abortSignal?: AbortSignal): Promise<void> {
@@ -3480,7 +3480,7 @@ export class Office365Client extends ConnectorClientBase {
     }
 
     /**
-     * Set up automatic replies (V2)
+     * Set up automatic replies
      * @remarks Set the automatic replies setting for your mailbox.
      */
     public async setAutomaticRepliesSettingAsync(input: SetAutomaticRepliesSettingInput, abortSignal?: AbortSignal): Promise<SetAutomaticRepliesSettingResponse> {
@@ -3496,7 +3496,7 @@ export class Office365Client extends ConnectorClientBase {
     }
 
     /**
-     * Send an email from a shared mailbox (V2)
+     * Send an email from a shared mailbox
      * @remarks This operation sends an email from a shared mailbox. Your account should have permission to access the mailbox for this operation to succeed.
      */
     public async sharedMailboxSendEmailAsync(input: SharedMailboxSendEmailInput, abortSignal?: AbortSignal): Promise<void> {

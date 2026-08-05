@@ -75,7 +75,7 @@ export class SmtpClient extends ConnectorClientBase {
     }
 
     /**
-     * Send Email (V3)
+     * Send Email
      * @remarks This operation sends an email to one or more recipients.
      */
     public async sendEmailAsync(input: Email, abortSignal?: AbortSignal): Promise<void> {
