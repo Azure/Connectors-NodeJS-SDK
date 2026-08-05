@@ -39,7 +39,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   `NewMeetingResponse` in generated output.
 - Updated generator-side TypeScript definition type normalization so
   swagger typo corrections are applied consistently during generation.
-- Validation baseline now includes 32 passing test suites and 378 passing tests.
+- Validation baseline: full test suite passes (see PR validation evidence).
 
 ### Removed
 
