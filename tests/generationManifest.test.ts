@@ -62,6 +62,19 @@ function computeSha256(relativePath: string): string {
         .digest("hex");
 }
 
+/**
+ * Computes the lowercase hex SHA-256 of UTF-8 text after normalizing CRLF line endings to LF.
+ */
+function computeCanonicalTextSha256(relativePath: string): string {
+    const canonicalContent = fs
+        .readFileSync(path.join(RepositoryRoot, relativePath), "utf8")
+        .replace(/\r\n/g, "\n");
+
+    return createHash("sha256")
+        .update(canonicalContent, "utf8")
+        .digest("hex");
+}
+
 // ──────────────────────────────────────────────
 // Tests
 // ──────────────────────────────────────────────
@@ -105,7 +118,7 @@ describe("generation.manifest.json provenance", () => {
             expect(typeof connector.outputSha256).toBe("string");
             expect(connector.outputSha256).toMatch(/^[0-9a-f]{64}$/);
             expect(fs.existsSync(path.join(RepositoryRoot, connector.outputFile))).toBe(true);
-            expect(computeSha256(connector.outputFile)).toBe(connector.outputSha256);
+            expect(computeCanonicalTextSha256(connector.outputFile)).toBe(connector.outputSha256);
         },
     );
 

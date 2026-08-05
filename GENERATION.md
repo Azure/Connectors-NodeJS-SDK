@@ -103,7 +103,7 @@ inputs it consumed.
 | `swaggerSource.swaggerCacheDirectory` | Directory holding the content-addressed Swagger snapshots. |
 | `connectors[].swaggerSnapshot` | Path to the persisted Swagger the run consumed for that connector. |
 | `connectors[].swaggerSha256` | SHA-256 of that snapshot, so byte-level reproduction is verifiable. |
-| `connectors[].outputSha256` | SHA-256 of the generated `outputFile`, so provenance and generated outputs stay atomically bound. |
+| `connectors[].outputSha256` | SHA-256 of the generated `outputFile` as UTF-8 text with CRLF normalized to LF, so provenance is platform-independent. |
 
 ### Recording provenance for a run
 
@@ -111,6 +111,21 @@ After generating (with the complete connector set) and saving each connector's S
 snapshot into `swagger-cache/`, populate the manifest from the repo root:
 
 ```powershell
+function Get-CanonicalTextSha256 {
+  param([Parameter(Mandatory = $true)][string]$Path)
+
+  $content = [System.IO.File]::ReadAllText($Path).Replace("`r`n", "`n")
+  $bytes = [System.Text.UTF8Encoding]::new($false).GetBytes($content)
+  $algorithm = [System.Security.Cryptography.SHA256]::Create()
+  try {
+    $hash = $algorithm.ComputeHash($bytes)
+    return ($hash | ForEach-Object { $_.ToString("x2") }) -join ""
+  }
+  finally {
+    $algorithm.Dispose()
+  }
+}
+
 $bpmRepoRoot = "<BPM-repo-root>"
 $manifest = Get-Content generation.manifest.json -Raw | ConvertFrom-Json
 
@@ -119,8 +134,12 @@ $manifest.generatedAtUtc = [DateTime]::UtcNow.ToString("yyyy-MM-ddTHH:mm:ssZ")
 $manifest.generator.bpmCommit = (git -C $bpmRepoRoot rev-parse HEAD)
 $manifest.generator.bpmBranch = (git -C $bpmRepoRoot rev-parse --abbrev-ref HEAD)
 
-$dll = Join-Path $bpmRepoRoot "src/tools/CodefulSdkGenerator/bin/Release/net8.0/Microsoft.Azure.Workflows.CodefulSdkGenerator.dll"
-if (Test-Path $dll) { $manifest.generator.assemblyVersion = (Get-Item $dll).VersionInfo.FileVersion }
+$dll = Join-Path $bpmRepoRoot "src/tools/CodefulSdkGenerator/bin/Release/Microsoft.Azure.Workflows.CodefulSdkGenerator.dll"
+if (-not (Test-Path $dll)) {
+  throw "Generator assembly '$dll' was not found. Build the Release configuration before recording provenance."
+}
+
+$manifest.generator.assemblyVersion = (Get-Item $dll).VersionInfo.FileVersion
 
 $manifest.swaggerSource.subscriptionId = if ($env:AZURE_SUBSCRIPTION_ID) { $env:AZURE_SUBSCRIPTION_ID } else { "f34b22a3-2202-4fb1-b040-1332bd928c84" }
 $manifest.swaggerSource.location = if ($env:AZURE_LOCATION) { $env:AZURE_LOCATION } else { "westus" }
@@ -130,9 +149,9 @@ foreach ($connector in $manifest.connectors) {
         $connector.swaggerSha256 = (Get-FileHash $connector.swaggerSnapshot -Algorithm SHA256).Hash.ToLowerInvariant()
     }
 
-  if (Test-Path $connector.outputFile) {
-    $connector.outputSha256 = (Get-FileHash $connector.outputFile -Algorithm SHA256).Hash.ToLowerInvariant()
-  }
+    if (Test-Path $connector.outputFile) {
+        $connector.outputSha256 = Get-CanonicalTextSha256 -Path $connector.outputFile
+    }
 }
 
 $manifest | ConvertTo-Json -Depth 6 | Set-Content generation.manifest.json -Encoding utf8
@@ -149,8 +168,8 @@ $manifest | ConvertTo-Json -Depth 6 | Set-Content generation.manifest.json -Enco
 - **The `tests/generationManifest.test.ts` guard runs in CI** and fails the build unless
   `status` is `generated`, `generator.bpmCommit` is populated, and every
   `connectors[].swaggerSha256` and `connectors[].outputSha256` matches the SHA-256 of
-  its committed `swagger-cache/` snapshot and generated output. Regenerate rather than
-  hand-editing so the guard stays green.
+  its committed `swagger-cache/` snapshot and canonical UTF-8/LF generated output.
+  Regenerate rather than hand-editing so the guard stays green.
 
 ## Post-Generation Validation
 
