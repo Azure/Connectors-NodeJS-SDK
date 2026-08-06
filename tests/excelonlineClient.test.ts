@@ -47,9 +47,15 @@ describe("ExcelonlineClient — constructor", () => {
         expect(client).toBeInstanceOf(ExcelonlineClient);
     });
 
-    it("should strip trailing slashes from connection URL", () => {
+    it("should strip trailing slashes from connection URL", async () => {
+        mockFetchResponse([]);
         const client = new ExcelonlineClient(TestConnectionUrl + "///", createMockTokenProvider());
-        expect(client).toBeDefined();
+        await client.getTablesAsync("drive1", "file1");
+        const [url] = (global.fetch as jest.Mock).mock.calls[0];
+        // NOTE: Confirms the trailing slashes were stripped by inspecting the
+        //       outbound URL: after the scheme, no `//` should remain.
+        expect(String(url).replace(/^https?:\/\//, "")).not.toContain("//");
+        jest.restoreAllMocks();
     });
 
     it("should throw on null connection URL", () => {

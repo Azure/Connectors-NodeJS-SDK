@@ -47,9 +47,15 @@ describe("FtpClient — constructor", () => {
         expect(client).toBeInstanceOf(FtpClient);
     });
 
-    it("should strip trailing slashes from connection URL", () => {
+    it("should strip trailing slashes from connection URL", async () => {
+        mockFetchResponse({});
         const client = new FtpClient(TestConnectionUrl + "///", createMockTokenProvider());
-        expect(client).toBeDefined();
+        await client.getFileMetadataAsync("file1");
+        const [url] = (global.fetch as jest.Mock).mock.calls[0];
+        // NOTE: Confirms the trailing slashes were stripped by inspecting the
+        //       outbound URL: after the scheme, no `//` should remain.
+        expect(String(url).replace(/^https?:\/\//, "")).not.toContain("//");
+        jest.restoreAllMocks();
     });
 
     it("should throw on null connection URL", () => {

@@ -250,8 +250,17 @@ The following connectors have been generated and validated with comprehensive te
 | **Shifts for Microsoft Teams** | `@azure/connectors/generated/ShiftsExtensions` | ✅ Complete | 6 tests |
 | **Slack** | `@azure/connectors/generated/SlackExtensions` | ✅ Complete | 6 tests |
 | **Microsoft To Do Business** | `@azure/connectors/generated/TodoExtensions` | ✅ Complete | 6 tests |
+| **Box** | `@azure/connectors/generated/BoxExtensions` | ✅ Complete | 8 tests |
+| **Dropbox** | `@azure/connectors/generated/DropboxExtensions` | ✅ Complete | 8 tests |
+| **Excel Online (Business)** | `@azure/connectors/generated/ExcelonlineExtensions` | ✅ Complete | 9 tests |
+| **FTP** | `@azure/connectors/generated/FtpExtensions` | ✅ Complete | 8 tests |
+| **Google Calendar** | `@azure/connectors/generated/GooglecalendarExtensions` | ✅ Complete | 8 tests |
+| **Google Drive** | `@azure/connectors/generated/GoogledriveExtensions` | ✅ Complete | 8 tests |
+| **Google Tasks** | `@azure/connectors/generated/GoogletasksExtensions` | ✅ Complete | 8 tests |
+| **Office 365 Groups Mail** | `@azure/connectors/generated/Office365groupsmailExtensions` | ✅ Complete | 8 tests |
+| **RSS** | `@azure/connectors/generated/RssExtensions` | ✅ Complete | 8 tests |
 
-**Total:** 318 tests (all passing) across 29 test suites and 21 generated connectors
+**Total:** 520 tests (all passing) across 41 test suites and 30 generated connectors
 
 ## Authentication
 
@@ -391,6 +400,15 @@ try {
 │   ├── SmtpExtensions.ts          # SMTP client
 │   ├── TeamsExtensions.ts         # Microsoft Teams client
 │   ├── TodoExtensions.ts          # Microsoft To Do Business client
+│   ├── BoxExtensions.ts           # Box client
+│   ├── DropboxExtensions.ts       # Dropbox client
+│   ├── ExcelonlineExtensions.ts   # Excel Online (Business) client
+│   ├── FtpExtensions.ts           # FTP client
+│   ├── GooglecalendarExtensions.ts # Google Calendar client
+│   ├── GoogledriveExtensions.ts   # Google Drive client
+│   ├── GoogletasksExtensions.ts   # Google Tasks client
+│   ├── Office365groupsmailExtensions.ts # Office 365 Groups Mail client
+│   ├── RssExtensions.ts           # RSS client
 │   ├── connectorNames.ts          # Connector name constants
 │   ├── index.ts                   # Generated export barrel
 │   └── ManagedConnectors.ts       # Connector registry
@@ -430,14 +448,14 @@ samples/
 │   └── javascript/         # JavaScript ESM samples (.mjs)
 │       ├── arm.mjs
 │       ├── azureblob.mjs
-│       └── ... (21 connectors)
+│       └── ... (30 connectors)
 └── cjs/
     ├── typescript/         # TypeScript CJS samples
     │   ├── arm.ts
-    │   └── ... (21 connectors)
+    │   └── ... (30 connectors)
     └── javascript/         # JavaScript CJS samples (.cjs)
         ├── arm.cjs
-        └── ... (21 connectors)
+        └── ... (30 connectors)
 ```
 
 See [docs/connection-setup.md](docs/connection-setup.md) for instructions on creating the Azure connections required to run the samples.
