@@ -171,46 +171,16 @@ export interface ObjectEntity {
 // #endregion Types
 
 export const GooglecalendarTriggerOperations = {
+    OnChangedEventInCalendar: "OnChangedEventInCalendar",
+    OnDeletedEventInCalendar: "OnDeletedEventInCalendar",
+    OnEventStarted: "OnEventStarted",
     OnNewEventInCalendar: "OnNewEventInCalendar",
     OnUpdatedEventInCalendar: "OnUpdatedEventInCalendar",
-    OnDeletedEventInCalendar: "OnDeletedEventInCalendar",
-    OnChangedEventInCalendar: "OnChangedEventInCalendar",
-    OnEventStarted: "OnEventStarted",
 } as const;
 
 export type GooglecalendarTriggerOperation = typeof GooglecalendarTriggerOperations[keyof typeof GooglecalendarTriggerOperations];
 
 export const GooglecalendarTriggerParameters = {
-    OnNewEventInCalendar: {
-        calendarId: {
-            name: "calendar_id",
-            type: "string",
-            required: true,
-            description: "Unique ID of the calendar to fetch events from.",
-            summary: "Calendar ID",
-            dynamicValuesOperationId: "ListCalendars",
-        },
-    },
-    OnUpdatedEventInCalendar: {
-        calendarId: {
-            name: "calendar_id",
-            type: "string",
-            required: true,
-            description: "Unique ID of the calendar to fetch events from.",
-            summary: "Calendar ID",
-            dynamicValuesOperationId: "ListCalendars",
-        },
-    },
-    OnDeletedEventInCalendar: {
-        calendarId: {
-            name: "calendar_id",
-            type: "string",
-            required: true,
-            description: "Unique ID of the calendar to fetch events from.",
-            summary: "Calendar ID",
-            dynamicValuesOperationId: "ListCalendars",
-        },
-    },
     OnChangedEventInCalendar: {
         calendarId: {
             name: "calendar_id",
@@ -228,7 +198,37 @@ export const GooglecalendarTriggerParameters = {
             summary: "Expand Recurring Events?",
         },
     },
+    OnDeletedEventInCalendar: {
+        calendarId: {
+            name: "calendar_id",
+            type: "string",
+            required: true,
+            description: "Unique ID of the calendar to fetch events from.",
+            summary: "Calendar ID",
+            dynamicValuesOperationId: "ListCalendars",
+        },
+    },
     OnEventStarted: {
+        calendarId: {
+            name: "calendar_id",
+            type: "string",
+            required: true,
+            description: "Unique ID of the calendar to fetch events from.",
+            summary: "Calendar ID",
+            dynamicValuesOperationId: "ListCalendars",
+        },
+    },
+    OnNewEventInCalendar: {
+        calendarId: {
+            name: "calendar_id",
+            type: "string",
+            required: true,
+            description: "Unique ID of the calendar to fetch events from.",
+            summary: "Calendar ID",
+            dynamicValuesOperationId: "ListCalendars",
+        },
+    },
+    OnUpdatedEventInCalendar: {
         calendarId: {
             name: "calendar_id",
             type: "string",

@@ -86,21 +86,21 @@ export interface TaskCreate {
 // #endregion Types
 
 export const GoogletasksTriggerOperations = {
-    OnNewTaskList: "OnNewTaskList",
-    OnNewTaskInList: "OnNewTaskInList",
-    OnDueTaskInList: "OnDueTaskInList",
     OnCompletedTaskInList: "OnCompletedTaskInListV2",
+    OnDueTaskInList: "OnDueTaskInList",
+    OnNewTaskInList: "OnNewTaskInList",
+    OnNewTaskList: "OnNewTaskList",
 } as const;
 
 export type GoogletasksTriggerOperation = typeof GoogletasksTriggerOperations[keyof typeof GoogletasksTriggerOperations];
 
 export const GoogletasksTriggerParameters = {
-    OnNewTaskInList: {
+    OnCompletedTaskInList: {
         taskListId: {
             name: "taskListId",
             type: "string",
             required: true,
-            description: "The id of the task list.",
+            description: "The id of the task list",
             summary: "Task List ID",
             dynamicValuesOperationId: "ListTaskLists",
         },
@@ -115,12 +115,12 @@ export const GoogletasksTriggerParameters = {
             dynamicValuesOperationId: "ListTaskLists",
         },
     },
-    OnCompletedTaskInList: {
+    OnNewTaskInList: {
         taskListId: {
             name: "taskListId",
             type: "string",
             required: true,
-            description: "The id of the task list",
+            description: "The id of the task list.",
             summary: "Task List ID",
             dynamicValuesOperationId: "ListTaskLists",
         },

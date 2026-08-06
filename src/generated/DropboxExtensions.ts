@@ -136,8 +136,8 @@ export type DropboxOnUpdatedFilesTriggerPayload = TriggerCallbackPayload<BlobMet
 
 export const DropboxTriggerOperations = {
     OnNewFile: "OnNewFile",
-    OnUpdatedFile: "OnUpdatedFile",
     OnNewFiles: "OnNewFiles",
+    OnUpdatedFile: "OnUpdatedFile",
     OnUpdatedFiles: "OnUpdatedFiles",
 } as const;
 
@@ -151,37 +151,6 @@ export const DropboxTriggerParameters = {
             required: true,
             description: "The unique identifier of the folder.",
             summary: "Folder",
-        },
-        inferContentType: {
-            name: "inferContentType",
-            type: "boolean",
-            required: false,
-            description: "A boolean value (true, false) to infer content-type based on extension.",
-            summary: "Infer Content Type",
-            defaultValue: "true",
-        },
-        queryParametersSingleEncoded: {
-            name: "queryParametersSingleEncoded",
-            type: "boolean",
-            required: false,
-            defaultValue: "true",
-        },
-    },
-    OnUpdatedFile: {
-        folderId: {
-            name: "folderId",
-            type: "string",
-            required: true,
-            description: "The unique identifier of the folder.",
-            summary: "Folder",
-        },
-        includeFileContent: {
-            name: "includeFileContent",
-            type: "boolean",
-            required: false,
-            description: "If set to true, file content will also be retrieved along with the trigger response.",
-            summary: "Include File Content",
-            defaultValue: "true",
         },
         inferContentType: {
             name: "inferContentType",
@@ -213,6 +182,37 @@ export const DropboxTriggerParameters = {
             description: "Maximum number of files to return by single trigger run (1-100). Note that 'Split On' setting can force trigger to process each item individually.",
             summary: "Number of files to return",
             defaultValue: "10",
+        },
+    },
+    OnUpdatedFile: {
+        folderId: {
+            name: "folderId",
+            type: "string",
+            required: true,
+            description: "The unique identifier of the folder.",
+            summary: "Folder",
+        },
+        includeFileContent: {
+            name: "includeFileContent",
+            type: "boolean",
+            required: false,
+            description: "If set to true, file content will also be retrieved along with the trigger response.",
+            summary: "Include File Content",
+            defaultValue: "true",
+        },
+        inferContentType: {
+            name: "inferContentType",
+            type: "boolean",
+            required: false,
+            description: "A boolean value (true, false) to infer content-type based on extension.",
+            summary: "Infer Content Type",
+            defaultValue: "true",
+        },
+        queryParametersSingleEncoded: {
+            name: "queryParametersSingleEncoded",
+            type: "boolean",
+            required: false,
+            defaultValue: "true",
         },
     },
     OnUpdatedFiles: {
