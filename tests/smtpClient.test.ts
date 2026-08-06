@@ -55,7 +55,6 @@ const _attachment: Attachment = {
     FileName: "report.pdf",
     ContentData: "base64data==",
     ContentType: "application/pdf",
-    ContentTransferEncoding: "base64",
 };
 
 // ──────────────────────────────────────────────
@@ -128,7 +127,7 @@ describe("SmtpClient — sendEmailAsync", () => {
             Subject: "With attachment",
             Body: "See attached",
             Attachments: [
-                { FileName: "doc.pdf", ContentData: "base64==", ContentType: "application/pdf", ContentTransferEncoding: "base64" },
+                { FileName: "doc.pdf", ContentData: "base64==", ContentType: "application/pdf" },
             ],
         };
 

@@ -236,63 +236,6 @@ export interface WebHookRequest {
 }
 
 /**
- * Definition: WebhookPushResponse
- */
-export interface WebhookPushResponse {
-    /** List of values */
-    value?: Array<WebhookNotificationEntity>;
-}
-
-/**
- * Definition: WebhookNotificationEntity
- */
-export interface WebhookNotificationEntity {
-    /** WebHook Subscription Id */
-    subscriptionId?: string;
-    /** yyyy-MM-ddTHH:mm:ss.fffZ (UTC format) */
-    expirationDateTime?: string;
-    /** Resource change type (created/updated/deleted). */
-    changeType?: string;
-    resourceData?: WebhookPushResponseResourceEntity;
-}
-
-/**
- * Definition: WebhookPushResponseResourceEntity
- */
-export interface WebhookPushResponseResourceEntity {
-    /** Full resource path. */
-    "@odata.id"?: string;
-    /** Resoure Type. */
-    "@odata.type"?: string;
-    /** ID of the resource that is updated. */
-    id?: string;
-    /** ID of team where the update happened. */
-    teamId?: string;
-}
-
-/**
- * Definition: Subscription
- */
-export interface Subscription {
-    /** Unique identifier for the subscription. */
-    id?: string;
-    /** Specifies the resource that will be monitored for changes. */
-    resource?: string;
-    /** Identifier of the application used to create the subscription. */
-    applicationId?: string;
-    /** Indicates the type of change in the subscribed resource that will raise a notification. */
-    changeType?: string;
-    /** Specifies the value of the clientState property sent by the service in each notification. The maximum length is 128 characters. The client can check that the notification came from the service by comparing the value of the clientState property sent with the subscription with the value of the clientState property received with each notification. */
-    clientState?: string;
-    /** The URL of the endpoint that will receive the notifications. This URL must make use of the HTTPS protocol. */
-    notificationUrl?: string;
-    /** Specifies the date and time when the webhook subscription expires (UTC). */
-    expirationDateTime?: string;
-    /** Identifier of the user or service principal that created the subscription. If the app used delegated permissions to create the subscription, this field contains the id of the signed-in user the app called on behalf of. If the app used application permissions, this field contains the id of the service principal corresponding to the app. */
-    creatorId?: string;
-}
-
-/**
  * Definition: ScheduleResponse
  */
 export interface ScheduleResponse {

@@ -20,42 +20,6 @@ export type UpdateFileInput = string;
 export type CreateFileInput = string;
 
 /**
- * Definition: DataSetsMetadata
- */
-export interface DataSetsMetadata {
-    tabular?: TabularDataSetsMetadata;
-    blob?: BlobDataSetsMetadata;
-}
-
-/**
- * Definition: TabularDataSetsMetadata
- */
-export interface TabularDataSetsMetadata {
-    /** Dataset source */
-    source?: string;
-    /** Dataset display name */
-    displayName?: string;
-    /** Dataset url encoding */
-    urlEncoding?: string;
-    /** Table display name */
-    tableDisplayName?: string;
-    /** Table plural display name */
-    tablePluralName?: string;
-}
-
-/**
- * Definition: BlobDataSetsMetadata
- */
-export interface BlobDataSetsMetadata {
-    /** Blob dataset source */
-    source?: string;
-    /** Blob dataset display name */
-    displayName?: string;
-    /** Blob dataset url encoding */
-    urlEncoding?: string;
-}
-
-/**
  * Definition: BlobMetadata
  */
 export interface BlobMetadata {
@@ -94,14 +58,6 @@ export interface SharingLink {
 }
 
 /**
- * Definition: Tags
- */
-export interface Tags {
-    /** A list of tags. */
-    Tags?: Array<string>;
-}
-
-/**
  * Definition: Thumbnail
  */
 export interface Thumbnail {
@@ -111,16 +67,6 @@ export interface Thumbnail {
     Width?: number;
     /** The thumbnail height in pixels. */
     Height?: number;
-}
-
-/**
- * Definition: ForASelectedFileResponse
- */
-export interface ForASelectedFileResponse {
-    /** The unique path of the file. */
-    filePath?: string;
-    /** The URL to the source file. */
-    fileUrl?: string;
 }
 
 /**

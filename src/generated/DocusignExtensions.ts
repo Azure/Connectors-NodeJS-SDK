@@ -134,72 +134,6 @@ export interface CreateHookEnvelopeResponse {
 }
 
 /**
- * Definition: WebhookRequestV2
- */
-export interface WebhookRequest {
-    allUsers: string;
-    allowEnvelopePublish: string;
-    includeDocumentFields: string;
-    requiresAcknowledgement: string;
-    urlToPublishTo: string;
-    name: string;
-    envelopeEvents: string;
-}
-
-/**
- * Definition: WebhookEnvelopeResponseV2
- */
-export interface WebhookEnvelopeResponse {
-    data?: Record<string, unknown>;
-}
-
-/**
- * Definition: WebhookOrganizationResponse
- */
-export interface WebhookOrganizationResponse {
-    data?: Record<string, unknown>;
-}
-
-/**
- * Definition: WorkflowDefinitionsResponse
- */
-export interface WorkflowDefinitionsResponse {
-    /** WorkflowDefinitions */
-    WorkflowDefinitions?: Array<WorkflowDefinition>;
-}
-
-/**
- * Definition: WorkflowDefinition
- */
-export interface WorkflowDefinition {
-    /** Id */
-    Id?: string;
-    /** Name */
-    Name?: string;
-}
-
-/**
- * Definition: WorkflowDefinitionResponse
- */
-export interface WorkflowDefinitionResponse {
-    /** Id */
-    Id?: string;
-    /** Name */
-    Name?: string;
-    PayloadSchema?: Array<WorkflowDefPayloadSchema>;
-}
-
-/**
- * Definition: WorkflowDefPayloadSchema
- */
-export interface WorkflowDefPayloadSchema {
-    /** Name */
-    PropertyName?: string;
-    /** Type */
-    Type?: string;
-}
-
-/**
  * Definition: TriggerMaestroFlowResponse
  */
 export interface TriggerMaestroFlowResponse {
@@ -262,13 +196,6 @@ export interface AdditionalURLForSenderView {
 }
 
 /**
- * Definition: AdditionalURL
- */
-export interface AdditionalURL {
-    [key: string]: unknown;
-}
-
-/**
  * Definition: DynamicSigningUrlFields
  */
 export interface DynamicSigningUrlFields {
@@ -304,41 +231,6 @@ export interface CompositeTemplateSchema {
 }
 
 /**
- * Definition: AddRecipientToEnvelopeRequest
- */
-export interface AddRecipientToEnvelopeRequest {
-    signers?: Array<SignerRequest>;
-}
-
-/**
- * Definition: SignerRequest
- */
-export interface SignerRequest {
-    /** The signing order of the recipient in the document. */
-    routingOrder?: string;
-    /** The role of the signer. */
-    roleName?: string;
-}
-
-/**
- * Definition: OnEnvelopeStatusChangesResponse
- */
-export interface OnEnvelopeStatusChangesResponse {
-    /** Envelopes */
-    envelopes?: Array<Envelope>;
-}
-
-/**
- * Definition: EnvelopeIds
- */
-export interface EnvelopeIds {
-    /** Title of the envelope */
-    emailSubject?: string;
-    /** Envelope ID */
-    envelopeId?: string;
-}
-
-/**
  * Definition: FilteredEnvelopes
  */
 export interface FilteredEnvelopes {
@@ -362,102 +254,6 @@ export interface FilteredEnvelopes {
     dateSent?: string;
     /** URL of the envelope */
     url?: string;
-}
-
-/**
- * Definition: SalesCopilotFilteredEnvelopes
- */
-export interface SalesCopilotFilteredEnvelopes {
-    /** Title of the envelope */
-    title?: string;
-    /** SubTitle of the envelope */
-    subTitle?: string;
-    /** URL of the envelope */
-    url?: string;
-    /** Additional Properties */
-    additionalPropertiesForSalesEnvelope?: Record<string, unknown>;
-}
-
-/**
- * Definition: Activity
- */
-export interface Activity {
-    /** This output indicates the title of the activity in the citation card. */
-    title: string;
-    /** This output indicates the description of the insight. */
-    description: string;
-    /** This output indicates the time associated with the insight. */
-    dateTime: string;
-    /** This output indicates the URL to open insight. */
-    url?: string;
-    /** This output indicates additional properties displayed in the detailed view of the insight. */
-    additionalProperties?: Record<string, unknown>;
-}
-
-/**
- * Definition: EmailSummary
- */
-export interface EmailSummary {
-    /** This output indicates the title of the partner section and should include only the partner's name. */
-    Title: string;
-    /** This output indicates the text you would like to be included in the email summary. */
-    Description: string;
-}
-
-/**
- * Definition: KeySales
- */
-export interface KeySales {
-    /** This output indicates the title of citation card for the insight. */
-    Title: string;
-    /** This output indicates the text of the insight to be included in key sales info. */
-    description: string;
-    /** This output indicates the URL to learn more about the insight. */
-    url?: string;
-    /** This output indicates the time associated with the insight. */
-    dateTime?: string;
-    /** This output indicates additional properties as name-value pairs of each related insight returned by the action. */
-    additionalProperties?: Record<string, unknown>;
-}
-
-/**
- * Definition: DocumentRecord
- */
-export interface DocumentRecord {
-    /** This output uniquely identifies each related record returned by the action. */
-    recordId: string;
-    /** This output indicates the display name of record type of each related record returned by the action. */
-    recordTypeDisplayName: string;
-    /** This output indicates the plural display name of the record type of each related record returned by the action. */
-    recordTypePluralDisplayName: string;
-    /** This output indicates the type of each related record returned by the action. */
-    recordType: string;
-    /** This output indicates the title of each related record returned by the action. */
-    recordTitle: string;
-    /** This output indicates the URL of each related record returned by the action. */
-    url?: string;
-    /** Additional Properties */
-    additionalProperties?: Record<string, unknown>;
-}
-
-/**
- * Definition: Envelope
- */
-export interface Envelope {
-    /** The URI for the document in DocuSign. */
-    documentsUri?: string;
-    /** The id of the envelope. */
-    envelopeId?: string;
-    /** The URI for the envelope in DocuSign. */
-    envelopeUri?: string;
-    /** The URI for the notifications. */
-    notificationUri?: string;
-    /** The URI for the recipients of the envelope in DocuSign. */
-    recipientsUri?: string;
-    /** The status of the envelope. */
-    status?: string;
-    /** The datetime the status changed. */
-    statusChangedDateTime?: string;
 }
 
 /**
@@ -486,14 +282,6 @@ export interface CombinedEmailBodyAndCustomFields {
 }
 
 /**
- * Definition: EnvelopeIDsResponse
- */
-export interface EnvelopeIDsResponse {
-    /** list of envelope ids */
-    envelopes?: Array<EnvelopeIds>;
-}
-
-/**
  * Definition: FilteredEnvelopeListResponse
  */
 export interface FilteredEnvelopeListResponse {
@@ -501,61 +289,6 @@ export interface FilteredEnvelopeListResponse {
     value?: Array<FilteredEnvelopes>;
     /** Shows if envelopes exceed the specified number in the Return envelopes field */
     hasMoreResults?: boolean;
-}
-
-/**
- * Definition: FilteredSalesCopilotEnvelopeListResponse
- */
-export interface FilteredSalesCopilotEnvelopeListResponse {
-    /** Filtered envelopes */
-    value?: Array<SalesCopilotFilteredEnvelopes>;
-    hasMoreResults?: boolean;
-}
-
-/**
- * Definition: ActivityListResponseEnvelope
- */
-export interface ActivityListResponseEnvelope {
-    /** Related activies */
-    value?: Array<Activity>;
-    hasMoreResults?: boolean;
-}
-
-/**
- * Definition: EmailSummaryResponse
- */
-export interface EmailSummaryResponse {
-    /** Key Sales */
-    value?: Array<EmailSummary>;
-    hasMoreResults?: boolean;
-}
-
-/**
- * Definition: KeySalesResponse
- */
-export interface KeySalesResponse {
-    /** Key Sales */
-    value?: Array<KeySales>;
-    hasMoreResults?: boolean;
-}
-
-/**
- * Definition: DocumentRecordListResponseEnvelope
- */
-export interface DocumentRecordListResponseEnvelope {
-    /** Related records */
-    value?: Array<DocumentRecord>;
-    hasMoreResults?: boolean;
-}
-
-/**
- * Definition: ApiError
- */
-export interface ApiError {
-    errorCode: string;
-    errorMessage?: string;
-    activityId?: string;
-    details?: Record<string, unknown>;
 }
 
 /**
@@ -666,37 +399,11 @@ export interface Signer {
 }
 
 /**
- * Definition: GetOrganizationsResponse
- */
-export interface GetOrganizationsResponse {
-    /** list of organizations */
-    organizations?: Array<Organization>;
-}
-
-/**
  * Definition: GetLoginAccountsResponse
  */
 export interface GetLoginAccountsResponse {
     /** Login accounts */
     loginAccounts?: Array<LoginAccount>;
-}
-
-/**
- * Definition: GetWorkFlowIdsResponse
- */
-export interface GetWorkFlowIdsResponse {
-    /** Workflow ID */
-    workflowIds?: Array<WorkflowId>;
-}
-
-/**
- * Definition: organization
- */
-export interface Organization {
-    /** The id of the organization. */
-    id?: string;
-    /** The name of the organization. */
-    name?: string;
 }
 
 /**
@@ -707,22 +414,6 @@ export interface LoginAccount {
     name?: string;
     /** The GUID of the account. */
     accountIdGuid: string;
-}
-
-/**
- * Definition: DocumentTypesResponse
- */
-export interface DocumentTypesResponse {
-    /** Document types */
-    documentTypes?: Array<DocumentType>;
-}
-
-/**
- * Definition: TabTypesResponse
- */
-export interface TabTypesResponse {
-    /** Tab types */
-    tabTypes?: Array<TabType>;
 }
 
 /**
@@ -766,104 +457,6 @@ export interface DocGenFormField {
 }
 
 /**
- * Definition: RecipientTypesResponse
- */
-export interface RecipientTypesResponse {
-    /** Recipient types */
-    tabTypes?: Array<RecipientType>;
-}
-
-/**
- * Definition: SignatureTypesResponse
- */
-export interface SignatureTypesResponse {
-    /** Signature types */
-    tabTypes?: Array<SignatureType>;
-}
-
-/**
- * Definition: FontNamesResponse
- */
-export interface FontNamesResponse {
-    /** Font names */
-    fontNames?: Array<FontName>;
-}
-
-/**
- * Definition: DocumentType
- */
-export interface DocumentType {
-    /** The type of a document. */
-    name?: string;
-}
-
-/**
- * Definition: TabType
- */
-export interface TabType {
-    /** Display name of the tab. */
-    name?: string;
-    /** Type of the tab. */
-    type?: string;
-}
-
-/**
- * Definition: WorkflowID
- */
-export interface WorkflowId {
-    /** The name of workflowID */
-    name?: string;
-    /** The type of workflowID */
-    type?: string;
-}
-
-/**
- * Definition: RecipientType
- */
-export interface RecipientType {
-    /** Display name of the recipient type. */
-    name?: string;
-    /** Type of the recipient. */
-    type?: string;
-}
-
-/**
- * Definition: SignatureType
- */
-export interface SignatureType {
-    /** Display name of the signature type. */
-    name?: string;
-    /** Type of the signature. */
-    type?: string;
-}
-
-/**
- * Definition: FontName
- */
-export interface FontName {
-    /** The name of a font metadata. */
-    name?: string;
-}
-
-/**
- * Definition: ListSigningGroupResponse
- */
-export interface ListSigningGroupResponse {
-    /** List of all signing groups */
-    signingGroups?: Array<SigningGroup>;
-}
-
-/**
- * Definition: SigningGroup
- */
-export interface SigningGroup {
-    /** The ID of the signing group. */
-    signingGroupId: string;
-    /** The name of the signing group. */
-    groupName?: string;
-}
-
-/**
  * Definition: ListTemplatesResponse
  */
 export interface ListTemplatesResponse {
@@ -887,14 +480,6 @@ export interface EnvelopeTemplate {
 export interface BulkSendListGuid {
     /** Bulk send list guid */
     listId?: string;
-}
-
-/**
- * Definition: ListFoldersResponse
- */
-export interface ListFoldersResponse {
-    /** Folders */
-    folders?: Array<Folder>;
 }
 
 /**
@@ -923,34 +508,6 @@ export interface UpdateEnvelopeCustomFieldResponse {
     name?: string;
     /** The value of the envelope custom field. */
     value?: string;
-}
-
-/**
- * Definition: Folder
- */
-export interface Folder {
-    /** The name of the folder. */
-    name?: string;
-    /** The id of the folder. */
-    folderId?: string;
-}
-
-/**
- * Definition: ListEnvelopesResponse
- */
-export interface ListEnvelopesResponse {
-    /** The envelopes within a folder. */
-    folderItems?: Array<FolderItem>;
-}
-
-/**
- * Definition: FolderItem
- */
-export interface FolderItem {
-    /** The id of the envelope. */
-    envelopeId?: string;
-    /** The subject of the envelope. */
-    subject?: string;
 }
 
 /**
@@ -1019,13 +576,6 @@ export interface EnvelopeDocumentField {
     name?: string;
     /** The value of the custom field. */
     value?: string;
-}
-
-/**
- * Definition: DeclineReasonWithoutType
- */
-export interface DeclineReasonWithoutType {
-    [key: string]: unknown;
 }
 // #endregion Types
 

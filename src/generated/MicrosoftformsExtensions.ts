@@ -21,27 +21,6 @@ export interface WebhookRequestBody {
 }
 
 /**
- * Definition: WebhookPayload
- */
-export interface WebhookPayload {
-    value?: Array<Record<string, unknown>>;
-}
-
-/**
- * Definition: FormsList
- */
-export interface FormsList {
-    [key: string]: unknown;
-}
-
-/**
- * Definition: NewResponses
- */
-export interface NewResponses {
-    [key: string]: unknown;
-}
-
-/**
  * Definition: GetFormResponseByIdResult
  */
 export interface GetFormResponseByIdResult {

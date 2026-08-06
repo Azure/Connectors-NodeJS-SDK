@@ -147,13 +147,6 @@ export interface AddMemberToChannelInput {
 }
 
 /**
- * Definition: Activities
- */
-export interface Activities {
-    [key: string]: unknown;
-}
-
-/**
  * Definition: AddMemberToTagResponseSchema
  */
 export interface AddMemberToTagResponseSchema {
@@ -174,14 +167,6 @@ export interface AssociatedTeamInfo {
 }
 
 /**
- * Definition: AtMentionBotResponse
- */
-export interface AtMentionBotResponse {
-    /** An @mention token for the bot. This property can be inserted into messages and adaptive cards */
-    atMention?: string;
-}
-
-/**
  * Definition: AtMentionTagResponse
  */
 export interface AtMentionTagResponse {
@@ -190,7 +175,7 @@ export interface AtMentionTagResponse {
 }
 
 /**
- * Definition: AtMentionUser_V1
+ * Definition: AtMentionUser
  */
 export interface AtMentionUser {
     /** An @mention token for the user. This property can be inserted into messages */
@@ -203,36 +188,9 @@ export interface AtMentionUser {
 export type BotIdForChat = string;
 
 /**
- * Definition: BotMentionRequest
- */
-export interface BotMentionRequest {
-    /** The bot's app identifier (GUID) */
-    appId: string;
-    /** The bot's unique identifier (GUID) */
-    botId: string;
-    /** The bot's display name */
-    name: string;
-}
-
-/**
- * Definition: CardResponseTriggerMetadata
- */
-export interface CardResponseTriggerMetadata {
-    CardOutputs?: ObjectEntity;
-    TeamsFlowRunContext?: ObjectEntity;
-}
-
-/**
  * Definition: ChannelIdForTeam
  */
 export type ChannelIdForTeam = string;
-
-/**
- * Definition: ChannelIds
- */
-export interface ChannelIds {
-    channel: ChannelIdForTeam;
-}
 
 /**
  * Definition: ChannelWithOwnerTeamId
@@ -292,31 +250,6 @@ export interface ChatMessageList {
 }
 
 /**
- * Definition: ChatMessageWebhookResponseSchema
- */
-export interface ChatMessageWebhookResponseSchema {
-    /** Message details response */
-    value?: Array<Record<string, unknown>>;
-}
-
-/**
- * Definition: ComposeMessageTriggerMetadata
- */
-export interface ComposeMessageTriggerMetadata {
-    CardOutputs?: ObjectEntity;
-    TeamsFlowRunContext?: ObjectEntity;
-}
-
-/**
- * Definition: ConnectorMetadata
- */
-export interface ConnectorMetadata {
-    activitytype?: string;
-    metadatatype?: string;
-    schema?: ObjectEntity;
-}
-
-/**
  * Definition: CreateATeamResponse
  */
 export interface CreateATeamResponse {
@@ -348,91 +281,6 @@ export interface DiscoverySettings {
 }
 
 /**
- * Definition: DraftOpenShift
- */
-export interface DraftOpenShift {
-    activities?: Activities;
-    /** Display Name */
-    displayName?: string;
-    /** yyyy-MM-ddTHH:mm:ss.fffZ (UTC format) */
-    endDateTime?: string;
-    /** Notes */
-    notes?: string;
-    /** Open Slot Count */
-    openSlotCount?: number;
-    /** yyyy-MM-ddTHH:mm:ss.fffZ (UTC format) */
-    startDateTime?: string;
-    /** Theme */
-    theme?: string;
-}
-
-/**
- * Definition: DraftShift
- */
-export interface DraftShift {
-    activities?: Activities;
-    /** Display Name */
-    displayName?: string;
-    /** yyyy-MM-ddTHH:mm:ss.fffZ (UTC format) */
-    endDateTime?: string;
-    /** Notes */
-    notes?: string;
-    /** yyyy-MM-ddTHH:mm:ss.fffZ (UTC format) */
-    startDateTime?: string;
-    /** Theme */
-    theme?: string;
-}
-
-/**
- * Definition: DynamicAtMentionWebhookTriggerResponseSchema
- */
-export interface DynamicAtMentionWebhookTriggerResponseSchema {
-    [key: string]: unknown;
-}
-
-/**
- * Definition: DynamicCardResponseTriggerResult
- */
-export interface DynamicCardResponseTriggerResult {
-    [key: string]: unknown;
-}
-
-/**
- * Definition: DynamicChannelAdaptiveCardRequest
- */
-export interface DynamicChannelAdaptiveCardRequest {
-    [key: string]: unknown;
-}
-
-/**
- * Definition: DynamicChannelFlowContinuationSubscriptionResult
- */
-export interface DynamicChannelFlowContinuationSubscriptionResult {
-    [key: string]: unknown;
-}
-
-/**
- * Definition: DynamicChannelNotificationRequest
- */
-export interface DynamicChannelNotificationRequest {
-    [key: string]: unknown;
-}
-
-/**
- * Definition: DynamicComposeMessageTriggerResult
- */
-export interface DynamicComposeMessageTriggerResult {
-    [key: string]: unknown;
-}
-
-/**
- * Definition: DynamicGatherInputSubscriptionResult
- */
-export interface DynamicGatherInputSubscriptionResult {
-    [key: string]: unknown;
-}
-
-/**
  * Definition: DynamicGetMessageDetailsResponseSchema
  */
 export interface DynamicGetMessageDetailsResponseSchema {
@@ -447,23 +295,9 @@ export interface DynamicGetMessageDetailsSchema {
 }
 
 /**
- * Definition: DynamicKeywordWebhookTriggerResponseSchema
- */
-export interface DynamicKeywordWebhookTriggerResponseSchema {
-    [key: string]: unknown;
-}
-
-/**
  * Definition: DynamicListMembersSchema
  */
 export interface DynamicListMembersSchema {
-    [key: string]: unknown;
-}
-
-/**
- * Definition: DynamicNewMessageWebhookTriggerResponseSchema
- */
-export interface DynamicNewMessageWebhookTriggerResponseSchema {
     [key: string]: unknown;
 }
 
@@ -478,13 +312,6 @@ export interface DynamicPostCardAndWaitRequest {
  * Definition: DynamicPostCardRequest
  */
 export interface DynamicPostCardRequest {
-    [key: string]: unknown;
-}
-
-/**
- * Definition: DynamicPostConversationNotificationRequest
- */
-export interface DynamicPostConversationNotificationRequest {
     [key: string]: unknown;
 }
 
@@ -510,13 +337,6 @@ export interface DynamicPostMessageRequest {
 }
 
 /**
- * Definition: DynamicPostToConversationResponse
- */
-export interface DynamicPostToConversationResponse {
-    [key: string]: unknown;
-}
-
-/**
  * Definition: DynamicReplyCardRequest
  */
 export interface DynamicReplyCardRequest {
@@ -531,37 +351,9 @@ export interface DynamicReplyMessageRequest {
 }
 
 /**
- * Definition: DynamicResponseSchema
- */
-export interface DynamicResponseSchema {
-    schema?: ObjectEntity;
-}
-
-/**
- * Definition: DynamicSelectedMessageTriggerResult
- */
-export interface DynamicSelectedMessageTriggerResult {
-    [key: string]: unknown;
-}
-
-/**
  * Definition: DynamicUpdateCardRequest
  */
 export interface DynamicUpdateCardRequest {
-    [key: string]: unknown;
-}
-
-/**
- * Definition: DynamicUserAdaptiveCardRequest
- */
-export interface DynamicUserAdaptiveCardRequest {
-    [key: string]: unknown;
-}
-
-/**
- * Definition: DynamicUserFlowContinuationSubscriptionResult
- */
-export interface DynamicUserFlowContinuationSubscriptionResult {
     [key: string]: unknown;
 }
 
@@ -573,33 +365,10 @@ export interface DynamicUserMessageWithOptionsSubscriptionRequest {
 }
 
 /**
- * Definition: DynamicUserMessageWithOptionsSubscriptionResult
- */
-export interface DynamicUserMessageWithOptionsSubscriptionResult {
-    [key: string]: unknown;
-}
-
-/**
- * Definition: DynamicUserNotificationRequest
- */
-export interface DynamicUserNotificationRequest {
-    [key: string]: unknown;
-}
-
-/**
  * Definition: DynamicWebhookTriggerRequestSchema
  */
 export interface DynamicWebhookTriggerRequestSchema {
     [key: string]: unknown;
-}
-
-/**
- * Definition: EditOpenShiftRequest
- */
-export interface EditOpenShiftRequest {
-    /** Scheduling Group ID */
-    schedulingGroupId?: string;
-    sharedOpenShift?: Record<string, unknown>;
 }
 
 /**
@@ -638,13 +407,6 @@ export interface GetChannelResponse {
     tenantId?: string;
     /** A hyperlink for the channel in Microsoft Teams */
     webUrl?: string;
-}
-
-/**
- * Definition: GetMessageDetailsSchema
- */
-export interface GetMessageDetailsSchema {
-    schema?: ObjectEntity;
 }
 
 /**
@@ -699,15 +461,6 @@ export interface GetTeamResponse {
 }
 
 /**
- * Definition: GetTimeOffReasonsResponse
- */
-export interface GetTimeOffReasonsResponse {
-    "@odata.context"?: string;
-    /** The list of time off reasons. */
-    value?: Array<Record<string, unknown>>;
-}
-
-/**
  * Definition: GuestSettings
  */
 export interface GuestSettings {
@@ -718,32 +471,11 @@ export interface GuestSettings {
 }
 
 /**
- * Definition: LastModifiedBy
- */
-export interface LastModifiedBy {
-    /** Application */
-    application?: string;
-    /** Conversation */
-    conversation?: string;
-    /** Device */
-    device?: string;
-    /** User */
-    user?: Record<string, unknown>;
-}
-
-/**
  * Definition: ListMembersResponseSchema
  */
 export interface ListMembersResponseSchema {
     /** List members response */
     value?: Array<Record<string, unknown>>;
-}
-
-/**
- * Definition: ListMembersSchema
- */
-export interface ListMembersSchema {
-    schema?: ObjectEntity;
 }
 
 /**
@@ -768,37 +500,6 @@ export interface MemberSettings {
     allowCreateUpdateRemoveTabs?: boolean;
     /** If set to true, members can delete channels */
     allowDeleteChannels?: boolean;
-}
-
-/**
- * Definition: MessageId
- */
-export interface MessageId {
-    /** Unique message identifier */
-    id?: string;
-}
-
-/**
- * Definition: MessageReactionWebhookResponseSchema
- */
-export interface MessageReactionWebhookResponseSchema {
-    /** The channel's unique identifier */
-    channelId?: string;
-    /** The chat's unique identifier */
-    chatId?: string;
-    /** Id of the message which was reacted */
-    messageId?: string;
-    /** Link to the message which was reacted */
-    messageLink?: string;
-    /** Message reaction used */
-    messageReaction?: string;
-    /** ID of the parent message of the thread */
-    replyToId?: string;
-    /** The team's unique identifier */
-    teamId?: string;
-    threadType?: string;
-    /** Reacting user's Id */
-    userId?: string;
 }
 
 /**
@@ -940,135 +641,10 @@ export interface NewMeetingResponse {
 }
 
 /**
- * Definition: Object
- */
-export interface ObjectEntity {
-    [key: string]: unknown;
-}
-
-/**
  * Definition: ObjectWithoutType
  */
 export interface ObjectWithoutType {
     [key: string]: unknown;
-}
-
-/**
- * Definition: OfferShiftRequestResponse
- */
-export interface OfferShiftRequestResponse {
-    /** The person the request is assigned to: 'manager' or 'recipient' */
-    assignedTo?: string;
-    /** yyyy-MM-ddTHH:mm:ss.fffZ (UTC format) */
-    createdDateTime?: string;
-    /** The unique ID of the Offer Shift request. */
-    id?: string;
-    /** yyyy-MM-ddTHH:mm:ss.fffZ (UTC format) */
-    lastModifiedDateTime?: string;
-    /** Time when the manager responded */
-    managerActionDateTime?: string;
-    /** The message from the manager */
-    managerActionMessage?: string;
-    /** The ID of the manager that responded */
-    managerUserId?: string;
-    /** Time when the recipient responded */
-    recipientActionDateTime?: string;
-    /** The message from the recipient */
-    recipientActionMessage?: string;
-    /** The ID of the recipient of the request */
-    recipientUserId?: string;
-    /** Time when the request was sent */
-    senderDateTime?: string;
-    /** The message from the request sender */
-    senderMessage?: string;
-    /** The ID of the shift from the sender */
-    senderShiftId?: string;
-    /** The ID of the user that sent the request */
-    senderUserId?: string;
-    /** 'approved', 'pending' or 'declined' */
-    state?: string;
-}
-
-/**
- * Definition: OnGroupMemberChange_Response
- */
-export interface OnGroupMemberChangeResponse {
-    [key: string]: unknown;
-}
-
-/**
- * Definition: OpenShiftChangeRequestResponse
- */
-export interface OpenShiftChangeRequestResponse {
-    /** The person the request is assigned to: 'manager' or 'recipient' */
-    assignedTo?: string;
-    /** yyyy-MM-ddTHH:mm:ss.fffZ (UTC format) */
-    createdDateTime?: string;
-    /** The unique ID of the Open Shift Change request. */
-    id?: string;
-    /** yyyy-MM-ddTHH:mm:ss.fffZ (UTC format) */
-    lastModifiedDateTime?: string;
-    /** Time when the manager responded */
-    managerActionDateTime?: string;
-    /** The message from the manager */
-    managerActionMessage?: string;
-    /** The ID of the manager that responded */
-    managerUserId?: string;
-    /** The ID of the open shift being requested */
-    openShiftId?: string;
-    /** Time when the request was sent */
-    senderDateTime?: string;
-    /** The message from the request sender */
-    senderMessage?: string;
-    /** The ID of the user that sent the request */
-    senderUserId?: string;
-    /** 'approved', 'pending' or 'declined' */
-    state?: string;
-}
-
-/**
- * Definition: OpenShiftResponse
- */
-export interface OpenShiftResponse {
-    /** yyyy-MM-ddTHH:mm:ss.fffZ (UTC format) */
-    createdDateTime?: string;
-    draftOpenShift?: DraftOpenShift;
-    /** The unique ID of the open shift. */
-    id?: string;
-    lastModifiedBy?: LastModifiedBy;
-    /** yyyy-MM-ddTHH:mm:ss.fffZ (UTC format) */
-    lastModifiedDateTime?: string;
-    /** Scheduling Group ID */
-    schedulingGroupId?: string;
-    sharedOpenShift?: SharedOpenShift;
-}
-
-/**
- * Definition: PostCardAndWaitSchema
- */
-export interface PostCardAndWaitSchema {
-    schema?: ObjectEntity;
-}
-
-/**
- * Definition: PostCardSchema
- */
-export interface PostCardSchema {
-    schema?: ObjectEntity;
-}
-
-/**
- * Definition: PostFeedSchema
- */
-export interface PostFeedSchema {
-    schema?: ObjectEntity;
-}
-
-/**
- * Definition: PostMessageSchema
- */
-export interface PostMessageSchema {
-    schema?: ObjectEntity;
 }
 
 /**
@@ -1084,203 +660,9 @@ export interface PostToConversationResponse {
 }
 
 /**
- * Definition: ScheduleResponse
- */
-export interface ScheduleResponse {
-    /** The unique ID of the schedule. */
-    id?: string;
-    /** The Provision Status of the schedule. */
-    provisionStatus?: string;
-    /** The Provision Status Code of the schedule. */
-    provisionStatusCode?: string;
-    /** The Time Zone of the schedule. */
-    timeZone?: string;
-}
-
-/**
- * Definition: SchedulingGroupResponse
- */
-export interface SchedulingGroupResponse {
-    /** The display name for the scheduling group. */
-    displayName?: string;
-    /** The unique ID of the scheduling group. */
-    id?: string;
-    /** Indicates whether the scheduling group can be used when creating new entities or updating existing ones. */
-    isActive?: boolean;
-    /** List of IDs of users in the scheduling group. */
-    userIds?: Array<string>;
-}
-
-/**
- * Definition: SelectedMessageTriggerMetadata
- */
-export interface SelectedMessageTriggerMetadata {
-    CardOutputs?: ObjectEntity;
-    TeamsFlowRunContext?: ObjectEntity;
-}
-
-/**
- * Definition: SharedOpenShift
- */
-export interface SharedOpenShift {
-    activities?: Activities;
-    /** Display Name */
-    displayName?: string;
-    /** yyyy-MM-ddTHH:mm:ss.fffZ (UTC format) */
-    endDateTime?: string;
-    /** Notes */
-    notes?: string;
-    /** Open Slot Count */
-    openSlotCount?: number;
-    /** yyyy-MM-ddTHH:mm:ss.fffZ (UTC format) */
-    startDateTime?: string;
-    /** Theme */
-    theme?: string;
-}
-
-/**
- * Definition: SharedShift
- */
-export interface SharedShift {
-    activities?: Activities;
-    /** Display Name */
-    displayName?: string;
-    /** yyyy-MM-ddTHH:mm:ss.fffZ (UTC format) */
-    endDateTime?: string;
-    /** Notes */
-    notes?: string;
-    /** yyyy-MM-ddTHH:mm:ss.fffZ (UTC format) */
-    startDateTime?: string;
-    /** Theme */
-    theme?: string;
-}
-
-/**
- * Definition: ShiftResponse
- */
-export interface ShiftResponse {
-    /** yyyy-MM-ddTHH:mm:ss.fffZ (UTC format) */
-    createdDateTime?: string;
-    draftShift?: DraftShift;
-    /** The unique ID of the shift. */
-    id?: string;
-    lastModifiedBy?: LastModifiedBy;
-    /** yyyy-MM-ddTHH:mm:ss.fffZ (UTC format) */
-    lastModifiedDateTime?: string;
-    /** Scheduling Group ID */
-    schedulingGroupId?: string;
-    sharedShift?: SharedShift;
-    /** Assigned To User ID */
-    userId?: string;
-}
-
-/**
- * Definition: SwapShiftsChangeRequestResponse
- */
-export interface SwapShiftsChangeRequestResponse {
-    /** The person the request is assigned to: 'manager' or 'recipient' */
-    assignedTo?: string;
-    /** yyyy-MM-ddTHH:mm:ss.fffZ (UTC format) */
-    createdDateTime?: string;
-    /** The unique ID of the Swap Shift request. */
-    id?: string;
-    /** yyyy-MM-ddTHH:mm:ss.fffZ (UTC format) */
-    lastModifiedDateTime?: string;
-    /** Time when the manager responded */
-    managerActionDateTime?: string;
-    /** The message from the manager */
-    managerActionMessage?: string;
-    /** The ID of the manager that responded */
-    managerUserId?: string;
-    /** Time when the recipient responded */
-    recipientActionDateTime?: string;
-    /** The message from the recipient */
-    recipientActionMessage?: string;
-    /** The ID of the shift from the recipient */
-    recipientShiftId?: string;
-    /** The ID of the recipient of the request */
-    recipientUserId?: string;
-    /** Time when the request was sent */
-    senderDateTime?: string;
-    /** The message from the request sender */
-    senderMessage?: string;
-    /** The ID of the shift from the sender */
-    senderShiftId?: string;
-    /** The ID of the user that sent the request */
-    senderUserId?: string;
-    /** 'approved', 'pending' or 'declined' */
-    state?: string;
-}
-
-/**
  * Definition: ThemeEditor
  */
 export type ThemeEditor = "white" | "blue" | "green" | "purple" | "pink" | "yellow" | "gray" | "darkblue" | "darkgreen" | "darkpurple" | "darkpink" | "darkyellow";
-
-/**
- * Definition: TimeOffRequestResponse
- */
-export interface TimeOffRequestResponse {
-    /** The person the request is assigned to: 'manager' or 'recipient' */
-    assignedTo?: string;
-    /** yyyy-MM-ddTHH:mm:ss.fffZ (UTC format) */
-    createdDateTime?: string;
-    /** End of time requested off */
-    endDateTime?: string;
-    /** The unique ID of the TimeOff request. */
-    id?: string;
-    /** yyyy-MM-ddTHH:mm:ss.fffZ (UTC format) */
-    lastModifiedDateTime?: string;
-    /** Time when the manager responded */
-    managerActionDateTime?: string;
-    /** The message from the manager */
-    managerActionMessage?: string;
-    /** The ID of the manager that responded */
-    managerUserId?: string;
-    /** Time when the request was sent */
-    senderDateTime?: string;
-    /** The message from the request sender */
-    senderMessage?: string;
-    /** The ID of the user that sent the request */
-    senderUserId?: string;
-    /** Start of time requested off */
-    startDateTime?: string;
-    /** 'approved', 'pending' or 'declined' */
-    state?: string;
-    /** The ID of the TimeOff Reason */
-    timeOffReasonId?: string;
-}
-
-/**
- * Definition: UnifiedActionSchema
- */
-export interface UnifiedActionSchema {
-    schema?: ObjectEntity;
-}
-
-/**
- * Definition: VirtualAgentBots
- */
-export interface VirtualAgentBots {
-    "@odata.context"?: string;
-    /** List of the Microsoft Copilot Studio agents */
-    value?: Array<Record<string, unknown>>;
-}
-
-/**
- * Definition: WebhookRequest
- */
-export interface WebhookRequest {
-    /** Specify a well-formed URL of the endpoint that will receive notifications */
-    notificationUrl: string;
-}
-
-/**
- * Definition: WebhookTriggerSchema
- */
-export interface WebhookTriggerSchema {
-    schema?: ObjectEntity;
-}
 
 /**
  * Typed callback payload for trigger operation 'OnNewChannelMessage'.

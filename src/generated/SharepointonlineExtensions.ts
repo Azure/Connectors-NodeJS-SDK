@@ -116,14 +116,6 @@ export interface CreateContentAssemblyDocumentInput {
 }
 
 /**
- * Definition: ApplicationPermissionIdentity
- */
-export interface ApplicationPermissionIdentity {
-    /** Application display name */
-    displayName?: string;
-}
-
-/**
  * Definition: ApprovalData
  */
 export interface ApprovalData {
@@ -137,18 +129,6 @@ export interface ApprovalData {
 export interface ApproveHubSiteJoinResponse {
     /** Approval Token */
     ApprovalToken?: string;
-}
-
-/**
- * Definition: BlobDataSetsMetadata
- */
-export interface BlobDataSetsMetadata {
-    /** Blob dataset display name */
-    displayName?: string;
-    /** Blob dataset source */
-    source?: string;
-    /** Blob dataset url encoding */
-    urlEncoding?: string;
 }
 
 /**
@@ -175,14 +155,6 @@ export interface BlobMetadata {
     Path?: string;
     /** The size of the file or folder. */
     Size?: number;
-}
-
-/**
- * Definition: BlobMetadataPage
- */
-export interface BlobMetadataPage {
-    /** Blob metadata collection. */
-    value?: Array<BlobMetadata>;
 }
 
 /**
@@ -259,34 +231,6 @@ export interface CreateNewFolderParameters {
 }
 
 /**
- * Definition: DataSet
- */
-export interface DataSet {
-    /** Dataset display name */
-    DisplayName?: string;
-    /** Dataset name */
-    Name?: string;
-    /** Pass-through Native Queries */
-    query?: Array<PassThroughNativeQuery>;
-}
-
-/**
- * Definition: DataSetsList
- */
-export interface DataSetsList {
-    /** List of datasets */
-    value?: Array<DataSet>;
-}
-
-/**
- * Definition: DataSetsMetadata
- */
-export interface DataSetsMetadata {
-    blob?: BlobDataSetsMetadata;
-    tabular?: TabularDataSetsMetadata;
-}
-
-/**
  * Definition: DeletedItem
  */
 export interface DeletedItem {
@@ -323,35 +267,6 @@ export interface FileCheckInParameters {
 }
 
 /**
- * Definition: GetItemChangesMetadataResponse
- */
-export interface GetItemChangesMetadataResponse {
-    schema?: ObjectEntity;
-}
-
-/**
- * Definition: GroupPermissionIdentity
- */
-export interface GroupPermissionIdentity {
-    /** Group display name */
-    displayName?: string;
-}
-
-/**
- * Definition: HubSiteJoinApprovalOutput
- */
-export interface HubSiteJoinApprovalOutput {
-    /** Approval Correlation Id */
-    ApprovalCorrelationId?: string;
-    /** Requesting Site Id */
-    RequestingSiteId?: string;
-    /** Requesting Site Title */
-    RequestingSiteTitle?: string;
-    /** Requesting Site Url */
-    RequestingSiteUrl?: string;
-}
-
-/**
  * Definition: Item
  */
 export interface Item {
@@ -373,22 +288,6 @@ export interface ItemGrantAccessBody {
 }
 
 /**
- * Definition: ItemPermissionAddBody
- */
-export interface ItemPermissionAddBody {
-    /** A plain text formatted message that is included in the sharing invitation. Maximum length 2000 characters. */
-    message?: string;
-    /** A collection of recipients who will receive access and the sharing invitation. */
-    recipients: Array<ItemPermissionRecipient>;
-    /** Specifies where the recipient of the invitation is required to sign-in to view the shared item. */
-    requireSignIn: boolean;
-    /** Specify the roles that are be granted to the recipients of the sharing invitation. */
-    roles: Array<string>;
-    /** Specifies if an email or post is generated (true) or if the permission is just created (false). */
-    sendInvitation: boolean;
-}
-
-/**
  * Definition: ItemPermissionCreateLinkBody
  */
 export interface ItemPermissionCreateLinkBody {
@@ -398,33 +297,6 @@ export interface ItemPermissionCreateLinkBody {
     scope: string;
     /** The type of sharing link to create */
     type: string;
-}
-
-/**
- * Definition: ItemPermissionRecipient
- */
-export interface ItemPermissionRecipient {
-    /** The email address for the recipient, if the recipient has an associated email address. */
-    email: string;
-}
-
-/**
- * Definition: ItemPermissionUpdateBody
- */
-export interface ItemPermissionUpdateBody {
-    /** Specify updated roles for this permission. */
-    roles: Array<string>;
-}
-
-/**
- * Definition: ItemReference
- */
-export interface ItemReference {
-    /** The name of the parent item */
-    name?: string;
-    /** Path that can be used to navigate to the parent item */
-    path?: string;
-    sharepointIds?: SharePointIds;
 }
 
 /**
@@ -464,21 +336,6 @@ export interface MoveFolderParameters {
 }
 
 /**
- * Definition: Object
- */
-export interface ObjectEntity {
-    [key: string]: unknown;
-}
-
-/**
- * Definition: PassThroughNativeQuery
- */
-export interface PassThroughNativeQuery {
-    /** Query language */
-    Language?: string;
-}
-
-/**
  * Definition: PatchFileItemWithPredictedValuesParameters
  */
 export interface PatchFileItemWithPredictedValuesParameters {
@@ -486,57 +343,6 @@ export interface PatchFileItemWithPredictedValuesParameters {
     modelId?: string;
     /** Enter request content in JSON */
     predictResult?: string;
-}
-
-/**
- * Definition: Permission
- */
-export interface Permission {
-    grantedTo?: PermissionIdentitySet;
-    /** For link type permissions, the details of the users to whom permission was granted */
-    grantedToIdentities?: Array<SharingLinkPermissionIdentitySet>;
-    /** Permission id */
-    id?: string;
-    inheritedFrom?: ItemReference;
-    invitation?: SharingInvitation;
-    link?: SharingLink;
-    /** The type of permission - read, write, owner, member */
-    roles?: Array<string>;
-}
-
-/**
- * Definition: PermissionIdentitySet
- */
-export interface PermissionIdentitySet {
-    application?: ApplicationPermissionIdentity;
-    group?: GroupPermissionIdentity;
-    user?: UserPermissionIdentity;
-}
-
-/**
- * Definition: PermissionsList
- */
-export interface PermissionsList {
-    /** List of Permissions */
-    value?: Array<Permission>;
-}
-
-/**
- * Definition: Procedure
- */
-export interface Procedure {
-    /** Procedure display name */
-    DisplayName?: string;
-    /** Procedure name */
-    Name?: string;
-}
-
-/**
- * Definition: PublishedResult
- */
-export interface PublishedResult {
-    /** A boolean value (true, false) to indicate whether the scheduled version of the file has been published */
-    IsFilePublished?: boolean;
 }
 
 /**
@@ -565,38 +371,6 @@ export interface SPBlobMetadataResponse {
     Path?: string;
     /** The size of the file or folder. */
     Size?: number;
-}
-
-/**
- * Definition: SPContentType
- */
-export interface SPContentType {
-    /** Content type Id */
-    Id?: string;
-    /** Content type name */
-    Name?: string;
-}
-
-/**
- * Definition: SPForASelectedFileResponse
- */
-export interface SPForASelectedFileResponse {
-    /** File Identifier */
-    ID?: number;
-    /** File Name */
-    fileName?: string;
-    /** File Url */
-    itemUrl?: string;
-}
-
-/**
- * Definition: SPListEntity
- */
-export interface SPListEntity {
-    /** What type of entity (field) this is */
-    EntityType?: string;
-    /** The Id of the SPField */
-    Id?: string;
 }
 
 /**
@@ -661,36 +435,6 @@ export interface SharePointHttpRequestBodyParameters {
 }
 
 /**
- * Definition: SharePointIds
- */
-export interface SharePointIds {
-    /** The unique identifier (guid) for the item's list in SharePoint */
-    listId?: string;
-    /** An integer identifier for the item within the containing list */
-    listItemId?: string;
-    /** The unique identifier (guid) for the item within OneDrive for Business or a SharePoint site */
-    listItemUniqueId?: string;
-    /** The unique identifier (guid) for the item's site collection (SPSite) */
-    siteId?: string;
-    /** The SharePoint URL for the site that contains the item */
-    siteUrl?: string;
-    /** The unique identifier (guid) for the tenancy */
-    tenantId?: string;
-    /** The unique identifier (guid) for the item's site (SPWeb) */
-    webId?: string;
-}
-
-/**
- * Definition: SharingInvitation
- */
-export interface SharingInvitation {
-    /** The email address provided for the recipient of the sharing invitation */
-    email?: string;
-    /** If true the recipient of the invitation needs to sign in in order to access the shared item */
-    signInRequired?: boolean;
-}
-
-/**
  * Definition: SharingLink
  */
 export interface SharingLink {
@@ -706,23 +450,6 @@ export interface SharingLinkPermission {
 }
 
 /**
- * Definition: SharingLinkPermissionIdentitySet
- */
-export interface SharingLinkPermissionIdentitySet {
-    user?: SharingLinkUserPermissionIdentity;
-}
-
-/**
- * Definition: SharingLinkUserPermissionIdentity
- */
-export interface SharingLinkUserPermissionIdentity {
-    /** User display name */
-    displayName?: string;
-    /** User email */
-    email?: string;
-}
-
-/**
  * Definition: Table
  */
 export interface Table {
@@ -735,101 +462,11 @@ export interface Table {
 }
 
 /**
- * Definition: TableCapabilitiesMetadata
- */
-export interface TableCapabilitiesMetadata {
-    /** List of supported filter capabilities */
-    filterFunctionSupport?: Array<string>;
-    filterRestrictions?: TableFilterRestrictionsMetadata;
-    /** Server paging restrictions */
-    isOnlyServerPagable?: boolean;
-    selectRestrictions?: TableSelectRestrictionsMetadata;
-    /** List of supported server-driven paging capabilities */
-    serverPagingOptions?: Array<string>;
-    sortRestrictions?: TableSortRestrictionsMetadata;
-}
-
-/**
- * Definition: TableFilterRestrictionsMetadata
- */
-export interface TableFilterRestrictionsMetadata {
-    /** Indicates whether this table has filterable columns */
-    filterable?: boolean;
-    /** List of non filterable properties */
-    nonFilterableProperties?: Array<string>;
-    /** List of required properties */
-    requiredProperties?: Array<string>;
-}
-
-/**
- * Definition: TableMetadata
- */
-export interface TableMetadata {
-    /** Table name */
-    name?: string;
-    referencedEntities?: ObjectEntity;
-    schema?: ObjectEntity;
-    /** Table title */
-    title?: string;
-    /** Url link */
-    webUrl?: string;
-    "x-ms-capabilities"?: TableCapabilitiesMetadata;
-    /** Table permission */
-    "x-ms-permission"?: string;
-}
-
-/**
- * Definition: TableSelectRestrictionsMetadata
- */
-export interface TableSelectRestrictionsMetadata {
-    /** Indicates whether this table has selectable columns */
-    selectable?: boolean;
-}
-
-/**
- * Definition: TableSortRestrictionsMetadata
- */
-export interface TableSortRestrictionsMetadata {
-    /** List of properties which support ascending order only */
-    ascendingOnlyProperties?: Array<string>;
-    /** Indicates whether this table has sortable columns */
-    sortable?: boolean;
-    /** List of unsortable properties */
-    unsortableProperties?: Array<string>;
-}
-
-/**
  * Definition: TablesList
  */
 export interface TablesList {
     /** List of Tables */
     value?: Array<Table>;
-}
-
-/**
- * Definition: TabularDataSetsMetadata
- */
-export interface TabularDataSetsMetadata {
-    /** Dataset display name */
-    displayName?: string;
-    /** Dataset source */
-    source?: string;
-    /** Table display name */
-    tableDisplayName?: string;
-    /** Table plural display name */
-    tablePluralName?: string;
-    /** Dataset url encoding */
-    urlEncoding?: string;
-}
-
-/**
- * Definition: UserPermissionIdentity
- */
-export interface UserPermissionIdentity {
-    /** User display name */
-    displayName?: string;
-    /** User email */
-    email?: string;
 }
 
 /**

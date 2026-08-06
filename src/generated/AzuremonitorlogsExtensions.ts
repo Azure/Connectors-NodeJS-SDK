@@ -33,13 +33,6 @@ export interface VisualizeQueryInput {
 }
 
 /**
- * Definition: Object
- */
-export interface ObjectEntity {
-    [key: string]: unknown;
-}
-
-/**
  * Definition: TableV2
  */
 export interface Table {
@@ -60,98 +53,6 @@ export interface VisualizeResults {
     body?: string;
     attachmentContent?: string;
     attachmentName?: string;
-}
-
-/**
- * Definition: SubscriptionListResult
- */
-export interface SubscriptionListResult {
-    /** The subscriptions . */
-    value?: Array<Subscription>;
-    /** The URL to get the next set of results.  */
-    nextLink?: string;
-}
-
-/**
- * Definition: Subscription
- */
-export interface Subscription {
-    /** The fully qualified Id. For example, /subscriptions/00000000-0000-0000-0000-000000000000.  */
-    id?: string;
-    /** The subscription Id.  */
-    subscriptionId?: string;
-    /** The authorization source of the request. Valid values are one or more combinations of Legacy, RoleBased, Bypassed, Direct and Management. For example, 'Legacy, RoleBased'.  */
-    authorizationSource?: string;
-}
-
-/**
- * Definition: ResourceGroupListResult
- */
-export interface ResourceGroupListResult {
-    /** The list of resource groups.  */
-    value?: Array<ResourceGroup>;
-    /** The URL to get the next set of results.  */
-    nextLink?: string;
-}
-
-/**
- * Definition: ResourceGroup
- */
-export interface ResourceGroup {
-    /** The ID of the resource group (e.g. /subscriptions/XXX/resourceGroups/YYY).  */
-    id?: string;
-    /** The Name of the resource group.  */
-    name?: string;
-}
-
-/**
- * Definition: ResourceItemListResult
- */
-export interface ResourceItemListResult {
-    /** The list of resource items.  */
-    value?: Array<ResourceItem>;
-    /** The URL to get the next set of results.  */
-    nextLink?: string;
-}
-
-/**
- * Definition: ResourceItem
- */
-export interface ResourceItem {
-    /** The ID of the resource.  */
-    id?: string;
-    /** The Name of the resource . */
-    name?: string;
-}
-
-/**
- * Definition: TimeRangeTypesListResult
- */
-export interface TimeRangeTypesListResult {
-    /** The list of time range types (Relative\Absolute\SetInQuery).  */
-    value?: Array<TimeRangeItem>;
-    /** The URL to get the next set of results.  */
-    nextLink?: string;
-}
-
-/**
- * Definition: TimeRangeListResult
- */
-export interface TimeRangeListResult {
-    /** The list of time range.  */
-    value?: Array<TimeRangeItem>;
-    /** The URL to get the next set of results.  */
-    nextLink?: string;
-}
-
-/**
- * Definition: TimeRangeItem
- */
-export interface TimeRangeItem {
-    /** The ID of the item.  */
-    id?: number;
-    /** The Name of the item.  */
-    name?: string;
 }
 // #endregion Types
 

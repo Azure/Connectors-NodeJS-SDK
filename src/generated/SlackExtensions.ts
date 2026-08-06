@@ -28,10 +28,12 @@ export interface Channel {
 }
 
 /**
- * Definition: ListChannels_Response
+ * Definition: ListChannels_ResponseV3
  */
 export interface ListChannelsResponse {
-    channels?: Array<Channel>;
+    value?: Array<Channel>;
+    /** Link to get next page of results */
+    "@odata.nextLink"?: string;
 }
 
 /**
@@ -42,12 +44,12 @@ export interface CreateChannelResponse {
 }
 
 /**
- * Definition: JoinChannel_Response
+ * Definition: JoinChannel_ResponseV2
  */
 export interface JoinChannelResponse {
-    /** Whether the user is already in the channel or not. */
-    already_in_channel?: boolean;
     channel?: Channel;
+    /** Whether the user is already in the channel or not. */
+    warning?: string;
 }
 
 /**

@@ -47,21 +47,6 @@ export interface MultipleSearchFetchModel {
 }
 
 /**
- * Definition: SingleSearchFetchModel
- */
-export interface SingleSearchFetchModel {
-    /** body of result */
-    body?: Array<GeneralAPIModel>;
-}
-
-/**
- * Definition: MultipleFetchModel
- */
-export interface MultipleFetchModel {
-    [key: string]: unknown;
-}
-
-/**
  * Definition: GeneralAPIModel
  */
 export interface GeneralAPIModel {
@@ -749,13 +734,6 @@ export interface TeamDetails {
 }
 
 /**
- * Definition: Link
- */
-export interface Link {
-    href: string;
-}
-
-/**
  * Definition: PullRequest
  */
 export interface PullRequest {
@@ -873,17 +851,6 @@ export interface PullRequestFile {
     contents_url?: string;
     /** The patch content for the file. */
     patch?: string;
-}
-
-/**
- * Definition: WebhookPullRequestResponse
- */
-export interface WebhookPullRequestResponse {
-    /** The action that was performed. */
-    action?: string;
-    /** The pull request number. */
-    number?: number;
-    pull_request?: PullRequest;
 }
 
 /**

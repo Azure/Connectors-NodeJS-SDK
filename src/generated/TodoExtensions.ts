@@ -10,11 +10,27 @@ import { TriggerCallbackPayload } from "../azureConnectors/triggerPayload.ts";
 // #region Types
 
 /**
+ * Definition: TodoList
+ */
+export interface TodoList {
+    "@odata.etag"?: string;
+    /** Unique identifier of the to-do list. */
+    id?: string;
+    /** Name of the to-do list. */
+    displayName?: string;
+    /** Property indicating the well-known list name if the given list is a well-known list. Possible values are: none, defaultList, flaggedEmails, unknownFutureValue. */
+    wellknownListName?: string;
+    /** True if the user is owner of the given task list. */
+    isOwner?: boolean;
+    /** True if the task list is shared with other users. */
+    isShared?: boolean;
+}
+
+/**
  * Definition: ToDo
  */
 export interface ToDo {
     "@odata.context"?: string;
-    "@odata.id"?: string;
     "@odata.etag"?: string;
     /** Unique identifier of the to-do. */
     id?: string;
@@ -22,179 +38,28 @@ export interface ToDo {
     createdDateTime?: string;
     /** YYYY-MM-DDThh:mm:ssZ (UTC format) */
     lastModifiedDateTime?: string;
-    changeKey?: string;
-    /** Collection of category names associated with the to-do. */
-    categories?: Array<string>;
-    /** Name of the person who has been assigned the to-do. */
-    assignedTo?: string;
     /** To-do body that typically contains information about the to-do. */
     body?: Record<string, unknown>;
-    /** Date-time in the UTC time zone when the to-do was finished. */
+    /** YYYY-MM-DDThh:mm:ssZ (UTC format) */
+    bodyLastModifiedDateTime?: string;
+    /** The date in the specified time zone that the task was finished. */
     completedDateTime?: Record<string, unknown>;
-    /** Date in the UTC time zone when the to-do is to be finished. */
+    /** The date in the specified time zone that the task is to be finished. */
     dueDateTime?: Record<string, unknown>;
     /** Low, normal or high. */
     importance?: string;
     /** True if an alert is set to remind the user of the to-do. */
     isReminderOn?: boolean;
-    /** Name of the person who created the to-do. */
-    owner?: string;
-    /** Unique identifier of the parent folder. */
-    parentFolderId?: string;
-    /** Date-time in the UTC time zone for a reminder alert of the to-do to occur. */
+    /** The date and time for a reminder alert of the task to occur. */
     reminderDateTime?: Record<string, unknown>;
-    /** Date in the UTC time zone when the to-do is to begin. */
-    startDateTime?: Record<string, unknown>;
     /** Indicates state or progress of the to-do - not started, in progress, completed, waiting on others or deferred. */
     status?: string;
     /** Brief description or title of the to-do. */
-    subject?: string;
+    title?: string;
 }
 
 /**
- * Definition: ToDoHtml
- */
-export interface ToDoHtml {
-    "@odata.context"?: string;
-    "@odata.id"?: string;
-    "@odata.etag"?: string;
-    /** Unique identifier of the to-do. */
-    id?: string;
-    /** YYYY-MM-DDThh:mm:ssZ (UTC format) */
-    createdDateTime?: string;
-    /** YYYY-MM-DDThh:mm:ssZ (UTC format) */
-    lastModifiedDateTime?: string;
-    /** Collection of category names associated with the to-do. */
-    categories?: Array<string>;
-    /** Name of the person who has been assigned the to-do. */
-    assignedTo?: string;
-    /** To-do body that typically contains information about the to-do. */
-    body?: Record<string, unknown>;
-    /** Date-time in the UTC time zone when the to-do was finished. */
-    completedDateTime?: Record<string, unknown>;
-    /** Date in the UTC time zone when the to-do is to be finished. */
-    dueDateTime?: Record<string, unknown>;
-    /** Low, normal or high. */
-    importance?: string;
-    /** True if an alert is set to remind the user of the to-do. */
-    isReminderOn?: boolean;
-    /** Name of the person who created the to-do. */
-    owner?: string;
-    /** Unique identifier of the parent folder. */
-    parentFolderId?: string;
-    /** Date-time in the UTC time zone for a reminder alert of the to-do to occur. */
-    reminderDateTime?: Record<string, unknown>;
-    /** Date in the UTC time zone when the to-do is to begin. */
-    startDateTime?: Record<string, unknown>;
-    /** Indicates state or progress of the to-do - not started, in progress, completed, waiting on others or deferred. */
-    status?: string;
-    /** Brief description or title of the to-do. */
-    subject?: string;
-}
-
-/**
- * Definition: CreateToDoBody
- */
-export interface CreateToDoBody {
-    /** Date in the UTC time zone when the to-do is to be finished. */
-    DueDateTime?: Record<string, unknown>;
-    /** Date-time in UTC time zone for a reminder alert of the to-do to occur. */
-    ReminderDateTime?: Record<string, unknown>;
-    /** Date in the UTC time zone when the to-do is to begin. */
-    StartDateTime?: Record<string, unknown>;
-    /** Low, normal or high. */
-    Importance?: string;
-    /** Brief description or title of the to-do. */
-    Subject: string;
-    /** Indicates state or progress of the to-do - not started, in progress, completed, waiting on others or deferred. */
-    Status?: string;
-    /** Indicates the level of privacy for the event. */
-    Sensitivity?: string;
-    /** To-do body that typically contains information about the to-do. */
-    Body?: Record<string, unknown>;
-    /** Collection of category names associated with the to-do. */
-    Categories?: Array<string>;
-    /** True if an alert is set to remind the user of the to-do. */
-    IsReminderOn?: boolean;
-}
-
-/**
- * Definition: CreateToDoHtmlBody
- */
-export interface CreateToDoHtmlBody {
-    /** Date in the UTC time zone when the to-do is to be finished. */
-    DueDateTime?: Record<string, unknown>;
-    /** Date-time in UTC time zone for a reminder alert of the to-do to occur. */
-    ReminderDateTime?: Record<string, unknown>;
-    /** Date in the UTC time zone when the to-do is to begin. */
-    StartDateTime?: Record<string, unknown>;
-    /** Low, normal or high. */
-    Importance?: string;
-    /** Brief description or title of the to-do. */
-    Subject: string;
-    /** Indicates state or progress of the to-do - not started, in progress, completed, waiting on others or deferred. */
-    Status?: string;
-    /** Indicates the level of privacy for the event. */
-    Sensitivity?: string;
-    /** To-do body that typically contains information about the to-do. */
-    Body?: Record<string, unknown>;
-    /** Collection of category names associated with the to-do. */
-    Categories?: Array<string>;
-    /** True if an alert is set to remind the user of the to-do. */
-    IsReminderOn?: boolean;
-}
-
-/**
- * Definition: UpdateToDoBody
- */
-export interface UpdateToDoBody {
-    /** Date in the UTC time zone when the to-do is to be finished. */
-    DueDateTime?: Record<string, unknown>;
-    /** Date-time in UTC time zone for a reminder alert of the to-do to occur. */
-    ReminderDateTime?: Record<string, unknown>;
-    /** Date in the UTC time zone when the to-do is to begin. */
-    StartDateTime?: Record<string, unknown>;
-    /** Low, normal or high. */
-    Importance?: string;
-    /** Brief description or title of the to-do. */
-    Subject?: string;
-    /** Indicates state or progress of the to-do - not started, in progress, completed, waiting on others or deferred. */
-    Status?: string;
-    /** Indicates the level of privacy for the event. */
-    Sensitivity?: string;
-    /** To-do body that typically contains information about the to-do. */
-    Body?: Record<string, unknown>;
-    /** Collection of category names associated with the to-do. */
-    Categories?: Array<string>;
-    /** True if an alert is set to remind the user of the to-do. */
-    IsReminderOn?: boolean;
-}
-
-/**
- * Definition: TodoList
- */
-export interface TodoList {
-    "@odata.id"?: string;
-    /** Unique identifier of the to-do list. */
-    id?: string;
-    changeKey?: string;
-    /** Name of the to-do list. */
-    name?: string;
-    /** True if this is the default to-do list. */
-    isDefaultFolder?: boolean;
-    parentGroupKey?: string;
-}
-
-/**
- * Definition: CreateToDoListBody
- */
-export interface CreateToDoListBody {
-    /** List name */
-    name: string;
-}
-
-/**
- * Definition: CreateToDo_V2
+ * Definition: CreateToDo
  */
 export interface CreateToDo {
     /** Date in the UTC time zone when the to-do is to be finished (note the time portion will be ignored). */
@@ -214,7 +79,7 @@ export interface CreateToDo {
 }
 
 /**
- * Definition: UpdateToDo_V2
+ * Definition: UpdateToDo
  */
 export interface UpdateToDo {
     /** Date in the UTC time zone when the to-do is to be finished (note the time portion will be ignored). */
@@ -234,7 +99,7 @@ export interface UpdateToDo {
 }
 
 /**
- * Definition: CreateToDoList_V2
+ * Definition: CreateToDoList
  */
 export interface CreateToDoList {
     /** List name */

@@ -43,7 +43,7 @@ export interface DirectReportsResponse {
 }
 
 /**
- * Definition: GraphUserUpdateable_V1
+ * Definition: GraphUserUpdateable
  */
 export interface GraphUserUpdateable {
     /** About Me */
@@ -247,13 +247,6 @@ export interface ClientPhotoMetadata {
 }
 
 /**
- * Definition: Object
- */
-export interface ObjectEntity {
-    [key: string]: unknown;
-}
-
-/**
  * Definition: EntityListResponse[IReadOnlyList[User]]
  */
 export interface EntityListResponseIReadOnlyListUser {
@@ -264,7 +257,7 @@ export interface EntityListResponseIReadOnlyListUser {
 }
 
 /**
- * Definition: GraphUser_V1
+ * Definition: GraphUser
  */
 export interface GraphUser {
     /** About Me */

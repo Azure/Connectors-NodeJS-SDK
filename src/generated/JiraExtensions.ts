@@ -185,35 +185,10 @@ export interface ListProjectsResponse {
 }
 
 /**
- * Definition: Project
- */
-export interface Project {
-    /** The unique Id of the project. */
-    id?: string;
-    /** The unique key of the project. */
-    key?: string;
-    /** Name of the project. */
-    name?: string;
-    /** The unique key of the project type. */
-    projectTypeKey?: string;
-}
-
-/**
  * Definition: ProjectArray
  */
 export interface ProjectArray {
     [key: string]: unknown;
-}
-
-/**
- * Definition: PartialIssue
- */
-export interface PartialIssue {
-    /** The unique Id of the Issue. */
-    id?: string;
-    /** The unique key of the issue. */
-    key?: string;
-    fields?: Record<string, unknown>;
 }
 
 /**
@@ -227,69 +202,6 @@ export interface FullIssue {
     /** Browse to the issue using this URL. */
     self?: string;
     fields?: Record<string, unknown>;
-}
-
-/**
- * Definition: Creator
- */
-export interface Creator {
-    /** Person who created the issue. */
-    accountId?: string;
-    /** Unique key of the person who created the issue. */
-    key?: string;
-    /** Email of the person who created the issue. */
-    emailAddress?: string;
-    /** Display name of the person who created the issue. */
-    displayName?: string;
-}
-
-/**
- * Definition: Assignee
- */
-export interface Assignee {
-    /** Person whom the issue is assigned to. */
-    accountId?: string;
-    /** Unique key of the person whom the issue is assigned to. */
-    key?: string;
-    /** Email of the person whom the issue is assigned to. */
-    emailAddress?: string;
-    /** Display name of the person whom the issue is assigned to. */
-    displayName?: string;
-}
-
-/**
- * Definition: User
- */
-export interface User {
-    /** Id of the Jira user. */
-    accountId?: string;
-    /** Unique key of the Jira user. */
-    key?: string;
-    /** Email of the Jira user. */
-    emailAddress?: string;
-    /** Display name of the Jira user. */
-    displayName?: string;
-}
-
-/**
- * Definition: UserList
- */
-export interface UserList {
-    [key: string]: unknown;
-}
-
-/**
- * Definition: Reporter
- */
-export interface Reporter {
-    /** Person who reported the issue. */
-    AccountId?: string;
-    /** Unique key of the person who reported the issue. */
-    key?: string;
-    /** Email of the person who reported the issue. */
-    emailAddress?: string;
-    /** Display name of the person who reported the issue. */
-    displayName?: string;
 }
 
 /**
@@ -329,41 +241,6 @@ export interface ListIssuesResponseDatacenter {
 }
 
 /**
- * Definition: IssueTypes
- */
-export interface IssueTypes {
-    [key: string]: unknown;
-}
-
-/**
- * Definition: CreateIssueRequest
- */
-export interface CreateIssueRequest {
-    fields: Record<string, unknown>;
-}
-
-/**
- * Definition: UpdateIssueRequest
- */
-export interface UpdateIssueRequest {
-    fields?: Record<string, unknown>;
-}
-
-/**
- * Definition: StatusList
- */
-export interface StatusList {
-    [key: string]: unknown;
-}
-
-/**
- * Definition: PriorityList
- */
-export interface PriorityList {
-    [key: string]: unknown;
-}
-
-/**
  * Definition: Comment
  */
 export interface Comment {
@@ -381,13 +258,6 @@ export interface CommentResponse {
     body?: string;
     /** yyyy-MM-ddTHH:mm:ss.fffZ */
     created?: string;
-}
-
-/**
- * Definition: Sites
- */
-export interface Sites {
-    [key: string]: unknown;
 }
 
 /**

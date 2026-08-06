@@ -51,7 +51,7 @@ describe("SlackClient — listChannelsAsync", () => {
     });
 
     it("should GET channels list", async () => {
-        const mockResponse: ListChannelsResponse = { channels: [] };
+        const mockResponse: ListChannelsResponse = { value: [] };
         mockFetchResponse(mockResponse);
 
         const client = new SlackClient(TestConnectionUrl, createMockTokenProvider());
