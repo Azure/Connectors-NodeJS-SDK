@@ -20,7 +20,7 @@ async function main(): Promise<void> {
 
     try {
         const result: ListChannelsResponse = await client.listChannelsAsync();
-        console.log(`Channels returned: ${(result.channels ?? []).length}`);
+        console.log(`Channels returned: ${(result.value ?? []).length}`);
     } catch (error) {
         if (error instanceof ConnectorException) {
             console.log(`Connector error (${error.statusCode}): ${error.message}`);
