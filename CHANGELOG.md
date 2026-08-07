@@ -7,6 +7,34 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed
+
+- Regenerated the 21 TypeScript connector clients under `src/generated/` against
+  the AzureUX-BPM `CodefulSdkGenerator` fix for [issue #70](https://github.com/Azure/Connectors-NodeJS-SDK/issues/70)
+  (`bpmCommit ad9ca945f84`, `assemblyVersion 1.185.0.6`). The previous
+  generator picked the first version-family sibling it saw when two swagger
+  definitions collapsed to the same version-stripped name (for example
+  `ListChannels_ResponseV1` vs `ListChannels_ResponseV3`), so an unreachable
+  deprecated sibling could silently override the current sibling used by the
+  emitted client. The fixed generator now walks reachable operations first and
+  emits the sibling that is actually referenced.
+
+### Changed (BREAKING)
+
+- `SlackExtensions.ListChannelsResponse` — renamed field `channels` → `value`
+  to match the current upstream shape (`ListChannels_ResponseV3`). Consumers
+  reading `.channels` must switch to `.value`.
+- `SmtpExtensions.Attachment` — removed field `ContentTransferEncoding` to
+  match the current upstream shape (`AttachmentV2`). Consumers setting this
+  field on outgoing attachments must remove it; the connector infers transfer
+  encoding.
+- Removed a large set of previously emitted but unreferenced deprecated-sibling
+  type declarations across Office 365 Outlook, Microsoft Teams, DocuSign,
+  SharePoint Online, Salesforce, Microsoft To Do, Jira, Power BI, and other
+  connectors (net removal of ~3,000 lines under `src/generated/`). These types
+  were never reachable from any emitted operation, but downstream code that
+  imported them by name will need to update to the currently emitted variants.
+
 ## [0.3.0-preview] - 2026-07-13
 
 ### Added
