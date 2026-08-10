@@ -82,6 +82,13 @@ export interface MCPQueryResponse {
 }
 
 /**
+ * Definition: Object
+ */
+export interface ObjectEntity {
+    [key: string]: unknown;
+}
+
+/**
  * Definition: Query
  */
 export type Query = string;

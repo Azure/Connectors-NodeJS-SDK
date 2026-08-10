@@ -9,7 +9,7 @@ import { TokenProvider } from "../azureConnectors/authentication.ts";
 // #region Types
 
 /**
- * Definition: AttachmentV2
+ * Definition: Attachment
  */
 export interface Attachment {
     /** Content data */
@@ -23,7 +23,7 @@ export interface Attachment {
 }
 
 /**
- * Definition: EmailV3
+ * Definition: Email
  */
 export interface Email {
     /** Email address of sender like sender@domain.com */

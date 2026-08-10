@@ -28,7 +28,7 @@ export interface Channel {
 }
 
 /**
- * Definition: ListChannels_ResponseV3
+ * Definition: ListChannels_Response
  */
 export interface ListChannelsResponse {
     value?: Array<Channel>;
@@ -44,7 +44,7 @@ export interface CreateChannelResponse {
 }
 
 /**
- * Definition: JoinChannel_ResponseV2
+ * Definition: JoinChannel_Response
  */
 export interface JoinChannelResponse {
     channel?: Channel;

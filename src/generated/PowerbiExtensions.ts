@@ -357,6 +357,49 @@ export interface EvaluatedAlert {
 }
 
 /**
+ * Definition: Alert
+ */
+export interface Alert {
+    /** The ID of the alert. */
+    alertId?: string;
+    /** The title of the alert. */
+    alertTitle?: string;
+    /** The ID of the group. */
+    groupId?: string;
+}
+
+/**
+ * Definition: Groups
+ */
+export interface Groups {
+    value?: Array<Record<string, unknown>>;
+}
+
+/**
+ * Definition: Datasets
+ */
+export interface Datasets {
+    value?: Array<Record<string, unknown>>;
+}
+
+/**
+ * Definition: Reports
+ */
+export interface Reports {
+    /** OData context */
+    "odata.context"?: string;
+    /** The report collection */
+    value?: Array<unknown>;
+}
+
+/**
+ * Definition: Tables
+ */
+export interface Tables {
+    value?: Array<Record<string, unknown>>;
+}
+
+/**
  * Definition: Payload
  */
 export interface Payload {
@@ -447,6 +490,27 @@ export interface EffectiveIdentity {
 export interface IdentityBlob {
     /** OAuth2 access token for SQL Azure */
     value: string;
+}
+
+/**
+ * Definition: Columns
+ */
+export interface Columns {
+    schema?: Record<string, unknown>;
+}
+
+/**
+ * Definition: DynamicPowerBiButtonClickedTriggerResult
+ */
+export interface DynamicPowerBiButtonClickedTriggerResult {
+    [key: string]: unknown;
+}
+
+/**
+ * Definition: PowerBiButtonClickedOutputs
+ */
+export interface PowerBiButtonClickedOutputs {
+    PowerBiInputs?: Record<string, unknown>;
 }
 // #endregion Types
 

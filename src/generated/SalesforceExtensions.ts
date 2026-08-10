@@ -76,6 +76,18 @@ export interface PostItemResponse {
 }
 
 /**
+ * Definition: BlobDataSetsMetadata
+ */
+export interface BlobDataSetsMetadata {
+    /** Blob dataset source */
+    source?: string;
+    /** Blob dataset display name */
+    displayName?: string;
+    /** Blob dataset url encoding */
+    urlEncoding?: string;
+}
+
+/**
  * Definition: CreateJobParameters
  */
 export interface CreateJobParameters {
@@ -130,6 +142,34 @@ export interface CreateJobResponse {
 }
 
 /**
+ * Definition: DataSet
+ */
+export interface DataSet {
+    /** Dataset name */
+    Name?: string;
+    /** Dataset display name */
+    DisplayName?: string;
+    /** Pass-through Native Queries */
+    query?: Array<PassThroughNativeQuery>;
+}
+
+/**
+ * Definition: DataSetsList
+ */
+export interface DataSetsList {
+    /** List of datasets */
+    value?: Array<DataSet>;
+}
+
+/**
+ * Definition: DataSetsMetadata
+ */
+export interface DataSetsMetadata {
+    tabular?: TabularDataSetsMetadata;
+    blob?: BlobDataSetsMetadata;
+}
+
+/**
  * Definition: ExecuteSoqlQueryParameters
  */
 export interface ExecuteSoqlQueryParameters {
@@ -137,6 +177,24 @@ export interface ExecuteSoqlQueryParameters {
     query: string;
     /** SOQL Query dynamic parameters. Key is parameter name (without '@' at sign), value is parameter value. */
     parameters?: Record<string, unknown>;
+}
+
+/**
+ * Definition: ExternalIdField
+ */
+export interface ExternalIdField {
+    /** Name of the external ID field, used at runtime. */
+    Name?: string;
+    /** Display name of the external ID field. */
+    DisplayName?: string;
+}
+
+/**
+ * Definition: ExternalIdFieldsList
+ */
+export interface ExternalIdFieldsList {
+    /** List of external ID fields. */
+    value?: Array<ExternalIdField>;
 }
 
 /**
@@ -162,6 +220,24 @@ export interface ObjectEntity {
 }
 
 /**
+ * Definition: PassThroughNativeQuery
+ */
+export interface PassThroughNativeQuery {
+    /** Query language */
+    Language?: string;
+}
+
+/**
+ * Definition: Procedure
+ */
+export interface Procedure {
+    /** Procedure name */
+    Name?: string;
+    /** Procedure display name */
+    DisplayName?: string;
+}
+
+/**
  * Definition: Table
  */
 export interface Table {
@@ -174,11 +250,91 @@ export interface Table {
 }
 
 /**
+ * Definition: TableCapabilitiesMetadata
+ */
+export interface TableCapabilitiesMetadata {
+    sortRestrictions?: TableSortRestrictionsMetadata;
+    filterRestrictions?: TableFilterRestrictionsMetadata;
+    selectRestrictions?: TableSelectRestrictionsMetadata;
+    /** Server paging restrictions */
+    isOnlyServerPagable?: boolean;
+    /** List of supported filter capabilities */
+    filterFunctionSupport?: Array<string>;
+    /** List of supported server-driven paging capabilities */
+    serverPagingOptions?: Array<string>;
+}
+
+/**
+ * Definition: TableFilterRestrictionsMetadata
+ */
+export interface TableFilterRestrictionsMetadata {
+    /** Indicates whether this table has filterable columns */
+    filterable?: boolean;
+    /** List of non filterable properties */
+    nonFilterableProperties?: Array<string>;
+    /** List of required properties */
+    requiredProperties?: Array<string>;
+}
+
+/**
+ * Definition: TableMetadata
+ */
+export interface TableMetadata {
+    /** Table name */
+    name?: string;
+    /** Table title */
+    title?: string;
+    /** Table permission */
+    "x-ms-permission"?: string;
+    "x-ms-capabilities"?: TableCapabilitiesMetadata;
+    schema?: ObjectEntity;
+    referencedEntities?: ObjectEntity;
+    /** URL link */
+    webUrl?: string;
+}
+
+/**
+ * Definition: TableSelectRestrictionsMetadata
+ */
+export interface TableSelectRestrictionsMetadata {
+    /** Indicates whether this table has selectable columns */
+    selectable?: boolean;
+}
+
+/**
  * Definition: TablesList
  */
 export interface TablesList {
     /** List of Tables */
     value?: Array<Table>;
+}
+
+/**
+ * Definition: TableSortRestrictionsMetadata
+ */
+export interface TableSortRestrictionsMetadata {
+    /** Indicates whether this table has sortable columns */
+    sortable?: boolean;
+    /** List of unsortable properties */
+    unsortableProperties?: Array<string>;
+    /** List of properties which support ascending order only */
+    ascendingOnlyProperties?: Array<string>;
+}
+
+/**
+ * Definition: TabularDataSetsMetadata
+ */
+export interface TabularDataSetsMetadata {
+    /** Dataset source */
+    source?: string;
+    /** Dataset display name */
+    displayName?: string;
+    /** Dataset url encoding */
+    urlEncoding?: string;
+    /** Table display name */
+    tableDisplayName?: string;
+    /** Table plural display name */
+    tablePluralName?: string;
 }
 
 /**
@@ -190,6 +346,22 @@ export interface GetAllJobsResponse {
     records?: Array<JobInfo>;
     /** Next Record URL */
     nextRecordUrl?: string;
+}
+
+/**
+ * Definition: CreateJobRequest
+ */
+export interface CreateJobRequest {
+    /** Column Delimiter */
+    columnDelimiter?: string;
+    /** External ID Field Name */
+    externalIdFieldName?: string;
+    /** Line Ending */
+    lineEnding?: string;
+    /** Object */
+    object: string;
+    /** Operation */
+    operation: string;
 }
 
 /**
@@ -269,6 +441,21 @@ export interface CheckJobResponse {
     systemModStamp?: string;
     /** Total Processing Time */
     totalProcessingTime?: number;
+}
+
+/**
+ * Definition: InstanceUrlResponse
+ */
+export interface InstanceUrlResponse {
+    /** Instance Url */
+    instanceUrl?: string;
+}
+
+/**
+ * Definition: GetCurrentUserInfoResponse
+ */
+export interface GetCurrentUserInfoResponse {
+    [key: string]: unknown;
 }
 
 /**

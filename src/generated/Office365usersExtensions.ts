@@ -247,6 +247,13 @@ export interface ClientPhotoMetadata {
 }
 
 /**
+ * Definition: Object
+ */
+export interface ObjectEntity {
+    [key: string]: unknown;
+}
+
+/**
  * Definition: EntityListResponse[IReadOnlyList[User]]
  */
 export interface EntityListResponseIReadOnlyListUser {
@@ -550,7 +557,7 @@ export class Office365usersClient extends ConnectorClientBase {
 
     /**
      * Search for users
-     * @remarks Retrieves the user profiles that match the search term (V2).
+     * @remarks Retrieves the user profiles that match the search term.
      */
     public async searchUserAsync(searchTerm?: string, top?: string, isSearchTermRequired?: string, skipToken?: string, abortSignal?: AbortSignal): Promise<EntityListResponseIReadOnlyListUser> {
         const queryParams: string[] = [];

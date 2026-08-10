@@ -25,9 +25,42 @@ export type CreateFileInput = string;
 export type UpdateFileInput = string;
 
 /**
+ * Definition: Object
+ */
+export interface ObjectEntity {
+    [key: string]: unknown;
+}
+
+/**
  * Definition: BlobMetadata
  */
 export interface BlobMetadata {
+    /** The unique id of the file or folder. */
+    Id?: string;
+    /** The name of the file or folder. */
+    Name?: string;
+    /** The display name of the file or folder. */
+    DisplayName?: string;
+    /** The path of the file or folder. */
+    Path?: string;
+    /** The date and time the file or folder was last modified. */
+    LastModified?: string;
+    /** The size of the file or folder. */
+    Size?: number;
+    /** The media type of the file or folder. */
+    MediaType?: string;
+    /** A boolean value (true, false) to indicate whether or not the blob is a folder. */
+    IsFolder?: boolean;
+    /** The etag of the file or folder. */
+    ETag?: string;
+    /** The filelocator of the file or folder. */
+    FileLocator?: string;
+}
+
+/**
+ * Definition: BlobMetadataResponse
+ */
+export interface BlobMetadataResponse {
     /** The unique id of the file or folder. */
     Id?: string;
     /** The name of the file or folder. */
@@ -148,6 +181,60 @@ export interface SharedAccessSignatureBlobPolicy {
 export interface SharedAccessSignature {
     /** A URL to an object with access token. */
     WebUrl?: string;
+}
+
+/**
+ * Definition: StorageAccountList
+ */
+export interface StorageAccountList {
+    /** List of storage account names */
+    value?: Array<StorageAccount>;
+}
+
+/**
+ * Definition: StorageAccount
+ */
+export interface StorageAccount {
+    /** The name of the storage account. */
+    Name?: string;
+    /** The display name of the storage account. */
+    DisplayName?: string;
+}
+
+/**
+ * Definition: DataSetsMetadata
+ */
+export interface DataSetsMetadata {
+    tabular?: TabularDataSetsMetadata;
+    blob?: BlobDataSetsMetadata;
+}
+
+/**
+ * Definition: TabularDataSetsMetadata
+ */
+export interface TabularDataSetsMetadata {
+    /** Dataset source */
+    source?: string;
+    /** Dataset display name */
+    displayName?: string;
+    /** Dataset url encoding */
+    urlEncoding?: string;
+    /** Table display name */
+    tableDisplayName?: string;
+    /** Table plural display name */
+    tablePluralName?: string;
+}
+
+/**
+ * Definition: BlobDataSetsMetadata
+ */
+export interface BlobDataSetsMetadata {
+    /** Blob dataset source */
+    source?: string;
+    /** Blob dataset display name */
+    displayName?: string;
+    /** Blob dataset url encoding */
+    urlEncoding?: string;
 }
 
 /**

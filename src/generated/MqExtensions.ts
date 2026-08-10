@@ -19,6 +19,22 @@ export interface SendResponse {
 }
 
 /**
+ * Definition: ProcedureMetadata
+ */
+export interface ProcedureMetadata {
+    name?: string;
+    title?: string;
+    schema?: ObjectEntity;
+}
+
+/**
+ * Definition: Object
+ */
+export interface ObjectEntity {
+    [key: string]: unknown;
+}
+
+/**
  * Definition: Item
  */
 export interface Item {
@@ -125,6 +141,13 @@ export interface SendValidDataOptions {
     Offset?: number;
     /** Format field for the message. */
     Format?: string;
+}
+
+/**
+ * Definition: SendValidDataOptionsArray
+ */
+export interface SendValidDataOptionsArray {
+    messages: Array<SendValidDataOptions>;
 }
 // #endregion Types
 
