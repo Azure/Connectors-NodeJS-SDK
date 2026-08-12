@@ -93,7 +93,16 @@ describe("GoogledriveClient — getFileMetadataAsync", () => {
         mockFetchError(404, "Not Found");
 
         const client = new GoogledriveClient(TestConnectionUrl, createMockTokenProvider());
-        await expect(client.getFileMetadataAsync("missing")).rejects.toThrow(ConnectorException);
+        try {
+            await client.getFileMetadataAsync("missing");
+            throw new Error("Expected ConnectorException to be thrown.");
+        } catch (error) {
+            expect(error).toBeInstanceOf(ConnectorException);
+            const connectorError = error as ConnectorException;
+            expect(connectorError.statusCode).toBe(404);
+            expect(connectorError.responseBody).toBe("Not Found");
+            expect(connectorError.operation).toBe("GET /datasets/default/files/missing");
+        }
     });
 });
 

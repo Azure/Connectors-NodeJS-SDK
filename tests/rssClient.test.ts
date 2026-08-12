@@ -96,7 +96,18 @@ describe("RssClient — listFeedItemsAsync", () => {
         mockFetchError(400, "Bad Request");
 
         const client = new RssClient(TestConnectionUrl, createMockTokenProvider());
-        await expect(client.listFeedItemsAsync("https://example.com/feed.xml")).rejects.toThrow(ConnectorException);
+        try {
+            await client.listFeedItemsAsync("https://example.com/feed.xml");
+            throw new Error("Expected ConnectorException to be thrown.");
+        } catch (error) {
+            expect(error).toBeInstanceOf(ConnectorException);
+            const connectorError = error as ConnectorException;
+            expect(connectorError.statusCode).toBe(400);
+            expect(connectorError.responseBody).toBe("Bad Request");
+            expect(connectorError.operation).toBe(
+                "GET /ListFeedItems?feedUrl=https%3A%2F%2Fexample.com%2Ffeed.xml",
+            );
+        }
     });
 });
 

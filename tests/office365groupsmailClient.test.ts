@@ -93,7 +93,16 @@ describe("Office365groupsmailClient — listConversationsAsync", () => {
         mockFetchError(403, "Forbidden");
 
         const client = new Office365groupsmailClient(TestConnectionUrl, createMockTokenProvider());
-        await expect(client.listConversationsAsync("group1")).rejects.toThrow(ConnectorException);
+        try {
+            await client.listConversationsAsync("group1");
+            throw new Error("Expected ConnectorException to be thrown.");
+        } catch (error) {
+            expect(error).toBeInstanceOf(ConnectorException);
+            const connectorError = error as ConnectorException;
+            expect(connectorError.statusCode).toBe(403);
+            expect(connectorError.responseBody).toBe("Forbidden");
+            expect(connectorError.operation).toBe("GET /v1.0/groups/group1/conversations");
+        }
     });
 });
 

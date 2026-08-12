@@ -105,7 +105,16 @@ describe("ExcelonlineClient — getTablesAsync", () => {
         mockFetchError(403, "Forbidden");
 
         const client = new ExcelonlineClient(TestConnectionUrl, createMockTokenProvider());
-        await expect(client.getTablesAsync("drive1", "file1")).rejects.toThrow(ConnectorException);
+        try {
+            await client.getTablesAsync("drive1", "file1");
+            throw new Error("Expected ConnectorException to be thrown.");
+        } catch (error) {
+            expect(error).toBeInstanceOf(ConnectorException);
+            const connectorError = error as ConnectorException;
+            expect(connectorError.statusCode).toBe(403);
+            expect(connectorError.responseBody).toBe("Forbidden");
+            expect(connectorError.operation).toBe("GET /codeless/v1.0/drives/drive1/items/file1/workbook/tables");
+        }
     });
 });
 

@@ -93,7 +93,16 @@ describe("GoogletasksClient — listTasksAsync", () => {
         mockFetchError(404, "Not Found");
 
         const client = new GoogletasksClient(TestConnectionUrl, createMockTokenProvider());
-        await expect(client.listTasksAsync("missing")).rejects.toThrow(ConnectorException);
+        try {
+            await client.listTasksAsync("missing");
+            throw new Error("Expected ConnectorException to be thrown.");
+        } catch (error) {
+            expect(error).toBeInstanceOf(ConnectorException);
+            const connectorError = error as ConnectorException;
+            expect(connectorError.statusCode).toBe(404);
+            expect(connectorError.responseBody).toBe("Not Found");
+            expect(connectorError.operation).toBe("GET /lists/missing/tasks");
+        }
     });
 });
 
