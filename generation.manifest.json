@@ -2,12 +2,12 @@
   "_comment": "Provenance record for the generated clients under src/generated/. It lets a regeneration be reproduced and any cross-language surface delta be attributed to a specific generator revision and Swagger input. Regenerate and repopulate this file on every run (see the 'Provenance & Reproducibility' section of GENERATION.md). A reviewable regeneration PR must have status 'generated' with non-null provenance, swaggerSha256 values that match the committed swagger-cache/ snapshots, and outputSha256 values that match the canonical UTF-8/LF generated outputs; the tests/generationManifest.test.ts guard enforces this.",
   "manifestVersion": 1,
   "status": "generated",
-  "generatedAtUtc": "2026-08-10T21:58:43Z",
+  "generatedAtUtc": "2026-08-12T18:00:36Z",
   "generator": {
     "repository": "https://msazure.visualstudio.com/One/_git/AzureUX-BPM",
     "tool": "CodefulSdkGenerator (LogicAppsCompiler)",
     "projectPath": "src/tools/CodefulSdkGenerator/LogicAppsCompiler.Cli/LogicAppsCompiler.Cli.csproj",
-    "bpmCommit": "84fe145bdb35a100eb2efa39943f01376353b91d",
+    "bpmCommit": "fa2f6e219b2d32fe09a1b15f480c0f95c3e7c96b",
     "bpmBranch": "swapnil/fix/typescript-reachability-emission",
     "assemblyVersion": "1.185.0.17"
   },
@@ -18,7 +18,7 @@
     "subscriptionId": "f34b22a3-2202-4fb1-b040-1332bd928c84",
     "location": "westus",
     "apiVersion": "2018-07-01-preview",
-    "capturedAtUtc": "2026-08-10T21:58:43Z",
+    "capturedAtUtc": "2026-08-12T18:00:36Z",
     "swaggerCacheDirectory": "swagger-cache/"
   },
   "connectors": [
