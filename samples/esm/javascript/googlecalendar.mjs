@@ -10,7 +10,7 @@
  *     $env:GOOGLECALENDAR_CONNECTION_URL = "https://[region].azure-apihub.net/apim/googlecalendar/[connection-id]"
  *
  *   Run:
- *     npm start
+ *     node googlecalendar.mjs
  */
 
 import { ManagedIdentityTokenProvider, ConnectorException } from "@azure/connectors";

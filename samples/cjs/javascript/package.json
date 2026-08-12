@@ -4,7 +4,7 @@
     "private": true,
     "description": "CommonJS JavaScript sample for @azure/connectors SDK",
     "scripts": {
-        "start": "node sampleOffice365.cjs"
+        "start": "node office365.cjs"
     },
     "dependencies": {
         "@azure/connectors": "0.1.2-preview",

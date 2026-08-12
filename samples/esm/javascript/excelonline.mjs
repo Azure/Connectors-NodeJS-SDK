@@ -12,7 +12,7 @@
  *     $env:EXCEL_FILE_ID  = "[workbook file id]"
  *
  *   Run:
- *     npm start
+ *     node excelonline.mjs
  */
 
 import { ManagedIdentityTokenProvider, ConnectorException } from "@azure/connectors";

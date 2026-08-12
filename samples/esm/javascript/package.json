@@ -5,7 +5,7 @@
     "type": "module",
     "description": "ESM JavaScript sample for @azure/connectors SDK",
     "scripts": {
-        "start": "node sampleOffice365.mjs"
+        "start": "node office365.mjs"
     },
     "dependencies": {
         "@azure/connectors": "0.1.2-preview",

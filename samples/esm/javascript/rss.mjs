@@ -11,7 +11,7 @@
  *     $env:RSS_FEED_URL       = "[optional feed url]"
  *
  *   Run:
- *     npm start
+ *     node rss.mjs
  */
 
 import { ManagedIdentityTokenProvider, ConnectorException } from "@azure/connectors";

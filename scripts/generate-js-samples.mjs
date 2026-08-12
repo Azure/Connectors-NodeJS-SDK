@@ -5,215 +5,72 @@
  * TypeScript samples for every connector where a JS counterpart is missing.
  *
  * Approach:
- *   - Regex-based transform that preserves whitespace and comments from the
- *     TS source so the generated JS matches the hand-written baselines.
- *   - Filters type-only imports using the SDK's simple runtime allowlist:
- *       * everything exported from "@azure/connectors" is runtime;
- *       * from "@azure/connectors/generated/<Api>Extensions" only the
- *         *Client class is runtime — every other name is a TS type.
- *   - Strips type annotations on functions, variables, and parameters, plus
- *     `as T` (and chained `as unknown as T`) type assertions.
- *   - For CJS, rewrites `import { A, B } from "X";` as
- *     `const { A, B } = require("X");` and inserts `"use strict";`.
+ *   - Uses the TypeScript compiler to remove types and type-only imports.
+ *   - Emits native ESM or CommonJS without attempting to parse TypeScript
+ *     syntax with regular expressions.
  *   - Rewords the JSDoc header and any in-code log strings from TypeScript
  *     to JavaScript so the sample self-describes correctly.
  *
  * Usage:
  *   node scripts/generate-js-samples.mjs           # write missing files only
  *   node scripts/generate-js-samples.mjs --force   # overwrite existing files
+ *   node scripts/generate-js-samples.mjs --force --output-root <directory>
  */
 
 import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
+import ts from "typescript";
 
 const RepositoryRoot = path.dirname(path.dirname(fileURLToPath(import.meta.url)));
 const EsmTypeScriptDir = path.join(RepositoryRoot, "samples", "esm", "typescript");
-const EsmJavaScriptDir = path.join(RepositoryRoot, "samples", "esm", "javascript");
 const CjsTypeScriptDir = path.join(RepositoryRoot, "samples", "cjs", "typescript");
-const CjsJavaScriptDir = path.join(RepositoryRoot, "samples", "cjs", "javascript");
 
 const ForceOverwrite = process.argv.includes("--force");
-
-/**
- * Returns the runtime-only subset of an `import { ... }` specifier list based
- * on the SDK's simple allowlist.
- */
-function filterRuntimeImports(importNames, moduleSpecifier) {
-    const names = importNames
-        .split(",")
-        .map(name => name.trim())
-        .filter(name => name.length > 0);
-
-    if (moduleSpecifier === "@azure/connectors") {
-        return names;
-    }
-
-    if (moduleSpecifier.startsWith("@azure/connectors/generated/")) {
-        return names.filter(name => name.endsWith("Client"));
-    }
-
-    return names;
+const OutputRootArgumentIndex = process.argv.indexOf("--output-root");
+if (OutputRootArgumentIndex >= 0 && !process.argv[OutputRootArgumentIndex + 1]) {
+    throw new Error("The '--output-root' option requires a directory path.");
 }
 
-/**
- * Walks the source starting at typeStart and returns the exclusive end index
- * of a TypeScript type expression, following angle-bracket depth, chained
- * unions and intersections, and `as unknown as T` sequences.
- */
-function findTypeExpressionEnd(source, typeStart) {
-    let index = typeStart;
-    let angleDepth = 0;
-
-    while (index < source.length) {
-        const character = source[index];
-
-        if (character === "<") {
-            angleDepth += 1;
-            index += 1;
-            continue;
-        }
-
-        if (character === ">") {
-            if (angleDepth === 0) {
-                break;
-            }
-
-            angleDepth -= 1;
-            index += 1;
-            continue;
-        }
-
-        if (angleDepth > 0) {
-            index += 1;
-            continue;
-        }
-
-        if (/[\w.[\]?]/.test(character)) {
-            index += 1;
-            continue;
-        }
-
-        if (character === " " || character === "\t") {
-            const lookahead = source.slice(index).match(/^[ \t]+(as[ \t]|[|&][ \t]*[\w.[])/);
-            if (lookahead) {
-                index += lookahead[0].length - 1;
-                continue;
-            }
-
-            break;
-        }
-
-        break;
-    }
-
-    return index;
-}
+const OutputRoot = OutputRootArgumentIndex >= 0
+    ? path.resolve(process.argv[OutputRootArgumentIndex + 1])
+    : path.join(RepositoryRoot, "samples");
+const EsmJavaScriptDir = path.join(OutputRoot, "esm", "javascript");
+const CjsJavaScriptDir = path.join(OutputRoot, "cjs", "javascript");
 
 /**
- * Removes every ` as <TypeExpression>` type assertion (including chained
- * `as unknown as T`) from the source.
+ * Transpiles a TypeScript sample using the compiler's parser and emitter.
  */
-function stripAsCasts(source) {
-    let result = "";
-    let cursor = 0;
-    const asPattern = /\bas[ \t]/g;
-
-    while (true) {
-        asPattern.lastIndex = cursor;
-        const match = asPattern.exec(source);
-        if (match === null) {
-            result += source.slice(cursor);
-            break;
-        }
-
-        const previousChar = source[match.index - 1];
-        const isCast = previousChar === " " || previousChar === "\t"
-            || previousChar === ")" || previousChar === "]";
-
-        if (!isCast) {
-            result += source.slice(cursor, match.index + match[0].length);
-            cursor = match.index + match[0].length;
-            continue;
-        }
-
-        // Emit everything up to but not including the whitespace before `as`.
-        let leadingWhitespaceStart = match.index;
-        while (leadingWhitespaceStart > cursor
-            && (source[leadingWhitespaceStart - 1] === " " || source[leadingWhitespaceStart - 1] === "\t")) {
-            leadingWhitespaceStart -= 1;
-        }
-
-        const typeStart = match.index + match[0].length;
-        const typeEnd = findTypeExpressionEnd(source, typeStart);
-
-        result += source.slice(cursor, leadingWhitespaceStart);
-        cursor = typeEnd;
-    }
-
-    return result;
-}
-
-/**
- * Rewrites `import { ... } from "..."` lines, filtering type-only names and,
- * for CJS, converting to `const { ... } = require("...")`.
- */
-function rewriteImports(source, moduleShape) {
-    return source.replace(
-        /^(\s*)import\s*\{\s*([^}]+)\s*\}\s*from\s*"([^"]+)";(\r?\n)?/gm,
-        (_, indent, list, mod, newline) => {
-            const runtimeOnly = filterRuntimeImports(list, mod);
-            const suffix = newline ?? "";
-
-            if (runtimeOnly.length === 0) {
-                return "";
-            }
-
-            if (moduleShape === "esm") {
-                return `${indent}import { ${runtimeOnly.join(", ")} } from "${mod}";${suffix}`;
-            }
-
-            return `${indent}const { ${runtimeOnly.join(", ")} } = require("${mod}");${suffix}`;
+function transpileSample(source, sourceFileName, moduleKind) {
+    const result = ts.transpileModule(source, {
+        compilerOptions: {
+            module: moduleKind,
+            newLine: ts.NewLineKind.LineFeed,
+            removeComments: false,
+            target: ts.ScriptTarget.ES2022,
         },
-    );
-}
+        fileName: sourceFileName,
+        reportDiagnostics: true,
+    });
+    const errors = (result.diagnostics ?? [])
+        .filter(diagnostic => diagnostic.category === ts.DiagnosticCategory.Error);
 
-/**
- * Strips TypeScript type annotations that this sample corpus uses.  The
- * regex set is intentionally narrow: function return types and variable
- * declaration types.
- */
-function stripTypeAnnotations(source) {
-    let result = source;
+    if (errors.length > 0) {
+        throw new Error(ts.formatDiagnostics(errors, {
+            getCanonicalFileName: fileName => fileName,
+            getCurrentDirectory: () => RepositoryRoot,
+            getNewLine: () => "\n",
+        }));
+    }
 
-    // Function return-type annotations: `function name(...): T {`.
-    result = result.replace(
-        /(\bfunction\s+\w+\s*\([^)]*\))\s*:\s*[\w<>[\],?|&\s]+?(\s\{)/g,
-        "$1$2",
-    );
-
-    // Arrow return-type annotations: `(...) : T =>`.
-    result = result.replace(
-        /(\)\s*):\s*[\w<>[\],?|&\s]+?(\s=>)/g,
-        "$1$2",
-    );
-
-    // Variable declaration annotations: `const x: T = ...`. The character
-    // class deliberately excludes the space immediately before `=` so a
-    // single canonical space is written back regardless of source formatting.
-    result = result.replace(
-        /(\b(?:const|let|var)\s+\w+)\s*:\s*[\w<>[\],?|&]+(?:\s*[|&,]\s*[\w<>[\]?|&]+)*\s*=/g,
-        "$1 =",
-    );
-
-    return result;
+    return result.outputText;
 }
 
 /**
  * Applies the JSDoc header, usage-block, and log-string rewording that maps
  * the ESM / CJS TypeScript samples onto their JavaScript counterparts.
  */
-function applyHeaderRewrites(source, moduleShape) {
+function applyHeaderRewrites(source, moduleShape, targetFileName) {
     let result = source;
 
     // Header separator is either an em-dash or a hyphen; preserve whichever
@@ -236,13 +93,13 @@ function applyHeaderRewrites(source, moduleShape) {
     // Long-form usage block: dev-run + build-run.
     result = result.replace(
         / \*   Run with tsx \(dev\):\r?\n \*     (?:npm run dev|npx tsx [^\r\n]+)\r?\n \*\r?\n \*   Or compile and run:\r?\n \*     (?:npm run build|node dist\/[^\r\n]+)\r?\n(?: \*     [^\r\n]+\r?\n)?/,
-        " *   Run:\n *     npm start\n",
+        ` *   Run:\n *     node ${targetFileName}\n`,
     );
 
     // Short-form usage block: only the dev-run line.
     result = result.replace(
         / \*   Run with tsx \(dev\):\r?\n \*     (?:npm run dev|npx tsx [^\r\n]+)\r?\n(?= \*\/)/,
-        " *   Run:\n *     npm start\n",
+        ` *   Run:\n *     node ${targetFileName}\n`,
     );
 
     // In-code log strings referring to the sample flavour.
@@ -252,41 +109,25 @@ function applyHeaderRewrites(source, moduleShape) {
 }
 
 /**
- * Inserts a top-level `"use strict";` directive after the JSDoc header so
- * generated CJS samples match the hand-written baselines.
- */
-function insertUseStrict(source) {
-    if (/^\s*"use strict";/m.test(source)) {
-        return source;
-    }
-
-    return source.replace(
-        /(\*\/\r?\n\r?\n)(?=const\s+\{)/,
-        `$1"use strict";\n\n`,
-    );
-}
-
-/**
  * Transforms an ESM TypeScript sample into an ESM JavaScript (.mjs) sample.
  */
-function transformEsmSample(source) {
-    let result = applyHeaderRewrites(source, "esm");
-    result = rewriteImports(result, "esm");
-    result = stripTypeAnnotations(result);
-    result = stripAsCasts(result);
-    return result;
+function transformEsmSample(source, sourceFileName, targetFileName) {
+    return transpileSample(
+        applyHeaderRewrites(source, "esm", targetFileName),
+        sourceFileName,
+        ts.ModuleKind.ESNext,
+    );
 }
 
 /**
  * Transforms a CJS TypeScript sample into a CJS JavaScript (.cjs) sample.
  */
-function transformCjsSample(source) {
-    let result = applyHeaderRewrites(source, "cjs");
-    result = rewriteImports(result, "cjs");
-    result = stripTypeAnnotations(result);
-    result = stripAsCasts(result);
-    result = insertUseStrict(result);
-    return result;
+function transformCjsSample(source, sourceFileName, targetFileName) {
+    return transpileSample(
+        applyHeaderRewrites(source, "cjs", targetFileName),
+        sourceFileName,
+        ts.ModuleKind.CommonJS,
+    );
 }
 
 /**
@@ -295,6 +136,7 @@ function transformCjsSample(source) {
  */
 function generateMissingSamples(sourceDir, sourceExt, targetDir, targetExt, transform) {
     const results = { written: [], skipped: [] };
+    fs.mkdirSync(targetDir, { recursive: true });
 
     for (const entry of fs.readdirSync(sourceDir).sort()) {
         if (!entry.endsWith(sourceExt)) {
@@ -309,8 +151,9 @@ function generateMissingSamples(sourceDir, sourceExt, targetDir, targetExt, tran
             continue;
         }
 
-        const source = fs.readFileSync(path.join(sourceDir, entry), "utf8");
-        fs.writeFileSync(targetFile, transform(source));
+        const sourceFile = path.join(sourceDir, entry);
+        const source = fs.readFileSync(sourceFile, "utf8");
+        fs.writeFileSync(targetFile, transform(source, sourceFile, path.basename(targetFile)));
         results.written.push(connectorName);
     }
 

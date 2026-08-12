@@ -11,7 +11,7 @@
  *     $env:FTP_TEST_FILE_ID   = "[optional file id]"
  *
  *   Run:
- *     npm start
+ *     node ftp.mjs
  */
 
 import { ManagedIdentityTokenProvider, ConnectorException } from "@azure/connectors";

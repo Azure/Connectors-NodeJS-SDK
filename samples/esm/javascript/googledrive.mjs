@@ -11,7 +11,7 @@
  *     $env:GOOGLEDRIVE_TEST_FILE_ID   = "[optional file id]"
  *
  *   Run:
- *     npm start
+ *     node googledrive.mjs
  */
 
 import { ManagedIdentityTokenProvider, ConnectorException } from "@azure/connectors";
