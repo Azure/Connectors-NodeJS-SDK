@@ -408,36 +408,17 @@ samples/
 ├── esm/
 │   ├── typescript/         # TypeScript ESM samples
 │   │   ├── arm.ts
-│   │   ├── azureblob.ts
-│   │   ├── azuremonitorlogs.ts
-│   │   ├── docusign.ts
-│   │   ├── github.ts
-│   │   ├── jira.ts
-│   │   ├── kusto.ts
-│   │   ├── microsoftforms.ts
-│   │   ├── mq.ts
-│   │   ├── msgraphgroupsanduser.ts
-│   │   ├── office365.ts
-│   │   ├── office365users.ts
-│   │   ├── onedriveforbusiness.ts
-│   │   ├── powerbi.ts
-│   │   ├── salesforce.ts
-│   │   ├── sharepoint.ts
-│   │   ├── shifts.ts
-│   │   ├── slack.ts
-│   │   ├── smtp.ts
-│   │   └── teams.ts
+│   │   └── ... (30 connectors)
 │   └── javascript/         # JavaScript ESM samples (.mjs)
 │       ├── arm.mjs
-│       ├── azureblob.mjs
-│       └── ... (21 connectors)
+│       └── ... (30 connectors)
 └── cjs/
     ├── typescript/         # TypeScript CJS samples
     │   ├── arm.ts
-    │   └── ... (21 connectors)
+    │   └── ... (30 connectors)
     └── javascript/         # JavaScript CJS samples (.cjs)
         ├── arm.cjs
-        └── ... (21 connectors)
+        └── ... (30 connectors)
 ```
 
 See [docs/connection-setup.md](docs/connection-setup.md) for instructions on creating the Azure connections required to run the samples.

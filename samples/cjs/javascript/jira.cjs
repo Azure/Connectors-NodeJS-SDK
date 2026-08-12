@@ -1,0 +1,36 @@
+// Copyright (c) Microsoft Corporation.  All rights reserved.
+
+/**
+ * Jira Connector SDK Sample - CJS JavaScript
+ */
+
+"use strict";
+
+const { ManagedIdentityTokenProvider, ConnectorException } = require("@azure/connectors");
+const { JiraClient } = require("@azure/connectors/generated/JiraExtensions");
+
+const CONNECTION_URL = process.env.JIRA_CONNECTION_URL ?? "";
+
+if (!CONNECTION_URL) {
+    console.error("Error: JIRA_CONNECTION_URL environment variable is not set.");
+    process.exit(1);
+}
+
+async function main() {
+    const tokenProvider = new ManagedIdentityTokenProvider();
+    const client = new JiraClient(CONNECTION_URL, tokenProvider);
+
+    try {
+        const result = await client.listResourcesAsync();
+        console.log(`Resources found: ${result.length}`);
+    } catch (error) {
+        if (error instanceof ConnectorException) {
+            console.log(`Connector error (${error.statusCode}): ${error.message}`);
+            return;
+        }
+
+        throw error;
+    }
+}
+
+main().catch(console.error);
