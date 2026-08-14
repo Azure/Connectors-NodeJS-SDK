@@ -1,6 +1,8 @@
 // Copyright (c) Microsoft Corporation.  All rights reserved.
 
 import {
+    AutomaticRepliesSettingClient,
+    Contact,
     Office365Client,
     DraftEmailInput,
     OutlookReceiveMessage,
@@ -72,9 +74,38 @@ const _message: GraphClientReceiveMessage = {
     isRead: true,
 };
 
+const _automaticRepliesSetting: AutomaticRepliesSettingClient = {
+    externalAudience: "all",
+    scheduledEndDateTime: { dateTime: "2026-08-15T17:00:00Z" },
+    scheduledStartDateTime: { dateTime: "2026-08-15T09:00:00Z" },
+    status: "scheduled",
+};
+
+const _contact: Contact = {
+    displayName: "Ada Lovelace",
+    givenName: "Ada",
+    homePhones: ["+1 555 0100"],
+};
+
 // ──────────────────────────────────────────────
 // Runtime tests
 // ──────────────────────────────────────────────
+
+describe("Office365 — retained model contracts", () => {
+    it("should expose the retained automatic replies fields", () => {
+        expect(_automaticRepliesSetting.externalAudience).toBe("all");
+        expect(_automaticRepliesSetting.scheduledStartDateTime).toEqual({
+            dateTime: "2026-08-15T09:00:00Z",
+        });
+        expect(_automaticRepliesSetting.status).toBe("scheduled");
+    });
+
+    it("should expose the retained contact fields", () => {
+        expect(_contact.displayName).toBe("Ada Lovelace");
+        expect(_contact.givenName).toBe("Ada");
+        expect(_contact.homePhones).toEqual(["+1 555 0100"]);
+    });
+});
 
 describe("Office365Client — constructor", () => {
     it("should construct with valid options", () => {

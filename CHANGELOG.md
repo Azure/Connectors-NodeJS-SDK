@@ -11,29 +11,43 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Regenerated the 21 TypeScript connector clients under `src/generated/` against
   the AzureUX-BPM `CodefulSdkGenerator` fix for [issue #70](https://github.com/Azure/Connectors-NodeJS-SDK/issues/70)
-  (`bpmCommit ad9ca945f84`, `assemblyVersion 1.185.0.6`). The previous
+  (`bpmCommit e5d44a0a0cd`, `assemblyVersion 1.186.0.10`). The previous
   generator picked the first version-family sibling it saw when two swagger
   definitions collapsed to the same version-stripped name (for example
-  `ListChannels_ResponseV1` vs `ListChannels_ResponseV3`), so an unreachable
-  deprecated sibling could silently override the current sibling used by the
-  emitted client. The fixed generator now walks reachable operations first and
-  emits the sibling that is actually referenced.
+  `ListChannels_ResponseV1` vs `ListChannels_ResponseV3`), so a deprecated
+  sibling could silently override the current sibling used by the emitted
+  client. The fixed generator skips a definition when it is both unreachable
+  and would collide with a retained sibling's simplified name.
 
 ### Changed (BREAKING)
 
 - `SlackExtensions.ListChannelsResponse` — renamed field `channels` → `value`
-  to match the current upstream shape (`ListChannels_ResponseV3`). Consumers
-  reading `.channels` must switch to `.value`.
+  and added `@odata.nextLink` to match the current upstream shape
+  (`ListChannels_ResponseV3`). Consumers reading `.channels` must switch to
+  `.value`.
+- `SlackExtensions.JoinChannelResponse` — replaced `already_in_channel` with
+  `warning` to match the response returned by the retained join-channel
+  operation.
 - `SmtpExtensions.Attachment` — removed field `ContentTransferEncoding` to
   match the current upstream shape (`AttachmentV2`). Consumers setting this
   field on outgoing attachments must remove it; the connector infers transfer
   encoding.
-- Removed a large set of previously emitted but unreferenced deprecated-sibling
-  type declarations across Office 365 Outlook, Microsoft Teams, DocuSign,
-  SharePoint Online, Salesforce, Microsoft To Do, Jira, Power BI, and other
-  connectors (net removal of ~3,000 lines under `src/generated/`). These types
-  were never reachable from any emitted operation, but downstream code that
-  imported them by name will need to update to the currently emitted variants.
+- `Office365Extensions.AutomaticRepliesSettingClient` — renamed PascalCase
+  fields to camelCase, replaced the `Scheduled*DateTimeOffset` string fields
+  with `scheduledStartDateTime` / `scheduledEndDateTime` objects, and retained
+  `externalAudience` and `status` as required fields.
+- `Office365Extensions.Contact` and `ContactResponse` — renamed fields from
+  PascalCase to camelCase and aligned required input fields with the retained
+  contact operations (`givenName` and `homePhones` on `Contact`).
+- `TodoExtensions.TodoList` — replaced the deprecated folder fields with the
+  retained list shape, including `displayName`, `wellknownListName`, `isOwner`,
+  and `isShared`.
+- `TodoExtensions.ToDo` — replaced deprecated task fields such as `subject`
+  with the retained task shape, including `title`, `createdDateTime`,
+  `lastModifiedDateTime`, and `bodyLastModifiedDateTime`.
+- The final generated diff changes nine connector files with 181 additions and
+  186 deletions. Consumers of any changed generated model should rebuild to
+  detect contract migrations at compile time.
 
 ## [0.3.0-preview] - 2026-07-13
 
