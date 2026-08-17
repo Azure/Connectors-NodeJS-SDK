@@ -43,7 +43,7 @@ export interface DirectReportsResponse {
 }
 
 /**
- * Definition: GraphUserUpdateable_V1
+ * Definition: GraphUserUpdateable
  */
 export interface GraphUserUpdateable {
     /** About Me */
@@ -264,7 +264,7 @@ export interface EntityListResponseIReadOnlyListUser {
 }
 
 /**
- * Definition: GraphUser_V1
+ * Definition: GraphUser
  */
 export interface GraphUser {
     /** About Me */
@@ -557,7 +557,7 @@ export class Office365usersClient extends ConnectorClientBase {
 
     /**
      * Search for users
-     * @remarks Retrieves the user profiles that match the search term (V2).
+     * @remarks Retrieves the user profiles that match the search term.
      */
     public async searchUserAsync(searchTerm?: string, top?: string, isSearchTermRequired?: string, skipToken?: string, abortSignal?: AbortSignal): Promise<EntityListResponseIReadOnlyListUser> {
         const queryParams: string[] = [];

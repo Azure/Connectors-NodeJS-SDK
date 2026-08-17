@@ -31,7 +31,9 @@ export interface Channel {
  * Definition: ListChannels_Response
  */
 export interface ListChannelsResponse {
-    channels?: Array<Channel>;
+    value?: Array<Channel>;
+    /** Link to get next page of results */
+    "@odata.nextLink"?: string;
 }
 
 /**
@@ -45,9 +47,9 @@ export interface CreateChannelResponse {
  * Definition: JoinChannel_Response
  */
 export interface JoinChannelResponse {
-    /** Whether the user is already in the channel or not. */
-    already_in_channel?: boolean;
     channel?: Channel;
+    /** Whether the user is already in the channel or not. */
+    warning?: string;
 }
 
 /**

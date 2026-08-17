@@ -176,7 +176,7 @@ export interface CreateIssueResponse {
 }
 
 /**
- * Definition: ListProjects_ResponseV2
+ * Definition: ListProjects_Response
  */
 export interface ListProjectsResponse {
     /** Next page of projects */

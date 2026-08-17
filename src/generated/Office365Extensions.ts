@@ -220,17 +220,17 @@ export interface Attendee {
  */
 export interface AutomaticRepliesSettingClient {
     /** The audience that will see the external reply message */
-    ExternalAudience: string;
+    externalAudience: string;
     /** Message for people outside your organization */
-    ExternalReplyMessage?: string;
+    externalReplyMessage?: string;
     /** Message for people within your organization */
-    InternalReplyMessage?: string;
-    /** Scheduled end time (example: '2016-11-01T15:30:00-00:00Z') */
-    ScheduledEndDateTimeOffset?: string;
-    /** Scheduled start time (example: '2016-11-01T15:30:00-00:00Z') */
-    ScheduledStartDateTimeOffset?: string;
+    internalReplyMessage?: string;
+    /** Scheduled end time (example: '2017-08-29T05:00:00.0000000') */
+    scheduledEndDateTime?: Record<string, unknown>;
+    /** Scheduled start time (example: '2017-08-29T04:00:00.0000000') */
+    scheduledStartDateTime?: Record<string, unknown>;
     /** Automatic reply setting status */
-    Status: string;
+    status: string;
 }
 
 /**
@@ -849,149 +849,149 @@ export interface ClientSubscription {
 }
 
 /**
- * Definition: Contact
- */
-export interface Contact {
-    /** The name of the contact's assistant */
-    AssistantName?: string;
-    /** The contact's birthday */
-    Birthday?: string;
-    BusinessAddress?: PhysicalAddress;
-    /** The business home page of the contact */
-    BusinessHomePage?: string;
-    /** The contact's business phone numbers */
-    BusinessPhones?: Array<string>;
-    /** The categories associated with the contact */
-    Categories?: Array<string>;
-    /** Identifies the version of the event object */
-    ChangeKey?: string;
-    /** The name of the contact's company */
-    CompanyName?: string;
-    /** The time the contact was created */
-    DateTimeCreated?: string;
-    /** The time the contact was modified */
-    DateTimeLastModified?: string;
-    /** The contact's department */
-    Department?: string;
-    /** The contact's display name */
-    DisplayName?: string;
-    /** The contact's email addresses */
-    EmailAddresses?: Array<EmailAddress>;
-    /** The name the contact is filed under */
-    FileAs?: string;
-    /** The contact's generation */
-    Generation?: string;
-    /** The contact's given name */
-    GivenName: string;
-    HomeAddress?: PhysicalAddress;
-    /** The contact's home phone numbers */
-    HomePhones: Array<string>;
-    /** The contact's unique identifier. */
-    Id?: string;
-    /** The contact's instant messaging (IM) addresses */
-    ImAddresses?: Array<string>;
-    /** The contact's initials */
-    Initials?: string;
-    /** The contact's job title */
-    JobTitle?: string;
-    /** The name of the contact's manager */
-    Manager?: string;
-    /** The contact's middle name */
-    MiddleName?: string;
-    /** The contact's mobile phone number */
-    MobilePhone1?: string;
-    /** The contact's nickname */
-    NickName?: string;
-    /** The location of the contact's office */
-    OfficeLocation?: string;
-    OtherAddress?: PhysicalAddress;
-    /** The ID of the contact's parent folder */
-    ParentFolderId?: string;
-    /** The contact's profession */
-    Profession?: string;
-    /** The contact's surname */
-    Surname?: string;
-    /** The contact's title */
-    Title?: string;
-    /** The phonetic Japanese company name of the contact */
-    YomiCompanyName?: string;
-    /** The phonetic Japanese given name (first name) of the contact */
-    YomiGivenName?: string;
-    /** The phonetic Japanese surname (last name) of the contact */
-    YomiSurname?: string;
-}
-
-/**
  * Definition: ContactResponse
  */
 export interface ContactResponse {
     /** The name of the contact's assistant */
-    AssistantName?: string;
+    assistantName?: string;
     /** The contact's birthday */
-    Birthday?: string;
-    BusinessAddress?: PhysicalAddress;
+    birthday?: string;
+    businessAddress?: PhysicalAddress;
     /** The business home page of the contact */
-    BusinessHomePage?: string;
+    businessHomePage?: string;
     /** The contact's business phone numbers */
-    BusinessPhones?: Array<string>;
+    businessPhones?: Array<string>;
     /** The categories associated with the contact */
-    Categories?: Array<string>;
+    categories?: Array<string>;
     /** Identifies the version of the event object */
-    ChangeKey?: string;
+    changeKey?: string;
     /** The name of the contact's company */
-    CompanyName?: string;
+    companyName?: string;
     /** The time the contact was created */
-    DateTimeCreated?: string;
-    /** The time the contact was modified */
-    DateTimeLastModified?: string;
+    createdDateTime?: string;
     /** The contact's department */
-    Department?: string;
+    department?: string;
     /** The contact's display name */
-    DisplayName?: string;
+    displayName?: string;
     /** The contact's email addresses */
-    EmailAddresses?: Array<EmailAddress>;
+    emailAddresses?: Array<EmailAddressV2>;
     /** The name the contact is filed under */
-    FileAs?: string;
+    fileAs?: string;
     /** The contact's generation */
-    Generation?: string;
+    generation?: string;
     /** The contact's given name */
-    GivenName?: string;
-    HomeAddress?: PhysicalAddress;
+    givenName?: string;
+    homeAddress?: PhysicalAddress;
     /** The contact's home phone numbers */
-    HomePhones?: Array<string>;
+    homePhones?: Array<string>;
     /** The contact's unique identifier. */
-    Id?: string;
+    id?: string;
     /** The contact's instant messaging (IM) addresses */
-    ImAddresses?: Array<string>;
+    imAddresses?: Array<string>;
     /** The contact's initials */
-    Initials?: string;
+    initials?: string;
     /** The contact's job title */
-    JobTitle?: string;
+    jobTitle?: string;
+    /** The time the contact was modified */
+    lastModifiedDateTime?: string;
     /** The name of the contact's manager */
-    Manager?: string;
+    manager?: string;
     /** The contact's middle name */
-    MiddleName?: string;
+    middleName?: string;
     /** The contact's mobile phone number */
-    MobilePhone1?: string;
+    mobilePhone?: string;
     /** The contact's nickname */
-    NickName?: string;
+    nickName?: string;
     /** The location of the contact's office */
-    OfficeLocation?: string;
-    OtherAddress?: PhysicalAddress;
+    officeLocation?: string;
+    otherAddress?: PhysicalAddress;
     /** The ID of the contact's parent folder */
-    ParentFolderId?: string;
+    parentFolderId?: string;
     /** The contact's profession */
-    Profession?: string;
+    profession?: string;
     /** The contact's surname */
-    Surname?: string;
+    surname?: string;
     /** The contact's title */
-    Title?: string;
+    title?: string;
     /** The phonetic Japanese company name of the contact */
-    YomiCompanyName?: string;
+    yomiCompanyName?: string;
     /** The phonetic Japanese given name (first name) of the contact */
-    YomiGivenName?: string;
+    yomiGivenName?: string;
     /** The phonetic Japanese surname (last name) of the contact */
-    YomiSurname?: string;
+    yomiSurname?: string;
+}
+
+/**
+ * Definition: Contact
+ */
+export interface Contact {
+    /** The name of the contact's assistant */
+    assistantName?: string;
+    /** The contact's birthday */
+    birthday?: string;
+    businessAddress?: PhysicalAddress;
+    /** The business home page of the contact */
+    businessHomePage?: string;
+    /** The contact's business phone numbers */
+    businessPhones?: Array<string>;
+    /** The categories associated with the contact */
+    categories?: Array<string>;
+    /** Identifies the version of the event object */
+    changeKey?: string;
+    /** The name of the contact's company */
+    companyName?: string;
+    /** The time the contact was created */
+    createdDateTime?: string;
+    /** The contact's department */
+    department?: string;
+    /** The contact's display name */
+    displayName?: string;
+    /** The contact's email addresses */
+    emailAddresses?: Array<EmailAddressV2>;
+    /** The name the contact is filed under */
+    fileAs?: string;
+    /** The contact's generation */
+    generation?: string;
+    /** The contact's given name */
+    givenName: string;
+    homeAddress?: PhysicalAddress;
+    /** The contact's home phone numbers */
+    homePhones: Array<string>;
+    /** The contact's unique identifier. */
+    id?: string;
+    /** The contact's instant messaging (IM) addresses */
+    imAddresses?: Array<string>;
+    /** The contact's initials */
+    initials?: string;
+    /** The contact's job title */
+    jobTitle?: string;
+    /** The time the contact was modified */
+    lastModifiedDateTime?: string;
+    /** The name of the contact's manager */
+    manager?: string;
+    /** The contact's middle name */
+    middleName?: string;
+    /** The contact's mobile phone number */
+    mobilePhone?: string;
+    /** The contact's nickname */
+    nickName?: string;
+    /** The location of the contact's office */
+    officeLocation?: string;
+    otherAddress?: PhysicalAddress;
+    /** The ID of the contact's parent folder */
+    parentFolderId?: string;
+    /** The contact's profession */
+    profession?: string;
+    /** The contact's surname */
+    surname?: string;
+    /** The contact's title */
+    title?: string;
+    /** The phonetic Japanese company name of the contact */
+    yomiCompanyName?: string;
+    /** The phonetic Japanese given name (first name) of the contact */
+    yomiGivenName?: string;
+    /** The phonetic Japanese surname (last name) of the contact */
+    yomiSurname?: string;
 }
 
 /**
@@ -1026,10 +1026,10 @@ export interface DataSetsMetadata {
  * Definition: DateTimeTimeZone
  */
 export interface DateTimeTimeZone {
-    /** DateTime */
-    DateTime?: string;
-    /** TimeZone */
-    TimeZone?: string;
+    /** DateTime (example: '2017-08-29T04:00:00.0000000') */
+    dateTime?: string;
+    /** TimeZone (example: 'Pacific Standard Time') */
+    timeZone?: string;
 }
 
 /**
@@ -1503,26 +1503,26 @@ export interface MCPQueryResponse {
  */
 export interface MailTipsAutomaticReplies {
     /** Automatic replies message */
-    Message?: string;
+    message?: string;
 }
 
 /**
  * Definition: MailTipsClientReceive
  */
 export interface MailTipsClientReceive {
-    AutomaticReplies?: MailTipsAutomaticReplies;
+    automaticReplies?: MailTipsAutomaticReplies;
     /** Is delivery restricted */
-    DeliveryRestricted?: boolean;
+    deliveryRestricted?: boolean;
     /** Number of external members */
-    ExternalMemberCount?: number;
+    externalMemberCount?: number;
     /** Is moderated */
-    IsModerated?: boolean;
+    isModerated?: boolean;
     /** Is mailbox full */
-    MailboxFull?: boolean;
+    mailboxFull?: boolean;
     /** Maximum message size */
-    MaxMessageSize?: number;
+    maxMessageSize?: number;
     /** Total member count */
-    TotalMemberCount?: number;
+    totalMemberCount?: number;
 }
 
 /**
@@ -1685,11 +1685,16 @@ export interface PatternedRecurrence {
  * Definition: PhysicalAddress
  */
 export interface PhysicalAddress {
-    City?: string;
-    CountryOrRegion?: string;
-    PostalCode?: string;
-    State?: string;
-    Street?: string;
+    /** The contact's city. */
+    city?: string;
+    /** The contact's country of region. */
+    countryOrRegion?: string;
+    /** The contact's postal code. */
+    postalCode?: string;
+    /** The contact's state. */
+    state?: string;
+    /** The contact's street address. */
+    street?: string;
 }
 
 /**

@@ -1,6 +1,7 @@
 // Copyright (c) Microsoft Corporation.  All rights reserved.
 
 import {
+    JoinChannelResponse,
     SlackClient,
     ListChannelsResponse,
     PostMessageRequest,
@@ -51,7 +52,7 @@ describe("SlackClient — listChannelsAsync", () => {
     });
 
     it("should GET channels list", async () => {
-        const mockResponse: ListChannelsResponse = { channels: [] };
+        const mockResponse: ListChannelsResponse = { value: [] };
         mockFetchResponse(mockResponse);
 
         const client = new SlackClient(TestConnectionUrl, createMockTokenProvider());
@@ -68,6 +69,28 @@ describe("SlackClient — listChannelsAsync", () => {
 
         const client = new SlackClient(TestConnectionUrl, createMockTokenProvider());
         await expect(client.listChannelsAsync()).rejects.toThrow(ConnectorException);
+    });
+});
+
+describe("SlackClient — joinChannelAsync", () => {
+    afterEach(() => {
+        jest.restoreAllMocks();
+    });
+
+    it("should return the retained join-channel response shape", async () => {
+        const mockResponse: JoinChannelResponse = {
+            channel: { id: "C123", name: "general" },
+            warning: "already_in_channel",
+        };
+        mockFetchResponse(mockResponse);
+
+        const client = new SlackClient(TestConnectionUrl, createMockTokenProvider());
+        const result = await client.joinChannelAsync("C123");
+
+        expect(result.warning).toBe("already_in_channel");
+        const [url, init] = (global.fetch as jest.Mock).mock.calls[0];
+        expect(url).toBe(`${TestConnectionUrl}/conversations.join?channel=C123`);
+        expect(init.method).toBe("POST");
     });
 });
 

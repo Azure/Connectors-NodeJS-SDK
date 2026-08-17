@@ -190,7 +190,7 @@ export interface AtMentionTagResponse {
 }
 
 /**
- * Definition: AtMentionUser_V1
+ * Definition: AtMentionUser
  */
 export interface AtMentionUser {
     /** An @mention token for the user. This property can be inserted into messages */

@@ -50,13 +50,18 @@ describe("TodoClient — getAllTodoListsAsync", () => {
     });
 
     it("should GET all to-do lists", async () => {
-        const mockResponse: TodoList[] = [{} as TodoList];
+        const mockResponse: TodoList[] = [{
+            displayName: "Tasks",
+            wellknownListName: "defaultList",
+        }];
         mockFetchResponse(mockResponse);
 
         const client = new TodoClient(TestConnectionUrl, createMockTokenProvider());
         const result = await client.getAllTodoListsAsync();
 
         expect(result).toEqual(mockResponse);
+        expect(result[0].displayName).toBe("Tasks");
+        expect(result[0].wellknownListName).toBe("defaultList");
         const [url, init] = (global.fetch as jest.Mock).mock.calls[0];
         expect(url).toBe(`${TestConnectionUrl}/lists`);
         expect(init.method).toBe("GET");
@@ -76,13 +81,18 @@ describe("TodoClient — getToDoAsync", () => {
     });
 
     it("should include folder and task ids in route", async () => {
-        const mockResponse: ToDo = {};
+        const mockResponse: ToDo = {
+            bodyLastModifiedDateTime: "2026-08-14T18:00:00Z",
+            title: "Review generated contracts",
+        };
         mockFetchResponse(mockResponse);
 
         const client = new TodoClient(TestConnectionUrl, createMockTokenProvider());
         const result = await client.getToDoAsync("list-1", "task-1");
 
         expect(result).toEqual(mockResponse);
+        expect(result.bodyLastModifiedDateTime).toBe("2026-08-14T18:00:00Z");
+        expect(result.title).toBe("Review generated contracts");
         const [url] = (global.fetch as jest.Mock).mock.calls[0];
         expect(url).toContain("/lists/list-1/tasks/task-1");
     });

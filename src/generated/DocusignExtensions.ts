@@ -134,7 +134,7 @@ export interface CreateHookEnvelopeResponse {
 }
 
 /**
- * Definition: WebhookRequestV2
+ * Definition: WebhookRequest
  */
 export interface WebhookRequest {
     allUsers: string;
@@ -147,7 +147,7 @@ export interface WebhookRequest {
 }
 
 /**
- * Definition: WebhookEnvelopeResponseV2
+ * Definition: WebhookEnvelopeResponse
  */
 export interface WebhookEnvelopeResponse {
     data?: Record<string, unknown>;

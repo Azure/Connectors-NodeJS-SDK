@@ -2,14 +2,14 @@
   "_comment": "Provenance record for the generated clients under src/generated/. It lets a regeneration be reproduced and any cross-language surface delta be attributed to a specific generator revision and Swagger input. Regenerate and repopulate this file on every run (see the 'Provenance & Reproducibility' section of GENERATION.md). A reviewable regeneration PR must have status 'generated' with non-null provenance, swaggerSha256 values that match the committed swagger-cache/ snapshots, and outputSha256 values that match the canonical UTF-8/LF generated outputs; the tests/generationManifest.test.ts guard enforces this.",
   "manifestVersion": 1,
   "status": "generated",
-  "generatedAtUtc": "2026-08-05T18:28:01Z",
+  "generatedAtUtc": "2026-08-14T18:34:59Z",
   "generator": {
     "repository": "https://msazure.visualstudio.com/One/_git/AzureUX-BPM",
     "tool": "CodefulSdkGenerator (LogicAppsCompiler)",
     "projectPath": "src/tools/CodefulSdkGenerator/LogicAppsCompiler.Cli/LogicAppsCompiler.Cli.csproj",
-    "bpmCommit": "8b25a939065e55ddf61bba4946600f59277013e6",
+    "bpmCommit": "e5d44a0a0cd47e46edce37a640bc91a1a61db9ab",
     "bpmBranch": "master",
-    "assemblyVersion": "1.184.0.29"
+    "assemblyVersion": "1.186.0.10"
   },
   "command": "LogicAppsCompiler.exe <output-directory> --directClient --language=typescript --connectors=arm,azureblob,azuremonitorlogs,docusign,github,jira,kusto,microsoftforms,mq,msgraphgroupsanduser,office365,office365users,onedriveforbusiness,powerbi,salesforce,sharepointonline,shifts,slack,smtp,teams,todo",
   "swaggerSource": {
@@ -18,7 +18,7 @@
     "subscriptionId": "f34b22a3-2202-4fb1-b040-1332bd928c84",
     "location": "westus",
     "apiVersion": "2018-07-01-preview",
-    "capturedAtUtc": "2026-07-30T18:19:13Z",
+    "capturedAtUtc": "2026-08-12T18:00:36Z",
     "swaggerCacheDirectory": "swagger-cache/"
   },
   "connectors": [
@@ -41,14 +41,14 @@
       "outputFile": "src/generated/AzuremonitorlogsExtensions.ts",
       "swaggerSnapshot": "swagger-cache/azuremonitorlogs.swagger.json",
       "swaggerSha256": "5b6269f3cb26df8212cb1d9ead1360171dc3fe9a8539cf50b913177d92aab3ba",
-      "outputSha256": "c86a3771619f24ea446aca34122749ba11e15e80a04a1e941a3de97e93f9bd64"
+      "outputSha256": "918047de8abd24db377903ffa15486a5453d7efb1aae7d5a3906004cbf52b273"
     },
     {
       "apiName": "docusign",
       "outputFile": "src/generated/DocusignExtensions.ts",
       "swaggerSnapshot": "swagger-cache/docusign.swagger.json",
       "swaggerSha256": "e7f34032a930205f6921168675b83565dcd15b82f80c3e7b9b6f6f75370767d0",
-      "outputSha256": "7e8130748c955c50bb7913034972dbac4b160d5819e3ff1bee106e07a3ddea02"
+      "outputSha256": "45b7f4c49786362d966aa136a1a381b4a6a72cff2a12584c91d02b38c049a066"
     },
     {
       "apiName": "github",
@@ -62,7 +62,7 @@
       "outputFile": "src/generated/JiraExtensions.ts",
       "swaggerSnapshot": "swagger-cache/jira.swagger.json",
       "swaggerSha256": "1cd6dac5a00f9e654b082936e38b8cc45cc2a0e22e2b141c043e7116a360088a",
-      "outputSha256": "2f62720d4eb48f0c8b34c0ae90b96a4eb180311514e4b3d2e0b2c1864585c6cd"
+      "outputSha256": "3941ff09060c4920165f53b0189df3ffee18d7793a29633d214d45961c730282"
     },
     {
       "apiName": "kusto",
@@ -97,14 +97,14 @@
       "outputFile": "src/generated/Office365Extensions.ts",
       "swaggerSnapshot": "swagger-cache/office365.swagger.json",
       "swaggerSha256": "d217c2d8455533ebb49e69e67e232339ac2d3001c9da0b0b2f7db29af2df8bf3",
-      "outputSha256": "49fc2a40bcb5d6b1ee00a9fed10458a939254ba96c93976b58c625dd3e066106"
+      "outputSha256": "8f906367aa576a3376f3123d47eac94d4993ada370926d0c9a0e887fef2c4fd9"
     },
     {
       "apiName": "office365users",
       "outputFile": "src/generated/Office365usersExtensions.ts",
       "swaggerSnapshot": "swagger-cache/office365users.swagger.json",
       "swaggerSha256": "9c8c39679772ea8019b9d935254e335f5cf83aba3aec0c2ce7c87cd5d581760c",
-      "outputSha256": "13eb8f08e290ba5d532b27d77fed7eb7bfd29c3317ab089780d40182aa8780f1"
+      "outputSha256": "f29d52affe4a0ebe13918e7a64660be7fd12e345a7e3f317d749f9e59fff875d"
     },
     {
       "apiName": "onedriveforbusiness",
@@ -146,28 +146,28 @@
       "outputFile": "src/generated/SlackExtensions.ts",
       "swaggerSnapshot": "swagger-cache/slack.swagger.json",
       "swaggerSha256": "70ca08c0330cc6d72038b145d55b0a894ce6d85e22683fc128b25f27d29114c7",
-      "outputSha256": "4b185b4c4d8c361c2c72978d8aeca37071b3099665a56c974a8ad154420f1a3d"
+      "outputSha256": "19eecdd02a196e58b8ed28b3a1012f45101502599bc4189ae950bd8a56ced6ed"
     },
     {
       "apiName": "smtp",
       "outputFile": "src/generated/SmtpExtensions.ts",
       "swaggerSnapshot": "swagger-cache/smtp.swagger.json",
       "swaggerSha256": "3b5e6b8629607064ad4b76b5e6feaf0bf0bbaf6879464ae3c8379610a2282e3c",
-      "outputSha256": "aca73919a88024ff583ca6aac050f32d55852aa5e95fd8abb5c04e083113e36f"
+      "outputSha256": "70b47c96e999a19d4a69476f1477509f2f364063131b97b80fa2e742349b0c1b"
     },
     {
       "apiName": "teams",
       "outputFile": "src/generated/TeamsExtensions.ts",
       "swaggerSnapshot": "swagger-cache/teams.swagger.json",
       "swaggerSha256": "dfe2f15e4133e2b84630722cd17170ecf11af70395523149cd40adeba112a1ef",
-      "outputSha256": "54f6a87345c4fd6858f3cec549aa7327e7db2e63e80078b29d28c3b3808bb6f0"
+      "outputSha256": "1e415cea9d142d85b7e72845972b99adb83d7f712bc4d9367a0d74dd4256a832"
     },
     {
       "apiName": "todo",
       "outputFile": "src/generated/TodoExtensions.ts",
       "swaggerSnapshot": "swagger-cache/todo.swagger.json",
       "swaggerSha256": "ce91e4007d86b687d89bf51bc43bd26873acb8118bbb9a56ea60c188c7468b43",
-      "outputSha256": "447801be8ad610613b70124fa0d38d32d5b57d7a2bea7c15006f8dedf9ff2e0b"
+      "outputSha256": "6da01b1b50b0f94f1b11b0038fd8eeccc35fbe2f372de7dd7a5eabdb22658a74"
     }
   ],
   "routeIdentityLoss": {

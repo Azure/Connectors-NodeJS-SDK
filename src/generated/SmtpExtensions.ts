@@ -9,6 +9,20 @@ import { TokenProvider } from "../azureConnectors/authentication.ts";
 // #region Types
 
 /**
+ * Definition: Attachment
+ */
+export interface Attachment {
+    /** Content data */
+    ContentData: string;
+    /** Content type */
+    ContentType: string;
+    /** File name */
+    FileName?: string;
+    /** Content id */
+    ContentId?: string;
+}
+
+/**
  * Definition: Email
  */
 export interface Email {
@@ -22,8 +36,6 @@ export interface Email {
     Subject?: string;
     /** Email body */
     Body?: string;
-    /** Send the email as HTML (true/false) */
-    IsHtml?: boolean;
     /** Specify email addresses separated by semicolons like recipient1@domain.com;recipient2@domain.com. */
     Bcc?: string;
     /** Importance of the email (High, Normal, or Low) */
@@ -34,22 +46,6 @@ export interface Email {
     DeliveryReceipt?: string;
     /** Attachments to be sent along with the email */
     Attachments?: Array<Attachment>;
-}
-
-/**
- * Definition: Attachment
- */
-export interface Attachment {
-    /** File name */
-    FileName?: string;
-    /** Content id */
-    ContentId?: string;
-    /** Content data (base64 encoded for streams and as-is for string) */
-    ContentData: string;
-    /** Content type */
-    ContentType: string;
-    /** Content Transfer Encoding (base64 or none) */
-    ContentTransferEncoding: string;
 }
 // #endregion Types
 

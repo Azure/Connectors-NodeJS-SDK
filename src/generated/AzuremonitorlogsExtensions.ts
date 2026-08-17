@@ -9,7 +9,7 @@ import { TokenProvider } from "../azureConnectors/authentication.ts";
 // #region Types
 
 /**
- * Run query and list results V2
+ * Run query and list results
  */
 export interface QueryDataInput {
     /** Specify the query you would like to run.  */
@@ -21,7 +21,7 @@ export interface QueryDataInput {
 }
 
 /**
- * Run query and visualize results V2
+ * Run query and visualize results
  */
 export interface VisualizeQueryInput {
     /** Specify the query you would like to run.  */
@@ -40,14 +40,14 @@ export interface ObjectEntity {
 }
 
 /**
- * Definition: TableV2
+ * Definition: Table
  */
 export interface Table {
     value?: Array<Row>;
 }
 
 /**
- * Definition: RowV2
+ * Definition: Row
  */
 export interface Row {
     [key: string]: unknown;
@@ -177,7 +177,7 @@ export class AzuremonitorlogsClient extends ConnectorClientBase {
     }
 
     /**
-     * Run query and list results V2
+     * Run query and list results
      * @remarks Returns each row as its own object. Use this action when you want to work with each row separately in the rest of the workflow. 
      */
     public async queryDataAsync(input: QueryDataInput, subscriptions?: string, resourcegroups?: string, resourcetype?: string, resourcename?: string, abortSignal?: AbortSignal): Promise<Table> {
@@ -206,7 +206,7 @@ export class AzuremonitorlogsClient extends ConnectorClientBase {
     }
 
     /**
-     * Run query and visualize results V2
+     * Run query and visualize results
      * @remarks Returns all rows in the result set as a single formatted object. Use this action when you want to use the result set together in the rest of the workflow. 
      */
     public async visualizeQueryAsync(input: VisualizeQueryInput, subscriptions?: string, resourcegroups?: string, resourcetype?: string, resourcename?: string, visType?: string, abortSignal?: AbortSignal): Promise<VisualizeResults> {
