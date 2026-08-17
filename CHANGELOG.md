@@ -7,6 +7,32 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- Generated 9 additional connector clients in `src/generated/`: Box, Dropbox,
+  Excel Online (Business), FTP, Google Calendar, Google Drive, Google Tasks,
+  Office 365 Groups Mail, and RSS.
+- Added detailed connector-specific Jest suites for all 9 new connectors:
+  `tests/boxClient.test.ts`, `tests/dropboxClient.test.ts`,
+  `tests/excelonlineClient.test.ts`, `tests/ftpClient.test.ts`,
+  `tests/googlecalendarClient.test.ts`, `tests/googledriveClient.test.ts`,
+  `tests/googletasksClient.test.ts`, `tests/office365groupsmailClient.test.ts`,
+  and `tests/rssClient.test.ts`.
+- Added ESM/CJS TypeScript sample programs for all 9 new connectors under
+  `samples/esm/typescript/` and `samples/cjs/typescript/`.
+- Expanded ESM/CJS JavaScript sample coverage to all 30 generated connectors.
+- Captured swagger snapshots for the 9 new connectors under `swagger-cache/`.
+
+### Changed
+
+- Updated generated connector registries (`connectorNames.ts`,
+  `ManagedConnectors.ts`, `index.ts`) to include all 30 generated connectors.
+- Regenerated the complete 30-connector TypeScript DirectClient surface using
+  AzureUX-BPM commit `e5d44a0a0cd` (`CodefulSdkGenerator` assembly
+  `1.186.0.10`).
+- Refreshed `generation.manifest.json` with the 30-connector provenance record,
+  including verified swagger and generated-output SHA-256 hashes.
+
 ### Fixed
 
 - Regenerated the 21 TypeScript connector clients under `src/generated/` against

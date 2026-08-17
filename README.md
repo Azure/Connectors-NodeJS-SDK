@@ -260,7 +260,7 @@ The following connectors have been generated and validated with comprehensive te
 | **Office 365 Groups Mail** | `@azure/connectors/generated/Office365groupsmailExtensions` | ✅ Complete | 8 tests |
 | **RSS** | `@azure/connectors/generated/RssExtensions` | ✅ Complete | 8 tests |
 
-**Total:** 520 tests (all passing) across 41 test suites and 30 generated connectors
+**Total:** 584 tests (all passing) across 42 test suites and 30 generated connectors
 
 ## Authentication
 
