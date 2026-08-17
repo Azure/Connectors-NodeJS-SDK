@@ -10,6 +10,24 @@ import { TriggerCallbackPayload } from "../azureConnectors/triggerPayload.ts";
 // #region Types
 
 /**
+ * Response for List joined teams
+ */
+export interface GetAllTeamsResponse {
+    "@odata.context"?: string;
+    /** List of the teams you are a member of */
+    value?: Array<Record<string, unknown>>;
+}
+
+/**
+ * Response for List associated teams
+ */
+export interface GetAllAssociatedTeamsResponse {
+    "@odata.context"?: string;
+    /** List of the teams you are associated with */
+    value?: Array<AssociatedTeamInfo>;
+}
+
+/**
  * Response for List channels
  */
 export interface GetChannelsForGroupResponse {
@@ -26,26 +44,43 @@ export interface CreateChannelInput {
     description?: string;
     /** Channel name as it appears in Microsoft Teams */
     displayName: string;
+    /** The type of channel. Private channels are accessible only to specific members. Shared channels can be shared with users outside the team. Defaults to standard. */
+    membershipType?: string;
 }
 
 /**
- * Response for Create a channel
+ * Update channel
  */
-export interface CreateChannelResponse {
-    /** Optional textual description for the channel */
-    description?: string;
-    /** Channel name as it appears in Microsoft Teams */
+export interface UpdateChannelPropertiesInput {
+    /** The new display name for the channel. */
     displayName?: string;
-    /** The channel's unique identifier */
-    id?: string;
+    /** The new description for the channel. */
+    description?: string;
 }
 
 /**
- * Response for List joined teams
+ * Archive a channel
  */
-export interface GetAllTeamsResponse {
+export interface ArchiveChannelInput {
+    /** If true, sets permissions for channel members to read-only on the SharePoint Online site associated with the team. */
+    shouldSetSpoSiteReadOnlyForMembers?: boolean;
+}
+
+/**
+ * Response for List all channels
+ */
+export interface GetAllChannelsForTeamResponse {
     "@odata.context"?: string;
-    /** List of the teams you are a member of */
+    /** List of one or more channels for a specific team */
+    value?: Array<ChannelWithOwnerTeamId>;
+}
+
+/**
+ * Response for List chats
+ */
+export interface GetChatsResponse {
+    "@odata.context"?: string;
+    /** List of one or more chats you are a part of */
     value?: Array<Record<string, unknown>>;
 }
 
@@ -60,21 +95,101 @@ export interface WebhookChatMessageTriggerInput {
  * Create a team
  */
 export interface CreateATeamInput {
-    /** An optional description for the team */
-    description: string;
     /** The name of the team */
     displayName: string;
+    /** An optional description for the team */
+    description: string;
     /** The visibility of the the team */
     visibility?: string;
 }
 
 /**
- * Response for List all channels
+ * Add a member to a team
  */
-export interface GetAllChannelsForTeamResponse {
-    "@odata.context"?: string;
-    /** List of one or more channels for a specific team */
-    value?: Array<ChannelWithOwnerTeamId>;
+export interface AddMemberToTeamInput {
+    /** User principal name or Microsoft Entra ID to add */
+    userId: string;
+    /** True, if the user should be a team owner */
+    owner?: boolean;
+}
+
+/**
+ * Add a member to a channel
+ */
+export interface AddMemberToChannelInput {
+    /** User principal name or Microsoft Entra ID to add */
+    userId: string;
+    /** True, if the user should be a channel owner */
+    owner?: boolean;
+}
+
+/**
+ * Post adaptive card and wait for a response
+ */
+export interface PostCardAndWaitForResponseInput {
+    notificationUrl: string;
+    body: Record<string, unknown>;
+}
+
+/**
+ * Send a Microsoft Graph HTTP request
+ */
+export type HttpRequestInput = string;
+
+/**
+ * Add a user to a chat
+ */
+export interface AddMemberToChatInput {
+    /** User principal name or Microsoft Entra ID to add */
+    userId: string;
+    /** True, if the user should be a chat owner */
+    owner?: boolean;
+    /** Timestamp that represents how far back in the chat history the new member can see. If not specified, no history is shared. */
+    visibleHistoryStartDateTime?: string;
+}
+
+/**
+ * Create a section
+ */
+export interface CreateSectionInput {
+    /** The display name of the section */
+    displayName: string;
+    /** The display icon for the section. Only iconType is writable; other fields are populated by the service. */
+    displayIcon?: Record<string, unknown>;
+    /** Whether the section is expanded */
+    isExpanded?: boolean;
+    /** The sort type for the section */
+    sortType?: string;
+}
+
+/**
+ * Update a section
+ */
+export interface UpdateSectionInput {
+    /** The display name of the section */
+    displayName?: string;
+    /** The display icon for the section. Only iconType is writable; other fields are populated by the service. */
+    displayIcon?: Record<string, unknown>;
+    /** Whether the section is expanded */
+    isExpanded?: boolean;
+    /** The sort type for the section */
+    sortType?: string;
+}
+
+/**
+ * Add an item to a section
+ */
+export interface AddSectionItemInput {
+    /** The conversation ID of the chat, channel, meeting, or community to add to the section. For community items, the service automatically normalizes the ID to the 19:{id}@EngageCommunity format. */
+    id: string;
+}
+
+/**
+ * Move a section item
+ */
+export interface MoveSectionItemInput {
+    /** The ID of the section to move the item to */
+    targetSectionId: string;
 }
 
 /**
@@ -88,6 +203,14 @@ export interface CreateTagInput {
 }
 
 /**
+ * Update a team tag
+ */
+export interface UpdateTagInput {
+    /** The new name of the tag as it appears to the user in Microsoft Teams. */
+    displayName: string;
+}
+
+/**
  * Add a member to a team tag
  */
 export interface AddMemberToTagInput {
@@ -96,61 +219,98 @@ export interface AddMemberToTagInput {
 }
 
 /**
- * Add a member to a team
+ * Definition: Object
  */
-export interface AddMemberToTeamInput {
-    /** True, if the user should be a team owner */
-    owner?: boolean;
-    /** User principal name or Microsoft Entra ID to add */
-    userId: string;
+export interface ObjectEntity {
+    [key: string]: unknown;
 }
 
 /**
- * Response for List chats
+ * Definition: ConnectorMetadata
  */
-export interface GetChatsResponse {
+export interface ConnectorMetadata {
+    metadatatype?: string;
+    activitytype?: string;
+    schema?: ObjectEntity;
+}
+
+/**
+ * Definition: PostFeedSchema
+ */
+export interface PostFeedSchema {
+    schema?: ObjectEntity;
+}
+
+/**
+ * Definition: PostMessageSchema
+ */
+export interface PostMessageSchema {
+    schema?: ObjectEntity;
+}
+
+/**
+ * Definition: PostCardSchema
+ */
+export interface PostCardSchema {
+    schema?: ObjectEntity;
+}
+
+/**
+ * Definition: PostCardAndWaitSchema
+ */
+export interface PostCardAndWaitSchema {
+    schema?: ObjectEntity;
+}
+
+/**
+ * Definition: UnifiedActionSchema
+ */
+export interface UnifiedActionSchema {
+    schema?: ObjectEntity;
+}
+
+/**
+ * Definition: GetMessageDetailsSchema
+ */
+export interface GetMessageDetailsSchema {
+    schema?: ObjectEntity;
+}
+
+/**
+ * Definition: ListMembersSchema
+ */
+export interface ListMembersSchema {
+    schema?: ObjectEntity;
+}
+
+/**
+ * Definition: GetTagsResponseSchema
+ */
+export interface GetTagsResponseSchema {
     "@odata.context"?: string;
-    /** List of one or more chats you are a part of */
     value?: Array<Record<string, unknown>>;
 }
 
 /**
- * Send a Microsoft Graph HTTP request
+ * Definition: GetTagMembersResponseSchema
  */
-export type HttpRequestInput = string;
-
-/**
- * Response for List associated teams
- */
-export interface GetAllAssociatedTeamsResponse {
-    "@odata.context"?: string;
-    /** List of the teams you are associated with */
-    value?: Array<AssociatedTeamInfo>;
+export interface GetTagMembersResponseSchema {
+    value?: Array<Record<string, unknown>>;
 }
 
 /**
- * Post adaptive card and wait for a response
+ * Definition: CreateTagResponseSchema
  */
-export interface PostCardAndWaitForResponseInput {
-    body: Record<string, unknown>;
-    notificationUrl: string;
-}
-
-/**
- * Add a member to a channel
- */
-export interface AddMemberToChannelInput {
-    /** True, if the user should be a channel owner */
-    owner?: boolean;
-    /** User principal name or Microsoft Entra ID to add */
-    userId: string;
-}
-
-/**
- * Definition: Activities
- */
-export interface Activities {
-    [key: string]: unknown;
+export interface CreateTagResponseSchema {
+    "@odata.type"?: string;
+    /** Unique identifier of the tag */
+    id?: string;
+    /** ID of the team in which the tag is defined */
+    teamId?: string;
+    /** The name of the tag as it appears to the user in Microsoft Teams. */
+    displayName?: string;
+    /** The number of users assigned to the tag */
+    memberCount?: number;
 }
 
 /**
@@ -162,89 +322,384 @@ export interface AddMemberToTagResponseSchema {
 }
 
 /**
- * Definition: AssociatedTeamInfo
+ * Definition: DynamicGetMessageDetailsSchema
  */
-export interface AssociatedTeamInfo {
-    /** The name of the team */
-    displayName?: string;
-    /** The unique identifier of the team */
-    id?: string;
-    /** The ID of the Microsoft Entra tenant this team belongs to */
-    tenantId?: string;
-}
-
-/**
- * Definition: AtMentionBotResponse
- */
-export interface AtMentionBotResponse {
-    /** An @mention token for the bot. This property can be inserted into messages and adaptive cards */
-    atMention?: string;
-}
-
-/**
- * Definition: AtMentionTagResponse
- */
-export interface AtMentionTagResponse {
-    /** A token for the tag to @mention. It can be inserted into messages and adaptive cards sent from a person */
-    atMention?: string;
-}
-
-/**
- * Definition: AtMentionUser
- */
-export interface AtMentionUser {
-    /** An @mention token for the user. This property can be inserted into messages */
-    atMention?: string;
-}
-
-/**
- * Definition: BotIdForChat
- */
-export type BotIdForChat = string;
-
-/**
- * Definition: BotMentionRequest
- */
-export interface BotMentionRequest {
-    /** The bot's app identifier (GUID) */
-    appId: string;
-    /** The bot's unique identifier (GUID) */
-    botId: string;
-    /** The bot's display name */
-    name: string;
-}
-
-/**
- * Definition: CardResponseTriggerMetadata
- */
-export interface CardResponseTriggerMetadata {
-    CardOutputs?: ObjectEntity;
-    TeamsFlowRunContext?: ObjectEntity;
-}
-
-/**
- * Definition: ChannelIdForTeam
- */
-export type ChannelIdForTeam = string;
-
-/**
- * Definition: ChannelIds
- */
-export interface ChannelIds {
-    channel: ChannelIdForTeam;
-}
-
-/**
- * Definition: ChannelWithOwnerTeamId
- */
-export interface ChannelWithOwnerTeamId {
+export interface DynamicGetMessageDetailsSchema {
     [key: string]: unknown;
 }
 
 /**
- * Definition: ChatId
+ * Definition: DynamicGetMessageDetailsResponseSchema
  */
-export type ChatId = string;
+export interface DynamicGetMessageDetailsResponseSchema {
+    [key: string]: unknown;
+}
+
+/**
+ * Definition: DynamicListMembersSchema
+ */
+export interface DynamicListMembersSchema {
+    [key: string]: unknown;
+}
+
+/**
+ * Definition: ListMembersResponseSchema
+ */
+export interface ListMembersResponseSchema {
+    /** List members response */
+    value?: Array<Record<string, unknown>>;
+}
+
+/**
+ * Definition: ListRepliesResponseSchema
+ */
+export interface ListRepliesResponseSchema {
+    /** List replies response */
+    value?: Array<Record<string, unknown>>;
+}
+
+/**
+ * Definition: DynamicUserNotificationRequest
+ */
+export interface DynamicUserNotificationRequest {
+    [key: string]: unknown;
+}
+
+/**
+ * Definition: DynamicPostConversationNotificationRequest
+ */
+export interface DynamicPostConversationNotificationRequest {
+    [key: string]: unknown;
+}
+
+/**
+ * Definition: DynamicChannelNotificationRequest
+ */
+export interface DynamicChannelNotificationRequest {
+    [key: string]: unknown;
+}
+
+/**
+ * Definition: DynamicPostFeedNotificationRequest
+ */
+export interface DynamicPostFeedNotificationRequest {
+    [key: string]: unknown;
+}
+
+/**
+ * Definition: DynamicPostMessageRequest
+ */
+export interface DynamicPostMessageRequest {
+    [key: string]: unknown;
+}
+
+/**
+ * Definition: DynamicReplyMessageRequest
+ */
+export interface DynamicReplyMessageRequest {
+    [key: string]: unknown;
+}
+
+/**
+ * Definition: DynamicPostCardRequest
+ */
+export interface DynamicPostCardRequest {
+    [key: string]: unknown;
+}
+
+/**
+ * Definition: DynamicPostCardAndWaitRequest
+ */
+export interface DynamicPostCardAndWaitRequest {
+    [key: string]: unknown;
+}
+
+/**
+ * Definition: DynamicReplyCardRequest
+ */
+export interface DynamicReplyCardRequest {
+    [key: string]: unknown;
+}
+
+/**
+ * Definition: DynamicUpdateCardRequest
+ */
+export interface DynamicUpdateCardRequest {
+    [key: string]: unknown;
+}
+
+/**
+ * Definition: DynamicUserAdaptiveCardRequest
+ */
+export interface DynamicUserAdaptiveCardRequest {
+    [key: string]: unknown;
+}
+
+/**
+ * Definition: DynamicChannelAdaptiveCardRequest
+ */
+export interface DynamicChannelAdaptiveCardRequest {
+    [key: string]: unknown;
+}
+
+/**
+ * Definition: DynamicUserMessageWithOptionsSubscriptionRequest
+ */
+export interface DynamicUserMessageWithOptionsSubscriptionRequest {
+    [key: string]: unknown;
+}
+
+/**
+ * Definition: DynamicUserMessageWithOptionsSubscriptionResult
+ */
+export interface DynamicUserMessageWithOptionsSubscriptionResult {
+    [key: string]: unknown;
+}
+
+/**
+ * Definition: DynamicSelectedMessageTriggerResult
+ */
+export interface DynamicSelectedMessageTriggerResult {
+    [key: string]: unknown;
+}
+
+/**
+ * Definition: DynamicComposeMessageTriggerResult
+ */
+export interface DynamicComposeMessageTriggerResult {
+    [key: string]: unknown;
+}
+
+/**
+ * Definition: DynamicCardResponseTriggerResult
+ */
+export interface DynamicCardResponseTriggerResult {
+    [key: string]: unknown;
+}
+
+/**
+ * Definition: WebhookTriggerSchema
+ */
+export interface WebhookTriggerSchema {
+    schema?: ObjectEntity;
+}
+
+/**
+ * Definition: MessageReactionWebhookResponseSchema
+ */
+export interface MessageReactionWebhookResponseSchema {
+    threadType?: string;
+    /** The chat's unique identifier */
+    chatId?: string;
+    /** The team's unique identifier */
+    teamId?: string;
+    /** The channel's unique identifier */
+    channelId?: string;
+    /** Id of the message which was reacted */
+    messageId?: string;
+    /** ID of the parent message of the thread */
+    replyToId?: string;
+    /** Link to the message which was reacted */
+    messageLink?: string;
+    /** Reacting user's Id */
+    userId?: string;
+    /** Message reaction used */
+    messageReaction?: string;
+}
+
+/**
+ * Definition: TeamsIdentitySet
+ */
+export interface TeamsIdentitySet {
+    /** Application identity (bot or service) */
+    application?: Record<string, unknown>;
+    /** Device identity */
+    device?: Record<string, unknown>;
+    /** User identity */
+    user?: Record<string, unknown>;
+}
+
+/**
+ * Definition: CallEventWebhookResponseSchema
+ */
+export interface CallEventWebhookResponseSchema {
+    /** Event identifier */
+    id?: string;
+    /** OData identifier */
+    "@odata.id"?: string;
+    /** OData type discriminator (always #microsoft.graph.callEvent; meeting-specific fields are flattened onto the base type by notification delivery). */
+    "@odata.type"?: string;
+    /** Type of call event */
+    callEventType?: string;
+    /** When the event occurred */
+    eventDateTime?: string;
+    /** Call conversation identifier */
+    callConversationId?: string;
+    /** Meeting join URL (populated when the call is associated with an online meeting) */
+    joinWebUrl?: string;
+    /** Chat information for the meeting (populated when the call is associated with an online meeting) */
+    chatInfo?: Record<string, unknown>;
+    /** Organizer info (populated when the call is associated with an online meeting) */
+    organizerMeetingInfo?: Record<string, unknown>;
+    /** Transcription state (set on transcriptionStateUpdated events) */
+    transcriptionState?: Record<string, unknown>;
+    /** Recording state (set on recordingStateUpdated events) */
+    recordingState?: Record<string, unknown>;
+    /** Participants (set on rosterUpdated events) */
+    participants?: Array<Record<string, unknown>>;
+}
+
+/**
+ * Definition: TranscriptWebhookResponseSchema
+ */
+export interface TranscriptWebhookResponseSchema {
+    /** Transcript identifier */
+    id?: string;
+    /** OData identifier */
+    "@odata.id"?: string;
+    /** Online meeting identifier (empty for ad-hoc call transcripts) */
+    meetingId?: string;
+    /** Call identifier (set for ad-hoc call transcripts) */
+    callId?: string;
+    /** Content correlation identifier */
+    contentCorrelationId?: string;
+    meetingOrganizer?: TeamsIdentitySet;
+    /** URL to download the transcript content */
+    transcriptContentUrl?: string;
+    /** When the transcript was created (UTC) */
+    createdDateTime?: string;
+    /** When the transcript ended (UTC) */
+    endDateTime?: string;
+}
+
+/**
+ * Definition: RecordingWebhookResponseSchema
+ */
+export interface RecordingWebhookResponseSchema {
+    /** Recording identifier */
+    id?: string;
+    /** OData identifier */
+    "@odata.id"?: string;
+    /** Online meeting identifier (empty for ad-hoc call recordings) */
+    meetingId?: string;
+    /** Call identifier (set for ad-hoc call recordings) */
+    callId?: string;
+    /** Content correlation identifier */
+    contentCorrelationId?: string;
+    meetingOrganizer?: TeamsIdentitySet;
+    /** URL to download the recording content */
+    recordingContentUrl?: string;
+    /** When the recording was created (UTC) */
+    createdDateTime?: string;
+    /** When the recording ended (UTC) */
+    endDateTime?: string;
+}
+
+/**
+ * Definition: ChatMessageWebhookResponseSchema
+ */
+export interface ChatMessageWebhookResponseSchema {
+    /** Message details response */
+    value?: Array<Record<string, unknown>>;
+}
+
+/**
+ * Definition: DynamicWebhookTriggerRequestSchema
+ */
+export interface DynamicWebhookTriggerRequestSchema {
+    [key: string]: unknown;
+}
+
+/**
+ * Definition: DynamicKeywordWebhookTriggerResponseSchema
+ */
+export interface DynamicKeywordWebhookTriggerResponseSchema {
+    [key: string]: unknown;
+}
+
+/**
+ * Definition: DynamicAtMentionWebhookTriggerResponseSchema
+ */
+export interface DynamicAtMentionWebhookTriggerResponseSchema {
+    [key: string]: unknown;
+}
+
+/**
+ * Definition: DynamicNewMessageWebhookTriggerResponseSchema
+ */
+export interface DynamicNewMessageWebhookTriggerResponseSchema {
+    [key: string]: unknown;
+}
+
+/**
+ * Definition: DynamicPostToConversationResponse
+ */
+export interface DynamicPostToConversationResponse {
+    [key: string]: unknown;
+}
+
+/**
+ * Definition: DynamicPostGatherInputToConversationResponse
+ */
+export interface DynamicPostGatherInputToConversationResponse {
+    [key: string]: unknown;
+}
+
+/**
+ * Definition: DynamicResponseSchema
+ */
+export interface DynamicResponseSchema {
+    schema?: ObjectEntity;
+}
+
+/**
+ * Definition: MessageId
+ */
+export interface MessageId {
+    /** Unique message identifier */
+    id?: string;
+}
+
+/**
+ * Definition: DynamicUserFlowContinuationSubscriptionResult
+ */
+export interface DynamicUserFlowContinuationSubscriptionResult {
+    [key: string]: unknown;
+}
+
+/**
+ * Definition: DynamicChannelFlowContinuationSubscriptionResult
+ */
+export interface DynamicChannelFlowContinuationSubscriptionResult {
+    [key: string]: unknown;
+}
+
+/**
+ * Definition: DynamicGatherInputSubscriptionResult
+ */
+export interface DynamicGatherInputSubscriptionResult {
+    [key: string]: unknown;
+}
+
+/**
+ * Definition: GetMessagesFromConversation_Response
+ */
+export interface GetMessagesFromConversationResponse {
+    /** @odata.context */
+    "@odata.context"?: string;
+    /** @odata.count */
+    "@odata.count"?: number;
+    /** @odata.nextLink */
+    "@odata.nextLink"?: string;
+    value?: ChatMessageList;
+}
+
+/**
+ * Definition: OnGroupMemberChange_Response
+ */
+export interface OnGroupMemberChangeResponse {
+    [key: string]: unknown;
+}
 
 /**
  * Definition: ChatMessage
@@ -292,410 +747,77 @@ export interface ChatMessageList {
 }
 
 /**
- * Definition: ChatMessageWebhookResponseSchema
+ * Definition: GetTeamResponse
  */
-export interface ChatMessageWebhookResponseSchema {
-    /** Message details response */
-    value?: Array<Record<string, unknown>>;
-}
-
-/**
- * Definition: ComposeMessageTriggerMetadata
- */
-export interface ComposeMessageTriggerMetadata {
-    CardOutputs?: ObjectEntity;
-    TeamsFlowRunContext?: ObjectEntity;
-}
-
-/**
- * Definition: ConnectorMetadata
- */
-export interface ConnectorMetadata {
-    activitytype?: string;
-    metadatatype?: string;
-    schema?: ObjectEntity;
-}
-
-/**
- * Definition: CreateATeamResponse
- */
-export interface CreateATeamResponse {
-    /** Team ID of the team that was just created */
-    newTeamId?: string;
-}
-
-/**
- * Definition: CreateTagResponseSchema
- */
-export interface CreateTagResponseSchema {
-    "@odata.type"?: string;
-    /** The name of the tag as it appears to the user in Microsoft Teams. */
-    displayName?: string;
-    /** Unique identifier of the tag */
+export interface GetTeamResponse {
+    /** The unique identifier of the team */
     id?: string;
-    /** The number of users assigned to the tag */
-    memberCount?: number;
-    /** ID of the team in which the tag is defined */
-    teamId?: string;
-}
-
-/**
- * Definition: DiscoverySettings
- */
-export interface DiscoverySettings {
-    /** If set to true, the team is visible via search and suggestions from the Teams client */
-    showInTeamsSearchAndSuggestions?: boolean;
-}
-
-/**
- * Definition: DraftOpenShift
- */
-export interface DraftOpenShift {
-    activities?: Activities;
-    /** Display Name */
+    /** The name of the team */
     displayName?: string;
-    /** yyyy-MM-ddTHH:mm:ss.fffZ (UTC format) */
-    endDateTime?: string;
-    /** Notes */
-    notes?: string;
-    /** Open Slot Count */
-    openSlotCount?: number;
-    /** yyyy-MM-ddTHH:mm:ss.fffZ (UTC format) */
-    startDateTime?: string;
-    /** Theme */
-    theme?: string;
+    /** The description of the team, optional */
+    description?: string;
+    /** The internal ID of the team */
+    internalId?: string;
+    /** A hyperlink that will go to the team in the Microsoft Teams client */
+    webUrl?: string;
+    /** Whether this team is in read-only mode */
+    isArchived?: boolean;
+    memberSettings?: MemberSettings;
+    guestSettings?: GuestSettings;
+    messagingSettings?: MessagingSettings;
+    funSettings?: FunSettings;
+    discoverySettings?: DiscoverySettings;
 }
 
 /**
- * Definition: DraftShift
+ * Definition: AssociatedTeamInfo
  */
-export interface DraftShift {
-    activities?: Activities;
-    /** Display Name */
+export interface AssociatedTeamInfo {
+    /** The unique identifier of the team */
+    id?: string;
+    /** The name of the team */
     displayName?: string;
-    /** yyyy-MM-ddTHH:mm:ss.fffZ (UTC format) */
-    endDateTime?: string;
-    /** Notes */
-    notes?: string;
-    /** yyyy-MM-ddTHH:mm:ss.fffZ (UTC format) */
-    startDateTime?: string;
-    /** Theme */
-    theme?: string;
-}
-
-/**
- * Definition: DynamicAtMentionWebhookTriggerResponseSchema
- */
-export interface DynamicAtMentionWebhookTriggerResponseSchema {
-    [key: string]: unknown;
-}
-
-/**
- * Definition: DynamicCardResponseTriggerResult
- */
-export interface DynamicCardResponseTriggerResult {
-    [key: string]: unknown;
-}
-
-/**
- * Definition: DynamicChannelAdaptiveCardRequest
- */
-export interface DynamicChannelAdaptiveCardRequest {
-    [key: string]: unknown;
-}
-
-/**
- * Definition: DynamicChannelFlowContinuationSubscriptionResult
- */
-export interface DynamicChannelFlowContinuationSubscriptionResult {
-    [key: string]: unknown;
-}
-
-/**
- * Definition: DynamicChannelNotificationRequest
- */
-export interface DynamicChannelNotificationRequest {
-    [key: string]: unknown;
-}
-
-/**
- * Definition: DynamicComposeMessageTriggerResult
- */
-export interface DynamicComposeMessageTriggerResult {
-    [key: string]: unknown;
-}
-
-/**
- * Definition: DynamicGatherInputSubscriptionResult
- */
-export interface DynamicGatherInputSubscriptionResult {
-    [key: string]: unknown;
-}
-
-/**
- * Definition: DynamicGetMessageDetailsResponseSchema
- */
-export interface DynamicGetMessageDetailsResponseSchema {
-    [key: string]: unknown;
-}
-
-/**
- * Definition: DynamicGetMessageDetailsSchema
- */
-export interface DynamicGetMessageDetailsSchema {
-    [key: string]: unknown;
-}
-
-/**
- * Definition: DynamicKeywordWebhookTriggerResponseSchema
- */
-export interface DynamicKeywordWebhookTriggerResponseSchema {
-    [key: string]: unknown;
-}
-
-/**
- * Definition: DynamicListMembersSchema
- */
-export interface DynamicListMembersSchema {
-    [key: string]: unknown;
-}
-
-/**
- * Definition: DynamicNewMessageWebhookTriggerResponseSchema
- */
-export interface DynamicNewMessageWebhookTriggerResponseSchema {
-    [key: string]: unknown;
-}
-
-/**
- * Definition: DynamicPostCardAndWaitRequest
- */
-export interface DynamicPostCardAndWaitRequest {
-    [key: string]: unknown;
-}
-
-/**
- * Definition: DynamicPostCardRequest
- */
-export interface DynamicPostCardRequest {
-    [key: string]: unknown;
-}
-
-/**
- * Definition: DynamicPostConversationNotificationRequest
- */
-export interface DynamicPostConversationNotificationRequest {
-    [key: string]: unknown;
-}
-
-/**
- * Definition: DynamicPostFeedNotificationRequest
- */
-export interface DynamicPostFeedNotificationRequest {
-    [key: string]: unknown;
-}
-
-/**
- * Definition: DynamicPostGatherInputToConversationResponse
- */
-export interface DynamicPostGatherInputToConversationResponse {
-    [key: string]: unknown;
-}
-
-/**
- * Definition: DynamicPostMessageRequest
- */
-export interface DynamicPostMessageRequest {
-    [key: string]: unknown;
-}
-
-/**
- * Definition: DynamicPostToConversationResponse
- */
-export interface DynamicPostToConversationResponse {
-    [key: string]: unknown;
-}
-
-/**
- * Definition: DynamicReplyCardRequest
- */
-export interface DynamicReplyCardRequest {
-    [key: string]: unknown;
-}
-
-/**
- * Definition: DynamicReplyMessageRequest
- */
-export interface DynamicReplyMessageRequest {
-    [key: string]: unknown;
-}
-
-/**
- * Definition: DynamicResponseSchema
- */
-export interface DynamicResponseSchema {
-    schema?: ObjectEntity;
-}
-
-/**
- * Definition: DynamicSelectedMessageTriggerResult
- */
-export interface DynamicSelectedMessageTriggerResult {
-    [key: string]: unknown;
-}
-
-/**
- * Definition: DynamicUpdateCardRequest
- */
-export interface DynamicUpdateCardRequest {
-    [key: string]: unknown;
-}
-
-/**
- * Definition: DynamicUserAdaptiveCardRequest
- */
-export interface DynamicUserAdaptiveCardRequest {
-    [key: string]: unknown;
-}
-
-/**
- * Definition: DynamicUserFlowContinuationSubscriptionResult
- */
-export interface DynamicUserFlowContinuationSubscriptionResult {
-    [key: string]: unknown;
-}
-
-/**
- * Definition: DynamicUserMessageWithOptionsSubscriptionRequest
- */
-export interface DynamicUserMessageWithOptionsSubscriptionRequest {
-    [key: string]: unknown;
-}
-
-/**
- * Definition: DynamicUserMessageWithOptionsSubscriptionResult
- */
-export interface DynamicUserMessageWithOptionsSubscriptionResult {
-    [key: string]: unknown;
-}
-
-/**
- * Definition: DynamicUserNotificationRequest
- */
-export interface DynamicUserNotificationRequest {
-    [key: string]: unknown;
-}
-
-/**
- * Definition: DynamicWebhookTriggerRequestSchema
- */
-export interface DynamicWebhookTriggerRequestSchema {
-    [key: string]: unknown;
-}
-
-/**
- * Definition: EditOpenShiftRequest
- */
-export interface EditOpenShiftRequest {
-    /** Scheduling Group ID */
-    schedulingGroupId?: string;
-    sharedOpenShift?: Record<string, unknown>;
-}
-
-/**
- * Definition: FunSettings
- */
-export interface FunSettings {
-    /** If set to true, enables users to include custom memes */
-    allowCustomMemes?: boolean;
-    /** If set to true, enables Giphy use */
-    allowGiphy?: boolean;
-    /** If set to true, enables users to include stickers and memes */
-    allowStickersAndMemes?: boolean;
-    /** Giphy content rating. Possible values are: moderate, strict */
-    giphyContentRating?: string;
+    /** The ID of the Microsoft Entra tenant this team belongs to */
+    tenantId?: string;
 }
 
 /**
  * Definition: GetChannelResponse
  */
 export interface GetChannelResponse {
-    /** Timestamp at which the channel was created. Read only */
-    createdDateTime?: string;
-    /** The description of the channel, optional */
-    description?: string;
-    /** The name of the channel */
-    displayName?: string;
-    /** The email address for sending messages to the channel */
-    email?: string;
-    /** The SharePoint folder URL of the channel */
-    filesFolderWebUrl?: string;
     /** The unique identifier of the channel */
     id?: string;
-    /** The channel membership type */
-    membershipType?: string;
+    /** The name of the channel */
+    displayName?: string;
+    /** The description of the channel, optional */
+    description?: string;
+    /** The email address for sending messages to the channel */
+    email?: string;
     /** The ID of the Microsoft Entra tenant. */
     tenantId?: string;
     /** A hyperlink for the channel in Microsoft Teams */
     webUrl?: string;
+    /** The SharePoint folder URL of the channel */
+    filesFolderWebUrl?: string;
+    /** Timestamp at which the channel was created. Read only */
+    createdDateTime?: string;
+    /** The channel membership type */
+    membershipType?: string;
 }
 
 /**
- * Definition: GetMessageDetailsSchema
+ * Definition: ChannelWithOwnerTeamId
  */
-export interface GetMessageDetailsSchema {
-    schema?: ObjectEntity;
+export interface ChannelWithOwnerTeamId {
+    [key: string]: unknown;
 }
 
 /**
- * Definition: GetMessagesFromConversation_Response
+ * Definition: WebhookRequest
  */
-export interface GetMessagesFromConversationResponse {
-    /** @odata.context */
-    "@odata.context"?: string;
-    /** @odata.count */
-    "@odata.count"?: number;
-    /** @odata.nextLink */
-    "@odata.nextLink"?: string;
-    value?: ChatMessageList;
-}
-
-/**
- * Definition: GetTagMembersResponseSchema
- */
-export interface GetTagMembersResponseSchema {
-    value?: Array<Record<string, unknown>>;
-}
-
-/**
- * Definition: GetTagsResponseSchema
- */
-export interface GetTagsResponseSchema {
-    "@odata.context"?: string;
-    value?: Array<Record<string, unknown>>;
-}
-
-/**
- * Definition: GetTeamResponse
- */
-export interface GetTeamResponse {
-    /** The description of the team, optional */
-    description?: string;
-    discoverySettings?: DiscoverySettings;
-    /** The name of the team */
-    displayName?: string;
-    funSettings?: FunSettings;
-    guestSettings?: GuestSettings;
-    /** The unique identifier of the team */
-    id?: string;
-    /** The internal ID of the team */
-    internalId?: string;
-    /** Whether this team is in read-only mode */
-    isArchived?: boolean;
-    memberSettings?: MemberSettings;
-    messagingSettings?: MessagingSettings;
-    /** A hyperlink that will go to the team in the Microsoft Teams client */
-    webUrl?: string;
+export interface WebhookRequest {
+    /** Specify a well-formed URL of the endpoint that will receive notifications */
+    notificationUrl: string;
 }
 
 /**
@@ -708,123 +830,415 @@ export interface GetTimeOffReasonsResponse {
 }
 
 /**
- * Definition: GuestSettings
+ * Definition: TimeOffRequestResponse
  */
-export interface GuestSettings {
-    /** If set to true, guests can add and update channels */
-    allowCreateUpdateChannels?: boolean;
-    /** If set to true, guests can delete channels */
-    allowDeleteChannels?: boolean;
-}
-
-/**
- * Definition: LastModifiedBy
- */
-export interface LastModifiedBy {
-    /** Application */
-    application?: string;
-    /** Conversation */
-    conversation?: string;
-    /** Device */
-    device?: string;
-    /** User */
-    user?: Record<string, unknown>;
-}
-
-/**
- * Definition: ListMembersResponseSchema
- */
-export interface ListMembersResponseSchema {
-    /** List members response */
-    value?: Array<Record<string, unknown>>;
-}
-
-/**
- * Definition: ListMembersSchema
- */
-export interface ListMembersSchema {
-    schema?: ObjectEntity;
-}
-
-/**
- * Definition: ListRepliesResponseSchema
- */
-export interface ListRepliesResponseSchema {
-    /** List replies response */
-    value?: Array<Record<string, unknown>>;
-}
-
-/**
- * Definition: MemberSettings
- */
-export interface MemberSettings {
-    /** If set to true, members can add and remove apps */
-    allowAddRemoveApps?: boolean;
-    /** If set to true, members can add and update channels */
-    allowCreateUpdateChannels?: boolean;
-    /** If set to true, members can add, update, and remove connectors */
-    allowCreateUpdateRemoveConnectors?: boolean;
-    /** If set to true, members can add, update, and remove tabs */
-    allowCreateUpdateRemoveTabs?: boolean;
-    /** If set to true, members can delete channels */
-    allowDeleteChannels?: boolean;
-}
-
-/**
- * Definition: MessageId
- */
-export interface MessageId {
-    /** Unique message identifier */
+export interface TimeOffRequestResponse {
+    /** The unique ID of the TimeOff request. */
     id?: string;
+    /** yyyy-MM-ddTHH:mm:ss.fffZ (UTC format) */
+    createdDateTime?: string;
+    /** yyyy-MM-ddTHH:mm:ss.fffZ (UTC format) */
+    lastModifiedDateTime?: string;
+    /** The person the request is assigned to: 'manager' or 'recipient' */
+    assignedTo?: string;
+    /** 'approved', 'pending' or 'declined' */
+    state?: string;
+    /** Time when the request was sent */
+    senderDateTime?: string;
+    /** The message from the request sender */
+    senderMessage?: string;
+    /** The ID of the user that sent the request */
+    senderUserId?: string;
+    /** Time when the manager responded */
+    managerActionDateTime?: string;
+    /** The message from the manager */
+    managerActionMessage?: string;
+    /** The ID of the manager that responded */
+    managerUserId?: string;
+    /** Start of time requested off */
+    startDateTime?: string;
+    /** End of time requested off */
+    endDateTime?: string;
+    /** The ID of the TimeOff Reason */
+    timeOffReasonId?: string;
 }
 
 /**
- * Definition: MessageReactionWebhookResponseSchema
+ * Definition: OfferShiftRequestResponse
  */
-export interface MessageReactionWebhookResponseSchema {
-    /** The channel's unique identifier */
-    channelId?: string;
-    /** The chat's unique identifier */
-    chatId?: string;
-    /** Id of the message which was reacted */
-    messageId?: string;
-    /** Link to the message which was reacted */
-    messageLink?: string;
-    /** Message reaction used */
-    messageReaction?: string;
-    /** ID of the parent message of the thread */
-    replyToId?: string;
-    /** The team's unique identifier */
-    teamId?: string;
-    threadType?: string;
-    /** Reacting user's Id */
+export interface OfferShiftRequestResponse {
+    /** The unique ID of the Offer Shift request. */
+    id?: string;
+    /** yyyy-MM-ddTHH:mm:ss.fffZ (UTC format) */
+    createdDateTime?: string;
+    /** yyyy-MM-ddTHH:mm:ss.fffZ (UTC format) */
+    lastModifiedDateTime?: string;
+    /** The person the request is assigned to: 'manager' or 'recipient' */
+    assignedTo?: string;
+    /** 'approved', 'pending' or 'declined' */
+    state?: string;
+    /** Time when the request was sent */
+    senderDateTime?: string;
+    /** The message from the request sender */
+    senderMessage?: string;
+    /** The ID of the user that sent the request */
+    senderUserId?: string;
+    /** The ID of the shift from the sender */
+    senderShiftId?: string;
+    /** Time when the recipient responded */
+    recipientActionDateTime?: string;
+    /** The message from the recipient */
+    recipientActionMessage?: string;
+    /** The ID of the recipient of the request */
+    recipientUserId?: string;
+    /** Time when the manager responded */
+    managerActionDateTime?: string;
+    /** The message from the manager */
+    managerActionMessage?: string;
+    /** The ID of the manager that responded */
+    managerUserId?: string;
+}
+
+/**
+ * Definition: SwapShiftsChangeRequestResponse
+ */
+export interface SwapShiftsChangeRequestResponse {
+    /** The unique ID of the Swap Shift request. */
+    id?: string;
+    /** yyyy-MM-ddTHH:mm:ss.fffZ (UTC format) */
+    createdDateTime?: string;
+    /** yyyy-MM-ddTHH:mm:ss.fffZ (UTC format) */
+    lastModifiedDateTime?: string;
+    /** The person the request is assigned to: 'manager' or 'recipient' */
+    assignedTo?: string;
+    /** 'approved', 'pending' or 'declined' */
+    state?: string;
+    /** Time when the request was sent */
+    senderDateTime?: string;
+    /** The message from the request sender */
+    senderMessage?: string;
+    /** The ID of the user that sent the request */
+    senderUserId?: string;
+    /** The ID of the shift from the sender */
+    senderShiftId?: string;
+    /** Time when the recipient responded */
+    recipientActionDateTime?: string;
+    /** The message from the recipient */
+    recipientActionMessage?: string;
+    /** The ID of the recipient of the request */
+    recipientUserId?: string;
+    /** The ID of the shift from the recipient */
+    recipientShiftId?: string;
+    /** Time when the manager responded */
+    managerActionDateTime?: string;
+    /** The message from the manager */
+    managerActionMessage?: string;
+    /** The ID of the manager that responded */
+    managerUserId?: string;
+}
+
+/**
+ * Definition: OpenShiftChangeRequestResponse
+ */
+export interface OpenShiftChangeRequestResponse {
+    /** The unique ID of the Open Shift Change request. */
+    id?: string;
+    /** yyyy-MM-ddTHH:mm:ss.fffZ (UTC format) */
+    createdDateTime?: string;
+    /** yyyy-MM-ddTHH:mm:ss.fffZ (UTC format) */
+    lastModifiedDateTime?: string;
+    /** The person the request is assigned to: 'manager' or 'recipient' */
+    assignedTo?: string;
+    /** 'approved', 'pending' or 'declined' */
+    state?: string;
+    /** Time when the request was sent */
+    senderDateTime?: string;
+    /** The message from the request sender */
+    senderMessage?: string;
+    /** The ID of the user that sent the request */
+    senderUserId?: string;
+    /** Time when the manager responded */
+    managerActionDateTime?: string;
+    /** The message from the manager */
+    managerActionMessage?: string;
+    /** The ID of the manager that responded */
+    managerUserId?: string;
+    /** The ID of the open shift being requested */
+    openShiftId?: string;
+}
+
+/**
+ * Definition: EditOpenShiftRequest
+ */
+export interface EditOpenShiftRequest {
+    /** Scheduling Group ID */
+    schedulingGroupId?: string;
+    sharedOpenShift?: Record<string, unknown>;
+}
+
+/**
+ * Definition: OpenShiftResponse
+ */
+export interface OpenShiftResponse {
+    /** The unique ID of the open shift. */
+    id?: string;
+    /** yyyy-MM-ddTHH:mm:ss.fffZ (UTC format) */
+    createdDateTime?: string;
+    /** yyyy-MM-ddTHH:mm:ss.fffZ (UTC format) */
+    lastModifiedDateTime?: string;
+    /** Scheduling Group ID */
+    schedulingGroupId?: string;
+    lastModifiedBy?: LastModifiedBy;
+    sharedOpenShift?: SharedOpenShift;
+    draftOpenShift?: DraftOpenShift;
+}
+
+/**
+ * Definition: SharedOpenShift
+ */
+export interface SharedOpenShift {
+    /** Display Name */
+    displayName?: string;
+    /** Notes */
+    notes?: string;
+    /** yyyy-MM-ddTHH:mm:ss.fffZ (UTC format) */
+    startDateTime?: string;
+    /** yyyy-MM-ddTHH:mm:ss.fffZ (UTC format) */
+    endDateTime?: string;
+    /** Theme */
+    theme?: string;
+    /** Open Slot Count */
+    openSlotCount?: number;
+    activities?: Activities;
+}
+
+/**
+ * Definition: DraftOpenShift
+ */
+export interface DraftOpenShift {
+    /** Display Name */
+    displayName?: string;
+    /** Notes */
+    notes?: string;
+    /** yyyy-MM-ddTHH:mm:ss.fffZ (UTC format) */
+    startDateTime?: string;
+    /** yyyy-MM-ddTHH:mm:ss.fffZ (UTC format) */
+    endDateTime?: string;
+    /** Theme */
+    theme?: string;
+    /** Open Slot Count */
+    openSlotCount?: number;
+    activities?: Activities;
+}
+
+/**
+ * Definition: ShiftResponse
+ */
+export interface ShiftResponse {
+    /** The unique ID of the shift. */
+    id?: string;
+    /** yyyy-MM-ddTHH:mm:ss.fffZ (UTC format) */
+    createdDateTime?: string;
+    /** yyyy-MM-ddTHH:mm:ss.fffZ (UTC format) */
+    lastModifiedDateTime?: string;
+    /** Assigned To User ID */
     userId?: string;
+    /** Scheduling Group ID */
+    schedulingGroupId?: string;
+    lastModifiedBy?: LastModifiedBy;
+    sharedShift?: SharedShift;
+    draftShift?: DraftShift;
 }
 
 /**
- * Definition: MessagingSettings
+ * Definition: SharedShift
  */
-export interface MessagingSettings {
-    /** If set to true, @channel mentions are allowed */
-    allowChannelMentions?: boolean;
-    /** If set to true, owners can delete any message */
-    allowOwnerDeleteMessages?: boolean;
-    /** If set to true, @team mentions are allowed */
-    allowTeamMentions?: boolean;
-    /** If set to true, users can delete their messages */
-    allowUserDeleteMessages?: boolean;
-    /** If set to true, users can edit their messages */
-    allowUserEditMessages?: boolean;
+export interface SharedShift {
+    /** Display Name */
+    displayName?: string;
+    /** Notes */
+    notes?: string;
+    /** yyyy-MM-ddTHH:mm:ss.fffZ (UTC format) */
+    startDateTime?: string;
+    /** yyyy-MM-ddTHH:mm:ss.fffZ (UTC format) */
+    endDateTime?: string;
+    /** Theme */
+    theme?: string;
+    activities?: Activities;
 }
+
+/**
+ * Definition: DraftShift
+ */
+export interface DraftShift {
+    /** Display Name */
+    displayName?: string;
+    /** Notes */
+    notes?: string;
+    /** yyyy-MM-ddTHH:mm:ss.fffZ (UTC format) */
+    startDateTime?: string;
+    /** yyyy-MM-ddTHH:mm:ss.fffZ (UTC format) */
+    endDateTime?: string;
+    /** Theme */
+    theme?: string;
+    activities?: Activities;
+}
+
+/**
+ * Definition: ScheduleResponse
+ */
+export interface ScheduleResponse {
+    /** The unique ID of the schedule. */
+    id?: string;
+    /** The Time Zone of the schedule. */
+    timeZone?: string;
+    /** The Provision Status of the schedule. */
+    provisionStatus?: string;
+    /** The Provision Status Code of the schedule. */
+    provisionStatusCode?: string;
+}
+
+/**
+ * Definition: AsyncOperationResponse
+ */
+export interface AsyncOperationResponse {
+    /** The status of the asynchronous operation */
+    status?: string;
+}
+
+/**
+ * Definition: CreateATeamResponse
+ */
+export interface CreateATeamResponse {
+    /** Team ID of the team that was just created */
+    newTeamId?: string;
+}
+
+/**
+ * Definition: CreateChannelResponse
+ */
+export interface CreateChannelResponse {
+    /** Optional textual description for the channel */
+    description?: string;
+    /** Channel name as it appears in Microsoft Teams */
+    displayName?: string;
+    /** The channel's unique identifier */
+    id?: string;
+    /** The type of channel membership */
+    membershipType?: string;
+}
+
+/**
+ * Definition: PostToConversationResponse
+ */
+export interface PostToConversationResponse {
+    /** Unique message ID */
+    id?: string;
+    /** Link to the message in Microsoft Teams */
+    messageLink?: string;
+    /** The chat's unique identifier */
+    conversationId?: string;
+}
+
+/**
+ * Definition: PostMessageToSelfRequest
+ */
+export interface PostMessageToSelfRequest {
+    body: Record<string, unknown>;
+}
+
+/**
+ * Definition: ThemeEditor
+ */
+export type ThemeEditor = "white" | "blue" | "green" | "purple" | "pink" | "yellow" | "gray" | "darkblue" | "darkgreen" | "darkpurple" | "darkpink" | "darkyellow";
+
+/**
+ * Definition: Activities
+ */
+export interface Activities {
+    [key: string]: unknown;
+}
+
+/**
+ * Definition: SchedulingGroupResponse
+ */
+export interface SchedulingGroupResponse {
+    /** The unique ID of the scheduling group. */
+    id?: string;
+    /** The display name for the scheduling group. */
+    displayName?: string;
+    /** Indicates whether the scheduling group can be used when creating new entities or updating existing ones. */
+    isActive?: boolean;
+    /** List of IDs of users in the scheduling group. */
+    userIds?: Array<string>;
+}
+
+/**
+ * Definition: AtMentionUser
+ */
+export interface AtMentionUser {
+    /** An @mention token for the user. This property can be inserted into messages */
+    atMention?: string;
+}
+
+/**
+ * Definition: BotMentionRequest
+ */
+export interface BotMentionRequest {
+    /** The bot's unique identifier (GUID) */
+    botId: string;
+    /** The bot's app identifier (GUID) */
+    appId: string;
+    /** The bot's display name */
+    name: string;
+}
+
+/**
+ * Definition: AtMentionBotResponse
+ */
+export interface AtMentionBotResponse {
+    /** An @mention token for the bot. This property can be inserted into messages and adaptive cards */
+    atMention?: string;
+}
+
+/**
+ * Definition: AtMentionTagResponse
+ */
+export interface AtMentionTagResponse {
+    /** A token for the tag to @mention. It can be inserted into messages and adaptive cards sent from a person */
+    atMention?: string;
+}
+
+/**
+ * Definition: ChannelIdForTeam
+ */
+export type ChannelIdForTeam = string;
+
+/**
+ * Definition: ChannelIds
+ */
+export interface ChannelIds {
+    channel: ChannelIdForTeam;
+}
+
+/**
+ * Definition: ChatId
+ */
+export type ChatId = string;
+
+/**
+ * Definition: BotIdForChat
+ */
+export type BotIdForChat = string;
 
 /**
  * Definition: NewChat
  */
 export interface NewChat {
-    /** User's IDs, separated by semicolons */
-    members: string;
     /** Title, displayed only in group chats */
     topic?: string;
+    /** User's IDs, separated by semicolons */
+    members: string;
 }
 
 /**
@@ -839,423 +1253,206 @@ export interface NewChatResponse {
  * Definition: NewMeeting
  */
 export interface NewMeeting {
-    /** The body of the message associated with the event */
-    body: Record<string, unknown>;
-    end: Record<string, unknown>;
-    /** The importance of the event: low, normal or high */
-    importance?: string;
-    /** Set to true if the event lasts all day */
-    isAllDay?: boolean;
-    /** Set to true, if the meeting should have an online meeting provider */
-    isOnlineMeeting: boolean;
-    /** Set to true if an alert is set to remind the user of the event */
-    isReminderOn?: boolean;
-    /** The location of the event */
-    location?: Record<string, unknown>;
-    /** Represents the online meeting service provider */
-    onlineMeetingProvider: string;
-    /** Optional attendees for the event separated by semicolons */
-    optionalAttendees?: string;
-    /** The recurrence pattern for the meeting */
-    recurrence?: Record<string, unknown>;
-    /** The number of minutes before the event start time that the reminder alert occurs */
-    reminderMinutesBeforeStart?: number;
-    /** Required attendees for the event separated by semicolons */
-    requiredAttendees?: string;
-    /** Set to true if the sender would like a response when the event is accepted */
-    responseRequested?: boolean;
-    /** Status to show during the event */
-    showAs?: string;
-    start: Record<string, unknown>;
     /** The text of the event's subject line */
     subject: string;
+    /** The body of the message associated with the event */
+    body: Record<string, unknown>;
     /** Time zone of the event */
     timeZone: string;
+    start: Record<string, unknown>;
+    end: Record<string, unknown>;
+    /** Required attendees for the event separated by semicolons */
+    requiredAttendees?: string;
+    /** Optional attendees for the event separated by semicolons */
+    optionalAttendees?: string;
+    /** The location of the event */
+    location?: Record<string, unknown>;
+    /** The importance of the event: low, normal or high */
+    importance?: string;
+    /** The recurrence pattern for the meeting */
+    recurrence?: Record<string, unknown>;
+    /** Set to true if the event lasts all day */
+    isAllDay?: boolean;
+    /** The number of minutes before the event start time that the reminder alert occurs */
+    reminderMinutesBeforeStart?: number;
+    /** Set to true if an alert is set to remind the user of the event */
+    isReminderOn?: boolean;
+    /** Status to show during the event */
+    showAs?: string;
+    /** Set to true if the sender would like a response when the event is accepted */
+    responseRequested?: boolean;
+    /** Set to true, if the meeting should have an online meeting provider */
+    isOnlineMeeting: boolean;
+    /** Represents the online meeting service provider */
+    onlineMeetingProvider: string;
 }
 
 /**
  * Definition: NewMeetingRespone
  */
 export interface NewMeetingResponse {
-    /** True if the meeting organizer allows invitees to propose a new time when responding */
-    allowNewTimeProposals?: boolean;
-    /** The collection of attendees for the event */
-    attendees?: Array<Record<string, unknown>>;
-    /** The body of the message associated with the event */
-    body?: Record<string, unknown>;
-    /** The preview of the message associated with the event */
-    bodyPreview?: string;
-    /** The categories associated with the event */
-    categories?: Array<unknown>;
-    /** Timestamp the event was created */
-    createdDateTime?: string;
-    /** The date, time, and time zone that the event ends */
-    end?: Record<string, unknown>;
-    /** Set to true if the event has attachments */
-    hasAttachments?: boolean;
     /** Unique identifier for the event */
     id?: string;
+    /** Timestamp the event was created */
+    createdDateTime?: string;
+    /** Timestamp the event was last modified */
+    lastModifiedDateTime?: string;
+    /** The categories associated with the event */
+    categories?: Array<unknown>;
+    /** Time zone of the event */
+    timeZone?: string;
+    /** The number of minutes before the event start time that the reminder alert occurs */
+    reminderMinutesBeforeStart?: number;
+    /** Set to true if an alert is set to remind the user of the event */
+    isReminderOn?: boolean;
+    /** Set to true if the event has attachments */
+    hasAttachments?: boolean;
+    /** The text of the event's subject line */
+    subject?: string;
+    /** The preview of the message associated with the event */
+    bodyPreview?: string;
     /** The importance of the event. The possible values are: low, normal, high */
     importance?: string;
+    /** Sensitivity of the event */
+    sensitivity?: string;
     /** Set to true if the event lasts all day */
     isAllDay?: boolean;
     /** Set to true if the event has been canceled */
     isCancelled?: boolean;
     /** Set to true if the calendar owner is the organizer of the event */
     isOrganizer?: boolean;
-    /** Set to true if an alert is set to remind the user of the event */
-    isReminderOn?: boolean;
-    /** Timestamp the event was last modified */
-    lastModifiedDateTime?: string;
-    /** The location of the event */
-    location?: Record<string, unknown>;
-    /** Details for an attendee to join the meeting online. */
-    onlineMeeting?: Record<string, unknown>;
-    /** A URL for an online meeting */
-    onlineMeetingUrl?: string;
-    /** Organizer */
-    organizer?: Record<string, unknown>;
-    /** The recurrence pattern for the event */
-    recurrence?: Record<string, unknown>;
-    /** The number of minutes before the event start time that the reminder alert occurs */
-    reminderMinutesBeforeStart?: number;
     /** The organizer would like an invitee to send a response to the event */
     responseRequested?: boolean;
-    /** Indicates the type of response sent in response to an event message */
-    responseStatus?: Record<string, unknown>;
-    /** Sensitivity of the event */
-    sensitivity?: string;
     /** The status to show. Possible values are: free, tentative, busy, oof, workingElsewhere, unknown. */
     showAs?: string;
-    /** The start date, time, and time zone of the event */
-    start?: Record<string, unknown>;
-    /** The text of the event's subject line */
-    subject?: string;
-    /** Time zone of the event */
-    timeZone?: string;
     /** The event type. Possible values are: singleInstance, occurrence, exception, seriesMaster */
     type?: string;
     /** The URL to open the event in Outlook on the web. */
     webLink?: string;
+    /** A URL for an online meeting */
+    onlineMeetingUrl?: string;
+    /** True if the meeting organizer allows invitees to propose a new time when responding */
+    allowNewTimeProposals?: boolean;
+    /** The recurrence pattern for the event */
+    recurrence?: Record<string, unknown>;
+    /** Indicates the type of response sent in response to an event message */
+    responseStatus?: Record<string, unknown>;
+    /** The body of the message associated with the event */
+    body?: Record<string, unknown>;
+    /** The start date, time, and time zone of the event */
+    start?: Record<string, unknown>;
+    /** The date, time, and time zone that the event ends */
+    end?: Record<string, unknown>;
+    /** The location of the event */
+    location?: Record<string, unknown>;
+    /** The collection of attendees for the event */
+    attendees?: Array<Record<string, unknown>>;
+    /** Organizer */
+    organizer?: Record<string, unknown>;
+    /** Details for an attendee to join the meeting online. */
+    onlineMeeting?: Record<string, unknown>;
 }
 
 /**
- * Definition: Object
+ * Definition: LastModifiedBy
  */
-export interface ObjectEntity {
-    [key: string]: unknown;
+export interface LastModifiedBy {
+    /** Application */
+    application?: string;
+    /** Device */
+    device?: string;
+    /** Conversation */
+    conversation?: string;
+    /** User */
+    user?: Record<string, unknown>;
 }
 
 /**
- * Definition: ObjectWithoutType
+ * Definition: MemberSettings
  */
-export interface ObjectWithoutType {
-    [key: string]: unknown;
+export interface MemberSettings {
+    /** If set to true, members can add and update channels */
+    allowCreateUpdateChannels?: boolean;
+    /** If set to true, members can delete channels */
+    allowDeleteChannels?: boolean;
+    /** If set to true, members can add and remove apps */
+    allowAddRemoveApps?: boolean;
+    /** If set to true, members can add, update, and remove tabs */
+    allowCreateUpdateRemoveTabs?: boolean;
+    /** If set to true, members can add, update, and remove connectors */
+    allowCreateUpdateRemoveConnectors?: boolean;
 }
 
 /**
- * Definition: OfferShiftRequestResponse
+ * Definition: GuestSettings
  */
-export interface OfferShiftRequestResponse {
-    /** The person the request is assigned to: 'manager' or 'recipient' */
-    assignedTo?: string;
-    /** yyyy-MM-ddTHH:mm:ss.fffZ (UTC format) */
-    createdDateTime?: string;
-    /** The unique ID of the Offer Shift request. */
-    id?: string;
-    /** yyyy-MM-ddTHH:mm:ss.fffZ (UTC format) */
-    lastModifiedDateTime?: string;
-    /** Time when the manager responded */
-    managerActionDateTime?: string;
-    /** The message from the manager */
-    managerActionMessage?: string;
-    /** The ID of the manager that responded */
-    managerUserId?: string;
-    /** Time when the recipient responded */
-    recipientActionDateTime?: string;
-    /** The message from the recipient */
-    recipientActionMessage?: string;
-    /** The ID of the recipient of the request */
-    recipientUserId?: string;
-    /** Time when the request was sent */
-    senderDateTime?: string;
-    /** The message from the request sender */
-    senderMessage?: string;
-    /** The ID of the shift from the sender */
-    senderShiftId?: string;
-    /** The ID of the user that sent the request */
-    senderUserId?: string;
-    /** 'approved', 'pending' or 'declined' */
-    state?: string;
+export interface GuestSettings {
+    /** If set to true, guests can add and update channels */
+    allowCreateUpdateChannels?: boolean;
+    /** If set to true, guests can delete channels */
+    allowDeleteChannels?: boolean;
 }
 
 /**
- * Definition: OnGroupMemberChange_Response
+ * Definition: MessagingSettings
  */
-export interface OnGroupMemberChangeResponse {
-    [key: string]: unknown;
+export interface MessagingSettings {
+    /** If set to true, users can edit their messages */
+    allowUserEditMessages?: boolean;
+    /** If set to true, users can delete their messages */
+    allowUserDeleteMessages?: boolean;
+    /** If set to true, owners can delete any message */
+    allowOwnerDeleteMessages?: boolean;
+    /** If set to true, @team mentions are allowed */
+    allowTeamMentions?: boolean;
+    /** If set to true, @channel mentions are allowed */
+    allowChannelMentions?: boolean;
 }
 
 /**
- * Definition: OpenShiftChangeRequestResponse
+ * Definition: FunSettings
  */
-export interface OpenShiftChangeRequestResponse {
-    /** The person the request is assigned to: 'manager' or 'recipient' */
-    assignedTo?: string;
-    /** yyyy-MM-ddTHH:mm:ss.fffZ (UTC format) */
-    createdDateTime?: string;
-    /** The unique ID of the Open Shift Change request. */
-    id?: string;
-    /** yyyy-MM-ddTHH:mm:ss.fffZ (UTC format) */
-    lastModifiedDateTime?: string;
-    /** Time when the manager responded */
-    managerActionDateTime?: string;
-    /** The message from the manager */
-    managerActionMessage?: string;
-    /** The ID of the manager that responded */
-    managerUserId?: string;
-    /** The ID of the open shift being requested */
-    openShiftId?: string;
-    /** Time when the request was sent */
-    senderDateTime?: string;
-    /** The message from the request sender */
-    senderMessage?: string;
-    /** The ID of the user that sent the request */
-    senderUserId?: string;
-    /** 'approved', 'pending' or 'declined' */
-    state?: string;
+export interface FunSettings {
+    /** If set to true, enables Giphy use */
+    allowGiphy?: boolean;
+    /** Giphy content rating. Possible values are: moderate, strict */
+    giphyContentRating?: string;
+    /** If set to true, enables users to include stickers and memes */
+    allowStickersAndMemes?: boolean;
+    /** If set to true, enables users to include custom memes */
+    allowCustomMemes?: boolean;
 }
 
 /**
- * Definition: OpenShiftResponse
+ * Definition: DiscoverySettings
  */
-export interface OpenShiftResponse {
-    /** yyyy-MM-ddTHH:mm:ss.fffZ (UTC format) */
-    createdDateTime?: string;
-    draftOpenShift?: DraftOpenShift;
-    /** The unique ID of the open shift. */
-    id?: string;
-    lastModifiedBy?: LastModifiedBy;
-    /** yyyy-MM-ddTHH:mm:ss.fffZ (UTC format) */
-    lastModifiedDateTime?: string;
-    /** Scheduling Group ID */
-    schedulingGroupId?: string;
-    sharedOpenShift?: SharedOpenShift;
-}
-
-/**
- * Definition: PostCardAndWaitSchema
- */
-export interface PostCardAndWaitSchema {
-    schema?: ObjectEntity;
-}
-
-/**
- * Definition: PostCardSchema
- */
-export interface PostCardSchema {
-    schema?: ObjectEntity;
-}
-
-/**
- * Definition: PostFeedSchema
- */
-export interface PostFeedSchema {
-    schema?: ObjectEntity;
-}
-
-/**
- * Definition: PostMessageSchema
- */
-export interface PostMessageSchema {
-    schema?: ObjectEntity;
-}
-
-/**
- * Definition: PostToConversationResponse
- */
-export interface PostToConversationResponse {
-    /** The chat's unique identifier */
-    conversationId?: string;
-    /** Unique message ID */
-    id?: string;
-    /** Link to the message in Microsoft Teams */
-    messageLink?: string;
-}
-
-/**
- * Definition: ScheduleResponse
- */
-export interface ScheduleResponse {
-    /** The unique ID of the schedule. */
-    id?: string;
-    /** The Provision Status of the schedule. */
-    provisionStatus?: string;
-    /** The Provision Status Code of the schedule. */
-    provisionStatusCode?: string;
-    /** The Time Zone of the schedule. */
-    timeZone?: string;
-}
-
-/**
- * Definition: SchedulingGroupResponse
- */
-export interface SchedulingGroupResponse {
-    /** The display name for the scheduling group. */
-    displayName?: string;
-    /** The unique ID of the scheduling group. */
-    id?: string;
-    /** Indicates whether the scheduling group can be used when creating new entities or updating existing ones. */
-    isActive?: boolean;
-    /** List of IDs of users in the scheduling group. */
-    userIds?: Array<string>;
+export interface DiscoverySettings {
+    /** If set to true, the team is visible via search and suggestions from the Teams client */
+    showInTeamsSearchAndSuggestions?: boolean;
 }
 
 /**
  * Definition: SelectedMessageTriggerMetadata
  */
 export interface SelectedMessageTriggerMetadata {
-    CardOutputs?: ObjectEntity;
     TeamsFlowRunContext?: ObjectEntity;
+    CardOutputs?: ObjectEntity;
 }
 
 /**
- * Definition: SharedOpenShift
+ * Definition: ComposeMessageTriggerMetadata
  */
-export interface SharedOpenShift {
-    activities?: Activities;
-    /** Display Name */
-    displayName?: string;
-    /** yyyy-MM-ddTHH:mm:ss.fffZ (UTC format) */
-    endDateTime?: string;
-    /** Notes */
-    notes?: string;
-    /** Open Slot Count */
-    openSlotCount?: number;
-    /** yyyy-MM-ddTHH:mm:ss.fffZ (UTC format) */
-    startDateTime?: string;
-    /** Theme */
-    theme?: string;
+export interface ComposeMessageTriggerMetadata {
+    TeamsFlowRunContext?: ObjectEntity;
+    CardOutputs?: ObjectEntity;
 }
 
 /**
- * Definition: SharedShift
+ * Definition: CardResponseTriggerMetadata
  */
-export interface SharedShift {
-    activities?: Activities;
-    /** Display Name */
-    displayName?: string;
-    /** yyyy-MM-ddTHH:mm:ss.fffZ (UTC format) */
-    endDateTime?: string;
-    /** Notes */
-    notes?: string;
-    /** yyyy-MM-ddTHH:mm:ss.fffZ (UTC format) */
-    startDateTime?: string;
-    /** Theme */
-    theme?: string;
-}
-
-/**
- * Definition: ShiftResponse
- */
-export interface ShiftResponse {
-    /** yyyy-MM-ddTHH:mm:ss.fffZ (UTC format) */
-    createdDateTime?: string;
-    draftShift?: DraftShift;
-    /** The unique ID of the shift. */
-    id?: string;
-    lastModifiedBy?: LastModifiedBy;
-    /** yyyy-MM-ddTHH:mm:ss.fffZ (UTC format) */
-    lastModifiedDateTime?: string;
-    /** Scheduling Group ID */
-    schedulingGroupId?: string;
-    sharedShift?: SharedShift;
-    /** Assigned To User ID */
-    userId?: string;
-}
-
-/**
- * Definition: SwapShiftsChangeRequestResponse
- */
-export interface SwapShiftsChangeRequestResponse {
-    /** The person the request is assigned to: 'manager' or 'recipient' */
-    assignedTo?: string;
-    /** yyyy-MM-ddTHH:mm:ss.fffZ (UTC format) */
-    createdDateTime?: string;
-    /** The unique ID of the Swap Shift request. */
-    id?: string;
-    /** yyyy-MM-ddTHH:mm:ss.fffZ (UTC format) */
-    lastModifiedDateTime?: string;
-    /** Time when the manager responded */
-    managerActionDateTime?: string;
-    /** The message from the manager */
-    managerActionMessage?: string;
-    /** The ID of the manager that responded */
-    managerUserId?: string;
-    /** Time when the recipient responded */
-    recipientActionDateTime?: string;
-    /** The message from the recipient */
-    recipientActionMessage?: string;
-    /** The ID of the shift from the recipient */
-    recipientShiftId?: string;
-    /** The ID of the recipient of the request */
-    recipientUserId?: string;
-    /** Time when the request was sent */
-    senderDateTime?: string;
-    /** The message from the request sender */
-    senderMessage?: string;
-    /** The ID of the shift from the sender */
-    senderShiftId?: string;
-    /** The ID of the user that sent the request */
-    senderUserId?: string;
-    /** 'approved', 'pending' or 'declined' */
-    state?: string;
-}
-
-/**
- * Definition: ThemeEditor
- */
-export type ThemeEditor = "white" | "blue" | "green" | "purple" | "pink" | "yellow" | "gray" | "darkblue" | "darkgreen" | "darkpurple" | "darkpink" | "darkyellow";
-
-/**
- * Definition: TimeOffRequestResponse
- */
-export interface TimeOffRequestResponse {
-    /** The person the request is assigned to: 'manager' or 'recipient' */
-    assignedTo?: string;
-    /** yyyy-MM-ddTHH:mm:ss.fffZ (UTC format) */
-    createdDateTime?: string;
-    /** End of time requested off */
-    endDateTime?: string;
-    /** The unique ID of the TimeOff request. */
-    id?: string;
-    /** yyyy-MM-ddTHH:mm:ss.fffZ (UTC format) */
-    lastModifiedDateTime?: string;
-    /** Time when the manager responded */
-    managerActionDateTime?: string;
-    /** The message from the manager */
-    managerActionMessage?: string;
-    /** The ID of the manager that responded */
-    managerUserId?: string;
-    /** Time when the request was sent */
-    senderDateTime?: string;
-    /** The message from the request sender */
-    senderMessage?: string;
-    /** The ID of the user that sent the request */
-    senderUserId?: string;
-    /** Start of time requested off */
-    startDateTime?: string;
-    /** 'approved', 'pending' or 'declined' */
-    state?: string;
-    /** The ID of the TimeOff Reason */
-    timeOffReasonId?: string;
-}
-
-/**
- * Definition: UnifiedActionSchema
- */
-export interface UnifiedActionSchema {
-    schema?: ObjectEntity;
+export interface CardResponseTriggerMetadata {
+    TeamsFlowRunContext?: ObjectEntity;
+    CardOutputs?: ObjectEntity;
 }
 
 /**
@@ -1268,18 +1465,219 @@ export interface VirtualAgentBots {
 }
 
 /**
- * Definition: WebhookRequest
+ * Definition: ObjectWithoutType
  */
-export interface WebhookRequest {
-    /** Specify a well-formed URL of the endpoint that will receive notifications */
-    notificationUrl: string;
+export interface ObjectWithoutType {
+    [key: string]: unknown;
 }
 
 /**
- * Definition: WebhookTriggerSchema
+ * Definition: GetOnlineMeeting_Response
  */
-export interface WebhookTriggerSchema {
-    schema?: ObjectEntity;
+export interface GetOnlineMeetingResponse {
+    /** The unique identifier of the online meeting */
+    id?: string;
+    /** The subject of the online meeting */
+    subject?: string;
+    /** The start time of the meeting in UTC */
+    startDateTime?: string;
+    /** The end time of the meeting in UTC */
+    endDateTime?: string;
+    /** The creation time of the meeting in UTC */
+    creationDateTime?: string;
+    /** The URL used to join the meeting online */
+    joinWebUrl?: string;
+    /** Settings related to the join meeting ID */
+    joinMeetingIdSettings?: Record<string, unknown>;
+    /** The participants of the meeting */
+    participants?: Record<string, unknown>;
+    /** Phone call-in information for the meeting */
+    audioConferencing?: Record<string, unknown>;
+    /** Whether announce notifications are enabled for callers joining or leaving the meeting */
+    isEntryExitAnnounced?: boolean;
+    /** Specifies who can be a presenter in the meeting */
+    allowedPresenters?: string;
+    /** Specifies which participants can bypass the meeting lobby */
+    lobbyBypassSettings?: Record<string, unknown>;
+    /** Indicates whether to record the meeting automatically */
+    recordAutomatically?: boolean;
+    /** Specifies the mode of meeting chat */
+    allowMeetingChat?: string;
+    /** A URL for the organizer to change settings for the meeting */
+    meetingOptionsWebUrl?: string;
+}
+
+/**
+ * Definition: CallRecordingResponse
+ */
+export interface CallRecordingResponse {
+    /** The recording ID */
+    id?: string;
+    /** The date and time when the recording was created */
+    createdDateTime?: string;
+    /** The URL to access the recording content */
+    recordingContentUrl?: string;
+    /** The meeting ID */
+    meetingId?: string;
+    /** The meeting organizer's user ID */
+    meetingOrganizerId?: string;
+    /** The call ID */
+    callId?: string;
+}
+
+/**
+ * Definition: CallRecordingCollectionResponse
+ */
+export interface CallRecordingCollectionResponse {
+    "@odata.context"?: string;
+    /** List of recordings */
+    value?: Array<CallRecordingResponse>;
+}
+
+/**
+ * Definition: CallTranscriptResponse
+ */
+export interface CallTranscriptResponse {
+    /** The transcript ID */
+    id?: string;
+    /** The date and time when the transcript was created */
+    createdDateTime?: string;
+    /** The URL to access the transcript content */
+    transcriptContentUrl?: string;
+    /** The meeting ID */
+    meetingId?: string;
+    /** The meeting organizer's user ID */
+    meetingOrganizerId?: string;
+    /** The call ID */
+    callId?: string;
+}
+
+/**
+ * Definition: CallTranscriptCollectionResponse
+ */
+export interface CallTranscriptCollectionResponse {
+    "@odata.context"?: string;
+    /** List of transcripts */
+    value?: Array<CallTranscriptResponse>;
+}
+
+/**
+ * Definition: SectionResponse
+ */
+export interface SectionResponse {
+    /** ETag for the sections collection. Pass as If-Match on Create, Update, and Delete. */
+    "@odata.etag"?: string;
+    /** The section ID */
+    id?: string;
+    /** The display name of the section */
+    displayName?: string;
+    /** The display icon for the section */
+    displayIcon?: Record<string, unknown>;
+    /** Whether the section is expanded */
+    isExpanded?: boolean;
+    /** The sort type for the section */
+    sortType?: string;
+    /** The type of section */
+    sectionType?: string;
+    /** The date and time when the section was created */
+    createdDateTime?: string;
+    /** The date and time when the section was last modified */
+    lastModifiedDateTime?: string;
+}
+
+/**
+ * Definition: ListSectionsResponse
+ */
+export interface ListSectionsResponse {
+    "@odata.context"?: string;
+    /** Version identifier for the sections hierarchy. Pass as If-Match on Create, Update, Delete, Add Item, Remove Item, and Move Item operations. */
+    "@microsoft.graph.sectionsVersion"?: string;
+    /** List of sections */
+    value?: Array<SectionResponse>;
+}
+
+/**
+ * Definition: SectionItemResponse
+ */
+export interface SectionItemResponse {
+    /** ETag for the section items collection. Pass as If-Match on Add, Remove, and Move. */
+    "@odata.etag"?: string;
+    /** The unique identifier of the item. Corresponds to the conversation ID of the underlying chat, channel, meeting, or community. */
+    id?: string;
+    /** The type of the item */
+    itemType?: string;
+    /** The date and time when the item was added to the section */
+    createdDateTime?: string;
+    /** The date and time when the item was last modified */
+    lastModifiedDateTime?: string;
+}
+
+/**
+ * Definition: ListSectionItemsResponse
+ */
+export interface ListSectionItemsResponse {
+    "@odata.context"?: string;
+    /** List of section items */
+    value?: Array<SectionItemResponse>;
+}
+
+/**
+ * Definition: SectionItemConflictError
+ */
+export interface SectionItemConflictError {
+    error?: Record<string, unknown>;
+}
+
+/**
+ * Definition: DynamicCallEventTriggerRequest
+ */
+export interface DynamicCallEventTriggerRequest {
+    /** Webhook callback URL */
+    notificationUrl: string;
+    scope: Record<string, unknown>;
+}
+
+/**
+ * Definition: DynamicTranscriptTriggerRequest
+ */
+export interface DynamicTranscriptTriggerRequest {
+    /** Webhook callback URL */
+    notificationUrl: string;
+    scope: Record<string, unknown>;
+}
+
+/**
+ * Definition: DynamicRecordingTriggerRequest
+ */
+export interface DynamicRecordingTriggerRequest {
+    /** Webhook callback URL */
+    notificationUrl: string;
+    scope: Record<string, unknown>;
+}
+
+/**
+ * Definition: AiInsightResponse
+ */
+export interface AiInsightResponse {
+    /** The AI insight ID */
+    id?: string;
+    /** The call ID */
+    callId?: string;
+    /** The content correlation ID */
+    contentCorrelationId?: string;
+    /** The date and time when the AI insight was created */
+    createdDateTime?: string;
+    /** The date and time when the AI insight ended */
+    endDateTime?: string;
+}
+
+/**
+ * Definition: AiInsightCollectionResponse
+ */
+export interface AiInsightCollectionResponse {
+    "@odata.context"?: string;
+    /** List of AI insights */
+    value?: Array<AiInsightResponse>;
 }
 
 /**
@@ -1307,8 +1705,10 @@ export type TeamsOnTeamMemberRemovedTriggerPayload = TriggerCallbackPayload<Reco
 export const TeamsTriggerOperations = {
     OnNewChannelMessage: "OnNewChannelMessage",
     OnNewChannelMessageMentioningMe: "OnNewChannelMessageMentioningMe",
+    OnRecordingTrigger: "RecordingTrigger",
     OnTeamMemberAdded: "OnGroupMembershipAdd",
     OnTeamMemberRemoved: "OnGroupMembershipRemoval",
+    OnTranscriptTrigger: "TranscriptTrigger",
     OnWebhookAtMentionTrigger: "WebhookAtMentionTrigger",
     OnWebhookChatMessageTrigger: "WebhookChatMessageTrigger",
     OnWebhookKeywordTrigger: "WebhookKeywordTrigger",
@@ -1369,6 +1769,16 @@ export const TeamsTriggerParameters = {
             defaultValue: "50",
         },
     },
+    OnRecordingTrigger: {
+        scopeType: {
+            name: "scopeType",
+            type: "string",
+            required: true,
+            description: "The scope of recordings to monitor",
+            summary: "Scope",
+            allowedValues: ["user", "meeting", "adhocCallUser"],
+        },
+    },
     OnTeamMemberAdded: {
         groupId: {
             name: "groupId",
@@ -1401,6 +1811,16 @@ export const TeamsTriggerParameters = {
             required: false,
             summary: "Select",
             defaultValue: "members",
+        },
+    },
+    OnTranscriptTrigger: {
+        scopeType: {
+            name: "scopeType",
+            type: "string",
+            required: true,
+            description: "The scope of transcripts to monitor",
+            summary: "Scope",
+            allowedValues: ["user", "meeting", "adhocCallUser"],
         },
     },
     OnWebhookAtMentionTrigger: {
@@ -1497,45 +1917,51 @@ export class TeamsClient extends ConnectorClientBase {
     }
 
     /**
-     * Create a chat
-     * @remarks Creates a one on one or group chat
+     * Create a Teams meeting
+     * @remarks Create a meeting with a link at the bottom of the invite to join the meeting online on Microsoft Teams.
      */
-    public async createChatAsync(input: NewChat, abortSignal?: AbortSignal): Promise<NewChatResponse> {
-        const requestPath = `/beta/chats`;
+    public async createTeamsMeetingAsync(input: NewMeeting, calendarid: string, abortSignal?: AbortSignal): Promise<NewMeetingResponse> {
+        const requestPath = `/v1.0/me/calendars/${calendarid}/events`;
         const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<NewChatResponse>("POST", url, undefined, input, abortSignal);
+        const httpResponse = await this.httpClient.sendAsync<NewMeetingResponse>("POST", url, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
             throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
-        return httpResponse.value as NewChatResponse;
+        return httpResponse.value as NewMeetingResponse;
     }
 
     /**
-     * Get messages in a chat
-     * @remarks Retrieves messages from a one on one or group chat
+     * List joined teams
+     * @remarks Lists all the teams in Microsoft Teams that you are a member of
      */
-    public async getMessagesFromChatAsync(chatId: string, filter?: string, orderby?: string, top?: string, abortSignal?: AbortSignal): Promise<GetMessagesFromConversationResponse> {
-        const queryParams: string[] = [];
-        if (filter !== undefined) {
-            queryParams.push(`$filter=${encodeURIComponent(String(filter))}`);
-        }
-        if (orderby !== undefined) {
-            queryParams.push(`$orderby=${encodeURIComponent(String(orderby))}`);
-        }
-        if (top !== undefined) {
-            queryParams.push(`$top=${encodeURIComponent(String(top))}`);
-        }
-        const requestPath = `/beta/chats/${chatId}/messages` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
+    public async getAllTeamsAsync(abortSignal?: AbortSignal): Promise<GetAllTeamsResponse> {
+        const requestPath = `/beta/me/joinedTeams`;
         const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<GetMessagesFromConversationResponse>("GET", url, undefined, undefined, abortSignal);
+        const httpResponse = await this.httpClient.sendAsync<GetAllTeamsResponse>("GET", url, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
             throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
-        return httpResponse.value as GetMessagesFromConversationResponse;
+        return httpResponse.value as GetAllTeamsResponse;
+    }
+
+    /**
+     * List associated teams
+     * @remarks Lists all the teams you are a direct member of, or are a member of a shared channel that is hosted inside the team.
+     */
+    public async getAllAssociatedTeamsAsync(abortSignal?: AbortSignal): Promise<GetAllAssociatedTeamsResponse> {
+        const requestPath = `/v1.0/me/teamwork/associatedTeams`;
+        const url = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<GetAllAssociatedTeamsResponse>("GET", url, undefined, undefined, abortSignal);
+
+        if (!httpResponse.isSuccessStatusCode) {
+            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+        }
+
+        return httpResponse.value as GetAllAssociatedTeamsResponse;
     }
 
     /**
@@ -1578,67 +2004,49 @@ export class TeamsClient extends ConnectorClientBase {
     }
 
     /**
-     * List joined teams
-     * @remarks Lists all the teams in Microsoft Teams that you are a member of
+     * Get details for a specific channel in a team
+     * @remarks Get the channel details
      */
-    public async getAllTeamsAsync(abortSignal?: AbortSignal): Promise<GetAllTeamsResponse> {
-        const requestPath = `/beta/me/joinedTeams`;
+    public async getChannelAsync(groupId: string, channelId: string, abortSignal?: AbortSignal): Promise<GetChannelResponse> {
+        const requestPath = `/beta/teams/${groupId}/channels/${channelId}`;
         const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<GetAllTeamsResponse>("GET", url, undefined, undefined, abortSignal);
+        const httpResponse = await this.httpClient.sendAsync<GetChannelResponse>("GET", url, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
             throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
-        return httpResponse.value as GetAllTeamsResponse;
+        return httpResponse.value as GetChannelResponse;
     }
 
     /**
-     * Create a team
-     * @remarks Creates a new team in Microsoft Teams
+     * Update channel
+     * @remarks Updates the properties of a channel in a specific team. Only the properties you provide are changed; omitted properties are left unchanged. For shared channels, the team ID must refer to the host team, which is the team that owns the shared channel.
      */
-    public async createATeamAsync(input: CreateATeamInput, abortSignal?: AbortSignal): Promise<CreateATeamResponse> {
-        const requestPath = `/beta/teams`;
+    public async updateChannelPropertiesAsync(input: UpdateChannelPropertiesInput, groupId: string, channelId: string, abortSignal?: AbortSignal): Promise<void> {
+        const requestPath = `/beta/teams/${groupId}/channels/${channelId}`;
         const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<CreateATeamResponse>("POST", url, undefined, input, abortSignal);
+        const httpResponse = await this.httpClient.sendAsync<void>("PATCH", url, undefined, input, abortSignal);
+
+        if (!httpResponse.isSuccessStatusCode) {
+            throw new ConnectorException(this.connectorName, `PATCH ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+        }
+    }
+
+    /**
+     * Archive a channel
+     * @remarks Archive a channel in a team. When a channel is archived, users can't send new messages or react to existing messages in the channel, edit the channel settings, or make other changes to the channel. Archiving is an asynchronous operation.
+     */
+    public async archiveChannelAsync(input: ArchiveChannelInput, groupId: string, channelId: string, abortSignal?: AbortSignal): Promise<AsyncOperationResponse> {
+        const requestPath = `/v1.0/teams/${groupId}/channels/${channelId}/archive`;
+        const url = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<AsyncOperationResponse>("POST", url, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
             throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
-        return httpResponse.value as CreateATeamResponse;
-    }
-
-    /**
-     * Post message in a chat or channel
-     * @remarks Posts a message to a chat or a channel
-     */
-    public async postMessageToConversationAsync(input: DynamicPostMessageRequest, poster: string, location: string, abortSignal?: AbortSignal): Promise<PostToConversationResponse> {
-        const requestPath = `/beta/teams/conversation/message/poster/${poster}/location/${location}`;
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<PostToConversationResponse>("POST", url, undefined, input, abortSignal);
-
-        if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
-        }
-
-        return httpResponse.value as PostToConversationResponse;
-    }
-
-    /**
-     * Get message details
-     * @remarks Gets the details of a message in a chat or a channel.
-     */
-    public async getMessageDetailsAsync(input: DynamicGetMessageDetailsSchema, messageId: string, threadType: string, abortSignal?: AbortSignal): Promise<DynamicGetMessageDetailsResponseSchema> {
-        const requestPath = `/beta/teams/messages/${messageId}/messageType/${threadType}`;
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<DynamicGetMessageDetailsResponseSchema>("POST", url, undefined, input, abortSignal);
-
-        if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
-        }
-
-        return httpResponse.value as DynamicGetMessageDetailsResponseSchema;
+        return httpResponse.value as AsyncOperationResponse;
     }
 
     /**
@@ -1665,80 +2073,32 @@ export class TeamsClient extends ConnectorClientBase {
     }
 
     /**
-     * Get details for a specific channel in a team
-     * @remarks Get the channel details
+     * List chats
+     * @remarks Lists recent chats you are a part of
      */
-    public async getChannelAsync(groupId: string, channelId: string, abortSignal?: AbortSignal): Promise<GetChannelResponse> {
-        const requestPath = `/beta/teams/${groupId}/channels/${channelId}`;
+    public async getChatsAsync(chatType: string, topic: string, abortSignal?: AbortSignal): Promise<GetChatsResponse> {
+        const requestPath = `/flowbot/actions/listchats/chattypes/${chatType}/topic/${topic}/expandmembers/false`;
         const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<GetChannelResponse>("GET", url, undefined, undefined, abortSignal);
+        const httpResponse = await this.httpClient.sendAsync<GetChatsResponse>("GET", url, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
             throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
-        return httpResponse.value as GetChannelResponse;
+        return httpResponse.value as GetChatsResponse;
     }
 
     /**
-     * Get messages in a channel
-     * @remarks Gets messages from a channel in a specific team. For shared channels, the team ID must refer to the host team, which is the team that owns the shared channel.
+     * Post a feed notification
+     * @remarks Posts a notification to a user's activity feed linking to a chat or team.
      */
-    public async getMessagesFromChannelAsync(groupId: string, channelId: string, abortSignal?: AbortSignal): Promise<GetMessagesFromConversationResponse> {
-        const requestPath = `/beta/teams/${groupId}/channels/${channelId}/messages`;
+    public async postFeedNotificationAsync(input: DynamicPostFeedNotificationRequest, poster: string, notificationType: string, abortSignal?: AbortSignal): Promise<void> {
+        const requestPath = `/flowbot/feednotification/poster/${poster}/notificationType/${notificationType}`;
         const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<GetMessagesFromConversationResponse>("GET", url, undefined, undefined, abortSignal);
-
-        if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
-        }
-
-        return httpResponse.value as GetMessagesFromConversationResponse;
-    }
-
-    /**
-     * List all tags for a team
-     * @remarks Lists the team's tags
-     */
-    public async getTagsAsync(groupId: string, abortSignal?: AbortSignal): Promise<GetTagsResponseSchema> {
-        const requestPath = `/beta/teams/${groupId}/tags`;
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<GetTagsResponseSchema>("GET", url, undefined, undefined, abortSignal);
-
-        if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
-        }
-
-        return httpResponse.value as GetTagsResponseSchema;
-    }
-
-    /**
-     * Create a tag for a team
-     * @remarks Creates a tag in a team
-     */
-    public async createTagAsync(input: CreateTagInput, groupId: string, abortSignal?: AbortSignal): Promise<CreateTagResponseSchema> {
-        const requestPath = `/beta/teams/${groupId}/tags`;
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<CreateTagResponseSchema>("POST", url, undefined, input, abortSignal);
+        const httpResponse = await this.httpClient.sendAsync<void>("POST", url, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
             throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
-        }
-
-        return httpResponse.value as CreateTagResponseSchema;
-    }
-
-    /**
-     * Delete a team tag
-     * @remarks Deletes a tag from a team
-     */
-    public async deleteTagAsync(groupId: string, tagId: string, abortSignal?: AbortSignal): Promise<void> {
-        const requestPath = `/beta/teams/${groupId}/tags/${tagId}`;
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<void>("DELETE", url, undefined, undefined, abortSignal);
-
-        if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `DELETE ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
     }
 
@@ -1759,299 +2119,35 @@ export class TeamsClient extends ConnectorClientBase {
     }
 
     /**
-     * List the members of a team tag
-     * @remarks Lists the members of a team tag
+     * Get messages in a channel
+     * @remarks Gets messages from a channel in a specific team. For shared channels, the team ID must refer to the host team, which is the team that owns the shared channel.
      */
-    public async getTagMembersAsync(groupId: string, tagId: string, abortSignal?: AbortSignal): Promise<GetTagMembersResponseSchema> {
-        const requestPath = `/beta/teams/${groupId}/tags/${tagId}/members`;
+    public async getMessagesFromChannelAsync(groupId: string, channelId: string, abortSignal?: AbortSignal): Promise<GetMessagesFromConversationResponse> {
+        const requestPath = `/beta/teams/${groupId}/channels/${channelId}/messages`;
         const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<GetTagMembersResponseSchema>("GET", url, undefined, undefined, abortSignal);
+        const httpResponse = await this.httpClient.sendAsync<GetMessagesFromConversationResponse>("GET", url, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
             throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
-        return httpResponse.value as GetTagMembersResponseSchema;
+        return httpResponse.value as GetMessagesFromConversationResponse;
     }
 
     /**
-     * Add a member to a team tag
-     * @remarks Adds a user to a team tag
+     * Get message details
+     * @remarks Gets the details of a message in a chat or a channel.
      */
-    public async addMemberToTagAsync(input: AddMemberToTagInput, groupId: string, tagId: string, abortSignal?: AbortSignal): Promise<AddMemberToTagResponseSchema> {
-        const requestPath = `/beta/teams/${groupId}/tags/${tagId}/members`;
+    public async getMessageDetailsAsync(input: DynamicGetMessageDetailsSchema, messageId: string, threadType: string, abortSignal?: AbortSignal): Promise<DynamicGetMessageDetailsResponseSchema> {
+        const requestPath = `/beta/teams/messages/${messageId}/messageType/${threadType}`;
         const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<AddMemberToTagResponseSchema>("POST", url, undefined, input, abortSignal);
+        const httpResponse = await this.httpClient.sendAsync<DynamicGetMessageDetailsResponseSchema>("POST", url, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
             throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
-        return httpResponse.value as AddMemberToTagResponseSchema;
-    }
-
-    /**
-     * Delete a member from a team tag
-     * @remarks Deletes a member from a team tag
-     */
-    public async deleteTagMemberAsync(groupId: string, tagId: string, tagMemberId: string, abortSignal?: AbortSignal): Promise<void> {
-        const requestPath = `/beta/teams/${groupId}/tags/${tagId}/members/${tagMemberId}`;
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<void>("DELETE", url, undefined, undefined, abortSignal);
-
-        if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `DELETE ${requestPath}`, httpResponse.statusCode, httpResponse.text);
-        }
-    }
-
-    /**
-     * Get a team
-     * @remarks Gets the details for a team in Microsoft Teams.
-     */
-    public async getTeamAsync(teamId: string, abortSignal?: AbortSignal): Promise<GetTeamResponse> {
-        const requestPath = `/beta/teams/${teamId}`;
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<GetTeamResponse>("GET", url, undefined, undefined, abortSignal);
-
-        if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
-        }
-
-        return httpResponse.value as GetTeamResponse;
-    }
-
-    /**
-     * Add a member to a team
-     * @remarks Adds a member to a team in Microsoft Teams
-     */
-    public async addMemberToTeamAsync(input: AddMemberToTeamInput, teamId: string, abortSignal?: AbortSignal): Promise<void> {
-        const requestPath = `/beta/teams/${teamId}/members`;
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<void>("POST", url, undefined, input, abortSignal);
-
-        if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
-        }
-    }
-
-    /**
-     * List chats
-     * @remarks Lists recent chats you are a part of
-     */
-    public async getChatsAsync(chatType: string, topic: string, abortSignal?: AbortSignal): Promise<GetChatsResponse> {
-        const requestPath = `/flowbot/actions/listchats/chattypes/${chatType}/topic/${topic}/expandmembers/false`;
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<GetChatsResponse>("GET", url, undefined, undefined, abortSignal);
-
-        if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
-        }
-
-        return httpResponse.value as GetChatsResponse;
-    }
-
-    /**
-     * Post a choice of options as the Flow bot to a user
-     * @remarks Send a set of options to a Microsoft Teams user, that they must respond to before the flow will continue. This action will pause the flow until the user response to the options
-     */
-    public async subscribeUserMessageWithOptionsAsync(input: DynamicUserMessageWithOptionsSubscriptionRequest, abortSignal?: AbortSignal): Promise<void> {
-        const requestPath = `/flowbot/actions/messagewithoptions/recipienttypes/user/$subscriptions`;
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<void>("POST", url, undefined, input, abortSignal);
-
-        if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
-        }
-    }
-
-    /**
-     * Post a feed notification
-     * @remarks Posts a notification to a user's activity feed linking to a chat or team.
-     */
-    public async postFeedNotificationAsync(input: DynamicPostFeedNotificationRequest, poster: string, notificationType: string, abortSignal?: AbortSignal): Promise<void> {
-        const requestPath = `/flowbot/feednotification/poster/${poster}/notificationType/${notificationType}`;
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<void>("POST", url, undefined, input, abortSignal);
-
-        if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
-        }
-    }
-
-    /**
-     * Send a Microsoft Graph HTTP request
-     * @remarks Construct a Microsoft Graph REST API request to invoke against the Microsoft Teams endpoints. These segments are supported: 1st segment: /teams, /me, /users 2nd segment: channels, chats, installedApps, messages, pinnedMessages, onlineMeetings. Learn more: https://docs.microsoft.com/en-us/graph/use-the-api
-     */
-    public async httpRequestAsync(input: HttpRequestInput, abortSignal?: AbortSignal): Promise<ObjectWithoutType> {
-        const requestPath = `/httprequest`;
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<ObjectWithoutType>("POST", url, undefined, input, abortSignal);
-
-        if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
-        }
-
-        return httpResponse.value as ObjectWithoutType;
-    }
-
-    /**
-     * Create a Teams meeting
-     * @remarks Create a meeting with a link at the bottom of the invite to join the meeting online on Microsoft Teams.
-     */
-    public async createTeamsMeetingAsync(input: NewMeeting, calendarid: string, abortSignal?: AbortSignal): Promise<NewMeetingResponse> {
-        const requestPath = `/v1.0/me/calendars/${calendarid}/events`;
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<NewMeetingResponse>("POST", url, undefined, input, abortSignal);
-
-        if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
-        }
-
-        return httpResponse.value as NewMeetingResponse;
-    }
-
-    /**
-     * List associated teams
-     * @remarks Lists all the teams you are a direct member of, or are a member of a shared channel that is hosted inside the team.
-     */
-    public async getAllAssociatedTeamsAsync(abortSignal?: AbortSignal): Promise<GetAllAssociatedTeamsResponse> {
-        const requestPath = `/v1.0/me/teamwork/associatedTeams`;
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<GetAllAssociatedTeamsResponse>("GET", url, undefined, undefined, abortSignal);
-
-        if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
-        }
-
-        return httpResponse.value as GetAllAssociatedTeamsResponse;
-    }
-
-    /**
-     * Post card in a chat or channel
-     * @remarks Posts a card to a chat or a channel
-     */
-    public async postCardToConversationAsync(input: DynamicPostCardRequest, poster: string, location: string, abortSignal?: AbortSignal): Promise<PostToConversationResponse> {
-        const requestPath = `/v1.0/teams/conversation/adaptivecard/poster/${poster}/location/${location}`;
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<PostToConversationResponse>("POST", url, undefined, input, abortSignal);
-
-        if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
-        }
-
-        return httpResponse.value as PostToConversationResponse;
-    }
-
-    /**
-     * Post adaptive card and wait for a response
-     * @remarks Posts an adaptive card to a chat or a channel and waits for a response from any user. This will pause the flow until any user responds.
-     */
-    public async postCardAndWaitForResponseAsync(input: PostCardAndWaitForResponseInput, poster: string, location: string, abortSignal?: AbortSignal): Promise<DynamicPostGatherInputToConversationResponse> {
-        const requestPath = `/v1.0/teams/conversation/gatherinput/poster/${poster}/location/${location}/$subscriptions`;
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<DynamicPostGatherInputToConversationResponse>("POST", url, undefined, input, abortSignal);
-
-        if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
-        }
-
-        return httpResponse.value as DynamicPostGatherInputToConversationResponse;
-    }
-
-    /**
-     * Reply with an adaptive card in a channel
-     * @remarks Replies with an adaptive card to a channel's message
-     */
-    public async replyWithCardToConversationAsync(input: DynamicReplyCardRequest, poster: string, location: string, abortSignal?: AbortSignal): Promise<PostToConversationResponse> {
-        const requestPath = `/v1.0/teams/conversation/replyWithAdaptivecard/poster/${poster}/location/${location}`;
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<PostToConversationResponse>("POST", url, undefined, input, abortSignal);
-
-        if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
-        }
-
-        return httpResponse.value as PostToConversationResponse;
-    }
-
-    /**
-     * Reply with a message in a channel
-     * @remarks Replies with a message to a channel's message
-     */
-    public async replyWithMessageToConversationAsync(input: DynamicReplyMessageRequest, poster: string, location: string, abortSignal?: AbortSignal): Promise<PostToConversationResponse> {
-        const requestPath = `/v1.0/teams/conversation/replyWithMessage/poster/${poster}/location/${location}`;
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<PostToConversationResponse>("POST", url, undefined, input, abortSignal);
-
-        if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
-        }
-
-        return httpResponse.value as PostToConversationResponse;
-    }
-
-    /**
-     * Update an adaptive card in a chat or channel
-     * @remarks Updates an existing adaptive card
-     */
-    public async updateCardInConversationAsync(input: DynamicUpdateCardRequest, poster: string, location: string, abortSignal?: AbortSignal): Promise<PostToConversationResponse> {
-        const requestPath = `/v1.0/teams/conversation/updateAdaptivecard/poster/${poster}/location/${location}`;
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<PostToConversationResponse>("POST", url, undefined, input, abortSignal);
-
-        if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
-        }
-
-        return httpResponse.value as PostToConversationResponse;
-    }
-
-    /**
-     * List members
-     * @remarks List direct members of a group chat or a channel
-     */
-    public async listMembersAsync(input: DynamicListMembersSchema, threadType: string, filter?: string, abortSignal?: AbortSignal): Promise<ListMembersResponseSchema> {
-        const queryParams: string[] = [];
-        if (filter !== undefined) {
-            queryParams.push(`$filter=${encodeURIComponent(String(filter))}`);
-        }
-        const requestPath = `/v1.0/teams/listmembers/threadType/${threadType}` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<ListMembersResponseSchema>("POST", url, undefined, input, abortSignal);
-
-        if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
-        }
-
-        return httpResponse.value as ListMembersResponseSchema;
-    }
-
-    /**
-     * Add a member to a channel
-     * @remarks Adds a member to a channel in Microsoft Teams
-     */
-    public async addMemberToChannelAsync(input: AddMemberToChannelInput, groupId: string, channelId: string, abortSignal?: AbortSignal): Promise<void> {
-        const requestPath = `/v1.0/teams/${groupId}/channels/${channelId}/members`;
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<void>("POST", url, undefined, input, abortSignal);
-
-        if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
-        }
-    }
-
-    /**
-     * Remove a direct member from a channel
-     * @remarks Removes a direct member from a channel in Microsoft Teams
-     */
-    public async removeMemberFromChannelAsync(groupId: string, channelId: string, membershipId: string, abortSignal?: AbortSignal): Promise<void> {
-        const requestPath = `/v1.0/teams/${groupId}/channels/${channelId}/members/${membershipId}`;
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<void>("DELETE", url, undefined, undefined, abortSignal);
-
-        if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `DELETE ${requestPath}`, httpResponse.statusCode, httpResponse.text);
-        }
+        return httpResponse.value as DynamicGetMessageDetailsResponseSchema;
     }
 
     /**
@@ -2075,6 +2171,56 @@ export class TeamsClient extends ConnectorClientBase {
     }
 
     /**
+     * List chat or channel members
+     * @remarks List direct members of a group chat or a channel
+     */
+    public async listMembersAsync(input: DynamicListMembersSchema, threadType: string, filter?: string, abortSignal?: AbortSignal): Promise<ListMembersResponseSchema> {
+        const queryParams: string[] = [];
+        if (filter !== undefined) {
+            queryParams.push(`$filter=${encodeURIComponent(String(filter))}`);
+        }
+        const requestPath = `/v1.0/teams/listmembers/threadType/${threadType}` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
+        const url = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<ListMembersResponseSchema>("POST", url, undefined, input, abortSignal);
+
+        if (!httpResponse.isSuccessStatusCode) {
+            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+        }
+
+        return httpResponse.value as ListMembersResponseSchema;
+    }
+
+    /**
+     * Post a choice of options as the Flow bot to a user
+     * @remarks Send a set of options to a Microsoft Teams user, that they must respond to before the flow will continue. This action will pause the flow until the user response to the options
+     */
+    public async subscribeUserMessageWithOptionsAsync(input: DynamicUserMessageWithOptionsSubscriptionRequest, abortSignal?: AbortSignal): Promise<void> {
+        const requestPath = `/flowbot/actions/messagewithoptions/recipienttypes/user/$subscriptions`;
+        const url = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<void>("POST", url, undefined, input, abortSignal);
+
+        if (!httpResponse.isSuccessStatusCode) {
+            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+        }
+    }
+
+    /**
+     * Get a team
+     * @remarks Gets the details for a team in Microsoft Teams.
+     */
+    public async getTeamAsync(teamId: string, abortSignal?: AbortSignal): Promise<GetTeamResponse> {
+        const requestPath = `/beta/teams/${teamId}`;
+        const url = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<GetTeamResponse>("GET", url, undefined, undefined, abortSignal);
+
+        if (!httpResponse.isSuccessStatusCode) {
+            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+        }
+
+        return httpResponse.value as GetTeamResponse;
+    }
+
+    /**
      * Get an @mention token for a user
      * @remarks Creates a token that can be inserted into a message or adaptive card to @mention a user.
      */
@@ -2088,6 +2234,898 @@ export class TeamsClient extends ConnectorClientBase {
         }
 
         return httpResponse.value as AtMentionUser;
+    }
+
+    /**
+     * Create a chat
+     * @remarks Creates a one on one or group chat
+     */
+    public async createChatAsync(input: NewChat, abortSignal?: AbortSignal): Promise<NewChatResponse> {
+        const requestPath = `/beta/chats`;
+        const url = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<NewChatResponse>("POST", url, undefined, input, abortSignal);
+
+        if (!httpResponse.isSuccessStatusCode) {
+            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+        }
+
+        return httpResponse.value as NewChatResponse;
+    }
+
+    /**
+     * Get messages in a chat
+     * @remarks Retrieves messages from a one on one or group chat
+     */
+    public async getMessagesFromChatAsync(chatId: string, filter?: string, orderby?: string, top?: string, abortSignal?: AbortSignal): Promise<GetMessagesFromConversationResponse> {
+        const queryParams: string[] = [];
+        if (filter !== undefined) {
+            queryParams.push(`$filter=${encodeURIComponent(String(filter))}`);
+        }
+        if (orderby !== undefined) {
+            queryParams.push(`$orderby=${encodeURIComponent(String(orderby))}`);
+        }
+        if (top !== undefined) {
+            queryParams.push(`$top=${encodeURIComponent(String(top))}`);
+        }
+        const requestPath = `/beta/chats/${chatId}/messages` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
+        const url = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<GetMessagesFromConversationResponse>("GET", url, undefined, undefined, abortSignal);
+
+        if (!httpResponse.isSuccessStatusCode) {
+            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+        }
+
+        return httpResponse.value as GetMessagesFromConversationResponse;
+    }
+
+    /**
+     * Post a message to myself
+     * @remarks Sends a message to the signed-in user's own Notes chat in Microsoft Teams.
+     */
+    public async postMessageToSelfAsync(input: PostMessageToSelfRequest, abortSignal?: AbortSignal): Promise<ChatMessage> {
+        const requestPath = `/v1.0/chats/48:notes/messages`;
+        const url = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<ChatMessage>("POST", url, undefined, input, abortSignal);
+
+        if (!httpResponse.isSuccessStatusCode) {
+            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+        }
+
+        return httpResponse.value as ChatMessage;
+    }
+
+    /**
+     * Create a team
+     * @remarks Creates a new team in Microsoft Teams
+     */
+    public async createATeamAsync(input: CreateATeamInput, abortSignal?: AbortSignal): Promise<CreateATeamResponse> {
+        const requestPath = `/beta/teams`;
+        const url = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<CreateATeamResponse>("POST", url, undefined, input, abortSignal);
+
+        if (!httpResponse.isSuccessStatusCode) {
+            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+        }
+
+        return httpResponse.value as CreateATeamResponse;
+    }
+
+    /**
+     * List team members
+     * @remarks Lists the members of a team in Microsoft Teams
+     */
+    public async listTeamMembersAsync(teamId: string, filter?: string, top?: string, abortSignal?: AbortSignal): Promise<ListMembersResponseSchema> {
+        const queryParams: string[] = [];
+        if (filter !== undefined) {
+            queryParams.push(`$filter=${encodeURIComponent(String(filter))}`);
+        }
+        if (top !== undefined) {
+            queryParams.push(`$top=${encodeURIComponent(String(top))}`);
+        }
+        const requestPath = `/v1.0/teams/${teamId}/members` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
+        const url = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<ListMembersResponseSchema>("GET", url, undefined, undefined, abortSignal);
+
+        if (!httpResponse.isSuccessStatusCode) {
+            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+        }
+
+        return httpResponse.value as ListMembersResponseSchema;
+    }
+
+    /**
+     * Add a member to a team
+     * @remarks Adds a member to a team in Microsoft Teams
+     */
+    public async addMemberToTeamAsync(input: AddMemberToTeamInput, teamId: string, abortSignal?: AbortSignal): Promise<void> {
+        const requestPath = `/v1.0/teams/${teamId}/members`;
+        const url = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<void>("POST", url, undefined, input, abortSignal);
+
+        if (!httpResponse.isSuccessStatusCode) {
+            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+        }
+    }
+
+    /**
+     * Remove a member from a team
+     * @remarks Removes a member from a team in Microsoft Teams
+     */
+    public async removeMemberFromTeamAsync(teamId: string, membershipId: string, abortSignal?: AbortSignal): Promise<void> {
+        const requestPath = `/v1.0/teams/${teamId}/members/${membershipId}`;
+        const url = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<void>("DELETE", url, undefined, undefined, abortSignal);
+
+        if (!httpResponse.isSuccessStatusCode) {
+            throw new ConnectorException(this.connectorName, `DELETE ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+        }
+    }
+
+    /**
+     * Add a member to a channel
+     * @remarks Adds a member to a channel in Microsoft Teams. The channel must be a private or shared channel.
+     */
+    public async addMemberToChannelAsync(input: AddMemberToChannelInput, groupId: string, channelId: string, abortSignal?: AbortSignal): Promise<void> {
+        const requestPath = `/v1.0/teams/${groupId}/channels/${channelId}/members`;
+        const url = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<void>("POST", url, undefined, input, abortSignal);
+
+        if (!httpResponse.isSuccessStatusCode) {
+            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+        }
+    }
+
+    /**
+     * Remove a direct member from a channel
+     * @remarks Removes a direct member from a channel in Microsoft Teams. The channel must be a private or shared channel.
+     */
+    public async removeMemberFromChannelAsync(groupId: string, channelId: string, membershipId: string, abortSignal?: AbortSignal): Promise<void> {
+        const requestPath = `/v1.0/teams/${groupId}/channels/${channelId}/members/${membershipId}`;
+        const url = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<void>("DELETE", url, undefined, undefined, abortSignal);
+
+        if (!httpResponse.isSuccessStatusCode) {
+            throw new ConnectorException(this.connectorName, `DELETE ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+        }
+    }
+
+    /**
+     * Post message in a chat or channel
+     * @remarks Posts a message to a chat or a channel
+     */
+    public async postMessageToConversationAsync(input: DynamicPostMessageRequest, poster: string, location: string, customizationModifiedTime?: string, abortSignal?: AbortSignal): Promise<PostToConversationResponse> {
+        const queryParams: string[] = [];
+        if (customizationModifiedTime !== undefined) {
+            queryParams.push(`customizationModifiedTime=${encodeURIComponent(String(customizationModifiedTime))}`);
+        }
+        const requestPath = `/beta/teams/conversation/message/poster/${poster}/location/${location}` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
+        const url = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<PostToConversationResponse>("POST", url, undefined, input, abortSignal);
+
+        if (!httpResponse.isSuccessStatusCode) {
+            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+        }
+
+        return httpResponse.value as PostToConversationResponse;
+    }
+
+    /**
+     * Reply with a message in a channel
+     * @remarks Replies with a message to a channel's message
+     */
+    public async replyWithMessageToConversationAsync(input: DynamicReplyMessageRequest, poster: string, location: string, customizationModifiedTime?: string, abortSignal?: AbortSignal): Promise<PostToConversationResponse> {
+        const queryParams: string[] = [];
+        if (customizationModifiedTime !== undefined) {
+            queryParams.push(`customizationModifiedTime=${encodeURIComponent(String(customizationModifiedTime))}`);
+        }
+        const requestPath = `/v1.0/teams/conversation/replyWithMessage/poster/${poster}/location/${location}` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
+        const url = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<PostToConversationResponse>("POST", url, undefined, input, abortSignal);
+
+        if (!httpResponse.isSuccessStatusCode) {
+            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+        }
+
+        return httpResponse.value as PostToConversationResponse;
+    }
+
+    /**
+     * Post card in a chat or channel
+     * @remarks Posts a card to a chat or a channel
+     */
+    public async postCardToConversationAsync(input: DynamicPostCardRequest, poster: string, location: string, customizationModifiedTime?: string, abortSignal?: AbortSignal): Promise<PostToConversationResponse> {
+        const queryParams: string[] = [];
+        if (customizationModifiedTime !== undefined) {
+            queryParams.push(`customizationModifiedTime=${encodeURIComponent(String(customizationModifiedTime))}`);
+        }
+        const requestPath = `/v1.0/teams/conversation/adaptivecard/poster/${poster}/location/${location}` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
+        const url = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<PostToConversationResponse>("POST", url, undefined, input, abortSignal);
+
+        if (!httpResponse.isSuccessStatusCode) {
+            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+        }
+
+        return httpResponse.value as PostToConversationResponse;
+    }
+
+    /**
+     * Post adaptive card and wait for a response
+     * @remarks Posts an adaptive card to a chat or a channel and waits for a response from any user. This will pause the flow until any user responds.
+     */
+    public async postCardAndWaitForResponseAsync(input: PostCardAndWaitForResponseInput, poster: string, location: string, customizationModifiedTime?: string, abortSignal?: AbortSignal): Promise<DynamicPostGatherInputToConversationResponse> {
+        const queryParams: string[] = [];
+        if (customizationModifiedTime !== undefined) {
+            queryParams.push(`customizationModifiedTime=${encodeURIComponent(String(customizationModifiedTime))}`);
+        }
+        const requestPath = `/v1.0/teams/conversation/gatherinput/poster/${poster}/location/${location}/$subscriptions` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
+        const url = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<DynamicPostGatherInputToConversationResponse>("POST", url, undefined, input, abortSignal);
+
+        if (!httpResponse.isSuccessStatusCode) {
+            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+        }
+
+        return httpResponse.value as DynamicPostGatherInputToConversationResponse;
+    }
+
+    /**
+     * Reply with an adaptive card in a channel
+     * @remarks Replies with an adaptive card to a channel's message
+     */
+    public async replyWithCardToConversationAsync(input: DynamicReplyCardRequest, poster: string, location: string, customizationModifiedTime?: string, abortSignal?: AbortSignal): Promise<PostToConversationResponse> {
+        const queryParams: string[] = [];
+        if (customizationModifiedTime !== undefined) {
+            queryParams.push(`customizationModifiedTime=${encodeURIComponent(String(customizationModifiedTime))}`);
+        }
+        const requestPath = `/v1.0/teams/conversation/replyWithAdaptivecard/poster/${poster}/location/${location}` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
+        const url = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<PostToConversationResponse>("POST", url, undefined, input, abortSignal);
+
+        if (!httpResponse.isSuccessStatusCode) {
+            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+        }
+
+        return httpResponse.value as PostToConversationResponse;
+    }
+
+    /**
+     * Update an adaptive card in a chat or channel
+     * @remarks Updates an existing adaptive card
+     */
+    public async updateCardInConversationAsync(input: DynamicUpdateCardRequest, poster: string, location: string, customizationModifiedTime?: string, abortSignal?: AbortSignal): Promise<PostToConversationResponse> {
+        const queryParams: string[] = [];
+        if (customizationModifiedTime !== undefined) {
+            queryParams.push(`customizationModifiedTime=${encodeURIComponent(String(customizationModifiedTime))}`);
+        }
+        const requestPath = `/v1.0/teams/conversation/updateAdaptivecard/poster/${poster}/location/${location}` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
+        const url = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<PostToConversationResponse>("POST", url, undefined, input, abortSignal);
+
+        if (!httpResponse.isSuccessStatusCode) {
+            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+        }
+
+        return httpResponse.value as PostToConversationResponse;
+    }
+
+    /**
+     * Send a Microsoft Graph HTTP request
+     * @remarks Construct a Microsoft Graph REST API request to invoke against the Microsoft Teams endpoints. These segments are supported: 1st segment: /teams, /me, /users 2nd segment: channels, chats, installedApps, messages, pinnedMessages, onlineMeetings. Learn more: https://docs.microsoft.com/en-us/graph/use-the-api
+     */
+    public async httpRequestAsync(input: HttpRequestInput, abortSignal?: AbortSignal): Promise<ObjectWithoutType> {
+        const requestPath = `/httprequest`;
+        const url = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<ObjectWithoutType>("POST", url, undefined, input, abortSignal);
+
+        if (!httpResponse.isSuccessStatusCode) {
+            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+        }
+
+        return httpResponse.value as ObjectWithoutType;
+    }
+
+    /**
+     * Add a user to a chat
+     * @remarks Adds a user to a chat in Microsoft Teams.
+     */
+    public async addMemberToChatAsync(input: AddMemberToChatInput, chatId: string, abortSignal?: AbortSignal): Promise<void> {
+        const requestPath = `/v1.0/chats/${chatId}/members`;
+        const url = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<void>("POST", url, undefined, input, abortSignal);
+
+        if (!httpResponse.isSuccessStatusCode) {
+            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+        }
+    }
+
+    /**
+     * Remove a member from a chat
+     * @remarks Removes a member from a chat in Microsoft Teams. Only group chats support member removal.
+     */
+    public async removeMemberFromChatAsync(chatId: string, membershipId: string, abortSignal?: AbortSignal): Promise<void> {
+        const requestPath = `/v1.0/chats/${chatId}/members/${membershipId}`;
+        const url = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<void>("DELETE", url, undefined, undefined, abortSignal);
+
+        if (!httpResponse.isSuccessStatusCode) {
+            throw new ConnectorException(this.connectorName, `DELETE ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+        }
+    }
+
+    /**
+     * Get an online meeting
+     * @remarks Retrieves the properties and relationships of an online meeting. You can look up a meeting by meeting ID, join web URL, or join meeting ID.
+     */
+    public async getOnlineMeetingAsync(lookupType?: string, lookupValue?: string, abortSignal?: AbortSignal): Promise<GetOnlineMeetingResponse> {
+        const queryParams: string[] = [];
+        if (lookupType !== undefined) {
+            queryParams.push(`lookupType=${encodeURIComponent(String(lookupType))}`);
+        }
+        if (lookupValue !== undefined) {
+            queryParams.push(`lookupValue=${encodeURIComponent(String(lookupValue))}`);
+        }
+        const requestPath = `/v1.0/me/onlineMeetings/lookup` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
+        const url = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<GetOnlineMeetingResponse>("GET", url, undefined, undefined, abortSignal);
+
+        if (!httpResponse.isSuccessStatusCode) {
+            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+        }
+
+        return httpResponse.value as GetOnlineMeetingResponse;
+    }
+
+    /**
+     * List meeting transcripts
+     * @remarks Lists all transcripts for an online meeting
+     */
+    public async listMeetingTranscriptsAsync(meetingId: string, abortSignal?: AbortSignal): Promise<CallTranscriptCollectionResponse> {
+        const requestPath = `/v1.0/me/onlineMeetings/${meetingId}/transcripts`;
+        const url = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<CallTranscriptCollectionResponse>("GET", url, undefined, undefined, abortSignal);
+
+        if (!httpResponse.isSuccessStatusCode) {
+            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+        }
+
+        return httpResponse.value as CallTranscriptCollectionResponse;
+    }
+
+    /**
+     * Get meeting transcript
+     * @remarks Gets a specific transcript for an online meeting
+     */
+    public async getMeetingTranscriptAsync(meetingId: string, transcriptId: string, abortSignal?: AbortSignal): Promise<CallTranscriptResponse> {
+        const requestPath = `/v1.0/me/onlineMeetings/${meetingId}/transcripts/${transcriptId}`;
+        const url = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<CallTranscriptResponse>("GET", url, undefined, undefined, abortSignal);
+
+        if (!httpResponse.isSuccessStatusCode) {
+            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+        }
+
+        return httpResponse.value as CallTranscriptResponse;
+    }
+
+    /**
+     * Get meeting transcript content
+     * @remarks Gets the content of a meeting transcript
+     */
+    public async getMeetingTranscriptContentAsync(meetingId: string, transcriptId: string, abortSignal?: AbortSignal): Promise<string> {
+        const requestPath = `/v1.0/me/onlineMeetings/${meetingId}/transcripts/${transcriptId}/content`;
+        const url = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<string>("GET", url, undefined, undefined, abortSignal);
+
+        if (!httpResponse.isSuccessStatusCode) {
+            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+        }
+
+        return httpResponse.value as string;
+    }
+
+    /**
+     * List meeting recordings
+     * @remarks Lists all recordings for an online meeting
+     */
+    public async listMeetingRecordingsAsync(meetingId: string, abortSignal?: AbortSignal): Promise<CallRecordingCollectionResponse> {
+        const requestPath = `/v1.0/me/onlineMeetings/${meetingId}/recordings`;
+        const url = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<CallRecordingCollectionResponse>("GET", url, undefined, undefined, abortSignal);
+
+        if (!httpResponse.isSuccessStatusCode) {
+            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+        }
+
+        return httpResponse.value as CallRecordingCollectionResponse;
+    }
+
+    /**
+     * Get meeting recording
+     * @remarks Gets a specific recording for an online meeting
+     */
+    public async getMeetingRecordingAsync(meetingId: string, recordingId: string, abortSignal?: AbortSignal): Promise<CallRecordingResponse> {
+        const requestPath = `/v1.0/me/onlineMeetings/${meetingId}/recordings/${recordingId}`;
+        const url = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<CallRecordingResponse>("GET", url, undefined, undefined, abortSignal);
+
+        if (!httpResponse.isSuccessStatusCode) {
+            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+        }
+
+        return httpResponse.value as CallRecordingResponse;
+    }
+
+    /**
+     * Get meeting recording content
+     * @remarks Gets the content stream of a meeting recording
+     */
+    public async getMeetingRecordingContentAsync(meetingId: string, recordingId: string, abortSignal?: AbortSignal): Promise<Blob> {
+        const requestPath = `/v1.0/me/onlineMeetings/${meetingId}/recordings/${recordingId}/content`;
+        const url = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<Blob>("GET", url, undefined, undefined, abortSignal);
+
+        if (!httpResponse.isSuccessStatusCode) {
+            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+        }
+
+        return httpResponse.value as Blob;
+    }
+
+    /**
+     * List sections
+     * @remarks Lists the current user's teamwork sections
+     */
+    public async listSectionsAsync(abortSignal?: AbortSignal): Promise<ListSectionsResponse> {
+        const requestPath = `/beta/me/teamwork/sections`;
+        const url = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<ListSectionsResponse>("GET", url, undefined, undefined, abortSignal);
+
+        if (!httpResponse.isSuccessStatusCode) {
+            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+        }
+
+        return httpResponse.value as ListSectionsResponse;
+    }
+
+    /**
+     * Create a section
+     * @remarks Creates a new teamwork section for the current user
+     */
+    public async createSectionAsync(input: CreateSectionInput, abortSignal?: AbortSignal): Promise<SectionResponse> {
+        const requestPath = `/beta/me/teamwork/sections`;
+        const url = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<SectionResponse>("POST", url, undefined, input, abortSignal);
+
+        if (!httpResponse.isSuccessStatusCode) {
+            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+        }
+
+        return httpResponse.value as SectionResponse;
+    }
+
+    /**
+     * Get a section
+     * @remarks Gets a specific teamwork section by ID
+     */
+    public async getSectionAsync(sectionId: string, abortSignal?: AbortSignal): Promise<SectionResponse> {
+        const requestPath = `/beta/me/teamwork/sections/${sectionId}`;
+        const url = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<SectionResponse>("GET", url, undefined, undefined, abortSignal);
+
+        if (!httpResponse.isSuccessStatusCode) {
+            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+        }
+
+        return httpResponse.value as SectionResponse;
+    }
+
+    /**
+     * Update a section
+     * @remarks Updates a teamwork section for the current user
+     */
+    public async updateSectionAsync(input: UpdateSectionInput, sectionId: string, abortSignal?: AbortSignal): Promise<SectionResponse> {
+        const requestPath = `/beta/me/teamwork/sections/${sectionId}`;
+        const url = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<SectionResponse>("PATCH", url, undefined, input, abortSignal);
+
+        if (!httpResponse.isSuccessStatusCode) {
+            throw new ConnectorException(this.connectorName, `PATCH ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+        }
+
+        return httpResponse.value as SectionResponse;
+    }
+
+    /**
+     * Delete a section
+     * @remarks Deletes a teamwork section for the current user
+     */
+    public async deleteSectionAsync(sectionId: string, abortSignal?: AbortSignal): Promise<void> {
+        const requestPath = `/beta/me/teamwork/sections/${sectionId}`;
+        const url = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<void>("DELETE", url, undefined, undefined, abortSignal);
+
+        if (!httpResponse.isSuccessStatusCode) {
+            throw new ConnectorException(this.connectorName, `DELETE ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+        }
+    }
+
+    /**
+     * List section items
+     * @remarks Lists the items (chats, channels, meetings, communities) in a teamwork section. Each item belongs to exactly one section at a time.
+     */
+    public async listSectionItemsAsync(sectionId: string, abortSignal?: AbortSignal): Promise<ListSectionItemsResponse> {
+        const requestPath = `/beta/me/teamwork/sections/${sectionId}/items`;
+        const url = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<ListSectionItemsResponse>("GET", url, undefined, undefined, abortSignal);
+
+        if (!httpResponse.isSuccessStatusCode) {
+            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+        }
+
+        return httpResponse.value as ListSectionItemsResponse;
+    }
+
+    /**
+     * Add an item to a section
+     * @remarks Adds an item (chat, channel, meeting, or community) currently in a system-defined section to a user-defined teamwork section. Use Move Section Item to relocate items already in another user-defined section.
+     */
+    public async addSectionItemAsync(input: AddSectionItemInput, sectionId: string, abortSignal?: AbortSignal): Promise<SectionItemResponse> {
+        const requestPath = `/beta/me/teamwork/sections/${sectionId}/items`;
+        const url = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<SectionItemResponse>("POST", url, undefined, input, abortSignal);
+
+        if (!httpResponse.isSuccessStatusCode) {
+            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+        }
+
+        return httpResponse.value as SectionItemResponse;
+    }
+
+    /**
+     * Remove an item from a section
+     * @remarks Removes an item from a user-defined teamwork section. The underlying chat, channel, meeting, or community is not deleted; the item returns to its default system-defined section.
+     */
+    public async removeSectionItemAsync(sectionId: string, sectionItemId: string, abortSignal?: AbortSignal): Promise<void> {
+        const requestPath = `/beta/me/teamwork/sections/${sectionId}/items/${sectionItemId}`;
+        const url = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<void>("DELETE", url, undefined, undefined, abortSignal);
+
+        if (!httpResponse.isSuccessStatusCode) {
+            throw new ConnectorException(this.connectorName, `DELETE ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+        }
+    }
+
+    /**
+     * Move a section item
+     * @remarks Atomically moves an item from one user-defined teamwork section to another user-defined section. Each item can belong to only one section at a time. This action removes the item from its current section and adds it to the target section.
+     */
+    public async moveSectionItemAsync(input: MoveSectionItemInput, sectionId: string, sectionItemId: string, abortSignal?: AbortSignal): Promise<SectionItemResponse> {
+        const requestPath = `/beta/me/teamwork/sections/${sectionId}/items/${sectionItemId}/move`;
+        const url = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<SectionItemResponse>("POST", url, undefined, input, abortSignal);
+
+        if (!httpResponse.isSuccessStatusCode) {
+            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+        }
+
+        return httpResponse.value as SectionItemResponse;
+    }
+
+    /**
+     * List all tags for a team
+     * @remarks Lists the team's tags
+     */
+    public async getTagsAsync(groupId: string, abortSignal?: AbortSignal): Promise<GetTagsResponseSchema> {
+        const requestPath = `/v1.0/teams/${groupId}/tags`;
+        const url = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<GetTagsResponseSchema>("GET", url, undefined, undefined, abortSignal);
+
+        if (!httpResponse.isSuccessStatusCode) {
+            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+        }
+
+        return httpResponse.value as GetTagsResponseSchema;
+    }
+
+    /**
+     * Create a tag for a team
+     * @remarks Creates a tag in a team
+     */
+    public async createTagAsync(input: CreateTagInput, groupId: string, abortSignal?: AbortSignal): Promise<CreateTagResponseSchema> {
+        const requestPath = `/v1.0/teams/${groupId}/tags`;
+        const url = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<CreateTagResponseSchema>("POST", url, undefined, input, abortSignal);
+
+        if (!httpResponse.isSuccessStatusCode) {
+            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+        }
+
+        return httpResponse.value as CreateTagResponseSchema;
+    }
+
+    /**
+     * Get a team tag
+     * @remarks Gets a specific tag by ID from a team
+     */
+    public async getTagAsync(groupId: string, tagId: string, abortSignal?: AbortSignal): Promise<CreateTagResponseSchema> {
+        const requestPath = `/v1.0/teams/${groupId}/tags/${tagId}`;
+        const url = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<CreateTagResponseSchema>("GET", url, undefined, undefined, abortSignal);
+
+        if (!httpResponse.isSuccessStatusCode) {
+            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+        }
+
+        return httpResponse.value as CreateTagResponseSchema;
+    }
+
+    /**
+     * Update a team tag
+     * @remarks Updates the display name of a tag in a team
+     */
+    public async updateTagAsync(input: UpdateTagInput, groupId: string, tagId: string, abortSignal?: AbortSignal): Promise<CreateTagResponseSchema> {
+        const requestPath = `/v1.0/teams/${groupId}/tags/${tagId}`;
+        const url = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<CreateTagResponseSchema>("PATCH", url, undefined, input, abortSignal);
+
+        if (!httpResponse.isSuccessStatusCode) {
+            throw new ConnectorException(this.connectorName, `PATCH ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+        }
+
+        return httpResponse.value as CreateTagResponseSchema;
+    }
+
+    /**
+     * Delete a team tag
+     * @remarks Deletes a tag from a team
+     */
+    public async deleteTagAsync(groupId: string, tagId: string, abortSignal?: AbortSignal): Promise<void> {
+        const requestPath = `/v1.0/teams/${groupId}/tags/${tagId}`;
+        const url = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<void>("DELETE", url, undefined, undefined, abortSignal);
+
+        if (!httpResponse.isSuccessStatusCode) {
+            throw new ConnectorException(this.connectorName, `DELETE ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+        }
+    }
+
+    /**
+     * Add a member to a team tag
+     * @remarks Adds a user to a team tag
+     */
+    public async addMemberToTagAsync(input: AddMemberToTagInput, groupId: string, tagId: string, abortSignal?: AbortSignal): Promise<AddMemberToTagResponseSchema> {
+        const requestPath = `/v1.0/teams/${groupId}/tags/${tagId}/members`;
+        const url = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<AddMemberToTagResponseSchema>("POST", url, undefined, input, abortSignal);
+
+        if (!httpResponse.isSuccessStatusCode) {
+            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+        }
+
+        return httpResponse.value as AddMemberToTagResponseSchema;
+    }
+
+    /**
+     * List the members of a team tag
+     * @remarks Lists the members of a team tag
+     */
+    public async getTagMembersAsync(groupId: string, tagId: string, abortSignal?: AbortSignal): Promise<GetTagMembersResponseSchema> {
+        const requestPath = `/v1.0/teams/${groupId}/tags/${tagId}/members`;
+        const url = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<GetTagMembersResponseSchema>("GET", url, undefined, undefined, abortSignal);
+
+        if (!httpResponse.isSuccessStatusCode) {
+            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+        }
+
+        return httpResponse.value as GetTagMembersResponseSchema;
+    }
+
+    /**
+     * Delete a member from a team tag
+     * @remarks Deletes a member from a team tag
+     */
+    public async deleteTagMemberAsync(groupId: string, tagId: string, tagMemberId: string, abortSignal?: AbortSignal): Promise<void> {
+        const requestPath = `/v1.0/teams/${groupId}/tags/${tagId}/members/${tagMemberId}`;
+        const url = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<void>("DELETE", url, undefined, undefined, abortSignal);
+
+        if (!httpResponse.isSuccessStatusCode) {
+            throw new ConnectorException(this.connectorName, `DELETE ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+        }
+    }
+
+    /**
+     * List call recordings
+     * @remarks Lists all recordings for an ad-hoc call
+     */
+    public async listCallRecordingsAsync(callId: string, abortSignal?: AbortSignal): Promise<CallRecordingCollectionResponse> {
+        const requestPath = `/v1.0/me/adhocCalls/${callId}/recordings`;
+        const url = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<CallRecordingCollectionResponse>("GET", url, undefined, undefined, abortSignal);
+
+        if (!httpResponse.isSuccessStatusCode) {
+            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+        }
+
+        return httpResponse.value as CallRecordingCollectionResponse;
+    }
+
+    /**
+     * Get call recording
+     * @remarks Gets a specific recording for an ad-hoc call
+     */
+    public async getCallRecordingAsync(callId: string, recordingId: string, abortSignal?: AbortSignal): Promise<CallRecordingResponse> {
+        const requestPath = `/v1.0/me/adhocCalls/${callId}/recordings/${recordingId}`;
+        const url = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<CallRecordingResponse>("GET", url, undefined, undefined, abortSignal);
+
+        if (!httpResponse.isSuccessStatusCode) {
+            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+        }
+
+        return httpResponse.value as CallRecordingResponse;
+    }
+
+    /**
+     * Get call recording content
+     * @remarks Gets the content of a call recording
+     */
+    public async getCallRecordingContentAsync(callId: string, recordingId: string, abortSignal?: AbortSignal): Promise<Blob> {
+        const requestPath = `/v1.0/me/adhocCalls/${callId}/recordings/${recordingId}/content`;
+        const url = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<Blob>("GET", url, undefined, undefined, abortSignal);
+
+        if (!httpResponse.isSuccessStatusCode) {
+            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+        }
+
+        return httpResponse.value as Blob;
+    }
+
+    /**
+     * List call transcripts
+     * @remarks Lists all transcripts for an ad-hoc call
+     */
+    public async listCallTranscriptsAsync(callId: string, abortSignal?: AbortSignal): Promise<CallTranscriptCollectionResponse> {
+        const requestPath = `/v1.0/me/adhocCalls/${callId}/transcripts`;
+        const url = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<CallTranscriptCollectionResponse>("GET", url, undefined, undefined, abortSignal);
+
+        if (!httpResponse.isSuccessStatusCode) {
+            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+        }
+
+        return httpResponse.value as CallTranscriptCollectionResponse;
+    }
+
+    /**
+     * Get call transcript
+     * @remarks Gets a specific transcript for an ad-hoc call
+     */
+    public async getCallTranscriptAsync(callId: string, transcriptId: string, abortSignal?: AbortSignal): Promise<CallTranscriptResponse> {
+        const requestPath = `/v1.0/me/adhocCalls/${callId}/transcripts/${transcriptId}`;
+        const url = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<CallTranscriptResponse>("GET", url, undefined, undefined, abortSignal);
+
+        if (!httpResponse.isSuccessStatusCode) {
+            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+        }
+
+        return httpResponse.value as CallTranscriptResponse;
+    }
+
+    /**
+     * Get call transcript content
+     * @remarks Gets the content of a call transcript
+     */
+    public async getCallTranscriptContentAsync(callId: string, transcriptId: string, abortSignal?: AbortSignal): Promise<string> {
+        const requestPath = `/v1.0/me/adhocCalls/${callId}/transcripts/${transcriptId}/content`;
+        const url = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<string>("GET", url, undefined, undefined, abortSignal);
+
+        if (!httpResponse.isSuccessStatusCode) {
+            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+        }
+
+        return httpResponse.value as string;
+    }
+
+    /**
+     * Get all ad-hoc call recordings
+     * @remarks Gets all recordings from ad-hoc calls for the signed-in user
+     */
+    public async getAllAdhocCallRecordingsAsync(startDateTime?: string, endDateTime?: string, top?: string, skiptoken?: string, deltatoken?: string, abortSignal?: AbortSignal): Promise<CallRecordingCollectionResponse> {
+        const queryParams: string[] = [];
+        if (startDateTime !== undefined) {
+            queryParams.push(`startDateTime=${encodeURIComponent(String(startDateTime))}`);
+        }
+        if (endDateTime !== undefined) {
+            queryParams.push(`endDateTime=${encodeURIComponent(String(endDateTime))}`);
+        }
+        if (top !== undefined) {
+            queryParams.push(`$top=${encodeURIComponent(String(top))}`);
+        }
+        if (skiptoken !== undefined) {
+            queryParams.push(`$skiptoken=${encodeURIComponent(String(skiptoken))}`);
+        }
+        if (deltatoken !== undefined) {
+            queryParams.push(`$deltatoken=${encodeURIComponent(String(deltatoken))}`);
+        }
+        const requestPath = `/v1.0/me/adhocCalls/getAllRecordings` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
+        const url = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<CallRecordingCollectionResponse>("GET", url, undefined, undefined, abortSignal);
+
+        if (!httpResponse.isSuccessStatusCode) {
+            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+        }
+
+        return httpResponse.value as CallRecordingCollectionResponse;
+    }
+
+    /**
+     * Get all ad-hoc call transcripts
+     * @remarks Gets all transcripts from ad-hoc calls for the signed-in user
+     */
+    public async getAllAdhocCallTranscriptsAsync(startDateTime?: string, endDateTime?: string, top?: string, skiptoken?: string, deltatoken?: string, abortSignal?: AbortSignal): Promise<CallTranscriptCollectionResponse> {
+        const queryParams: string[] = [];
+        if (startDateTime !== undefined) {
+            queryParams.push(`startDateTime=${encodeURIComponent(String(startDateTime))}`);
+        }
+        if (endDateTime !== undefined) {
+            queryParams.push(`endDateTime=${encodeURIComponent(String(endDateTime))}`);
+        }
+        if (top !== undefined) {
+            queryParams.push(`$top=${encodeURIComponent(String(top))}`);
+        }
+        if (skiptoken !== undefined) {
+            queryParams.push(`$skiptoken=${encodeURIComponent(String(skiptoken))}`);
+        }
+        if (deltatoken !== undefined) {
+            queryParams.push(`$deltatoken=${encodeURIComponent(String(deltatoken))}`);
+        }
+        const requestPath = `/v1.0/me/adhocCalls/getAllTranscripts` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
+        const url = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<CallTranscriptCollectionResponse>("GET", url, undefined, undefined, abortSignal);
+
+        if (!httpResponse.isSuccessStatusCode) {
+            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+        }
+
+        return httpResponse.value as CallTranscriptCollectionResponse;
+    }
+
+    /**
+     * List AI insights
+     * @remarks Lists AI-generated insights for an online meeting. Requires Microsoft 365 Copilot license.
+     */
+    public async listAiInsightsAsync(meetingId: string, abortSignal?: AbortSignal): Promise<AiInsightCollectionResponse> {
+        const requestPath = `/v1.0/copilot/me/onlineMeetings/${meetingId}/aiInsights`;
+        const url = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<AiInsightCollectionResponse>("GET", url, undefined, undefined, abortSignal);
+
+        if (!httpResponse.isSuccessStatusCode) {
+            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+        }
+
+        return httpResponse.value as AiInsightCollectionResponse;
+    }
+
+    /**
+     * Get AI insight
+     * @remarks Gets a specific AI-generated insight for an online meeting. Requires Microsoft 365 Copilot license.
+     */
+    public async getAiInsightAsync(meetingId: string, aiInsightId: string, abortSignal?: AbortSignal): Promise<AiInsightResponse> {
+        const requestPath = `/v1.0/copilot/me/onlineMeetings/${meetingId}/aiInsights/${aiInsightId}`;
+        const url = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<AiInsightResponse>("GET", url, undefined, undefined, abortSignal);
+
+        if (!httpResponse.isSuccessStatusCode) {
+            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+        }
+
+        return httpResponse.value as AiInsightResponse;
     }
 
 }

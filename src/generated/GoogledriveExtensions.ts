@@ -66,6 +66,10 @@ export interface BlobMetadata {
     DisplayName?: string;
     /** The path of the file or folder. */
     Path?: string;
+    /** The unique id of the parent folder of the file or folder. */
+    FolderId?: string;
+    /** The current path of the parent folder of the file or folder. */
+    FolderPath?: string;
     /** The date and time the file or folder was last modified. */
     LastModified?: string;
     /** The size of the file or folder. */
@@ -364,32 +368,6 @@ export class GoogledriveClient extends ConnectorClientBase {
     }
 
     /**
-     * Create file
-     * @remarks Uploads a file to Google Drive
-     */
-    public async createFileAsync(input: CreateFileInput, folderPath?: string, name?: string, queryParametersSingleEncoded?: string, abortSignal?: AbortSignal): Promise<BlobMetadata> {
-        const queryParams: string[] = [];
-        if (folderPath !== undefined) {
-            queryParams.push(`folderPath=${encodeURIComponent(String(folderPath))}`);
-        }
-        if (name !== undefined) {
-            queryParams.push(`name=${encodeURIComponent(String(name))}`);
-        }
-        if (queryParametersSingleEncoded !== undefined) {
-            queryParams.push(`queryParametersSingleEncoded=${encodeURIComponent(String(queryParametersSingleEncoded))}`);
-        }
-        const requestPath = `/datasets/default/files` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<BlobMetadata>("POST", url, undefined, input, abortSignal);
-
-        if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
-        }
-
-        return httpResponse.value as BlobMetadata;
-    }
-
-    /**
      * Copy file
      * @remarks Copies a file on Google Drive
      */
@@ -448,6 +426,32 @@ export class GoogledriveClient extends ConnectorClientBase {
         }
 
         return httpResponse.value as Array<BlobMetadata>;
+    }
+
+    /**
+     * Create file
+     * @remarks Uploads a file to a Google Drive folder selected by its identifier
+     */
+    public async createFileAsync(input: CreateFileInput, folderId?: string, name?: string, queryParametersSingleEncoded?: string, abortSignal?: AbortSignal): Promise<BlobMetadata> {
+        const queryParams: string[] = [];
+        if (folderId !== undefined) {
+            queryParams.push(`folderId=${encodeURIComponent(String(folderId))}`);
+        }
+        if (name !== undefined) {
+            queryParams.push(`name=${encodeURIComponent(String(name))}`);
+        }
+        if (queryParametersSingleEncoded !== undefined) {
+            queryParams.push(`queryParametersSingleEncoded=${encodeURIComponent(String(queryParametersSingleEncoded))}`);
+        }
+        const requestPath = `/datasets/default/v2/files` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
+        const url = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<BlobMetadata>("POST", url, undefined, input, abortSignal);
+
+        if (!httpResponse.isSuccessStatusCode) {
+            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+        }
+
+        return httpResponse.value as BlobMetadata;
     }
 
     /**

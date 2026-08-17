@@ -26,6 +26,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Updated generated connector registries (`connectorNames.ts`,
   `ManagedConnectors.ts`, `index.ts`) to include all 30 generated connectors.
+- Regenerated the complete 30-connector TypeScript surface from live `westus`
+  managed connector metadata using AzureUX-BPM commit `732a35b8cce5`
+  (`CodefulSdkGenerator` assembly `1.186.0.23`). Updated all 30 persisted
+  swagger snapshots and their verified input/output hashes in
+  `generation.manifest.json`.
+- Added SharePoint form operations and models, including `getTableFormAsync`,
+  `submitDocGenFormAsync`, and their form metadata types.
+- Added 35 Microsoft Teams actions for channel archiving, chat and team
+  membership, sections, meeting and ad hoc call recordings/transcripts,
+  tags, and Copilot meeting insights.
 - Extended `tests/connectorNames.test.ts` and `tests/managedConnectors.test.ts`
   to cover the 9 new connectors (registry count now 30).
 
@@ -43,6 +53,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed (BREAKING)
 
+- `GoogledriveExtensions.createFileAsync` now accepts `folderId` instead of
+  `folderPath` and calls the current `/datasets/default/v2/files` route.
+- `JiraExtensions.listIssuesAsync` adds `nextPageToken` before `abortSignal`.
+- `Office365Extensions.forwardEmailAsync` adds the optional
+  `extractSensitivityLabel` and `fetchSensitivityLabelMetadata` parameters
+  before `abortSignal`.
+- `SharepointonlineExtensions.createAgreementsSolutionDocumentAsync` removes
+  the optional `table` and `view` parameters.
+- Microsoft Teams tag and team-member actions now call the current `v1.0`
+  routes instead of the previous beta routes. Six conversation actions add an
+  optional `customizationModifiedTime` parameter before `abortSignal`.
 - `SlackExtensions.ListChannelsResponse` — renamed field `channels` → `value`
   and added `@odata.nextLink` to match the current upstream shape
   (`ListChannels_ResponseV3`). Consumers reading `.channels` must switch to

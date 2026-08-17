@@ -189,13 +189,13 @@ export interface ReplyConversationThreadBody {
 }
 
 /**
- * Definition: ForwardPostBody
+ * Definition: ForwardPost_V2Body
  */
 export interface ForwardPostBody {
     /** Comment to forward with the post. */
-    comment?: string;
+    Comment?: string;
     /** The recipients to whom the threaded is forwarded to. */
-    toRecipients: Array<GetUsersGraphAction>;
+    ToRecipients: Array<GetUsersGraphAction>;
 }
 
 /**

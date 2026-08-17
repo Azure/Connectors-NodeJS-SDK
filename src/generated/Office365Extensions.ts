@@ -17,14 +17,14 @@ export interface AssignCategoryBulkInput {
 }
 
 /**
- * Send an HTTP request
- */
-export type HttpRequestInput = string;
-
-/**
  * Update my contact's photo
  */
 export type UpdateMyContactPhotoInput = string;
+
+/**
+ * Send an HTTP request
+ */
+export type HttpRequestInput = string;
 
 /**
  * Response for Get calendars
@@ -38,26 +38,26 @@ export interface CalendarGetTablesResponse {
  * Find meeting times
  */
 export interface FindMeetingTimesInput {
-    /** Work, Personal, Unrestricted, or Unknown */
-    ActivityDomain?: string;
-    /** End time for meeting time suggestions */
-    End?: string;
-    /** true if the organizer doesn't have to attend. The default is false */
-    IsOrganizerOptional?: boolean;
-    /** The maximum number of meeting suggestions to return in the response */
-    MaxCandidates?: number;
-    /** Duration of the meeting in minutes */
-    MeetingDuration?: number;
-    /** The minimum required confidence for a time slot to be returned in the response */
-    MinimumAttendeePercentage?: string;
-    /** List of semicolon separated email addresses */
-    OptionalAttendees?: string;
     /** List of semicolon separated email addresses */
     RequiredAttendees?: string;
+    /** List of semicolon separated email addresses */
+    OptionalAttendees?: string;
     /** Resource attendees for the event separated by semicolons */
     ResourceAttendees?: string;
+    /** Duration of the meeting in minutes */
+    MeetingDuration?: number;
     /** Start time for meeting time suggestions */
     Start?: string;
+    /** End time for meeting time suggestions */
+    End?: string;
+    /** The maximum number of meeting suggestions to return in the response */
+    MaxCandidates?: number;
+    /** The minimum required confidence for a time slot to be returned in the response */
+    MinimumAttendeePercentage?: string;
+    /** true if the organizer doesn't have to attend. The default is false */
+    IsOrganizerOptional?: boolean;
+    /** Work, Personal, Unrestricted, or Unknown */
+    ActivityDomain?: string;
 }
 
 /**
@@ -73,33 +73,33 @@ export interface FindMeetingTimesResponse {
  * Response for Get Attachment
  */
 export interface GetAttachmentResponse {
-    /** Content of attachment. */
-    contentBytes?: string;
-    /** Content Id */
-    contentId?: string;
-    /** Content type of attachment. */
-    contentType?: string;
     /** Id of the attachment. */
     id?: string;
+    /** Name of attachment. */
+    name?: string;
+    /** Content type of attachment. */
+    contentType?: string;
+    /** Size of attachment. */
+    size?: number;
+    /** Content of attachment. */
+    contentBytes?: string;
     /** Set to true if this is an inline attachment. */
     isInline?: boolean;
     /** The date and time when the attachment was last modified. */
     lastModifiedDateTime?: string;
-    /** Name of attachment. */
-    name?: string;
+    /** Content Id */
+    contentId?: string;
     sensitivityLabelInfo?: Array<SensitivityLabelMetadata>;
-    /** Size of attachment. */
-    size?: number;
 }
 
 /**
  * Get mail tips for a mailbox
  */
 export interface GetMailTipsInput {
-    /** Address of the mailbox to get mail tips for. */
-    EmailAddresses: Array<string>;
     /** Flags that represents the mailtips. */
     MailTipsOptions: string;
+    /** Address of the mailbox to get mail tips for. */
+    EmailAddresses: Array<string>;
 }
 
 /**
@@ -156,143 +156,90 @@ export interface SetAutomaticRepliesSettingResponse {
 }
 
 /**
- * Definition: ApprovalEmailResponse
+ * Definition: TableMetadata
  */
-export interface ApprovalEmailResponse {
-    /** User response */
-    SelectedOption?: string;
-    /** User email address. The value is the user's email address for individual users and user ID for the members in Distribution Group or Mail Enabled Security Group. */
-    UserEmailAddress?: string;
-    /** User ID. The value is the user id for both individual users and the members in Distribution Group or Mail Enabled Security Group. */
-    UserId?: string;
-    /** User tenant ID. The value is the tenant id of the user for both individual users and the members in Distribution Group or Mail Enabled Security Group. */
-    UserTenantId?: string;
+export interface TableMetadata {
+    /** Table name */
+    name?: string;
+    /** Table title */
+    title?: string;
+    /** Table permission */
+    "x-ms-permission"?: string;
+    "x-ms-capabilities"?: TableCapabilitiesMetadata;
+    schema?: ObjectEntity;
+    referencedEntities?: ObjectEntity;
+    /** Url link */
+    webUrl?: string;
 }
 
 /**
- * Definition: ApprovalEmailSubscription
+ * Definition: TableCapabilitiesMetadata
  */
-export interface ApprovalEmailSubscription {
-    Message: ApprovalMessage;
-    /** Gets or sets callback url to flow engine. It is expected as part of request */
-    NotificationUrl: string;
+export interface TableCapabilitiesMetadata {
+    sortRestrictions?: TableSortRestrictionsMetadata;
+    filterRestrictions?: TableFilterRestrictionsMetadata;
+    selectRestrictions?: TableSelectRestrictionsMetadata;
+    /** Server paging restrictions */
+    isOnlyServerPagable?: boolean;
+    /** List of supported filter capabilities */
+    filterFunctionSupport?: Array<string>;
+    /** List of supported server-driven paging capabilities */
+    serverPagingOptions?: Array<string>;
 }
 
 /**
- * Definition: ApprovalMessage
+ * Definition: Object
  */
-export interface ApprovalMessage {
-    /** Attachments */
-    Attachments?: Array<ClientSendAttachment>;
-    /** Body */
-    Body?: string;
-    /** Header text for email body */
-    HeaderText?: string;
-    /** If set to Yes, then the email body is hidden and only message card is displayed. Email clients which do not support actionable messages will display HTML message regardless of the parameter value. */
-    HideHTMLMessage?: boolean;
-    /** Importance */
-    Importance?: string;
-    /** User Options */
-    Options?: string;
-    /** Header text for users options selection */
-    SelectionText?: string;
-    /** If set to Yes then a dialog wil be shown to confirm selected option of HTML message */
-    ShowHTMLConfirmationDialog?: boolean;
-    /** Subject */
-    Subject?: string;
-    /** Specify email addresses separated by semicolons like someone@contoso.com */
-    To: string;
-    /** Use only HTML message */
-    UseOnlyHTMLMessage?: boolean;
+export interface ObjectEntity {
+    [key: string]: unknown;
 }
 
 /**
- * Definition: Attendee
+ * Definition: TableSortRestrictionsMetadata
  */
-export interface Attendee {
-    EmailAddress?: EmailAddress;
-    Status?: ResponseStatus;
-    Type?: string;
+export interface TableSortRestrictionsMetadata {
+    /** Indicates whether this table has sortable columns */
+    sortable?: boolean;
+    /** List of unsortable properties */
+    unsortableProperties?: Array<string>;
+    /** List of properties which support ascending order only */
+    ascendingOnlyProperties?: Array<string>;
 }
 
 /**
- * Definition: AutomaticRepliesSettingClient
+ * Definition: TableFilterRestrictionsMetadata
  */
-export interface AutomaticRepliesSettingClient {
-    /** The audience that will see the external reply message */
-    externalAudience: string;
-    /** Message for people outside your organization */
-    externalReplyMessage?: string;
-    /** Message for people within your organization */
-    internalReplyMessage?: string;
-    /** Scheduled end time (example: '2017-08-29T05:00:00.0000000') */
-    scheduledEndDateTime?: Record<string, unknown>;
-    /** Scheduled start time (example: '2017-08-29T04:00:00.0000000') */
-    scheduledStartDateTime?: Record<string, unknown>;
-    /** Automatic reply setting status */
-    status: string;
+export interface TableFilterRestrictionsMetadata {
+    /** Indicates whether this table has filterable columns */
+    filterable?: boolean;
+    /** List of non filterable properties */
+    nonFilterableProperties?: Array<string>;
+    /** List of required properties */
+    requiredProperties?: Array<string>;
 }
 
 /**
- * Definition: BatchItemFailureResult
+ * Definition: TableSelectRestrictionsMetadata
  */
-export interface BatchItemFailureResult {
-    /** The error message of the failure. */
-    Error?: string;
-    /** The ID of the failed message. */
-    MessageId?: string;
+export interface TableSelectRestrictionsMetadata {
+    /** Indicates whether this table has selectable columns */
+    selectable?: boolean;
 }
 
 /**
- * Definition: BatchOperationResult
+ * Definition: CalendarEventList
  */
-export interface BatchOperationResult {
-    /** The list of failed messages with errors. */
-    failures?: Array<BatchItemFailureResult>;
-    /** The count of messages processed successfully. */
-    successCount?: number;
-}
-
-/**
- * Definition: BatchResponse[ClientReceiveMessage]
- */
-export interface BatchResponseClientReceiveMessage {
-    /** A list of the response objects */
-    value?: Array<ClientReceiveMessage>;
-}
-
-/**
- * Definition: BatchResponse[GraphClientReceiveMessage]
- */
-export interface BatchResponseGraphClientReceiveMessage {
-    /** A list of the response objects */
-    value?: Array<GraphClientReceiveMessage>;
-}
-
-/**
- * Definition: BatchResponse[SensitivityLabel]
- */
-export interface BatchResponseSensitivityLabel {
-    /** A list of the response objects */
-    value?: Array<SensitivityLabel>;
-}
-
-/**
- * Definition: BlobDataSetsMetadata
- */
-export interface BlobDataSetsMetadata {
-    /** Blob dataset display name */
-    displayName?: string;
-    /** Blob dataset source */
-    source?: string;
-    /** Blob dataset url encoding */
-    urlEncoding?: string;
+export interface CalendarEventList {
+    /** List of calendar items */
+    value?: Array<CalendarEventBackend>;
 }
 
 /**
  * Definition: CalendarEventBackend
  */
 export interface CalendarEventBackend {
+    /** The Event's unique identifier */
+    Id?: string;
     /** List of attendees for the event */
     Attendees?: Array<Attendee>;
     Body?: ItemBody;
@@ -314,8 +261,6 @@ export interface CalendarEventBackend {
     HasAttachments?: boolean;
     /** A unique identifier that is shared by all instances of an event across different calendars */
     ICalUId?: string;
-    /** The Event's unique identifier */
-    Id?: string;
     /** The importance of the event: Low, Normal, or High */
     Importance?: string;
     /** Set to true if the event lasts all day */
@@ -326,8 +271,6 @@ export interface CalendarEventBackend {
     IsOrganizer?: boolean;
     Location?: Location;
     Organizer?: Recipient;
-    /** The reason property used by O365 sync events protocol, will be 'deleted' if its a deleted event. */
-    Reason?: string;
     Recurrence?: PatternedRecurrence;
     /** Time in minutes before event start to remind */
     Reminder?: number;
@@ -348,288 +291,99 @@ export interface CalendarEventBackend {
     Type?: string;
     /** The preview of the message associated with the event */
     WebLink?: string;
+    /** The reason property used by O365 sync events protocol, will be 'deleted' if its a deleted event. */
+    Reason?: string;
 }
 
 /**
- * Definition: CalendarEventClient
+ * Definition: Attendee
  */
-export interface CalendarEventClient {
-    /** Body of the message associated with the event */
-    Body?: string;
-    /** End time of the event (example: '2016-11-01T15:30:00Z') */
-    End: string;
-    /** The importance of the event: Low, Normal, or High */
-    Importance?: string;
-    /** Set to true if the event lasts all day */
-    IsAllDay?: boolean;
-    /** Set to true if the body is Html */
-    IsHtml?: boolean;
-    /** Location of the event */
-    Location?: string;
-    /** How many times to repeat the event */
+export interface Attendee {
+    Status?: ResponseStatus;
+    Type?: string;
+    EmailAddress?: EmailAddress;
+}
+
+/**
+ * Definition: ItemBody
+ */
+export interface ItemBody {
+    ContentType?: string;
+    Content?: string;
+}
+
+/**
+ * Definition: Location
+ */
+export interface Location {
+    DisplayName?: string;
+    Address?: PhysicalAddress;
+    Coordinates?: GeoCoordinates;
+}
+
+/**
+ * Definition: Recipient
+ */
+export interface Recipient {
+    EmailAddress?: EmailAddress;
+}
+
+/**
+ * Definition: PatternedRecurrence
+ */
+export interface PatternedRecurrence {
+    Pattern?: RecurrencePattern;
+    Range?: RecurrenceRange;
+}
+
+/**
+ * Definition: ResponseStatus
+ */
+export interface ResponseStatus {
+    Response?: string;
+    Time?: string;
+}
+
+/**
+ * Definition: EmailAddress
+ */
+export interface EmailAddress {
+    Name?: string;
+    Address?: string;
+}
+
+/**
+ * Definition: GeoCoordinates
+ */
+export interface GeoCoordinates {
+    Altitude?: number;
+    Latitude?: number;
+    Longitude?: number;
+    Accuracy?: number;
+    AltitudeAccuracy?: number;
+}
+
+/**
+ * Definition: RecurrencePattern
+ */
+export interface RecurrencePattern {
+    Type?: string;
+    Interval?: number;
+    Month?: number;
+    DayOfMonth?: number;
+    DaysOfWeek?: Array<string>;
+    FirstDayOfWeek?: string;
+    Index?: string;
+}
+
+/**
+ * Definition: RecurrenceRange
+ */
+export interface RecurrenceRange {
+    Type?: string;
+    StartDate?: string;
+    EndDate?: string;
     NumberOfOccurrences?: number;
-    /** Optional attendees for the event separated by semicolons */
-    OptionalAttendees?: string;
-    /** The recurrence pattern for the event */
-    Recurrence?: string;
-    /** End time of the recurrence */
-    RecurrenceEnd?: string;
-    /** Time in minutes before event start to remind */
-    Reminder?: number;
-    /** Required attendees for the event separated by semicolons */
-    RequiredAttendees?: string;
-    /** Resource attendees for the event separated by semicolons */
-    ResourceAttendees?: string;
-    /** Set to true if the sender would like a response when the event is accepted or declined */
-    ResponseRequested?: boolean;
-    /** Status to show during the event */
-    ShowAs?: string;
-    /** Start time of the event (example: '2016-11-01T14:30:00Z') */
-    Start: string;
-    /** Event subject */
-    Subject: string;
-    /** Time zone of the event */
-    TimeZone?: string;
-}
-
-/**
- * Definition: CalendarEventClientReceive
- */
-export interface CalendarEventClientReceive {
-    /** Body of the message associated with the event */
-    Body?: string;
-    /** The categories associated with the event */
-    Categories?: Array<string>;
-    /** The date and time that the event was created */
-    DateTimeCreated?: string;
-    /** The date and time that the event was last modified */
-    DateTimeLastModified?: string;
-    /** End time of the event (example: '2016-11-01T15:30:00Z') */
-    End?: string;
-    /** A unique identifier that is shared by all instances of an event across different calendars */
-    ICalUId?: string;
-    /** The event's unique identifier */
-    Id?: string;
-    /** The importance of the event (0 - Low, 1 - Normal, 2 - High) */
-    Importance?: number;
-    /** Set to true if the event lasts all day */
-    IsAllDay?: boolean;
-    /** Set to true if the body is Html */
-    IsHtml?: boolean;
-    /** Location of the event */
-    Location?: string;
-    /** How many times to repeat the event */
-    NumberOfOccurrences?: number;
-    /** Optional attendees for the event separated by semicolons */
-    OptionalAttendees?: string;
-    /** The organizer of the event */
-    Organizer?: string;
-    /** The recurrence pattern for the event (None - 0, Daily - 1, Weekly - 2, Monthly - 3, Yearly - 4) */
-    Recurrence?: number;
-    /** End time of the recurrence */
-    RecurrenceEnd?: string;
-    /** Time in minutes before event start to remind */
-    Reminder?: number;
-    /** Required attendees for the event separated by semicolons */
-    RequiredAttendees?: string;
-    /** Resource attendees for the event separated by semicolons */
-    ResourceAttendees?: string;
-    /** Set to true if the sender would like a response when the event is accepted or declined */
-    ResponseRequested?: boolean;
-    /** The response time of the event */
-    ResponseTime?: string;
-    /** The response type of the event (None - 0, Organizer - 1, TentativelyAccepted - 2, Accepted - 3, Declined - 4, NotResponded - 5) */
-    ResponseType?: number;
-    /** Unique identifier for Series Master event type */
-    SeriesMasterId?: string;
-    /** Status to show during the event (Unknown - -1, Free - 0, Tentative - 1, Busy - 2, Oof - 3, WorkingElsewhere - 4) */
-    ShowAs?: number;
-    /** Start time of the event (example: '2016-11-01T14:30:00Z') */
-    Start?: string;
-    /** Event subject */
-    Subject?: string;
-    /** Time zone of the event */
-    TimeZone?: string;
-    /** The URL to open the event in Outlook Web App */
-    WebLink?: string;
-}
-
-/**
- * Definition: CalendarEventClientReceiveStringEnums
- */
-export interface CalendarEventClientReceiveStringEnums {
-    /** Body of the message associated with the event */
-    Body?: string;
-    /** The categories associated with the event */
-    Categories?: Array<string>;
-    /** The date and time that the event was created */
-    DateTimeCreated?: string;
-    /** The date and time that the event was last modified */
-    DateTimeLastModified?: string;
-    /** End time of the event (example: '2016-11-01T15:30:00Z') */
-    End?: string;
-    /** A unique identifier that is shared by all instances of an event across different calendars */
-    ICalUId?: string;
-    /** The event's unique identifier */
-    Id?: string;
-    /** The importance of the event: Low, Normal, or High */
-    Importance?: string;
-    /** Set to true if the event lasts all day */
-    IsAllDay?: boolean;
-    /** Set to true if the body is Html */
-    IsHtml?: boolean;
-    /** Location of the event */
-    Location?: string;
-    /** How many times to repeat the event */
-    NumberOfOccurrences?: number;
-    /** Optional attendees for the event separated by semicolons */
-    OptionalAttendees?: string;
-    /** The organizer of the event */
-    Organizer?: string;
-    /** The recurrence pattern for the event */
-    Recurrence?: string;
-    /** End time of the recurrence */
-    RecurrenceEnd?: string;
-    /** Time in minutes before event start to remind */
-    Reminder?: number;
-    /** Required attendees for the event separated by semicolons */
-    RequiredAttendees?: string;
-    /** Resource attendees for the event separated by semicolons */
-    ResourceAttendees?: string;
-    /** Set to true if the sender would like a response when the event is accepted or declined */
-    ResponseRequested?: boolean;
-    /** The response time of the event */
-    ResponseTime?: string;
-    /** The response type of the event: None, Organizer, TentativelyAccepted, Accepted, Declined or NotResponded */
-    ResponseType?: string;
-    /** Unique identifier for Series Master event type */
-    SeriesMasterId?: string;
-    /** Status to show during the event */
-    ShowAs?: string;
-    /** Start time of the event (example: '2016-11-01T14:30:00Z') */
-    Start?: string;
-    /** Event subject */
-    Subject?: string;
-    /** Time zone of the event */
-    TimeZone?: string;
-    /** The URL to open the event in Outlook Web App */
-    WebLink?: string;
-}
-
-/**
- * Definition: CalendarEventClientWithActionType
- */
-export interface CalendarEventClientWithActionType {
-    /** Changed action type of the event - added, updated or deleted. */
-    ActionType?: string;
-    /** Body of the message associated with the event */
-    Body?: string;
-    /** The categories associated with the event */
-    Categories?: Array<string>;
-    /** The date and time that the event was created */
-    DateTimeCreated?: string;
-    /** The date and time that the event was last modified */
-    DateTimeLastModified?: string;
-    /** End time of the event (example: '2016-11-01T15:30:00Z') */
-    End?: string;
-    /** A unique identifier that is shared by all instances of an event across different calendars */
-    ICalUId?: string;
-    /** The event's unique identifier */
-    Id?: string;
-    /** The importance of the event (0 - Low, 1 - Normal, 2 - High) */
-    Importance?: number;
-    /** Flag that indicates whether the event was added since the last poll of the trigger. */
-    IsAdded?: boolean;
-    /** Set to true if the event lasts all day */
-    IsAllDay?: boolean;
-    /** Set to true if the body is Html */
-    IsHtml?: boolean;
-    /** Flag that indicates whether the event was updated since the last poll of the trigger. */
-    IsUpdated?: boolean;
-    /** Location of the event */
-    Location?: string;
-    /** How many times to repeat the event */
-    NumberOfOccurrences?: number;
-    /** Optional attendees for the event separated by semicolons */
-    OptionalAttendees?: string;
-    /** The organizer of the event */
-    Organizer?: string;
-    /** The recurrence pattern for the event (None - 0, Daily - 1, Weekly - 2, Monthly - 3, Yearly - 4) */
-    Recurrence?: number;
-    /** End time of the recurrence */
-    RecurrenceEnd?: string;
-    /** Time in minutes before event start to remind */
-    Reminder?: number;
-    /** Required attendees for the event separated by semicolons */
-    RequiredAttendees?: string;
-    /** Resource attendees for the event separated by semicolons */
-    ResourceAttendees?: string;
-    /** Set to true if the sender would like a response when the event is accepted or declined */
-    ResponseRequested?: boolean;
-    /** The response time of the event */
-    ResponseTime?: string;
-    /** The response type of the event (None - 0, Organizer - 1, TentativelyAccepted - 2, Accepted - 3, Declined - 4, NotResponded - 5) */
-    ResponseType?: number;
-    /** Unique identifier for Series Master event type */
-    SeriesMasterId?: string;
-    /** Status to show during the event (Unknown - -1, Free - 0, Tentative - 1, Busy - 2, Oof - 3, WorkingElsewhere - 4) */
-    ShowAs?: number;
-    /** Start time of the event (example: '2016-11-01T14:30:00Z') */
-    Start?: string;
-    /** Event subject */
-    Subject?: string;
-    /** Time zone of the event */
-    TimeZone?: string;
-    /** The URL to open the event in Outlook Web App */
-    WebLink?: string;
-}
-
-/**
- * Definition: CalendarEventHtmlClient
- */
-export interface CalendarEventHtmlClient {
-    /** Body of the message associated with the event */
-    Body?: string;
-    /** End time of the event (example: '2016-11-01T15:30:00Z') */
-    End: string;
-    /** The importance of the event: Low, Normal, or High */
-    Importance?: string;
-    /** Set to true if the event lasts all day */
-    IsAllDay?: boolean;
-    /** Location of the event */
-    Location?: string;
-    /** How many times to repeat the event */
-    NumberOfOccurrences?: number;
-    /** Optional attendees for the event separated by semicolons */
-    OptionalAttendees?: string;
-    /** The recurrence pattern for the event */
-    Recurrence?: string;
-    /** End time of the recurrence */
-    RecurrenceEnd?: string;
-    /** Time in minutes before event start to remind */
-    Reminder?: number;
-    /** Required attendees for the event separated by semicolons */
-    RequiredAttendees?: string;
-    /** Resource attendees for the event separated by semicolons */
-    ResourceAttendees?: string;
-    /** Set to true if the sender would like a response when the event is accepted or declined */
-    ResponseRequested?: boolean;
-    /** Status to show during the event */
-    ShowAs?: string;
-    /** Start time of the event (example: '2016-11-01T14:30:00Z') */
-    Start: string;
-    /** Event subject */
-    Subject: string;
-    /** Time zone of the event */
-    TimeZone?: string;
-}
-
-/**
- * Definition: CalendarEventList
- */
-export interface CalendarEventList {
-    /** List of calendar items */
-    value?: Array<CalendarEventBackend>;
 }
 
 /**
@@ -641,203 +395,213 @@ export interface CalendarEventListClientReceive {
 }
 
 /**
- * Definition: CalendarEventListWithActionType
+ * Definition: CalendarEventClientReceive
  */
-export interface CalendarEventListWithActionType {
-    /** List of calendar items */
-    value?: Array<CalendarEventClientWithActionType>;
-}
-
-/**
- * Definition: ClientDraftHtmlMessage
- */
-export interface DraftEmailInput {
-    /** Attachments */
-    Attachments?: Array<ClientSendAttachment>;
-    /** Specify email addresses separated by semicolons like someone@contoso.com */
-    Bcc?: string;
-    /** Specify the body of the mail */
-    Body: string;
-    /** Specify email addresses separated by semicolons like someone@contoso.com */
-    Cc?: string;
-    /** Email address to send mail from (requires "Send as" or "Send on behalf of" permission for that mailbox). For more info on granting permissions please refer https://docs.microsoft.com/office365/admin/manage/send-email-as-distribution-list */
-    From?: string;
-    /** Importance */
-    Importance?: string;
-    /** The email addresses to use when replying */
-    ReplyTo?: string;
-    /** Sensitivity */
-    Sensitivity?: string;
-    /** Specify the subject of the mail */
-    Subject: string;
-    /** Specify email addresses separated by semicolons like someone@contoso.com */
-    To: string;
-}
-
-/**
- * Definition: ClientReceiveFileAttachment
- */
-export interface ClientReceiveFileAttachment {
-    /** Attachment content */
-    ContentBytes?: string;
-    /** Content Id */
-    ContentId?: string;
-    /** Attachment content type */
-    ContentType?: string;
-    /** Attachment Id */
-    Id?: string;
-    /** Set to true if this is an inline attachment */
-    IsInline?: boolean;
-    /** The date and time when the attachment was last modified */
-    LastModifiedDateTime?: string;
-    /** Attachment name */
-    Name?: string;
-    /** The size in bytes of the attachment */
-    Size?: number;
-}
-
-/**
- * Definition: ClientReceiveMessage
- */
-export interface ClientReceiveMessage {
-    /** The file attachments for the message */
-    Attachments?: Array<ClientReceiveFileAttachment>;
-    /** The Bcc recipients for the message */
-    Bcc?: string;
-    /** The body of the message */
-    Body?: string;
-    /** The preview of the message */
-    BodyPreview?: string;
-    /** The Cc recipients for the message */
-    Cc?: string;
-    /** The Id of the conversation the email belongs to */
-    ConversationId?: string;
-    /** The date and time the message was received */
-    DateTimeReceived?: string;
-    /** The mailbox owner and sender of the message */
-    From?: string;
-    /** Indicates whether the message has attachments */
-    HasAttachment?: boolean;
-    /** The unique identifier of the message */
-    Id?: string;
-    /** The importance of the message (0 - Low, 1 - Normal, 2 - High) */
+export interface CalendarEventClientReceive {
+    /** Event subject */
+    Subject?: string;
+    /** Start time of the event (example: '2016-11-01T14:30:00Z') */
+    Start?: string;
+    /** End time of the event (example: '2016-11-01T15:30:00Z') */
+    End?: string;
+    /** Status to show during the event (Unknown - -1, Free - 0, Tentative - 1, Busy - 2, Oof - 3, WorkingElsewhere - 4) */
+    ShowAs?: number;
+    /** The recurrence pattern for the event (None - 0, Daily - 1, Weekly - 2, Monthly - 3, Yearly - 4) */
+    Recurrence?: number;
+    /** The response type of the event (None - 0, Organizer - 1, TentativelyAccepted - 2, Accepted - 3, Declined - 4, NotResponded - 5) */
+    ResponseType?: number;
+    /** The response time of the event */
+    ResponseTime?: string;
+    /** A unique identifier that is shared by all instances of an event across different calendars */
+    ICalUId?: string;
+    /** The importance of the event (0 - Low, 1 - Normal, 2 - High) */
     Importance?: number;
-    /** The message ID in the format specified by RFC2822 */
-    InternetMessageId?: string;
-    /** Is Html? */
-    IsHtml?: boolean;
-    /** Indicates whether the message has been read */
-    IsRead?: boolean;
-    /** The email addresses to use when replying */
-    ReplyTo?: string;
-    /** The subject of the message */
-    Subject?: string;
-    /** The recipients for the message */
-    To?: string;
-}
-
-/**
- * Definition: ClientReceiveMessageStringEnums
- */
-export interface ClientReceiveMessageStringEnums {
-    /** The file attachments for the message */
-    Attachments?: Array<ClientReceiveFileAttachment>;
-    /** The Bcc recipients for the message */
-    Bcc?: string;
-    /** The body of the message */
-    Body?: string;
-    /** The preview of the message */
-    BodyPreview?: string;
-    /** The Cc recipients for the message */
-    Cc?: string;
-    /** The Id of the conversation the email belongs to */
-    ConversationId?: string;
-    /** The date and time the message was received */
-    DateTimeReceived?: string;
-    /** The mailbox owner and sender of the message */
-    From?: string;
-    /** Indicates whether the message has attachments */
-    HasAttachment?: boolean;
-    /** The unique identifier of the message */
+    /** The event's unique identifier */
     Id?: string;
-    /** The importance of the message */
-    Importance?: string;
-    /** The message ID in the format specified by RFC2822 */
-    InternetMessageId?: string;
-    /** Is Html? */
+    /** The date and time that the event was created */
+    DateTimeCreated?: string;
+    /** The date and time that the event was last modified */
+    DateTimeLastModified?: string;
+    /** The organizer of the event */
+    Organizer?: string;
+    /** Time zone of the event */
+    TimeZone?: string;
+    /** Unique identifier for Series Master event type */
+    SeriesMasterId?: string;
+    /** The categories associated with the event */
+    Categories?: Array<string>;
+    /** The URL to open the event in Outlook Web App */
+    WebLink?: string;
+    /** Required attendees for the event separated by semicolons */
+    RequiredAttendees?: string;
+    /** Optional attendees for the event separated by semicolons */
+    OptionalAttendees?: string;
+    /** Resource attendees for the event separated by semicolons */
+    ResourceAttendees?: string;
+    /** Body of the message associated with the event */
+    Body?: string;
+    /** Set to true if the body is Html */
     IsHtml?: boolean;
-    /** Indicates whether the message has been read */
-    IsRead?: boolean;
-    /** The email addresses to use when replying */
-    ReplyTo?: string;
-    /** The subject of the message */
+    /** Location of the event */
+    Location?: string;
+    /** Set to true if the event lasts all day */
+    IsAllDay?: boolean;
+    /** End time of the recurrence */
+    RecurrenceEnd?: string;
+    /** How many times to repeat the event */
+    NumberOfOccurrences?: number;
+    /** Time in minutes before event start to remind */
+    Reminder?: number;
+    /** Set to true if the sender would like a response when the event is accepted or declined */
+    ResponseRequested?: boolean;
+}
+
+/**
+ * Definition: GraphCalendarEventListClientReceive
+ */
+export interface GraphCalendarEventListClientReceive {
+    /** List of calendar items */
+    value?: Array<GraphCalendarEventClientReceive>;
+}
+
+/**
+ * Definition: GraphCalendarEventClientReceive
+ */
+export interface GraphCalendarEventClientReceive {
+    /** Event subject */
+    subject?: string;
+    /** Start time of the event (example: '2017-08-29T04:00:00.0000000') */
+    start?: string;
+    /** End time of the event (example: '2017-08-29T05:00:00.0000000') */
+    end?: string;
+    /** Start time of the event with time zone (example: '2017-08-29T04:00:00.0000000+00:00') */
+    startWithTimeZone?: string;
+    /** End time of the event with time zone (example: '2017-08-29T05:00:00.0000000+00:00') */
+    endWithTimeZone?: string;
+    /** Body of the message associated with the event */
+    body?: string;
+    /** Set to true if the body is Html */
+    isHtml?: boolean;
+    /** The response type of the event (none, organizer, tentativelyAccepted, accepted, declined or notResponded) */
+    responseType?: string;
+    /** The response time of the event */
+    responseTime?: string;
+    /** The event's unique identifier */
+    id?: string;
+    /** The date and time that the event was created */
+    createdDateTime?: string;
+    /** The date and time that the event was last modified */
+    lastModifiedDateTime?: string;
+    /** The organizer of the event */
+    organizer?: string;
+    /** Time zone of the event */
+    timeZone?: string;
+    /** Unique identifier for Series Master event type */
+    seriesMasterId?: string;
+    /** A unique identifier for an event across calendars. This ID is different for each occurrence in a recurring series */
+    iCalUId?: string;
+    /** The categories associated with the event */
+    categories?: Array<string>;
+    /** The URL to open the event in Outlook Web App */
+    webLink?: string;
+    /** Required attendees for the event separated by semicolons */
+    requiredAttendees?: string;
+    /** Optional attendees for the event separated by semicolons */
+    optionalAttendees?: string;
+    /** Resource attendees for the event separated by semicolons */
+    resourceAttendees?: string;
+    /** Location of the event */
+    location?: string;
+    /** The importance of the event: low, normal, or high */
+    importance?: string;
+    /** Set to true if the event lasts all day */
+    isAllDay?: boolean;
+    /** The recurrence pattern for the event: none, daily, weekly, monthly or yearly */
+    recurrence?: string;
+    /** End Date of the recurrence */
+    recurrenceEnd?: string;
+    /** How many times to repeat the event */
+    numberOfOccurences?: number;
+    /** Time in minutes before event start to remind */
+    reminderMinutesBeforeStart?: number;
+    /** Set to true if an alert is set to remind the user of the event. */
+    isReminderOn?: boolean;
+    /** Status to show during the event: free, tentative, busy, oof, workingElsewhere or unknown */
+    showAs?: string;
+    /** Set to true if the sender would like a response when the event is accepted or declined */
+    responseRequested?: boolean;
+    /** The possible values are: normal, personal, private, confidential */
+    sensitivity?: string;
+}
+
+/**
+ * Definition: PaginatedListResponse[CalendarEventClientReceiveStringEnums]
+ */
+export interface PaginatedListResponseCalendarEventClientReceiveStringEnums {
+    /** Values */
+    Values?: Array<CalendarEventClientReceiveStringEnums>;
+}
+
+/**
+ * Definition: CalendarEventClientReceiveStringEnums
+ */
+export interface CalendarEventClientReceiveStringEnums {
+    /** The importance of the event: Low, Normal, or High */
+    Importance?: string;
+    /** The response type of the event: None, Organizer, TentativelyAccepted, Accepted, Declined or NotResponded */
+    ResponseType?: string;
+    /** The recurrence pattern for the event */
+    Recurrence?: string;
+    /** Status to show during the event */
+    ShowAs?: string;
+    /** Event subject */
     Subject?: string;
-    /** The recipients for the message */
-    To?: string;
-}
-
-/**
- * Definition: ClientSendAttachment
- */
-export interface ClientSendAttachment {
-    /** Attachment content */
-    ContentBytes: string;
-    /** Attachment name */
-    Name: string;
-}
-
-/**
- * Definition: ClientSendHtmlMessage
- */
-export interface SendEmailInput {
-    /** Attachments */
-    Attachments?: Array<ClientSendAttachment>;
-    /** Specify email addresses separated by semicolons like someone@contoso.com */
-    Bcc?: string;
-    /** Specify the body of the mail */
-    Body: string;
-    /** Specify email addresses separated by semicolons like someone@contoso.com */
-    Cc?: string;
-    /** Email address to send mail from (requires "Send as" or "Send on behalf of" permission for that mailbox). For more info on granting permissions please refer https://docs.microsoft.com/office365/admin/manage/send-email-as-distribution-list */
-    From?: string;
-    /** Importance */
-    Importance?: string;
-    /** The email addresses to use when replying */
-    ReplyTo?: string;
-    /** Sensitivity */
-    Sensitivity?: string;
-    /** Specify the subject of the mail */
-    Subject: string;
-    /** Specify email addresses separated by semicolons like someone@contoso.com */
-    To: string;
-}
-
-/**
- * Definition: ClientSendMessage
- */
-export interface ClientSendMessage {
-    /** Attachments */
-    Attachments?: Array<ClientSendAttachment>;
-    /** Specify email addresses separated by semicolons like someone@contoso.com */
-    Bcc?: string;
-    /** Specify the body of the mail */
-    Body: string;
-    /** Specify email addresses separated by semicolons like someone@contoso.com */
-    Cc?: string;
-    /** Email address to send mail from (requires "Send as" or "Send on behalf of" permission for that mailbox). For more info on granting permissions please refer https://docs.microsoft.com/office365/admin/manage/send-email-as-distribution-list */
-    From?: string;
-    /** Importance */
-    Importance?: string;
-    /** Is Html? */
+    /** Start time of the event (example: '2016-11-01T14:30:00Z') */
+    Start?: string;
+    /** End time of the event (example: '2016-11-01T15:30:00Z') */
+    End?: string;
+    /** The response time of the event */
+    ResponseTime?: string;
+    /** A unique identifier that is shared by all instances of an event across different calendars */
+    ICalUId?: string;
+    /** The event's unique identifier */
+    Id?: string;
+    /** The date and time that the event was created */
+    DateTimeCreated?: string;
+    /** The date and time that the event was last modified */
+    DateTimeLastModified?: string;
+    /** The organizer of the event */
+    Organizer?: string;
+    /** Time zone of the event */
+    TimeZone?: string;
+    /** Unique identifier for Series Master event type */
+    SeriesMasterId?: string;
+    /** The categories associated with the event */
+    Categories?: Array<string>;
+    /** The URL to open the event in Outlook Web App */
+    WebLink?: string;
+    /** Required attendees for the event separated by semicolons */
+    RequiredAttendees?: string;
+    /** Optional attendees for the event separated by semicolons */
+    OptionalAttendees?: string;
+    /** Resource attendees for the event separated by semicolons */
+    ResourceAttendees?: string;
+    /** Body of the message associated with the event */
+    Body?: string;
+    /** Set to true if the body is Html */
     IsHtml?: boolean;
-    /** The email addresses to use when replying */
-    ReplyTo?: string;
-    /** Sensitivity */
-    Sensitivity?: string;
-    /** Specify the subject of the mail */
-    Subject: string;
-    /** Specify email addresses separated by semicolons like someone@contoso.com */
-    To: string;
+    /** Location of the event */
+    Location?: string;
+    /** Set to true if the event lasts all day */
+    IsAllDay?: boolean;
+    /** End time of the recurrence */
+    RecurrenceEnd?: string;
+    /** How many times to repeat the event */
+    NumberOfOccurrences?: number;
+    /** Time in minutes before event start to remind */
+    Reminder?: number;
+    /** Set to true if the sender would like a response when the event is accepted or declined */
+    ResponseRequested?: boolean;
 }
 
 /**
@@ -849,213 +613,796 @@ export interface ClientSubscription {
 }
 
 /**
- * Definition: ContactResponse
+ * Definition: SubscriptionResponse
  */
-export interface ContactResponse {
-    /** The name of the contact's assistant */
-    assistantName?: string;
-    /** The contact's birthday */
-    birthday?: string;
-    businessAddress?: PhysicalAddress;
-    /** The business home page of the contact */
-    businessHomePage?: string;
-    /** The contact's business phone numbers */
-    businessPhones?: Array<string>;
-    /** The categories associated with the contact */
-    categories?: Array<string>;
-    /** Identifies the version of the event object */
-    changeKey?: string;
-    /** The name of the contact's company */
-    companyName?: string;
-    /** The time the contact was created */
-    createdDateTime?: string;
-    /** The contact's department */
-    department?: string;
-    /** The contact's display name */
-    displayName?: string;
-    /** The contact's email addresses */
-    emailAddresses?: Array<EmailAddressV2>;
-    /** The name the contact is filed under */
-    fileAs?: string;
-    /** The contact's generation */
-    generation?: string;
-    /** The contact's given name */
-    givenName?: string;
-    homeAddress?: PhysicalAddress;
-    /** The contact's home phone numbers */
-    homePhones?: Array<string>;
-    /** The contact's unique identifier. */
+export interface SubscriptionResponse {
+    /** Id of the subscription */
     id?: string;
-    /** The contact's instant messaging (IM) addresses */
-    imAddresses?: Array<string>;
-    /** The contact's initials */
-    initials?: string;
-    /** The contact's job title */
-    jobTitle?: string;
-    /** The time the contact was modified */
-    lastModifiedDateTime?: string;
-    /** The name of the contact's manager */
-    manager?: string;
-    /** The contact's middle name */
-    middleName?: string;
-    /** The contact's mobile phone number */
-    mobilePhone?: string;
-    /** The contact's nickname */
-    nickName?: string;
-    /** The location of the contact's office */
-    officeLocation?: string;
-    otherAddress?: PhysicalAddress;
-    /** The ID of the contact's parent folder */
-    parentFolderId?: string;
-    /** The contact's profession */
-    profession?: string;
-    /** The contact's surname */
-    surname?: string;
-    /** The contact's title */
-    title?: string;
-    /** The phonetic Japanese company name of the contact */
-    yomiCompanyName?: string;
-    /** The phonetic Japanese given name (first name) of the contact */
-    yomiGivenName?: string;
-    /** The phonetic Japanese surname (last name) of the contact */
-    yomiSurname?: string;
+    /** Resource of the subscription request */
+    resource?: string;
+    /** Notification Type */
+    notificationType?: string;
+    /** Notification Url */
+    notificationUrl?: string;
 }
 
 /**
- * Definition: Contact
+ * Definition: EntityListResponse[FilePickerFile]
  */
-export interface Contact {
-    /** The name of the contact's assistant */
-    assistantName?: string;
-    /** The contact's birthday */
-    birthday?: string;
-    businessAddress?: PhysicalAddress;
-    /** The business home page of the contact */
-    businessHomePage?: string;
-    /** The contact's business phone numbers */
-    businessPhones?: Array<string>;
-    /** The categories associated with the contact */
-    categories?: Array<string>;
-    /** Identifies the version of the event object */
-    changeKey?: string;
-    /** The name of the contact's company */
-    companyName?: string;
-    /** The time the contact was created */
-    createdDateTime?: string;
-    /** The contact's department */
-    department?: string;
-    /** The contact's display name */
-    displayName?: string;
-    /** The contact's email addresses */
-    emailAddresses?: Array<EmailAddressV2>;
-    /** The name the contact is filed under */
-    fileAs?: string;
-    /** The contact's generation */
-    generation?: string;
-    /** The contact's given name */
-    givenName: string;
-    homeAddress?: PhysicalAddress;
-    /** The contact's home phone numbers */
-    homePhones: Array<string>;
-    /** The contact's unique identifier. */
-    id?: string;
-    /** The contact's instant messaging (IM) addresses */
-    imAddresses?: Array<string>;
-    /** The contact's initials */
-    initials?: string;
-    /** The contact's job title */
-    jobTitle?: string;
-    /** The time the contact was modified */
-    lastModifiedDateTime?: string;
-    /** The name of the contact's manager */
-    manager?: string;
-    /** The contact's middle name */
-    middleName?: string;
-    /** The contact's mobile phone number */
-    mobilePhone?: string;
-    /** The contact's nickname */
-    nickName?: string;
-    /** The location of the contact's office */
-    officeLocation?: string;
-    otherAddress?: PhysicalAddress;
-    /** The ID of the contact's parent folder */
-    parentFolderId?: string;
-    /** The contact's profession */
-    profession?: string;
-    /** The contact's surname */
-    surname?: string;
-    /** The contact's title */
-    title?: string;
-    /** The phonetic Japanese company name of the contact */
-    yomiCompanyName?: string;
-    /** The phonetic Japanese given name (first name) of the contact */
-    yomiGivenName?: string;
-    /** The phonetic Japanese surname (last name) of the contact */
-    yomiSurname?: string;
+export interface EntityListResponseFilePickerFile {
+    /** List of values */
+    value?: Array<FilePickerFile>;
 }
 
 /**
- * Definition: DataSet
+ * Definition: FilePickerFile
  */
-export interface DataSet {
-    /** Dataset display name */
+export interface FilePickerFile {
+    /** Uniquely identifies the file */
+    Id?: string;
+    /** Display name for the file */
     DisplayName?: string;
-    /** Dataset name */
-    Name?: string;
-    /** Pass-through Native Queries */
-    query?: Array<PassThroughNativeQuery>;
+    /** Set to true if the file is a folder */
+    IsFolder?: boolean;
+    /** Path of the file */
+    Path?: string;
 }
 
 /**
- * Definition: DataSetsList
+ * Definition: ClientSendMessage
  */
-export interface DataSetsList {
-    /** List of datasets */
-    value?: Array<DataSet>;
+export interface ClientSendMessage {
+    /** Email address to send mail from (requires "Send as" or "Send on behalf of" permission for that mailbox). For more info on granting permissions please refer https://docs.microsoft.com/office365/admin/manage/send-email-as-distribution-list */
+    From?: string;
+    /** Specify email addresses separated by semicolons like someone@contoso.com */
+    Cc?: string;
+    /** Specify email addresses separated by semicolons like someone@contoso.com */
+    Bcc?: string;
+    /** Specify email addresses separated by semicolons like someone@contoso.com */
+    To: string;
+    /** Specify the subject of the mail */
+    Subject: string;
+    /** Specify the body of the mail */
+    Body: string;
+    /** Attachments */
+    Attachments?: Array<ClientSendAttachment>;
+    /** Sensitivity */
+    Sensitivity?: string;
+    /** The email addresses to use when replying */
+    ReplyTo?: string;
+    /** Importance */
+    Importance?: string;
+    /** Is Html? */
+    IsHtml?: boolean;
+}
+
+/**
+ * Definition: ClientSendAttachment
+ */
+export interface ClientSendAttachment {
+    /** Attachment name */
+    Name: string;
+    /** Attachment content */
+    ContentBytes: string;
+}
+
+/**
+ * Definition: ClientReceiveMessageStringEnums
+ */
+export interface ClientReceiveMessageStringEnums {
+    /** The importance of the message */
+    Importance?: string;
+    /** The mailbox owner and sender of the message */
+    From?: string;
+    /** The recipients for the message */
+    To?: string;
+    /** The Cc recipients for the message */
+    Cc?: string;
+    /** The Bcc recipients for the message */
+    Bcc?: string;
+    /** The email addresses to use when replying */
+    ReplyTo?: string;
+    /** The subject of the message */
+    Subject?: string;
+    /** The body of the message */
+    Body?: string;
+    /** The preview of the message */
+    BodyPreview?: string;
+    /** Indicates whether the message has attachments */
+    HasAttachment?: boolean;
+    /** The unique identifier of the message */
+    Id?: string;
+    /** The message ID in the format specified by RFC2822 */
+    InternetMessageId?: string;
+    /** The Id of the conversation the email belongs to */
+    ConversationId?: string;
+    /** The date and time the message was received */
+    DateTimeReceived?: string;
+    /** Indicates whether the message has been read */
+    IsRead?: boolean;
+    /** The file attachments for the message */
+    Attachments?: Array<ClientReceiveFileAttachment>;
+    /** Is Html? */
+    IsHtml?: boolean;
+}
+
+/**
+ * Definition: ClientReceiveFileAttachment
+ */
+export interface ClientReceiveFileAttachment {
+    /** Attachment Id */
+    Id?: string;
+    /** Attachment name */
+    Name?: string;
+    /** Attachment content */
+    ContentBytes?: string;
+    /** Attachment content type */
+    ContentType?: string;
+    /** The size in bytes of the attachment */
+    Size?: number;
+    /** Set to true if this is an inline attachment */
+    IsInline?: boolean;
+    /** The date and time when the attachment was last modified */
+    LastModifiedDateTime?: string;
+    /** Content Id */
+    ContentId?: string;
+}
+
+/**
+ * Definition: ClientSendHtmlMessage
+ */
+export interface SendEmailInput {
+    /** Specify email addresses separated by semicolons like someone@contoso.com */
+    To: string;
+    /** Specify the subject of the mail */
+    Subject: string;
+    /** Specify the body of the mail */
+    Body: string;
+    /** Email address to send mail from (requires "Send as" or "Send on behalf of" permission for that mailbox). For more info on granting permissions please refer https://docs.microsoft.com/office365/admin/manage/send-email-as-distribution-list */
+    From?: string;
+    /** Specify email addresses separated by semicolons like someone@contoso.com */
+    Cc?: string;
+    /** Specify email addresses separated by semicolons like someone@contoso.com */
+    Bcc?: string;
+    /** Attachments */
+    Attachments?: Array<ClientSendAttachment>;
+    /** Sensitivity */
+    Sensitivity?: string;
+    /** The email addresses to use when replying */
+    ReplyTo?: string;
+    /** Importance */
+    Importance?: string;
+}
+
+/**
+ * Definition: ClientDraftHtmlMessage
+ */
+export interface DraftEmailInput {
+    /** Specify email addresses separated by semicolons like someone@contoso.com */
+    To: string;
+    /** Specify the subject of the mail */
+    Subject: string;
+    /** Specify the body of the mail */
+    Body: string;
+    /** Email address to send mail from (requires "Send as" or "Send on behalf of" permission for that mailbox). For more info on granting permissions please refer https://docs.microsoft.com/office365/admin/manage/send-email-as-distribution-list */
+    From?: string;
+    /** Specify email addresses separated by semicolons like someone@contoso.com */
+    Cc?: string;
+    /** Specify email addresses separated by semicolons like someone@contoso.com */
+    Bcc?: string;
+    /** Attachments */
+    Attachments?: Array<ClientSendAttachment>;
+    /** Sensitivity */
+    Sensitivity?: string;
+    /** The email addresses to use when replying */
+    ReplyTo?: string;
+    /** Importance */
+    Importance?: string;
+}
+
+/**
+ * Definition: GraphOutlookCategory
+ */
+export interface GraphOutlookCategory {
+    /** The ID of the Outlook Category. */
+    id?: string;
+    /** The display name of the Outlook Category. */
+    displayName?: string;
+}
+
+/**
+ * Definition: BatchOperationResult
+ */
+export interface BatchOperationResult {
+    /** The count of messages processed successfully. */
+    successCount?: number;
+    /** The list of failed messages with errors. */
+    failures?: Array<BatchItemFailureResult>;
+}
+
+/**
+ * Definition: BatchItemFailureResult
+ */
+export interface BatchItemFailureResult {
+    /** The ID of the failed message. */
+    MessageId?: string;
+    /** The error message of the failure. */
+    Error?: string;
+}
+
+/**
+ * Definition: BatchResponse[ClientReceiveMessage]
+ */
+export interface BatchResponseClientReceiveMessage {
+    /** A list of the response objects */
+    value?: Array<ClientReceiveMessage>;
+}
+
+/**
+ * Definition: ClientReceiveMessage
+ */
+export interface ClientReceiveMessage {
+    /** The mailbox owner and sender of the message */
+    From?: string;
+    /** The recipients for the message */
+    To?: string;
+    /** The Cc recipients for the message */
+    Cc?: string;
+    /** The Bcc recipients for the message */
+    Bcc?: string;
+    /** The email addresses to use when replying */
+    ReplyTo?: string;
+    /** The subject of the message */
+    Subject?: string;
+    /** The body of the message */
+    Body?: string;
+    /** The importance of the message (0 - Low, 1 - Normal, 2 - High) */
+    Importance?: number;
+    /** The preview of the message */
+    BodyPreview?: string;
+    /** Indicates whether the message has attachments */
+    HasAttachment?: boolean;
+    /** The unique identifier of the message */
+    Id?: string;
+    /** The message ID in the format specified by RFC2822 */
+    InternetMessageId?: string;
+    /** The Id of the conversation the email belongs to */
+    ConversationId?: string;
+    /** The date and time the message was received */
+    DateTimeReceived?: string;
+    /** Indicates whether the message has been read */
+    IsRead?: boolean;
+    /** The file attachments for the message */
+    Attachments?: Array<ClientReceiveFileAttachment>;
+    /** Is Html? */
+    IsHtml?: boolean;
+}
+
+/**
+ * Definition: GraphClientReceiveMessage
+ */
+export interface GraphClientReceiveMessage {
+    /** The mailbox owner and sender of the message */
+    from?: string;
+    /** The recipients for the message */
+    toRecipients?: string;
+    /** The Cc recipients for the message */
+    ccRecipients?: string;
+    /** The Bcc recipients for the message */
+    bccRecipients?: string;
+    /** The email addresses to use when replying */
+    replyTo?: string;
+    /** The subject of the message */
+    subject?: string;
+    /** The body of the message */
+    body?: string;
+    /** The importance of the message (low, normal, high) */
+    importance?: string;
+    /** The preview of the message */
+    bodyPreview?: string;
+    /** Indicates whether the message has attachments */
+    hasAttachments?: boolean;
+    /** The unique identifier of the message */
+    id?: string;
+    /** The message ID in the format specified by RFC2822 */
+    internetMessageId?: string;
+    /** The Id of the conversation the email belongs to */
+    conversationId?: string;
+    /** The date and time the message was received */
+    receivedDateTime?: string;
+    /** Indicates whether the message has been read */
+    isRead?: boolean;
+    /** The file attachments for the message */
+    attachments?: Array<GraphClientReceiveFileAttachment>;
+    /** Is Html? */
+    isHtml?: boolean;
+    sensitivityLabelInfo?: Array<SensitivityLabelMetadata>;
+}
+
+/**
+ * Definition: GraphClientReceiveFileAttachment
+ */
+export interface GraphClientReceiveFileAttachment {
+    /** Attachment Id */
+    id?: string;
+    /** Attachment name */
+    name?: string;
+    /** Attachment content */
+    contentBytes?: string;
+    /** Attachment content type */
+    contentType?: string;
+    /** The size in bytes of the attachment */
+    size?: number;
+    /** Set to true if this is an inline attachment */
+    isInline?: boolean;
+    /** The date and time when the attachment was last modified */
+    lastModifiedDateTime?: string;
+    /** Content Id */
+    contentId?: string;
+}
+
+/**
+ * Definition: BatchResponse[GraphClientReceiveMessage]
+ */
+export interface BatchResponseGraphClientReceiveMessage {
+    /** A list of the response objects */
+    value?: Array<GraphClientReceiveMessage>;
+}
+
+/**
+ * Definition: ReplyMessage
+ */
+export interface ReplyMessage {
+    /** Example: recipient1@domain.com; recipient2@domain.com */
+    To?: string;
+    /** Example: recipient1@domain.com; recipient2@domain.com */
+    Cc?: string;
+    /** Example: recipient1@domain.com; recipient2@domain.com */
+    Bcc?: string;
+    /** Email subject (if empty, the original subject used). */
+    Subject?: string;
+    /** Content of the email. */
+    Body?: string;
+    /** True to reply to all recipients. (default: False) */
+    ReplyAll?: boolean;
+    /** True to send the reply as HTML. (default: True) */
+    IsHtml?: boolean;
+    /** Pick an importance. (default: Low) */
+    Importance?: string;
+    /** Details of attachments to be sent along with the reply. */
+    Attachments?: Array<ClientSendAttachment>;
+}
+
+/**
+ * Definition: ReplyHtmlMessage
+ */
+export interface ReplyEmailInput {
+    /** Example: recipient1@domain.com; recipient2@domain.com */
+    To?: string;
+    /** Example: recipient1@domain.com; recipient2@domain.com */
+    Cc?: string;
+    /** Example: recipient1@domain.com; recipient2@domain.com */
+    Bcc?: string;
+    /** Email subject (if empty, the original subject used). */
+    Subject?: string;
+    /** Content of the email. */
+    Body?: string;
+    /** True to reply to all recipients. (default: False) */
+    ReplyAll?: boolean;
+    /** Pick an importance. (default: Low) */
+    Importance?: string;
+    /** Details of attachments to be sent along with the reply. */
+    Attachments?: Array<ClientSendAttachment>;
+}
+
+/**
+ * Definition: TriggerBatchResponse[ClientReceiveMessage]
+ */
+export interface TriggerBatchResponseClientReceiveMessage {
+    /** A list of the response objects */
+    value?: Array<ClientReceiveMessage>;
+}
+
+/**
+ * Definition: TriggerBatchResponse[GraphClientReceiveMessage]
+ */
+export interface TriggerBatchResponseGraphClientReceiveMessage {
+    /** A list of the response objects */
+    value?: Array<GraphClientReceiveMessage>;
+}
+
+/**
+ * Definition: BatchResponse[SensitivityLabel]
+ */
+export interface BatchResponseSensitivityLabel {
+    /** A list of the response objects */
+    value?: Array<SensitivityLabel>;
+}
+
+/**
+ * Definition: SensitivityLabel
+ */
+export interface SensitivityLabel {
+    /** Gets or sets the identifier. */
+    Id?: string;
+    /** Gets or sets the display name. */
+    DisplayName?: string;
+    /** Gets or sets the applicable to. */
+    ApplicableTo?: string;
+    /** Gets or sets sub labels. */
+    SubLabels?: Array<SensitivityLabel>;
+}
+
+/**
+ * Definition: TriggerBatchResponse[ReceiveMessageMetadata]
+ */
+export interface TriggerBatchResponseReceiveMessageMetadata {
+    /** A list of the response objects */
+    value?: Array<ReceiveMessageMetadata>;
+}
+
+/**
+ * Definition: ReceiveMessageMetadata
+ */
+export interface ReceiveMessageMetadata {
+    /** The mailbox owner and sender of the message */
+    From?: string;
+    /** The recipients for the message */
+    To?: string;
+    /** The Cc recipients for the message */
+    Cc?: string;
+    /** The Bcc recipients for the message */
+    Bcc?: string;
+    /** The email addresses to use when replying */
+    ReplyTo?: string;
+    /** The subject of the message */
+    Subject?: string;
+    /** The importance of the message  (0 - Low, 1 - Normal, 2 - High) */
+    Importance?: number;
+    /** Indicates whether the message has attachments */
+    HasAttachment?: boolean;
+    /** The unique identifier of the message */
+    Id?: string;
+    /** The date and time the message was received */
+    DateTimeReceived?: string;
+    /** Indicates whether the message has been read */
+    IsRead?: boolean;
 }
 
 /**
  * Definition: DataSetsMetadata
  */
 export interface DataSetsMetadata {
-    blob?: BlobDataSetsMetadata;
     tabular?: TabularDataSetsMetadata;
+    blob?: BlobDataSetsMetadata;
 }
 
 /**
- * Definition: DateTimeTimeZone
+ * Definition: TabularDataSetsMetadata
  */
-export interface DateTimeTimeZone {
-    /** DateTime (example: '2017-08-29T04:00:00.0000000') */
-    dateTime?: string;
-    /** TimeZone (example: 'Pacific Standard Time') */
-    timeZone?: string;
+export interface TabularDataSetsMetadata {
+    /** Dataset source */
+    source?: string;
+    /** Dataset display name */
+    displayName?: string;
+    /** Dataset url encoding */
+    urlEncoding?: string;
+    /** Table display name */
+    tableDisplayName?: string;
+    /** Table plural display name */
+    tablePluralName?: string;
 }
 
 /**
- * Definition: DirectForwardMessage
+ * Definition: BlobDataSetsMetadata
  */
-export interface DirectForwardMessage {
-    /** Comment */
-    Comment?: string;
-    /** Semicolon separated list of recipients to forward the message to */
-    ToRecipients: string;
+export interface BlobDataSetsMetadata {
+    /** Blob dataset source */
+    source?: string;
+    /** Blob dataset display name */
+    displayName?: string;
+    /** Blob dataset url encoding */
+    urlEncoding?: string;
 }
 
 /**
- * Definition: EmailAddress
+ * Definition: OptionsEmailSubscription
  */
-export interface EmailAddress {
-    Address?: string;
+export interface OptionsEmailSubscription {
+    /** Gets or sets callback url to flow engine. It is expected as part of request */
+    NotificationUrl: string;
+    Message: MessageWithOptions;
+}
+
+/**
+ * Definition: MessageWithOptions
+ */
+export interface MessageWithOptions {
+    /** Specify email addresses separated by semicolons like someone@contoso.com */
+    To: string;
+    /** Subject of the email */
+    Subject?: string;
+    /** List of comma separated options for the email response */
+    Options?: string;
+    /** Header text for email body */
+    HeaderText?: string;
+    /** Header text for users options selection */
+    SelectionText?: string;
+    /** Body of the email */
+    Body?: string;
+    /** Importance */
+    Importance?: string;
+    /** Attachments */
+    Attachments?: Array<ClientSendAttachment>;
+    /** Use only HTML message */
+    UseOnlyHTMLMessage?: boolean;
+    /** If set to Yes, then the email body is hidden and only message card is displayed. Email clients which do not support actionable messages will display HTML message regardless of the parameter value. */
+    HideHTMLMessage?: boolean;
+    /** If set to Yes then a dialog wil be shown to confirm selected option of HTML message */
+    ShowHTMLConfirmationDialog?: boolean;
+    /** If set to Yes, then the Microsoft footer is hidden in the email body. */
+    HideMicrosoftFooter?: boolean;
+}
+
+/**
+ * Definition: ApprovalEmailResponse
+ */
+export interface ApprovalEmailResponse {
+    /** User response */
+    SelectedOption?: string;
+    /** User email address. The value is the user's email address for individual users and user ID for the members in Distribution Group or Mail Enabled Security Group. */
+    UserEmailAddress?: string;
+    /** User tenant ID. The value is the tenant id of the user for both individual users and the members in Distribution Group or Mail Enabled Security Group. */
+    UserTenantId?: string;
+    /** User ID. The value is the user id for both individual users and the members in Distribution Group or Mail Enabled Security Group. */
+    UserId?: string;
+}
+
+/**
+ * Definition: ApprovalEmailSubscription
+ */
+export interface ApprovalEmailSubscription {
+    /** Gets or sets callback url to flow engine. It is expected as part of request */
+    NotificationUrl: string;
+    Message: ApprovalMessage;
+}
+
+/**
+ * Definition: ApprovalMessage
+ */
+export interface ApprovalMessage {
+    /** Specify email addresses separated by semicolons like someone@contoso.com */
+    To: string;
+    /** Subject */
+    Subject?: string;
+    /** User Options */
+    Options?: string;
+    /** Header text for email body */
+    HeaderText?: string;
+    /** Header text for users options selection */
+    SelectionText?: string;
+    /** Body */
+    Body?: string;
+    /** Importance */
+    Importance?: string;
+    /** Attachments */
+    Attachments?: Array<ClientSendAttachment>;
+    /** Use only HTML message */
+    UseOnlyHTMLMessage?: boolean;
+    /** If set to Yes, then the email body is hidden and only message card is displayed. Email clients which do not support actionable messages will display HTML message regardless of the parameter value. */
+    HideHTMLMessage?: boolean;
+    /** If set to Yes then a dialog wil be shown to confirm selected option of HTML message */
+    ShowHTMLConfirmationDialog?: boolean;
+}
+
+/**
+ * Definition: SharedMailboxClientSendMessage
+ */
+export interface SharedMailboxClientSendMessage {
+    /** Specify email address of a shared mailbox like someone@contoso.com */
+    MailboxAddress: string;
+    /** Specify email addresses separated by semicolons like someone@contoso.com */
+    To: string;
+    /** Specify the subject of the mail */
+    Subject: string;
+    /** Specify the body of the mail */
+    Body: string;
+    /** Specify email addresses separated by semicolons like someone@contoso.com */
+    Cc?: string;
+    /** Specify email addresses separated by semicolons like someone@contoso.com */
+    Bcc?: string;
+    /** Attachments */
+    Attachments?: Array<ClientSendAttachment>;
+    /** Sensitivity */
+    Sensitivity?: string;
+    /** The email addresses to use when replying */
+    ReplyTo?: string;
+    /** Importance */
+    Importance?: string;
+    /** Is Html? */
+    IsHtml?: boolean;
+}
+
+/**
+ * Definition: SharedMailboxClientSendHtmlMessage
+ */
+export interface SharedMailboxSendEmailInput {
+    /** Specify email address of a shared mailbox like someone@contoso.com */
+    MailboxAddress: string;
+    /** Specify email addresses separated by semicolons like someone@contoso.com */
+    To: string;
+    /** Specify the subject of the mail */
+    Subject: string;
+    /** Specify the body of the mail */
+    Body: string;
+    /** Specify email addresses separated by semicolons like someone@contoso.com */
+    Cc?: string;
+    /** Specify email addresses separated by semicolons like someone@contoso.com */
+    Bcc?: string;
+    /** Attachments */
+    Attachments?: Array<ClientSendAttachment>;
+    /** Sensitivity */
+    Sensitivity?: string;
+    /** The email addresses to use when replying */
+    ReplyTo?: string;
+    /** Importance */
+    Importance?: string;
+}
+
+/**
+ * Definition: SubscriptionPayload[OutlookReceiveMessage]
+ */
+export interface SubscriptionPayloadOutlookReceiveMessage {
+    /** List of values */
+    value?: Array<SubscriptionPayloadEntityOutlookReceiveMessage>;
+}
+
+/**
+ * Definition: SubscriptionPayloadEntity[OutlookReceiveMessage]
+ */
+export interface SubscriptionPayloadEntityOutlookReceiveMessage {
+    /** Sequence number */
+    SequenceNumber?: number;
+    /** Change type */
+    ChangeType?: string;
+    /** Client state */
+    ClientState?: string;
+    /** Resource */
+    Resource?: string;
+    ResourceData?: OutlookReceiveMessage;
+}
+
+/**
+ * Definition: OutlookReceiveMessage
+ */
+export interface OutlookReceiveMessage {
+    /** Internet Message Id */
+    InternetMessageId?: string;
+    /** Body preview */
+    BodyPreview?: string;
+    /** Id */
+    Id?: string;
+    /** Conversation Id */
+    ConversationId?: string;
+    /** Has attachments */
+    HasAttachments?: boolean;
+    /** Is read */
+    IsRead?: boolean;
+    /** Created date and time */
+    CreatedDateTime?: string;
+    /** Received date and time */
+    ReceivedDateTime?: string;
+    /** Last modified date and time */
+    LastModifiedDateTime?: string;
+    /** Attachments */
+    Attachments?: Array<OutlookReceiveAttachment>;
+    /** To Recipient */
+    ToRecipients?: Array<Recipient>;
+    /** Cc Recipients */
+    CcRecipients?: Array<Recipient>;
+    /** Bcc Recipients */
+    BccRecipients?: Array<Recipient>;
+    /** The email addresses to use when replying */
+    ReplyTo?: Array<Recipient>;
+    /** Subject */
+    Subject?: string;
+    Body?: ItemBody;
+    From?: Recipient;
+    /** Importance */
+    Importance?: string;
+    /** Internet message headers */
+    InternetMessageHeaders?: Array<InternetMessageHeader>;
+}
+
+/**
+ * Definition: OutlookReceiveAttachment
+ */
+export interface OutlookReceiveAttachment {
+    /** OData type */
+    "@odata.type"?: string;
+    /** Attachment Id */
+    Id?: string;
+    /** Attachment name */
     Name?: string;
+    /** Attachment content */
+    ContentBytes?: string;
+    /** Attachment content type */
+    ContentType?: string;
+    /** Attachment size in bytes */
+    Size?: number;
+    /** Permission associated with a reference attachment */
+    Permission?: string;
+    /** Provider for the reference attachment */
+    ProviderType?: string;
+    /** Reference attachment source url */
+    SourceUrl?: string;
+    /** Set to true if this is an inline attachment */
+    IsInline?: boolean;
+    /** The date and time when the attachment was last modified */
+    LastModifiedDateTime?: string;
+    /** Content Id */
+    ContentId?: string;
 }
 
 /**
- * Definition: EmailAddress_V2
+ * Definition: InternetMessageHeader
  */
-export interface EmailAddressV2 {
-    address?: string;
-    name?: string;
+export interface InternetMessageHeader {
+    /** Header name */
+    Name?: string;
+    /** Header value */
+    Value?: string;
+}
+
+/**
+ * Definition: SubscriptionPayload[SubscriptionEvent]
+ */
+export interface SubscriptionPayloadSubscriptionEvent {
+    /** List of values */
+    value?: Array<SubscriptionPayloadEntitySubscriptionEvent>;
+}
+
+/**
+ * Definition: SubscriptionPayloadEntity[SubscriptionEvent]
+ */
+export interface SubscriptionPayloadEntitySubscriptionEvent {
+    /** Sequence number */
+    SequenceNumber?: number;
+    /** Change type */
+    ChangeType?: string;
+    /** Client state */
+    ClientState?: string;
+    /** Resource */
+    Resource?: string;
+    ResourceData?: SubscriptionEvent;
+}
+
+/**
+ * Definition: SubscriptionEvent
+ */
+export interface SubscriptionEvent {
+    /** The Event's unique identifier */
+    Id?: string;
+}
+
+/**
+ * Definition: EntityListResponse[Table]
+ */
+export interface EntityListResponseTable {
+    /** List of values */
+    value?: Array<Table>;
+}
+
+/**
+ * Definition: Table
+ */
+export interface Table {
+    /** The name of the table. The name is used at runtime. */
+    Name?: string;
+    /** The display name of the table. */
+    DisplayName?: string;
+    /** Additional table properties provided by the connector to the clients. */
+    DynamicProperties?: Record<string, unknown>;
 }
 
 /**
@@ -1075,22 +1422,6 @@ export interface EntityListResponseCalendarEventClientReceiveStringEnums {
 }
 
 /**
- * Definition: EntityListResponse[ContactResponse]
- */
-export interface EntityListResponseContactResponse {
-    /** List of values */
-    value?: Array<ContactResponse>;
-}
-
-/**
- * Definition: EntityListResponse[FilePickerFile]
- */
-export interface EntityListResponseFilePickerFile {
-    /** List of values */
-    value?: Array<FilePickerFile>;
-}
-
-/**
  * Definition: EntityListResponse[GraphCalendarEventClientReceive]
  */
 export interface EntityListResponseGraphCalendarEventClientReceive {
@@ -1099,162 +1430,217 @@ export interface EntityListResponseGraphCalendarEventClientReceive {
 }
 
 /**
- * Definition: EntityListResponse[GraphContactFolder]
+ * Definition: CalendarEventClient
  */
-export interface EntityListResponseGraphContactFolder {
-    /** List of values */
-    value?: Array<GraphContactFolder>;
+export interface CalendarEventClient {
+    /** Event subject */
+    Subject: string;
+    /** Start time of the event (example: '2016-11-01T14:30:00Z') */
+    Start: string;
+    /** End time of the event (example: '2016-11-01T15:30:00Z') */
+    End: string;
+    /** Time zone of the event */
+    TimeZone?: string;
+    /** Required attendees for the event separated by semicolons */
+    RequiredAttendees?: string;
+    /** Optional attendees for the event separated by semicolons */
+    OptionalAttendees?: string;
+    /** Resource attendees for the event separated by semicolons */
+    ResourceAttendees?: string;
+    /** Body of the message associated with the event */
+    Body?: string;
+    /** Set to true if the body is Html */
+    IsHtml?: boolean;
+    /** Location of the event */
+    Location?: string;
+    /** The importance of the event: Low, Normal, or High */
+    Importance?: string;
+    /** Set to true if the event lasts all day */
+    IsAllDay?: boolean;
+    /** The recurrence pattern for the event */
+    Recurrence?: string;
+    /** End time of the recurrence */
+    RecurrenceEnd?: string;
+    /** How many times to repeat the event */
+    NumberOfOccurrences?: number;
+    /** Time in minutes before event start to remind */
+    Reminder?: number;
+    /** Status to show during the event */
+    ShowAs?: string;
+    /** Set to true if the sender would like a response when the event is accepted or declined */
+    ResponseRequested?: boolean;
 }
 
 /**
- * Definition: EntityListResponse[Table]
+ * Definition: CalendarEventHtmlClient
  */
-export interface EntityListResponseTable {
-    /** List of values */
-    value?: Array<Table>;
-}
-
-/**
- * Definition: FilePickerFile
- */
-export interface FilePickerFile {
-    /** Display name for the file */
-    DisplayName?: string;
-    /** Uniquely identifies the file */
-    Id?: string;
-    /** Set to true if the file is a folder */
-    IsFolder?: boolean;
-    /** Path of the file */
-    Path?: string;
-}
-
-/**
- * Definition: GeoCoordinates
- */
-export interface GeoCoordinates {
-    Accuracy?: number;
-    Altitude?: number;
-    AltitudeAccuracy?: number;
-    Latitude?: number;
-    Longitude?: number;
+export interface CalendarEventHtmlClient {
+    /** Event subject */
+    Subject: string;
+    /** Start time of the event (example: '2016-11-01T14:30:00Z') */
+    Start: string;
+    /** End time of the event (example: '2016-11-01T15:30:00Z') */
+    End: string;
+    /** Time zone of the event */
+    TimeZone?: string;
+    /** Required attendees for the event separated by semicolons */
+    RequiredAttendees?: string;
+    /** Optional attendees for the event separated by semicolons */
+    OptionalAttendees?: string;
+    /** Resource attendees for the event separated by semicolons */
+    ResourceAttendees?: string;
+    /** Body of the message associated with the event */
+    Body?: string;
+    /** Location of the event */
+    Location?: string;
+    /** The importance of the event: Low, Normal, or High */
+    Importance?: string;
+    /** Set to true if the event lasts all day */
+    IsAllDay?: boolean;
+    /** The recurrence pattern for the event */
+    Recurrence?: string;
+    /** End time of the recurrence */
+    RecurrenceEnd?: string;
+    /** How many times to repeat the event */
+    NumberOfOccurrences?: number;
+    /** Time in minutes before event start to remind */
+    Reminder?: number;
+    /** Status to show during the event */
+    ShowAs?: string;
+    /** Set to true if the sender would like a response when the event is accepted or declined */
+    ResponseRequested?: boolean;
 }
 
 /**
  * Definition: GraphCalendarEventClient
  */
 export interface GraphCalendarEventClient {
+    /** Event subject */
+    subject: string;
+    /** Start time of the event (example: '2017-08-29T04:00:00') */
+    start: string;
+    /** End time of the event (example: '2017-08-29T05:00:00') */
+    end: string;
+    /** Time zone of the event */
+    timeZone: string;
+    /** Required attendees for the event separated by semicolons */
+    requiredAttendees?: string;
+    /** Optional attendees for the event separated by semicolons */
+    optionalAttendees?: string;
+    /** Resource attendees for the event separated by semicolons */
+    resourceAttendees?: string;
     /** Body of the message associated with the event */
     body?: string;
     /** The categories associated with the event */
     categories?: Array<string>;
-    /** End time of the event (example: '2017-08-29T05:00:00') */
-    end: string;
+    /** Location of the event */
+    location?: string;
     /** The importance of the event: low, normal, or high */
     importance?: string;
     /** Set to true if the event lasts all day */
     isAllDay?: boolean;
-    /** Set to true if an alert is set to remind the user of the event. */
-    isReminderOn?: boolean;
-    /** Location of the event */
-    location?: string;
-    /** How many times to repeat the event */
-    numberOfOccurences?: number;
-    /** Optional attendees for the event separated by semicolons */
-    optionalAttendees?: string;
     /** The recurrence pattern for the event: none, daily, weekly, monthly or yearly */
     recurrence?: string;
-    /** End Date of the recurrence */
-    recurrenceEnd?: string;
-    /** Time in minutes before event start to remind */
-    reminderMinutesBeforeStart?: number;
-    /** Required attendees for the event separated by semicolons */
-    requiredAttendees?: string;
-    /** Resource attendees for the event separated by semicolons */
-    resourceAttendees?: string;
-    /** Set to true if the sender would like a response when the event is accepted or declined */
-    responseRequested?: boolean;
     /** Days of week for weekly recurrence */
     selectedDaysOfWeek?: Array<string>;
-    /** The possible values are: normal, personal, private, confidential */
-    sensitivity?: string;
+    /** End Date of the recurrence */
+    recurrenceEnd?: string;
+    /** How many times to repeat the event */
+    numberOfOccurences?: number;
+    /** Time in minutes before event start to remind */
+    reminderMinutesBeforeStart?: number;
+    /** Set to true if an alert is set to remind the user of the event. */
+    isReminderOn?: boolean;
     /** Status to show during the event: free, tentative, busy, oof, workingElsewhere or unknown */
     showAs?: string;
-    /** Start time of the event (example: '2017-08-29T04:00:00') */
-    start: string;
-    /** Event subject */
-    subject: string;
-    /** Time zone of the event */
-    timeZone: string;
+    /** Set to true if the sender would like a response when the event is accepted or declined */
+    responseRequested?: boolean;
+    /** The possible values are: normal, personal, private, confidential */
+    sensitivity?: string;
 }
 
 /**
- * Definition: GraphCalendarEventClientReceive
+ * Definition: CalendarEventListWithActionType
  */
-export interface GraphCalendarEventClientReceive {
-    /** Body of the message associated with the event */
-    body?: string;
-    /** The categories associated with the event */
-    categories?: Array<string>;
-    /** The date and time that the event was created */
-    createdDateTime?: string;
-    /** End time of the event (example: '2017-08-29T05:00:00.0000000') */
-    end?: string;
-    /** End time of the event with time zone (example: '2017-08-29T05:00:00.0000000+00:00') */
-    endWithTimeZone?: string;
-    /** A unique identifier for an event across calendars. This ID is different for each occurrence in a recurring series */
-    iCalUId?: string;
-    /** The event's unique identifier */
-    id?: string;
-    /** The importance of the event: low, normal, or high */
-    importance?: string;
-    /** Set to true if the event lasts all day */
-    isAllDay?: boolean;
-    /** Set to true if the body is Html */
-    isHtml?: boolean;
-    /** Set to true if an alert is set to remind the user of the event. */
-    isReminderOn?: boolean;
-    /** The date and time that the event was last modified */
-    lastModifiedDateTime?: string;
-    /** Location of the event */
-    location?: string;
-    /** How many times to repeat the event */
-    numberOfOccurences?: number;
-    /** Optional attendees for the event separated by semicolons */
-    optionalAttendees?: string;
-    /** The organizer of the event */
-    organizer?: string;
-    /** The recurrence pattern for the event: none, daily, weekly, monthly or yearly */
-    recurrence?: string;
-    /** End Date of the recurrence */
-    recurrenceEnd?: string;
-    /** Time in minutes before event start to remind */
-    reminderMinutesBeforeStart?: number;
-    /** Required attendees for the event separated by semicolons */
-    requiredAttendees?: string;
-    /** Resource attendees for the event separated by semicolons */
-    resourceAttendees?: string;
-    /** Set to true if the sender would like a response when the event is accepted or declined */
-    responseRequested?: boolean;
-    /** The response time of the event */
-    responseTime?: string;
-    /** The response type of the event (none, organizer, tentativelyAccepted, accepted, declined or notResponded) */
-    responseType?: string;
-    /** The possible values are: normal, personal, private, confidential */
-    sensitivity?: string;
-    /** Unique identifier for Series Master event type */
-    seriesMasterId?: string;
-    /** Status to show during the event: free, tentative, busy, oof, workingElsewhere or unknown */
-    showAs?: string;
-    /** Start time of the event (example: '2017-08-29T04:00:00.0000000') */
-    start?: string;
-    /** Start time of the event with time zone (example: '2017-08-29T04:00:00.0000000+00:00') */
-    startWithTimeZone?: string;
+export interface CalendarEventListWithActionType {
+    /** List of calendar items */
+    value?: Array<CalendarEventClientWithActionType>;
+}
+
+/**
+ * Definition: CalendarEventClientWithActionType
+ */
+export interface CalendarEventClientWithActionType {
+    /** Changed action type of the event - added, updated or deleted. */
+    ActionType?: string;
+    /** Flag that indicates whether the event was added since the last poll of the trigger. */
+    IsAdded?: boolean;
+    /** Flag that indicates whether the event was updated since the last poll of the trigger. */
+    IsUpdated?: boolean;
     /** Event subject */
-    subject?: string;
+    Subject?: string;
+    /** Start time of the event (example: '2016-11-01T14:30:00Z') */
+    Start?: string;
+    /** End time of the event (example: '2016-11-01T15:30:00Z') */
+    End?: string;
+    /** Status to show during the event (Unknown - -1, Free - 0, Tentative - 1, Busy - 2, Oof - 3, WorkingElsewhere - 4) */
+    ShowAs?: number;
+    /** The recurrence pattern for the event (None - 0, Daily - 1, Weekly - 2, Monthly - 3, Yearly - 4) */
+    Recurrence?: number;
+    /** The response type of the event (None - 0, Organizer - 1, TentativelyAccepted - 2, Accepted - 3, Declined - 4, NotResponded - 5) */
+    ResponseType?: number;
+    /** The response time of the event */
+    ResponseTime?: string;
+    /** A unique identifier that is shared by all instances of an event across different calendars */
+    ICalUId?: string;
+    /** The importance of the event (0 - Low, 1 - Normal, 2 - High) */
+    Importance?: number;
+    /** The event's unique identifier */
+    Id?: string;
+    /** The date and time that the event was created */
+    DateTimeCreated?: string;
+    /** The date and time that the event was last modified */
+    DateTimeLastModified?: string;
+    /** The organizer of the event */
+    Organizer?: string;
     /** Time zone of the event */
-    timeZone?: string;
+    TimeZone?: string;
+    /** Unique identifier for Series Master event type */
+    SeriesMasterId?: string;
+    /** The categories associated with the event */
+    Categories?: Array<string>;
     /** The URL to open the event in Outlook Web App */
-    webLink?: string;
+    WebLink?: string;
+    /** Required attendees for the event separated by semicolons */
+    RequiredAttendees?: string;
+    /** Optional attendees for the event separated by semicolons */
+    OptionalAttendees?: string;
+    /** Resource attendees for the event separated by semicolons */
+    ResourceAttendees?: string;
+    /** Body of the message associated with the event */
+    Body?: string;
+    /** Set to true if the body is Html */
+    IsHtml?: boolean;
+    /** Location of the event */
+    Location?: string;
+    /** Set to true if the event lasts all day */
+    IsAllDay?: boolean;
+    /** End time of the recurrence */
+    RecurrenceEnd?: string;
+    /** How many times to repeat the event */
+    NumberOfOccurrences?: number;
+    /** Time in minutes before event start to remind */
+    Reminder?: number;
+    /** Set to true if the sender would like a response when the event is accepted or declined */
+    ResponseRequested?: boolean;
+}
+
+/**
+ * Definition: GraphCalendarEventListWithActionType
+ */
+export interface GraphCalendarEventListWithActionType {
+    /** List of calendar items */
+    value?: Array<GraphCalendarEventClientWithActionType>;
 }
 
 /**
@@ -1267,243 +1653,146 @@ export interface GraphCalendarEventClientWithActionType {
     IsAdded?: boolean;
     /** Flag that indicates whether the event was updated since the last poll of the trigger. */
     IsUpdated?: boolean;
-    /** Body of the message associated with the event */
-    body?: string;
-    /** The categories associated with the event */
-    categories?: Array<string>;
-    /** The date and time that the event was created */
-    createdDateTime?: string;
+    /** Event subject */
+    subject?: string;
+    /** Start time of the event (example: '2017-08-29T04:00:00.0000000') */
+    start?: string;
     /** End time of the event (example: '2017-08-29T05:00:00.0000000') */
     end?: string;
+    /** Start time of the event with time zone (example: '2017-08-29T04:00:00.0000000+00:00') */
+    startWithTimeZone?: string;
     /** End time of the event with time zone (example: '2017-08-29T05:00:00.0000000+00:00') */
     endWithTimeZone?: string;
-    /** A unique identifier for an event across calendars. This ID is different for each occurrence in a recurring series */
-    iCalUId?: string;
+    /** Body of the message associated with the event */
+    body?: string;
+    /** Set to true if the body is Html */
+    isHtml?: boolean;
+    /** The response type of the event (none, organizer, tentativelyAccepted, accepted, declined or notResponded) */
+    responseType?: string;
+    /** The response time of the event */
+    responseTime?: string;
     /** The event's unique identifier */
     id?: string;
+    /** The date and time that the event was created */
+    createdDateTime?: string;
+    /** The date and time that the event was last modified */
+    lastModifiedDateTime?: string;
+    /** The organizer of the event */
+    organizer?: string;
+    /** Time zone of the event */
+    timeZone?: string;
+    /** Unique identifier for Series Master event type */
+    seriesMasterId?: string;
+    /** A unique identifier for an event across calendars. This ID is different for each occurrence in a recurring series */
+    iCalUId?: string;
+    /** The categories associated with the event */
+    categories?: Array<string>;
+    /** The URL to open the event in Outlook Web App */
+    webLink?: string;
+    /** Required attendees for the event separated by semicolons */
+    requiredAttendees?: string;
+    /** Optional attendees for the event separated by semicolons */
+    optionalAttendees?: string;
+    /** Resource attendees for the event separated by semicolons */
+    resourceAttendees?: string;
+    /** Location of the event */
+    location?: string;
     /** The importance of the event: low, normal, or high */
     importance?: string;
     /** Set to true if the event lasts all day */
     isAllDay?: boolean;
-    /** Set to true if the body is Html */
-    isHtml?: boolean;
-    /** Set to true if an alert is set to remind the user of the event. */
-    isReminderOn?: boolean;
-    /** The date and time that the event was last modified */
-    lastModifiedDateTime?: string;
-    /** Location of the event */
-    location?: string;
-    /** How many times to repeat the event */
-    numberOfOccurences?: number;
-    /** Optional attendees for the event separated by semicolons */
-    optionalAttendees?: string;
-    /** The organizer of the event */
-    organizer?: string;
     /** The recurrence pattern for the event: none, daily, weekly, monthly or yearly */
     recurrence?: string;
     /** End Date of the recurrence */
     recurrenceEnd?: string;
+    /** How many times to repeat the event */
+    numberOfOccurences?: number;
     /** Time in minutes before event start to remind */
     reminderMinutesBeforeStart?: number;
-    /** Required attendees for the event separated by semicolons */
-    requiredAttendees?: string;
-    /** Resource attendees for the event separated by semicolons */
-    resourceAttendees?: string;
-    /** Set to true if the sender would like a response when the event is accepted or declined */
-    responseRequested?: boolean;
-    /** The response time of the event */
-    responseTime?: string;
-    /** The response type of the event (none, organizer, tentativelyAccepted, accepted, declined or notResponded) */
-    responseType?: string;
-    /** The possible values are: normal, personal, private, confidential */
-    sensitivity?: string;
-    /** Unique identifier for Series Master event type */
-    seriesMasterId?: string;
+    /** Set to true if an alert is set to remind the user of the event. */
+    isReminderOn?: boolean;
     /** Status to show during the event: free, tentative, busy, oof, workingElsewhere or unknown */
     showAs?: string;
-    /** Start time of the event (example: '2017-08-29T04:00:00.0000000') */
-    start?: string;
-    /** Start time of the event with time zone (example: '2017-08-29T04:00:00.0000000+00:00') */
-    startWithTimeZone?: string;
-    /** Event subject */
-    subject?: string;
-    /** Time zone of the event */
-    timeZone?: string;
-    /** The URL to open the event in Outlook Web App */
-    webLink?: string;
+    /** Set to true if the sender would like a response when the event is accepted or declined */
+    responseRequested?: boolean;
+    /** The possible values are: normal, personal, private, confidential */
+    sensitivity?: string;
 }
 
 /**
- * Definition: GraphCalendarEventListClientReceive
+ * Definition: EntityListResponse[GraphContactFolder]
  */
-export interface GraphCalendarEventListClientReceive {
-    /** List of calendar items */
-    value?: Array<GraphCalendarEventClientReceive>;
-}
-
-/**
- * Definition: GraphCalendarEventListWithActionType
- */
-export interface GraphCalendarEventListWithActionType {
-    /** List of calendar items */
-    value?: Array<GraphCalendarEventClientWithActionType>;
-}
-
-/**
- * Definition: GraphClientReceiveFileAttachment
- */
-export interface GraphClientReceiveFileAttachment {
-    /** Attachment content */
-    contentBytes?: string;
-    /** Content Id */
-    contentId?: string;
-    /** Attachment content type */
-    contentType?: string;
-    /** Attachment Id */
-    id?: string;
-    /** Set to true if this is an inline attachment */
-    isInline?: boolean;
-    /** The date and time when the attachment was last modified */
-    lastModifiedDateTime?: string;
-    /** Attachment name */
-    name?: string;
-    /** The size in bytes of the attachment */
-    size?: number;
-}
-
-/**
- * Definition: GraphClientReceiveMessage
- */
-export interface GraphClientReceiveMessage {
-    /** The file attachments for the message */
-    attachments?: Array<GraphClientReceiveFileAttachment>;
-    /** The Bcc recipients for the message */
-    bccRecipients?: string;
-    /** The body of the message */
-    body?: string;
-    /** The preview of the message */
-    bodyPreview?: string;
-    /** The Cc recipients for the message */
-    ccRecipients?: string;
-    /** The Id of the conversation the email belongs to */
-    conversationId?: string;
-    /** The mailbox owner and sender of the message */
-    from?: string;
-    /** Indicates whether the message has attachments */
-    hasAttachments?: boolean;
-    /** The unique identifier of the message */
-    id?: string;
-    /** The importance of the message (low, normal, high) */
-    importance?: string;
-    /** The message ID in the format specified by RFC2822 */
-    internetMessageId?: string;
-    /** Is Html? */
-    isHtml?: boolean;
-    /** Indicates whether the message has been read */
-    isRead?: boolean;
-    /** The date and time the message was received */
-    receivedDateTime?: string;
-    /** The email addresses to use when replying */
-    replyTo?: string;
-    sensitivityLabelInfo?: Array<SensitivityLabelMetadata>;
-    /** The subject of the message */
-    subject?: string;
-    /** The recipients for the message */
-    toRecipients?: string;
+export interface EntityListResponseGraphContactFolder {
+    /** List of values */
+    value?: Array<GraphContactFolder>;
 }
 
 /**
  * Definition: GraphContactFolder
  */
 export interface GraphContactFolder {
-    /** The name of the contacts folder */
-    displayName?: string;
     /** The ID of the contacts folder */
     id?: string;
+    /** The name of the contacts folder */
+    displayName?: string;
     /** The ID of the parent folder */
     parentFolderId?: string;
 }
 
 /**
- * Definition: GraphOutlookCategory
+ * Definition: DataSetsList
  */
-export interface GraphOutlookCategory {
-    /** The display name of the Outlook Category. */
-    displayName?: string;
-    /** The ID of the Outlook Category. */
-    id?: string;
+export interface DataSetsList {
+    /** List of datasets */
+    value?: Array<DataSet>;
 }
 
 /**
- * Definition: InternetMessageHeader
+ * Definition: DataSet
  */
-export interface InternetMessageHeader {
-    /** Header name */
+export interface DataSet {
+    /** Dataset name */
     Name?: string;
-    /** Header value */
-    Value?: string;
+    /** Dataset display name */
+    DisplayName?: string;
+    /** Pass-through Native Queries */
+    query?: Array<PassThroughNativeQuery>;
 }
 
 /**
- * Definition: ItemBody
+ * Definition: Procedure
  */
-export interface ItemBody {
-    Content?: string;
-    ContentType?: string;
-}
-
-/**
- * Definition: Location
- */
-export interface Location {
-    Address?: PhysicalAddress;
-    Coordinates?: GeoCoordinates;
+export interface Procedure {
+    /** Procedure name */
+    Name?: string;
+    /** Procedure display name */
     DisplayName?: string;
 }
 
 /**
- * Definition: LocationConstraint
+ * Definition: PassThroughNativeQuery
  */
-export interface LocationConstraint {
-    /** Should a meeting location be returned for the meeting? */
-    IsRequired?: boolean;
-    /** Locations */
-    Locations?: Array<Record<string, unknown>>;
-    /** Should the response provide one or more meeting location suggestions? */
-    SuggestLocation?: boolean;
+export interface PassThroughNativeQuery {
+    /** Query language */
+    Language?: string;
 }
 
 /**
- * Definition: MCPQueryRequest
+ * Definition: AutomaticRepliesSettingClient
  */
-export interface MCPQueryRequest {
-    callbackEndpoint?: string;
-    error?: Record<string, unknown>;
-    id?: string;
-    jsonrpc?: string;
-    method?: string;
-    params?: Record<string, unknown>;
-    result?: Record<string, unknown>;
-}
-
-/**
- * Definition: MCPQueryResponse
- */
-export interface MCPQueryResponse {
-    error?: Record<string, unknown>;
-    id?: string;
-    jsonrpc?: string;
-    method?: string;
-    params?: Record<string, unknown>;
-    result?: Record<string, unknown>;
-}
-
-/**
- * Definition: MailTipsAutomaticReplies
- */
-export interface MailTipsAutomaticReplies {
-    /** Automatic replies message */
-    message?: string;
+export interface AutomaticRepliesSettingClient {
+    /** Automatic reply setting status */
+    status: string;
+    /** The audience that will see the external reply message */
+    externalAudience: string;
+    /** Scheduled start time (example: '2017-08-29T04:00:00.0000000') */
+    scheduledStartDateTime?: Record<string, unknown>;
+    /** Scheduled end time (example: '2017-08-29T05:00:00.0000000') */
+    scheduledEndDateTime?: Record<string, unknown>;
+    /** Message for people within your organization */
+    internalReplyMessage?: string;
+    /** Message for people outside your organization */
+    externalReplyMessage?: string;
 }
 
 /**
@@ -1526,297 +1815,19 @@ export interface MailTipsClientReceive {
 }
 
 /**
- * Definition: MeetingTimeSuggestions
+ * Definition: MailTipsAutomaticReplies
  */
-export interface MeetingTimeSuggestions {
-    [key: string]: unknown;
+export interface MailTipsAutomaticReplies {
+    /** Automatic replies message */
+    message?: string;
 }
 
 /**
- * Definition: MessageWithOptions
+ * Definition: UpdateEmailFlag
  */
-export interface MessageWithOptions {
-    /** Attachments */
-    Attachments?: Array<ClientSendAttachment>;
-    /** Body of the email */
-    Body?: string;
-    /** Header text for email body */
-    HeaderText?: string;
-    /** If set to Yes, then the email body is hidden and only message card is displayed. Email clients which do not support actionable messages will display HTML message regardless of the parameter value. */
-    HideHTMLMessage?: boolean;
-    /** If set to Yes, then the Microsoft footer is hidden in the email body. */
-    HideMicrosoftFooter?: boolean;
-    /** Importance */
-    Importance?: string;
-    /** List of comma separated options for the email response */
-    Options?: string;
-    /** Header text for users options selection */
-    SelectionText?: string;
-    /** If set to Yes then a dialog wil be shown to confirm selected option of HTML message */
-    ShowHTMLConfirmationDialog?: boolean;
-    /** Subject of the email */
-    Subject?: string;
-    /** Specify email addresses separated by semicolons like someone@contoso.com */
-    To: string;
-    /** Use only HTML message */
-    UseOnlyHTMLMessage?: boolean;
-}
-
-/**
- * Definition: Object
- */
-export interface ObjectEntity {
-    [key: string]: unknown;
-}
-
-/**
- * Definition: ObjectWithoutType
- */
-export interface ObjectWithoutType {
-    [key: string]: unknown;
-}
-
-/**
- * Definition: OptionsEmailSubscription
- */
-export interface OptionsEmailSubscription {
-    Message: MessageWithOptions;
-    /** Gets or sets callback url to flow engine. It is expected as part of request */
-    NotificationUrl: string;
-}
-
-/**
- * Definition: OutlookReceiveAttachment
- */
-export interface OutlookReceiveAttachment {
-    /** OData type */
-    "@odata.type"?: string;
-    /** Attachment content */
-    ContentBytes?: string;
-    /** Content Id */
-    ContentId?: string;
-    /** Attachment content type */
-    ContentType?: string;
-    /** Attachment Id */
-    Id?: string;
-    /** Set to true if this is an inline attachment */
-    IsInline?: boolean;
-    /** The date and time when the attachment was last modified */
-    LastModifiedDateTime?: string;
-    /** Attachment name */
-    Name?: string;
-    /** Permission associated with a reference attachment */
-    Permission?: string;
-    /** Provider for the reference attachment */
-    ProviderType?: string;
-    /** Attachment size in bytes */
-    Size?: number;
-    /** Reference attachment source url */
-    SourceUrl?: string;
-}
-
-/**
- * Definition: OutlookReceiveMessage
- */
-export interface OutlookReceiveMessage {
-    /** Attachments */
-    Attachments?: Array<OutlookReceiveAttachment>;
-    /** Bcc Recipients */
-    BccRecipients?: Array<Recipient>;
-    Body?: ItemBody;
-    /** Body preview */
-    BodyPreview?: string;
-    /** Cc Recipients */
-    CcRecipients?: Array<Recipient>;
-    /** Conversation Id */
-    ConversationId?: string;
-    /** Created date and time */
-    CreatedDateTime?: string;
-    From?: Recipient;
-    /** Has attachments */
-    HasAttachments?: boolean;
-    /** Id */
-    Id?: string;
-    /** Importance */
-    Importance?: string;
-    /** Internet message headers */
-    InternetMessageHeaders?: Array<InternetMessageHeader>;
-    /** Internet Message Id */
-    InternetMessageId?: string;
-    /** Is read */
-    IsRead?: boolean;
-    /** Last modified date and time */
-    LastModifiedDateTime?: string;
-    /** Received date and time */
-    ReceivedDateTime?: string;
-    /** The email addresses to use when replying */
-    ReplyTo?: Array<Recipient>;
-    /** Subject */
-    Subject?: string;
-    /** To Recipient */
-    ToRecipients?: Array<Recipient>;
-}
-
-/**
- * Definition: PaginatedListResponse[CalendarEventClientReceiveStringEnums]
- */
-export interface PaginatedListResponseCalendarEventClientReceiveStringEnums {
-    /** Values */
-    Values?: Array<CalendarEventClientReceiveStringEnums>;
-}
-
-/**
- * Definition: PassThroughNativeQuery
- */
-export interface PassThroughNativeQuery {
-    /** Query language */
-    Language?: string;
-}
-
-/**
- * Definition: PatternedRecurrence
- */
-export interface PatternedRecurrence {
-    Pattern?: RecurrencePattern;
-    Range?: RecurrenceRange;
-}
-
-/**
- * Definition: PhysicalAddress
- */
-export interface PhysicalAddress {
-    /** The contact's city. */
-    city?: string;
-    /** The contact's country of region. */
-    countryOrRegion?: string;
-    /** The contact's postal code. */
-    postalCode?: string;
-    /** The contact's state. */
-    state?: string;
-    /** The contact's street address. */
-    street?: string;
-}
-
-/**
- * Definition: Procedure
- */
-export interface Procedure {
-    /** Procedure display name */
-    DisplayName?: string;
-    /** Procedure name */
-    Name?: string;
-}
-
-/**
- * Definition: ReceiveMessageMetadata
- */
-export interface ReceiveMessageMetadata {
-    /** The Bcc recipients for the message */
-    Bcc?: string;
-    /** The Cc recipients for the message */
-    Cc?: string;
-    /** The date and time the message was received */
-    DateTimeReceived?: string;
-    /** The mailbox owner and sender of the message */
-    From?: string;
-    /** Indicates whether the message has attachments */
-    HasAttachment?: boolean;
-    /** The unique identifier of the message */
-    Id?: string;
-    /** The importance of the message  (0 - Low, 1 - Normal, 2 - High) */
-    Importance?: number;
-    /** Indicates whether the message has been read */
-    IsRead?: boolean;
-    /** The email addresses to use when replying */
-    ReplyTo?: string;
-    /** The subject of the message */
-    Subject?: string;
-    /** The recipients for the message */
-    To?: string;
-}
-
-/**
- * Definition: Recipient
- */
-export interface Recipient {
-    EmailAddress?: EmailAddress;
-}
-
-/**
- * Definition: RecurrencePattern
- */
-export interface RecurrencePattern {
-    DayOfMonth?: number;
-    DaysOfWeek?: Array<string>;
-    FirstDayOfWeek?: string;
-    Index?: string;
-    Interval?: number;
-    Month?: number;
-    Type?: string;
-}
-
-/**
- * Definition: RecurrenceRange
- */
-export interface RecurrenceRange {
-    EndDate?: string;
-    NumberOfOccurrences?: number;
-    StartDate?: string;
-    Type?: string;
-}
-
-/**
- * Definition: ReplyHtmlMessage
- */
-export interface ReplyEmailInput {
-    /** Details of attachments to be sent along with the reply. */
-    Attachments?: Array<ClientSendAttachment>;
-    /** Example: recipient1@domain.com; recipient2@domain.com */
-    Bcc?: string;
-    /** Content of the email. */
-    Body?: string;
-    /** Example: recipient1@domain.com; recipient2@domain.com */
-    Cc?: string;
-    /** Pick an importance. (default: Low) */
-    Importance?: string;
-    /** True to reply to all recipients. (default: False) */
-    ReplyAll?: boolean;
-    /** Email subject (if empty, the original subject used). */
-    Subject?: string;
-    /** Example: recipient1@domain.com; recipient2@domain.com */
-    To?: string;
-}
-
-/**
- * Definition: ReplyMessage
- */
-export interface ReplyMessage {
-    /** Details of attachments to be sent along with the reply. */
-    Attachments?: Array<ClientSendAttachment>;
-    /** Example: recipient1@domain.com; recipient2@domain.com */
-    Bcc?: string;
-    /** Content of the email. */
-    Body?: string;
-    /** Example: recipient1@domain.com; recipient2@domain.com */
-    Cc?: string;
-    /** Pick an importance. (default: Low) */
-    Importance?: string;
-    /** True to send the reply as HTML. (default: True) */
-    IsHtml?: boolean;
-    /** True to reply to all recipients. (default: False) */
-    ReplyAll?: boolean;
-    /** Email subject (if empty, the original subject used). */
-    Subject?: string;
-    /** Example: recipient1@domain.com; recipient2@domain.com */
-    To?: string;
-}
-
-/**
- * Definition: ResponseStatus
- */
-export interface ResponseStatus {
-    Response?: string;
-    Time?: string;
+export interface UpdateEmailFlag {
+    /** Flag status */
+    flag?: Record<string, unknown>;
 }
 
 /**
@@ -1830,289 +1841,278 @@ export interface ResponseToEventInvite {
 }
 
 /**
- * Definition: SensitivityLabel
+ * Definition: DirectForwardMessage
  */
-export interface SensitivityLabel {
-    /** Gets or sets the applicable to. */
-    ApplicableTo?: string;
-    /** Gets or sets the display name. */
-    DisplayName?: string;
-    /** Gets or sets the identifier. */
-    Id?: string;
-    /** Gets or sets sub labels. */
-    SubLabels?: Array<SensitivityLabel>;
+export interface DirectForwardMessage {
+    /** Comment */
+    Comment?: string;
+    /** Semicolon separated list of recipients to forward the message to */
+    ToRecipients: string;
 }
 
 /**
- * Definition: SharedMailboxClientSendHtmlMessage
+ * Definition: MeetingTimeSuggestions
  */
-export interface SharedMailboxSendEmailInput {
-    /** Attachments */
-    Attachments?: Array<ClientSendAttachment>;
-    /** Specify email addresses separated by semicolons like someone@contoso.com */
-    Bcc?: string;
-    /** Specify the body of the mail */
-    Body: string;
-    /** Specify email addresses separated by semicolons like someone@contoso.com */
-    Cc?: string;
-    /** Importance */
-    Importance?: string;
-    /** Specify email address of a shared mailbox like someone@contoso.com */
-    MailboxAddress: string;
-    /** The email addresses to use when replying */
-    ReplyTo?: string;
-    /** Sensitivity */
-    Sensitivity?: string;
-    /** Specify the subject of the mail */
-    Subject: string;
-    /** Specify email addresses separated by semicolons like someone@contoso.com */
-    To: string;
+export interface MeetingTimeSuggestions {
+    [key: string]: unknown;
 }
 
 /**
- * Definition: SharedMailboxClientSendMessage
+ * Definition: LocationConstraint
  */
-export interface SharedMailboxClientSendMessage {
-    /** Attachments */
-    Attachments?: Array<ClientSendAttachment>;
-    /** Specify email addresses separated by semicolons like someone@contoso.com */
-    Bcc?: string;
-    /** Specify the body of the mail */
-    Body: string;
-    /** Specify email addresses separated by semicolons like someone@contoso.com */
-    Cc?: string;
-    /** Importance */
-    Importance?: string;
-    /** Is Html? */
-    IsHtml?: boolean;
-    /** Specify email address of a shared mailbox like someone@contoso.com */
-    MailboxAddress: string;
-    /** The email addresses to use when replying */
-    ReplyTo?: string;
-    /** Sensitivity */
-    Sensitivity?: string;
-    /** Specify the subject of the mail */
-    Subject: string;
-    /** Specify email addresses separated by semicolons like someone@contoso.com */
-    To: string;
+export interface LocationConstraint {
+    /** Should a meeting location be returned for the meeting? */
+    IsRequired?: boolean;
+    /** Should the response provide one or more meeting location suggestions? */
+    SuggestLocation?: boolean;
+    /** Locations */
+    Locations?: Array<Record<string, unknown>>;
 }
 
 /**
- * Definition: SubscriptionEvent
+ * Definition: DateTimeTimeZone
  */
-export interface SubscriptionEvent {
-    /** The Event's unique identifier */
-    Id?: string;
+export interface DateTimeTimeZone {
+    /** DateTime (example: '2017-08-29T04:00:00.0000000') */
+    dateTime?: string;
+    /** TimeZone (example: 'Pacific Standard Time') */
+    timeZone?: string;
 }
 
 /**
- * Definition: SubscriptionPayloadEntity[OutlookReceiveMessage]
+ * Definition: EntityListResponse[ContactResponse]
  */
-export interface SubscriptionPayloadEntityOutlookReceiveMessage {
-    /** Change type */
-    ChangeType?: string;
-    /** Client state */
-    ClientState?: string;
-    /** Resource */
-    Resource?: string;
-    ResourceData?: OutlookReceiveMessage;
-    /** Sequence number */
-    SequenceNumber?: number;
-}
-
-/**
- * Definition: SubscriptionPayloadEntity[SubscriptionEvent]
- */
-export interface SubscriptionPayloadEntitySubscriptionEvent {
-    /** Change type */
-    ChangeType?: string;
-    /** Client state */
-    ClientState?: string;
-    /** Resource */
-    Resource?: string;
-    ResourceData?: SubscriptionEvent;
-    /** Sequence number */
-    SequenceNumber?: number;
-}
-
-/**
- * Definition: SubscriptionPayload[OutlookReceiveMessage]
- */
-export interface SubscriptionPayloadOutlookReceiveMessage {
+export interface EntityListResponseContactResponse {
     /** List of values */
-    value?: Array<SubscriptionPayloadEntityOutlookReceiveMessage>;
+    value?: Array<ContactResponse>;
 }
 
 /**
- * Definition: SubscriptionPayload[SubscriptionEvent]
+ * Definition: EmailAddress_V2
  */
-export interface SubscriptionPayloadSubscriptionEvent {
-    /** List of values */
-    value?: Array<SubscriptionPayloadEntitySubscriptionEvent>;
-}
-
-/**
- * Definition: SubscriptionResponse
- */
-export interface SubscriptionResponse {
-    /** Id of the subscription */
-    id?: string;
-    /** Notification Type */
-    notificationType?: string;
-    /** Notification Url */
-    notificationUrl?: string;
-    /** Resource of the subscription request */
-    resource?: string;
-}
-
-/**
- * Definition: Table
- */
-export interface Table {
-    /** The display name of the table. */
-    DisplayName?: string;
-    /** Additional table properties provided by the connector to the clients. */
-    DynamicProperties?: Record<string, unknown>;
-    /** The name of the table. The name is used at runtime. */
-    Name?: string;
-}
-
-/**
- * Definition: TableCapabilitiesMetadata
- */
-export interface TableCapabilitiesMetadata {
-    /** List of supported filter capabilities */
-    filterFunctionSupport?: Array<string>;
-    filterRestrictions?: TableFilterRestrictionsMetadata;
-    /** Server paging restrictions */
-    isOnlyServerPagable?: boolean;
-    selectRestrictions?: TableSelectRestrictionsMetadata;
-    /** List of supported server-driven paging capabilities */
-    serverPagingOptions?: Array<string>;
-    sortRestrictions?: TableSortRestrictionsMetadata;
-}
-
-/**
- * Definition: TableFilterRestrictionsMetadata
- */
-export interface TableFilterRestrictionsMetadata {
-    /** Indicates whether this table has filterable columns */
-    filterable?: boolean;
-    /** List of non filterable properties */
-    nonFilterableProperties?: Array<string>;
-    /** List of required properties */
-    requiredProperties?: Array<string>;
-}
-
-/**
- * Definition: TableMetadata
- */
-export interface TableMetadata {
-    /** Table name */
+export interface EmailAddressV2 {
     name?: string;
-    referencedEntities?: ObjectEntity;
-    schema?: ObjectEntity;
-    /** Table title */
-    title?: string;
-    /** Url link */
-    webUrl?: string;
-    "x-ms-capabilities"?: TableCapabilitiesMetadata;
-    /** Table permission */
-    "x-ms-permission"?: string;
+    address?: string;
 }
 
 /**
- * Definition: TableSelectRestrictionsMetadata
+ * Definition: PhysicalAddress
  */
-export interface TableSelectRestrictionsMetadata {
-    /** Indicates whether this table has selectable columns */
-    selectable?: boolean;
+export interface PhysicalAddress {
+    /** The contact's street address. */
+    street?: string;
+    /** The contact's city. */
+    city?: string;
+    /** The contact's state. */
+    state?: string;
+    /** The contact's country of region. */
+    countryOrRegion?: string;
+    /** The contact's postal code. */
+    postalCode?: string;
 }
 
 /**
- * Definition: TableSortRestrictionsMetadata
+ * Definition: Contact
  */
-export interface TableSortRestrictionsMetadata {
-    /** List of properties which support ascending order only */
-    ascendingOnlyProperties?: Array<string>;
-    /** Indicates whether this table has sortable columns */
-    sortable?: boolean;
-    /** List of unsortable properties */
-    unsortableProperties?: Array<string>;
-}
-
-/**
- * Definition: TabularDataSetsMetadata
- */
-export interface TabularDataSetsMetadata {
-    /** Dataset display name */
+export interface Contact {
+    /** The contact's unique identifier. */
+    id?: string;
+    /** The ID of the contact's parent folder */
+    parentFolderId?: string;
+    /** The contact's birthday */
+    birthday?: string;
+    /** The name the contact is filed under */
+    fileAs?: string;
+    /** The contact's display name */
     displayName?: string;
-    /** Dataset source */
-    source?: string;
-    /** Table display name */
-    tableDisplayName?: string;
-    /** Table plural display name */
-    tablePluralName?: string;
-    /** Dataset url encoding */
-    urlEncoding?: string;
+    /** The contact's given name */
+    givenName: string;
+    /** The contact's initials */
+    initials?: string;
+    /** The contact's middle name */
+    middleName?: string;
+    /** The contact's nickname */
+    nickName?: string;
+    /** The contact's surname */
+    surname?: string;
+    /** The contact's title */
+    title?: string;
+    /** The contact's generation */
+    generation?: string;
+    /** The contact's email addresses */
+    emailAddresses?: Array<EmailAddressV2>;
+    /** The contact's instant messaging (IM) addresses */
+    imAddresses?: Array<string>;
+    /** The contact's job title */
+    jobTitle?: string;
+    /** The name of the contact's company */
+    companyName?: string;
+    /** The contact's department */
+    department?: string;
+    /** The location of the contact's office */
+    officeLocation?: string;
+    /** The contact's profession */
+    profession?: string;
+    /** The business home page of the contact */
+    businessHomePage?: string;
+    /** The name of the contact's assistant */
+    assistantName?: string;
+    /** The name of the contact's manager */
+    manager?: string;
+    /** The contact's home phone numbers */
+    homePhones: Array<string>;
+    /** The contact's business phone numbers */
+    businessPhones?: Array<string>;
+    /** The contact's mobile phone number */
+    mobilePhone?: string;
+    homeAddress?: PhysicalAddress;
+    businessAddress?: PhysicalAddress;
+    otherAddress?: PhysicalAddress;
+    /** The phonetic Japanese company name of the contact */
+    yomiCompanyName?: string;
+    /** The phonetic Japanese given name (first name) of the contact */
+    yomiGivenName?: string;
+    /** The phonetic Japanese surname (last name) of the contact */
+    yomiSurname?: string;
+    /** The categories associated with the contact */
+    categories?: Array<string>;
+    /** Identifies the version of the event object */
+    changeKey?: string;
+    /** The time the contact was created */
+    createdDateTime?: string;
+    /** The time the contact was modified */
+    lastModifiedDateTime?: string;
 }
 
 /**
- * Definition: TriggerBatchResponse[ClientReceiveMessage]
+ * Definition: ContactResponse
  */
-export interface TriggerBatchResponseClientReceiveMessage {
-    /** A list of the response objects */
-    value?: Array<ClientReceiveMessage>;
+export interface ContactResponse {
+    /** The contact's unique identifier. */
+    id?: string;
+    /** The ID of the contact's parent folder */
+    parentFolderId?: string;
+    /** The contact's birthday */
+    birthday?: string;
+    /** The name the contact is filed under */
+    fileAs?: string;
+    /** The contact's display name */
+    displayName?: string;
+    /** The contact's given name */
+    givenName?: string;
+    /** The contact's initials */
+    initials?: string;
+    /** The contact's middle name */
+    middleName?: string;
+    /** The contact's nickname */
+    nickName?: string;
+    /** The contact's surname */
+    surname?: string;
+    /** The contact's title */
+    title?: string;
+    /** The contact's generation */
+    generation?: string;
+    /** The contact's email addresses */
+    emailAddresses?: Array<EmailAddressV2>;
+    /** The contact's instant messaging (IM) addresses */
+    imAddresses?: Array<string>;
+    /** The contact's job title */
+    jobTitle?: string;
+    /** The name of the contact's company */
+    companyName?: string;
+    /** The contact's department */
+    department?: string;
+    /** The location of the contact's office */
+    officeLocation?: string;
+    /** The contact's profession */
+    profession?: string;
+    /** The business home page of the contact */
+    businessHomePage?: string;
+    /** The name of the contact's assistant */
+    assistantName?: string;
+    /** The name of the contact's manager */
+    manager?: string;
+    /** The contact's home phone numbers */
+    homePhones?: Array<string>;
+    /** The contact's business phone numbers */
+    businessPhones?: Array<string>;
+    /** The contact's mobile phone number */
+    mobilePhone?: string;
+    homeAddress?: PhysicalAddress;
+    businessAddress?: PhysicalAddress;
+    otherAddress?: PhysicalAddress;
+    /** The phonetic Japanese company name of the contact */
+    yomiCompanyName?: string;
+    /** The phonetic Japanese given name (first name) of the contact */
+    yomiGivenName?: string;
+    /** The phonetic Japanese surname (last name) of the contact */
+    yomiSurname?: string;
+    /** The categories associated with the contact */
+    categories?: Array<string>;
+    /** Identifies the version of the event object */
+    changeKey?: string;
+    /** The time the contact was created */
+    createdDateTime?: string;
+    /** The time the contact was modified */
+    lastModifiedDateTime?: string;
 }
 
 /**
- * Definition: TriggerBatchResponse[GraphClientReceiveMessage]
+ * Definition: ObjectWithoutType
  */
-export interface TriggerBatchResponseGraphClientReceiveMessage {
-    /** A list of the response objects */
-    value?: Array<GraphClientReceiveMessage>;
-}
-
-/**
- * Definition: TriggerBatchResponse[ReceiveMessageMetadata]
- */
-export interface TriggerBatchResponseReceiveMessageMetadata {
-    /** A list of the response objects */
-    value?: Array<ReceiveMessageMetadata>;
-}
-
-/**
- * Definition: UpdateEmailFlag
- */
-export interface UpdateEmailFlag {
-    /** Flag status */
-    flag?: Record<string, unknown>;
+export interface ObjectWithoutType {
+    [key: string]: unknown;
 }
 
 /**
  * Definition: sensitivityLabelMetadata
  */
 export interface SensitivityLabelMetadata {
-    /** SensitivityLabel color. */
-    color?: string;
-    /** SensitivityLabel displayName info */
-    displayName?: string;
-    /** Whether SensitivityLabel is Enabled. */
-    isEnabled?: boolean;
-    /**  is SensitivityLabel Encrypted. */
-    isEncrypted?: boolean;
-    /** Whether SensitivityLabel is Parent. */
-    isParent?: boolean;
-    /** SensitivityLabel name. */
-    name?: string;
-    /** Parent SensitivityLabel Id. */
-    parentSensitivityLabelId?: string;
-    /** SensitivityLabel priority. */
-    priority?: number;
     /** SensitivityLabel Id. */
     sensitivityLabelId?: string;
+    /** SensitivityLabel name. */
+    name?: string;
+    /** SensitivityLabel displayName info */
+    displayName?: string;
     /** SensitivityLabel details on tooltip. */
     tooltip?: string;
+    /** SensitivityLabel priority. */
+    priority?: number;
+    /** SensitivityLabel color. */
+    color?: string;
+    /**  is SensitivityLabel Encrypted. */
+    isEncrypted?: boolean;
+    /** Whether SensitivityLabel is Enabled. */
+    isEnabled?: boolean;
+    /** Whether SensitivityLabel is Parent. */
+    isParent?: boolean;
+    /** Parent SensitivityLabel Id. */
+    parentSensitivityLabelId?: string;
+}
+
+/**
+ * Definition: MCPQueryRequest
+ */
+export interface MCPQueryRequest {
+    jsonrpc?: string;
+    id?: string;
+    method?: string;
+    params?: Record<string, unknown>;
+    result?: Record<string, unknown>;
+    error?: Record<string, unknown>;
+    callbackEndpoint?: string;
+}
+
+/**
+ * Definition: MCPQueryResponse
+ */
+export interface MCPQueryResponse {
+    jsonrpc?: string;
+    id?: string;
+    method?: string;
+    params?: Record<string, unknown>;
+    result?: Record<string, unknown>;
+    error?: Record<string, unknown>;
 }
 
 /**
@@ -2645,24 +2645,6 @@ export class Office365Client extends ConnectorClientBase {
     }
 
     /**
-     * Updates an email Draft message
-     * @remarks This operation updates an an email Draft message.
-     */
-    public async updateDraftEmailAsync(input: DraftEmailInput, messageId?: string, abortSignal?: AbortSignal): Promise<void> {
-        const queryParams: string[] = [];
-        if (messageId !== undefined) {
-            queryParams.push(`messageId=${encodeURIComponent(String(messageId))}`);
-        }
-        const requestPath = `/Draft` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<void>("PATCH", url, undefined, input, abortSignal);
-
-        if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `PATCH ${requestPath}`, httpResponse.statusCode, httpResponse.text);
-        }
-    }
-
-    /**
      * Draft an email message
      * @remarks This operation drafts an email message.
      */
@@ -2686,6 +2668,24 @@ export class Office365Client extends ConnectorClientBase {
         }
 
         return httpResponse.value as OutlookReceiveMessage;
+    }
+
+    /**
+     * Updates an email Draft message
+     * @remarks This operation updates an an email Draft message.
+     */
+    public async updateDraftEmailAsync(input: DraftEmailInput, messageId?: string, abortSignal?: AbortSignal): Promise<void> {
+        const queryParams: string[] = [];
+        if (messageId !== undefined) {
+            queryParams.push(`messageId=${encodeURIComponent(String(messageId))}`);
+        }
+        const requestPath = `/Draft` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
+        const url = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<void>("PATCH", url, undefined, input, abortSignal);
+
+        if (!httpResponse.isSuccessStatusCode) {
+            throw new ConnectorException(this.connectorName, `PATCH ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+        }
     }
 
     /**
@@ -2740,6 +2740,22 @@ export class Office365Client extends ConnectorClientBase {
     }
 
     /**
+     * Send email with options
+     * @remarks This operation sends an email with multiple options and waits for the recipient to respond back with one of the options. Please refer to the following link regarding the support of actionable messages in different mail clients: https://docs.microsoft.com/outlook/actionable-messages/#outlook-version-requirements-for-actionable-messages.
+     */
+    public async sendMailWithOptionsAsync(input: OptionsEmailSubscription, abortSignal?: AbortSignal): Promise<SubscriptionResponse> {
+        const requestPath = `/mailwithoptions/$subscriptions`;
+        const url = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<SubscriptionResponse>("POST", url, undefined, input, abortSignal);
+
+        if (!httpResponse.isSuccessStatusCode) {
+            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+        }
+
+        return httpResponse.value as SubscriptionResponse;
+    }
+
+    /**
      * Send approval email
      * @remarks This operation sends an approval email and waits for a response from the recipient. Please refer to the following link regarding the support of actionable messages in different mail clients: https://docs.microsoft.com/outlook/actionable-messages/#outlook-version-requirements-for-actionable-messages.
      */
@@ -2753,22 +2769,6 @@ export class Office365Client extends ConnectorClientBase {
         }
 
         return httpResponse.value as SubscriptionResponse;
-    }
-
-    /**
-     * Send an HTTP request
-     * @remarks Construct a Microsoft Graph REST API request to invoke. These segments are supported: 1st segement: /me, /users/<userId> 2nd segment: messages, mailFolders, events, calendar, calendars, outlook, inferenceClassification. Learn more: https://docs.microsoft.com/en-us/graph/use-the-api.
-     */
-    public async httpRequestAsync(input: HttpRequestInput, abortSignal?: AbortSignal): Promise<ObjectWithoutType> {
-        const requestPath = `/codeless/httprequest`;
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<ObjectWithoutType>("POST", url, undefined, input, abortSignal);
-
-        if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
-        }
-
-        return httpResponse.value as ObjectWithoutType;
     }
 
     /**
@@ -2786,39 +2786,19 @@ export class Office365Client extends ConnectorClientBase {
     }
 
     /**
-     * Send email with options
-     * @remarks This operation sends an email with multiple options and waits for the recipient to respond back with one of the options. Please refer to the following link regarding the support of actionable messages in different mail clients: https://docs.microsoft.com/outlook/actionable-messages/#outlook-version-requirements-for-actionable-messages.
+     * Send an HTTP request
+     * @remarks Construct a Microsoft Graph REST API request to invoke. These segments are supported: 1st segement: /me, /users/<userId> 2nd segment: messages, mailFolders, events, calendar, calendars, outlook, inferenceClassification. Learn more: https://docs.microsoft.com/en-us/graph/use-the-api.
      */
-    public async sendMailWithOptionsAsync(input: OptionsEmailSubscription, abortSignal?: AbortSignal): Promise<SubscriptionResponse> {
-        const requestPath = `/mailwithoptions/$subscriptions`;
+    public async httpRequestAsync(input: HttpRequestInput, abortSignal?: AbortSignal): Promise<ObjectWithoutType> {
+        const requestPath = `/codeless/httprequest`;
         const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<SubscriptionResponse>("POST", url, undefined, input, abortSignal);
+        const httpResponse = await this.httpClient.sendAsync<ObjectWithoutType>("POST", url, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
             throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
-        return httpResponse.value as SubscriptionResponse;
-    }
-
-    /**
-     * Contact Management MCP Server
-     * @remarks This MCP server manages contacts
-     */
-    public async mcpContactsManagementAsync(input: MCPQueryRequest, sessionId?: string, abortSignal?: AbortSignal): Promise<MCPQueryResponse> {
-        const queryParams: string[] = [];
-        if (sessionId !== undefined) {
-            queryParams.push(`sessionId=${encodeURIComponent(String(sessionId))}`);
-        }
-        const requestPath = `/mcp/ContactsManagement` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<MCPQueryResponse>("POST", url, undefined, input, abortSignal);
-
-        if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
-        }
-
-        return httpResponse.value as MCPQueryResponse;
+        return httpResponse.value as ObjectWithoutType;
     }
 
     /**
@@ -2851,6 +2831,26 @@ export class Office365Client extends ConnectorClientBase {
             queryParams.push(`sessionId=${encodeURIComponent(String(sessionId))}`);
         }
         const requestPath = `/mcp/MeetingManagement` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
+        const url = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<MCPQueryResponse>("POST", url, undefined, input, abortSignal);
+
+        if (!httpResponse.isSuccessStatusCode) {
+            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+        }
+
+        return httpResponse.value as MCPQueryResponse;
+    }
+
+    /**
+     * Contact Management MCP Server
+     * @remarks This MCP server manages contacts
+     */
+    public async mcpContactsManagementAsync(input: MCPQueryRequest, sessionId?: string, abortSignal?: AbortSignal): Promise<MCPQueryResponse> {
+        const queryParams: string[] = [];
+        if (sessionId !== undefined) {
+            queryParams.push(`sessionId=${encodeURIComponent(String(sessionId))}`);
+        }
+        const requestPath = `/mcp/ContactsManagement` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const url = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<MCPQueryResponse>("POST", url, undefined, input, abortSignal);
 
@@ -3161,10 +3161,16 @@ export class Office365Client extends ConnectorClientBase {
      * Forward an email
      * @remarks Forward an email.
      */
-    public async forwardEmailAsync(input: DirectForwardMessage, messageId: string, mailboxAddress?: string, abortSignal?: AbortSignal): Promise<void> {
+    public async forwardEmailAsync(input: DirectForwardMessage, messageId: string, mailboxAddress?: string, extractSensitivityLabel?: string, fetchSensitivityLabelMetadata?: string, abortSignal?: AbortSignal): Promise<void> {
         const queryParams: string[] = [];
         if (mailboxAddress !== undefined) {
             queryParams.push(`mailboxAddress=${encodeURIComponent(String(mailboxAddress))}`);
+        }
+        if (extractSensitivityLabel !== undefined) {
+            queryParams.push(`extractSensitivityLabel=${encodeURIComponent(String(extractSensitivityLabel))}`);
+        }
+        if (fetchSensitivityLabelMetadata !== undefined) {
+            queryParams.push(`fetchSensitivityLabelMetadata=${encodeURIComponent(String(fetchSensitivityLabelMetadata))}`);
         }
         const requestPath = `/codeless/v1.0/me/messages/${messageId}/forward` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const url = this.resolveUrl(requestPath);

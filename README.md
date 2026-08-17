@@ -250,8 +250,17 @@ The following connectors have been generated and validated with comprehensive te
 | **Shifts for Microsoft Teams** | `@azure/connectors/generated/ShiftsExtensions` | ✅ Complete | 6 tests |
 | **Slack** | `@azure/connectors/generated/SlackExtensions` | ✅ Complete | 6 tests |
 | **Microsoft To Do Business** | `@azure/connectors/generated/TodoExtensions` | ✅ Complete | 6 tests |
+| **Box** | `@azure/connectors/generated/BoxExtensions` | ✅ Complete | 8 tests |
+| **Dropbox** | `@azure/connectors/generated/DropboxExtensions` | ✅ Complete | 8 tests |
+| **Excel Online** | `@azure/connectors/generated/ExcelonlineExtensions` | ✅ Complete | 9 tests |
+| **FTP** | `@azure/connectors/generated/FtpExtensions` | ✅ Complete | 8 tests |
+| **Google Calendar** | `@azure/connectors/generated/GooglecalendarExtensions` | ✅ Complete | 8 tests |
+| **Google Drive** | `@azure/connectors/generated/GoogledriveExtensions` | ✅ Complete | 8 tests |
+| **Google Tasks** | `@azure/connectors/generated/GoogletasksExtensions` | ✅ Complete | 8 tests |
+| **Office 365 Groups Mail** | `@azure/connectors/generated/Office365groupsmailExtensions` | ✅ Complete | 8 tests |
+| **RSS** | `@azure/connectors/generated/RssExtensions` | ✅ Complete | 8 tests |
 
-**Total:** 318 tests (all passing) across 29 test suites and 21 generated connectors
+**Total:** 523 tests across 41 test suites and 30 generated connectors.
 
 ## Authentication
 
@@ -360,7 +369,7 @@ try {
 
 ## Project Structure
 
-```
+```text
 @azure/connectors/
 ├── src/azureConnectors/            # Core SDK infrastructure
 │   ├── authentication.ts           # Token providers
@@ -373,17 +382,26 @@ try {
 │   ├── ArmExtensions.ts           # Azure Resource Manager client
 │   ├── AzureblobExtensions.ts     # Azure Blob Storage client
 │   ├── AzuremonitorlogsExtensions.ts # Azure Monitor Logs client
+│   ├── BoxExtensions.ts           # Box client
 │   ├── DocusignExtensions.ts      # DocuSign client
+│   ├── DropboxExtensions.ts       # Dropbox client
+│   ├── ExcelonlineExtensions.ts   # Excel Online client
+│   ├── FtpExtensions.ts           # FTP client
 │   ├── GithubExtensions.ts        # GitHub client
+│   ├── GooglecalendarExtensions.ts # Google Calendar client
+│   ├── GoogledriveExtensions.ts   # Google Drive client
+│   ├── GoogletasksExtensions.ts   # Google Tasks client
 │   ├── JiraExtensions.ts          # Jira client
 │   ├── KustoExtensions.ts         # Azure Data Explorer client
 │   ├── MicrosoftformsExtensions.ts # Microsoft Forms client
 │   ├── MqExtensions.ts            # IBM MQ client
 │   ├── MsgraphgroupsanduserExtensions.ts # MS Graph Groups & Users client
 │   ├── Office365Extensions.ts     # Office 365 Outlook client
+│   ├── Office365groupsmailExtensions.ts # Office 365 Groups Mail client
 │   ├── Office365usersExtensions.ts # Office 365 Users client
 │   ├── OnedriveforbusinessExtensions.ts # OneDrive for Business client
 │   ├── PowerbiExtensions.ts       # Power BI client
+│   ├── RssExtensions.ts           # RSS client
 │   ├── SalesforceExtensions.ts    # Salesforce client
 │   ├── SharepointonlineExtensions.ts # SharePoint Online client
 │   ├── ShiftsExtensions.ts        # Shifts for Microsoft Teams client
@@ -403,7 +421,7 @@ try {
 
 Complete working samples are included for both TypeScript and JavaScript in ESM and CommonJS formats:
 
-```
+```text
 samples/
 ├── esm/
 │   ├── typescript/         # TypeScript ESM samples
@@ -430,7 +448,7 @@ See [docs/connection-setup.md](docs/connection-setup.md) for instructions on cre
 
 ## Contributing
 
-This project welcomes contributions and suggestions. Most contributions require you to agree to a Contributor License Agreement (CLA) declaring that you have the right to, and actually do, grant us the rights to use your contribution. For details, visit https://cla.opensource.microsoft.com.
+This project welcomes contributions and suggestions. Most contributions require you to agree to a Contributor License Agreement (CLA) declaring that you have the right to, and actually do, grant us the rights to use your contribution. For details, visit the [Microsoft CLA website](https://cla.opensource.microsoft.com).
 
 When you submit a pull request, a CLA bot will automatically determine whether you need to provide a CLA and decorate the PR appropriately (e.g., status check, comment). Simply follow the instructions provided by the bot.
 

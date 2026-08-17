@@ -41,6 +41,13 @@ export interface CreateNewFolderResponse {
 }
 
 /**
+ * Generate a document from a form (preview)
+ */
+export interface SubmitDocGenFormInput {
+    [key: string]: unknown;
+}
+
+/**
  * Create item
  */
 export interface PostItemInput {
@@ -143,10 +150,10 @@ export interface ApproveHubSiteJoinResponse {
  * Definition: BlobDataSetsMetadata
  */
 export interface BlobDataSetsMetadata {
-    /** Blob dataset display name */
-    displayName?: string;
     /** Blob dataset source */
     source?: string;
+    /** Blob dataset display name */
+    displayName?: string;
     /** Blob dataset url encoding */
     urlEncoding?: string;
 }
@@ -155,26 +162,26 @@ export interface BlobDataSetsMetadata {
  * Definition: BlobMetadata
  */
 export interface BlobMetadata {
+    /** The unique id of the file or folder. */
+    Id?: string;
+    /** The name of the file or folder. */
+    Name?: string;
     /** The display name of the file or folder. */
     DisplayName?: string;
+    /** The path of the file or folder. */
+    Path?: string;
+    /** The date and time the file or folder was last modified. */
+    LastModified?: string;
+    /** The size of the file or folder. */
+    Size?: number;
+    /** The media type of the file or folder. */
+    MediaType?: string;
+    /** A boolean value (true, false) to indicate whether or not the blob is a folder. */
+    IsFolder?: boolean;
     /** The etag of the file or folder. */
     ETag?: string;
     /** The filelocator of the file or folder. */
     FileLocator?: string;
-    /** The unique id of the file or folder. */
-    Id?: string;
-    /** A boolean value (true, false) to indicate whether or not the blob is a folder. */
-    IsFolder?: boolean;
-    /** The date and time the file or folder was last modified. */
-    LastModified?: string;
-    /** The media type of the file or folder. */
-    MediaType?: string;
-    /** The name of the file or folder. */
-    Name?: string;
-    /** The path of the file or folder. */
-    Path?: string;
-    /** The size of the file or folder. */
-    Size?: number;
 }
 
 /**
@@ -189,65 +196,65 @@ export interface BlobMetadataPage {
  * Definition: BlobMetadataResponse
  */
 export interface BlobMetadataResponse {
+    /** The unique id of the file or folder. */
+    Id?: string;
+    /** The name of the file or folder. */
+    Name?: string;
     /** The display name of the file or folder. */
     DisplayName?: string;
+    /** The path of the file or folder. */
+    Path?: string;
+    /** The date and time the file or folder was last modified. */
+    LastModified?: string;
+    /** The size of the file or folder. */
+    Size?: number;
+    /** The media type of the file or folder. */
+    MediaType?: string;
+    /** A boolean value (true, false) to indicate whether or not the blob is a folder. */
+    IsFolder?: boolean;
     /** The etag of the file or folder. */
     ETag?: string;
     /** The filelocator of the file or folder. */
     FileLocator?: string;
-    /** The unique id of the file or folder. */
-    Id?: string;
-    /** A boolean value (true, false) to indicate whether or not the blob is a folder. */
-    IsFolder?: boolean;
-    /** The date and time the file or folder was last modified. */
-    LastModified?: string;
-    /** The media type of the file or folder. */
-    MediaType?: string;
-    /** The name of the file or folder. */
-    Name?: string;
-    /** The path of the file or folder. */
-    Path?: string;
-    /** The size of the file or folder. */
-    Size?: number;
 }
 
 /**
  * Definition: CopyFileParameters
  */
 export interface CopyFileParameters {
+    /** File Identifier */
+    sourceFileId: string;
     /** Example: https://contoso.sharepoint.com/sites/sitename */
     destinationDataset: string;
     /** Destination Folder */
     destinationFolderPath: string;
     /** Pick one of the options available */
     nameConflictBehavior: number;
-    /** File Identifier */
-    sourceFileId: string;
 }
 
 /**
  * Definition: CopyFolderParameters
  */
 export interface CopyFolderParameters {
+    /** File Identifier */
+    sourceFolderId: string;
     /** Example: https://contoso.sharepoint.com/sites/sitename */
     destinationDataset: string;
     /** Destination Folder */
     destinationFolderPath: string;
     /** Pick one of the options available */
     nameConflictBehavior: number;
-    /** File Identifier */
-    sourceFolderId: string;
 }
 
 /**
  * Definition: CreateNewDocumentSetParameters
  */
 export interface CreateNewDocumentSetParameters {
-    DynamicProperties?: Record<string, unknown>;
-    /** Example: 0x0120D520 */
-    contentTypeId: string;
     /** Example: folder1/folder2/dsName */
     path: string;
+    /** Example: 0x0120D520 */
+    contentTypeId: string;
+    DynamicProperties?: Record<string, unknown>;
 }
 
 /**
@@ -262,10 +269,10 @@ export interface CreateNewFolderParameters {
  * Definition: DataSet
  */
 export interface DataSet {
-    /** Dataset display name */
-    DisplayName?: string;
     /** Dataset name */
     Name?: string;
+    /** Dataset display name */
+    DisplayName?: string;
     /** Pass-through Native Queries */
     query?: Array<PassThroughNativeQuery>;
 }
@@ -282,26 +289,26 @@ export interface DataSetsList {
  * Definition: DataSetsMetadata
  */
 export interface DataSetsMetadata {
-    blob?: BlobDataSetsMetadata;
     tabular?: TabularDataSetsMetadata;
+    blob?: BlobDataSetsMetadata;
 }
 
 /**
  * Definition: DeletedItem
  */
 export interface DeletedItem {
-    /** The name of the user who deleted this item */
-    DeletedByUserName?: string;
-    /** File name with extension of the item in document libraries, same as Name of the item in lists */
-    FileNameWithExtension?: string;
     /** List item id */
     ID?: number;
-    /** A true/false value to indicate if the item is a folder */
-    IsFolder?: boolean;
     /** File name of the item in document libraries, display name of the item in lists */
     Name?: string;
+    /** File name with extension of the item in document libraries, same as Name of the item in lists */
+    FileNameWithExtension?: string;
+    /** The name of the user who deleted this item */
+    DeletedByUserName?: string;
     /** When this item was deleted */
     TimeDeleted?: string;
+    /** A true/false value to indicate if the item is a folder */
+    IsFolder?: boolean;
 }
 
 /**
@@ -316,10 +323,26 @@ export interface DeletedItemList {
  * Definition: FileCheckInParameters
  */
 export interface FileCheckInParameters {
-    /** Select the type of version you would like to check in */
-    checkinType: number;
     /** Type comments describing what has changed in this version */
     comment: string;
+    /** Select the type of version you would like to check in */
+    checkinType: number;
+}
+
+/**
+ * Definition: FormFieldMetadata
+ */
+export interface FormFieldMetadata {
+    /** Gets or sets the field ID */
+    ID?: string;
+    /** Gets or sets the field Name */
+    Name?: string;
+    /** Gets or sets a value indicating whether the field is required */
+    IsRequired?: boolean;
+    /** Gets or sets the field data type */
+    DataType?: string;
+    /** Gets or sets the default value */
+    DefaultValue?: string;
 }
 
 /**
@@ -341,14 +364,14 @@ export interface GroupPermissionIdentity {
  * Definition: HubSiteJoinApprovalOutput
  */
 export interface HubSiteJoinApprovalOutput {
-    /** Approval Correlation Id */
-    ApprovalCorrelationId?: string;
+    /** Requesting Site Url */
+    RequestingSiteUrl?: string;
     /** Requesting Site Id */
     RequestingSiteId?: string;
     /** Requesting Site Title */
     RequestingSiteTitle?: string;
-    /** Requesting Site Url */
-    RequestingSiteUrl?: string;
+    /** Approval Correlation Id */
+    ApprovalCorrelationId?: string;
 }
 
 /**
@@ -362,12 +385,12 @@ export interface Item {
  * Definition: ItemGrantAccessBody
  */
 export interface ItemGrantAccessBody {
-    /** A plain text formatted message that is included in the sharing invitation */
-    emailBody?: string;
     /** A collection of recipients who will receive the sharing invitation */
     recipients: string;
     /** Specify a role that is to be granted to the recipients */
     roleValue: string;
+    /** A plain text formatted message that is included in the sharing invitation */
+    emailBody?: string;
     /** Specify whether recipients should receive an email notification message */
     sendEmail?: boolean;
 }
@@ -376,28 +399,28 @@ export interface ItemGrantAccessBody {
  * Definition: ItemPermissionAddBody
  */
 export interface ItemPermissionAddBody {
-    /** A plain text formatted message that is included in the sharing invitation. Maximum length 2000 characters. */
-    message?: string;
     /** A collection of recipients who will receive access and the sharing invitation. */
     recipients: Array<ItemPermissionRecipient>;
-    /** Specifies where the recipient of the invitation is required to sign-in to view the shared item. */
-    requireSignIn: boolean;
     /** Specify the roles that are be granted to the recipients of the sharing invitation. */
     roles: Array<string>;
+    /** Specifies where the recipient of the invitation is required to sign-in to view the shared item. */
+    requireSignIn: boolean;
     /** Specifies if an email or post is generated (true) or if the permission is just created (false). */
     sendInvitation: boolean;
+    /** A plain text formatted message that is included in the sharing invitation. Maximum length 2000 characters. */
+    message?: string;
 }
 
 /**
  * Definition: ItemPermissionCreateLinkBody
  */
 export interface ItemPermissionCreateLinkBody {
-    /** The date after which the link will expire in yyyy-MM-dd format. Only applicable for anonymous links. */
-    expirationDateTime?: string;
-    /** Choose who your sharing link gives access to. "Anyone" option will only work if your administrator has enabled it. */
-    scope: string;
     /** The type of sharing link to create */
     type: string;
+    /** Choose who your sharing link gives access to. "Anyone" option will only work if your administrator has enabled it. */
+    scope: string;
+    /** The date after which the link will expire in yyyy-MM-dd format. Only applicable for anonymous links. */
+    expirationDateTime?: string;
 }
 
 /**
@@ -439,28 +462,28 @@ export interface ItemsList {
  * Definition: MoveFileParameters
  */
 export interface MoveFileParameters {
+    /** File Identifier */
+    sourceFileId: string;
     /** Example: https://contoso.sharepoint.com/sites/sitename */
     destinationDataset: string;
     /** Destination Folder */
     destinationFolderPath: string;
     /** Pick one of the options available */
     nameConflictBehavior: number;
-    /** File Identifier */
-    sourceFileId: string;
 }
 
 /**
  * Definition: MoveFolderParameters
  */
 export interface MoveFolderParameters {
+    /** File Identifier */
+    sourceFolderId: string;
     /** Example: https://contoso.sharepoint.com/sites/sitename */
     destinationDataset: string;
     /** Destination Folder */
     destinationFolderPath: string;
     /** Pick one of the options available */
     nameConflictBehavior: number;
-    /** File Identifier */
-    sourceFolderId: string;
 }
 
 /**
@@ -492,13 +515,13 @@ export interface PatchFileItemWithPredictedValuesParameters {
  * Definition: Permission
  */
 export interface Permission {
+    /** Permission id */
+    id?: string;
     grantedTo?: PermissionIdentitySet;
     /** For link type permissions, the details of the users to whom permission was granted */
     grantedToIdentities?: Array<SharingLinkPermissionIdentitySet>;
-    /** Permission id */
-    id?: string;
-    inheritedFrom?: ItemReference;
     invitation?: SharingInvitation;
+    inheritedFrom?: ItemReference;
     link?: SharingLink;
     /** The type of permission - read, write, owner, member */
     roles?: Array<string>;
@@ -525,10 +548,10 @@ export interface PermissionsList {
  * Definition: Procedure
  */
 export interface Procedure {
-    /** Procedure display name */
-    DisplayName?: string;
     /** Procedure name */
     Name?: string;
+    /** Procedure display name */
+    DisplayName?: string;
 }
 
 /**
@@ -536,112 +559,21 @@ export interface Procedure {
  */
 export interface PublishedResult {
     /** A boolean value (true, false) to indicate whether the scheduled version of the file has been published */
-    IsFilePublished?: boolean;
-}
-
-/**
- * Definition: SPBlobMetadataResponse
- */
-export interface SPBlobMetadataResponse {
-    /** The display name of the file or folder. */
-    DisplayName?: string;
-    /** The etag of the file or folder. */
-    ETag?: string;
-    /** The filelocator of the file or folder. */
-    FileLocator?: string;
-    /** The unique id of the file or folder. */
-    Id?: string;
-    /** A boolean value (true, false) to indicate whether or not the blob is a folder. */
-    IsFolder?: boolean;
-    /** The value that can be used to Get or Update file properties in libraries. */
-    ItemId?: number;
-    /** The date and time the file or folder was last modified. */
-    LastModified?: string;
-    /** The media type of the file or folder. */
-    MediaType?: string;
-    /** The name of the file or folder. */
-    Name?: string;
-    /** The path of the file or folder. */
-    Path?: string;
-    /** The size of the file or folder. */
-    Size?: number;
-}
-
-/**
- * Definition: SPContentType
- */
-export interface SPContentType {
-    /** Content type Id */
-    Id?: string;
-    /** Content type name */
-    Name?: string;
-}
-
-/**
- * Definition: SPForASelectedFileResponse
- */
-export interface SPForASelectedFileResponse {
-    /** File Identifier */
-    ID?: number;
-    /** File Name */
-    fileName?: string;
-    /** File Url */
-    itemUrl?: string;
-}
-
-/**
- * Definition: SPListEntity
- */
-export interface SPListEntity {
-    /** What type of entity (field) this is */
-    EntityType?: string;
-    /** The Id of the SPField */
-    Id?: string;
-}
-
-/**
- * Definition: SPListExpandedUser
- */
-export interface SPListExpandedUser {
-    "@odata.type"?: string;
-    /** user claims */
-    Claims?: string;
-    /** user department */
-    Department?: string;
-    /** user title */
-    DisplayName?: string;
-    /** user email */
-    Email?: string;
-    /** user job title */
-    JobTitle?: string;
-    /** user picture */
-    Picture?: string;
-}
-
-/**
- * Definition: SPListItemAttachment
- */
-export interface SPListItemAttachment {
-    /** Link to attachment */
-    AbsoluteUri?: string;
-    /** Name */
-    DisplayName?: string;
-    /** File identifier */
-    Id?: string;
+    IsFilePublished: boolean;
 }
 
 /**
  * Definition: SetApprovalStatusOutput
  */
 export interface SetApprovalStatusOutput {
-    /** A link to the item that needs approval */
-    ApprovalLink?: string;
-    /** The content approval status of the list item */
-    ContentApprovalStatus?: string;
     /** ETag of the item after the approval status was set */
     ETag?: string;
+    /** A link to the item that needs approval */
+    ApprovalLink?: string;
     /** Date time at which the item will be Published */
     PublishStartDate?: string;
+    /** The content approval status of the list item */
+    ContentApprovalStatus?: string;
     /** The version of the item that has been scheduled */
     ScheduledVersion?: string;
 }
@@ -650,14 +582,14 @@ export interface SetApprovalStatusOutput {
  * Definition: SharePointHttpRequestBodyParameters
  */
 export interface SharePointHttpRequestBodyParameters {
-    /** Enter request content in JSON */
-    body?: string;
-    /** Enter JSON object of request headers */
-    headers?: Record<string, unknown>;
     /** Http Method */
     method: string;
     /** Example: _api/web/lists/getbytitle('Documents') */
     uri: string;
+    /** Enter JSON object of request headers */
+    headers?: Record<string, unknown>;
+    /** Enter request content in JSON */
+    body?: string;
 }
 
 /**
@@ -723,30 +655,130 @@ export interface SharingLinkUserPermissionIdentity {
 }
 
 /**
+ * Definition: SPBlobMetadataResponse
+ */
+export interface SPBlobMetadataResponse {
+    /** The value that can be used to Get or Update file properties in libraries. */
+    ItemId?: number;
+    /** The unique id of the file or folder. */
+    Id?: string;
+    /** The name of the file or folder. */
+    Name?: string;
+    /** The display name of the file or folder. */
+    DisplayName?: string;
+    /** The path of the file or folder. */
+    Path?: string;
+    /** The date and time the file or folder was last modified. */
+    LastModified?: string;
+    /** The size of the file or folder. */
+    Size?: number;
+    /** The media type of the file or folder. */
+    MediaType?: string;
+    /** A boolean value (true, false) to indicate whether or not the blob is a folder. */
+    IsFolder?: boolean;
+    /** The etag of the file or folder. */
+    ETag?: string;
+    /** The filelocator of the file or folder. */
+    FileLocator?: string;
+}
+
+/**
+ * Definition: SPContentType
+ */
+export interface SPContentType {
+    /** Content type Id */
+    Id?: string;
+    /** Content type name */
+    Name?: string;
+}
+
+/**
+ * Definition: SPForASelectedFileResponse
+ */
+export interface SPForASelectedFileResponse {
+    /** File Identifier */
+    ID?: number;
+    /** File Url */
+    itemUrl?: string;
+    /** File Name */
+    fileName?: string;
+}
+
+/**
+ * Definition: SPListEntity
+ */
+export interface SPListEntity {
+    /** The Id of the SPField */
+    Id?: string;
+    /** What type of entity (field) this is */
+    EntityType?: string;
+}
+
+/**
+ * Definition: SPListExpandedUser
+ */
+export interface SPListExpandedUser {
+    /** user claims */
+    Claims?: string;
+    /** user title */
+    DisplayName?: string;
+    /** user email */
+    Email?: string;
+    /** user picture */
+    Picture?: string;
+    /** user department */
+    Department?: string;
+    /** user job title */
+    JobTitle?: string;
+    "@odata.type"?: string;
+}
+
+/**
+ * Definition: SPListItemAttachment
+ */
+export interface SPListItemAttachment {
+    /** File identifier */
+    Id?: string;
+    /** Link to attachment */
+    AbsoluteUri?: string;
+    /** Name */
+    DisplayName?: string;
+}
+
+/**
  * Definition: Table
  */
 export interface Table {
+    /** The name of the table. The name is used at runtime. */
+    Name?: string;
     /** The display name of the table. */
     DisplayName?: string;
     /** Additional table properties provided by the connector to the clients. */
     DynamicProperties?: Record<string, unknown>;
-    /** The name of the table. The name is used at runtime. */
-    Name?: string;
 }
 
 /**
  * Definition: TableCapabilitiesMetadata
  */
 export interface TableCapabilitiesMetadata {
-    /** List of supported filter capabilities */
-    filterFunctionSupport?: Array<string>;
+    sortRestrictions?: TableSortRestrictionsMetadata;
     filterRestrictions?: TableFilterRestrictionsMetadata;
+    selectRestrictions?: TableSelectRestrictionsMetadata;
+    countRestrictions?: TableCountRestrictionsMetadata;
     /** Server paging restrictions */
     isOnlyServerPagable?: boolean;
-    selectRestrictions?: TableSelectRestrictionsMetadata;
+    /** List of supported filter capabilities */
+    filterFunctionSupport?: Array<string>;
     /** List of supported server-driven paging capabilities */
     serverPagingOptions?: Array<string>;
-    sortRestrictions?: TableSortRestrictionsMetadata;
+}
+
+/**
+ * Definition: TableCountRestrictionsMetadata
+ */
+export interface TableCountRestrictionsMetadata {
+    /** Indicates whether this table has countable columns */
+    countable?: boolean;
 }
 
 /**
@@ -762,20 +794,46 @@ export interface TableFilterRestrictionsMetadata {
 }
 
 /**
+ * Definition: TableForm
+ */
+export interface TableForm {
+    /** Gets or sets the form ID */
+    FormID?: string;
+    /** Gets or sets the form display name */
+    DisplayName?: string;
+    /** Gets or sets the form type */
+    Type?: string;
+    /** Gets or sets the form link/URL */
+    Link?: string;
+    /** Gets or sets the user who created the form */
+    CreatedBy?: string;
+    /** Gets or sets the date the form was created */
+    Created?: string;
+    /** Gets or sets the date the form was last modified */
+    Modified?: string;
+    /** Gets or sets the user who last modified the form */
+    ModifiedBy?: string;
+    /** Gets or sets the output format (e.g. "Word document", "PDF document", "None") */
+    OutputFormat?: string;
+    /** Gets or sets Form Fields */
+    FieldsMetadata?: Array<FormFieldMetadata>;
+}
+
+/**
  * Definition: TableMetadata
  */
 export interface TableMetadata {
     /** Table name */
     name?: string;
-    referencedEntities?: ObjectEntity;
-    schema?: ObjectEntity;
     /** Table title */
     title?: string;
-    /** Url link */
-    webUrl?: string;
-    "x-ms-capabilities"?: TableCapabilitiesMetadata;
     /** Table permission */
     "x-ms-permission"?: string;
+    "x-ms-capabilities"?: TableCapabilitiesMetadata;
+    schema?: ObjectEntity;
+    referencedEntities?: ObjectEntity;
+    /** URL link */
+    webUrl?: string;
 }
 
 /**
@@ -787,18 +845,6 @@ export interface TableSelectRestrictionsMetadata {
 }
 
 /**
- * Definition: TableSortRestrictionsMetadata
- */
-export interface TableSortRestrictionsMetadata {
-    /** List of properties which support ascending order only */
-    ascendingOnlyProperties?: Array<string>;
-    /** Indicates whether this table has sortable columns */
-    sortable?: boolean;
-    /** List of unsortable properties */
-    unsortableProperties?: Array<string>;
-}
-
-/**
  * Definition: TablesList
  */
 export interface TablesList {
@@ -807,19 +853,31 @@ export interface TablesList {
 }
 
 /**
+ * Definition: TableSortRestrictionsMetadata
+ */
+export interface TableSortRestrictionsMetadata {
+    /** Indicates whether this table has sortable columns */
+    sortable?: boolean;
+    /** List of unsortable properties */
+    unsortableProperties?: Array<string>;
+    /** List of properties which support ascending order only */
+    ascendingOnlyProperties?: Array<string>;
+}
+
+/**
  * Definition: TabularDataSetsMetadata
  */
 export interface TabularDataSetsMetadata {
-    /** Dataset display name */
-    displayName?: string;
     /** Dataset source */
     source?: string;
+    /** Dataset display name */
+    displayName?: string;
+    /** Dataset url encoding */
+    urlEncoding?: string;
     /** Table display name */
     tableDisplayName?: string;
     /** Table plural display name */
     tablePluralName?: string;
-    /** Dataset url encoding */
-    urlEncoding?: string;
 }
 
 /**
@@ -858,6 +916,16 @@ export type SharepointonlineOnNewFileItemsTriggerPayload = TriggerCallbackPayloa
 export type SharepointonlineOnNewItemsTriggerPayload = TriggerCallbackPayload<Item>;
 
 /**
+ * Typed callback payload for trigger operation 'GetOnNewItemsFromForm'.
+ */
+export type SharepointonlineOnNewItemsFromFormTriggerPayload = TriggerCallbackPayload<Item>;
+
+/**
+ * Typed callback payload for trigger operation 'GetOnRecurrenceDigest'.
+ */
+export type SharepointonlineOnRecurrenceDigestTriggerPayload = TriggerCallbackPayload<Item>;
+
+/**
  * Typed callback payload for trigger operation 'GetOnUpdatedFileClassifiedTimes'.
  */
 export type SharepointonlineOnUpdatedFileClassifiedTimesTriggerPayload = TriggerCallbackPayload<Item>;
@@ -881,6 +949,8 @@ export const SharepointonlineTriggerOperations = {
     OnNewFile: "OnNewFile",
     OnNewFileItems: "GetOnNewFileItems",
     OnNewItems: "GetOnNewItems",
+    OnNewItemsFromForm: "GetOnNewItemsFromForm",
+    OnRecurrenceDigest: "GetOnRecurrenceDigest",
     OnUpdatedFile: "OnUpdatedFile",
     OnUpdatedFileClassifiedTimes: "GetOnUpdatedFileClassifiedTimes",
     OnUpdatedFileItems: "GetOnUpdatedFileItems",
@@ -987,7 +1057,7 @@ export const SharepointonlineTriggerParameters = {
             type: "boolean",
             required: false,
             description: "Infer content-type based on extension.",
-            summary: "Infer Content Type",
+            summary: "Infer content type",
             defaultValue: "true",
         },
         queryParametersSingleEncoded: {
@@ -1056,6 +1126,102 @@ export const SharepointonlineTriggerParameters = {
             dynamicValuesOperationId: "GetTableViews",
         },
     },
+    OnNewItemsFromForm: {
+        dataset: {
+            name: "dataset",
+            type: "string",
+            required: true,
+            description: "Example: https://contoso.sharepoint.com/sites/sitename",
+            summary: "Site Address",
+            dynamicValuesOperationId: "GetDataSets",
+        },
+        table: {
+            name: "table",
+            type: "string",
+            required: true,
+            description: "SharePoint list or library name",
+            summary: "List or Library Name",
+            dynamicValuesOperationId: "GetTablesForListsAndLibraries",
+        },
+        form: {
+            name: "form",
+            type: "string",
+            required: true,
+            description: "Form identifier",
+            summary: "Form Name",
+            dynamicValuesOperationId: "GetTableForms",
+        },
+        view: {
+            name: "view",
+            type: "string",
+            required: false,
+            description: "Avoid column threshold issues by only using columns defined in a view",
+            summary: "Limit Columns by View",
+            dynamicValuesOperationId: "GetTableViews",
+        },
+    },
+    OnRecurrenceDigest: {
+        dataset: {
+            name: "dataset",
+            type: "string",
+            required: true,
+            description: "Example: https://contoso.sharepoint.com/sites/sitename.",
+            summary: "Site Address",
+            dynamicValuesOperationId: "GetDataSets",
+        },
+        table: {
+            name: "table",
+            type: "string",
+            required: true,
+            description: "SharePoint list or library name.",
+            summary: "List or Library Name",
+            dynamicValuesOperationId: "GetTablesForListsAndLibraries",
+        },
+        update: {
+            name: "update",
+            type: "boolean",
+            required: true,
+            description: "Include item updates in the digest.",
+            summary: "Include edits",
+        },
+        add: {
+            name: "add",
+            type: "boolean",
+            required: true,
+            description: "Include new items and files in the digest.",
+            summary: "Include new items or files",
+        },
+        runSchedule: {
+            name: "runSchedule",
+            type: "string",
+            required: true,
+            description: "When to run.",
+            summary: "When to run",
+            dynamicValuesOperationId: "GetDayOfWeekOptions",
+        },
+        folderPath: {
+            name: "folderPath",
+            type: "string",
+            required: false,
+            description: "Folder path within the list or document library.",
+            summary: "Folder",
+        },
+        view: {
+            name: "view",
+            type: "string",
+            required: false,
+            description: "Avoid column threshold issues by only using columns defined in a view.",
+            summary: "Limit Columns by View",
+            dynamicValuesOperationId: "GetTableViews",
+        },
+        startTime: {
+            name: "startTime",
+            type: "string",
+            required: false,
+            description: "Start time for the recurrence.",
+            summary: "Start Time",
+        },
+    },
     OnUpdatedFile: {
         dataset: {
             name: "dataset",
@@ -1085,7 +1251,7 @@ export const SharepointonlineTriggerParameters = {
             type: "boolean",
             required: false,
             description: "Infer content-type based on extension.",
-            summary: "Infer Content Type",
+            summary: "Infer content type",
             defaultValue: "true",
         },
         queryParametersSingleEncoded: {
@@ -1211,111 +1377,13 @@ export class SharepointonlineClient extends ConnectorClientBase {
     }
 
     /**
-     * Get file metadata using path
-     * @remarks Gets information about the file such as size, etag, created date, etc. Uses a file path to pick the file. Use "Get file properties" action to get to the values stored in the columns in the library.
-     */
-    public async getFileMetadataByPathAsync(dataset: string, path?: string, queryParametersSingleEncoded?: string, abortSignal?: AbortSignal): Promise<SPBlobMetadataResponse> {
-        const queryParams: string[] = [];
-        if (path !== undefined) {
-            queryParams.push(`path=${encodeURIComponent(String(path))}`);
-        }
-        if (queryParametersSingleEncoded !== undefined) {
-            queryParams.push(`queryParametersSingleEncoded=${encodeURIComponent(String(queryParametersSingleEncoded))}`);
-        }
-        const requestPath = `/datasets/${encodeURIComponent(String(dataset))}/GetFileByPath` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<SPBlobMetadataResponse>("GET", url, undefined, undefined, abortSignal);
-
-        if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
-        }
-
-        return httpResponse.value as SPBlobMetadataResponse;
-    }
-
-    /**
-     * Get file content using path
-     * @remarks Gets file contents using the file path.
-     */
-    public async getFileContentByPathAsync(dataset: string, path?: string, inferContentType?: string, queryParametersSingleEncoded?: string, abortSignal?: AbortSignal): Promise<Blob> {
-        const queryParams: string[] = [];
-        if (path !== undefined) {
-            queryParams.push(`path=${encodeURIComponent(String(path))}`);
-        }
-        if (inferContentType !== undefined) {
-            queryParams.push(`inferContentType=${encodeURIComponent(String(inferContentType))}`);
-        }
-        if (queryParametersSingleEncoded !== undefined) {
-            queryParams.push(`queryParametersSingleEncoded=${encodeURIComponent(String(queryParametersSingleEncoded))}`);
-        }
-        const requestPath = `/datasets/${encodeURIComponent(String(dataset))}/GetFileContentByPath` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<Blob>("GET", url, undefined, undefined, abortSignal);
-
-        if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
-        }
-
-        return httpResponse.value as Blob;
-    }
-
-    /**
-     * Get folder metadata
-     * @remarks Gets information about the folder. Uses a file identifier to pick the folder.
-     */
-    public async getFolderMetadataAsync(dataset: string, id?: string, abortSignal?: AbortSignal): Promise<SPBlobMetadataResponse> {
-        const queryParams: string[] = [];
-        if (id !== undefined) {
-            queryParams.push(`id=${encodeURIComponent(String(id))}`);
-        }
-        const requestPath = `/datasets/${encodeURIComponent(String(dataset))}/GetFolder` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<SPBlobMetadataResponse>("GET", url, undefined, undefined, abortSignal);
-
-        if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
-        }
-
-        return httpResponse.value as SPBlobMetadataResponse;
-    }
-
-    /**
-     * Get folder metadata using path
-     * @remarks Gets information about the folder. Uses a folder path to pick the folder.
-     */
-    public async getFolderMetadataByPathAsync(dataset: string, path?: string, queryParametersSingleEncoded?: string, abortSignal?: AbortSignal): Promise<SPBlobMetadataResponse> {
-        const queryParams: string[] = [];
-        if (path !== undefined) {
-            queryParams.push(`path=${encodeURIComponent(String(path))}`);
-        }
-        if (queryParametersSingleEncoded !== undefined) {
-            queryParams.push(`queryParametersSingleEncoded=${encodeURIComponent(String(queryParametersSingleEncoded))}`);
-        }
-        const requestPath = `/datasets/${encodeURIComponent(String(dataset))}/GetFolderByPath` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<SPBlobMetadataResponse>("GET", url, undefined, undefined, abortSignal);
-
-        if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
-        }
-
-        return httpResponse.value as SPBlobMetadataResponse;
-    }
-
-    /**
      * Agreements Solution - Generate document within Agreements Solution workspace
      * @remarks Use this action to create documents based on modern templates in a Agreements Solution workspace. This is behind a payment wall currently in planning (either license or PayG).
      */
-    public async createAgreementsSolutionDocumentAsync(input: CreateAgreementsSolutionDocumentInput, dataset: string, template: string, documentName?: string, table?: string, view?: string, abortSignal?: AbortSignal): Promise<SPBlobMetadataResponse> {
+    public async createAgreementsSolutionDocumentAsync(input: CreateAgreementsSolutionDocumentInput, dataset: string, template: string, documentName?: string, abortSignal?: AbortSignal): Promise<SPBlobMetadataResponse> {
         const queryParams: string[] = [];
         if (documentName !== undefined) {
             queryParams.push(`documentName=${encodeURIComponent(String(documentName))}`);
-        }
-        if (table !== undefined) {
-            queryParams.push(`table=${encodeURIComponent(String(table))}`);
-        }
-        if (view !== undefined) {
-            queryParams.push(`view=${encodeURIComponent(String(view))}`);
         }
         const requestPath = `/datasets/${encodeURIComponent(String(dataset))}/agreements/templates/${template}/createnewdocument` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const url = this.resolveUrl(requestPath);
@@ -1487,20 +1555,6 @@ export class SharepointonlineClient extends ConnectorClientBase {
     }
 
     /**
-     * Delete file
-     * @remarks Deletes the file specified by the file identifier.
-     */
-    public async deleteFileAsync(dataset: string, id: string, abortSignal?: AbortSignal): Promise<void> {
-        const requestPath = `/datasets/${encodeURIComponent(String(dataset))}/files/${id}`;
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<void>("DELETE", url, undefined, undefined, abortSignal);
-
-        if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `DELETE ${requestPath}`, httpResponse.statusCode, httpResponse.text);
-        }
-    }
-
-    /**
      * Get file metadata
      * @remarks Gets information about the file such as size, etag, created date, etc. Uses a file identifier to pick the file. Use "Get file properties" action to get to the values stored in the columns in the library.
      */
@@ -1530,6 +1584,20 @@ export class SharepointonlineClient extends ConnectorClientBase {
         }
 
         return httpResponse.value as BlobMetadataResponse;
+    }
+
+    /**
+     * Delete file
+     * @remarks Deletes the file specified by the file identifier.
+     */
+    public async deleteFileAsync(dataset: string, id: string, abortSignal?: AbortSignal): Promise<void> {
+        const requestPath = `/datasets/${encodeURIComponent(String(dataset))}/files/${id}`;
+        const url = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<void>("DELETE", url, undefined, undefined, abortSignal);
+
+        if (!httpResponse.isSuccessStatusCode) {
+            throw new ConnectorException(this.connectorName, `DELETE ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+        }
     }
 
     /**
@@ -1585,8 +1653,100 @@ export class SharepointonlineClient extends ConnectorClientBase {
     }
 
     /**
+     * Get file metadata using path
+     * @remarks Gets information about the file such as size, etag, created date, etc. Uses a file path to pick the file. Use "Get file properties" action to get to the values stored in the columns in the library.
+     */
+    public async getFileMetadataByPathAsync(dataset: string, path?: string, queryParametersSingleEncoded?: string, abortSignal?: AbortSignal): Promise<SPBlobMetadataResponse> {
+        const queryParams: string[] = [];
+        if (path !== undefined) {
+            queryParams.push(`path=${encodeURIComponent(String(path))}`);
+        }
+        if (queryParametersSingleEncoded !== undefined) {
+            queryParams.push(`queryParametersSingleEncoded=${encodeURIComponent(String(queryParametersSingleEncoded))}`);
+        }
+        const requestPath = `/datasets/${encodeURIComponent(String(dataset))}/GetFileByPath` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
+        const url = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<SPBlobMetadataResponse>("GET", url, undefined, undefined, abortSignal);
+
+        if (!httpResponse.isSuccessStatusCode) {
+            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+        }
+
+        return httpResponse.value as SPBlobMetadataResponse;
+    }
+
+    /**
+     * Get file content using path
+     * @remarks Gets file contents using the file path.
+     */
+    public async getFileContentByPathAsync(dataset: string, path?: string, inferContentType?: string, queryParametersSingleEncoded?: string, abortSignal?: AbortSignal): Promise<Blob> {
+        const queryParams: string[] = [];
+        if (path !== undefined) {
+            queryParams.push(`path=${encodeURIComponent(String(path))}`);
+        }
+        if (inferContentType !== undefined) {
+            queryParams.push(`inferContentType=${encodeURIComponent(String(inferContentType))}`);
+        }
+        if (queryParametersSingleEncoded !== undefined) {
+            queryParams.push(`queryParametersSingleEncoded=${encodeURIComponent(String(queryParametersSingleEncoded))}`);
+        }
+        const requestPath = `/datasets/${encodeURIComponent(String(dataset))}/GetFileContentByPath` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
+        const url = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<Blob>("GET", url, undefined, undefined, abortSignal);
+
+        if (!httpResponse.isSuccessStatusCode) {
+            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+        }
+
+        return httpResponse.value as Blob;
+    }
+
+    /**
+     * Get folder metadata
+     * @remarks Gets information about the folder. Uses a file identifier to pick the folder.
+     */
+    public async getFolderMetadataAsync(dataset: string, id?: string, abortSignal?: AbortSignal): Promise<SPBlobMetadataResponse> {
+        const queryParams: string[] = [];
+        if (id !== undefined) {
+            queryParams.push(`id=${encodeURIComponent(String(id))}`);
+        }
+        const requestPath = `/datasets/${encodeURIComponent(String(dataset))}/GetFolder` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
+        const url = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<SPBlobMetadataResponse>("GET", url, undefined, undefined, abortSignal);
+
+        if (!httpResponse.isSuccessStatusCode) {
+            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+        }
+
+        return httpResponse.value as SPBlobMetadataResponse;
+    }
+
+    /**
+     * Get folder metadata using path
+     * @remarks Gets information about the folder. Uses a folder path to pick the folder.
+     */
+    public async getFolderMetadataByPathAsync(dataset: string, path?: string, queryParametersSingleEncoded?: string, abortSignal?: AbortSignal): Promise<SPBlobMetadataResponse> {
+        const queryParams: string[] = [];
+        if (path !== undefined) {
+            queryParams.push(`path=${encodeURIComponent(String(path))}`);
+        }
+        if (queryParametersSingleEncoded !== undefined) {
+            queryParams.push(`queryParametersSingleEncoded=${encodeURIComponent(String(queryParametersSingleEncoded))}`);
+        }
+        const requestPath = `/datasets/${encodeURIComponent(String(dataset))}/GetFolderByPath` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
+        const url = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<SPBlobMetadataResponse>("GET", url, undefined, undefined, abortSignal);
+
+        if (!httpResponse.isSuccessStatusCode) {
+            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+        }
+
+        return httpResponse.value as SPBlobMetadataResponse;
+    }
+
+    /**
      * Send an HTTP request to SharePoint
-     * @remarks Construct a SharePoint REST API to invoke. Note û This action may execute any SharePoint REST API you have access to. Please proceed with caution.
+     * @remarks Construct a SharePoint REST API to invoke. Note – This action may execute any SharePoint REST API you have access to. Please proceed with caution.
      */
     public async httpRequestAsync(input: SharePointHttpRequestBodyParameters, dataset: string, abortSignal?: AbortSignal): Promise<void> {
         const requestPath = `/datasets/${encodeURIComponent(String(dataset))}/httprequest`;
@@ -1748,6 +1908,42 @@ export class SharepointonlineClient extends ConnectorClientBase {
     }
 
     /**
+     * Get form metadata (preview)
+     * @remarks Use this action to get the form metadata, which includes the form ID, title, link, form type, and the output format. It also gets the form questions used to collect information.             Document generation forms is a part of AI in SharePoint Public Preview. For more info on getting started, see: https://learn.microsoft.com/sharepoint/dev/declarative-customization/structured-documents.
+     */
+    public async getTableFormAsync(dataset: string, table: string, form: string, abortSignal?: AbortSignal): Promise<TableForm> {
+        const requestPath = `/datasets/${encodeURIComponent(String(dataset))}/tables/${table}/forms/${form}`;
+        const url = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<TableForm>("GET", url, undefined, undefined, abortSignal);
+
+        if (!httpResponse.isSuccessStatusCode) {
+            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+        }
+
+        return httpResponse.value as TableForm;
+    }
+
+    /**
+     * Generate a document from a form (preview)
+     * @remarks Use this action to create documents from a document generation template. Map the template fields to the corresponding content in the data source.             Document generation forms is a part of AI in SharePoint Public Preview. For more info on getting started, see: https://learn.microsoft.com/sharepoint/dev/declarative-customization/structured-documents.
+     */
+    public async submitDocGenFormAsync(input: SubmitDocGenFormInput, dataset: string, table: string, form: string, view?: string, abortSignal?: AbortSignal): Promise<SPBlobMetadataResponse> {
+        const queryParams: string[] = [];
+        if (view !== undefined) {
+            queryParams.push(`view=${encodeURIComponent(String(view))}`);
+        }
+        const requestPath = `/datasets/${encodeURIComponent(String(dataset))}/tables/${table}/forms/${form}/submitdocgenform` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
+        const url = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<SPBlobMetadataResponse>("POST", url, undefined, input, abortSignal);
+
+        if (!httpResponse.isSuccessStatusCode) {
+            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+        }
+
+        return httpResponse.value as SPBlobMetadataResponse;
+    }
+
+    /**
      * Get files (properties only)
      * @remarks Gets the properties saved in the columns in the library for all folders and files stored in the library.             You can also filter down to the items that match a condition. An "Apply to each" section is usually used to work with the output from this action.             When using this with the On-Premises Data Gateway, the name of the library to connect to may need to be entered manually.
      */
@@ -1838,20 +2034,6 @@ export class SharepointonlineClient extends ConnectorClientBase {
     }
 
     /**
-     * Delete item
-     * @remarks Deletes an item from a SharePoint list.
-     */
-    public async deleteItemAsync(dataset: string, table: string, id: string, abortSignal?: AbortSignal): Promise<void> {
-        const requestPath = `/datasets/${encodeURIComponent(String(dataset))}/tables/${table}/items/${id}`;
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<void>("DELETE", url, undefined, undefined, abortSignal);
-
-        if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `DELETE ${requestPath}`, httpResponse.statusCode, httpResponse.text);
-        }
-    }
-
-    /**
      * Get item
      * @remarks Gets a single item by its id from a SharePoint list.
      */
@@ -1869,6 +2051,20 @@ export class SharepointonlineClient extends ConnectorClientBase {
         }
 
         return httpResponse.value as GetItemResponse;
+    }
+
+    /**
+     * Delete item
+     * @remarks Deletes an item from a SharePoint list.
+     */
+    public async deleteItemAsync(dataset: string, table: string, id: string, abortSignal?: AbortSignal): Promise<void> {
+        const requestPath = `/datasets/${encodeURIComponent(String(dataset))}/tables/${table}/items/${id}`;
+        const url = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<void>("DELETE", url, undefined, undefined, abortSignal);
+
+        if (!httpResponse.isSuccessStatusCode) {
+            throw new ConnectorException(this.connectorName, `DELETE ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+        }
     }
 
     /**
@@ -1970,7 +2166,7 @@ export class SharepointonlineClient extends ConnectorClientBase {
 
     /**
      * Discard check out
-     * @remarks If you check out a file and donÆt make changes to it, or you make changes that you donÆt want to keep, you can simply discard the checkout, rather than saving the file. If your organization tracks versions, a new version is created each time you check a file back into the library. By discarding the checkout, you can avoid making new versions when you havenÆt made any changes to the file.
+     * @remarks If you check out a file and don’t make changes to it, or you make changes that you don’t want to keep, you can simply discard the checkout, rather than saving the file. If your organization tracks versions, a new version is created each time you check a file back into the library. By discarding the checkout, you can avoid making new versions when you haven’t made any changes to the file.
      */
     public async discardFileCheckOutAsync(dataset: string, table: string, id: string, abortSignal?: AbortSignal): Promise<void> {
         const requestPath = `/datasets/${encodeURIComponent(String(dataset))}/tables/${table}/items/${id}/discardfilecheckout`;
