@@ -10,7 +10,7 @@
  *     $env:GOOGLETASKS_CONNECTION_URL = "https://[region].azure-apihub.net/apim/googletasks/[connection-id]"
  *
  *   Run:
- *     node googletasks.mjs
+ *     npm start
  */
 
 import { ManagedIdentityTokenProvider, ConnectorException } from "@azure/connectors";

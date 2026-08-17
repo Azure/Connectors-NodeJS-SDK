@@ -1,6 +1,9 @@
 // Copyright (c) Microsoft Corporation.  All rights reserved.
 
-import { Office365groupsmailClient } from "../src/generated/Office365groupsmailExtensions.ts";
+import {
+    ForwardPostBody,
+    Office365groupsmailClient,
+} from "../src/generated/Office365groupsmailExtensions.ts";
 import { ConnectorException } from "../src/azureConnectors/connectorException.ts";
 import { TokenProvider } from "../src/azureConnectors/authentication.ts";
 import { ConnectorNames } from "../src/generated/connectorNames.ts";
@@ -103,6 +106,36 @@ describe("Office365groupsmailClient — listConversationsAsync", () => {
             expect(connectorError.responseBody).toBe("Forbidden");
             expect(connectorError.operation).toBe("GET /v1.0/groups/group1/conversations");
         }
+    });
+});
+
+describe("Office365groupsmailClient — forwardAsync", () => {
+    afterEach(() => {
+        jest.restoreAllMocks();
+    });
+
+    it("should POST the current ForwardPost_V2 request shape", async () => {
+        mockFetchResponse(null);
+        const input: ForwardPostBody = {
+            Comment: "Please review this post.",
+            ToRecipients: [{ EmailAddress: { address: "recipient@example.com" } }],
+        };
+
+        const client = new Office365groupsmailClient(TestConnectionUrl, createMockTokenProvider());
+        await client.forwardAsync(input, "group1", "conversation1", "thread1", "post1");
+
+        expect(global.fetch).toHaveBeenCalledTimes(1);
+        const [url, init] = (global.fetch as jest.Mock).mock.calls[0];
+        const requestBody = JSON.parse(init.body);
+        expect(url).toBe(
+            `${TestConnectionUrl}/beta/groups/group1/conversations/conversation1/threads/thread1/posts/post1/forward`,
+        );
+        expect(init.method).toBe("POST");
+        expect(requestBody).toEqual(input);
+        expect(requestBody).toHaveProperty("Comment");
+        expect(requestBody).toHaveProperty("ToRecipients");
+        expect(requestBody).not.toHaveProperty("comment");
+        expect(requestBody).not.toHaveProperty("toRecipients");
     });
 });
 

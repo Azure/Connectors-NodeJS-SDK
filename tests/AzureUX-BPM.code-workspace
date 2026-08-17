@@ -1,0 +1,13 @@
+{
+	"folders": [
+		{
+			"path": "../../AzureUX-BPM"
+		},
+		{
+			"path": ".."
+		}
+	],
+	"settings": {
+		"dotnet.preferCSharpExtension": true
+	}
+}

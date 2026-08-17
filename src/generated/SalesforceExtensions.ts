@@ -133,7 +133,7 @@ export interface CreateJobResponse {
     createdDate?: string;
     /** Unique ID for this job. */
     id?: string;
-    /** The job's type. */
+    /** The job’s type. */
     jobType?: string;
     /** The current state of processing for the job. */
     state?: string;
@@ -970,7 +970,7 @@ export class SalesforceClient extends ConnectorClientBase {
 
     /**
      * Close or abort a job
-     * @remarks Closes or aborts a job. Use UploadComplete to close a job, or Aborted to abort a job. If you close a job, Salesforce queues the job and uploaded data for processing, and you can't add any additional job data. If you abort a job, the job does not get queued or processed.
+     * @remarks Closes or aborts a job. Use UploadComplete to close a job, or Aborted to abort a job. If you close a job, Salesforce queues the job and uploaded data for processing, and you can’t add any additional job data. If you abort a job, the job does not get queued or processed.
      */
     public async closeJobAsync(input: CloseJobRequest, jobId: string, abortSignal?: AbortSignal): Promise<JobInfo> {
         const requestPath = `/codeless/jobs/ingest/${jobId}`;

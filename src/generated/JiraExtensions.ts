@@ -312,8 +312,10 @@ export interface FilterArray {
  * Definition: ListIssuesResponse
  */
 export interface ListIssuesResponse {
-    /** The maximum number of items to return per page */
-    maxResults?: number;
+    /** The token used to retrieve the next page of issues. Pass this value into the 'Next page token' input of a subsequent call to fetch the next page. Absent on the last page. */
+    nextPageToken?: string;
+    /** Indicates whether this is the last page of results. */
+    isLast?: boolean;
     issues?: Array<FullIssue>;
 }
 
@@ -643,7 +645,7 @@ export class JiraClient extends ConnectorClientBase {
      * Get list of issues
      * @remarks This operation returns a list of issues using JQL.
      */
-    public async listIssuesAsync(jql?: string, expand?: string, fields?: string, abortSignal?: AbortSignal): Promise<ListIssuesResponse> {
+    public async listIssuesAsync(jql?: string, expand?: string, fields?: string, nextPageToken?: string, abortSignal?: AbortSignal): Promise<ListIssuesResponse> {
         const queryParams: string[] = [];
         if (jql !== undefined) {
             queryParams.push(`jql=${encodeURIComponent(String(jql))}`);
@@ -653,6 +655,9 @@ export class JiraClient extends ConnectorClientBase {
         }
         if (fields !== undefined) {
             queryParams.push(`fields=${encodeURIComponent(String(fields))}`);
+        }
+        if (nextPageToken !== undefined) {
+            queryParams.push(`nextPageToken=${encodeURIComponent(String(nextPageToken))}`);
         }
         const requestPath = `/2/search` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const url = this.resolveUrl(requestPath);

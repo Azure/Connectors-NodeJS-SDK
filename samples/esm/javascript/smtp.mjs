@@ -42,12 +42,14 @@ async function main() {
     // Example 1: Send a simple email
     console.log("\n--- Send Email ---");
     try {
-        await client.sendEmailAsync({
+        const email = {
             From: FROM_ADDRESS,
             To: TO_ADDRESS,
             Subject: `Test from SMTP SDK Sample (${new Date().toISOString()})`,
-            Body: "<p>Hello from the <strong>SMTP JavaScript SDK</strong> sample!</p>",
-        });
+            Body: "<p>Hello from the <strong>SMTP TypeScript SDK</strong> sample!</p>",
+        };
+
+        await client.sendEmailAsync(email);
         console.log("Email sent successfully.");
         console.log(`  From: ${FROM_ADDRESS}`);
         console.log(`  To: ${TO_ADDRESS}`);
@@ -59,18 +61,20 @@ async function main() {
         }
     }
 
-    // Example 2: Send email with CC
+    // Example 2: Send email with CC and BCC
     const ccAddress = process.env.SMTP_CC;
     if (ccAddress) {
         console.log("\n--- Send Email with CC ---");
         try {
-            await client.sendEmailAsync({
+            const email = {
                 From: FROM_ADDRESS,
                 To: TO_ADDRESS,
                 CC: ccAddress,
                 Subject: `CC Test from SMTP SDK Sample (${new Date().toISOString()})`,
                 Body: "<p>This email has a CC recipient.</p>",
-            });
+            };
+
+            await client.sendEmailAsync(email);
             console.log("Email with CC sent successfully.");
         } catch (error) {
             if (error instanceof ConnectorException) {
@@ -84,12 +88,14 @@ async function main() {
     // Example 3: Error handling — invalid address
     console.log("\n--- Error Handling ---");
     try {
-        await client.sendEmailAsync({
+        const badEmail = {
             From: "",
             To: "",
             Subject: "This should fail",
             Body: "Test",
-        });
+        };
+
+        await client.sendEmailAsync(badEmail);
         console.log("Unexpected success.");
     } catch (error) {
         if (error instanceof ConnectorException) {
@@ -97,7 +103,7 @@ async function main() {
             console.log(`  Message: ${error.message}`);
             console.log(`  Status: ${error.statusCode}`);
         } else {
-            console.log(`Unexpected error type: ${error.constructor.name}`);
+            console.log(`Unexpected error type: ${(error).constructor.name}`);
         }
     }
 

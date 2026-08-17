@@ -81,7 +81,7 @@ async function main() {
     console.log("\n--- Get Emails ---");
     try {
         const emails = await client.getEmailsAsync();
-        const emailList = emails?.value ?? [];
+        const emailList = emails.value ?? [];
         console.log(`Found ${emailList.length} emails in inbox.`);
         for (const email of emailList.slice(0, 3)) {
             console.log(`  - ${email.subject ?? "No Subject"}`);

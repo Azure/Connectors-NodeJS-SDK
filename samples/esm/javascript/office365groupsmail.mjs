@@ -11,7 +11,7 @@
  *     $env:OFFICE365GROUPSMAIL_GROUP_ID = "[group id]"
  *
  *   Run:
- *     node office365groupsmail.mjs
+ *     npm start
  */
 
 import { ManagedIdentityTokenProvider, ConnectorException } from "@azure/connectors";

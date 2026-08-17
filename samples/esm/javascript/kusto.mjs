@@ -18,7 +18,7 @@
  *     $env:KUSTO_DATABASE = "mydb"
  *
  *   Run:
- *     npm run kusto
+ *     npm start
  */
 
 import { ManagedIdentityTokenProvider, ConnectorException } from "@azure/connectors";
@@ -57,9 +57,10 @@ async function main() {
         };
         const result = await client.listKustoResultsAsync(input);
 
-        if (result?.value && Array.isArray(result.value)) {
-            console.log(`Returned ${result.value.length} rows:`);
-            for (const row of result.value.slice(0, 10)) {
+        const rows = result.value ?? [];
+        if (rows.length > 0) {
+            console.log(`Returned ${rows.length} rows:`);
+            for (const row of rows.slice(0, 10)) {
                 console.log(`  ${JSON.stringify(row)}`);
             }
         } else {
@@ -83,10 +84,12 @@ async function main() {
         };
         const controlResult = await client.listKustoShowCommandResultsAsync(controlInput);
 
-        if (controlResult?.value && Array.isArray(controlResult.value)) {
-            console.log(`Found ${controlResult.value.length} databases:`);
-            for (const row of controlResult.value.slice(0, 10)) {
-                console.log(`  - ${row.DatabaseName ?? row.Name ?? JSON.stringify(row)}`);
+        const controlRows = controlResult.value ?? [];
+        if (controlRows.length > 0) {
+            console.log(`Found ${controlRows.length} databases:`);
+            for (const row of controlRows.slice(0, 10)) {
+                const rowRecord = row;
+                console.log(`  - ${rowRecord.DatabaseName ?? rowRecord.Name ?? JSON.stringify(row)}`);
             }
         } else {
             console.log("Result:", JSON.stringify(controlResult, null, 2));
@@ -115,7 +118,7 @@ async function main() {
             console.log(`  Message: ${error.message}`);
             console.log(`  Status: ${error.statusCode}`);
         } else {
-            console.log(`Unexpected error type: ${error?.constructor?.name}`);
+            console.log(`Unexpected error type: ${(error).constructor.name}`);
         }
     }
 

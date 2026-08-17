@@ -59,7 +59,6 @@ async function main() {
     // Example 2: Send Email
     console.log("\n--- Send Email ---");
     try {
-        /** @type {{ To: string, Subject: string, Body: string }} */
         const email = {
             To: process.env.TEST_EMAIL_TO ?? "test@example.com",
             Subject: "Test from ESM JavaScript Sample",
@@ -80,7 +79,7 @@ async function main() {
     console.log("\n--- Get Emails ---");
     try {
         const emails = await client.getEmailsAsync();
-        const emailList = emails?.value ?? [];
+        const emailList = emails.value ?? [];
         console.log(`Found ${emailList.length} emails in inbox.`);
         for (const email of emailList.slice(0, 3)) {
             console.log(`  - ${email.subject ?? "No Subject"}`);

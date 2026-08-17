@@ -15,7 +15,7 @@
  *     $env:TEAMS_CONNECTION_URL = "https://[region].azure-apihub.net/apim/teams/[connection-id]"
  *
  *   Run:
- *     npm run teams
+ *     npm start
  */
 
 "use strict";
@@ -104,7 +104,7 @@ async function main() {
                 "user",
                 "channel",
             );
-            console.log(`Message posted successfully (id: ${result?.id ?? "unknown"}).`);
+            console.log(`Message posted successfully (id: ${result.id ?? "unknown"}).`);
         } catch (error) {
             if (error instanceof ConnectorException) {
                 console.log(`Connector error: ${error.message}`);
@@ -119,12 +119,15 @@ async function main() {
         console.log("\n--- Get Channel Messages ---");
         try {
             const messagesResponse = await client.getMessagesFromChannelAsync(firstTeamId, firstChannelId);
-            const messages = messagesResponse?.value ?? [];
+            // NOTE: ChatMessageList is typed as [key: string]: unknown; at runtime value is an array
+            const rawValue = messagesResponse.value;
+            const messages = (Array.isArray(rawValue) ? rawValue : []);
 
             if (messages.length > 0) {
                 console.log(`Found ${messages.length} messages:`);
                 for (const message of messages.slice(0, 3)) {
-                    const content = message.body?.content;
+                    const body = message.body;
+                    const content = body?.content;
                     const preview = content
                         ? content.replace(/<[^>]+>/g, "").slice(0, 60)
                         : "No content";
@@ -142,28 +145,30 @@ async function main() {
         }
     }
 
-    // Example 5: Polling trigger — check for new channel messages
+    // Example 5: Poll for channel updates by re-reading recent messages
     if (firstTeamId && firstChannelId) {
-        console.log("\n--- Trigger: Poll for New Channel Messages ---");
+        console.log("\n--- Poll Channel Messages ---");
         try {
-            const triggerResponse = await client.onNewChannelMessageAsync(firstTeamId, firstChannelId);
-            const triggerMessages = Array.isArray(triggerResponse?.value) ? triggerResponse.value : [];
+            const messagesResponse = await client.getMessagesFromChannelAsync(firstTeamId, firstChannelId);
+            const rawValue = messagesResponse.value;
+            const polledMessages = (Array.isArray(rawValue) ? rawValue : []);
 
-            if (triggerMessages.length > 0) {
-                console.log(`Trigger returned ${triggerMessages.length} new messages:`);
-                for (const message of triggerMessages.slice(0, 3)) {
-                    const content = message.body?.content;
+            if (polledMessages.length > 0) {
+                console.log(`Poll returned ${polledMessages.length} messages:`);
+                for (const message of polledMessages.slice(0, 3)) {
+                    const body = message.body;
+                    const content = body?.content;
                     const preview = content
                         ? content.replace(/<[^>]+>/g, "").slice(0, 60)
                         : "No content";
                     console.log(`  - [${message.createdDateTime ?? ""}] ${preview}`);
                 }
             } else {
-                console.log("No new messages from trigger poll.");
+                console.log("No messages returned from poll.");
             }
         } catch (error) {
             if (error instanceof ConnectorException) {
-                console.log(`Trigger poll response (${error.statusCode}): No new messages available.`);
+                console.log(`Polling response (${error.statusCode}): No messages available.`);
             } else {
                 throw error;
             }

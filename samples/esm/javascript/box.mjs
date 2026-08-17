@@ -11,7 +11,7 @@
  *     $env:BOX_TEST_FILE_ID   = "[optional file id]"
  *
  *   Run:
- *     node box.mjs
+ *     npm start
  */
 
 import { ManagedIdentityTokenProvider, ConnectorException } from "@azure/connectors";

@@ -221,7 +221,7 @@ describe("TeamsClient — getTagsAsync", () => {
 
         expect(result).toEqual(mockResponse);
         const [url] = (global.fetch as jest.Mock).mock.calls[0];
-        expect(url).toContain("/beta/teams/");
+        expect(url).toContain("/v1.0/teams/");
         expect(url).toContain("/tags");
     });
 });

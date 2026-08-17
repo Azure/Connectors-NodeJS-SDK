@@ -44,7 +44,8 @@ async function main() {
         if (fileList.length > 0) {
             console.log(`Found ${fileList.length} items in root:`);
             for (const file of fileList.slice(0, 10)) {
-                const icon = file.IsFolder ? "[folder]" : "[file]";
+                const isFolder = file.IsFolder ?? false;
+                const icon = isFolder ? "[folder]" : "[file]";
                 console.log(`  ${icon} ${file.DisplayName ?? file.Name ?? "Unknown"} (${file.Size ?? "?"} bytes)`);
             }
         } else {
@@ -64,6 +65,7 @@ async function main() {
         console.log(`\n--- Get File Metadata (${fileId}) ---`);
         try {
             const metadata = await client.getFileMetadataAsync(fileId);
+
             console.log(`  Name: ${metadata.DisplayName ?? metadata.Name}`);
             console.log(`  Size: ${metadata.Size ?? "unknown"} bytes`);
             console.log(`  Last Modified: ${metadata.LastModified ?? "unknown"}`);
@@ -84,17 +86,33 @@ async function main() {
         console.log(`\n--- List Folder Contents ---`);
         try {
             const contents = await client.listFolderAsync(folderId);
-            const contentList = contents ?? [];
+            const contentList = contents.value ?? [];
 
             if (contentList.length > 0) {
                 console.log(`Found ${contentList.length} items:`);
                 for (const item of contentList.slice(0, 10)) {
-                    const icon = item.IsFolder ? "[folder]" : "[file]";
+                    const isFolder = item.IsFolder ?? false;
+                    const icon = isFolder ? "[folder]" : "[file]";
                     console.log(`  ${icon} ${item.DisplayName ?? item.Name ?? "Unknown"}`);
                 }
             } else {
                 console.log("Folder is empty.");
             }
+        } catch (error) {
+            if (error instanceof ConnectorException) {
+                console.log(`Connector error (${error.statusCode}): ${error.message}`);
+            } else {
+                throw error;
+            }
+        }
+    }
+
+    // Example 4: Get thumbnail
+    if (fileId) {
+        console.log(`\n--- Get File Thumbnail ---`);
+        try {
+            const thumbnail = await client.getFileThumbnailAsync(fileId);
+            console.log(`  Thumbnail URL: ${String(thumbnail.Url ?? "none").substring(0, 80)}...`);
         } catch (error) {
             if (error instanceof ConnectorException) {
                 console.log(`Connector error (${error.statusCode}): ${error.message}`);

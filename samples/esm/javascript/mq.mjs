@@ -40,13 +40,15 @@ async function main() {
 
     // Example 1: Send a message to a queue
     console.log("\n--- Send Message ---");
+    let sentMessageId;
     try {
         const sendResult = await client.sendAsync({
             Queue: QUEUE_NAME,
-            MessageData: `Hello from SDK sample! (${new Date().toISOString()})`,
+            Message: `Hello from SDK sample! (${new Date().toISOString()})`,
         });
+        sentMessageId = sendResult.MessageId;
         console.log(`Message sent successfully.`);
-        console.log(`  MessageId: ${sendResult.MessageId ?? "unknown"}`);
+        console.log(`  MessageId: ${sentMessageId ?? "unknown"}`);
         console.log(`  CorrelationId: ${sendResult.CorrelationId ?? "none"}`);
     } catch (error) {
         if (error instanceof ConnectorException) {
@@ -59,7 +61,11 @@ async function main() {
     // Example 2: Read (peek) a message without removing it
     console.log("\n--- Read (Peek) Message ---");
     try {
-        const message = await client.readAsync({ Queue: QUEUE_NAME, Timeout: 5 });
+        const readOptions = {
+            Queue: QUEUE_NAME,
+            Timeout: "5",
+        };
+        const message = await client.readAsync(readOptions);
         console.log(`Message read successfully:`);
         console.log(`  MessageId: ${message.MessageId ?? "unknown"}`);
         console.log(`  Data: ${message.MessageData ?? "empty"}`);
@@ -74,7 +80,12 @@ async function main() {
     // Example 3: Receive (destructive read) messages
     console.log("\n--- Receive Messages ---");
     try {
-        const messages = await client.receiveAllAsync({ Queue: QUEUE_NAME, MaxCount: 5, Timeout: 5 });
+        const receiveOptions = {
+            Queue: QUEUE_NAME,
+            BatchSize: 5,
+            Timeout: "5",
+        };
+        const messages = await client.receiveAllAsync(receiveOptions);
         const messageList = messages.value ?? [];
         console.log(`Received ${messageList.length} messages:`);
         for (const msg of messageList.slice(0, 5)) {

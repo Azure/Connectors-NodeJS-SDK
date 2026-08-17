@@ -5,9 +5,9 @@
  * TypeScript samples for every connector where a JS counterpart is missing.
  *
  * Approach:
- *   - Uses the TypeScript compiler to remove types and type-only imports.
- *   - Emits native ESM or CommonJS without attempting to parse TypeScript
- *     syntax with regular expressions.
+ *   - Uses the TypeScript parser to locate type-only syntax, then removes it
+ *     from the original source so comments and formatting remain stable.
+ *   - Converts CJS imports to destructured require() calls.
  *   - Rewords the JSDoc header and any in-code log strings from TypeScript
  *     to JavaScript so the sample self-describes correctly.
  *
@@ -39,38 +39,91 @@ const EsmJavaScriptDir = path.join(OutputRoot, "esm", "javascript");
 const CjsJavaScriptDir = path.join(OutputRoot, "cjs", "javascript");
 
 /**
- * Transpiles a TypeScript sample using the compiler's parser and emitter.
+ * Returns the runtime imports used by the sample corpus.
  */
-function transpileSample(source, sourceFileName, moduleKind) {
-    const result = ts.transpileModule(source, {
-        compilerOptions: {
-            module: moduleKind,
-            newLine: ts.NewLineKind.LineFeed,
-            removeComments: false,
-            target: ts.ScriptTarget.ES2022,
-        },
-        fileName: sourceFileName,
-        reportDiagnostics: true,
-    });
-    const errors = (result.diagnostics ?? [])
-        .filter(diagnostic => diagnostic.category === ts.DiagnosticCategory.Error);
-
-    if (errors.length > 0) {
-        throw new Error(ts.formatDiagnostics(errors, {
-            getCanonicalFileName: fileName => fileName,
-            getCurrentDirectory: () => RepositoryRoot,
-            getNewLine: () => "\n",
-        }));
+function getRuntimeImportNames(importDeclaration) {
+    const importClause = importDeclaration.importClause;
+    if (!importClause?.namedBindings || !ts.isNamedImports(importClause.namedBindings)) {
+        return [];
     }
 
-    return result.outputText;
+    const moduleSpecifier = importDeclaration.moduleSpecifier.text;
+    return importClause.namedBindings.elements
+        .filter(importSpecifier =>
+            moduleSpecifier === "@azure/connectors" ||
+            (moduleSpecifier.startsWith("@azure/connectors/generated/") && importSpecifier.name.text.endsWith("Client")))
+        .map(importSpecifier => importSpecifier.name.text);
+}
+
+/**
+ * Removes TypeScript-only syntax while retaining the source's whitespace.
+ */
+function stripTypeScriptSyntax(source, sourceFileName, moduleShape) {
+    const sourceFile = ts.createSourceFile(
+        sourceFileName,
+        source,
+        ts.ScriptTarget.ES2022,
+        true,
+        ts.ScriptKind.TS,
+    );
+    const edits = [];
+
+    function removeTypeAnnotation(node) {
+        if (!node.type) {
+            return;
+        }
+
+        const typeStart = node.type.getStart(sourceFile);
+        const colonStart = source.lastIndexOf(":", typeStart);
+        edits.push({ start: colonStart, end: node.type.end, replacement: "" });
+    }
+
+    function visit(node) {
+        if (ts.isImportDeclaration(node)) {
+            const runtimeImportNames = getRuntimeImportNames(node);
+            const moduleSpecifier = node.moduleSpecifier.text;
+            const replacement = runtimeImportNames.length === 0
+                ? ""
+                : moduleShape === "esm"
+                    ? `import { ${runtimeImportNames.join(", ")} } from "${moduleSpecifier}";`
+                    : `const { ${runtimeImportNames.join(", ")} } = require("${moduleSpecifier}");`;
+            edits.push({ start: node.getStart(sourceFile), end: node.end, replacement });
+            return;
+        }
+
+        if (ts.isVariableDeclaration(node) ||
+            ts.isParameter(node) ||
+            ts.isFunctionDeclaration(node) ||
+            ts.isFunctionExpression(node) ||
+            ts.isArrowFunction(node) ||
+            ts.isMethodDeclaration(node)) {
+            removeTypeAnnotation(node);
+        }
+
+        if (ts.isAsExpression(node) || ts.isSatisfiesExpression(node)) {
+            edits.push({ start: node.expression.end, end: node.end, replacement: "" });
+        } else if (ts.isNonNullExpression(node)) {
+            edits.push({ start: node.expression.end, end: node.end, replacement: "" });
+        }
+
+        ts.forEachChild(node, visit);
+    }
+
+    visit(sourceFile);
+
+    return edits
+        .sort((left, right) => right.start - left.start)
+        .reduce(
+            (result, edit) => result.slice(0, edit.start) + edit.replacement + result.slice(edit.end),
+            source,
+        );
 }
 
 /**
  * Applies the JSDoc header, usage-block, and log-string rewording that maps
  * the ESM / CJS TypeScript samples onto their JavaScript counterparts.
  */
-function applyHeaderRewrites(source, moduleShape, targetFileName) {
+function applyHeaderRewrites(source, moduleShape) {
     let result = source;
 
     // Header separator is either an em-dash or a hyphen; preserve whichever
@@ -93,13 +146,13 @@ function applyHeaderRewrites(source, moduleShape, targetFileName) {
     // Long-form usage block: dev-run + build-run.
     result = result.replace(
         / \*   Run with tsx \(dev\):\r?\n \*     (?:npm run dev|npx tsx [^\r\n]+)\r?\n \*\r?\n \*   Or compile and run:\r?\n \*     (?:npm run build|node dist\/[^\r\n]+)\r?\n(?: \*     [^\r\n]+\r?\n)?/,
-        ` *   Run:\n *     node ${targetFileName}\n`,
+        " *   Run:\n *     npm start\n",
     );
 
     // Short-form usage block: only the dev-run line.
     result = result.replace(
         / \*   Run with tsx \(dev\):\r?\n \*     (?:npm run dev|npx tsx [^\r\n]+)\r?\n(?= \*\/)/,
-        ` *   Run:\n *     node ${targetFileName}\n`,
+        " *   Run:\n *     npm start\n",
     );
 
     // In-code log strings referring to the sample flavour.
@@ -111,23 +164,24 @@ function applyHeaderRewrites(source, moduleShape, targetFileName) {
 /**
  * Transforms an ESM TypeScript sample into an ESM JavaScript (.mjs) sample.
  */
-function transformEsmSample(source, sourceFileName, targetFileName) {
-    return transpileSample(
-        applyHeaderRewrites(source, "esm", targetFileName),
+function transformEsmSample(source, sourceFileName) {
+    return stripTypeScriptSyntax(
+        applyHeaderRewrites(source, "esm"),
         sourceFileName,
-        ts.ModuleKind.ESNext,
+        "esm",
     );
 }
 
 /**
  * Transforms a CJS TypeScript sample into a CJS JavaScript (.cjs) sample.
  */
-function transformCjsSample(source, sourceFileName, targetFileName) {
-    return transpileSample(
-        applyHeaderRewrites(source, "cjs", targetFileName),
+function transformCjsSample(source, sourceFileName) {
+    const result = stripTypeScriptSyntax(
+        applyHeaderRewrites(source, "cjs"),
         sourceFileName,
-        ts.ModuleKind.CommonJS,
+        "cjs",
     );
+    return result.replace(/(\*\/\r?\n\r?\n)(?=const\s+\{)/, `$1"use strict";${result.includes("\r\n") ? "\r\n\r\n" : "\n\n"}`);
 }
 
 /**
@@ -153,7 +207,7 @@ function generateMissingSamples(sourceDir, sourceExt, targetDir, targetExt, tran
 
         const sourceFile = path.join(sourceDir, entry);
         const source = fs.readFileSync(sourceFile, "utf8");
-        fs.writeFileSync(targetFile, transform(source, sourceFile, path.basename(targetFile)));
+        fs.writeFileSync(targetFile, transform(source, sourceFile));
         results.written.push(connectorName);
     }
 

@@ -11,7 +11,7 @@
  *     $env:DROPBOX_TEST_FILE_ID   = "[optional file id]"
  *
  *   Run:
- *     node dropbox.mjs
+ *     npm start
  */
 
 import { ManagedIdentityTokenProvider, ConnectorException } from "@azure/connectors";
