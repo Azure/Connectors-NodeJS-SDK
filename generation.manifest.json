@@ -237,6 +237,30 @@
     "_comment": "Trigger routes the generator drops because their simplified trigger name collides with a newer version kept in their place. Captured from the generator's 'ROUTE IDENTITY LOSS' warnings for this run and verifiable by regeneration; recorded here so a silent catalog drop is reviewable in-repo rather than only on a console. Tracked in AzureUX-BPM PR 16476697.",
     "droppedTriggerRoutes": [
       {
+        "connector": "box",
+        "droppedOperationId": "OnUpdatedFiles",
+        "path": "/datasets/default/triggers/batch/onupdatedfile",
+        "keptOperationId": "OnUpdatedFilesV2"
+      },
+      {
+        "connector": "office365",
+        "droppedOperationId": "OnFlaggedEmailV3",
+        "path": "/v3/Mail/OnFlaggedEmail",
+        "keptOperationId": "OnFlaggedEmailV4"
+      },
+      {
+        "connector": "docusign",
+        "droppedOperationId": "CreateHookEnvelopeV3",
+        "path": "/accounts/{accountId}/connectV3",
+        "keptOperationId": "CreateHookEnvelopeV4"
+      },
+      {
+        "connector": "googletasks",
+        "droppedOperationId": "OnCompletedTaskInList",
+        "path": "/trigger3/lists/{taskListId}/tasks",
+        "keptOperationId": "OnCompletedTaskInListV2"
+      },
+      {
         "connector": "jira",
         "droppedOperationId": "OnNewIssue",
         "path": "/new_issue_trigger/search",
@@ -253,12 +277,6 @@
         "droppedOperationId": "OnNewIssueJQL",
         "path": "/new_issue_jql_trigger/search",
         "keptOperationId": "OnNewIssueJQL_V2"
-      },
-      {
-        "connector": "office365",
-        "droppedOperationId": "OnFlaggedEmailV3",
-        "path": "/v3/Mail/OnFlaggedEmail",
-        "keptOperationId": "OnFlaggedEmailV4"
       }
     ]
   }

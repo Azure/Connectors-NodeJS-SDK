@@ -248,7 +248,7 @@ The following connectors have been generated and validated with comprehensive te
 | **Power BI** | `@azure/connectors/generated/PowerbiExtensions` | ✅ Complete | 6 tests |
 | **Salesforce** | `@azure/connectors/generated/SalesforceExtensions` | ✅ Complete | 6 tests |
 | **Shifts for Microsoft Teams** | `@azure/connectors/generated/ShiftsExtensions` | ✅ Complete | 6 tests |
-| **Slack** | `@azure/connectors/generated/SlackExtensions` | ✅ Complete | 6 tests |
+| **Slack** | `@azure/connectors/generated/SlackExtensions` | ✅ Complete | 7 tests |
 | **Microsoft To Do Business** | `@azure/connectors/generated/TodoExtensions` | ✅ Complete | 6 tests |
 | **Box** | `@azure/connectors/generated/BoxExtensions` | ✅ Complete | 8 tests |
 | **Dropbox** | `@azure/connectors/generated/DropboxExtensions` | ✅ Complete | 8 tests |
@@ -257,7 +257,7 @@ The following connectors have been generated and validated with comprehensive te
 | **Google Calendar** | `@azure/connectors/generated/GooglecalendarExtensions` | ✅ Complete | 8 tests |
 | **Google Drive** | `@azure/connectors/generated/GoogledriveExtensions` | ✅ Complete | 8 tests |
 | **Google Tasks** | `@azure/connectors/generated/GoogletasksExtensions` | ✅ Complete | 8 tests |
-| **Office 365 Groups Mail** | `@azure/connectors/generated/Office365groupsmailExtensions` | ✅ Complete | 8 tests |
+| **Office 365 Groups Mail** | `@azure/connectors/generated/Office365groupsmailExtensions` | ✅ Complete | 9 tests |
 | **RSS** | `@azure/connectors/generated/RssExtensions` | ✅ Complete | 8 tests |
 
 **Total:** 587 tests across 42 test suites and 30 generated connectors.
