@@ -195,7 +195,7 @@ async function main(): Promise<void> {
             console.log(`  Message: ${error.message}`);
             console.log(`  Status: ${error.statusCode}`);
         } else {
-            console.log(`Unexpected error type: ${(error as Error).constructor.name}`);
+            console.log(`Unexpected error type: ${(error as Error)?.constructor?.name}`);
         }
     }
 
