@@ -68,7 +68,7 @@ describe("WebexClient — getMessagesAsync", () => {
         mockFetchResponse(messages);
 
         const client = new WebexClient(TestConnectionUrl, createMockTokenProvider());
-        const result = await client.getMessagesAsync();
+        const result = await client.getMessagesAsync("room1");
 
         expect(result).toEqual(messages);
         expect(global.fetch).toHaveBeenCalledTimes(1);
@@ -82,7 +82,7 @@ describe("WebexClient — getMessagesAsync", () => {
 
         const client = new WebexClient(TestConnectionUrl, createMockTokenProvider());
         try {
-            await client.getMessagesAsync();
+            await client.getMessagesAsync("room1");
             throw new Error("Expected ConnectorException to be thrown.");
         } catch (error) {
             expect(error).toBeInstanceOf(ConnectorException);

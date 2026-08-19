@@ -30,6 +30,7 @@ async function main(): Promise<void> {
     // Example 1: Create a support ticket.
     try {
         const ticket = await client.createTicketAsync({
+            email: "requester@example.com",
             subject: "Cannot access email",
             status: "Open",
             priority: "High",

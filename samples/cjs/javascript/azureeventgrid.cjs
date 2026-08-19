@@ -19,7 +19,7 @@
 "use strict";
 
 const { ManagedIdentityTokenProvider } = require("@azure/connectors");
-const { AzureeventgridClient } = require("@azure/connectors/generated/AzureeventgridExtensions");
+const { AzureeventgridClient, AzureeventgridTriggerOperations } = require("@azure/connectors/generated/AzureeventgridExtensions");
 
 const CONNECTION_URL = process.env.AZUREEVENTGRID_CONNECTION_URL ?? "";
 

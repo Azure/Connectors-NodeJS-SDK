@@ -69,6 +69,7 @@ describe("FreshserviceClient — createTicketAsync", () => {
 
         const client = new FreshserviceClient(TestConnectionUrl, createMockTokenProvider());
         const result = await client.createTicketAsync({
+            email: "requester@example.com",
             subject: "Cannot access email",
             status: "Open",
             priority: "High",
@@ -88,6 +89,7 @@ describe("FreshserviceClient — createTicketAsync", () => {
         const client = new FreshserviceClient(TestConnectionUrl, createMockTokenProvider());
         try {
             await client.createTicketAsync({
+                email: "requester@example.com",
                 subject: "Cannot access email",
                 status: "Open",
                 priority: "High",

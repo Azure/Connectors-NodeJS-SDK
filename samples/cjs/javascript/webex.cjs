@@ -8,6 +8,7 @@
  * Usage:
  *   Set environment variables:
  *     $env:WEBEX_CONNECTION_URL = "https://[region].azure-apihub.net/apim/webex/[connection-id]"
+ *     $env:WEBEX_ROOM_ID        = "[Webex space/room id to list messages from]"
  *
  *   Run:
  *     npm start
@@ -29,9 +30,10 @@ async function main() {
     const tokenProvider = new ManagedIdentityTokenProvider();
     const client = new WebexClient(CONNECTION_URL, tokenProvider);
 
-    // Example 1: List the messages.
+    // Example 1: List messages in a Webex space (a room ID is required).
+    const roomId = process.env.WEBEX_ROOM_ID ?? "sample-room-id";
     try {
-        const messages = await client.getMessagesAsync();
+        const messages = await client.getMessagesAsync(roomId);
         console.log("Messages:", JSON.stringify(messages, null, 2));
     } catch (error) {
         if (error instanceof ConnectorException) {

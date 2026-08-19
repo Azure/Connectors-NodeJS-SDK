@@ -51,7 +51,10 @@ function getRuntimeImportNames(importDeclaration) {
     return importClause.namedBindings.elements
         .filter(importSpecifier =>
             moduleSpecifier === "@azure/connectors" ||
-            (moduleSpecifier.startsWith("@azure/connectors/generated/") && importSpecifier.name.text.endsWith("Client")))
+            (moduleSpecifier.startsWith("@azure/connectors/generated/") &&
+                (importSpecifier.name.text.endsWith("Client") ||
+                    importSpecifier.name.text.endsWith("TriggerOperations") ||
+                    importSpecifier.name.text.endsWith("TriggerParameters"))))
         .map(importSpecifier => importSpecifier.name.text);
 }
 

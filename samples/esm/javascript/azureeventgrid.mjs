@@ -17,7 +17,7 @@
  */
 
 import { ManagedIdentityTokenProvider } from "@azure/connectors";
-import { AzureeventgridClient } from "@azure/connectors/generated/AzureeventgridExtensions";
+import { AzureeventgridClient, AzureeventgridTriggerOperations } from "@azure/connectors/generated/AzureeventgridExtensions";
 
 const CONNECTION_URL = process.env.AZUREEVENTGRID_CONNECTION_URL ?? "";
 
