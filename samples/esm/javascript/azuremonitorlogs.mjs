@@ -44,15 +44,22 @@ async function main() {
     console.log("\n--- Run KQL Query ---");
     console.log(`Query: ${kqlQuery}`);
     try {
+        const input = {
+            query: kqlQuery,
+            timerangetype: "Last 24 hours",
+            timerange: {},
+        };
+
         const result = await client.queryDataAsync(
-            { query: kqlQuery, timerangetype: "Last 24 hours", timerange: {} },
+            input,
             SUBSCRIPTIONS || undefined,
             RESOURCE_GROUPS || undefined,
         );
 
-        if (result.value && Array.isArray(result.value)) {
-            console.log(`Returned ${result.value.length} rows:`);
-            for (const row of result.value.slice(0, 10)) {
+        const rows = result.value ?? [];
+        if (rows.length > 0) {
+            console.log(`Returned ${rows.length} rows:`);
+            for (const row of rows.slice(0, 10)) {
                 console.log(`  ${JSON.stringify(row)}`);
             }
         } else {
@@ -69,15 +76,22 @@ async function main() {
     // Example 2: Visualize a query
     console.log("\n--- Visualize Query ---");
     try {
+        const visInput = {
+            query: "Heartbeat | summarize count() by Computer | take 10",
+            timerangetype: "Last 24 hours",
+            timerange: {},
+        };
+
         const visResult = await client.visualizeQueryAsync(
-            { query: "Heartbeat | summarize count() by Computer | take 10", timerangetype: "Last 24 hours", timerange: {} },
+            visInput,
             SUBSCRIPTIONS || undefined,
             RESOURCE_GROUPS || undefined,
             undefined,
             undefined,
             "piechart",
         );
-        console.log("Visualization result keys:", Object.keys(visResult).join(", "));
+        const visRecord = visResult;
+        console.log("Visualization result keys:", Object.keys(visRecord).join(", "));
     } catch (error) {
         if (error instanceof ConnectorException) {
             console.log(`Connector error (${error.statusCode}): ${error.message}`);

@@ -43,7 +43,7 @@ async function main() {
     if (CONTAINER) {
         console.log(`\n--- List Blobs (${CONTAINER}) ---`);
         try {
-            const blobs = await client.listFolderV2Async(CONTAINER);
+            const blobs = await client.listFolderAsync(CONTAINER, "/");
             const blobValues = blobs.value ?? [];
 
             if (blobValues.length > 0) {
@@ -69,6 +69,7 @@ async function main() {
         console.log(`\n--- Get Blob Metadata (${blobPath}) ---`);
         try {
             const metadata = await client.getFileMetadataAsync(CONTAINER, blobPath);
+
             console.log(`  Name: ${metadata.DisplayName ?? metadata.Name}`);
             console.log(`  Size: ${metadata.Size ?? "unknown"} bytes`);
             console.log(`  Last Modified: ${metadata.LastModified ?? "unknown"}`);
@@ -82,13 +83,18 @@ async function main() {
         }
     }
 
-    // Example 3: Get SAS URI for a blob
+    // Example 3: Create a share link for a blob
     if (STORAGE_ACCOUNT && blobPath) {
-        console.log("\n--- Get SAS URI ---");
+        console.log("\n--- Create Share Link ---");
         try {
-            const sas = await client.createSasUriAsync(STORAGE_ACCOUNT, CONTAINER, blobPath);
+            const policy = {};
+            const sas = await client.createShareLinkByPathAsync(
+                policy,
+                STORAGE_ACCOUNT,
+                blobPath,
+            );
             const webUrl = sas.WebUrl ?? "";
-            console.log(`  SAS URI: ${webUrl.substring(0, 80)}...`);
+            console.log(`  Share Link: ${webUrl.substring(0, 80)}...`);
         } catch (error) {
             if (error instanceof ConnectorException) {
                 console.log(`Connector error (${error.statusCode}): ${error.message}`);

@@ -9,113 +9,9 @@ import { TokenProvider } from "../azureConnectors/authentication.ts";
 // #region Types
 
 /**
- * Definition: AsyncCommandResult
- */
-export interface AsyncCommandResult {
-    /** The operation ID of the control command */
-    operationId?: string;
-    /** The state of the command. */
-    state?: string;
-    /** The status of the command. */
-    status?: string;
-}
-
-/**
- * Definition: ChartType
- */
-export type ChartType = "Html Table" | "Pie Chart" | "Time Chart" | "Bar Chart";
-
-/**
- * Definition: ClusterName
- */
-export type ClusterName = string;
-
-/**
- * Definition: CommandAndVisualizeSchema
- */
-export interface CommandAndVisualizeSchema {
-    chartType: ChartType;
-    cluster: ClusterName;
-    /** Specify the control command you would like to run */
-    csl: string;
-    db: DatabaseName;
-}
-
-/**
- * Definition: ControlCommandAndListSchema
- */
-export interface ControlCommandAndListSchema {
-    cluster: ClusterName;
-    /** Specify the show control command you would like to run */
-    csl: string;
-    db: DatabaseName;
-}
-
-/**
- * Definition: DatabaseName
- */
-export type DatabaseName = string;
-
-/**
- * Definition: MCPQueryRequest
- */
-export interface MCPQueryRequest {
-    callbackEndpoint?: string;
-    error?: Record<string, unknown>;
-    id?: string;
-    jsonrpc?: string;
-    method?: string;
-    params?: Record<string, unknown>;
-    result?: Record<string, unknown>;
-}
-
-/**
- * Definition: MCPQueryResponse
- */
-export interface MCPQueryResponse {
-    error?: Record<string, unknown>;
-    id?: string;
-    jsonrpc?: string;
-    method?: string;
-    params?: Record<string, unknown>;
-    result?: Record<string, unknown>;
-}
-
-/**
  * Definition: Object
  */
 export interface ObjectEntity {
-    [key: string]: unknown;
-}
-
-/**
- * Definition: Query
- */
-export type Query = string;
-
-/**
- * Definition: QueryAndListSchema
- */
-export interface QueryAndListSchema {
-    cluster: ClusterName;
-    csl: Query;
-    db: DatabaseName;
-}
-
-/**
- * Definition: QueryAndVisualizeSchema
- */
-export interface QueryAndVisualizeSchema {
-    chartType: ChartType;
-    cluster: ClusterName;
-    csl: Query;
-    db: DatabaseName;
-}
-
-/**
- * Definition: Row
- */
-export interface Row {
     [key: string]: unknown;
 }
 
@@ -127,19 +23,123 @@ export interface Table {
 }
 
 /**
+ * Definition: Row
+ */
+export interface Row {
+    [key: string]: unknown;
+}
+
+/**
+ * Definition: QueryAndVisualizeSchema
+ */
+export interface QueryAndVisualizeSchema {
+    cluster: ClusterName;
+    db: DatabaseName;
+    csl: Query;
+    chartType: ChartType;
+}
+
+/**
+ * Definition: CommandAndVisualizeSchema
+ */
+export interface CommandAndVisualizeSchema {
+    cluster: ClusterName;
+    db: DatabaseName;
+    /** Specify the control command you would like to run */
+    csl: string;
+    chartType: ChartType;
+}
+
+/**
+ * Definition: QueryAndListSchema
+ */
+export interface QueryAndListSchema {
+    cluster: ClusterName;
+    db: DatabaseName;
+    csl: Query;
+}
+
+/**
+ * Definition: ControlCommandAndListSchema
+ */
+export interface ControlCommandAndListSchema {
+    cluster: ClusterName;
+    db: DatabaseName;
+    /** Specify the show control command you would like to run */
+    csl: string;
+}
+
+/**
+ * Definition: ClusterName
+ */
+export type ClusterName = string;
+
+/**
+ * Definition: DatabaseName
+ */
+export type DatabaseName = string;
+
+/**
+ * Definition: Query
+ */
+export type Query = string;
+
+/**
+ * Definition: ChartType
+ */
+export type ChartType = "Html Table" | "Pie Chart" | "Time Chart" | "Bar Chart";
+
+/**
  * Definition: VisualizeResults
  */
 export interface VisualizeResults {
-    /** The content of the attachment. */
-    attachmentContent?: string;
-    /** The name of the attachment file. */
-    attachmentName?: string;
     /** The body of the result in base64 encoding. */
     body?: string;
     /** The body of the result in html encoding. */
     bodyHtml?: string;
+    /** The content of the attachment. */
+    attachmentContent?: string;
+    /** The name of the attachment file. */
+    attachmentName?: string;
     /** Links to run the query in Kusto tools, for instance in KustoExplorer. */
     kustoDeepLink?: string;
+}
+
+/**
+ * Definition: AsyncCommandResult
+ */
+export interface AsyncCommandResult {
+    /** The state of the command. */
+    state?: string;
+    /** The status of the command. */
+    status?: string;
+    /** The operation ID of the control command */
+    operationId?: string;
+}
+
+/**
+ * Definition: MCPQueryRequest
+ */
+export interface MCPQueryRequest {
+    jsonrpc?: string;
+    id?: string;
+    method?: string;
+    params?: Record<string, unknown>;
+    result?: Record<string, unknown>;
+    error?: Record<string, unknown>;
+    callbackEndpoint?: string;
+}
+
+/**
+ * Definition: MCPQueryResponse
+ */
+export interface MCPQueryResponse {
+    jsonrpc?: string;
+    id?: string;
+    method?: string;
+    params?: Record<string, unknown>;
+    result?: Record<string, unknown>;
+    error?: Record<string, unknown>;
 }
 // #endregion Types
 
@@ -197,22 +197,6 @@ export class KustoClient extends ConnectorClientBase {
     }
 
     /**
-     * Run async control command
-     * @remarks Runs control command in async mode and returns its ID, state and status on completion. Command can run for maximum 1 hour. The 'async' keyword is mandatory e.g .set-or-append async TargetTable <| SourceTable.
-     */
-    public async runAsyncControlCommandAndWaitAsync(input: ControlCommandAndListSchema, abortSignal?: AbortSignal): Promise<AsyncCommandResult> {
-        const requestPath = `/RunAsyncControlCommandAndWait`;
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<AsyncCommandResult>("POST", url, undefined, input, abortSignal);
-
-        if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
-        }
-
-        return httpResponse.value as AsyncCommandResult;
-    }
-
-    /**
      * Run KQL query and render a chart
      * @remarks Runs the KQL query and returns result as a chart of your choice e.g TableName | where Timestamp > ago(1h) | project timestamp, value.
      */
@@ -242,6 +226,22 @@ export class KustoClient extends ConnectorClientBase {
         }
 
         return httpResponse.value as VisualizeResults;
+    }
+
+    /**
+     * Run async control command
+     * @remarks Runs control command in async mode and returns its ID, state and status on completion. Command can run for maximum 1 hour. The 'async' keyword is mandatory e.g .set-or-append async TargetTable <| SourceTable.
+     */
+    public async runAsyncControlCommandAndWaitAsync(input: ControlCommandAndListSchema, abortSignal?: AbortSignal): Promise<AsyncCommandResult> {
+        const requestPath = `/RunAsyncControlCommandAndWait`;
+        const url = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<AsyncCommandResult>("POST", url, undefined, input, abortSignal);
+
+        if (!httpResponse.isSuccessStatusCode) {
+            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+        }
+
+        return httpResponse.value as AsyncCommandResult;
     }
 
     /**

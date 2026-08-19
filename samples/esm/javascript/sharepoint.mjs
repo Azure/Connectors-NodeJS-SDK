@@ -17,7 +17,7 @@
  *     $env:SHAREPOINT_SITE_URL = "https://[tenant].sharepoint.com/sites/[site-name]"
  *
  *   Run:
- *     npm run sharepoint
+ *     npm start
  */
 
 import { ManagedIdentityTokenProvider, ConnectorException } from "@azure/connectors";
@@ -48,7 +48,7 @@ async function main() {
     console.log("\n--- Get All Lists and Libraries ---");
     try {
         const tables = await client.getAllTablesAsync(SITE_URL);
-        const lists = tables?.value ?? [];
+        const lists = tables.value ?? [];
 
         if (lists.length > 0) {
             console.log(`Found ${lists.length} lists and libraries:`);
@@ -70,12 +70,12 @@ async function main() {
     console.log(`\n--- Get List Items (${listName}) ---`);
     try {
         const items = await client.getItemsAsync(SITE_URL, listName);
-        const itemValues = items?.value ?? [];
+        const itemValues = items.value ?? [];
 
         if (itemValues.length > 0) {
             console.log(`Found ${itemValues.length} items:`);
             for (const item of itemValues.slice(0, 5)) {
-                console.log(`  - [${item.ID ?? "?"}] ${item.Title ?? item.FileLeafRef ?? "No Title"}`);
+                console.log(`  - [${item.dynamicProperties?.ID ?? "?"}] ${item.dynamicProperties?.Title ?? item.dynamicProperties?.FileLeafRef ?? "No Title"}`);
             }
         } else {
             console.log(`No items found in '${listName}'.`);
@@ -92,12 +92,12 @@ async function main() {
     console.log(`\n--- Get File Properties (${listName}) ---`);
     try {
         const files = await client.getFileItemsAsync(SITE_URL, listName);
-        const fileValues = files?.value ?? [];
+        const fileValues = files.value ?? [];
 
         if (fileValues.length > 0) {
             console.log(`Found ${fileValues.length} files:`);
             for (const file of fileValues.slice(0, 5)) {
-                console.log(`  - ${file.FileLeafRef ?? file.Title ?? "Unknown"} (ID: ${file.ID ?? "?"})`);
+                console.log(`  - ${file.dynamicProperties?.FileLeafRef ?? file.dynamicProperties?.Title ?? "Unknown"} (ID: ${file.dynamicProperties?.ID ?? "?"})`);
             }
         } else {
             console.log(`No files found in '${listName}'.`);
@@ -110,16 +110,16 @@ async function main() {
         }
     }
 
-    // Example 4: List root folder files
-    console.log("\n--- List Root Folder ---");
+    // Example 4: Get root folder metadata
+    console.log("\n--- Get Root Folder Metadata ---");
     try {
-        const rootFiles = await client.listRootFolderAsync(SITE_URL);
+        const rootFolder = await client.getFolderMetadataByPathAsync(SITE_URL);
 
-        if (rootFiles && rootFiles.length > 0) {
-            console.log(`Found ${rootFiles.length} items in root folder:`);
-            for (const file of rootFiles.slice(0, 5)) {
-                console.log(`  - ${file.DisplayName ?? file.Name ?? "Unknown"} (folder: ${file.IsFolder ?? false})`);
-            }
+        if (rootFolder) {
+            console.log(`Root folder metadata:`);
+            console.log(`  - Name: ${rootFolder.DisplayName ?? rootFolder.Name ?? "Unknown"}`);
+            console.log(`  - Path: ${rootFolder.Path ?? "Unknown"}`);
+            console.log(`  - Is Folder: ${rootFolder.IsFolder ?? true}`);
         } else {
             console.log("No items in root folder.");
         }
@@ -143,13 +143,13 @@ async function main() {
                 SITE_URL,
                 crudListName,
             );
-            const itemId = String(created?.ID);
-            console.log(`  Created item ${itemId}: ${created?.Title}`);
+            const itemId = String(created.ID);
+            console.log(`  Created item ${itemId}: ${created.Title}`);
 
             // READ
             console.log("Reading item...");
             const item = await client.getItemAsync(SITE_URL, crudListName, itemId);
-            console.log(`  Read item ${itemId}: ${item?.Title}`);
+            console.log(`  Read item ${itemId}: ${item.Title}`);
 
             // UPDATE
             console.log("Updating item...");
@@ -160,7 +160,7 @@ async function main() {
                 itemId,
             );
             const updated = await client.getItemAsync(SITE_URL, crudListName, itemId);
-            console.log(`  Updated item ${itemId}: ${updated?.Title}`);
+            console.log(`  Updated item ${itemId}: ${updated.Title}`);
 
             // DELETE
             console.log("Deleting item...");
@@ -191,7 +191,7 @@ async function main() {
             console.log(`  Message: ${error.message}`);
             console.log(`  Status: ${error.statusCode}`);
         } else {
-            console.log(`Unexpected error type: ${error?.constructor?.name}`);
+            console.log(`Unexpected error type: ${(error)?.constructor?.name}`);
         }
     }
 

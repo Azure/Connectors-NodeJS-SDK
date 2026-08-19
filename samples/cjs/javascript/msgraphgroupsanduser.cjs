@@ -63,7 +63,9 @@ async function main() {
     const searchTerm = process.env.MSGRAPH_GROUP_SEARCH ?? "Engineering";
     console.log(`\n--- Search Groups ("${searchTerm}") ---`);
     try {
-        const groupsResponse = await client.listGroupsByDisplayNameSearchAsync(searchTerm);
+        const groupsResponse = await client.listGroupsByDisplayNameSearchAsync(
+            searchTerm,
+        );
         const groups = groupsResponse.value ?? [];
 
         if (groups.length > 0) {

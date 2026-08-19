@@ -7,6 +7,42 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- Generated 9 additional connector clients in `src/generated/`: Box, Dropbox,
+  Excel Online, FTP, Google Calendar, Google Drive, Google Tasks, Office 365
+  Groups Mail, and RSS (Phase 2 connector rollout, mirroring the Python SDK's
+  Phase 2 set).
+- Added connector-specific Jest suites for the 9 new connectors:
+  `tests/boxClient.test.ts`, `tests/dropboxClient.test.ts`,
+  `tests/excelonlineClient.test.ts`, `tests/ftpClient.test.ts`,
+  `tests/googlecalendarClient.test.ts`, `tests/googledriveClient.test.ts`,
+  `tests/googletasksClient.test.ts`, `tests/office365groupsmailClient.test.ts`,
+  and `tests/rssClient.test.ts`.
+- Added ESM/CJS TypeScript sample programs for the 9 new connectors under
+  `samples/esm/typescript/` and `samples/cjs/typescript/`.
+- Added generated ESM/CJS JavaScript samples for the complete 30-connector
+  catalog and a consistency test for the TypeScript-to-JavaScript transform.
+
+### Changed
+
+- Updated generated connector registries (`connectorNames.ts`,
+  `ManagedConnectors.ts`, `index.ts`) to include all 30 generated connectors.
+- Regenerated the complete 30-connector TypeScript surface from live `westus`
+  managed connector metadata using AzureUX-BPM commit `732a35b8cce5`
+  (`CodefulSdkGenerator` assembly `1.186.0.23`). Updated all 30 persisted
+  swagger snapshots and their verified input/output hashes in
+  `generation.manifest.json`.
+- Added SharePoint form operations and models, including `getTableFormAsync`,
+  `submitDocGenFormAsync`, and their form metadata types.
+- Added 35 Microsoft Teams actions for channel archiving, chat and team
+  membership, sections, meeting and ad hoc call recordings/transcripts,
+  tags, and Copilot meeting insights.
+- Extended `tests/connectorNames.test.ts` and `tests/managedConnectors.test.ts`
+  to cover the 9 new connectors (registry count now 30).
+- Updated standalone sample package manifests to consume the repository SDK so
+  unreleased Phase 2 connector exports resolve during local validation.
+
 ### Fixed
 
 - Regenerated the 21 TypeScript connector clients under `src/generated/` against
@@ -21,6 +57,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed (BREAKING)
 
+- `GoogledriveExtensions.createFileAsync` now accepts `folderId` instead of
+  `folderPath` and calls the current `/datasets/default/v2/files` route.
+- `JiraExtensions.listIssuesAsync` adds `nextPageToken` before `abortSignal`.
+- `Office365Extensions.forwardEmailAsync` adds the optional
+  `extractSensitivityLabel` and `fetchSensitivityLabelMetadata` parameters
+  before `abortSignal`.
+- `SharepointonlineExtensions.createAgreementsSolutionDocumentAsync` removes
+  the optional `table` and `view` parameters.
+- Microsoft Teams tag and team-member actions now call the current `v1.0`
+  routes instead of the previous beta routes. Six conversation actions add an
+  optional `customizationModifiedTime` parameter before `abortSignal`.
 - `SlackExtensions.ListChannelsResponse` — renamed field `channels` → `value`
   and added `@odata.nextLink` to match the current upstream shape
   (`ListChannels_ResponseV3`). Consumers reading `.channels` must switch to

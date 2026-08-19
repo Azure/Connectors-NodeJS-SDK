@@ -2,23 +2,23 @@
   "_comment": "Provenance record for the generated clients under src/generated/. It lets a regeneration be reproduced and any cross-language surface delta be attributed to a specific generator revision and Swagger input. Regenerate and repopulate this file on every run (see the 'Provenance & Reproducibility' section of GENERATION.md). A reviewable regeneration PR must have status 'generated' with non-null provenance, swaggerSha256 values that match the committed swagger-cache/ snapshots, and outputSha256 values that match the canonical UTF-8/LF generated outputs; the tests/generationManifest.test.ts guard enforces this.",
   "manifestVersion": 1,
   "status": "generated",
-  "generatedAtUtc": "2026-08-14T18:34:59Z",
+  "generatedAtUtc": "2026-08-17T18:04:37Z",
   "generator": {
     "repository": "https://msazure.visualstudio.com/One/_git/AzureUX-BPM",
     "tool": "CodefulSdkGenerator (LogicAppsCompiler)",
     "projectPath": "src/tools/CodefulSdkGenerator/LogicAppsCompiler.Cli/LogicAppsCompiler.Cli.csproj",
-    "bpmCommit": "e5d44a0a0cd47e46edce37a640bc91a1a61db9ab",
+    "bpmCommit": "732a35b8cce54892ffe685b4da7bf946b18de6d1",
     "bpmBranch": "master",
-    "assemblyVersion": "1.186.0.10"
+    "assemblyVersion": "1.186.0.23"
   },
-  "command": "LogicAppsCompiler.exe <output-directory> --directClient --language=typescript --connectors=arm,azureblob,azuremonitorlogs,docusign,github,jira,kusto,microsoftforms,mq,msgraphgroupsanduser,office365,office365users,onedriveforbusiness,powerbi,salesforce,sharepointonline,shifts,slack,smtp,teams,todo",
+  "command": "LogicAppsCompiler.exe <output-directory> --directClient --language=typescript --connectors=arm,azureblob,azuremonitorlogs,box,docusign,dropbox,excelonline,ftp,github,googlecalendar,googledrive,googletasks,jira,kusto,microsoftforms,mq,msgraphgroupsanduser,office365,office365groupsmail,office365users,onedriveforbusiness,powerbi,rss,salesforce,sharepointonline,shifts,slack,smtp,teams,todo",
   "swaggerSource": {
     "_comment": "How the connector Swagger inputs were obtained. The generator reads the regional managedApis ARM endpoint selected by subscriptionId + location (AZURE_SUBSCRIPTION_ID / AZURE_LOCATION; defaults f34b22a3-2202-4fb1-b040-1332bd928c84 / westus in LogicAppsCompiler.Cli/Program.cs). Each snapshot is persisted under swaggerCacheDirectory so the SHA-256 values below are verifiable.",
     "kind": "live-arm-metadata",
-    "subscriptionId": "f34b22a3-2202-4fb1-b040-1332bd928c84",
+    "subscriptionId": "0b894477-1614-4c8d-8a9b-a697a24596b8",
     "location": "westus",
     "apiVersion": "2018-07-01-preview",
-    "capturedAtUtc": "2026-08-12T18:00:36Z",
+    "capturedAtUtc": "2026-08-17T18:04:37Z",
     "swaggerCacheDirectory": "swagger-cache/"
   },
   "connectors": [
@@ -26,153 +26,222 @@
       "apiName": "arm",
       "outputFile": "src/generated/ArmExtensions.ts",
       "swaggerSnapshot": "swagger-cache/arm.swagger.json",
-      "swaggerSha256": "3a307f546ed991c9cd455951a2e4e1a16e8a437c763c81729417865d8e262d1e",
+      "swaggerSha256": "5974fb8aaee9a2d46d64171889a52c0cf5345aff190a52cd045b2fc5e1d79a7f",
       "outputSha256": "4744145f4cbe461e15d2e586376429c01796baae5afbfaa6b65885c933c65fe9"
     },
     {
       "apiName": "azureblob",
       "outputFile": "src/generated/AzureblobExtensions.ts",
       "swaggerSnapshot": "swagger-cache/azureblob.swagger.json",
-      "swaggerSha256": "025073f2c99881704da52df73e22fd7f0a8e8352580cba9188e2034e42ccc535",
+      "swaggerSha256": "2913f54ac344c619768967e0a126bd5aba4e92917e9531d081daeae1b9b76f7c",
       "outputSha256": "e5585bb95250ca817e08972cad42d483dba1e759b0b7c23aaf743feee2fbdd09"
     },
     {
       "apiName": "azuremonitorlogs",
       "outputFile": "src/generated/AzuremonitorlogsExtensions.ts",
       "swaggerSnapshot": "swagger-cache/azuremonitorlogs.swagger.json",
-      "swaggerSha256": "5b6269f3cb26df8212cb1d9ead1360171dc3fe9a8539cf50b913177d92aab3ba",
+      "swaggerSha256": "c1e01924da74ac2a63a6ea81b79afe7441febfae47489d6f0efe7c509bd5a74d",
       "outputSha256": "918047de8abd24db377903ffa15486a5453d7efb1aae7d5a3906004cbf52b273"
+    },
+    {
+      "apiName": "box",
+      "outputFile": "src/generated/BoxExtensions.ts",
+      "swaggerSnapshot": "swagger-cache/box.swagger.json",
+      "swaggerSha256": "fe54c9b5095095f2aa30b78847b006330f3a3f2d3e2c7410527e18d7d1e1e408",
+      "outputSha256": "1f57396eacda6a3635f4cf49c0e659c7f2f112ab4bbb67b1299d87688dce11a2"
     },
     {
       "apiName": "docusign",
       "outputFile": "src/generated/DocusignExtensions.ts",
       "swaggerSnapshot": "swagger-cache/docusign.swagger.json",
-      "swaggerSha256": "e7f34032a930205f6921168675b83565dcd15b82f80c3e7b9b6f6f75370767d0",
+      "swaggerSha256": "4a8742b7bf35b705558a5ddb7607219e7ac46fd6582a1f2fe964ec72c1d435dd",
       "outputSha256": "45b7f4c49786362d966aa136a1a381b4a6a72cff2a12584c91d02b38c049a066"
+    },
+    {
+      "apiName": "dropbox",
+      "outputFile": "src/generated/DropboxExtensions.ts",
+      "swaggerSnapshot": "swagger-cache/dropbox.swagger.json",
+      "swaggerSha256": "d096ccafa3e65ca96c504d4a8335760f0fc8c38b9a446f9e6d6db13b83809df1",
+      "outputSha256": "c7adf592df17c98b113c1e9bfb1c77e18ace39e2851c905e679c233fb3c514ad"
+    },
+    {
+      "apiName": "excelonline",
+      "outputFile": "src/generated/ExcelonlineExtensions.ts",
+      "swaggerSnapshot": "swagger-cache/excelonline.swagger.json",
+      "swaggerSha256": "55b95c5aa93a92f02f3258e0daecbb158cb3dbc27abc67aecbf20375c07f6489",
+      "outputSha256": "013c1e9c20b3ad924952bf77631e30d4898e7678793f0863ea5c174cb26848bf"
+    },
+    {
+      "apiName": "ftp",
+      "outputFile": "src/generated/FtpExtensions.ts",
+      "swaggerSnapshot": "swagger-cache/ftp.swagger.json",
+      "swaggerSha256": "ae060ad49d55f2e651e8f04a3e5ab33454f6546a67af7cc67e724cecba63eaec",
+      "outputSha256": "f897824775b2ef4e39994d1a623c23301bf26c8f681953c811c0bb5f21fdc4a3"
     },
     {
       "apiName": "github",
       "outputFile": "src/generated/GithubExtensions.ts",
       "swaggerSnapshot": "swagger-cache/github.swagger.json",
-      "swaggerSha256": "cef62915904eabc3c75adf1acc803a727e7bfa1668d991159c23db66cdc6f9f9",
+      "swaggerSha256": "ab508ed2ea1f9c4cf3216d440e2d50cf86b3cc0f5312fa39ee036185d493c73e",
       "outputSha256": "14797f06b7405cc0e4c8097e308aa2c31066a92cd9efc2e6debab23c0e723792"
+    },
+    {
+      "apiName": "googlecalendar",
+      "outputFile": "src/generated/GooglecalendarExtensions.ts",
+      "swaggerSnapshot": "swagger-cache/googlecalendar.swagger.json",
+      "swaggerSha256": "dd09f24015298cc95328572c4bfdb47c3be3ee1c56a7bd48cd2c0751b2d35e2c",
+      "outputSha256": "a68278581f59b35010fa04fe486243da0c380fc49fff266d13da03090343c3ae"
+    },
+    {
+      "apiName": "googledrive",
+      "outputFile": "src/generated/GoogledriveExtensions.ts",
+      "swaggerSnapshot": "swagger-cache/googledrive.swagger.json",
+      "swaggerSha256": "c77bf8e2a2b80669f82d97d0341ba332392b964afc962f07e78728a4421ad338",
+      "outputSha256": "bda7b2ed59e2e644521127185229c60fdc46a2361e37a5ad6b96dd1252bf0cd6"
+    },
+    {
+      "apiName": "googletasks",
+      "outputFile": "src/generated/GoogletasksExtensions.ts",
+      "swaggerSnapshot": "swagger-cache/googletasks.swagger.json",
+      "swaggerSha256": "0c7f04201868f4f31b01a72191cf9c28617bf09cb07265ef1bab75723c20efb6",
+      "outputSha256": "ab971c7ad3304026810f852707ad04257cfaa3bd9c09331d4e8cc46aa8d718ff"
     },
     {
       "apiName": "jira",
       "outputFile": "src/generated/JiraExtensions.ts",
       "swaggerSnapshot": "swagger-cache/jira.swagger.json",
-      "swaggerSha256": "1cd6dac5a00f9e654b082936e38b8cc45cc2a0e22e2b141c043e7116a360088a",
-      "outputSha256": "3941ff09060c4920165f53b0189df3ffee18d7793a29633d214d45961c730282"
+      "swaggerSha256": "8dc4dffa5057af7b5b22c7f6db1ef8862f8cf018fed1198c035753865bf5e6d1",
+      "outputSha256": "86a33f4fefc810523cd55e72cd795b9f269007f9fa61b50080a2c7c5069e4c27"
     },
     {
       "apiName": "kusto",
       "outputFile": "src/generated/KustoExtensions.ts",
       "swaggerSnapshot": "swagger-cache/kusto.swagger.json",
-      "swaggerSha256": "bae492b63ea9df82179007e8878c432bf1ab43c715b4714e710ae2d8ad775474",
-      "outputSha256": "76eeb3f470c018bc2abd0e304b0b0545db40d52ccf0641e6b6e13faafca92712"
+      "swaggerSha256": "2a087d76fd239a5f9abf80f4e9b4b57b8e8aca4cf7bf913d22aea1a32ca05cb7",
+      "outputSha256": "a38a0e47a5e7a0c4bcf5a16184038eb718ee7ecd20d9ef96a07849e5502c7e92"
     },
     {
       "apiName": "microsoftforms",
       "outputFile": "src/generated/MicrosoftformsExtensions.ts",
       "swaggerSnapshot": "swagger-cache/microsoftforms.swagger.json",
-      "swaggerSha256": "4bd1070439720e6722bf2613b23e3b504aecc31ebbab9a14e3660033a51460df",
+      "swaggerSha256": "41fe0302637470344eebd0ebc2837253a6501cdf708a5297d7002408f5f2d19d",
       "outputSha256": "562764935ba0502c097caad7b323c4045105197330b74c115c45d9cbf14889ea"
     },
     {
       "apiName": "mq",
       "outputFile": "src/generated/MqExtensions.ts",
       "swaggerSnapshot": "swagger-cache/mq.swagger.json",
-      "swaggerSha256": "19ec097f2db097f67c118988c06b4cef2d04d0e9d32ad5cc9a7f7f7a083319c9",
+      "swaggerSha256": "ffd294fd756815f011740d654360b95e5acdbbe9ee0de2d05b64c0edd158de18",
       "outputSha256": "0dbe8782e541760842d2773204b5bc3a943dbaf13db76eb654778c1ad17e4bee"
     },
     {
       "apiName": "msgraphgroupsanduser",
       "outputFile": "src/generated/MsgraphgroupsanduserExtensions.ts",
       "swaggerSnapshot": "swagger-cache/msgraphgroupsanduser.swagger.json",
-      "swaggerSha256": "62b0d86bf9407f29ff76e0e3618b0c85a91a86abd84a0e42845b83aa4e37fbb9",
+      "swaggerSha256": "cf7a73b0df7b3e26ab4c2c19a595f4c7eb3d3c935f47675735b074b00ea0af7b",
       "outputSha256": "dc14ebba7d42218a4b0c6bc1bc709cb125de39d17d162ebc295bb8a4b0622ce5"
     },
     {
       "apiName": "office365",
       "outputFile": "src/generated/Office365Extensions.ts",
       "swaggerSnapshot": "swagger-cache/office365.swagger.json",
-      "swaggerSha256": "d217c2d8455533ebb49e69e67e232339ac2d3001c9da0b0b2f7db29af2df8bf3",
-      "outputSha256": "8f906367aa576a3376f3123d47eac94d4993ada370926d0c9a0e887fef2c4fd9"
+      "swaggerSha256": "b58a10baa9a5ca6914bd7dff75d050cba3949c1186ef962abc2365fabdc96f05",
+      "outputSha256": "e8b0751c8acb23c22b6d2ef68b88ac79fe6f151ae56534829c2e9cd938cdc2c7"
+    },
+    {
+      "apiName": "office365groupsmail",
+      "outputFile": "src/generated/Office365groupsmailExtensions.ts",
+      "swaggerSnapshot": "swagger-cache/office365groupsmail.swagger.json",
+      "swaggerSha256": "ebf91624f5c75da8d26015e9741b36fe2e4bbde8ad3c356c326487aebbd5a2a9",
+      "outputSha256": "3bc286bdb044e889cbf2bf22e8545072ec9b67322e278fee3355859970b03b87"
     },
     {
       "apiName": "office365users",
       "outputFile": "src/generated/Office365usersExtensions.ts",
       "swaggerSnapshot": "swagger-cache/office365users.swagger.json",
-      "swaggerSha256": "9c8c39679772ea8019b9d935254e335f5cf83aba3aec0c2ce7c87cd5d581760c",
+      "swaggerSha256": "642b5779ef601327d0345f631c9a1182b27914815a854f536b84ee99f476e137",
       "outputSha256": "f29d52affe4a0ebe13918e7a64660be7fd12e345a7e3f317d749f9e59fff875d"
     },
     {
       "apiName": "onedriveforbusiness",
       "outputFile": "src/generated/OnedriveforbusinessExtensions.ts",
       "swaggerSnapshot": "swagger-cache/onedriveforbusiness.swagger.json",
-      "swaggerSha256": "e30a453db413ea2f24af16bc32be9ee1c38cee43f1a67a85783436179202a418",
+      "swaggerSha256": "78b4ae2f45214f2eefc3fb7f3289e237cb90dd3b373459ef46a1afca5751aad0",
       "outputSha256": "579daac19c18d65811c38515bdfdb7e54f7bfde649dbb369d27546a194a3e8de"
     },
     {
       "apiName": "powerbi",
       "outputFile": "src/generated/PowerbiExtensions.ts",
       "swaggerSnapshot": "swagger-cache/powerbi.swagger.json",
-      "swaggerSha256": "74ea8b462cd7d3a7ca7b5fd17910e14785d13da4b18477cf5305d1eea34c3a3d",
+      "swaggerSha256": "27efea205500f3a160a3c0ade08b31522cd6bb5b7601221c118c930f82efa24b",
       "outputSha256": "d4160e59cd1ed7b65027b85172daef1923cae11fc37b82117b1fb248e53528c1"
+    },
+    {
+      "apiName": "rss",
+      "outputFile": "src/generated/RssExtensions.ts",
+      "swaggerSnapshot": "swagger-cache/rss.swagger.json",
+      "swaggerSha256": "e8470f461e7b966cc86b51733674510b7cc3a4f719611e1a337f8fad7fcf96d2",
+      "outputSha256": "840cb0b12952d21339c93b25028e3705a04f2a187cb77a0fbf999e43122c015c"
     },
     {
       "apiName": "salesforce",
       "outputFile": "src/generated/SalesforceExtensions.ts",
       "swaggerSnapshot": "swagger-cache/salesforce.swagger.json",
-      "swaggerSha256": "9bef9388bfc7c372371367d68850b212b4144cc4c7cce44bc87be01f7039c5e7",
-      "outputSha256": "4568e8a892684f6eec10ef4f8c6de8ff41d6a57893562243e534efa92df54c79"
+      "swaggerSha256": "57ad15ab50d2d1796a1520b9a03d85dbabbf52b5ac722b05e390f1787926051f",
+      "outputSha256": "cb7687ece5dab1b680ae5053ae5e320593b35a3e4b70ddfcb39c5041fbe841b0"
     },
     {
       "apiName": "sharepointonline",
       "outputFile": "src/generated/SharepointonlineExtensions.ts",
       "swaggerSnapshot": "swagger-cache/sharepointonline.swagger.json",
-      "swaggerSha256": "91d9f67a38be4b330b616ea42b45ba2800d512c1c78856e08c99521763a9090a",
-      "outputSha256": "8ececd31cc58d69f92521f9b262a0531d51d1223014bc6b9b658b3c7f4fa40ee"
+      "swaggerSha256": "2407765778e4079f7ee5b7a5cb7abcbf9ede7b294e62a8203150cbb25b7a722d",
+      "outputSha256": "774c433a2d2d22c6d70c2e54ea2fc3a9876c4ba06af84c043a2eca7ed866c09d"
     },
     {
       "apiName": "shifts",
       "outputFile": "src/generated/ShiftsExtensions.ts",
       "swaggerSnapshot": "swagger-cache/shifts.swagger.json",
-      "swaggerSha256": "2cf9bec004c035ccc81c7c186201c01e9c60f21ee2c9418e1f4434e4eb378686",
+      "swaggerSha256": "db4ed2f1af41c20cf583de3ebf7351ffa12baae52abb565906c7e46ef7eb86b9",
       "outputSha256": "41b06418f157f9ccf7bcc7bf03587222bcdec9f4967cf2e9897119a029cbf3da"
     },
     {
       "apiName": "slack",
       "outputFile": "src/generated/SlackExtensions.ts",
       "swaggerSnapshot": "swagger-cache/slack.swagger.json",
-      "swaggerSha256": "70ca08c0330cc6d72038b145d55b0a894ce6d85e22683fc128b25f27d29114c7",
+      "swaggerSha256": "9628ffa4396b91d06a3ef246926c86beea3513602b8b8f5a1d6f22c38386c336",
       "outputSha256": "19eecdd02a196e58b8ed28b3a1012f45101502599bc4189ae950bd8a56ced6ed"
     },
     {
       "apiName": "smtp",
       "outputFile": "src/generated/SmtpExtensions.ts",
       "swaggerSnapshot": "swagger-cache/smtp.swagger.json",
-      "swaggerSha256": "3b5e6b8629607064ad4b76b5e6feaf0bf0bbaf6879464ae3c8379610a2282e3c",
+      "swaggerSha256": "095d7b6b4ccace265ee4df85f523c7af655711baf374293cb33bfc727ff35c7e",
       "outputSha256": "70b47c96e999a19d4a69476f1477509f2f364063131b97b80fa2e742349b0c1b"
     },
     {
       "apiName": "teams",
       "outputFile": "src/generated/TeamsExtensions.ts",
       "swaggerSnapshot": "swagger-cache/teams.swagger.json",
-      "swaggerSha256": "dfe2f15e4133e2b84630722cd17170ecf11af70395523149cd40adeba112a1ef",
-      "outputSha256": "1e415cea9d142d85b7e72845972b99adb83d7f712bc4d9367a0d74dd4256a832"
+      "swaggerSha256": "8130802332f0174086c050cc1e36815f77cbfc18f64d7abeb19698cf779181fb",
+      "outputSha256": "d4d92d677bad241f18ceb76ca7461fdbe9bc5486af88be7e0a9571d0d4b65b0c"
     },
     {
       "apiName": "todo",
       "outputFile": "src/generated/TodoExtensions.ts",
       "swaggerSnapshot": "swagger-cache/todo.swagger.json",
-      "swaggerSha256": "ce91e4007d86b687d89bf51bc43bd26873acb8118bbb9a56ea60c188c7468b43",
+      "swaggerSha256": "d500a1028c6e81a051a849c6a6382082363f5bcc0c74d1c132d825210670ca6a",
       "outputSha256": "6da01b1b50b0f94f1b11b0038fd8eeccc35fbe2f372de7dd7a5eabdb22658a74"
     }
   ],
   "routeIdentityLoss": {
-    "_comment": "Trigger routes the generator drops because their simplified trigger name collides with a newer version kept in their place. Captured from the generator's 'ROUTE IDENTITY LOSS' warnings for this run and verifiable by regeneration; recorded here so a silent catalog drop is reviewable in-repo rather than only on a console. Pre-existing on main — not introduced by this generation. Tracked in AzureUX-BPM PR 16476697.",
+    "_comment": "Trigger routes the generator drops because their simplified trigger name collides with a newer version kept in their place. Captured from the generator's 'ROUTE IDENTITY LOSS' warnings for this run and verifiable by regeneration; recorded here so a silent catalog drop is reviewable in-repo rather than only on a console. Tracked in AzureUX-BPM PR 16476697.",
     "droppedTriggerRoutes": [
+      {
+        "connector": "box",
+        "droppedOperationId": "OnUpdatedFiles",
+        "path": "/datasets/default/triggers/batch/onupdatedfile",
+        "keptOperationId": "OnUpdatedFilesV2"
+      },
       {
         "connector": "office365",
         "droppedOperationId": "OnFlaggedEmailV3",
@@ -184,6 +253,12 @@
         "droppedOperationId": "CreateHookEnvelopeV3",
         "path": "/accounts/{accountId}/connectV3",
         "keptOperationId": "CreateHookEnvelopeV4"
+      },
+      {
+        "connector": "googletasks",
+        "droppedOperationId": "OnCompletedTaskInList",
+        "path": "/trigger3/lists/{taskListId}/tasks",
+        "keptOperationId": "OnCompletedTaskInListV2"
       },
       {
         "connector": "jira",
