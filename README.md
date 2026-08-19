@@ -259,8 +259,30 @@ The following connectors have been generated and validated with comprehensive te
 | **Google Tasks** | `@azure/connectors/generated/GoogletasksExtensions` | ✅ Complete | 8 tests |
 | **Office 365 Groups Mail** | `@azure/connectors/generated/Office365groupsmailExtensions` | ✅ Complete | 9 tests |
 | **RSS** | `@azure/connectors/generated/RssExtensions` | ✅ Complete | 8 tests |
+| **Azure Event Grid** | `@azure/connectors/generated/AzureeventgridExtensions` | ✅ Complete | 5 tests |
+| **Azure IoT Central** | `@azure/connectors/generated/AzureiotcentralExtensions` | ✅ Complete | 7 tests |
+| **Cloudmersive Document Conversion** | `@azure/connectors/generated/CloudmersiveconvertExtensions` | ✅ Complete | 7 tests |
+| **Fin & Ops Apps (Dynamics 365)** | `@azure/connectors/generated/DynamicsaxExtensions` | ✅ Complete | 7 tests |
+| **PDF.co** | `@azure/connectors/generated/PdfcoExtensions` | ✅ Complete | 7 tests |
+| **Plumsail Documents** | `@azure/connectors/generated/PlumsailExtensions` | ✅ Complete | 7 tests |
+| **SQL Server** | `@azure/connectors/generated/SqlExtensions` | ✅ Complete | 7 tests |
+| **Zendesk** | `@azure/connectors/generated/ZendeskExtensions` | ✅ Complete | 7 tests |
+| **Pipedrive** | `@azure/connectors/generated/PipedriveExtensions` | ✅ Complete | 7 tests |
+| **DocuWare** | `@azure/connectors/generated/DocuwareExtensions` | ✅ Complete | 7 tests |
+| **SigningHub** | `@azure/connectors/generated/SigninghubExtensions` | ✅ Complete | 7 tests |
+| **Campfire** | `@azure/connectors/generated/CampfireExtensions` | ✅ Complete | 7 tests |
+| **ClickSend SMS** | `@azure/connectors/generated/ClicksendsmsExtensions` | ✅ Complete | 7 tests |
+| **Freshservice** | `@azure/connectors/generated/FreshserviceExtensions` | ✅ Complete | 7 tests |
+| **Infusionsoft** | `@azure/connectors/generated/InfusionsoftExtensions` | ✅ Complete | 7 tests |
+| **Insightly** | `@azure/connectors/generated/InsightlyExtensions` | ✅ Complete | 7 tests |
+| **Mailchimp** | `@azure/connectors/generated/MailchimpExtensions` | ✅ Complete | 7 tests |
+| **Monday** | `@azure/connectors/generated/MondayExtensions` | ✅ Complete | 7 tests |
+| **Projectplace** | `@azure/connectors/generated/ProjectplaceExtensions` | ✅ Complete | 7 tests |
+| **SendGrid** | `@azure/connectors/generated/SendgridExtensions` | ✅ Complete | 7 tests |
+| **Text Request** | `@azure/connectors/generated/TextrequestExtensions` | ✅ Complete | 7 tests |
+| **Webex** | `@azure/connectors/generated/WebexExtensions` | ✅ Complete | 7 tests |
 
-**Total:** 587 tests across 42 test suites and 30 generated connectors.
+**Total:** 849 tests across 64 test suites and 52 generated connectors.
 
 ## Authentication
 
@@ -426,17 +448,17 @@ samples/
 ├── esm/
 │   ├── typescript/         # TypeScript ESM samples
 │   │   ├── arm.ts
-│   │   └── ... (30 connectors)
+│   │   └── ... (52 connectors)
 │   └── javascript/         # JavaScript ESM samples (.mjs)
 │       ├── arm.mjs
-│       └── ... (30 connectors)
+│       └── ... (52 connectors)
 └── cjs/
     ├── typescript/         # TypeScript CJS samples
     │   ├── arm.ts
-    │   └── ... (30 connectors)
+    │   └── ... (52 connectors)
     └── javascript/         # JavaScript CJS samples (.cjs)
         ├── arm.cjs
-        └── ... (30 connectors)
+        └── ... (52 connectors)
 ```
 
 See [docs/connection-setup.md](docs/connection-setup.md) for instructions on creating the Azure connections required to run the samples.

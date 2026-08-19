@@ -87,9 +87,9 @@ describe("ConnectorNames", () => {
         expect(ConnectorNames.RSS).toBe("rss");
     });
 
-    it("should contain exactly 30 connector entries", () => {
+    it("should contain exactly 52 connector entries", () => {
         const keys = Object.keys(ConnectorNames);
-        expect(keys).toHaveLength(30);
+        expect(keys).toHaveLength(52);
     });
 
     it("should have all values as lowercase strings", () => {

@@ -4,34 +4,56 @@
 // Usage:
 //   import { ArmClient } from './ArmExtensions.ts';
 //   import { AzureblobClient } from './AzureblobExtensions.ts';
+//   import { AzureeventgridClient } from './AzureeventgridExtensions.ts';
+//   import { AzureiotcentralClient } from './AzureiotcentralExtensions.ts';
 //   import { AzuremonitorlogsClient } from './AzuremonitorlogsExtensions.ts';
 //   import { BoxClient } from './BoxExtensions.ts';
+//   import { CampfireClient } from './CampfireExtensions.ts';
+//   import { ClicksendsmsClient } from './ClicksendsmsExtensions.ts';
+//   import { CloudmersiveconvertClient } from './CloudmersiveconvertExtensions.ts';
 //   import { DocusignClient } from './DocusignExtensions.ts';
+//   import { DocuwareClient } from './DocuwareExtensions.ts';
 //   import { DropboxClient } from './DropboxExtensions.ts';
+//   import { DynamicsaxClient } from './DynamicsaxExtensions.ts';
 //   import { ExcelonlineClient } from './ExcelonlineExtensions.ts';
+//   import { FreshserviceClient } from './FreshserviceExtensions.ts';
 //   import { FtpClient } from './FtpExtensions.ts';
 //   import { GithubClient } from './GithubExtensions.ts';
 //   import { GooglecalendarClient } from './GooglecalendarExtensions.ts';
 //   import { GoogledriveClient } from './GoogledriveExtensions.ts';
 //   import { GoogletasksClient } from './GoogletasksExtensions.ts';
+//   import { InfusionsoftClient } from './InfusionsoftExtensions.ts';
+//   import { InsightlyClient } from './InsightlyExtensions.ts';
 //   import { JiraClient } from './JiraExtensions.ts';
 //   import { KustoClient } from './KustoExtensions.ts';
+//   import { MailchimpClient } from './MailchimpExtensions.ts';
 //   import { MicrosoftformsClient } from './MicrosoftformsExtensions.ts';
+//   import { MondayClient } from './MondayExtensions.ts';
 //   import { MqClient } from './MqExtensions.ts';
 //   import { MsgraphgroupsanduserClient } from './MsgraphgroupsanduserExtensions.ts';
 //   import { Office365Client } from './Office365Extensions.ts';
 //   import { Office365groupsmailClient } from './Office365groupsmailExtensions.ts';
 //   import { Office365usersClient } from './Office365usersExtensions.ts';
 //   import { OnedriveforbusinessClient } from './OnedriveforbusinessExtensions.ts';
+//   import { PdfcoClient } from './PdfcoExtensions.ts';
+//   import { PipedriveClient } from './PipedriveExtensions.ts';
+//   import { PlumsailClient } from './PlumsailExtensions.ts';
 //   import { PowerbiClient } from './PowerbiExtensions.ts';
+//   import { ProjectplaceClient } from './ProjectplaceExtensions.ts';
 //   import { RssClient } from './RssExtensions.ts';
 //   import { SalesforceClient } from './SalesforceExtensions.ts';
+//   import { SendgridClient } from './SendgridExtensions.ts';
 //   import { SharepointonlineClient } from './SharepointonlineExtensions.ts';
 //   import { ShiftsClient } from './ShiftsExtensions.ts';
+//   import { SigninghubClient } from './SigninghubExtensions.ts';
 //   import { SlackClient } from './SlackExtensions.ts';
 //   import { SmtpClient } from './SmtpExtensions.ts';
+//   import { SqlClient } from './SqlExtensions.ts';
 //   import { TeamsClient } from './TeamsExtensions.ts';
+//   import { TextrequestClient } from './TextrequestExtensions.ts';
 //   import { TodoClient } from './TodoExtensions.ts';
+//   import { WebexClient } from './WebexExtensions.ts';
+//   import { ZendeskClient } from './ZendeskExtensions.ts';
 
 /**
  * Available DirectClient connectors.
@@ -39,63 +61,107 @@
 export const availableConnectors: string[] = [
     "arm",
     "azureblob",
+    "azureeventgrid",
+    "azureiotcentral",
     "azuremonitorlogs",
     "box",
+    "campfire",
+    "clicksendsms",
+    "cloudmersiveconvert",
     "docusign",
+    "docuware",
     "dropbox",
+    "dynamicsax",
     "excelonline",
+    "freshservice",
     "ftp",
     "github",
     "googlecalendar",
     "googledrive",
     "googletasks",
+    "infusionsoft",
+    "insightly",
     "jira",
     "kusto",
+    "mailchimp",
     "microsoftforms",
+    "monday",
     "mq",
     "msgraphgroupsanduser",
     "office365",
     "office365groupsmail",
     "office365users",
     "onedriveforbusiness",
+    "pdfco",
+    "pipedrive",
+    "plumsail",
     "powerbi",
+    "projectplace",
     "rss",
     "salesforce",
+    "sendgrid",
     "sharepointonline",
     "shifts",
+    "signinghub",
     "slack",
     "smtp",
+    "sql",
     "teams",
+    "textrequest",
     "todo",
+    "webex",
+    "zendesk",
 ];
 
 export { ArmClient } from './ArmExtensions.ts';
 export { AzureblobClient } from './AzureblobExtensions.ts';
+export { AzureeventgridClient } from './AzureeventgridExtensions.ts';
+export { AzureiotcentralClient } from './AzureiotcentralExtensions.ts';
 export { AzuremonitorlogsClient } from './AzuremonitorlogsExtensions.ts';
 export { BoxClient } from './BoxExtensions.ts';
+export { CampfireClient } from './CampfireExtensions.ts';
+export { ClicksendsmsClient } from './ClicksendsmsExtensions.ts';
+export { CloudmersiveconvertClient } from './CloudmersiveconvertExtensions.ts';
 export { DocusignClient } from './DocusignExtensions.ts';
+export { DocuwareClient } from './DocuwareExtensions.ts';
 export { DropboxClient } from './DropboxExtensions.ts';
+export { DynamicsaxClient } from './DynamicsaxExtensions.ts';
 export { ExcelonlineClient } from './ExcelonlineExtensions.ts';
+export { FreshserviceClient } from './FreshserviceExtensions.ts';
 export { FtpClient } from './FtpExtensions.ts';
 export { GithubClient } from './GithubExtensions.ts';
 export { GooglecalendarClient } from './GooglecalendarExtensions.ts';
 export { GoogledriveClient } from './GoogledriveExtensions.ts';
 export { GoogletasksClient } from './GoogletasksExtensions.ts';
+export { InfusionsoftClient } from './InfusionsoftExtensions.ts';
+export { InsightlyClient } from './InsightlyExtensions.ts';
 export { JiraClient } from './JiraExtensions.ts';
 export { KustoClient } from './KustoExtensions.ts';
+export { MailchimpClient } from './MailchimpExtensions.ts';
 export { MicrosoftformsClient } from './MicrosoftformsExtensions.ts';
+export { MondayClient } from './MondayExtensions.ts';
 export { MqClient } from './MqExtensions.ts';
 export { MsgraphgroupsanduserClient } from './MsgraphgroupsanduserExtensions.ts';
 export { Office365Client } from './Office365Extensions.ts';
 export { Office365groupsmailClient } from './Office365groupsmailExtensions.ts';
 export { Office365usersClient } from './Office365usersExtensions.ts';
 export { OnedriveforbusinessClient } from './OnedriveforbusinessExtensions.ts';
+export { PdfcoClient } from './PdfcoExtensions.ts';
+export { PipedriveClient } from './PipedriveExtensions.ts';
+export { PlumsailClient } from './PlumsailExtensions.ts';
 export { PowerbiClient } from './PowerbiExtensions.ts';
+export { ProjectplaceClient } from './ProjectplaceExtensions.ts';
 export { RssClient } from './RssExtensions.ts';
 export { SalesforceClient } from './SalesforceExtensions.ts';
+export { SendgridClient } from './SendgridExtensions.ts';
 export { SharepointonlineClient } from './SharepointonlineExtensions.ts';
 export { ShiftsClient } from './ShiftsExtensions.ts';
+export { SigninghubClient } from './SigninghubExtensions.ts';
 export { SlackClient } from './SlackExtensions.ts';
 export { SmtpClient } from './SmtpExtensions.ts';
+export { SqlClient } from './SqlExtensions.ts';
 export { TeamsClient } from './TeamsExtensions.ts';
+export { TextrequestClient } from './TextrequestExtensions.ts';
 export { TodoClient } from './TodoExtensions.ts';
+export { WebexClient } from './WebexExtensions.ts';
+export { ZendeskClient } from './ZendeskExtensions.ts';
