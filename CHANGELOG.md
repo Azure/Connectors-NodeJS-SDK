@@ -57,6 +57,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed (BREAKING)
 
+- `GoogletasksClient.craeteTaskAsync` is corrected to
+  `GoogletasksClient.createTaskAsync`. The connector route and request payload
+  are unchanged.
 - `GoogledriveExtensions.createFileAsync` now accepts `folderId` instead of
   `folderPath` and calls the current `/datasets/default/v2/files` route.
 - `JiraExtensions.listIssuesAsync` adds `nextPageToken` before `abortSignal`.

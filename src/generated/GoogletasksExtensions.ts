@@ -200,7 +200,7 @@ export class GoogletasksClient extends ConnectorClientBase {
      * Create a task in a task list
      * @remarks Create a task in a specific task list.
      */
-    public async craeteTaskAsync(input: TaskCreate, taskListId: string, abortSignal?: AbortSignal): Promise<TaskObject> {
+    public async createTaskAsync(input: TaskCreate, taskListId: string, abortSignal?: AbortSignal): Promise<TaskObject> {
         const requestPath = `/lists/${taskListId}/tasks`;
         const url = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<TaskObject>("POST", url, undefined, input, abortSignal);

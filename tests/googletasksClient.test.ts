@@ -106,6 +106,27 @@ describe("GoogletasksClient — listTasksAsync", () => {
     });
 });
 
+describe("GoogletasksClient — createTaskAsync", () => {
+    afterEach(() => {
+        jest.restoreAllMocks();
+    });
+
+    it("should POST a task to the selected task list", async () => {
+        const task = { id: "task1", title: "Write report" };
+        mockFetchResponse(task);
+
+        const client = new GoogletasksClient(TestConnectionUrl, createMockTokenProvider());
+        const result = await client.createTaskAsync({ title: "Write report" }, "list1");
+
+        expect(result).toEqual(task);
+        expect(global.fetch).toHaveBeenCalledTimes(1);
+        const [url, init] = (global.fetch as jest.Mock).mock.calls[0];
+        expect(init.method).toBe("POST");
+        expect(JSON.parse(init.body)).toEqual({ title: "Write report" });
+        expect(url).toContain("/lists/list1/tasks");
+    });
+});
+
 describe("Googletasks — connector registry", () => {
     it("should expose GoogleTasks in ConnectorNames", () => {
         expect(ConnectorNames.GoogleTasks).toBe("googletasks");
