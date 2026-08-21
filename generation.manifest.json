@@ -2,7 +2,7 @@
   "_comment": "Provenance record for the generated clients under src/generated/. It lets a regeneration be reproduced and any cross-language surface delta be attributed to a specific generator revision and Swagger input. Regenerate and repopulate this file on every run (see the 'Provenance & Reproducibility' section of GENERATION.md). A reviewable regeneration PR must have status 'generated' with non-null provenance, swaggerSha256 values that match the committed swagger-cache/ snapshots, and outputSha256 values that match the canonical UTF-8/LF generated outputs; the tests/generationManifest.test.ts guard enforces this.",
   "manifestVersion": 1,
   "status": "generated",
-  "generatedAtUtc": "2026-08-17T18:04:37Z",
+  "generatedAtUtc": "2026-08-19T18:20:59Z",
   "generator": {
     "repository": "https://msazure.visualstudio.com/One/_git/AzureUX-BPM",
     "tool": "CodefulSdkGenerator (LogicAppsCompiler)",
@@ -11,14 +11,14 @@
     "bpmBranch": "master",
     "assemblyVersion": "1.186.0.23"
   },
-  "command": "LogicAppsCompiler.exe <output-directory> --directClient --language=typescript --connectors=arm,azureblob,azuremonitorlogs,box,docusign,dropbox,excelonline,ftp,github,googlecalendar,googledrive,googletasks,jira,kusto,microsoftforms,mq,msgraphgroupsanduser,office365,office365groupsmail,office365users,onedriveforbusiness,powerbi,rss,salesforce,sharepointonline,shifts,slack,smtp,teams,todo",
+  "command": "LogicAppsCompiler.exe <output-directory> --directClient --language=typescript --connectors=arm,azureblob,azuremonitorlogs,box,docusign,dropbox,excelonline,ftp,github,googlecalendar,googledrive,googletasks,jira,kusto,microsoftforms,mq,msgraphgroupsanduser,office365,office365groupsmail,office365users,onedriveforbusiness,powerbi,rss,salesforce,sharepointonline,shifts,slack,smtp,teams,todo,azureeventgrid,azureiotcentral,cloudmersiveconvert,dynamicsax,pdfco,plumsail,sql,zendesk,pipedrive,docuware,signinghub,campfire,clicksendsms,freshservice,infusionsoft,insightly,mailchimp,monday,projectplace,sendgrid,textrequest,webex",
   "swaggerSource": {
     "_comment": "How the connector Swagger inputs were obtained. The generator reads the regional managedApis ARM endpoint selected by subscriptionId + location (AZURE_SUBSCRIPTION_ID / AZURE_LOCATION; defaults f34b22a3-2202-4fb1-b040-1332bd928c84 / westus in LogicAppsCompiler.Cli/Program.cs). Each snapshot is persisted under swaggerCacheDirectory so the SHA-256 values below are verifiable.",
     "kind": "live-arm-metadata",
     "subscriptionId": "0b894477-1614-4c8d-8a9b-a697a24596b8",
     "location": "westus",
     "apiVersion": "2018-07-01-preview",
-    "capturedAtUtc": "2026-08-17T18:04:37Z",
+    "capturedAtUtc": "2026-08-19T18:20:59Z",
     "swaggerCacheDirectory": "swagger-cache/"
   },
   "connectors": [
@@ -231,6 +231,160 @@
       "swaggerSnapshot": "swagger-cache/todo.swagger.json",
       "swaggerSha256": "d500a1028c6e81a051a849c6a6382082363f5bcc0c74d1c132d825210670ca6a",
       "outputSha256": "6da01b1b50b0f94f1b11b0038fd8eeccc35fbe2f372de7dd7a5eabdb22658a74"
+    },
+    {
+      "apiName": "azureeventgrid",
+      "outputFile": "src/generated/AzureeventgridExtensions.ts",
+      "swaggerSnapshot": "swagger-cache/azureeventgrid.swagger.json",
+      "swaggerSha256": "7c66da60e8a32a159118d1117682e54571423b327ebd86ea4716d93438897d32",
+      "outputSha256": "bd9e9baba18329df00db13ceca89193af96b31b1699455b534218a49794b1fe1"
+    },
+    {
+      "apiName": "azureiotcentral",
+      "outputFile": "src/generated/AzureiotcentralExtensions.ts",
+      "swaggerSnapshot": "swagger-cache/azureiotcentral.swagger.json",
+      "swaggerSha256": "19613b639f5451e81d7f6be142426e3f74a6749e006f75a48e87b52a013f5751",
+      "outputSha256": "b6277e710fc2cc917703a8fe0523f9741c04f90b41069c884f92d3c730338459"
+    },
+    {
+      "apiName": "cloudmersiveconvert",
+      "outputFile": "src/generated/CloudmersiveconvertExtensions.ts",
+      "swaggerSnapshot": "swagger-cache/cloudmersiveconvert.swagger.json",
+      "swaggerSha256": "860768b6ceff8ca5fd5f41b118b06d0cfe55076e15636295b3894e6c78cf067c",
+      "outputSha256": "234e51d7233f1695bcff973e9324d05deb2e6045e0246d7e8e2003143daa9794"
+    },
+    {
+      "apiName": "dynamicsax",
+      "outputFile": "src/generated/DynamicsaxExtensions.ts",
+      "swaggerSnapshot": "swagger-cache/dynamicsax.swagger.json",
+      "swaggerSha256": "7ad46b64824a9857eef0cd657182f571258f4e2e3127c5b5ed0f0313e80c6e55",
+      "outputSha256": "fac76e38b6eaf6a96d55159002f68c43d5be04833031ef2e80513064a63ffd66"
+    },
+    {
+      "apiName": "pdfco",
+      "outputFile": "src/generated/PdfcoExtensions.ts",
+      "swaggerSnapshot": "swagger-cache/pdfco.swagger.json",
+      "swaggerSha256": "c9fb18e541124ef0cd7d867173a4c61eabd2c7a0b0be95bcdf5d4b1c4ede3702",
+      "outputSha256": "c3cebb2d46f244a5b3e42ede74754a9b672064b53e22aa19a8ecb3e99ad81852"
+    },
+    {
+      "apiName": "plumsail",
+      "outputFile": "src/generated/PlumsailExtensions.ts",
+      "swaggerSnapshot": "swagger-cache/plumsail.swagger.json",
+      "swaggerSha256": "08a9a832487f5c1e414757a4dab88f6c3719aaf3bdb37d4fe72dce69e9f46adb",
+      "outputSha256": "80924cd05758753c24eaea2e6c83f1afeb51de2c3beaebc47c8f4af33c8f7064"
+    },
+    {
+      "apiName": "sql",
+      "outputFile": "src/generated/SqlExtensions.ts",
+      "swaggerSnapshot": "swagger-cache/sql.swagger.json",
+      "swaggerSha256": "ce1b8d471f2a8ca04e7919434266694173a456b0af27710de3694cbf84f01972",
+      "outputSha256": "acf3206711153f9bba4ef72881db8f8c04bd8231170b2c246dbaa25a35161d9a"
+    },
+    {
+      "apiName": "zendesk",
+      "outputFile": "src/generated/ZendeskExtensions.ts",
+      "swaggerSnapshot": "swagger-cache/zendesk.swagger.json",
+      "swaggerSha256": "f568516a726b1eb89d50c38c34582f20fd3bb315d29f5f139eb563ddf84b1f8a",
+      "outputSha256": "6e29123b7ede7a89e37af558e58120eb6474f827f1c9d2ede061f52c2b6ee075"
+    },
+    {
+      "apiName": "pipedrive",
+      "outputFile": "src/generated/PipedriveExtensions.ts",
+      "swaggerSnapshot": "swagger-cache/pipedrive.swagger.json",
+      "swaggerSha256": "0ad01a515fe55402fd96669a2b37c420dbad740db51520e52d7b1e187e174770",
+      "outputSha256": "19e6a4810bcbb1e771b31d7add9d974a58fd7c5db8a80ca11236e70b730efdff"
+    },
+    {
+      "apiName": "docuware",
+      "outputFile": "src/generated/DocuwareExtensions.ts",
+      "swaggerSnapshot": "swagger-cache/docuware.swagger.json",
+      "swaggerSha256": "7ebc04b5a47c35f5da9a2afddb9de3bb022e169744f5362f92449939f07df143",
+      "outputSha256": "591fea8101cbb462af498e9436b8e68cbbb44b8c5315e2146d4b28c6bafec9b5"
+    },
+    {
+      "apiName": "signinghub",
+      "outputFile": "src/generated/SigninghubExtensions.ts",
+      "swaggerSnapshot": "swagger-cache/signinghub.swagger.json",
+      "swaggerSha256": "209a58f4fa78b19845cd3d7b6f4e01d94f73ace0a9832c73f804449f68263404",
+      "outputSha256": "458c0a3efd06ae3a67ea03e2b2a43cafdffe52b2ec3396ad6e99852411761413"
+    },
+    {
+      "apiName": "campfire",
+      "outputFile": "src/generated/CampfireExtensions.ts",
+      "swaggerSnapshot": "swagger-cache/campfire.swagger.json",
+      "swaggerSha256": "c86087b24f20b9f7a792c695ea265bd0f1ba84233057fc9ebebd474b443a8b7d",
+      "outputSha256": "22b3d5533c81cdef4bdb400a683f32a70b5c21aef6f1a1d8f9217e9f9a3691ea"
+    },
+    {
+      "apiName": "clicksendsms",
+      "outputFile": "src/generated/ClicksendsmsExtensions.ts",
+      "swaggerSnapshot": "swagger-cache/clicksendsms.swagger.json",
+      "swaggerSha256": "4b231296afcdada895783d197201e3e91b0ec4347239209c44b56f78c47774af",
+      "outputSha256": "a459ed271c4205fb51a3e4afc46906ea0babf4c961cd5fc7d7dff6ad9bec08dd"
+    },
+    {
+      "apiName": "freshservice",
+      "outputFile": "src/generated/FreshserviceExtensions.ts",
+      "swaggerSnapshot": "swagger-cache/freshservice.swagger.json",
+      "swaggerSha256": "9f0d6655b631ee3c07f50be93d62fe02ac166573f2ee79bb8a3781bca96aaee3",
+      "outputSha256": "3b7e1eb29c7d572bb8516f4e89ff4703db2b8145b23a0a79e81c0bbe9c322485"
+    },
+    {
+      "apiName": "infusionsoft",
+      "outputFile": "src/generated/InfusionsoftExtensions.ts",
+      "swaggerSnapshot": "swagger-cache/infusionsoft.swagger.json",
+      "swaggerSha256": "dbbb0d24f6d67dc9ae36c12ab2ee38d1b7daea90bef97af5b04677e8381b0482",
+      "outputSha256": "60176c76a022dbb17ff6043a2d7e0d95c45a96a41f4b2f916052499e4f9d0a9d"
+    },
+    {
+      "apiName": "insightly",
+      "outputFile": "src/generated/InsightlyExtensions.ts",
+      "swaggerSnapshot": "swagger-cache/insightly.swagger.json",
+      "swaggerSha256": "f5ead046092417e8c47bada3c0f12cc07b7b2efe62d3a7d025d0205c7b9c7924",
+      "outputSha256": "0d5e8552554c1d8bef884b2438d1462ec19ea222ea3ca7cb0b6173045645d59c"
+    },
+    {
+      "apiName": "mailchimp",
+      "outputFile": "src/generated/MailchimpExtensions.ts",
+      "swaggerSnapshot": "swagger-cache/mailchimp.swagger.json",
+      "swaggerSha256": "2cf5f68881a233e7f1c9850bc4d3649231bad35ac2d883b02b94c24962308fa6",
+      "outputSha256": "e26b1eaa0386fcee5543192c3800cc6a39a1784a2c7da3711bcf5bed28f9861e"
+    },
+    {
+      "apiName": "monday",
+      "outputFile": "src/generated/MondayExtensions.ts",
+      "swaggerSnapshot": "swagger-cache/monday.swagger.json",
+      "swaggerSha256": "c3510aa18fd7e2ce8349c28ab83e10598ffa2f25ff0dbaa6b9ccd4d2fe1e0797",
+      "outputSha256": "022095339dac3e2f48a05d6ac54a54eda1396f3c91704212a4faa2fe3125f771"
+    },
+    {
+      "apiName": "projectplace",
+      "outputFile": "src/generated/ProjectplaceExtensions.ts",
+      "swaggerSnapshot": "swagger-cache/projectplace.swagger.json",
+      "swaggerSha256": "2dadbee3dfee2d60eeac8df831bd8a7b51cbbcded8480cbb7a14180fe7e50c11",
+      "outputSha256": "8fd74ee5f41a7b0b931479e76a3d38aedc23b27553aa824d5cd6844b6595df89"
+    },
+    {
+      "apiName": "sendgrid",
+      "outputFile": "src/generated/SendgridExtensions.ts",
+      "swaggerSnapshot": "swagger-cache/sendgrid.swagger.json",
+      "swaggerSha256": "a5d7caddb68834238831a5a808180c5f84c0c7075130fc09a0a2a998a0dc7fd6",
+      "outputSha256": "f05799ebecd51cc80820161aa3ee29bace92b280698d53ff1ee30f37b6a17e8b"
+    },
+    {
+      "apiName": "textrequest",
+      "outputFile": "src/generated/TextrequestExtensions.ts",
+      "swaggerSnapshot": "swagger-cache/textrequest.swagger.json",
+      "swaggerSha256": "ae8e02fd550831232602aed510c23be86b8287c394d9b4ffdfc3f8657b9d7adb",
+      "outputSha256": "fa18815d73dc2662eb5826ac5cdc1c2442bab928df42f868eb975c76cb84b776"
+    },
+    {
+      "apiName": "webex",
+      "outputFile": "src/generated/WebexExtensions.ts",
+      "swaggerSnapshot": "swagger-cache/webex.swagger.json",
+      "swaggerSha256": "171e92c116967fbfef49546c895cc4f1de3304102c7d45b6ed2ba371e9ad07dc",
+      "outputSha256": "458eaaf6f9fe4902578025f13aba93647669aa60a4a2a9fbf757ac61315f0c10"
     }
   ],
   "routeIdentityLoss": {
@@ -277,6 +431,12 @@
         "droppedOperationId": "OnNewIssueJQL",
         "path": "/new_issue_jql_trigger/search",
         "keptOperationId": "OnNewIssueJQL_V2"
+      },
+      {
+        "connector": "zendesk",
+        "droppedOperationId": "GetOnUpdatedItems",
+        "path": "/datasets/default/tables/{table}/onupdateditems",
+        "keptOperationId": "GetOnUpdatedItemsV2"
       }
     ]
   }

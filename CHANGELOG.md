@@ -9,6 +9,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- Generated 22 additional connector clients in `src/generated/` (Phase 3 & 4
+  connector rollout, mirroring the Python SDK's Phase 3 and Phase 4 sets):
+  Azure Event Grid, Azure IoT Central, Cloudmersive Document Conversion, Fin &
+  Ops Apps (Dynamics 365), PDF.co, Plumsail Documents, SQL Server, Zendesk,
+  Pipedrive, DocuWare, and SigningHub (Phase 3); Campfire, ClickSend SMS,
+  Freshservice, Infusionsoft, Insightly, Mailchimp, Monday, Projectplace,
+  SendGrid, Text Request, and Webex (Phase 4).
+- Added connector-specific Jest suites for the 22 new connectors under `tests/`,
+  plus ESM/CJS TypeScript sample programs under `samples/esm/typescript/` and
+  `samples/cjs/typescript/` with generated JavaScript (`.mjs`/`.cjs`) counterparts.
 - Generated 9 additional connector clients in `src/generated/`: Box, Dropbox,
   Excel Online, FTP, Google Calendar, Google Drive, Google Tasks, Office 365
   Groups Mail, and RSS (Phase 2 connector rollout, mirroring the Python SDK's
@@ -26,6 +36,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Updated generated connector registries (`connectorNames.ts`,
+  `ManagedConnectors.ts`, `index.ts`) to include all 52 generated connectors.
+  Captured 22 additional swagger snapshots and recorded their verified
+  input/output hashes in `generation.manifest.json` (52 connectors total),
+  generated from live `westus` managed connector metadata using AzureUX-BPM
+  commit `732a35b8cce5` (`CodefulSdkGenerator` assembly `1.186.0.23`), and
+  recorded the Zendesk `GetOnUpdatedItems` → `GetOnUpdatedItemsV2` trigger
+  route-identity loss. Registry count is now 52.
 - Updated generated connector registries (`connectorNames.ts`,
   `ManagedConnectors.ts`, `index.ts`) to include all 30 generated connectors.
 - Regenerated the complete 30-connector TypeScript surface from live `westus`

@@ -52,7 +52,7 @@ Remove-Item $tempFile -ErrorAction SilentlyContinue
 
 ### Step 2: Create Connection
 
-Supported SDK connector names: `arm`, `azureblob`, `azuremonitorlogs`, `box`, `docusign`, `dropbox`, `excelonline`, `ftp`, `github`, `googlecalendar`, `googledrive`, `googletasks`, `jira`, `kusto`, `microsoftforms`, `mq`, `msgraphgroupsanduser`, `office365`, `office365groupsmail`, `office365users`, `onedriveforbusiness`, `powerbi`, `rss`, `salesforce`, `sharepointonline`, `shifts`, `slack`, `smtp`, `teams`, `todo` (and any `Microsoft.Web/connections` connector name).
+Supported SDK connector names: `arm`, `azureblob`, `azureeventgrid`, `azureiotcentral`, `azuremonitorlogs`, `box`, `campfire`, `clicksendsms`, `cloudmersiveconvert`, `docusign`, `docuware`, `dropbox`, `dynamicsax`, `excelonline`, `freshservice`, `ftp`, `github`, `googlecalendar`, `googledrive`, `googletasks`, `infusionsoft`, `insightly`, `jira`, `kusto`, `mailchimp`, `microsoftforms`, `monday`, `mq`, `msgraphgroupsanduser`, `office365`, `office365groupsmail`, `office365users`, `onedriveforbusiness`, `pdfco`, `pipedrive`, `plumsail`, `powerbi`, `projectplace`, `rss`, `salesforce`, `sendgrid`, `sharepointonline`, `shifts`, `signinghub`, `slack`, `smtp`, `sql`, `teams`, `textrequest`, `todo`, `webex`, `zendesk` (and any `Microsoft.Web/connections` connector name).
 
 ```powershell
 $connectorName = "<connector-name>"      # e.g., "office365", "sharepointonline", "teams"
