@@ -68,7 +68,7 @@ describe("TextrequestClient — getMessagesByContactPhoneAsync", () => {
         mockFetchResponse(messages);
 
         const client = new TextrequestClient(TestConnectionUrl, createMockTokenProvider());
-        const result = await client.getMessagesByContactPhoneAsync("dash123", "+15555550100");
+        const result = await client.getMessagesByContactPhoneAsync("123", "+15555550100");
 
         expect(result).toEqual(messages);
         expect(global.fetch).toHaveBeenCalledTimes(1);
@@ -82,7 +82,7 @@ describe("TextrequestClient — getMessagesByContactPhoneAsync", () => {
 
         const client = new TextrequestClient(TestConnectionUrl, createMockTokenProvider());
         try {
-            await client.getMessagesByContactPhoneAsync("dash123", "+15555550100");
+            await client.getMessagesByContactPhoneAsync("123", "+15555550100");
             throw new Error("Expected ConnectorException to be thrown.");
         } catch (error) {
             expect(error).toBeInstanceOf(ConnectorException);

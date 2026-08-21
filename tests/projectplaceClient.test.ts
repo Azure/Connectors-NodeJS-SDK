@@ -68,7 +68,7 @@ describe("ProjectplaceClient — createCardAsync", () => {
         mockFetchResponse(response);
 
         const client = new ProjectplaceClient(TestConnectionUrl, createMockTokenProvider());
-        const result = await client.createCardAsync({ title: "Design review" }, "board123");
+        const result = await client.createCardAsync({ title: "Design review" }, "123");
 
         expect(result).toEqual(response);
         expect(global.fetch).toHaveBeenCalledTimes(1);
@@ -82,7 +82,7 @@ describe("ProjectplaceClient — createCardAsync", () => {
 
         const client = new ProjectplaceClient(TestConnectionUrl, createMockTokenProvider());
         try {
-            await client.createCardAsync({ title: "Design review" }, "board123");
+            await client.createCardAsync({ title: "Design review" }, "123");
             throw new Error("Expected ConnectorException to be thrown.");
         } catch (error) {
             expect(error).toBeInstanceOf(ConnectorException);

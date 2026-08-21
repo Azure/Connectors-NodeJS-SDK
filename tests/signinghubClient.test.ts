@@ -68,7 +68,7 @@ describe("SigninghubClient — attachmentDownloadAttachmentAsync", () => {
         mockFetchResponse(attachment);
 
         const client = new SigninghubClient(TestConnectionUrl, createMockTokenProvider());
-        const result = await client.attachmentDownloadAttachmentAsync("pkg123", "doc123", "att123");
+        const result = await client.attachmentDownloadAttachmentAsync("123", "456", "789");
 
         expect(result).toEqual(attachment);
         expect(global.fetch).toHaveBeenCalledTimes(1);
@@ -82,7 +82,7 @@ describe("SigninghubClient — attachmentDownloadAttachmentAsync", () => {
 
         const client = new SigninghubClient(TestConnectionUrl, createMockTokenProvider());
         try {
-            await client.attachmentDownloadAttachmentAsync("pkg123", "doc123", "att123");
+            await client.attachmentDownloadAttachmentAsync("123", "456", "789");
             throw new Error("Expected ConnectorException to be thrown.");
         } catch (error) {
             expect(error).toBeInstanceOf(ConnectorException);

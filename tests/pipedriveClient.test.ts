@@ -68,7 +68,7 @@ describe("PipedriveClient — getDealAsync", () => {
         mockFetchResponse(deal);
 
         const client = new PipedriveClient(TestConnectionUrl, createMockTokenProvider());
-        const result = await client.getDealAsync("deal123");
+        const result = await client.getDealAsync("123");
 
         expect(result).toEqual(deal);
         expect(global.fetch).toHaveBeenCalledTimes(1);
@@ -82,7 +82,7 @@ describe("PipedriveClient — getDealAsync", () => {
 
         const client = new PipedriveClient(TestConnectionUrl, createMockTokenProvider());
         try {
-            await client.getDealAsync("deal123");
+            await client.getDealAsync("123");
             throw new Error("Expected ConnectorException to be thrown.");
         } catch (error) {
             expect(error).toBeInstanceOf(ConnectorException);

@@ -8,7 +8,7 @@
  * Usage:
  *   Set environment variables:
  *     $env:TEXTREQUEST_CONNECTION_URL = "https://[region].azure-apihub.net/apim/textrequest/[connection-id]"
- *     $env:TEXTREQUEST_DASHBOARD_ID   = "[optional dashboard id]"
+ *     $env:TEXTREQUEST_DASHBOARD_ID   = "[required numeric dashboard id]"
  *     $env:TEXTREQUEST_PHONE          = "[optional contact phone number]"
  *
  *   Run:
@@ -21,9 +21,15 @@ const { ManagedIdentityTokenProvider, ConnectorException } = require("@azure/con
 const { TextrequestClient } = require("@azure/connectors/generated/TextrequestExtensions");
 
 const CONNECTION_URL = process.env.TEXTREQUEST_CONNECTION_URL ?? "";
+const DASHBOARD_ID = process.env.TEXTREQUEST_DASHBOARD_ID ?? "";
 
 if (!CONNECTION_URL) {
     console.error("Error: TEXTREQUEST_CONNECTION_URL environment variable is not set.");
+    process.exit(1);
+}
+
+if (!/^\d+$/.test(DASHBOARD_ID)) {
+    console.error("Error: TEXTREQUEST_DASHBOARD_ID environment variable must be set to a numeric value.");
     process.exit(1);
 }
 
@@ -32,10 +38,9 @@ async function main() {
     const client = new TextrequestClient(CONNECTION_URL, tokenProvider);
 
     // Example 1: List messages exchanged with a contact phone number.
-    const dashboardId = process.env.TEXTREQUEST_DASHBOARD_ID ?? "dash123";
     const phoneNumber = process.env.TEXTREQUEST_PHONE ?? "+15555550100";
     try {
-        const messages = await client.getMessagesByContactPhoneAsync(dashboardId, phoneNumber);
+        const messages = await client.getMessagesByContactPhoneAsync(DASHBOARD_ID, phoneNumber);
         console.log("Messages:", JSON.stringify(messages, null, 2));
     } catch (error) {
         if (error instanceof ConnectorException) {

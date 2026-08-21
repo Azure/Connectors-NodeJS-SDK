@@ -64,11 +64,11 @@ describe("CampfireClient — getUserAsync", () => {
     });
 
     it("should GET the user and return the deserialized response", async () => {
-        const user = { id: "user123", name: "Ada Lovelace", email_address: "ada@example.com" };
+        const user = { id: 123, name: "Ada Lovelace", email_address: "ada@example.com" };
         mockFetchResponse(user);
 
         const client = new CampfireClient(TestConnectionUrl, createMockTokenProvider());
-        const result = await client.getUserAsync("user123");
+        const result = await client.getUserAsync("123");
 
         expect(result).toEqual(user);
         expect(global.fetch).toHaveBeenCalledTimes(1);
@@ -82,7 +82,7 @@ describe("CampfireClient — getUserAsync", () => {
 
         const client = new CampfireClient(TestConnectionUrl, createMockTokenProvider());
         try {
-            await client.getUserAsync("user123");
+            await client.getUserAsync("123");
             throw new Error("Expected ConnectorException to be thrown.");
         } catch (error) {
             expect(error).toBeInstanceOf(ConnectorException);
