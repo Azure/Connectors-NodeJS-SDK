@@ -3357,8 +3357,8 @@ export class SigninghubClient extends ConnectorClientBase {
      */
     public async attachmentDeleteAttachmentAsync(packageId: string, documentId: string, attachmentId: string, abortSignal?: AbortSignal): Promise<EmptyResponse> {
         const requestPath = `/v4/packages/${packageId}/documents/${documentId}/attachments/${attachmentId}`;
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<EmptyResponse>("DELETE", url, undefined, undefined, abortSignal);
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<EmptyResponse>("DELETE", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
             throw new ConnectorException(this.connectorName, `DELETE ${requestPath}`, httpResponse.statusCode, httpResponse.text);
@@ -3373,8 +3373,8 @@ export class SigninghubClient extends ConnectorClientBase {
      */
     public async attachmentDownloadAttachmentAsync(packageId: string, documentId: string, attachmentId: string, abortSignal?: AbortSignal): Promise<AttachmentDownloadAttachmentResponse> {
         const requestPath = `/v4/packages/${packageId}/documents/${documentId}/attachments/${attachmentId}`;
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<AttachmentDownloadAttachmentResponse>("GET", url, undefined, undefined, abortSignal);
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<AttachmentDownloadAttachmentResponse>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
             throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
@@ -3389,8 +3389,8 @@ export class SigninghubClient extends ConnectorClientBase {
      */
     public async attachmentGetAttachmentsAsync(packageId: string, documentId: string, abortSignal?: AbortSignal): Promise<Array<GetAttachmentResponse>> {
         const requestPath = `/v4/packages/${packageId}/documents/${documentId}/attachments`;
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<Array<GetAttachmentResponse>>("GET", url, undefined, undefined, abortSignal);
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<Array<GetAttachmentResponse>>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
             throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
@@ -3405,8 +3405,8 @@ export class SigninghubClient extends ConnectorClientBase {
      */
     public async attachmentUploadAttachmentAsync(input: AttachmentUploadAttachmentInput, packageId: string, documentId: string, abortSignal?: AbortSignal): Promise<AddAttachmentResponse> {
         const requestPath = `/v4/packages/${packageId}/documents/${documentId}/attachments`;
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<AddAttachmentResponse>("POST", url, undefined, input, abortSignal);
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<AddAttachmentResponse>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
             throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
@@ -3421,8 +3421,8 @@ export class SigninghubClient extends ConnectorClientBase {
      */
     public async checkboxAddCheckBoxAsync(input: CheckBoxFieldRequest, packageId: string, documentId: string, abortSignal?: AbortSignal): Promise<AddFieldResponse> {
         const requestPath = `/v4/packages/${packageId}/documents/${documentId}/fields/checkbox`;
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<AddFieldResponse>("POST", url, undefined, input, abortSignal);
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<AddFieldResponse>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
             throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
@@ -3437,8 +3437,8 @@ export class SigninghubClient extends ConnectorClientBase {
      */
     public async checkboxUpdateCheckBoxAsync(input: UpdateCheckBoxFieldRequest, packageId: string, documentId: string, abortSignal?: AbortSignal): Promise<EmptyResponse> {
         const requestPath = `/v4/packages/${packageId}/documents/${documentId}/fields/checkbox`;
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<EmptyResponse>("PUT", url, undefined, input, abortSignal);
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<EmptyResponse>("PUT", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
             throw new ConnectorException(this.connectorName, `PUT ${requestPath}`, httpResponse.statusCode, httpResponse.text);
@@ -3460,8 +3460,8 @@ export class SigninghubClient extends ConnectorClientBase {
             queryParams.push(`asc=${encodeURIComponent(String(asc))}`);
         }
         const requestPath = `/v4/settings/contacts/${recordPerPage}/${pageNo}` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<Array<ContactResponse>>("GET", url, undefined, undefined, abortSignal);
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<Array<ContactResponse>>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
             throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
@@ -3476,8 +3476,8 @@ export class SigninghubClient extends ConnectorClientBase {
      */
     public async documentsDeleteDocumentAsync(packageId: string, documentId: string, abortSignal?: AbortSignal): Promise<DocumentResponse> {
         const requestPath = `/v4/packages/${packageId}/documents/${documentId}`;
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<DocumentResponse>("DELETE", url, undefined, undefined, abortSignal);
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<DocumentResponse>("DELETE", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
             throw new ConnectorException(this.connectorName, `DELETE ${requestPath}`, httpResponse.statusCode, httpResponse.text);
@@ -3492,8 +3492,8 @@ export class SigninghubClient extends ConnectorClientBase {
      */
     public async documentsDownloadDocumentBytesAsync(packageId: string, documentId: string, abortSignal?: AbortSignal): Promise<DocumentsDownloadDocumentBytesResponse> {
         const requestPath = `/v4/packages/${packageId}/documents/${documentId}`;
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<DocumentsDownloadDocumentBytesResponse>("GET", url, undefined, undefined, abortSignal);
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<DocumentsDownloadDocumentBytesResponse>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
             throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
@@ -3508,8 +3508,8 @@ export class SigninghubClient extends ConnectorClientBase {
      */
     public async documentsGetCertifyPolicyAsync(packageId: string, documentId: string, abortSignal?: AbortSignal): Promise<CertifyPolicyResponse> {
         const requestPath = `/v4/packages/${packageId}/documents/${documentId}/certify`;
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<CertifyPolicyResponse>("GET", url, undefined, undefined, abortSignal);
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<CertifyPolicyResponse>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
             throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
@@ -3524,8 +3524,8 @@ export class SigninghubClient extends ConnectorClientBase {
      */
     public async documentsGetDocumentDetailsAsync(packageId: string, documentId: string, abortSignal?: AbortSignal): Promise<DocumentDetailsResponse> {
         const requestPath = `/v4/packages/${packageId}/documents/${documentId}/details`;
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<DocumentDetailsResponse>("GET", url, undefined, undefined, abortSignal);
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<DocumentDetailsResponse>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
             throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
@@ -3540,8 +3540,8 @@ export class SigninghubClient extends ConnectorClientBase {
      */
     public async documentsRenameDocumentAsync(input: RenameDocumentRequest, packageId: string, documentId: string, abortSignal?: AbortSignal): Promise<DocumentResponse> {
         const requestPath = `/v4/packages/${packageId}/documents/${documentId}`;
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<DocumentResponse>("PUT", url, undefined, input, abortSignal);
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<DocumentResponse>("PUT", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
             throw new ConnectorException(this.connectorName, `PUT ${requestPath}`, httpResponse.statusCode, httpResponse.text);
@@ -3556,8 +3556,8 @@ export class SigninghubClient extends ConnectorClientBase {
      */
     public async documentsUpdateCertifyPolicyAsync(input: UpdateCertifyPolicyRequest, packageId: string, documentId: string, abortSignal?: AbortSignal): Promise<EmptyResponse> {
         const requestPath = `/v4/packages/${packageId}/documents/${documentId}/certify`;
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<EmptyResponse>("PUT", url, undefined, input, abortSignal);
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<EmptyResponse>("PUT", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
             throw new ConnectorException(this.connectorName, `PUT ${requestPath}`, httpResponse.statusCode, httpResponse.text);
@@ -3572,8 +3572,8 @@ export class SigninghubClient extends ConnectorClientBase {
      */
     public async documentsUploadFromLibraryAsync(packageId: string, documentId: string, abortSignal?: AbortSignal): Promise<UploadDocumentLibraryResponse> {
         const requestPath = `/v4/packages/${packageId}/documents/library/${documentId}`;
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<UploadDocumentLibraryResponse>("POST", url, undefined, undefined, abortSignal);
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<UploadDocumentLibraryResponse>("POST", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
             throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
@@ -3588,8 +3588,8 @@ export class SigninghubClient extends ConnectorClientBase {
      */
     public async documentsUploadStreamAsync(input: DocumentsUploadStreamInput, packageId: string, abortSignal?: AbortSignal): Promise<UploadDocument> {
         const requestPath = `/v4/packages/${packageId}/documents`;
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<UploadDocument>("POST", url, undefined, input, abortSignal);
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<UploadDocument>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
             throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
@@ -3604,8 +3604,8 @@ export class SigninghubClient extends ConnectorClientBase {
      */
     public async enterpriseDocumentsGetEnterpriseWorkflowAccessAsync(packageId: string, order: string, abortSignal?: AbortSignal): Promise<EnterpriseAccessResponse> {
         const requestPath = `/v4/enterprise/packages/${packageId}/workflow/${order}/authentication`;
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<EnterpriseAccessResponse>("GET", url, undefined, undefined, abortSignal);
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<EnterpriseAccessResponse>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
             throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
@@ -3620,8 +3620,8 @@ export class SigninghubClient extends ConnectorClientBase {
      */
     public async enterpriseDocumentsUpdateEnterpriseWorkflowAccessAsync(input: AccessUpdateRequest, packageId: string, order: string, abortSignal?: AbortSignal): Promise<EmptyResponse> {
         const requestPath = `/v4/enterprise/packages/${packageId}/workflow/${order}/authentication`;
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<EmptyResponse>("PUT", url, undefined, input, abortSignal);
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<EmptyResponse>("PUT", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
             throw new ConnectorException(this.connectorName, `PUT ${requestPath}`, httpResponse.statusCode, httpResponse.text);
@@ -3636,8 +3636,8 @@ export class SigninghubClient extends ConnectorClientBase {
      */
     public async fieldsAutoAssignFieldAsync(input: FieldsAutoAssignFieldInput, packageId: string, documentId: string, abortSignal?: AbortSignal): Promise<EmptyResponse> {
         const requestPath = `/v4/packages/${packageId}/documents/${documentId}/fields/assign`;
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<EmptyResponse>("PUT", url, undefined, input, abortSignal);
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<EmptyResponse>("PUT", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
             throw new ConnectorException(this.connectorName, `PUT ${requestPath}`, httpResponse.statusCode, httpResponse.text);
@@ -3652,8 +3652,8 @@ export class SigninghubClient extends ConnectorClientBase {
      */
     public async fieldsAutoPlaceAsync(input: AutoPlaceFieldRequest, packageId: string, documentId: string, abortSignal?: AbortSignal): Promise<Array<AutoPlaceFieldsResponse>> {
         const requestPath = `/v4/packages/${packageId}/documents/${documentId}/fields/autoplace`;
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<Array<AutoPlaceFieldsResponse>>("POST", url, undefined, input, abortSignal);
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<Array<AutoPlaceFieldsResponse>>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
             throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
@@ -3668,8 +3668,8 @@ export class SigninghubClient extends ConnectorClientBase {
      */
     public async fieldsDeleteDocumentFieldAsync(input: DeleteDocumentFieldRequest, packageId: string, documentId: string, abortSignal?: AbortSignal): Promise<EmptyResponse> {
         const requestPath = `/v4/packages/${packageId}/documents/${documentId}/fields`;
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<EmptyResponse>("DELETE", url, undefined, input, abortSignal);
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<EmptyResponse>("DELETE", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
             throw new ConnectorException(this.connectorName, `DELETE ${requestPath}`, httpResponse.statusCode, httpResponse.text);
@@ -3684,8 +3684,8 @@ export class SigninghubClient extends ConnectorClientBase {
      */
     public async fieldsFillFormFieldsAsync(input: FormFillingRequest, packageId: string, documentId: string, abortSignal?: AbortSignal): Promise<EmptyResponse> {
         const requestPath = `/v4/packages/${packageId}/documents/${documentId}/fields`;
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<EmptyResponse>("PUT", url, undefined, input, abortSignal);
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<EmptyResponse>("PUT", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
             throw new ConnectorException(this.connectorName, `PUT ${requestPath}`, httpResponse.statusCode, httpResponse.text);
@@ -3700,8 +3700,8 @@ export class SigninghubClient extends ConnectorClientBase {
      */
     public async fieldsGetAllDocumentFieldsAsync(packageId: string, documentId: string, pageNo: string, abortSignal?: AbortSignal): Promise<FieldsResponse> {
         const requestPath = `/v4/packages/${packageId}/documents/${documentId}/fields/${pageNo}`;
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<FieldsResponse>("GET", url, undefined, undefined, abortSignal);
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<FieldsResponse>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
             throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
@@ -3716,8 +3716,8 @@ export class SigninghubClient extends ConnectorClientBase {
      */
     public async folderMovePackageAsync(input: MoveToRequest, packageId: string, abortSignal?: AbortSignal): Promise<EmptyResponse> {
         const requestPath = `/v4/packages/${packageId}/move_to`;
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<EmptyResponse>("PUT", url, undefined, input, abortSignal);
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<EmptyResponse>("PUT", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
             throw new ConnectorException(this.connectorName, `PUT ${requestPath}`, httpResponse.statusCode, httpResponse.text);
@@ -3732,8 +3732,8 @@ export class SigninghubClient extends ConnectorClientBase {
      */
     public async initialsAddInitialAsync(input: InitialFieldRequest, packageId: string, documentId: string, abortSignal?: AbortSignal): Promise<AddFieldResponse> {
         const requestPath = `/v4/packages/${packageId}/documents/${documentId}/fields/initials`;
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<AddFieldResponse>("POST", url, undefined, input, abortSignal);
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<AddFieldResponse>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
             throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
@@ -3748,8 +3748,8 @@ export class SigninghubClient extends ConnectorClientBase {
      */
     public async initialsFillAsync(input: InitialFillingRequest, packageId: string, documentId: string, abortSignal?: AbortSignal): Promise<EmptyResponse> {
         const requestPath = `/v4/packages/${packageId}/documents/${documentId}/initial`;
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<EmptyResponse>("POST", url, undefined, input, abortSignal);
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<EmptyResponse>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
             throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
@@ -3764,8 +3764,8 @@ export class SigninghubClient extends ConnectorClientBase {
      */
     public async initialsUpdateInitialAsync(input: UpdateInitialFieldRequest, packageId: string, documentId: string, abortSignal?: AbortSignal): Promise<EmptyResponse> {
         const requestPath = `/v4/packages/${packageId}/documents/${documentId}/fields/initials`;
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<EmptyResponse>("PUT", url, undefined, input, abortSignal);
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<EmptyResponse>("PUT", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
             throw new ConnectorException(this.connectorName, `PUT ${requestPath}`, httpResponse.statusCode, httpResponse.text);
@@ -3780,8 +3780,8 @@ export class SigninghubClient extends ConnectorClientBase {
      */
     public async inPersonAddInPersonAsync(input: InPersonFieldRequest, packageId: string, documentId: string, abortSignal?: AbortSignal): Promise<AddFieldResponse> {
         const requestPath = `/v4/packages/${packageId}/documents/${documentId}/fields/in_person_signature`;
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<AddFieldResponse>("POST", url, undefined, input, abortSignal);
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<AddFieldResponse>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
             throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
@@ -3796,8 +3796,8 @@ export class SigninghubClient extends ConnectorClientBase {
      */
     public async inPersonUpdateInPersonAsync(input: UpdateInPersonFieldRequest, packageId: string, documentId: string, abortSignal?: AbortSignal): Promise<EmptyResponse> {
         const requestPath = `/v4/packages/${packageId}/documents/${documentId}/fields/in_person_signature`;
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<EmptyResponse>("PUT", url, undefined, input, abortSignal);
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<EmptyResponse>("PUT", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
             throw new ConnectorException(this.connectorName, `PUT ${requestPath}`, httpResponse.statusCode, httpResponse.text);
@@ -3812,8 +3812,8 @@ export class SigninghubClient extends ConnectorClientBase {
      */
     public async packageAddPackageAsync(input: AddDocumentPackageRequest, abortSignal?: AbortSignal): Promise<AddPackageResponse> {
         const requestPath = `/v4/packages`;
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<AddPackageResponse>("POST", url, undefined, input, abortSignal);
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<AddPackageResponse>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
             throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
@@ -3828,8 +3828,8 @@ export class SigninghubClient extends ConnectorClientBase {
      */
     public async packageApproveAsync(input: ApproveRequest, packageId: string, abortSignal?: AbortSignal): Promise<EmptyResponse> {
         const requestPath = `/v4/packages/${packageId}/approve`;
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<EmptyResponse>("POST", url, undefined, input, abortSignal);
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<EmptyResponse>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
             throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
@@ -3844,8 +3844,8 @@ export class SigninghubClient extends ConnectorClientBase {
      */
     public async packageDeclineAsync(input: DeclineRequest, packageId: string, abortSignal?: AbortSignal): Promise<EmptyResponse> {
         const requestPath = `/v4/packages/${packageId}/decline`;
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<EmptyResponse>("POST", url, undefined, input, abortSignal);
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<EmptyResponse>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
             throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
@@ -3860,8 +3860,8 @@ export class SigninghubClient extends ConnectorClientBase {
      */
     public async packageDeletePackageAsync(packageIdBulkAction: string, abortSignal?: AbortSignal): Promise<EmptyResponse> {
         const requestPath = `/v4/packages/${packageIdBulkAction}`;
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<EmptyResponse>("DELETE", url, undefined, undefined, abortSignal);
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<EmptyResponse>("DELETE", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
             throw new ConnectorException(this.connectorName, `DELETE ${requestPath}`, httpResponse.statusCode, httpResponse.text);
@@ -3880,8 +3880,8 @@ export class SigninghubClient extends ConnectorClientBase {
             queryParams.push(`document-ids=${encodeURIComponent(String(documentIds))}`);
         }
         const requestPath = `/v4/packages/${packageIdBulkAction}` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<PackageDownloadPackageBytesResponse>("GET", url, undefined, undefined, abortSignal);
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<PackageDownloadPackageBytesResponse>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
             throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
@@ -3896,8 +3896,8 @@ export class SigninghubClient extends ConnectorClientBase {
      */
     public async packageFinishAsync(packageId: string, abortSignal?: AbortSignal): Promise<EmptyResponse> {
         const requestPath = `/v4/packages/${packageId}/finish`;
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<EmptyResponse>("POST", url, undefined, undefined, abortSignal);
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<EmptyResponse>("POST", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
             throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
@@ -3912,8 +3912,8 @@ export class SigninghubClient extends ConnectorClientBase {
      */
     public async packageGatekeeperApproveAsync(input: ApproveRequest, packageId: string, abortSignal?: AbortSignal): Promise<EmptyResponse> {
         const requestPath = `/v4/packages/${packageId}/gatekeeper/approve`;
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<EmptyResponse>("POST", url, undefined, input, abortSignal);
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<EmptyResponse>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
             throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
@@ -3928,8 +3928,8 @@ export class SigninghubClient extends ConnectorClientBase {
      */
     public async packageGatekeeperDeclineAsync(input: DeclineRequest, packageId: string, abortSignal?: AbortSignal): Promise<EmptyResponse> {
         const requestPath = `/v4/packages/${packageId}/gatekeeper/decline`;
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<EmptyResponse>("POST", url, undefined, input, abortSignal);
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<EmptyResponse>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
             throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
@@ -4002,8 +4002,8 @@ export class SigninghubClient extends ConnectorClientBase {
             queryParams.push(`smart-form=${encodeURIComponent(String(smartForm))}`);
         }
         const requestPath = `/v4/packages/${documentStatus}/${pageNo}/${recordPerPage}` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<Array<GetPackagesResponse>>("GET", url, undefined, undefined, abortSignal);
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<Array<GetPackagesResponse>>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
             throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
@@ -4018,8 +4018,8 @@ export class SigninghubClient extends ConnectorClientBase {
      */
     public async packageGetPackageDetailsAsync(packageId: string, abortSignal?: AbortSignal): Promise<GetPackageDetailsResponse> {
         const requestPath = `/v4/packages/${packageId}/details`;
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<GetPackageDetailsResponse>("GET", url, undefined, undefined, abortSignal);
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<GetPackageDetailsResponse>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
             throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
@@ -4034,8 +4034,8 @@ export class SigninghubClient extends ConnectorClientBase {
      */
     public async packageRenamePackageAsync(input: RenameDocumentPackageRequest, packageIdBulkAction: string, abortSignal?: AbortSignal): Promise<EmptyResponse> {
         const requestPath = `/v4/packages/${packageIdBulkAction}`;
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<EmptyResponse>("PUT", url, undefined, input, abortSignal);
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<EmptyResponse>("PUT", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
             throw new ConnectorException(this.connectorName, `PUT ${requestPath}`, httpResponse.statusCode, httpResponse.text);
@@ -4050,8 +4050,8 @@ export class SigninghubClient extends ConnectorClientBase {
      */
     public async packageSubmitAsync(packageId: string, abortSignal?: AbortSignal): Promise<EmptyResponse> {
         const requestPath = `/v4/packages/${packageId}/submit`;
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<EmptyResponse>("POST", url, undefined, undefined, abortSignal);
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<EmptyResponse>("POST", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
             throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
@@ -4066,8 +4066,8 @@ export class SigninghubClient extends ConnectorClientBase {
      */
     public async qraddQRCodeAsync(input: QrCodeRequest, packageId: string, documentId: string, abortSignal?: AbortSignal): Promise<AddQrCodeResponse> {
         const requestPath = `/v4/packages/${packageId}/documents/${documentId}/fields/qrcode`;
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<AddQrCodeResponse>("POST", url, undefined, input, abortSignal);
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<AddQrCodeResponse>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
             throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
@@ -4082,8 +4082,8 @@ export class SigninghubClient extends ConnectorClientBase {
      */
     public async qrupdateQRCodeAsync(input: UpdateQrCodeRequest, packageId: string, documentId: string, abortSignal?: AbortSignal): Promise<UpdateQrCodeResponse> {
         const requestPath = `/v4/packages/${packageId}/documents/${documentId}/fields/qrcode`;
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<UpdateQrCodeResponse>("PUT", url, undefined, input, abortSignal);
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<UpdateQrCodeResponse>("PUT", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
             throw new ConnectorException(this.connectorName, `PUT ${requestPath}`, httpResponse.statusCode, httpResponse.text);
@@ -4098,8 +4098,8 @@ export class SigninghubClient extends ConnectorClientBase {
      */
     public async radioAddRadioBoxAsync(input: RadioBoxFieldRequest, packageId: string, documentId: string, abortSignal?: AbortSignal): Promise<AddFieldResponse> {
         const requestPath = `/v4/packages/${packageId}/documents/${documentId}/fields/radio`;
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<AddFieldResponse>("POST", url, undefined, input, abortSignal);
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<AddFieldResponse>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
             throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
@@ -4114,8 +4114,8 @@ export class SigninghubClient extends ConnectorClientBase {
      */
     public async radioUpdateRadioBoxAsync(input: UpdateRadioBoxFieldRequest, packageId: string, documentId: string, abortSignal?: AbortSignal): Promise<EmptyResponse> {
         const requestPath = `/v4/packages/${packageId}/documents/${documentId}/fields/radio`;
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<EmptyResponse>("PUT", url, undefined, input, abortSignal);
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<EmptyResponse>("PUT", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
             throw new ConnectorException(this.connectorName, `PUT ${requestPath}`, httpResponse.statusCode, httpResponse.text);
@@ -4137,8 +4137,8 @@ export class SigninghubClient extends ConnectorClientBase {
             queryParams.push(`asc=${encodeURIComponent(String(asc))}`);
         }
         const requestPath = `/v4/settings/templates/${recordPerPage}/${pageNo}` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<Array<TemplateResponse>>("GET", url, undefined, undefined, abortSignal);
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<Array<TemplateResponse>>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
             throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
@@ -4153,8 +4153,8 @@ export class SigninghubClient extends ConnectorClientBase {
      */
     public async signatureAddSignatureAsync(input: DigitalSignatureFieldRequest, packageId: string, documentId: string, abortSignal?: AbortSignal): Promise<SignatureFieldResponse> {
         const requestPath = `/v4/packages/${packageId}/documents/${documentId}/fields/signature`;
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<SignatureFieldResponse>("POST", url, undefined, input, abortSignal);
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<SignatureFieldResponse>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
             throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
@@ -4169,8 +4169,8 @@ export class SigninghubClient extends ConnectorClientBase {
      */
     public async signatureUpdateSignatureAsync(input: UpdateDigitalSignatureFieldRequest, packageId: string, documentId: string, abortSignal?: AbortSignal): Promise<EmptyResponse> {
         const requestPath = `/v4/packages/${packageId}/documents/${documentId}/fields/signature`;
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<EmptyResponse>("PUT", url, undefined, input, abortSignal);
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<EmptyResponse>("PUT", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
             throw new ConnectorException(this.connectorName, `PUT ${requestPath}`, httpResponse.statusCode, httpResponse.text);
@@ -4185,8 +4185,8 @@ export class SigninghubClient extends ConnectorClientBase {
      */
     public async signingBulkSignDocumentsAsync(input: BulkSignRequest, packageIdBulkAction: string, abortSignal?: AbortSignal): Promise<BulkSignResponse> {
         const requestPath = `/v4/packages/${packageIdBulkAction}`;
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<BulkSignResponse>("POST", url, undefined, input, abortSignal);
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<BulkSignResponse>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
             throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
@@ -4201,8 +4201,8 @@ export class SigninghubClient extends ConnectorClientBase {
      */
     public async signingBulkSignStatusAsync(input: BulkSignStatusRequest, bulkAction: string, abortSignal?: AbortSignal): Promise<BulkSignStatusResponse> {
         const requestPath = `/v4/packages/${bulkAction}/status`;
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<BulkSignStatusResponse>("POST", url, undefined, input, abortSignal);
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<BulkSignStatusResponse>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
             throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
@@ -4217,8 +4217,8 @@ export class SigninghubClient extends ConnectorClientBase {
      */
     public async signingSignDocumentAsync(input: SignDocumentRequest, packageId: string, documentId: string, abortSignal?: AbortSignal): Promise<SignDocumentResponse> {
         const requestPath = `/v4/packages/${packageId}/documents/${documentId}/sign`;
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<SignDocumentResponse>("POST", url, undefined, input, abortSignal);
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<SignDocumentResponse>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
             throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
@@ -4243,8 +4243,8 @@ export class SigninghubClient extends ConnectorClientBase {
             queryParams.push(`id=${encodeURIComponent(String(id))}`);
         }
         const requestPath = `/v4/enterprise/templates/${recordPerPage}/${pageNo}` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<Array<EnterpriseTemplateResponse>>("GET", url, undefined, undefined, abortSignal);
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<Array<EnterpriseTemplateResponse>>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
             throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
@@ -4259,8 +4259,8 @@ export class SigninghubClient extends ConnectorClientBase {
      */
     public async textBoxAddTextBoxAsync(input: TextBoxFieldRequest, packageId: string, documentId: string, abortSignal?: AbortSignal): Promise<AddFieldResponse> {
         const requestPath = `/v4/packages/${packageId}/documents/${documentId}/fields/text`;
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<AddFieldResponse>("POST", url, undefined, input, abortSignal);
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<AddFieldResponse>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
             throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
@@ -4275,8 +4275,8 @@ export class SigninghubClient extends ConnectorClientBase {
      */
     public async textBoxUpdateTextBoxAsync(input: UpdateTextBoxFieldRequest, packageId: string, documentId: string, abortSignal?: AbortSignal): Promise<EmptyResponse> {
         const requestPath = `/v4/packages/${packageId}/documents/${documentId}/fields/text`;
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<EmptyResponse>("PUT", url, undefined, input, abortSignal);
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<EmptyResponse>("PUT", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
             throw new ConnectorException(this.connectorName, `PUT ${requestPath}`, httpResponse.statusCode, httpResponse.text);
@@ -4291,8 +4291,8 @@ export class SigninghubClient extends ConnectorClientBase {
      */
     public async workflowApplyTemplateAsync(input: ApplyTemplateRequest, packageId: string, documentId: string, abortSignal?: AbortSignal): Promise<DocumentDetailsResponse> {
         const requestPath = `/v4/packages/${packageId}/documents/${documentId}/template`;
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<DocumentDetailsResponse>("POST", url, undefined, input, abortSignal);
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<DocumentDetailsResponse>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
             throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
@@ -4307,8 +4307,8 @@ export class SigninghubClient extends ConnectorClientBase {
      */
     public async workflowEvidenceReportDownloadBytesAsync(packageId: string, abortSignal?: AbortSignal): Promise<WorkflowEvidenceReportDownloadBytesResponse> {
         const requestPath = `/v4/packages/${packageId}/report`;
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<WorkflowEvidenceReportDownloadBytesResponse>("GET", url, undefined, undefined, abortSignal);
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<WorkflowEvidenceReportDownloadBytesResponse>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
             throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
@@ -4323,8 +4323,8 @@ export class SigninghubClient extends ConnectorClientBase {
      */
     public async workflowGetWorkflowDetailAsync(packageId: string, abortSignal?: AbortSignal): Promise<WorkflowDetailsResponse> {
         const requestPath = `/v4/packages/${packageId}/workflow`;
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<WorkflowDetailsResponse>("GET", url, undefined, undefined, abortSignal);
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<WorkflowDetailsResponse>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
             throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
@@ -4339,8 +4339,8 @@ export class SigninghubClient extends ConnectorClientBase {
      */
     public async workflowGetWorkflowHistoryAsync(packageId: string, pageNo: string, recordsPerPage: string, abortSignal?: AbortSignal): Promise<WorkflowHistoryResponse> {
         const requestPath = `/v4/packages/${packageId}/log/${pageNo}/${recordsPerPage}`;
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<WorkflowHistoryResponse>("GET", url, undefined, undefined, abortSignal);
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<WorkflowHistoryResponse>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
             throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
@@ -4355,8 +4355,8 @@ export class SigninghubClient extends ConnectorClientBase {
      */
     public async workflowGetWorkflowReminderAsync(packageId: string, order: string, abortSignal?: AbortSignal): Promise<ReminderResponse> {
         const requestPath = `/v4/packages/${packageId}/workflow/${order}/reminders`;
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<ReminderResponse>("GET", url, undefined, undefined, abortSignal);
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<ReminderResponse>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
             throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
@@ -4371,8 +4371,8 @@ export class SigninghubClient extends ConnectorClientBase {
      */
     public async workflowGetWorkflowUsersAsync(packageId: string, abortSignal?: AbortSignal): Promise<Array<WorkflowRecipient>> {
         const requestPath = `/v4/packages/${packageId}/workflow/users`;
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<Array<WorkflowRecipient>>("GET", url, undefined, undefined, abortSignal);
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<Array<WorkflowRecipient>>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
             throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
@@ -4387,8 +4387,8 @@ export class SigninghubClient extends ConnectorClientBase {
      */
     public async workflowMarkWorkflowCompletedAsync(packageId: string, abortSignal?: AbortSignal): Promise<EmptyResponse> {
         const requestPath = `/v4/packages/${packageId}/complete`;
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<EmptyResponse>("POST", url, undefined, undefined, abortSignal);
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<EmptyResponse>("POST", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
             throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
@@ -4403,8 +4403,8 @@ export class SigninghubClient extends ConnectorClientBase {
      */
     public async workflowPermissionGetWorkflowPermissionsAsync(packageId: string, order: string, abortSignal?: AbortSignal): Promise<WorkflowPermissionResponse> {
         const requestPath = `/v4/packages/${packageId}/workflow/${order}/permissions`;
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<WorkflowPermissionResponse>("GET", url, undefined, undefined, abortSignal);
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<WorkflowPermissionResponse>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
             throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
@@ -4419,8 +4419,8 @@ export class SigninghubClient extends ConnectorClientBase {
      */
     public async workflowPermissionUpdateWorkflowPermissionsAsync(input: WorkflowPermissionsUpdateRequest, packageId: string, order: string, abortSignal?: AbortSignal): Promise<EmptyResponse> {
         const requestPath = `/v4/packages/${packageId}/workflow/${order}/permissions`;
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<EmptyResponse>("PUT", url, undefined, input, abortSignal);
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<EmptyResponse>("PUT", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
             throw new ConnectorException(this.connectorName, `PUT ${requestPath}`, httpResponse.statusCode, httpResponse.text);
@@ -4435,8 +4435,8 @@ export class SigninghubClient extends ConnectorClientBase {
      */
     public async workflowRecallWorkflowAsync(packageId: string, abortSignal?: AbortSignal): Promise<EmptyResponse> {
         const requestPath = `/v4/packages/${packageId}/workflow`;
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<EmptyResponse>("DELETE", url, undefined, undefined, abortSignal);
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<EmptyResponse>("DELETE", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
             throw new ConnectorException(this.connectorName, `DELETE ${requestPath}`, httpResponse.statusCode, httpResponse.text);
@@ -4451,8 +4451,8 @@ export class SigninghubClient extends ConnectorClientBase {
      */
     public async workflowStartWorkflowAsync(packageId: string, abortSignal?: AbortSignal): Promise<Array<StartWorkflowResponse>> {
         const requestPath = `/v4/packages/${packageId}/workflow`;
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<Array<StartWorkflowResponse>>("POST", url, undefined, undefined, abortSignal);
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<Array<StartWorkflowResponse>>("POST", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
             throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
@@ -4467,8 +4467,8 @@ export class SigninghubClient extends ConnectorClientBase {
      */
     public async workflowUpdateWorkflowAsync(input: WorkflowDetailUpdateRequest, packageId: string, abortSignal?: AbortSignal): Promise<EmptyResponse> {
         const requestPath = `/v4/packages/${packageId}/workflow`;
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<EmptyResponse>("PUT", url, undefined, input, abortSignal);
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<EmptyResponse>("PUT", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
             throw new ConnectorException(this.connectorName, `PUT ${requestPath}`, httpResponse.statusCode, httpResponse.text);
@@ -4483,8 +4483,8 @@ export class SigninghubClient extends ConnectorClientBase {
      */
     public async workflowUpdateWorkflowPostProcessAsync(input: PostProcessUpdateRequest, packageId: string, abortSignal?: AbortSignal): Promise<EmptyResponse> {
         const requestPath = `/v4/packages/${packageId}/workflow/post_process`;
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<EmptyResponse>("PUT", url, undefined, input, abortSignal);
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<EmptyResponse>("PUT", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
             throw new ConnectorException(this.connectorName, `PUT ${requestPath}`, httpResponse.statusCode, httpResponse.text);
@@ -4499,8 +4499,8 @@ export class SigninghubClient extends ConnectorClientBase {
      */
     public async workflowUpdateWorkflowReminderAsync(input: UpdateReminderRequest, packageId: string, order: string, abortSignal?: AbortSignal): Promise<EmptyResponse> {
         const requestPath = `/v4/packages/${packageId}/workflow/${order}/reminders`;
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<EmptyResponse>("PUT", url, undefined, input, abortSignal);
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<EmptyResponse>("PUT", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
             throw new ConnectorException(this.connectorName, `PUT ${requestPath}`, httpResponse.statusCode, httpResponse.text);
@@ -4515,8 +4515,8 @@ export class SigninghubClient extends ConnectorClientBase {
      */
     public async workflowWorkflowAddGroupAsync(input: WorkflowWorkflowAddGroupInput, packageId: string, abortSignal?: AbortSignal): Promise<Array<CollaboratorGroupResponse>> {
         const requestPath = `/v4/packages/${packageId}/workflow/groups`;
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<Array<CollaboratorGroupResponse>>("POST", url, undefined, input, abortSignal);
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<Array<CollaboratorGroupResponse>>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
             throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
@@ -4531,8 +4531,8 @@ export class SigninghubClient extends ConnectorClientBase {
      */
     public async workflowWorkflowAddPlaceholderAsync(input: WorkflowWorkflowAddPlaceholderInput, packageId: string, abortSignal?: AbortSignal): Promise<Array<CollaboratorPlaceholderResponse>> {
         const requestPath = `/v4/packages/${packageId}/workflow/placeholder`;
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<Array<CollaboratorPlaceholderResponse>>("POST", url, undefined, input, abortSignal);
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<Array<CollaboratorPlaceholderResponse>>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
             throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
@@ -4547,8 +4547,8 @@ export class SigninghubClient extends ConnectorClientBase {
      */
     public async workflowWorkflowAddUserAsync(input: WorkflowWorkflowAddUserInput, packageId: string, abortSignal?: AbortSignal): Promise<Array<CollaboratorResponse>> {
         const requestPath = `/v4/packages/${packageId}/workflow/users`;
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<Array<CollaboratorResponse>>("POST", url, undefined, input, abortSignal);
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<Array<CollaboratorResponse>>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
             throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
@@ -4563,8 +4563,8 @@ export class SigninghubClient extends ConnectorClientBase {
      */
     public async workflowWorkflowDeleteUserAsync(packageId: string, order: string, abortSignal?: AbortSignal): Promise<EmptyResponse> {
         const requestPath = `/v4/packages/${packageId}/workflow/${order}`;
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<EmptyResponse>("DELETE", url, undefined, undefined, abortSignal);
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<EmptyResponse>("DELETE", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
             throw new ConnectorException(this.connectorName, `DELETE ${requestPath}`, httpResponse.statusCode, httpResponse.text);
@@ -4579,8 +4579,8 @@ export class SigninghubClient extends ConnectorClientBase {
      */
     public async workflowWorkflowUpdatePlaceholderAsync(input: WorkflowPlaceholderUpdateRequest, packageId: string, order: string, abortSignal?: AbortSignal): Promise<EmptyResponse> {
         const requestPath = `/v4/packages/${packageId}/workflow/${order}/placeholder`;
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<EmptyResponse>("PUT", url, undefined, input, abortSignal);
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<EmptyResponse>("PUT", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
             throw new ConnectorException(this.connectorName, `PUT ${requestPath}`, httpResponse.statusCode, httpResponse.text);
@@ -4595,8 +4595,8 @@ export class SigninghubClient extends ConnectorClientBase {
      */
     public async workflowWorkflowUserUpdateAsync(input: WorkflowUserUpdateRequest, packageId: string, order: string, abortSignal?: AbortSignal): Promise<UpdateCollaboratorResponse> {
         const requestPath = `/v4/packages/${packageId}/workflow/${order}/user`;
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<UpdateCollaboratorResponse>("PUT", url, undefined, input, abortSignal);
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<UpdateCollaboratorResponse>("PUT", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
             throw new ConnectorException(this.connectorName, `PUT ${requestPath}`, httpResponse.statusCode, httpResponse.text);
@@ -4611,8 +4611,8 @@ export class SigninghubClient extends ConnectorClientBase {
      */
     public async workflowWorkflowUserUpdateOrderAsync(input: WorkflowUserReorderRequest, packageId: string, order: string, abortSignal?: AbortSignal): Promise<EmptyResponse> {
         const requestPath = `/v4/packages/${packageId}/workflow/${order}/reorder`;
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<EmptyResponse>("PUT", url, undefined, input, abortSignal);
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<EmptyResponse>("PUT", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
             throw new ConnectorException(this.connectorName, `PUT ${requestPath}`, httpResponse.statusCode, httpResponse.text);
@@ -4627,8 +4627,8 @@ export class SigninghubClient extends ConnectorClientBase {
      */
     public async workSpaceDeleteSharedSpaceAsync(id: string, abortSignal?: AbortSignal): Promise<EmptyResponse> {
         const requestPath = `/v4/shared_spaces/${id}`;
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<EmptyResponse>("DELETE", url, undefined, undefined, abortSignal);
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<EmptyResponse>("DELETE", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
             throw new ConnectorException(this.connectorName, `DELETE ${requestPath}`, httpResponse.statusCode, httpResponse.text);
@@ -4643,8 +4643,8 @@ export class SigninghubClient extends ConnectorClientBase {
      */
     public async workSpaceGetSharedSpaceAsync(id: string, abortSignal?: AbortSignal): Promise<WorkSpaceResponse> {
         const requestPath = `/v4/shared_spaces/${id}`;
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<WorkSpaceResponse>("GET", url, undefined, undefined, abortSignal);
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<WorkSpaceResponse>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
             throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
@@ -4659,8 +4659,8 @@ export class SigninghubClient extends ConnectorClientBase {
      */
     public async workSpaceUpdateSharedSpaceAsync(input: UpdateWorkSpaceRequest, id: string, abortSignal?: AbortSignal): Promise<EmptyResponse> {
         const requestPath = `/v4/shared_spaces/${id}`;
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<EmptyResponse>("PUT", url, undefined, input, abortSignal);
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<EmptyResponse>("PUT", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
             throw new ConnectorException(this.connectorName, `PUT ${requestPath}`, httpResponse.statusCode, httpResponse.text);

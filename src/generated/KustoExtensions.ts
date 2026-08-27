@@ -170,8 +170,8 @@ export class KustoClient extends ConnectorClientBase {
      */
     public async listKustoResultsAsync(input: QueryAndListSchema, abortSignal?: AbortSignal): Promise<Table> {
         const requestPath = `/ListKustoResults/false`;
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<Table>("POST", url, undefined, input, abortSignal);
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<Table>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
             throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
@@ -186,8 +186,8 @@ export class KustoClient extends ConnectorClientBase {
      */
     public async listKustoShowCommandResultsAsync(input: ControlCommandAndListSchema, abortSignal?: AbortSignal): Promise<Table> {
         const requestPath = `/ListKustoShowCommandResults`;
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<Table>("POST", url, undefined, input, abortSignal);
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<Table>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
             throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
@@ -202,8 +202,8 @@ export class KustoClient extends ConnectorClientBase {
      */
     public async runKustoQueryAndVisualizeResultsAsync(input: QueryAndVisualizeSchema, abortSignal?: AbortSignal): Promise<VisualizeResults> {
         const requestPath = `/RunKustoAndVisualizeResults/false`;
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<VisualizeResults>("POST", url, undefined, input, abortSignal);
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<VisualizeResults>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
             throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
@@ -218,8 +218,8 @@ export class KustoClient extends ConnectorClientBase {
      */
     public async runKustoCommandAndVisualizeResultsAsync(input: CommandAndVisualizeSchema, abortSignal?: AbortSignal): Promise<VisualizeResults> {
         const requestPath = `/RunKustoAndVisualizeResults/true`;
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<VisualizeResults>("POST", url, undefined, input, abortSignal);
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<VisualizeResults>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
             throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
@@ -234,8 +234,8 @@ export class KustoClient extends ConnectorClientBase {
      */
     public async runAsyncControlCommandAndWaitAsync(input: ControlCommandAndListSchema, abortSignal?: AbortSignal): Promise<AsyncCommandResult> {
         const requestPath = `/RunAsyncControlCommandAndWait`;
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<AsyncCommandResult>("POST", url, undefined, input, abortSignal);
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<AsyncCommandResult>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
             throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
@@ -254,8 +254,8 @@ export class KustoClient extends ConnectorClientBase {
             queryParams.push(`sessionId=${encodeURIComponent(String(sessionId))}`);
         }
         const requestPath = `/mcp/KustoQueryManagement` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<MCPQueryResponse>("POST", url, undefined, input, abortSignal);
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<MCPQueryResponse>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
             throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);

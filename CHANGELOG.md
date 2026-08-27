@@ -9,6 +9,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- Generated 21 additional connector clients in `src/generated/` for the Phase 5,
+  Phase 6, and Phase 7 rollout: Twitter, WordPress, Plivo, Rev.ai, Starmind,
+  Tallyfy, Eventbrite, Formstack Forms, Typeform, Ticketmaster, Zoho Sign,
+  Seismic Planner, Way We Do, Meeting Room Map, StarRez REST V1, Replicon,
+  Etsy, Elfsquad Data, Impexium, Jedox OData Hub, and Orderful. Campfire,
+  ClickSend SMS, Text Request, and Webex were already present from Phase 4.
+- Added shared Jest coverage for Phase 5-7 client construction, authenticated
+  actions, connector error details, registry entries, and Typeform trigger metadata.
 - Generated 22 additional connector clients in `src/generated/` (Phase 3 & 4
   connector rollout, mirroring the Python SDK's Phase 3 and Phase 4 sets):
   Azure Event Grid, Azure IoT Central, Cloudmersive Document Conversion, Fin &
@@ -36,6 +44,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Updated generated registries and reproducibility metadata for all 73 connector
+  clients. The Orderful input uses the checked-in AzureUX-BPM Swagger fixture
+  because the retired connector is no longer returned by regional ARM catalogs.
 - Updated generated connector registries (`connectorNames.ts`,
   `ManagedConnectors.ts`, `index.ts`) to include all 52 generated connectors.
   Captured 22 additional swagger snapshots and recorded their verified

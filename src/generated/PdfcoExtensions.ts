@@ -337,7 +337,7 @@ export interface SplitPdf2Response {
 /**
  * PDF Search Text
  */
-export interface PDFSerarchTextInput {
+export interface PDFSearchTextInput {
     /** URL to the source file. Supports links from Google Drive, Dropbox, and PDF.co built-in files storage. */
     url: string;
     /** Text to search can support regular expressions if you set the "Regex Search" parameter to true. */
@@ -2416,8 +2416,8 @@ export class PdfcoClient extends ConnectorClientBase {
      */
     public async htmlToPdfAsync(input: HtmlToPdfInput, abortSignal?: AbortSignal): Promise<HtmlToPdfResponse> {
         const requestPath = `/v1/pdf/convert/from/html`;
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<HtmlToPdfResponse>("POST", url, undefined, input, abortSignal);
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<HtmlToPdfResponse>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
             throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
@@ -2432,8 +2432,8 @@ export class PdfcoClient extends ConnectorClientBase {
      */
     public async urlToPdfAsync(input: UrlToPdfInput, abortSignal?: AbortSignal): Promise<UrlToPdfResponse> {
         const requestPath = `/v1/pdf/convert/from/url`;
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<UrlToPdfResponse>("POST", url, undefined, input, abortSignal);
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<UrlToPdfResponse>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
             throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
@@ -2448,8 +2448,8 @@ export class PdfcoClient extends ConnectorClientBase {
      */
     public async pdfFillerAsync(input: PdfFillerInput, abortSignal?: AbortSignal): Promise<PdfFillerResponse> {
         const requestPath = `/v1/pdf/edit/add`;
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<PdfFillerResponse>("POST", url, undefined, input, abortSignal);
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<PdfFillerResponse>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
             throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
@@ -2464,8 +2464,8 @@ export class PdfcoClient extends ConnectorClientBase {
      */
     public async mergePdfSimplifiedAsync(input: MergePdfSimplifiedInput, abortSignal?: AbortSignal): Promise<MergePdfSimplifiedResponse> {
         const requestPath = `/v1/pdf/merge`;
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<MergePdfSimplifiedResponse>("POST", url, undefined, input, abortSignal);
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<MergePdfSimplifiedResponse>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
             throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
@@ -2480,8 +2480,8 @@ export class PdfcoClient extends ConnectorClientBase {
      */
     public async mergePdfAsync(input: MergePdfInput, abortSignal?: AbortSignal): Promise<MergePdfResponse> {
         const requestPath = `/v1/pdf/merge2`;
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<MergePdfResponse>("POST", url, undefined, input, abortSignal);
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<MergePdfResponse>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
             throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
@@ -2496,8 +2496,8 @@ export class PdfcoClient extends ConnectorClientBase {
      */
     public async splitPdfAsync(input: SplitPdfInput, abortSignal?: AbortSignal): Promise<SplitPdfResponse> {
         const requestPath = `/v1/pdf/split`;
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<SplitPdfResponse>("POST", url, undefined, input, abortSignal);
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<SplitPdfResponse>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
             throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
@@ -2512,8 +2512,8 @@ export class PdfcoClient extends ConnectorClientBase {
      */
     public async splitPdf2Async(input: SplitPdf2Input, abortSignal?: AbortSignal): Promise<SplitPdf2Response> {
         const requestPath = `/v1/pdf/split2`;
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<SplitPdf2Response>("POST", url, undefined, input, abortSignal);
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<SplitPdf2Response>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
             throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
@@ -2526,10 +2526,10 @@ export class PdfcoClient extends ConnectorClientBase {
      * PDF Search Text
      * @remarks Search text in PDF and get coordinates. Supports regular expressions. Please see api documentation at https://developer.pdf.co/api/pdf-find/index.html for comprehensive guidelines.
      */
-    public async pdfserarchTextAsync(input: PDFSerarchTextInput, abortSignal?: AbortSignal): Promise<PDFSearchTextResponse> {
+    public async pdfsearchTextAsync(input: PDFSearchTextInput, abortSignal?: AbortSignal): Promise<PDFSearchTextResponse> {
         const requestPath = `/v1/pdf/find`;
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<PDFSearchTextResponse>("POST", url, undefined, input, abortSignal);
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<PDFSearchTextResponse>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
             throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
@@ -2544,8 +2544,8 @@ export class PdfcoClient extends ConnectorClientBase {
      */
     public async documentParserAsync(input: DocumentParserInput, abortSignal?: AbortSignal): Promise<DocumentParserResponse> {
         const requestPath = `/v1/pdf/documentparser`;
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<DocumentParserResponse>("POST", url, undefined, input, abortSignal);
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<DocumentParserResponse>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
             throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
@@ -2560,8 +2560,8 @@ export class PdfcoClient extends ConnectorClientBase {
      */
     public async jobCheckAsync(input: JobCheckInput, abortSignal?: AbortSignal): Promise<JobCheckResponse> {
         const requestPath = `/v1/job/check`;
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<JobCheckResponse>("POST", url, undefined, input, abortSignal);
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<JobCheckResponse>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
             throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
@@ -2576,8 +2576,8 @@ export class PdfcoClient extends ConnectorClientBase {
      */
     public async barcodeGeneratorAsync(input: BarcodeGeneratorInput, abortSignal?: AbortSignal): Promise<BarcodeGeneratorResponse> {
         const requestPath = `/v1/barcode/generate`;
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<BarcodeGeneratorResponse>("POST", url, undefined, input, abortSignal);
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<BarcodeGeneratorResponse>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
             throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
@@ -2592,8 +2592,8 @@ export class PdfcoClient extends ConnectorClientBase {
      */
     public async barcodeReaderAsync(input: BarcodeReaderInput, abortSignal?: AbortSignal): Promise<BarcodeReaderResponse> {
         const requestPath = `/v1/barcode/read/from/url`;
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<BarcodeReaderResponse>("POST", url, undefined, input, abortSignal);
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<BarcodeReaderResponse>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
             throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
@@ -2608,8 +2608,8 @@ export class PdfcoClient extends ConnectorClientBase {
      */
     public async pdfinfoReaderAsync(input: PDFInfoReaderInput, abortSignal?: AbortSignal): Promise<PDFInfoReaderResponse> {
         const requestPath = `/v1/pdf/info`;
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<PDFInfoReaderResponse>("POST", url, undefined, input, abortSignal);
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<PDFInfoReaderResponse>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
             throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
@@ -2624,8 +2624,8 @@ export class PdfcoClient extends ConnectorClientBase {
      */
     public async pdfformsInfoReaderAsync(input: PDFFormsInfoReaderInput, abortSignal?: AbortSignal): Promise<PDFFormsInfoReaderResponse> {
         const requestPath = `/v1/pdf/info/fields`;
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<PDFFormsInfoReaderResponse>("POST", url, undefined, input, abortSignal);
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<PDFFormsInfoReaderResponse>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
             throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
@@ -2640,8 +2640,8 @@ export class PdfcoClient extends ConnectorClientBase {
      */
     public async pdffindTableAsync(input: PDFFindTableInput, abortSignal?: AbortSignal): Promise<PDFFindTableResponse> {
         const requestPath = `/v1/pdf/find/table`;
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<PDFFindTableResponse>("POST", url, undefined, input, abortSignal);
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<PDFFindTableResponse>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
             throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
@@ -2656,8 +2656,8 @@ export class PdfcoClient extends ConnectorClientBase {
      */
     public async searchAndReplaceAsync(input: SearchAndReplaceInput, abortSignal?: AbortSignal): Promise<SearchAndReplaceResponse> {
         const requestPath = `/v1/pdf/edit/replace-text`;
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<SearchAndReplaceResponse>("POST", url, undefined, input, abortSignal);
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<SearchAndReplaceResponse>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
             throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
@@ -2672,8 +2672,8 @@ export class PdfcoClient extends ConnectorClientBase {
      */
     public async searchAndReplaceWithImageAsync(input: SearchAndReplaceWithImageInput, abortSignal?: AbortSignal): Promise<SearchAndReplaceWithImageResponse> {
         const requestPath = `/v1/pdf/edit/replace-text-with-image`;
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<SearchAndReplaceWithImageResponse>("POST", url, undefined, input, abortSignal);
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<SearchAndReplaceWithImageResponse>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
             throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
@@ -2688,8 +2688,8 @@ export class PdfcoClient extends ConnectorClientBase {
      */
     public async searchAndDeleteTextAsync(input: SearchAndDeleteTextInput, abortSignal?: AbortSignal): Promise<SearchAndDeleteTextResponse> {
         const requestPath = `/v1/pdf/edit/delete-text`;
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<SearchAndDeleteTextResponse>("POST", url, undefined, input, abortSignal);
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<SearchAndDeleteTextResponse>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
             throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
@@ -2704,8 +2704,8 @@ export class PdfcoClient extends ConnectorClientBase {
      */
     public async pdfsearchableAsync(input: PDFSearchableInput, abortSignal?: AbortSignal): Promise<PDFSearchableResponse> {
         const requestPath = `/v1/pdf/makesearchable`;
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<PDFSearchableResponse>("POST", url, undefined, input, abortSignal);
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<PDFSearchableResponse>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
             throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
@@ -2720,8 +2720,8 @@ export class PdfcoClient extends ConnectorClientBase {
      */
     public async pdfunSearchableAsync(input: PDFUnSearchableInput, abortSignal?: AbortSignal): Promise<PDFUnSearchableResponse> {
         const requestPath = `/v1/pdf/makeunsearchable`;
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<PDFUnSearchableResponse>("POST", url, undefined, input, abortSignal);
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<PDFUnSearchableResponse>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
             throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
@@ -2736,8 +2736,8 @@ export class PdfcoClient extends ConnectorClientBase {
      */
     public async pdftoCSVAsync(input: PDFToCSVInput, abortSignal?: AbortSignal): Promise<PDFToCSVResponse> {
         const requestPath = `/v1/pdf/convert/to/csv`;
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<PDFToCSVResponse>("POST", url, undefined, input, abortSignal);
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<PDFToCSVResponse>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
             throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
@@ -2752,8 +2752,8 @@ export class PdfcoClient extends ConnectorClientBase {
      */
     public async pdftoJSONAsync(input: PDFToJSONInput, abortSignal?: AbortSignal): Promise<PDFToJSONResponse> {
         const requestPath = `/v1/pdf/convert/to/json2`;
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<PDFToJSONResponse>("POST", url, undefined, input, abortSignal);
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<PDFToJSONResponse>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
             throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
@@ -2768,8 +2768,8 @@ export class PdfcoClient extends ConnectorClientBase {
      */
     public async pdftoJSONMetaAsync(input: PDFToJSONMetaInput, abortSignal?: AbortSignal): Promise<PDFToJSONMetaResponse> {
         const requestPath = `/v1/pdf/convert/to/json-meta`;
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<PDFToJSONMetaResponse>("POST", url, undefined, input, abortSignal);
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<PDFToJSONMetaResponse>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
             throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
@@ -2784,8 +2784,8 @@ export class PdfcoClient extends ConnectorClientBase {
      */
     public async pdftoTextAsync(input: PDFToTextInput, abortSignal?: AbortSignal): Promise<PDFToTextResponse> {
         const requestPath = `/v1/pdf/convert/to/text`;
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<PDFToTextResponse>("POST", url, undefined, input, abortSignal);
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<PDFToTextResponse>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
             throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
@@ -2800,8 +2800,8 @@ export class PdfcoClient extends ConnectorClientBase {
      */
     public async pdftoTextSimpleAsync(input: PDFToTextSimpleInput, abortSignal?: AbortSignal): Promise<PDFToTextSimpleResponse> {
         const requestPath = `/v1/pdf/convert/to/text-simple`;
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<PDFToTextSimpleResponse>("POST", url, undefined, input, abortSignal);
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<PDFToTextSimpleResponse>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
             throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
@@ -2816,8 +2816,8 @@ export class PdfcoClient extends ConnectorClientBase {
      */
     public async pdftoXLSAsync(input: PDFToXLSInput, abortSignal?: AbortSignal): Promise<PDFToXLSResponse> {
         const requestPath = `/v1/pdf/convert/to/xls`;
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<PDFToXLSResponse>("POST", url, undefined, input, abortSignal);
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<PDFToXLSResponse>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
             throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
@@ -2832,8 +2832,8 @@ export class PdfcoClient extends ConnectorClientBase {
      */
     public async pdftoXLSXAsync(input: PDFToXLSXInput, abortSignal?: AbortSignal): Promise<PDFToXLSXResponse> {
         const requestPath = `/v1/pdf/convert/to/xlsx`;
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<PDFToXLSXResponse>("POST", url, undefined, input, abortSignal);
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<PDFToXLSXResponse>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
             throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
@@ -2848,8 +2848,8 @@ export class PdfcoClient extends ConnectorClientBase {
      */
     public async pdftoXMLAsync(input: PDFToXMLInput, abortSignal?: AbortSignal): Promise<PDFToXMLResponse> {
         const requestPath = `/v1/pdf/convert/to/xml`;
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<PDFToXMLResponse>("POST", url, undefined, input, abortSignal);
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<PDFToXMLResponse>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
             throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
@@ -2864,8 +2864,8 @@ export class PdfcoClient extends ConnectorClientBase {
      */
     public async pdftoJPGAsync(input: PDFToJPGInput, abortSignal?: AbortSignal): Promise<PDFToJPGResponse> {
         const requestPath = `/v1/pdf/convert/to/jpg`;
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<PDFToJPGResponse>("POST", url, undefined, input, abortSignal);
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<PDFToJPGResponse>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
             throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
@@ -2880,8 +2880,8 @@ export class PdfcoClient extends ConnectorClientBase {
      */
     public async pdftoPNGAsync(input: PDFToPNGInput, abortSignal?: AbortSignal): Promise<PDFToPNGResponse> {
         const requestPath = `/v1/pdf/convert/to/png`;
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<PDFToPNGResponse>("POST", url, undefined, input, abortSignal);
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<PDFToPNGResponse>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
             throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
@@ -2896,8 +2896,8 @@ export class PdfcoClient extends ConnectorClientBase {
      */
     public async pdftoWEBPAsync(input: PDFToWEBPInput, abortSignal?: AbortSignal): Promise<PDFToWEBPResponse> {
         const requestPath = `/v1/pdf/convert/to/webp`;
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<PDFToWEBPResponse>("POST", url, undefined, input, abortSignal);
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<PDFToWEBPResponse>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
             throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
@@ -2912,8 +2912,8 @@ export class PdfcoClient extends ConnectorClientBase {
      */
     public async pdftoTIFFAsync(input: PDFToTIFFInput, abortSignal?: AbortSignal): Promise<PDFToTIFFResponse> {
         const requestPath = `/v1/pdf/convert/to/tiff`;
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<PDFToTIFFResponse>("POST", url, undefined, input, abortSignal);
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<PDFToTIFFResponse>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
             throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
@@ -2928,8 +2928,8 @@ export class PdfcoClient extends ConnectorClientBase {
      */
     public async pdffromCSVAsync(input: PDFFromCSVInput, abortSignal?: AbortSignal): Promise<PDFFromCSVResponse> {
         const requestPath = `/v1/pdf/convert/from/csv`;
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<PDFFromCSVResponse>("POST", url, undefined, input, abortSignal);
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<PDFFromCSVResponse>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
             throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
@@ -2944,8 +2944,8 @@ export class PdfcoClient extends ConnectorClientBase {
      */
     public async pdffromDocAsync(input: PDFFromDocInput, abortSignal?: AbortSignal): Promise<PDFFromDocResponse> {
         const requestPath = `/v1/pdf/convert/from/doc`;
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<PDFFromDocResponse>("POST", url, undefined, input, abortSignal);
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<PDFFromDocResponse>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
             throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
@@ -2960,8 +2960,8 @@ export class PdfcoClient extends ConnectorClientBase {
      */
     public async pdffromImagesAsync(input: PDFFromImagesInput, abortSignal?: AbortSignal): Promise<PDFFromImagesResponse> {
         const requestPath = `/v1/pdf/convert/from/image`;
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<PDFFromImagesResponse>("POST", url, undefined, input, abortSignal);
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<PDFFromImagesResponse>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
             throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
@@ -2976,8 +2976,8 @@ export class PdfcoClient extends ConnectorClientBase {
      */
     public async pdffromEmailAsync(input: PDFFromEmailInput, abortSignal?: AbortSignal): Promise<PDFFromEmailResponse> {
         const requestPath = `/v1/pdf/convert/from/email`;
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<PDFFromEmailResponse>("POST", url, undefined, input, abortSignal);
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<PDFFromEmailResponse>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
             throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
@@ -2992,8 +2992,8 @@ export class PdfcoClient extends ConnectorClientBase {
      */
     public async pdfaddSecurityAsync(input: PDFAddSecurityInput, abortSignal?: AbortSignal): Promise<PDFAddSecurityResponse> {
         const requestPath = `/v1/pdf/security/add`;
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<PDFAddSecurityResponse>("POST", url, undefined, input, abortSignal);
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<PDFAddSecurityResponse>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
             throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
@@ -3008,8 +3008,8 @@ export class PdfcoClient extends ConnectorClientBase {
      */
     public async pdfsecurityRemoveAsync(input: PDFSecurityRemoveInput, abortSignal?: AbortSignal): Promise<PDFSecurityRemoveResponse> {
         const requestPath = `/v1/pdf/security/remove`;
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<PDFSecurityRemoveResponse>("POST", url, undefined, input, abortSignal);
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<PDFSecurityRemoveResponse>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
             throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
@@ -3024,8 +3024,8 @@ export class PdfcoClient extends ConnectorClientBase {
      */
     public async pdffromXLSXLSXAsync(input: PDFFromXLSXLSXInput, abortSignal?: AbortSignal): Promise<PDFFromXLSXLSXResponse> {
         const requestPath = `/v1/xls/convert/to/pdf`;
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<PDFFromXLSXLSXResponse>("POST", url, undefined, input, abortSignal);
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<PDFFromXLSXLSXResponse>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
             throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
@@ -3040,8 +3040,8 @@ export class PdfcoClient extends ConnectorClientBase {
      */
     public async xlstoCSVAsync(input: XLStoCSVInput, abortSignal?: AbortSignal): Promise<XLStoCSVResponse> {
         const requestPath = `/v1/xls/convert/to/csv`;
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<XLStoCSVResponse>("POST", url, undefined, input, abortSignal);
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<XLStoCSVResponse>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
             throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
@@ -3056,8 +3056,8 @@ export class PdfcoClient extends ConnectorClientBase {
      */
     public async xlstoJSONAsync(input: XLStoJSONInput, abortSignal?: AbortSignal): Promise<XLStoJSONResponse> {
         const requestPath = `/v1/xls/convert/to/json`;
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<XLStoJSONResponse>("POST", url, undefined, input, abortSignal);
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<XLStoJSONResponse>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
             throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
@@ -3072,8 +3072,8 @@ export class PdfcoClient extends ConnectorClientBase {
      */
     public async xlstoHTMLAsync(input: XLStoHTMLInput, abortSignal?: AbortSignal): Promise<XLStoHTMLResponse> {
         const requestPath = `/v1/xls/convert/to/html`;
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<XLStoHTMLResponse>("POST", url, undefined, input, abortSignal);
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<XLStoHTMLResponse>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
             throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
@@ -3088,8 +3088,8 @@ export class PdfcoClient extends ConnectorClientBase {
      */
     public async xlstoTXTAsync(input: XLStoTXTInput, abortSignal?: AbortSignal): Promise<XLStoTXTResponse> {
         const requestPath = `/v1/xls/convert/to/txt`;
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<XLStoTXTResponse>("POST", url, undefined, input, abortSignal);
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<XLStoTXTResponse>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
             throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
@@ -3104,8 +3104,8 @@ export class PdfcoClient extends ConnectorClientBase {
      */
     public async xlstoXMLAsync(input: XLStoXMLInput, abortSignal?: AbortSignal): Promise<XLStoXMLResponse> {
         const requestPath = `/v1/xls/convert/to/xml`;
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<XLStoXMLResponse>("POST", url, undefined, input, abortSignal);
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<XLStoXMLResponse>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
             throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
@@ -3120,8 +3120,8 @@ export class PdfcoClient extends ConnectorClientBase {
      */
     public async pdfrotatePagesAsync(input: PDFRotatePagesInput, abortSignal?: AbortSignal): Promise<PDFRotatePagesResponse> {
         const requestPath = `/v1/pdf/edit/rotate`;
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<PDFRotatePagesResponse>("POST", url, undefined, input, abortSignal);
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<PDFRotatePagesResponse>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
             throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
@@ -3136,8 +3136,8 @@ export class PdfcoClient extends ConnectorClientBase {
      */
     public async pdfautoRotatePagesAsync(input: PDFAutoRotatePagesInput, abortSignal?: AbortSignal): Promise<PDFAutoRotatePagesResponse> {
         const requestPath = `/v1/pdf/edit/rotate/auto`;
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<PDFAutoRotatePagesResponse>("POST", url, undefined, input, abortSignal);
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<PDFAutoRotatePagesResponse>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
             throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
@@ -3152,8 +3152,8 @@ export class PdfcoClient extends ConnectorClientBase {
      */
     public async pdfdeletePagesAsync(input: PDFDeletePagesInput, abortSignal?: AbortSignal): Promise<PDFDeletePagesResponse> {
         const requestPath = `/v1/pdf/edit/delete-pages`;
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<PDFDeletePagesResponse>("POST", url, undefined, input, abortSignal);
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<PDFDeletePagesResponse>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
             throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
@@ -3168,8 +3168,8 @@ export class PdfcoClient extends ConnectorClientBase {
      */
     public async pdfcompressAsync(input: PDFCompressInput, abortSignal?: AbortSignal): Promise<PDFCompressResponse> {
         const requestPath = `/v1/pdf/optimize`;
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<PDFCompressResponse>("POST", url, undefined, input, abortSignal);
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<PDFCompressResponse>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
             throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
@@ -3184,8 +3184,8 @@ export class PdfcoClient extends ConnectorClientBase {
      */
     public async pdfclassifierAsync(input: PDFClassifierInput, abortSignal?: AbortSignal): Promise<PDFClassifierResponse> {
         const requestPath = `/v1/pdf/classifier`;
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<PDFClassifierResponse>("POST", url, undefined, input, abortSignal);
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<PDFClassifierResponse>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
             throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
@@ -3200,8 +3200,8 @@ export class PdfcoClient extends ConnectorClientBase {
      */
     public async emailSendAsync(input: EmailSendInput, abortSignal?: AbortSignal): Promise<EmailSendResponse> {
         const requestPath = `/v1/email/send`;
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<EmailSendResponse>("POST", url, undefined, input, abortSignal);
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<EmailSendResponse>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
             throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
@@ -3216,8 +3216,8 @@ export class PdfcoClient extends ConnectorClientBase {
      */
     public async emailDecodeAsync(input: EmailDecodeInput, abortSignal?: AbortSignal): Promise<EmailDecodeResponse> {
         const requestPath = `/v1/email/decode`;
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<EmailDecodeResponse>("POST", url, undefined, input, abortSignal);
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<EmailDecodeResponse>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
             throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
@@ -3232,8 +3232,8 @@ export class PdfcoClient extends ConnectorClientBase {
      */
     public async emailAttachmentExtractionAsync(input: EmailAttachmentExtractionInput, abortSignal?: AbortSignal): Promise<EmailAttachmentExtractionResponse> {
         const requestPath = `/v1/email/extract-attachments`;
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<EmailAttachmentExtractionResponse>("POST", url, undefined, input, abortSignal);
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<EmailAttachmentExtractionResponse>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
             throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
@@ -3248,8 +3248,8 @@ export class PdfcoClient extends ConnectorClientBase {
      */
     public async pdfattachmentExtractionAsync(input: PDFAttachmentExtractionInput, abortSignal?: AbortSignal): Promise<PDFAttachmentExtractionResponse> {
         const requestPath = `/v1/pdf/attachments/extract`;
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<PDFAttachmentExtractionResponse>("POST", url, undefined, input, abortSignal);
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<PDFAttachmentExtractionResponse>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
             throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);

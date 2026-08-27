@@ -127,8 +127,8 @@ export class InfusionsoftClient extends ConnectorClientBase {
      */
     public async createTaskAsync(input: CreateTaskRequest, abortSignal?: AbortSignal): Promise<TaskResponse> {
         const requestPath = `/crm/rest/v1/tasks/`;
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<TaskResponse>("POST", url, undefined, input, abortSignal);
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<TaskResponse>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
             throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
@@ -143,8 +143,8 @@ export class InfusionsoftClient extends ConnectorClientBase {
      */
     public async updateTaskAsync(input: CreateTaskRequest, id: string, abortSignal?: AbortSignal): Promise<TaskResponse> {
         const requestPath = `/crm/rest/v1/tasks/${id}`;
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<TaskResponse>("PUT", url, undefined, input, abortSignal);
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<TaskResponse>("PUT", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
             throw new ConnectorException(this.connectorName, `PUT ${requestPath}`, httpResponse.statusCode, httpResponse.text);

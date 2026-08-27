@@ -208,8 +208,8 @@ export class ProjectplaceClient extends ConnectorClientBase {
      */
     public async createCardAsync(input: CreateCardInput, boardId: string, abortSignal?: AbortSignal): Promise<CreateCardResponse> {
         const requestPath = `/v1/external_notifications/${boardId}/create_card`;
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<CreateCardResponse>("POST", url, undefined, input, abortSignal);
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<CreateCardResponse>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
             throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
@@ -224,8 +224,8 @@ export class ProjectplaceClient extends ConnectorClientBase {
      */
     public async moveCardAsync(input: MoveCardInput, boardId: string, abortSignal?: AbortSignal): Promise<MoveCardResponse> {
         const requestPath = `/v1/external_notifications/${boardId}/move_card`;
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<MoveCardResponse>("POST", url, undefined, input, abortSignal);
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<MoveCardResponse>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
             throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);

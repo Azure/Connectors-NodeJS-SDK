@@ -212,8 +212,8 @@ export class CampfireClient extends ConnectorClientBase {
             queryParams.push(`message=${encodeURIComponent(String(message))}`);
         }
         const requestPath = `/room/${roomId}/speak.json` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<CreateMessageResponse>("POST", url, undefined, undefined, abortSignal);
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<CreateMessageResponse>("POST", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
             throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
@@ -232,8 +232,8 @@ export class CampfireClient extends ConnectorClientBase {
             queryParams.push(`account=${encodeURIComponent(String(account))}`);
         }
         const requestPath = `/users/${userId}.json` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<UserResponse>("GET", url, undefined, undefined, abortSignal);
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<UserResponse>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
             throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);

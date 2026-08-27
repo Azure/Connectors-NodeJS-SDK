@@ -2421,8 +2421,8 @@ export class CloudmersiveconvertClient extends ConnectorClientBase {
      */
     public async editDocumentDocxCreateBlankDocumentAsync(input: CreateBlankDocxRequest, abortSignal?: AbortSignal): Promise<CreateBlankDocxResponse> {
         const requestPath = `/convert/edit/docx/create/blank`;
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<CreateBlankDocxResponse>("POST", url, undefined, input, abortSignal);
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<CreateBlankDocxResponse>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
             throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
@@ -2437,8 +2437,8 @@ export class CloudmersiveconvertClient extends ConnectorClientBase {
      */
     public async editDocumentDocxDeletePagesAsync(input: RemoveDocxPagesRequest, abortSignal?: AbortSignal): Promise<Blob> {
         const requestPath = `/convert/edit/docx/delete-pages`;
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<Blob>("POST", url, undefined, input, abortSignal);
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<Blob>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
             throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
@@ -2453,8 +2453,8 @@ export class CloudmersiveconvertClient extends ConnectorClientBase {
      */
     public async editDocumentDocxDeleteTableRowAsync(input: DeleteDocxTableRowRequest, abortSignal?: AbortSignal): Promise<DeleteDocxTableRowResponse> {
         const requestPath = `/convert/edit/docx/delete-table-row`;
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<DeleteDocxTableRowResponse>("POST", url, undefined, input, abortSignal);
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<DeleteDocxTableRowResponse>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
             throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
@@ -2469,8 +2469,8 @@ export class CloudmersiveconvertClient extends ConnectorClientBase {
      */
     public async editDocumentDocxDeleteTableRowRangeAsync(input: DeleteDocxTableRowRangeRequest, abortSignal?: AbortSignal): Promise<DeleteDocxTableRowRangeResponse> {
         const requestPath = `/convert/edit/docx/delete-table-row/range`;
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<DeleteDocxTableRowRangeResponse>("POST", url, undefined, input, abortSignal);
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<DeleteDocxTableRowRangeResponse>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
             throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
@@ -2485,8 +2485,8 @@ export class CloudmersiveconvertClient extends ConnectorClientBase {
      */
     public async editDocumentDocxBodyAsync(input: GetDocxBodyRequest, abortSignal?: AbortSignal): Promise<GetDocxBodyResponse> {
         const requestPath = `/convert/edit/docx/get-body`;
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<GetDocxBodyResponse>("POST", url, undefined, input, abortSignal);
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<GetDocxBodyResponse>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
             throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
@@ -2501,8 +2501,8 @@ export class CloudmersiveconvertClient extends ConnectorClientBase {
      */
     public async editDocumentDocxGetCommentsHierarchicalAsync(input: GetDocxGetCommentsHierarchicalRequest, abortSignal?: AbortSignal): Promise<GetDocxCommentsHierarchicalResponse> {
         const requestPath = `/convert/edit/docx/get-comments/hierarchical`;
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<GetDocxCommentsHierarchicalResponse>("POST", url, undefined, input, abortSignal);
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<GetDocxCommentsHierarchicalResponse>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
             throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
@@ -2517,8 +2517,8 @@ export class CloudmersiveconvertClient extends ConnectorClientBase {
      */
     public async editDocumentDocxGetHeadersAndFootersAsync(input: GetDocxHeadersAndFootersRequest, abortSignal?: AbortSignal): Promise<GetDocxHeadersAndFootersResponse> {
         const requestPath = `/convert/edit/docx/get-headers-and-footers`;
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<GetDocxHeadersAndFootersResponse>("POST", url, undefined, input, abortSignal);
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<GetDocxHeadersAndFootersResponse>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
             throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
@@ -2533,8 +2533,8 @@ export class CloudmersiveconvertClient extends ConnectorClientBase {
      */
     public async editDocumentDocxGetImagesAsync(input: GetDocxImagesRequest, abortSignal?: AbortSignal): Promise<GetDocxImagesResponse> {
         const requestPath = `/convert/edit/docx/get-images`;
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<GetDocxImagesResponse>("POST", url, undefined, input, abortSignal);
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<GetDocxImagesResponse>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
             throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
@@ -2549,8 +2549,8 @@ export class CloudmersiveconvertClient extends ConnectorClientBase {
      */
     public async editDocumentDocxPagesAsync(input: GetDocxPagesRequest, abortSignal?: AbortSignal): Promise<GetDocxPagesResponse> {
         const requestPath = `/convert/edit/docx/get-pages`;
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<GetDocxPagesResponse>("POST", url, undefined, input, abortSignal);
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<GetDocxPagesResponse>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
             throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
@@ -2565,8 +2565,8 @@ export class CloudmersiveconvertClient extends ConnectorClientBase {
      */
     public async editDocumentDocxGetSectionsAsync(input: GetDocxSectionsRequest, abortSignal?: AbortSignal): Promise<GetDocxSectionsResponse> {
         const requestPath = `/convert/edit/docx/get-sections`;
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<GetDocxSectionsResponse>("POST", url, undefined, input, abortSignal);
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<GetDocxSectionsResponse>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
             throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
@@ -2581,8 +2581,8 @@ export class CloudmersiveconvertClient extends ConnectorClientBase {
      */
     public async editDocumentDocxGetStylesAsync(input: GetDocxStylesRequest, abortSignal?: AbortSignal): Promise<GetDocxStylesResponse> {
         const requestPath = `/convert/edit/docx/get-styles`;
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<GetDocxStylesResponse>("POST", url, undefined, input, abortSignal);
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<GetDocxStylesResponse>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
             throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
@@ -2597,8 +2597,8 @@ export class CloudmersiveconvertClient extends ConnectorClientBase {
      */
     public async editDocumentDocxGetTableRowAsync(input: GetDocxTableRowRequest, abortSignal?: AbortSignal): Promise<GetDocxTableRowResponse> {
         const requestPath = `/convert/edit/docx/get-table-row`;
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<GetDocxTableRowResponse>("POST", url, undefined, input, abortSignal);
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<GetDocxTableRowResponse>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
             throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
@@ -2613,8 +2613,8 @@ export class CloudmersiveconvertClient extends ConnectorClientBase {
      */
     public async editDocumentDocxGetTableByIndexAsync(input: GetDocxTableByIndexRequest, abortSignal?: AbortSignal): Promise<GetDocxTableByIndexResponse> {
         const requestPath = `/convert/edit/docx/get-table/by-index`;
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<GetDocxTableByIndexResponse>("POST", url, undefined, input, abortSignal);
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<GetDocxTableByIndexResponse>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
             throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
@@ -2629,8 +2629,8 @@ export class CloudmersiveconvertClient extends ConnectorClientBase {
      */
     public async editDocumentDocxGetTablesAsync(input: GetDocxTablesRequest, abortSignal?: AbortSignal): Promise<GetDocxTablesResponse> {
         const requestPath = `/convert/edit/docx/get-tables`;
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<GetDocxTablesResponse>("POST", url, undefined, input, abortSignal);
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<GetDocxTablesResponse>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
             throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
@@ -2645,8 +2645,8 @@ export class CloudmersiveconvertClient extends ConnectorClientBase {
      */
     public async editDocumentDocxInsertCommentOnParagraphAsync(input: DocxInsertCommentOnParagraphRequest, abortSignal?: AbortSignal): Promise<InsertDocxCommentOnParagraphResponse> {
         const requestPath = `/convert/edit/docx/insert-comment/on/paragraph`;
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<InsertDocxCommentOnParagraphResponse>("POST", url, undefined, input, abortSignal);
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<InsertDocxCommentOnParagraphResponse>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
             throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
@@ -2661,8 +2661,8 @@ export class CloudmersiveconvertClient extends ConnectorClientBase {
      */
     public async editDocumentDocxInsertImageAsync(input: DocxInsertImageRequest, abortSignal?: AbortSignal): Promise<DocxInsertImageResponse> {
         const requestPath = `/convert/edit/docx/insert-image`;
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<DocxInsertImageResponse>("POST", url, undefined, input, abortSignal);
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<DocxInsertImageResponse>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
             throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
@@ -2677,8 +2677,8 @@ export class CloudmersiveconvertClient extends ConnectorClientBase {
      */
     public async editDocumentDocxInsertParagraphAsync(input: InsertDocxInsertParagraphRequest, abortSignal?: AbortSignal): Promise<InsertDocxInsertParagraphResponse> {
         const requestPath = `/convert/edit/docx/insert-paragraph`;
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<InsertDocxInsertParagraphResponse>("POST", url, undefined, input, abortSignal);
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<InsertDocxInsertParagraphResponse>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
             throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
@@ -2693,8 +2693,8 @@ export class CloudmersiveconvertClient extends ConnectorClientBase {
      */
     public async editDocumentDocxInsertTableAsync(input: InsertDocxTablesRequest, abortSignal?: AbortSignal): Promise<InsertDocxTablesResponse> {
         const requestPath = `/convert/edit/docx/insert-table`;
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<InsertDocxTablesResponse>("POST", url, undefined, input, abortSignal);
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<InsertDocxTablesResponse>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
             throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
@@ -2709,8 +2709,8 @@ export class CloudmersiveconvertClient extends ConnectorClientBase {
      */
     public async editDocumentDocxInsertTableRowAsync(input: InsertDocxTableRowRequest, abortSignal?: AbortSignal): Promise<InsertDocxTableRowResponse> {
         const requestPath = `/convert/edit/docx/insert-table-row`;
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<InsertDocxTableRowResponse>("POST", url, undefined, input, abortSignal);
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<InsertDocxTableRowResponse>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
             throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
@@ -2725,8 +2725,8 @@ export class CloudmersiveconvertClient extends ConnectorClientBase {
      */
     public async editDocumentDocxRemoveHeadersAndFootersAsync(input: RemoveDocxHeadersAndFootersRequest, abortSignal?: AbortSignal): Promise<RemoveDocxHeadersAndFootersResponse> {
         const requestPath = `/convert/edit/docx/remove-headers-and-footers`;
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<RemoveDocxHeadersAndFootersResponse>("POST", url, undefined, input, abortSignal);
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<RemoveDocxHeadersAndFootersResponse>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
             throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
@@ -2741,8 +2741,8 @@ export class CloudmersiveconvertClient extends ConnectorClientBase {
      */
     public async editDocumentDocxRemoveObjectAsync(input: DocxRemoveObjectRequest, abortSignal?: AbortSignal): Promise<DocxRemoveObjectResponse> {
         const requestPath = `/convert/edit/docx/remove-object`;
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<DocxRemoveObjectResponse>("POST", url, undefined, input, abortSignal);
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<DocxRemoveObjectResponse>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
             throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
@@ -2757,8 +2757,8 @@ export class CloudmersiveconvertClient extends ConnectorClientBase {
      */
     public async editDocumentDocxReplaceAsync(input: ReplaceStringRequest, abortSignal?: AbortSignal): Promise<Blob> {
         const requestPath = `/convert/edit/docx/replace-all`;
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<Blob>("POST", url, undefined, input, abortSignal);
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<Blob>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
             throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
@@ -2773,8 +2773,8 @@ export class CloudmersiveconvertClient extends ConnectorClientBase {
      */
     public async editDocumentDocxSetFooterAsync(input: DocxSetFooterRequest, abortSignal?: AbortSignal): Promise<DocxSetFooterResponse> {
         const requestPath = `/convert/edit/docx/set-footer`;
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<DocxSetFooterResponse>("POST", url, undefined, input, abortSignal);
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<DocxSetFooterResponse>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
             throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
@@ -2789,8 +2789,8 @@ export class CloudmersiveconvertClient extends ConnectorClientBase {
      */
     public async editDocumentDocxSetFooterAddPageNumberAsync(input: DocxSetFooterAddPageNumberRequest, abortSignal?: AbortSignal): Promise<DocxSetFooterResponse> {
         const requestPath = `/convert/edit/docx/set-footer/add-page-number`;
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<DocxSetFooterResponse>("POST", url, undefined, input, abortSignal);
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<DocxSetFooterResponse>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
             throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
@@ -2805,8 +2805,8 @@ export class CloudmersiveconvertClient extends ConnectorClientBase {
      */
     public async editDocumentDocxSetHeaderAsync(input: DocxSetHeaderRequest, abortSignal?: AbortSignal): Promise<DocxSetHeaderResponse> {
         const requestPath = `/convert/edit/docx/set-header`;
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<DocxSetHeaderResponse>("POST", url, undefined, input, abortSignal);
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<DocxSetHeaderResponse>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
             throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
@@ -2821,8 +2821,8 @@ export class CloudmersiveconvertClient extends ConnectorClientBase {
      */
     public async editDocumentDocxUpdateTableCellAsync(input: UpdateDocxTableCellRequest, abortSignal?: AbortSignal): Promise<UpdateDocxTableCellResponse> {
         const requestPath = `/convert/edit/docx/update-table-cell`;
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<UpdateDocxTableCellResponse>("POST", url, undefined, input, abortSignal);
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<UpdateDocxTableCellResponse>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
             throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
@@ -2837,8 +2837,8 @@ export class CloudmersiveconvertClient extends ConnectorClientBase {
      */
     public async editDocumentDocxUpdateTableRowAsync(input: UpdateDocxTableRowRequest, abortSignal?: AbortSignal): Promise<UpdateDocxTableRowResponse> {
         const requestPath = `/convert/edit/docx/update-table-row`;
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<UpdateDocxTableRowResponse>("POST", url, undefined, input, abortSignal);
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<UpdateDocxTableRowResponse>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
             throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
@@ -2853,8 +2853,8 @@ export class CloudmersiveconvertClient extends ConnectorClientBase {
      */
     public async editDocumentFinishEditingAsync(input: FinishEditingRequest, abortSignal?: AbortSignal): Promise<Blob> {
         const requestPath = `/convert/edit/finish-editing`;
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<Blob>("POST", url, undefined, input, abortSignal);
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<Blob>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
             throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
@@ -2869,8 +2869,8 @@ export class CloudmersiveconvertClient extends ConnectorClientBase {
      */
     public async editDocumentPptxDeleteSlidesAsync(input: RemovePptxSlidesRequest, abortSignal?: AbortSignal): Promise<Blob> {
         const requestPath = `/convert/edit/pptx/delete-slides`;
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<Blob>("POST", url, undefined, input, abortSignal);
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<Blob>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
             throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
@@ -2885,8 +2885,8 @@ export class CloudmersiveconvertClient extends ConnectorClientBase {
      */
     public async editDocumentPptxReplaceAsync(input: ReplaceStringRequest, abortSignal?: AbortSignal): Promise<Blob> {
         const requestPath = `/convert/edit/pptx/replace-all`;
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<Blob>("POST", url, undefined, input, abortSignal);
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<Blob>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
             throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
@@ -2901,8 +2901,8 @@ export class CloudmersiveconvertClient extends ConnectorClientBase {
      */
     public async editDocumentXlsxClearCellByIndexAsync(input: ClearXlsxCellRequest, abortSignal?: AbortSignal): Promise<ClearXlsxCellResponse> {
         const requestPath = `/convert/edit/xlsx/clear-cell/by-index`;
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<ClearXlsxCellResponse>("POST", url, undefined, input, abortSignal);
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<ClearXlsxCellResponse>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
             throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
@@ -2917,8 +2917,8 @@ export class CloudmersiveconvertClient extends ConnectorClientBase {
      */
     public async editDocumentXlsxCreateBlankSpreadsheetAsync(input: CreateBlankSpreadsheetRequest, abortSignal?: AbortSignal): Promise<CreateBlankSpreadsheetResponse> {
         const requestPath = `/convert/edit/xlsx/create/blank`;
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<CreateBlankSpreadsheetResponse>("POST", url, undefined, input, abortSignal);
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<CreateBlankSpreadsheetResponse>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
             throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
@@ -2933,8 +2933,8 @@ export class CloudmersiveconvertClient extends ConnectorClientBase {
      */
     public async editDocumentXlsxCreateSpreadsheetFromDataAsync(input: CreateSpreadsheetFromDataRequest, abortSignal?: AbortSignal): Promise<CreateSpreadsheetFromDataResponse> {
         const requestPath = `/convert/edit/xlsx/create/from/data`;
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<CreateSpreadsheetFromDataResponse>("POST", url, undefined, input, abortSignal);
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<CreateSpreadsheetFromDataResponse>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
             throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
@@ -2949,8 +2949,8 @@ export class CloudmersiveconvertClient extends ConnectorClientBase {
      */
     public async editDocumentXlsxDeleteWorksheetAsync(input: RemoveXlsxWorksheetRequest, abortSignal?: AbortSignal): Promise<EditDocumentXlsxDeleteWorksheetResponse> {
         const requestPath = `/convert/edit/xlsx/delete-worksheet`;
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<EditDocumentXlsxDeleteWorksheetResponse>("POST", url, undefined, input, abortSignal);
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<EditDocumentXlsxDeleteWorksheetResponse>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
             throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
@@ -2965,8 +2965,8 @@ export class CloudmersiveconvertClient extends ConnectorClientBase {
      */
     public async editDocumentXlsxGetCellByIdentifierAsync(input: GetXlsxCellByIdentifierRequest, abortSignal?: AbortSignal): Promise<GetXlsxCellByIdentifierResponse> {
         const requestPath = `/convert/edit/xlsx/get-cell/by-identifier`;
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<GetXlsxCellByIdentifierResponse>("POST", url, undefined, input, abortSignal);
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<GetXlsxCellByIdentifierResponse>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
             throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
@@ -2981,8 +2981,8 @@ export class CloudmersiveconvertClient extends ConnectorClientBase {
      */
     public async editDocumentXlsxGetCellByIndexAsync(input: GetXlsxCellRequest, abortSignal?: AbortSignal): Promise<GetXlsxCellResponse> {
         const requestPath = `/convert/edit/xlsx/get-cell/by-index`;
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<GetXlsxCellResponse>("POST", url, undefined, input, abortSignal);
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<GetXlsxCellResponse>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
             throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
@@ -2997,8 +2997,8 @@ export class CloudmersiveconvertClient extends ConnectorClientBase {
      */
     public async editDocumentXlsxGetColumnsAsync(input: GetXlsxColumnsRequest, abortSignal?: AbortSignal): Promise<GetXlsxColumnsResponse> {
         const requestPath = `/convert/edit/xlsx/get-columns`;
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<GetXlsxColumnsResponse>("POST", url, undefined, input, abortSignal);
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<GetXlsxColumnsResponse>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
             throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
@@ -3013,8 +3013,8 @@ export class CloudmersiveconvertClient extends ConnectorClientBase {
      */
     public async editDocumentXlsxGetImagesAsync(input: GetXlsxImagesRequest, abortSignal?: AbortSignal): Promise<GetXlsxImagesResponse> {
         const requestPath = `/convert/edit/xlsx/get-images`;
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<GetXlsxImagesResponse>("POST", url, undefined, input, abortSignal);
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<GetXlsxImagesResponse>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
             throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
@@ -3029,8 +3029,8 @@ export class CloudmersiveconvertClient extends ConnectorClientBase {
      */
     public async editDocumentXlsxGetRowsAndCellsAsync(input: GetXlsxRowsAndCellsRequest, abortSignal?: AbortSignal): Promise<GetXlsxRowsAndCellsResponse> {
         const requestPath = `/convert/edit/xlsx/get-rows-and-cells`;
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<GetXlsxRowsAndCellsResponse>("POST", url, undefined, input, abortSignal);
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<GetXlsxRowsAndCellsResponse>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
             throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
@@ -3045,8 +3045,8 @@ export class CloudmersiveconvertClient extends ConnectorClientBase {
      */
     public async editDocumentXlsxGetStylesAsync(input: GetXlsxStylesRequest, abortSignal?: AbortSignal): Promise<GetXlsxStylesResponse> {
         const requestPath = `/convert/edit/xlsx/get-styles`;
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<GetXlsxStylesResponse>("POST", url, undefined, input, abortSignal);
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<GetXlsxStylesResponse>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
             throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
@@ -3061,8 +3061,8 @@ export class CloudmersiveconvertClient extends ConnectorClientBase {
      */
     public async editDocumentXlsxGetWorksheetsAsync(input: GetXlsxWorksheetsRequest, abortSignal?: AbortSignal): Promise<GetXlsxWorksheetsResponse> {
         const requestPath = `/convert/edit/xlsx/get-worksheets`;
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<GetXlsxWorksheetsResponse>("POST", url, undefined, input, abortSignal);
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<GetXlsxWorksheetsResponse>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
             throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
@@ -3077,8 +3077,8 @@ export class CloudmersiveconvertClient extends ConnectorClientBase {
      */
     public async editDocumentXlsxInsertWorksheetAsync(input: InsertXlsxWorksheetRequest, abortSignal?: AbortSignal): Promise<InsertXlsxWorksheetResponse> {
         const requestPath = `/convert/edit/xlsx/insert-worksheet`;
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<InsertXlsxWorksheetResponse>("POST", url, undefined, input, abortSignal);
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<InsertXlsxWorksheetResponse>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
             throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
@@ -3093,8 +3093,8 @@ export class CloudmersiveconvertClient extends ConnectorClientBase {
      */
     public async editDocumentXlsxSetCellByIdentifierAsync(input: SetXlsxCellByIdentifierRequest, abortSignal?: AbortSignal): Promise<SetXlsxCellByIdentifierResponse> {
         const requestPath = `/convert/edit/xlsx/set-cell/by-identifier`;
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<SetXlsxCellByIdentifierResponse>("POST", url, undefined, input, abortSignal);
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<SetXlsxCellByIdentifierResponse>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
             throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
@@ -3109,8 +3109,8 @@ export class CloudmersiveconvertClient extends ConnectorClientBase {
      */
     public async editDocumentXlsxSetCellByIndexAsync(input: SetXlsxCellRequest, abortSignal?: AbortSignal): Promise<SetXlsxCellResponse> {
         const requestPath = `/convert/edit/xlsx/set-cell/by-index`;
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<SetXlsxCellResponse>("POST", url, undefined, input, abortSignal);
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<SetXlsxCellResponse>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
             throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
@@ -3125,8 +3125,8 @@ export class CloudmersiveconvertClient extends ConnectorClientBase {
      */
     public async convertWebHtmlToDocxAsync(input: HtmlToOfficeRequest, abortSignal?: AbortSignal): Promise<Blob> {
         const requestPath = `/convert/html/to/docx`;
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<Blob>("POST", url, undefined, input, abortSignal);
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<Blob>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
             throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
@@ -3141,8 +3141,8 @@ export class CloudmersiveconvertClient extends ConnectorClientBase {
      */
     public async convertDataJsonToXmlAsync(input: ConvertDataJsonToXmlInput, abortSignal?: AbortSignal): Promise<string> {
         const requestPath = `/convert/json/to/xml`;
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<string>("POST", url, undefined, input, abortSignal);
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<string>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
             throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
@@ -3157,8 +3157,8 @@ export class CloudmersiveconvertClient extends ConnectorClientBase {
      */
     public async convertTemplateApplyHtmlTemplateAsync(input: HtmlTemplateApplicationRequest, abortSignal?: AbortSignal): Promise<HtmlTemplateApplicationResponse> {
         const requestPath = `/convert/template/html/apply`;
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<HtmlTemplateApplicationResponse>("POST", url, undefined, input, abortSignal);
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<HtmlTemplateApplicationResponse>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
             throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
@@ -3173,8 +3173,8 @@ export class CloudmersiveconvertClient extends ConnectorClientBase {
      */
     public async convertWebHtmlToPdfAsync(input: HtmlToPdfRequest, abortSignal?: AbortSignal): Promise<Blob> {
         const requestPath = `/convert/web/html/to/pdf`;
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<Blob>("POST", url, undefined, input, abortSignal);
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<Blob>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
             throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
@@ -3189,8 +3189,8 @@ export class CloudmersiveconvertClient extends ConnectorClientBase {
      */
     public async convertWebHtmlToPngAsync(input: HtmlToPngRequest, abortSignal?: AbortSignal): Promise<ConvertWebHtmlToPngResponse> {
         const requestPath = `/convert/web/html/to/png`;
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<ConvertWebHtmlToPngResponse>("POST", url, undefined, input, abortSignal);
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<ConvertWebHtmlToPngResponse>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
             throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
@@ -3205,8 +3205,8 @@ export class CloudmersiveconvertClient extends ConnectorClientBase {
      */
     public async convertWebHtmlToTxtAsync(input: HtmlToTextRequest, abortSignal?: AbortSignal): Promise<HtmlToTextResponse> {
         const requestPath = `/convert/web/html/to/txt`;
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<HtmlToTextResponse>("POST", url, undefined, input, abortSignal);
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<HtmlToTextResponse>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
             throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
@@ -3221,8 +3221,8 @@ export class CloudmersiveconvertClient extends ConnectorClientBase {
      */
     public async convertWebUrlToPdfAsync(input: ScreenshotRequest, abortSignal?: AbortSignal): Promise<Blob> {
         const requestPath = `/convert/web/url/to/pdf`;
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<Blob>("POST", url, undefined, input, abortSignal);
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<Blob>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
             throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
@@ -3237,8 +3237,8 @@ export class CloudmersiveconvertClient extends ConnectorClientBase {
      */
     public async convertWebUrlToScreenshotAsync(input: ScreenshotRequest, abortSignal?: AbortSignal): Promise<Blob> {
         const requestPath = `/convert/web/url/to/screenshot`;
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<Blob>("POST", url, undefined, input, abortSignal);
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<Blob>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
             throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
@@ -3253,8 +3253,8 @@ export class CloudmersiveconvertClient extends ConnectorClientBase {
      */
     public async convertWebUrlToTxtAsync(input: UrlToTextRequest, abortSignal?: AbortSignal): Promise<UrlToTextResponse> {
         const requestPath = `/convert/web/url/to/txt`;
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<UrlToTextResponse>("POST", url, undefined, input, abortSignal);
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<UrlToTextResponse>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
             throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);

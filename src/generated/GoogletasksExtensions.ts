@@ -154,8 +154,8 @@ export class GoogletasksClient extends ConnectorClientBase {
      */
     public async listTaskListsAsync(abortSignal?: AbortSignal): Promise<TaskListList> {
         const requestPath = `/users/@me/lists`;
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<TaskListList>("GET", url, undefined, undefined, abortSignal);
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<TaskListList>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
             throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
@@ -170,8 +170,8 @@ export class GoogletasksClient extends ConnectorClientBase {
      */
     public async createTaskListAsync(input: TaskListCreate, abortSignal?: AbortSignal): Promise<TaskListEntry> {
         const requestPath = `/users/@me/lists`;
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<TaskListEntry>("POST", url, undefined, input, abortSignal);
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<TaskListEntry>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
             throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
@@ -186,8 +186,8 @@ export class GoogletasksClient extends ConnectorClientBase {
      */
     public async listTasksAsync(taskListId: string, abortSignal?: AbortSignal): Promise<TaskList> {
         const requestPath = `/lists/${taskListId}/tasks`;
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<TaskList>("GET", url, undefined, undefined, abortSignal);
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<TaskList>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
             throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
@@ -200,10 +200,10 @@ export class GoogletasksClient extends ConnectorClientBase {
      * Create a task in a task list
      * @remarks Create a task in a specific task list.
      */
-    public async craeteTaskAsync(input: TaskCreate, taskListId: string, abortSignal?: AbortSignal): Promise<TaskObject> {
+    public async createTaskAsync(input: TaskCreate, taskListId: string, abortSignal?: AbortSignal): Promise<TaskObject> {
         const requestPath = `/lists/${taskListId}/tasks`;
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<TaskObject>("POST", url, undefined, input, abortSignal);
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<TaskObject>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
             throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
@@ -218,8 +218,8 @@ export class GoogletasksClient extends ConnectorClientBase {
      */
     public async listTaskAsync(taskListId: string, taskId: string, abortSignal?: AbortSignal): Promise<TaskObject> {
         const requestPath = `/lists/${taskListId}/tasks/${taskId}`;
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<TaskObject>("GET", url, undefined, undefined, abortSignal);
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<TaskObject>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
             throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);

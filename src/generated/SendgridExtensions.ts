@@ -195,8 +195,8 @@ export class SendgridClient extends ConnectorClientBase {
      */
     public async addGlobalSuppressionAsync(input: AddGlobalSuppressRequestAndResponse, abortSignal?: AbortSignal): Promise<AddGlobalSuppressRequestAndResponse> {
         const requestPath = `/suppressions/global`;
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<AddGlobalSuppressRequestAndResponse>("POST", url, undefined, input, abortSignal);
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<AddGlobalSuppressRequestAndResponse>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
             throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
@@ -211,8 +211,8 @@ export class SendgridClient extends ConnectorClientBase {
      */
     public async getGlobalSuppressionAsync(email: string, abortSignal?: AbortSignal): Promise<GetGlobalSuppressResponse> {
         const requestPath = `/suppressions/global/${email}`;
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<GetGlobalSuppressResponse>("GET", url, undefined, undefined, abortSignal);
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<GetGlobalSuppressResponse>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
             throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
@@ -227,8 +227,8 @@ export class SendgridClient extends ConnectorClientBase {
      */
     public async deleteGlobalSuppressionAsync(email: string, abortSignal?: AbortSignal): Promise<void> {
         const requestPath = `/suppressions/global/${email}`;
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<void>("DELETE", url, undefined, undefined, abortSignal);
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<void>("DELETE", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
             throw new ConnectorException(this.connectorName, `DELETE ${requestPath}`, httpResponse.statusCode, httpResponse.text);
@@ -241,8 +241,8 @@ export class SendgridClient extends ConnectorClientBase {
      */
     public async addRecipientToListAsync(listId: string, recipientId: string, abortSignal?: AbortSignal): Promise<ObjectEntity> {
         const requestPath = `/v3/contactdb/lists/${listId}/recipients/${recipientId}`;
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<ObjectEntity>("POST", url, undefined, undefined, abortSignal);
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<ObjectEntity>("POST", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
             throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
@@ -257,8 +257,8 @@ export class SendgridClient extends ConnectorClientBase {
      */
     public async getBounceAsync(email: string, abortSignal?: AbortSignal): Promise<Array<Bounce>> {
         const requestPath = `/suppression/bounces/${email}`;
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<Array<Bounce>>("GET", url, undefined, undefined, abortSignal);
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<Array<Bounce>>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
             throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
@@ -273,8 +273,8 @@ export class SendgridClient extends ConnectorClientBase {
      */
     public async deleteBounceAsync(email: string, abortSignal?: AbortSignal): Promise<void> {
         const requestPath = `/suppression/bounces/${email}`;
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<void>("DELETE", url, undefined, undefined, abortSignal);
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<void>("DELETE", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
             throw new ConnectorException(this.connectorName, `DELETE ${requestPath}`, httpResponse.statusCode, httpResponse.text);
@@ -287,8 +287,8 @@ export class SendgridClient extends ConnectorClientBase {
      */
     public async checkEmailIsInUnsubscribesListAsync(email: string, abortSignal?: AbortSignal): Promise<EmailIsUnsubscribedResponse> {
         const requestPath = `/unsubscribes/${email}`;
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<EmailIsUnsubscribedResponse>("GET", url, undefined, undefined, abortSignal);
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<EmailIsUnsubscribedResponse>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
             throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
@@ -303,8 +303,8 @@ export class SendgridClient extends ConnectorClientBase {
      */
     public async sendEmailAsync(input: EmailRequest, abortSignal?: AbortSignal): Promise<ObjectEntity> {
         const requestPath = `/v4/mail/send`;
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<ObjectEntity>("POST", url, undefined, input, abortSignal);
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<ObjectEntity>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
             throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);

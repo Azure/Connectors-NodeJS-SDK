@@ -44,6 +44,7 @@ export interface ObjectEntity {
  */
 export interface Table {
     value?: Array<Row>;
+    error?: PartialQueryError;
 }
 
 /**
@@ -54,12 +55,20 @@ export interface Row {
 }
 
 /**
+ * Definition: PartialQueryError
+ */
+export interface PartialQueryError {
+    code?: string;
+}
+
+/**
  * Definition: VisualizeResults
  */
 export interface VisualizeResults {
     body?: string;
     attachmentContent?: string;
     attachmentName?: string;
+    error?: PartialQueryError;
 }
 
 /**
@@ -195,8 +204,8 @@ export class AzuremonitorlogsClient extends ConnectorClientBase {
             queryParams.push(`resourcename=${encodeURIComponent(String(resourcename))}`);
         }
         const requestPath = `/queryDataV2` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<Table>("POST", url, undefined, input, abortSignal);
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<Table>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
             throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
@@ -227,8 +236,8 @@ export class AzuremonitorlogsClient extends ConnectorClientBase {
             queryParams.push(`visType=${encodeURIComponent(String(visType))}`);
         }
         const requestPath = `/visualizeQueryV2` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<VisualizeResults>("POST", url, undefined, input, abortSignal);
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<VisualizeResults>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
             throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);

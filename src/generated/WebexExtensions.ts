@@ -568,8 +568,8 @@ export class WebexClient extends ConnectorClientBase {
      */
     public async createSpaceMemberAsync(input: CreateSpaceMemberInput, abortSignal?: AbortSignal): Promise<CreateSpaceMemberResponse> {
         const requestPath = `/v1/memberships`;
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<CreateSpaceMemberResponse>("POST", url, undefined, input, abortSignal);
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<CreateSpaceMemberResponse>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
             throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
@@ -600,8 +600,8 @@ export class WebexClient extends ConnectorClientBase {
             queryParams.push(`max=${encodeURIComponent(String(max))}`);
         }
         const requestPath = `/v1/messages` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<GetMessagesResponse>("GET", url, undefined, undefined, abortSignal);
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<GetMessagesResponse>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
             throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
@@ -616,8 +616,8 @@ export class WebexClient extends ConnectorClientBase {
      */
     public async sendMessageAsync(input: SendMessageInput, abortSignal?: AbortSignal): Promise<SendMessageResponse> {
         const requestPath = `/v1/messages`;
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<SendMessageResponse>("POST", url, undefined, input, abortSignal);
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<SendMessageResponse>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
             throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
@@ -632,8 +632,8 @@ export class WebexClient extends ConnectorClientBase {
      */
     public async getMessageDetailsAsync(messageId: string, abortSignal?: AbortSignal): Promise<GetMessageDetailsResponse> {
         const requestPath = `/v1/messages/${messageId}`;
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<GetMessageDetailsResponse>("GET", url, undefined, undefined, abortSignal);
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<GetMessageDetailsResponse>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
             throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
@@ -655,8 +655,8 @@ export class WebexClient extends ConnectorClientBase {
             queryParams.push(`email=${encodeURIComponent(String(email))}`);
         }
         const requestPath = `/v1/people` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<GetPeopleResponse>("GET", url, undefined, undefined, abortSignal);
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<GetPeopleResponse>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
             throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
@@ -671,8 +671,8 @@ export class WebexClient extends ConnectorClientBase {
      */
     public async getMyOwnDetailsAsync(abortSignal?: AbortSignal): Promise<GetMyOwnDetailsResponse> {
         const requestPath = `/v1/people/me`;
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<GetMyOwnDetailsResponse>("GET", url, undefined, undefined, abortSignal);
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<GetMyOwnDetailsResponse>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
             throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
@@ -697,8 +697,8 @@ export class WebexClient extends ConnectorClientBase {
             queryParams.push(`sortBy=${encodeURIComponent(String(sortBy))}`);
         }
         const requestPath = `/v1/rooms` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<GetSpacesResponse>("GET", url, undefined, undefined, abortSignal);
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<GetSpacesResponse>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
             throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
@@ -713,8 +713,8 @@ export class WebexClient extends ConnectorClientBase {
      */
     public async createSpaceAsync(input: CreateSpaceInput, abortSignal?: AbortSignal): Promise<CreateSpaceResponse> {
         const requestPath = `/v1/rooms`;
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<CreateSpaceResponse>("POST", url, undefined, input, abortSignal);
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<CreateSpaceResponse>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
             throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
@@ -729,8 +729,8 @@ export class WebexClient extends ConnectorClientBase {
      */
     public async getSpaceDetailAsync(roomId: string, abortSignal?: AbortSignal): Promise<GetSpaceDetailResponse> {
         const requestPath = `/v1/rooms/${roomId}`;
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<GetSpaceDetailResponse>("GET", url, undefined, undefined, abortSignal);
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<GetSpaceDetailResponse>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
             throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
@@ -745,8 +745,8 @@ export class WebexClient extends ConnectorClientBase {
      */
     public async createTeamMemberAsync(input: CreateTeamMemberInput, abortSignal?: AbortSignal): Promise<CreateTeamMemberResponse> {
         const requestPath = `/v1/team/memberships`;
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<CreateTeamMemberResponse>("POST", url, undefined, input, abortSignal);
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<CreateTeamMemberResponse>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
             throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);

@@ -281,8 +281,29 @@ The following connectors have been generated and validated with comprehensive te
 | **SendGrid** | `@azure/connectors/generated/SendgridExtensions` | ✅ Complete | 7 tests |
 | **Text Request** | `@azure/connectors/generated/TextrequestExtensions` | ✅ Complete | 7 tests |
 | **Webex** | `@azure/connectors/generated/WebexExtensions` | ✅ Complete | 7 tests |
+| **Twitter (X)** | `@azure/connectors/generated/TwitterExtensions` | ✅ Complete | Shared Phase 5-7 suite |
+| **WordPress** | `@azure/connectors/generated/WordpressExtensions` | ✅ Complete | Shared Phase 5-7 suite |
+| **Plivo** | `@azure/connectors/generated/PlivoExtensions` | ✅ Complete | Shared Phase 5-7 suite |
+| **Rev.ai** | `@azure/connectors/generated/RevaiExtensions` | ✅ Complete | Shared Phase 5-7 suite |
+| **Starmind** | `@azure/connectors/generated/StarmindExtensions` | ✅ Complete | Shared Phase 5-7 suite |
+| **Tallyfy** | `@azure/connectors/generated/TallyfyExtensions` | ✅ Complete | Shared Phase 5-7 suite |
+| **Eventbrite** | `@azure/connectors/generated/EventbriteExtensions` | ✅ Complete | Shared Phase 5-7 suite |
+| **Formstack Forms** | `@azure/connectors/generated/FormstackformsExtensions` | ✅ Complete | Shared Phase 5-7 suite |
+| **Typeform** | `@azure/connectors/generated/TypeformExtensions` | ✅ Complete | Shared Phase 5-7 suite |
+| **Ticketmaster** | `@azure/connectors/generated/TicketmasterExtensions` | ✅ Complete | Shared Phase 5-7 suite |
+| **Zoho Sign** | `@azure/connectors/generated/ZohosignExtensions` | ✅ Complete | Shared Phase 5-7 suite |
+| **Seismic Planner** | `@azure/connectors/generated/SeismicplannerExtensions` | ✅ Complete | Shared Phase 5-7 suite |
+| **Way We Do** | `@azure/connectors/generated/WaywedoExtensions` | ✅ Complete | Shared Phase 5-7 suite |
+| **Meeting Room Map** | `@azure/connectors/generated/MeetingroommapExtensions` | ✅ Complete | Shared Phase 5-7 suite |
+| **StarRez REST V1** | `@azure/connectors/generated/Starrezrestv1Extensions` | ✅ Complete | Shared Phase 5-7 suite |
+| **Replicon** | `@azure/connectors/generated/RepliconExtensions` | ✅ Complete | Shared Phase 5-7 suite |
+| **Etsy** | `@azure/connectors/generated/EtsyExtensions` | ✅ Complete | Shared Phase 5-7 suite |
+| **Elfsquad Data** | `@azure/connectors/generated/ElfsquaddataExtensions` | ✅ Complete | Shared Phase 5-7 suite |
+| **Impexium** | `@azure/connectors/generated/ImpexiumExtensions` | ✅ Complete | Shared Phase 5-7 suite |
+| **Jedox OData Hub** | `@azure/connectors/generated/JedoxodatahubExtensions` | ✅ Complete | Shared Phase 5-7 suite |
+| **Orderful** | `@azure/connectors/generated/OrderfulExtensions` | ✅ Complete | Shared Phase 5-7 suite |
 
-**Total:** 849 tests across 64 test suites and 52 generated connectors.
+**Total:** 995 tests across 65 test suites and 73 generated connectors.
 
 ## Authentication
 

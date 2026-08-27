@@ -379,8 +379,8 @@ export class Office365groupsmailClient extends ConnectorClientBase {
      */
     public async listConversationsAsync(groupId: string, abortSignal?: AbortSignal): Promise<ListConversationsResponse> {
         const requestPath = `/v1.0/groups/${groupId}/conversations`;
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<ListConversationsResponse>("GET", url, undefined, undefined, abortSignal);
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<ListConversationsResponse>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
             throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
@@ -395,8 +395,8 @@ export class Office365groupsmailClient extends ConnectorClientBase {
      */
     public async createConversationAsync(input: CreateConversationBody, groupId: string, abortSignal?: AbortSignal): Promise<CreateConversationResponse> {
         const requestPath = `/v1.0/groups/${groupId}/conversations`;
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<CreateConversationResponse>("POST", url, undefined, input, abortSignal);
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<CreateConversationResponse>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
             throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
@@ -411,8 +411,8 @@ export class Office365groupsmailClient extends ConnectorClientBase {
      */
     public async getGroupConversationAsync(groupId: string, conversationId: string, abortSignal?: AbortSignal): Promise<Conversation> {
         const requestPath = `/v1.0/groups/${groupId}/conversations/${conversationId}`;
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<Conversation>("GET", url, undefined, undefined, abortSignal);
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<Conversation>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
             throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
@@ -427,8 +427,8 @@ export class Office365groupsmailClient extends ConnectorClientBase {
      */
     public async listConversationThreadsAsync(groupId: string, conversationId: string, abortSignal?: AbortSignal): Promise<ListConversationThreadsResponse> {
         const requestPath = `/v1.0/groups/${groupId}/conversations/${conversationId}/threads`;
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<ListConversationThreadsResponse>("GET", url, undefined, undefined, abortSignal);
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<ListConversationThreadsResponse>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
             throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
@@ -443,8 +443,8 @@ export class Office365groupsmailClient extends ConnectorClientBase {
      */
     public async createConversationThreadAsync(input: CreateConversationBody, groupId: string, conversationId: string, abortSignal?: AbortSignal): Promise<NewConversationThreadResponse> {
         const requestPath = `/v1.0/groups/${groupId}/conversations/${conversationId}/threads`;
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<NewConversationThreadResponse>("POST", url, undefined, input, abortSignal);
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<NewConversationThreadResponse>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
             throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
@@ -459,8 +459,8 @@ export class Office365groupsmailClient extends ConnectorClientBase {
      */
     public async listGroupThreadsAsync(groupId: string, abortSignal?: AbortSignal): Promise<ListGroupThreadsResponse> {
         const requestPath = `/v1.0/groups/${groupId}/threads`;
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<ListGroupThreadsResponse>("GET", url, undefined, undefined, abortSignal);
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<ListGroupThreadsResponse>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
             throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
@@ -475,8 +475,8 @@ export class Office365groupsmailClient extends ConnectorClientBase {
      */
     public async createGroupThreadAsync(input: CreateConversationBody, groupId: string, abortSignal?: AbortSignal): Promise<NewConversationThreadResponse> {
         const requestPath = `/v1.0/groups/${groupId}/threads`;
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<NewConversationThreadResponse>("POST", url, undefined, input, abortSignal);
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<NewConversationThreadResponse>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
             throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
@@ -491,8 +491,8 @@ export class Office365groupsmailClient extends ConnectorClientBase {
      */
     public async getConversationThreadAsync(groupId: string, threadId: string, abortSignal?: AbortSignal): Promise<ConversationThread> {
         const requestPath = `/v1.0/groups/${groupId}/threads/${threadId}`;
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<ConversationThread>("GET", url, undefined, undefined, abortSignal);
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<ConversationThread>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
             throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
@@ -507,8 +507,8 @@ export class Office365groupsmailClient extends ConnectorClientBase {
      */
     public async deleteConversationThreadAsync(groupId: string, threadId: string, abortSignal?: AbortSignal): Promise<void> {
         const requestPath = `/v1.0/groups/${groupId}/threads/${threadId}`;
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<void>("DELETE", url, undefined, undefined, abortSignal);
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<void>("DELETE", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
             throw new ConnectorException(this.connectorName, `DELETE ${requestPath}`, httpResponse.statusCode, httpResponse.text);
@@ -521,8 +521,8 @@ export class Office365groupsmailClient extends ConnectorClientBase {
      */
     public async listThreadPostsAsync(groupId: string, threadId: string, abortSignal?: AbortSignal): Promise<ListThreadPostsResponse> {
         const requestPath = `/v1.0/groups/${groupId}/threads/${threadId}/posts`;
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<ListThreadPostsResponse>("GET", url, undefined, undefined, abortSignal);
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<ListThreadPostsResponse>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
             throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
@@ -541,8 +541,8 @@ export class Office365groupsmailClient extends ConnectorClientBase {
             queryParams.push(`$expand=${encodeURIComponent(String(expand))}`);
         }
         const requestPath = `/v1.0/groups/${groupId}/threads/${threadId}/posts/${postId}` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<Post>("GET", url, undefined, undefined, abortSignal);
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<Post>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
             throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
@@ -557,8 +557,8 @@ export class Office365groupsmailClient extends ConnectorClientBase {
      */
     public async getAttachmentsAsync(groupId: string, threadId: string, postId: string, abortSignal?: AbortSignal): Promise<GetAttachmentsResponse> {
         const requestPath = `/v1.0/groups/${groupId}/threads/${threadId}/posts/${postId}/attachments`;
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<GetAttachmentsResponse>("GET", url, undefined, undefined, abortSignal);
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<GetAttachmentsResponse>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
             throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
@@ -573,8 +573,8 @@ export class Office365groupsmailClient extends ConnectorClientBase {
      */
     public async replyToAThreadAsync(input: ReplyConversationThreadBody, groupId: string, threadId: string, abortSignal?: AbortSignal): Promise<void> {
         const requestPath = `/v1.0/groups/${groupId}/threads/${threadId}/reply`;
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<void>("POST", url, undefined, input, abortSignal);
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<void>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
             throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
@@ -587,8 +587,8 @@ export class Office365groupsmailClient extends ConnectorClientBase {
      */
     public async replyAsync(input: ReplyConversationThreadBody, groupId: string, threadId: string, postId: string, abortSignal?: AbortSignal): Promise<void> {
         const requestPath = `/v1.0/groups/${groupId}/threads/${threadId}/posts/${postId}/reply`;
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<void>("POST", url, undefined, input, abortSignal);
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<void>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
             throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
@@ -601,8 +601,8 @@ export class Office365groupsmailClient extends ConnectorClientBase {
      */
     public async httpRequestAsync(input: HttpRequestInput, abortSignal?: AbortSignal): Promise<ObjectWithoutType> {
         const requestPath = `/httprequest`;
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<ObjectWithoutType>("POST", url, undefined, input, abortSignal);
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<ObjectWithoutType>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
             throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
@@ -617,8 +617,8 @@ export class Office365groupsmailClient extends ConnectorClientBase {
      */
     public async forwardAsync(input: ForwardPostBody, groupMail: string, conversationId: string, threadId: string, postId: string, abortSignal?: AbortSignal): Promise<void> {
         const requestPath = `/beta/groups/${groupMail}/conversations/${conversationId}/threads/${threadId}/posts/${postId}/forward`;
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<void>("POST", url, undefined, input, abortSignal);
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<void>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
             throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);

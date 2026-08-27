@@ -424,8 +424,8 @@ export class PipedriveClient extends ConnectorClientBase {
      */
     public async getDealAsync(dealId: string, abortSignal?: AbortSignal): Promise<DealResponse> {
         const requestPath = `/v1/deals/${dealId}`;
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<DealResponse>("GET", url, undefined, undefined, abortSignal);
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<DealResponse>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
             throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
@@ -440,8 +440,8 @@ export class PipedriveClient extends ConnectorClientBase {
      */
     public async updateDealStatusAsync(input: UpdateDealStatusRequest, dealId: string, abortSignal?: AbortSignal): Promise<DealResponse> {
         const requestPath = `/update_status_deal/v1/deals/${dealId}`;
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<DealResponse>("PUT", url, undefined, input, abortSignal);
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<DealResponse>("PUT", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
             throw new ConnectorException(this.connectorName, `PUT ${requestPath}`, httpResponse.statusCode, httpResponse.text);
@@ -456,8 +456,8 @@ export class PipedriveClient extends ConnectorClientBase {
      */
     public async addActivityAsync(input: AddActivityRequest, abortSignal?: AbortSignal): Promise<ActivityResponse> {
         const requestPath = `/v1/activities`;
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<ActivityResponse>("POST", url, undefined, input, abortSignal);
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<ActivityResponse>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
             throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
@@ -472,8 +472,8 @@ export class PipedriveClient extends ConnectorClientBase {
      */
     public async getStageAsync(stageId: string, abortSignal?: AbortSignal): Promise<StageResponse> {
         const requestPath = `/v1/stages/${stageId}`;
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<StageResponse>("GET", url, undefined, undefined, abortSignal);
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<StageResponse>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
             throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
@@ -488,8 +488,8 @@ export class PipedriveClient extends ConnectorClientBase {
      */
     public async addDealAsync(input: AddDealRequest, abortSignal?: AbortSignal): Promise<DealResponseV2> {
         const requestPath = `/connector-v2/v1/deals`;
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<DealResponseV2>("POST", url, undefined, input, abortSignal);
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<DealResponseV2>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
             throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
@@ -504,8 +504,8 @@ export class PipedriveClient extends ConnectorClientBase {
      */
     public async updateDealStageAsync(input: UpdateDealStageRequest, dealId: string, abortSignal?: AbortSignal): Promise<DealResponseV2> {
         const requestPath = `/connector-v2/update_stage_deal/v1/deals/${dealId}`;
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<DealResponseV2>("PUT", url, undefined, input, abortSignal);
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<DealResponseV2>("PUT", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
             throw new ConnectorException(this.connectorName, `PUT ${requestPath}`, httpResponse.statusCode, httpResponse.text);

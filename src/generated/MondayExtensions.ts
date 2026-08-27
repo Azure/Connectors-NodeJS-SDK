@@ -532,8 +532,8 @@ export class MondayClient extends ConnectorClientBase {
      */
     public async createItemAsync(input: CreateItemInput, abortSignal?: AbortSignal): Promise<CreateItemResponse> {
         const requestPath = `/executePowerAutomateAction/CreateItem`;
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<CreateItemResponse>("POST", url, undefined, input, abortSignal);
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<CreateItemResponse>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
             throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
@@ -548,8 +548,8 @@ export class MondayClient extends ConnectorClientBase {
      */
     public async duplicateBoardAsync(input: DuplicateBoardInput, abortSignal?: AbortSignal): Promise<DuplicateBoardResponse> {
         const requestPath = `/executePowerAutomateAction/DuplicateBoard`;
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<DuplicateBoardResponse>("POST", url, undefined, input, abortSignal);
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<DuplicateBoardResponse>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
             throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
@@ -564,8 +564,8 @@ export class MondayClient extends ConnectorClientBase {
      */
     public async createBoardAsync(input: CreateBoardInput, abortSignal?: AbortSignal): Promise<CreateBoardResponse> {
         const requestPath = `/executePowerAutomateAction/CreateBoard`;
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<CreateBoardResponse>("POST", url, undefined, input, abortSignal);
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<CreateBoardResponse>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
             throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
@@ -580,8 +580,8 @@ export class MondayClient extends ConnectorClientBase {
      */
     public async createColumnAsync(input: CreateColumnInput, abortSignal?: AbortSignal): Promise<CreateColumnResponse> {
         const requestPath = `/executePowerAutomateAction/CreateColumn`;
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<CreateColumnResponse>("POST", url, undefined, input, abortSignal);
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<CreateColumnResponse>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
             throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
@@ -596,8 +596,8 @@ export class MondayClient extends ConnectorClientBase {
      */
     public async createGroupAsync(input: CreateGroupInput, abortSignal?: AbortSignal): Promise<CreateGroupResponse> {
         const requestPath = `/executePowerAutomateAction/CreateGroup`;
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<CreateGroupResponse>("POST", url, undefined, input, abortSignal);
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<CreateGroupResponse>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
             throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
@@ -612,8 +612,8 @@ export class MondayClient extends ConnectorClientBase {
      */
     public async updateItemColumnAsync(input: UpdateItemColumnInput, abortSignal?: AbortSignal): Promise<UpdateItemColumnResponse> {
         const requestPath = `/executePowerAutomateAction/UpdateItemColumn`;
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<UpdateItemColumnResponse>("POST", url, undefined, input, abortSignal);
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<UpdateItemColumnResponse>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
             throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
@@ -628,8 +628,8 @@ export class MondayClient extends ConnectorClientBase {
      */
     public async updateMultipleItemColumnsAsync(input: UpdateMultipleItemColumnsInput, abortSignal?: AbortSignal): Promise<UpdateMultipleItemColumnsResponse> {
         const requestPath = `/executePowerAutomateAction/UpdateMultipleItemColumns`;
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<UpdateMultipleItemColumnsResponse>("POST", url, undefined, input, abortSignal);
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<UpdateMultipleItemColumnsResponse>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
             throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
@@ -644,8 +644,8 @@ export class MondayClient extends ConnectorClientBase {
      */
     public async moveItemToGroupAsync(input: MoveItemToGroupInput, abortSignal?: AbortSignal): Promise<MoveItemToGroupResponse> {
         const requestPath = `/executePowerAutomateAction/MoveItemToGroup`;
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<MoveItemToGroupResponse>("POST", url, undefined, input, abortSignal);
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<MoveItemToGroupResponse>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
             throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
@@ -660,8 +660,8 @@ export class MondayClient extends ConnectorClientBase {
      */
     public async createNotificationAsync(input: CreateNotificationInput, abortSignal?: AbortSignal): Promise<CreateNotificationResponse> {
         const requestPath = `/executePowerAutomateAction/CreateNotification`;
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<CreateNotificationResponse>("POST", url, undefined, input, abortSignal);
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<CreateNotificationResponse>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
             throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
@@ -676,8 +676,8 @@ export class MondayClient extends ConnectorClientBase {
      */
     public async createSubitemAsync(input: CreateSubitemInput, abortSignal?: AbortSignal): Promise<CreateSubitemResponse> {
         const requestPath = `/executePowerAutomateAction/CreateSubitem`;
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<CreateSubitemResponse>("POST", url, undefined, input, abortSignal);
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<CreateSubitemResponse>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
             throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
@@ -702,8 +702,8 @@ export class MondayClient extends ConnectorClientBase {
             queryParams.push(`itemId=${encodeURIComponent(String(itemId))}`);
         }
         const requestPath = `/getData/getSubitems` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<GetSubitemColumnNamesForGetSubitems>("GET", url, undefined, undefined, abortSignal);
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<GetSubitemColumnNamesForGetSubitems>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
             throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
@@ -718,8 +718,8 @@ export class MondayClient extends ConnectorClientBase {
      */
     public async createUpdateAsync(input: CreateUpdateInput, abortSignal?: AbortSignal): Promise<CreateUpdateResponse> {
         const requestPath = `/executePowerAutomateAction/CreateUpdate`;
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<CreateUpdateResponse>("POST", url, undefined, input, abortSignal);
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<CreateUpdateResponse>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
             throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
@@ -744,8 +744,8 @@ export class MondayClient extends ConnectorClientBase {
             queryParams.push(`boardId=${encodeURIComponent(String(boardId))}`);
         }
         const requestPath = `/getData/getItemById` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<DynamicResponseGetListSchemaGet>("GET", url, undefined, undefined, abortSignal);
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<DynamicResponseGetListSchemaGet>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
             throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
@@ -760,8 +760,8 @@ export class MondayClient extends ConnectorClientBase {
      */
     public async createWorkspaceAsync(input: CreateWorkspaceInput, abortSignal?: AbortSignal): Promise<CreateWorkspaceResponse> {
         const requestPath = `/executePowerAutomateAction/CreateWorkspaceV2`;
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<CreateWorkspaceResponse>("POST", url, undefined, input, abortSignal);
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<CreateWorkspaceResponse>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
             throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
@@ -822,8 +822,8 @@ export class MondayClient extends ConnectorClientBase {
             queryParams.push(`filter4Value=${encodeURIComponent(String(filter4Value))}`);
         }
         const requestPath = `/getData/getItemsV2` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<DynamicGetGetItemsSchema>("GET", url, undefined, undefined, abortSignal);
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<DynamicGetGetItemsSchema>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
             throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
@@ -838,8 +838,8 @@ export class MondayClient extends ConnectorClientBase {
      */
     public async getTagsAsync(abortSignal?: AbortSignal): Promise<GetTagsResponse> {
         const requestPath = `/getData/getTagsV2`;
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<GetTagsResponse>("GET", url, undefined, undefined, abortSignal);
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<GetTagsResponse>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
             throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
@@ -854,8 +854,8 @@ export class MondayClient extends ConnectorClientBase {
      */
     public async getUsersAsync(abortSignal?: AbortSignal): Promise<GetUsersResponse> {
         const requestPath = `/getData/getUsersV2`;
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<GetUsersResponse>("GET", url, undefined, undefined, abortSignal);
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<GetUsersResponse>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
             throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);

@@ -271,8 +271,8 @@ export class GooglecalendarClient extends ConnectorClientBase {
             queryParams.push(`minAccessRole=${encodeURIComponent(String(minAccessRole))}`);
         }
         const requestPath = `/users/me/calendarList` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<CalendarList>("GET", url, undefined, undefined, abortSignal);
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<CalendarList>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
             throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
@@ -297,8 +297,8 @@ export class GooglecalendarClient extends ConnectorClientBase {
             queryParams.push(`q=${encodeURIComponent(String(q))}`);
         }
         const requestPath = `/calendars/${calendarId}/events` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<CalendarEventList>("GET", url, undefined, undefined, abortSignal);
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<CalendarEventList>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
             throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
@@ -313,8 +313,8 @@ export class GooglecalendarClient extends ConnectorClientBase {
      */
     public async createEventAsync(input: RequestEvent, calendarId: string, abortSignal?: AbortSignal): Promise<ResponseEvent> {
         const requestPath = `/calendars/${calendarId}/events`;
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<ResponseEvent>("POST", url, undefined, input, abortSignal);
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<ResponseEvent>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
             throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
@@ -329,8 +329,8 @@ export class GooglecalendarClient extends ConnectorClientBase {
      */
     public async getEventAsync(calendarId: string, eventId: string, abortSignal?: AbortSignal): Promise<ResponseEvent> {
         const requestPath = `/calendars/${calendarId}/events/${eventId}`;
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<ResponseEvent>("GET", url, undefined, undefined, abortSignal);
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<ResponseEvent>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
             throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
@@ -345,8 +345,8 @@ export class GooglecalendarClient extends ConnectorClientBase {
      */
     public async deleteEventAsync(calendarId: string, eventId: string, abortSignal?: AbortSignal): Promise<ObjectEntity> {
         const requestPath = `/calendars/${calendarId}/events/${eventId}`;
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<ObjectEntity>("DELETE", url, undefined, undefined, abortSignal);
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<ObjectEntity>("DELETE", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
             throw new ConnectorException(this.connectorName, `DELETE ${requestPath}`, httpResponse.statusCode, httpResponse.text);
@@ -361,8 +361,8 @@ export class GooglecalendarClient extends ConnectorClientBase {
      */
     public async updateEventAsync(input: PatchEvent, calendarId: string, eventId: string, abortSignal?: AbortSignal): Promise<ResponseEvent> {
         const requestPath = `/calendars/${calendarId}/events/${eventId}`;
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<ResponseEvent>("PATCH", url, undefined, input, abortSignal);
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<ResponseEvent>("PATCH", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
             throw new ConnectorException(this.connectorName, `PATCH ${requestPath}`, httpResponse.statusCode, httpResponse.text);
