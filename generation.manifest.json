@@ -318,7 +318,7 @@
       "apiName": "orderful",
       "outputFile": "src/generated/OrderfulExtensions.ts",
       "swaggerSnapshot": "swagger-cache/orderful.swagger.json",
-      "swaggerSha256": "f40f9e53dd9e257bb289c78f3698d608d3e61077f48e67da1622543df85a3b5f",
+      "swaggerSha256": "9ebaadc1cb1e3d0b1676f83c0c762a42dc6cfd5ef8eef953dad90ddfbeb4b75b",
       "outputSha256": "d242aa3d9714a9933f6b3bb9c0c1506d94dbb9089ee1b7860f531d9aac8fcda2"
     },
     {

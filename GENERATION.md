@@ -102,7 +102,7 @@ inputs it consumed.
 | `swaggerSource.capturedAtUtc` | UTC time the Swagger snapshots were pulled. |
 | `swaggerSource.swaggerCacheDirectory` | Directory holding the content-addressed Swagger snapshots. |
 | `connectors[].swaggerSnapshot` | Path to the persisted Swagger the run consumed for that connector. |
-| `connectors[].swaggerSha256` | SHA-256 of that snapshot, so byte-level reproduction is verifiable. |
+| `connectors[].swaggerSha256` | SHA-256 of the snapshot as UTF-8 text with CRLF normalized to LF, so provenance is platform-independent. |
 | `connectors[].outputSha256` | SHA-256 of the generated `outputFile` as UTF-8 text with CRLF normalized to LF, so provenance is platform-independent. |
 
 ### Recording provenance for a run
@@ -146,7 +146,7 @@ $manifest.swaggerSource.location = if ($env:AZURE_LOCATION) { $env:AZURE_LOCATIO
 $manifest.swaggerSource.capturedAtUtc = $manifest.generatedAtUtc
 foreach ($connector in $manifest.connectors) {
     if (Test-Path $connector.swaggerSnapshot) {
-        $connector.swaggerSha256 = (Get-FileHash $connector.swaggerSnapshot -Algorithm SHA256).Hash.ToLowerInvariant()
+        $connector.swaggerSha256 = Get-CanonicalTextSha256 -Path $connector.swaggerSnapshot
     }
 
     if (Test-Path $connector.outputFile) {

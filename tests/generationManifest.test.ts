@@ -54,15 +54,6 @@ function loadManifest(): GenerationManifest {
 }
 
 /**
- * Computes the lowercase hex SHA-256 of the file at the given repository-relative path.
- */
-function computeSha256(relativePath: string): string {
-    return createHash("sha256")
-        .update(fs.readFileSync(path.join(RepositoryRoot, relativePath)))
-        .digest("hex");
-}
-
-/**
  * Computes the lowercase hex SHA-256 of UTF-8 text after normalizing CRLF line endings to LF.
  */
 function computeCanonicalTextSha256(relativePath: string): string {
@@ -108,7 +99,7 @@ describe("generation.manifest.json provenance", () => {
         (_apiName: string, connector: ManifestConnectorEntry) => {
             expect(fs.existsSync(path.join(RepositoryRoot, connector.swaggerSnapshot))).toBe(true);
             expect(fs.existsSync(path.join(RepositoryRoot, connector.outputFile))).toBe(true);
-            expect(computeSha256(connector.swaggerSnapshot)).toBe(connector.swaggerSha256);
+            expect(computeCanonicalTextSha256(connector.swaggerSnapshot)).toBe(connector.swaggerSha256);
         },
     );
 
