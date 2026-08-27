@@ -594,7 +594,7 @@
       {
         "connector": "typeform",
         "droppedOperationId": "NewResponseWebhook",
-        "path": "/whr",
+        "path": "/forms/{form_id}/webhooks/{tag}",
         "keptOperationId": "NewResponseWebhook_V2"
       },
       {
