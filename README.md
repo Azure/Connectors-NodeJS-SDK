@@ -303,7 +303,7 @@ The following connectors have been generated and validated with comprehensive te
 | **Jedox OData Hub** | `@azure/connectors/generated/JedoxodatahubExtensions` | ✅ Complete | Shared Phase 5-7 suite |
 | **Orderful** | `@azure/connectors/generated/OrderfulExtensions` | ✅ Complete | Shared Phase 5-7 suite |
 
-**Total:** 1,037 tests across 65 test suites and 73 generated connectors.
+**Total:** 1,038 tests across 65 test suites and 73 generated connectors.
 
 ## Authentication
 

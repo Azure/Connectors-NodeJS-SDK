@@ -36,9 +36,14 @@ interface ManifestDroppedTriggerRoute {
  * The provenance record persisted in generation.manifest.json.
  */
 interface GenerationManifest {
+    manifestVersion: number;
     status: string;
     generator: {
-        bpmCommit: string | null;
+        bpmBaseCommit: string | null;
+        sourcePatch: {
+            path: string;
+            sha256: string;
+        };
     };
     connectors: ManifestConnectorEntry[];
     routeIdentityLoss?: {
@@ -77,13 +82,20 @@ describe("generation.manifest.json provenance", () => {
         expect(manifest.status).toBe("generated");
     });
 
-    it("should record a non-empty BPM generator commit", () => {
-        expect(typeof manifest.generator.bpmCommit).toBe("string");
-        expect((manifest.generator.bpmCommit ?? "").length).toBeGreaterThan(0);
+    it("should use the source-patch-aware manifest schema", () => {
+        expect(manifest.manifestVersion).toBe(2);
     });
 
-    it("should record the BPM generator commit as a 40-character hex SHA", () => {
-        expect(manifest.generator.bpmCommit ?? "").toMatch(/^[0-9a-f]{40}$/);
+    it("should record the BPM generator base commit as a 40-character hex SHA", () => {
+        expect(manifest.generator.bpmBaseCommit ?? "").toMatch(/^[0-9a-f]{40}$/);
+    });
+
+    it("should match the recorded generator source patch hash", () => {
+        expect(manifest.generator.sourcePatch.path).toBeTruthy();
+        expect(manifest.generator.sourcePatch.sha256).toMatch(/^[0-9a-f]{64}$/);
+        expect(fs.existsSync(path.join(RepositoryRoot, manifest.generator.sourcePatch.path))).toBe(true);
+        expect(computeCanonicalTextSha256(manifest.generator.sourcePatch.path))
+            .toBe(manifest.generator.sourcePatch.sha256);
     });
 
     it("should list at least one connector", () => {

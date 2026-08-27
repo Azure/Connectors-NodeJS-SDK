@@ -17,6 +17,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   ClickSend SMS, Text Request, and Webex were already present from Phase 4.
 - Added shared Jest coverage for Phase 5-7 client construction, authenticated
   actions, connector error details, registry entries, and Typeform trigger metadata.
+- Added ESM and CJS TypeScript samples for all 21 net-new Phase 5-7 connectors,
+  with generated `.mjs` and `.cjs` counterparts.
 - Generated 22 additional connector clients in `src/generated/` (Phase 3 & 4
   connector rollout, mirroring the Python SDK's Phase 3 and Phase 4 sets):
   Azure Event Grid, Azure IoT Central, Cloudmersive Document Conversion, Fin &
