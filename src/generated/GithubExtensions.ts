@@ -1016,8 +1016,8 @@ export class GithubClient extends ConnectorClientBase {
      */
     public async createIssueAsync(input: IssueBasicDetailsModel, repositoryOwner: string, repositoryName: string, abortSignal?: AbortSignal): Promise<IssueDetailsModel> {
         const requestPath = `/repos/${repositoryOwner}/${repositoryName}/issues`;
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<IssueDetailsModel>("POST", url, undefined, input, abortSignal);
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<IssueDetailsModel>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
             throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
@@ -1066,8 +1066,8 @@ export class GithubClient extends ConnectorClientBase {
             queryParams.push(`page=${encodeURIComponent(String(page))}`);
         }
         const requestPath = `/repos/${repositoryOwner}/${repositoryName}/issues` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<Array<GeneralAPIModel>>("GET", url, undefined, undefined, abortSignal);
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<Array<GeneralAPIModel>>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
             throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
@@ -1082,8 +1082,8 @@ export class GithubClient extends ConnectorClientBase {
      */
     public async getRepositoryPublicKeyAsync(repositoryOwner: string, repositoryName: string, abortSignal?: AbortSignal): Promise<ActionsPublicKey> {
         const requestPath = `/repos/${repositoryOwner}/${repositoryName}/actions/secrets/public-key`;
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<ActionsPublicKey>("GET", url, undefined, undefined, abortSignal);
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<ActionsPublicKey>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
             throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
@@ -1098,8 +1098,8 @@ export class GithubClient extends ConnectorClientBase {
      */
     public async createUpdateRepositorySecretAsync(input: CreateRepositorySecretRequest, repositoryOwner: string, repositoryName: string, secretName: string, abortSignal?: AbortSignal): Promise<void> {
         const requestPath = `/repos/${repositoryOwner}/${repositoryName}/actions/secrets/${secretName}`;
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<void>("PUT", url, undefined, input, abortSignal);
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<void>("PUT", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
             throw new ConnectorException(this.connectorName, `PUT ${requestPath}`, httpResponse.statusCode, httpResponse.text);
@@ -1112,8 +1112,8 @@ export class GithubClient extends ConnectorClientBase {
      */
     public async createRepositoryUsingTemplateAsync(input: CreateRepositoryUsingTemplateRequest, templateOwner: string, templateRepository: string, abortSignal?: AbortSignal): Promise<RepositoryDetails> {
         const requestPath = `/repos/${templateOwner}/${templateRepository}/generate`;
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<RepositoryDetails>("POST", url, undefined, input, abortSignal);
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<RepositoryDetails>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
             throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
@@ -1128,8 +1128,8 @@ export class GithubClient extends ConnectorClientBase {
      */
     public async getRepositoryByIdAsync(repositoryId: string, abortSignal?: AbortSignal): Promise<RepositoryDetails> {
         const requestPath = `/repositories/${repositoryId}`;
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<RepositoryDetails>("GET", url, undefined, undefined, abortSignal);
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<RepositoryDetails>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
             throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
@@ -1144,8 +1144,8 @@ export class GithubClient extends ConnectorClientBase {
      */
     public async createReferenceAsync(input: CreateReferenceRequest, repositoryOwner: string, repositoryName: string, abortSignal?: AbortSignal): Promise<GitReference> {
         const requestPath = `/repos/${repositoryOwner}/${repositoryName}/git/refs`;
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<GitReference>("POST", url, undefined, input, abortSignal);
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<GitReference>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
             throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
@@ -1160,8 +1160,8 @@ export class GithubClient extends ConnectorClientBase {
      */
     public async getReferenceAsync(repositoryOwner: string, repositoryName: string, reference: string, abortSignal?: AbortSignal): Promise<GitReference> {
         const requestPath = `/repos/${repositoryOwner}/${repositoryName}/git/ref/${reference}`;
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<GitReference>("GET", url, undefined, undefined, abortSignal);
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<GitReference>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
             throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
@@ -1176,8 +1176,8 @@ export class GithubClient extends ConnectorClientBase {
      */
     public async mergePullRequestAsync(input: PullRequestMergeRequest, repositoryOwner: string, repositoryName: string, pullNumber: string, abortSignal?: AbortSignal): Promise<PullRequestMergeResult> {
         const requestPath = `/repos/${repositoryOwner}/${repositoryName}/pulls/${pullNumber}/merge`;
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<PullRequestMergeResult>("PUT", url, undefined, input, abortSignal);
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<PullRequestMergeResult>("PUT", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
             throw new ConnectorException(this.connectorName, `PUT ${requestPath}`, httpResponse.statusCode, httpResponse.text);
@@ -1192,8 +1192,8 @@ export class GithubClient extends ConnectorClientBase {
      */
     public async getPullRequestAsync(repositoryOwner: string, repositoryName: string, pullNumber: string, abortSignal?: AbortSignal): Promise<PullRequest> {
         const requestPath = `/repos/${repositoryOwner}/${repositoryName}/pulls/${pullNumber}`;
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<PullRequest>("GET", url, undefined, undefined, abortSignal);
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<PullRequest>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
             throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
@@ -1208,8 +1208,8 @@ export class GithubClient extends ConnectorClientBase {
      */
     public async updatePullRequestAsync(input: PullRequestUpdateRequest, repositoryOwner: string, repositoryName: string, pullNumber: string, abortSignal?: AbortSignal): Promise<PullRequest> {
         const requestPath = `/repos/${repositoryOwner}/${repositoryName}/pulls/${pullNumber}`;
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<PullRequest>("PATCH", url, undefined, input, abortSignal);
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<PullRequest>("PATCH", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
             throw new ConnectorException(this.connectorName, `PATCH ${requestPath}`, httpResponse.statusCode, httpResponse.text);
@@ -1224,8 +1224,8 @@ export class GithubClient extends ConnectorClientBase {
      */
     public async getPullRequestFilesAsync(repositoryOwner: string, repositoryName: string, pullNumber: string, abortSignal?: AbortSignal): Promise<Array<PullRequestFile>> {
         const requestPath = `/repos/${repositoryOwner}/${repositoryName}/pulls/${pullNumber}/files`;
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<Array<PullRequestFile>>("GET", url, undefined, undefined, abortSignal);
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<Array<PullRequestFile>>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
             throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
@@ -1240,8 +1240,8 @@ export class GithubClient extends ConnectorClientBase {
      */
     public async requestReviewersPullRequestAsync(input: RequestReviewersBody, repositoryOwner: string, repositoryName: string, pullNumber: string, abortSignal?: AbortSignal): Promise<void> {
         const requestPath = `/repos/${repositoryOwner}/${repositoryName}/pulls/${pullNumber}/requested_reviewers`;
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<void>("POST", url, undefined, input, abortSignal);
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<void>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
             throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
@@ -1254,8 +1254,8 @@ export class GithubClient extends ConnectorClientBase {
      */
     public async removeReviewersPullRequestAsync(input: RequestReviewersBody, repositoryOwner: string, repositoryName: string, pullNumber: string, abortSignal?: AbortSignal): Promise<void> {
         const requestPath = `/repos/${repositoryOwner}/${repositoryName}/pulls/${pullNumber}/requested_reviewers`;
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<void>("DELETE", url, undefined, input, abortSignal);
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<void>("DELETE", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
             throw new ConnectorException(this.connectorName, `DELETE ${requestPath}`, httpResponse.statusCode, httpResponse.text);
@@ -1268,8 +1268,8 @@ export class GithubClient extends ConnectorClientBase {
      */
     public async createPullRequestAsync(input: PullRequestCreateRequest, repositoryOwner: string, repositoryName: string, abortSignal?: AbortSignal): Promise<PullRequest> {
         const requestPath = `/repos/${repositoryOwner}/${repositoryName}/pulls`;
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<PullRequest>("POST", url, undefined, input, abortSignal);
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<PullRequest>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
             throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
@@ -1306,8 +1306,8 @@ export class GithubClient extends ConnectorClientBase {
             queryParams.push(`page=${encodeURIComponent(String(page))}`);
         }
         const requestPath = `/repos/${repositoryOwner}/${repositoryName}/pulls` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<Array<GeneralAPIModel>>("GET", url, undefined, undefined, abortSignal);
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<Array<GeneralAPIModel>>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
             throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
@@ -1322,8 +1322,8 @@ export class GithubClient extends ConnectorClientBase {
      */
     public async createRepositoryDispatchEventAsync(input: RepositoryDispatchEvent, repositoryOwner: string, repositoryName: string, abortSignal?: AbortSignal): Promise<void> {
         const requestPath = `/repos/${repositoryOwner}/${repositoryName}/dispatches`;
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<void>("POST", url, undefined, input, abortSignal);
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<void>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
             throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
@@ -1336,8 +1336,8 @@ export class GithubClient extends ConnectorClientBase {
      */
     public async compareRepositoryCommitsAsync(repositoryOwner: string, repositoryName: string, base: string, head: string, abortSignal?: AbortSignal): Promise<CommitComparison> {
         const requestPath = `/repos/${repositoryOwner}/${repositoryName}/compare/${base}...${head}`;
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<CommitComparison>("GET", url, undefined, undefined, abortSignal);
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<CommitComparison>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
             throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
@@ -1352,8 +1352,8 @@ export class GithubClient extends ConnectorClientBase {
      */
     public async addSelectedRepoToOrgSecretAsync(repositoryOwner: string, repositoryId: string, secretName: string, abortSignal?: AbortSignal): Promise<void> {
         const requestPath = `/orgs/${repositoryOwner}/actions/secrets/${secretName}/repositories/${repositoryId}`;
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<void>("PUT", url, undefined, undefined, abortSignal);
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<void>("PUT", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
             throw new ConnectorException(this.connectorName, `PUT ${requestPath}`, httpResponse.statusCode, httpResponse.text);
@@ -1366,8 +1366,8 @@ export class GithubClient extends ConnectorClientBase {
      */
     public async removeSelectedRepoFromOrgSecretAsync(repositoryOwner: string, repositoryId: string, secretName: string, abortSignal?: AbortSignal): Promise<void> {
         const requestPath = `/orgs/${repositoryOwner}/actions/secrets/${secretName}/repositories/${repositoryId}`;
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<void>("DELETE", url, undefined, undefined, abortSignal);
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<void>("DELETE", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
             throw new ConnectorException(this.connectorName, `DELETE ${requestPath}`, httpResponse.statusCode, httpResponse.text);
@@ -1380,8 +1380,8 @@ export class GithubClient extends ConnectorClientBase {
      */
     public async deleteWebhookTriggerAsync(repositoryOwner: string, repositoryName: string, webhookId: string, abortSignal?: AbortSignal): Promise<void> {
         const requestPath = `/repos/${repositoryOwner}/${repositoryName}/hooks/${webhookId}`;
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<void>("DELETE", url, undefined, undefined, abortSignal);
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<void>("DELETE", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
             throw new ConnectorException(this.connectorName, `DELETE ${requestPath}`, httpResponse.statusCode, httpResponse.text);
@@ -1394,8 +1394,8 @@ export class GithubClient extends ConnectorClientBase {
      */
     public async getIssueNumAsync(repositoryOwner: string, repositoryName: string, issueNumber: string, abortSignal?: AbortSignal): Promise<IssueDetailsModel> {
         const requestPath = `/repos/${repositoryOwner}/${repositoryName}/issues/${issueNumber}`;
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<IssueDetailsModel>("GET", url, undefined, undefined, abortSignal);
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<IssueDetailsModel>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
             throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
@@ -1410,8 +1410,8 @@ export class GithubClient extends ConnectorClientBase {
      */
     public async updateIssueNumAsync(input: IssueUpdateModel, repositoryOwner: string, repositoryName: string, issueNumber: string, abortSignal?: AbortSignal): Promise<IssueDetailsModel> {
         const requestPath = `/repos/${repositoryOwner}/${repositoryName}/issues/${issueNumber}`;
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<IssueDetailsModel>("PATCH", url, undefined, input, abortSignal);
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<IssueDetailsModel>("PATCH", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
             throw new ConnectorException(this.connectorName, `PATCH ${requestPath}`, httpResponse.statusCode, httpResponse.text);
@@ -1426,8 +1426,8 @@ export class GithubClient extends ConnectorClientBase {
      */
     public async updateMilestoneAsync(input: MilestoneUpdateModel, repositoryOwner: string, repositoryName: string, milestoneNumber: string, abortSignal?: AbortSignal): Promise<Milestone> {
         const requestPath = `/repos/${repositoryOwner}/${repositoryName}/milestones/${milestoneNumber}`;
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<Milestone>("PATCH", url, undefined, input, abortSignal);
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<Milestone>("PATCH", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
             throw new ConnectorException(this.connectorName, `PATCH ${requestPath}`, httpResponse.statusCode, httpResponse.text);
@@ -1442,8 +1442,8 @@ export class GithubClient extends ConnectorClientBase {
      */
     public async getUserAsync(abortSignal?: AbortSignal): Promise<UserDetailsModel> {
         const requestPath = `/user`;
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<UserDetailsModel>("GET", url, undefined, undefined, abortSignal);
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<UserDetailsModel>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
             throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
@@ -1458,8 +1458,8 @@ export class GithubClient extends ConnectorClientBase {
      */
     public async searchGithubWithQueryAsync(input: GraphQlQuery, abortSignal?: AbortSignal): Promise<void> {
         const requestPath = `/graphql`;
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<void>("POST", url, undefined, input, abortSignal);
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<void>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
             throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
@@ -1479,8 +1479,8 @@ export class GithubClient extends ConnectorClientBase {
             queryParams.push(`page=${encodeURIComponent(String(page))}`);
         }
         const requestPath = `/repos/${repositoryOwner}/${repositoryName}/assignees` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<Array<GeneralAPIModel>>("GET", url, undefined, undefined, abortSignal);
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<Array<GeneralAPIModel>>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
             throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
@@ -1502,8 +1502,8 @@ export class GithubClient extends ConnectorClientBase {
             queryParams.push(`page=${encodeURIComponent(String(page))}`);
         }
         const requestPath = `/repos/${repositoryOwner}/${repositoryName}/collaborators` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<Array<GeneralAPIModel>>("GET", url, undefined, undefined, abortSignal);
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<Array<GeneralAPIModel>>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
             throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
@@ -1518,8 +1518,8 @@ export class GithubClient extends ConnectorClientBase {
      */
     public async checkCollaboratorAsync(repositoryOwner: string, repositoryName: string, userName: string, abortSignal?: AbortSignal): Promise<GeneralAPIModel> {
         const requestPath = `/repos/${repositoryOwner}/${repositoryName}/collaborators/${userName}`;
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<GeneralAPIModel>("GET", url, undefined, undefined, abortSignal);
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<GeneralAPIModel>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
             throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
@@ -1550,8 +1550,8 @@ export class GithubClient extends ConnectorClientBase {
             queryParams.push(`page=${encodeURIComponent(String(page))}`);
         }
         const requestPath = `/repos/${repositoryOwner}/${repositoryName}/milestones` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<Array<GeneralAPIModel>>("GET", url, undefined, undefined, abortSignal);
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<Array<GeneralAPIModel>>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
             throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
@@ -1573,8 +1573,8 @@ export class GithubClient extends ConnectorClientBase {
             queryParams.push(`page=${encodeURIComponent(String(page))}`);
         }
         const requestPath = `/repos/${repositoryOwner}/${repositoryName}/labels` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<Array<GeneralAPIModel>>("GET", url, undefined, undefined, abortSignal);
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<Array<GeneralAPIModel>>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
             throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
@@ -1596,8 +1596,8 @@ export class GithubClient extends ConnectorClientBase {
             queryParams.push(`page=${encodeURIComponent(String(page))}`);
         }
         const requestPath = `/repos/${repositoryOwner}/${repositoryName}/issues/${issueNumber}/labels` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<Array<GeneralAPIModel>>("GET", url, undefined, undefined, abortSignal);
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<Array<GeneralAPIModel>>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
             throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
@@ -1628,8 +1628,8 @@ export class GithubClient extends ConnectorClientBase {
             queryParams.push(`page=${encodeURIComponent(String(page))}`);
         }
         const requestPath = `/users/${repositoryOwner}/repos` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<Array<GeneralAPIModel>>("GET", url, undefined, undefined, abortSignal);
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<Array<GeneralAPIModel>>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
             throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
@@ -1660,8 +1660,8 @@ export class GithubClient extends ConnectorClientBase {
             queryParams.push(`page=${encodeURIComponent(String(page))}`);
         }
         const requestPath = `/orgs/${repositoryOwner}/repos` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<Array<GeneralAPIModel>>("GET", url, undefined, undefined, abortSignal);
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<Array<GeneralAPIModel>>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
             throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
@@ -1704,8 +1704,8 @@ export class GithubClient extends ConnectorClientBase {
             queryParams.push(`page=${encodeURIComponent(String(page))}`);
         }
         const requestPath = `/user/repos` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<Array<GeneralAPIModel>>("GET", url, undefined, undefined, abortSignal);
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<Array<GeneralAPIModel>>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
             throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
@@ -1736,8 +1736,8 @@ export class GithubClient extends ConnectorClientBase {
             queryParams.push(`page=${encodeURIComponent(String(page))}`);
         }
         const requestPath = `/search/issues` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<MultipleSearchFetchModel>("GET", url, undefined, undefined, abortSignal);
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<MultipleSearchFetchModel>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
             throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
@@ -1752,8 +1752,8 @@ export class GithubClient extends ConnectorClientBase {
      */
     public async invokeMCPServerAsync(input: QueryRequest, abortSignal?: AbortSignal): Promise<void> {
         const requestPath = `/mcp`;
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<void>("POST", url, undefined, input, abortSignal);
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<void>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
             throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);

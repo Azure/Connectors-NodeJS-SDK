@@ -178,8 +178,8 @@ export class MqClient extends ConnectorClientBase {
      */
     public async deleteAsync(input: SingleGetValidOptions, abortSignal?: AbortSignal): Promise<Item> {
         const requestPath = `/v2/delete`;
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<Item>("POST", url, undefined, input, abortSignal);
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<Item>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
             throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
@@ -194,8 +194,8 @@ export class MqClient extends ConnectorClientBase {
      */
     public async deleteAllAsync(input: MultipleGetValidOptions, abortSignal?: AbortSignal): Promise<ItemsList> {
         const requestPath = `/v2/deleteall`;
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<ItemsList>("POST", url, undefined, input, abortSignal);
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<ItemsList>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
             throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
@@ -210,8 +210,8 @@ export class MqClient extends ConnectorClientBase {
      */
     public async readAsync(input: SingleGetValidOptions, abortSignal?: AbortSignal): Promise<Item> {
         const requestPath = `/v2/read`;
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<Item>("POST", url, undefined, input, abortSignal);
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<Item>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
             throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
@@ -226,8 +226,8 @@ export class MqClient extends ConnectorClientBase {
      */
     public async readAllAsync(input: MultipleGetValidOptions, abortSignal?: AbortSignal): Promise<ItemsList> {
         const requestPath = `/v2/readall`;
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<ItemsList>("POST", url, undefined, input, abortSignal);
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<ItemsList>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
             throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
@@ -242,8 +242,8 @@ export class MqClient extends ConnectorClientBase {
      */
     public async receiveAsync(input: SingleGetValidOptions, abortSignal?: AbortSignal): Promise<Item> {
         const requestPath = `/v2/receive`;
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<Item>("POST", url, undefined, input, abortSignal);
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<Item>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
             throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
@@ -258,8 +258,8 @@ export class MqClient extends ConnectorClientBase {
      */
     public async receiveAllAsync(input: MultipleGetValidOptions, abortSignal?: AbortSignal): Promise<ItemsList> {
         const requestPath = `/v2/receiveall`;
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<ItemsList>("POST", url, undefined, input, abortSignal);
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<ItemsList>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
             throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
@@ -274,8 +274,8 @@ export class MqClient extends ConnectorClientBase {
      */
     public async sendAsync(input: SendValidDataOptions, abortSignal?: AbortSignal): Promise<SendResponse> {
         const requestPath = `/v2/send`;
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<SendResponse>("POST", url, undefined, input, abortSignal);
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<SendResponse>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
             throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);

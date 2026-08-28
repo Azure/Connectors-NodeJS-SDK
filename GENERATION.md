@@ -93,22 +93,31 @@ inputs it consumed.
 |-------|---------|
 | `status` | `template` until a run records real values; `generated` for a captured run. |
 | `generatedAtUtc` | ISO 8601 UTC timestamp of the generation run. |
-| `generator.bpmCommit` | Immutable BPM commit SHA the generator was built from. |
+| `generator.bpmBaseCommit` | Immutable, reachable BPM commit SHA used as the generator source baseline. |
 | `generator.bpmBranch` | BPM branch the commit was on (informational). |
 | `generator.assemblyVersion` | File version of the built `Microsoft.Azure.Workflows.CodefulSdkGenerator.dll`. |
+| `generator.sourcePatch.path` | Repository-relative patch applied to `bpmBaseCommit` before building the generator. |
+| `generator.sourcePatch.sha256` | SHA-256 of the source patch as canonical UTF-8/LF text. |
 | `swaggerSource.subscriptionId` | Azure subscription whose regional managed-connector metadata was read (`AZURE_SUBSCRIPTION_ID`). |
 | `swaggerSource.location` | Azure region whose `managedApis` endpoint was read (`AZURE_LOCATION`). |
 | `swaggerSource.apiVersion` | Managed-connector API version used to read metadata. |
 | `swaggerSource.capturedAtUtc` | UTC time the Swagger snapshots were pulled. |
 | `swaggerSource.swaggerCacheDirectory` | Directory holding the content-addressed Swagger snapshots. |
 | `connectors[].swaggerSnapshot` | Path to the persisted Swagger the run consumed for that connector. |
-| `connectors[].swaggerSha256` | SHA-256 of that snapshot, so byte-level reproduction is verifiable. |
+| `connectors[].swaggerSha256` | SHA-256 of the snapshot as UTF-8 text with CRLF normalized to LF, so provenance is platform-independent. |
 | `connectors[].outputSha256` | SHA-256 of the generated `outputFile` as UTF-8 text with CRLF normalized to LF, so provenance is platform-independent. |
 
 ### Recording provenance for a run
 
 After generating (with the complete connector set) and saving each connector's Swagger
 snapshot into `swagger-cache/`, populate the manifest from the repo root:
+
+When `generator.sourcePatch` is present, reproduce the generator source before building:
+
+```powershell
+git -C <BPM-repo-root> checkout <bpmBaseCommit>
+git -C <BPM-repo-root> apply --unidiff-zero <SDK-repo-root>/<sourcePatch.path>
+```
 
 ```powershell
 function Get-CanonicalTextSha256 {
@@ -131,8 +140,9 @@ $manifest = Get-Content generation.manifest.json -Raw | ConvertFrom-Json
 
 $manifest.status = "generated"
 $manifest.generatedAtUtc = [DateTime]::UtcNow.ToString("yyyy-MM-ddTHH:mm:ssZ")
-$manifest.generator.bpmCommit = (git -C $bpmRepoRoot rev-parse HEAD)
+$manifest.generator.bpmBaseCommit = (git -C $bpmRepoRoot rev-parse HEAD)
 $manifest.generator.bpmBranch = (git -C $bpmRepoRoot rev-parse --abbrev-ref HEAD)
+$manifest.generator.sourcePatch.sha256 = Get-CanonicalTextSha256 -Path $manifest.generator.sourcePatch.path
 
 $dll = Join-Path $bpmRepoRoot "src/tools/CodefulSdkGenerator/bin/Release/Microsoft.Azure.Workflows.CodefulSdkGenerator.dll"
 if (-not (Test-Path $dll)) {
@@ -146,7 +156,7 @@ $manifest.swaggerSource.location = if ($env:AZURE_LOCATION) { $env:AZURE_LOCATIO
 $manifest.swaggerSource.capturedAtUtc = $manifest.generatedAtUtc
 foreach ($connector in $manifest.connectors) {
     if (Test-Path $connector.swaggerSnapshot) {
-        $connector.swaggerSha256 = (Get-FileHash $connector.swaggerSnapshot -Algorithm SHA256).Hash.ToLowerInvariant()
+        $connector.swaggerSha256 = Get-CanonicalTextSha256 -Path $connector.swaggerSnapshot
     }
 
     if (Test-Path $connector.outputFile) {
@@ -166,7 +176,8 @@ $manifest | ConvertTo-Json -Depth 6 | Set-Content generation.manifest.json -Enco
 - **Do not hand-edit** the manifest's generated values; let the tooling write them so
   they always match the actual run.
 - **The `tests/generationManifest.test.ts` guard runs in CI** and fails the build unless
-  `status` is `generated`, `generator.bpmCommit` is populated, and every
+  `status` is `generated`, `generator.bpmBaseCommit` and the hashed source patch are
+  populated, and every
   `connectors[].swaggerSha256` and `connectors[].outputSha256` matches the SHA-256 of
   its committed `swagger-cache/` snapshot and canonical UTF-8/LF generated output.
   Regenerate rather than hand-editing so the guard stays green.

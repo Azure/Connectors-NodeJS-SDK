@@ -712,8 +712,8 @@ export class PlumsailClient extends ConnectorClientBase {
      */
     public async profilesMeGetAsync(abortSignal?: AbortSignal): Promise<ProfileInfo> {
         const requestPath = `/profiles/me`;
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<ProfileInfo>("GET", url, undefined, undefined, abortSignal);
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<ProfileInfo>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
             throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
@@ -728,8 +728,8 @@ export class PlumsailClient extends ConnectorClientBase {
      */
     public async flowV1DocumentsJobsApplyDocxTemplateAsync(input: ApplyDocxTemplateRequest, abortSignal?: AbortSignal): Promise<Blob> {
         const requestPath = `/flow/v1/Documents/jobs/ApplyDocxTemplate`;
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<Blob>("POST", url, undefined, input, abortSignal);
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<Blob>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
             throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
@@ -744,8 +744,8 @@ export class PlumsailClient extends ConnectorClientBase {
      */
     public async flowV1DocumentsJobsApplyXlsxTemplateAsync(input: ApplyXlsxTemplateRequest, abortSignal?: AbortSignal): Promise<Blob> {
         const requestPath = `/flow/v1/Documents/jobs/ApplyXlsxTemplate`;
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<Blob>("POST", url, undefined, input, abortSignal);
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<Blob>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
             throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
@@ -760,8 +760,8 @@ export class PlumsailClient extends ConnectorClientBase {
      */
     public async flowV1DocumentsJobsApplyPptxAsync(input: ApplyPptxTemplateRequest, abortSignal?: AbortSignal): Promise<DocumentProcessingResponse> {
         const requestPath = `/flow/v1/Documents/jobs/ApplyPptx`;
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<DocumentProcessingResponse>("POST", url, undefined, input, abortSignal);
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<DocumentProcessingResponse>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
             throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
@@ -776,8 +776,8 @@ export class PlumsailClient extends ConnectorClientBase {
      */
     public async flowV1DocumentsJobsApplyDocxAsync(input: MergeFieldsTemplateRequest, abortSignal?: AbortSignal): Promise<DocumentProcessingResponse> {
         const requestPath = `/flow/v1/Documents/jobs/ApplyDocx`;
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<DocumentProcessingResponse>("POST", url, undefined, input, abortSignal);
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<DocumentProcessingResponse>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
             throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
@@ -792,8 +792,8 @@ export class PlumsailClient extends ConnectorClientBase {
      */
     public async flowV1DocumentsJobsApplyHtmlAsync(input: ApplyHtmlFlowTemplateRequest, abortSignal?: AbortSignal): Promise<ApplyHtmlTemplateResponse> {
         const requestPath = `/flow/v1/Documents/jobs/ApplyHtml`;
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<ApplyHtmlTemplateResponse>("POST", url, undefined, input, abortSignal);
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<ApplyHtmlTemplateResponse>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
             throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
@@ -808,8 +808,8 @@ export class PlumsailClient extends ConnectorClientBase {
      */
     public async flowV1DocumentsJobsHtml2PdfAsync(input: Html2PdfFlowRequest, abortSignal?: AbortSignal): Promise<DocumentProcessingResponse> {
         const requestPath = `/flow/v1/Documents/jobs/Html2Pdf`;
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<DocumentProcessingResponse>("POST", url, undefined, input, abortSignal);
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<DocumentProcessingResponse>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
             throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
@@ -824,8 +824,8 @@ export class PlumsailClient extends ConnectorClientBase {
      */
     public async flowV1DocumentsJobsHtml2DocxAsync(input: Html2DocxFlowRequest, abortSignal?: AbortSignal): Promise<DocumentProcessingResponse> {
         const requestPath = `/flow/v1/Documents/jobs/Html2Docx`;
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<DocumentProcessingResponse>("POST", url, undefined, input, abortSignal);
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<DocumentProcessingResponse>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
             throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
@@ -840,8 +840,8 @@ export class PlumsailClient extends ConnectorClientBase {
      */
     public async flowV1DocumentsJobsDocx2PdfAsync(input: Docx2PdfRequest, abortSignal?: AbortSignal): Promise<DocumentProcessingResponse> {
         const requestPath = `/flow/v1/Documents/jobs/Docx2Pdf`;
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<DocumentProcessingResponse>("POST", url, undefined, input, abortSignal);
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<DocumentProcessingResponse>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
             throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
@@ -856,8 +856,8 @@ export class PlumsailClient extends ConnectorClientBase {
      */
     public async flowV1DocumentsJobsXslx2PdfAsync(input: Xlsx2PdfRequest, abortSignal?: AbortSignal): Promise<Blob> {
         const requestPath = `/flow/v1/Documents/jobs/Xslx2Pdf`;
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<Blob>("POST", url, undefined, input, abortSignal);
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<Blob>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
             throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
@@ -872,8 +872,8 @@ export class PlumsailClient extends ConnectorClientBase {
      */
     public async flowV1DocumentsJobsPptx2PdfAsync(input: Pptx2PdfRequest, abortSignal?: AbortSignal): Promise<Blob> {
         const requestPath = `/flow/v1/Documents/jobs/Pptx2Pdf`;
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<Blob>("POST", url, undefined, input, abortSignal);
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<Blob>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
             throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
@@ -888,8 +888,8 @@ export class PlumsailClient extends ConnectorClientBase {
      */
     public async flowV1DocumentsJobsAny2PdfV2Async(input: Any2PdfRequest, abortSignal?: AbortSignal): Promise<Blob> {
         const requestPath = `/flow/v1/Documents/jobs/Any2PdfV2`;
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<Blob>("POST", url, undefined, input, abortSignal);
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<Blob>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
             throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
@@ -904,8 +904,8 @@ export class PlumsailClient extends ConnectorClientBase {
      */
     public async flowV1DocumentsJobsEmail2PdfAsync(input: Email2PdfRequest, abortSignal?: AbortSignal): Promise<Blob> {
         const requestPath = `/flow/v1/Documents/jobs/Email2Pdf`;
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<Blob>("POST", url, undefined, input, abortSignal);
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<Blob>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
             throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
@@ -920,8 +920,8 @@ export class PlumsailClient extends ConnectorClientBase {
      */
     public async flowV1DocumentsJobsDoc2DocxAsync(input: Doc2DocxRequest, abortSignal?: AbortSignal): Promise<Blob> {
         const requestPath = `/flow/v1/Documents/jobs/Doc2Docx`;
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<Blob>("POST", url, undefined, input, abortSignal);
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<Blob>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
             throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
@@ -936,8 +936,8 @@ export class PlumsailClient extends ConnectorClientBase {
      */
     public async flowV1DocumentsJobsXls2XlsxAsync(input: Xls2XlsxRequest, abortSignal?: AbortSignal): Promise<Blob> {
         const requestPath = `/flow/v1/Documents/jobs/Xls2Xlsx`;
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<Blob>("POST", url, undefined, input, abortSignal);
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<Blob>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
             throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
@@ -952,8 +952,8 @@ export class PlumsailClient extends ConnectorClientBase {
      */
     public async flowV1DocumentsJobsPpt2PptxAsync(input: Ppt2PptxRequest, abortSignal?: AbortSignal): Promise<Blob> {
         const requestPath = `/flow/v1/Documents/jobs/Ppt2Pptx`;
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<Blob>("POST", url, undefined, input, abortSignal);
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<Blob>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
             throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
@@ -972,8 +972,8 @@ export class PlumsailClient extends ConnectorClientBase {
             queryParams.push(`type=${encodeURIComponent(String(type))}`);
         }
         const requestPath = `/flow/v1/Documents/jobs/SplitPdfV2` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<DocumentsWithFilenamesResponse>("POST", url, undefined, input, abortSignal);
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<DocumentsWithFilenamesResponse>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
             throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
@@ -988,8 +988,8 @@ export class PlumsailClient extends ConnectorClientBase {
      */
     public async flowV1DocumentsJobsMergeAnyToPdfV2Async(input: MergeAny2PdfRequest, abortSignal?: AbortSignal): Promise<Blob> {
         const requestPath = `/flow/v1/Documents/jobs/MergeAnyToPdfV2`;
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<Blob>("POST", url, undefined, input, abortSignal);
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<Blob>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
             throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
@@ -1004,8 +1004,8 @@ export class PlumsailClient extends ConnectorClientBase {
      */
     public async flowV1DocumentsJobsExtractTextFromPdfAsync(input: Pdf2TextRequest, abortSignal?: AbortSignal): Promise<DocumentProcessingResponse> {
         const requestPath = `/flow/v1/Documents/jobs/ExtractTextFromPdf`;
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<DocumentProcessingResponse>("POST", url, undefined, input, abortSignal);
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<DocumentProcessingResponse>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
             throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
@@ -1020,8 +1020,8 @@ export class PlumsailClient extends ConnectorClientBase {
      */
     public async flowV1DocumentsJobsPdf2ImageV2Async(input: Pdf2ImageRequest, abortSignal?: AbortSignal): Promise<DocumentsWithFilenamesResponse> {
         const requestPath = `/flow/v1/Documents/jobs/Pdf2ImageV2`;
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<DocumentsWithFilenamesResponse>("POST", url, undefined, input, abortSignal);
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<DocumentsWithFilenamesResponse>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
             throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
@@ -1036,8 +1036,8 @@ export class PlumsailClient extends ConnectorClientBase {
      */
     public async flowV1DocumentsJobsImage2PdfAsync(input: Image2PdfRequest, abortSignal?: AbortSignal): Promise<Blob> {
         const requestPath = `/flow/v1/Documents/jobs/Image2Pdf`;
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<Blob>("POST", url, undefined, input, abortSignal);
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<Blob>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
             throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
@@ -1052,8 +1052,8 @@ export class PlumsailClient extends ConnectorClientBase {
      */
     public async flowV1DocumentsJobsFillInPdfFormAsync(input: FillInPdfFormRequest, abortSignal?: AbortSignal): Promise<DocumentProcessingResponse> {
         const requestPath = `/flow/v1/Documents/jobs/FillInPdfForm`;
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<DocumentProcessingResponse>("POST", url, undefined, input, abortSignal);
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<DocumentProcessingResponse>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
             throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
@@ -1068,8 +1068,8 @@ export class PlumsailClient extends ConnectorClientBase {
      */
     public async flowV1DocumentsJobsGetPdfFormAsync(input: GetPdfFormRequest, abortSignal?: AbortSignal): Promise<FlowDocumentsJobsGetPdfFormPostResponse> {
         const requestPath = `/flow/v1/Documents/jobs/GetPdfForm`;
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<FlowDocumentsJobsGetPdfFormPostResponse>("POST", url, undefined, input, abortSignal);
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<FlowDocumentsJobsGetPdfFormPostResponse>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
             throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
@@ -1084,8 +1084,8 @@ export class PlumsailClient extends ConnectorClientBase {
      */
     public async flowV1DocumentsJobsProtectPdfAsync(input: ProtectPdfRequest, abortSignal?: AbortSignal): Promise<DocumentProcessingResponse> {
         const requestPath = `/flow/v1/Documents/jobs/ProtectPdf`;
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<DocumentProcessingResponse>("POST", url, undefined, input, abortSignal);
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<DocumentProcessingResponse>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
             throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
@@ -1100,8 +1100,8 @@ export class PlumsailClient extends ConnectorClientBase {
      */
     public async flowV1DocumentsJobsGetPdfProtectionInfoAsync(input: PdfProtectionInfoRequest, abortSignal?: AbortSignal): Promise<GetPdfProtectionInfoResponse> {
         const requestPath = `/flow/v1/Documents/jobs/GetPdfProtectionInfo`;
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<GetPdfProtectionInfoResponse>("POST", url, undefined, input, abortSignal);
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<GetPdfProtectionInfoResponse>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
             throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
@@ -1116,8 +1116,8 @@ export class PlumsailClient extends ConnectorClientBase {
      */
     public async flowV1DocumentsJobsCompressPdfAsync(input: CompressPdfRequest, abortSignal?: AbortSignal): Promise<Blob> {
         const requestPath = `/flow/v1/Documents/jobs/CompressPdf`;
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<Blob>("POST", url, undefined, input, abortSignal);
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<Blob>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
             throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
@@ -1136,8 +1136,8 @@ export class PlumsailClient extends ConnectorClientBase {
             queryParams.push(`type=${encodeURIComponent(String(type))}`);
         }
         const requestPath = `/flow/v1/Documents/jobs/AddWatermarkToPdf` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<DocumentProcessingResponse>("POST", url, undefined, input, abortSignal);
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<DocumentProcessingResponse>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
             throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
@@ -1152,8 +1152,8 @@ export class PlumsailClient extends ConnectorClientBase {
      */
     public async flowV1DocumentsJobsMergeDocxAsync(input: MergeDocxRequest, abortSignal?: AbortSignal): Promise<DocumentProcessingResponse> {
         const requestPath = `/flow/v1/Documents/jobs/MergeDocx`;
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<DocumentProcessingResponse>("POST", url, undefined, input, abortSignal);
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<DocumentProcessingResponse>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
             throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
@@ -1168,8 +1168,8 @@ export class PlumsailClient extends ConnectorClientBase {
      */
     public async flowV1DocumentsJobsParseCsvAsync(input: ParseCsvFlowRequest, abortSignal?: AbortSignal): Promise<ParseCsvSchemaResponse> {
         const requestPath = `/flow/v1/Documents/jobs/ParseCsv`;
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<ParseCsvSchemaResponse>("POST", url, undefined, input, abortSignal);
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<ParseCsvSchemaResponse>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
             throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
@@ -1184,8 +1184,8 @@ export class PlumsailClient extends ConnectorClientBase {
      */
     public async flowV1DocumentsJobsCsv2XlsxAsync(input: Csv2XlsxRequest, abortSignal?: AbortSignal): Promise<Blob> {
         const requestPath = `/flow/v1/Documents/jobs/Csv2Xlsx`;
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<Blob>("POST", url, undefined, input, abortSignal);
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<Blob>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
             throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
@@ -1200,8 +1200,8 @@ export class PlumsailClient extends ConnectorClientBase {
      */
     public async flowV1DocumentsJobsJson2XlsxAsync(input: Json2XlsxRequest, abortSignal?: AbortSignal): Promise<Blob> {
         const requestPath = `/flow/v1/Documents/jobs/Json2Xlsx`;
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<Blob>("POST", url, undefined, input, abortSignal);
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<Blob>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
             throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
@@ -1216,8 +1216,8 @@ export class PlumsailClient extends ConnectorClientBase {
      */
     public async flowV1DocumentsJobsJson2CsvAsync(input: Json2CsvRequest, abortSignal?: AbortSignal): Promise<Blob> {
         const requestPath = `/flow/v1/Documents/jobs/Json2Csv`;
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<Blob>("POST", url, undefined, input, abortSignal);
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<Blob>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
             throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
@@ -1232,8 +1232,8 @@ export class PlumsailClient extends ConnectorClientBase {
      */
     public async flowV1DocumentsJobsRegExpMatchAsync(input: RegExpMatchRequest, abortSignal?: AbortSignal): Promise<RegExpMatchSchemaResponseClass> {
         const requestPath = `/flow/v1/Documents/jobs/RegExpMatch`;
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<RegExpMatchSchemaResponseClass>("POST", url, undefined, input, abortSignal);
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<RegExpMatchSchemaResponseClass>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
             throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
@@ -1248,8 +1248,8 @@ export class PlumsailClient extends ConnectorClientBase {
      */
     public async flowV1DocumentsJobsRegExpReplaceAsync(input: RegExpReplaceRequest, abortSignal?: AbortSignal): Promise<StringResultResponse> {
         const requestPath = `/flow/v1/Documents/jobs/RegExpReplace`;
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<StringResultResponse>("POST", url, undefined, input, abortSignal);
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<StringResultResponse>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
             throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
@@ -1264,8 +1264,8 @@ export class PlumsailClient extends ConnectorClientBase {
      */
     public async flowV1DocumentsJobsRegExpTestAsync(input: RegExpTestRequest, abortSignal?: AbortSignal): Promise<BooleanResultResponse> {
         const requestPath = `/flow/v1/Documents/jobs/RegExpTest`;
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<BooleanResultResponse>("POST", url, undefined, input, abortSignal);
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<BooleanResultResponse>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
             throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
@@ -1280,8 +1280,8 @@ export class PlumsailClient extends ConnectorClientBase {
      */
     public async flowV1DocumentsJobsCreateArchiveAsync(input: CreateArchiveRequest, abortSignal?: AbortSignal): Promise<DocumentContentWithFilenameResponse> {
         const requestPath = `/flow/v1/Documents/jobs/CreateArchive`;
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<DocumentContentWithFilenameResponse>("POST", url, undefined, input, abortSignal);
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<DocumentContentWithFilenameResponse>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
             throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
@@ -1296,8 +1296,8 @@ export class PlumsailClient extends ConnectorClientBase {
      */
     public async flowV1DocumentsJobsExtractArchiveAsync(input: ExtractArchiveRequest, abortSignal?: AbortSignal): Promise<DocumentsWithFilenamesResponse> {
         const requestPath = `/flow/v1/Documents/jobs/ExtractArchive`;
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<DocumentsWithFilenamesResponse>("POST", url, undefined, input, abortSignal);
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<DocumentsWithFilenamesResponse>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
             throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
@@ -1312,8 +1312,8 @@ export class PlumsailClient extends ConnectorClientBase {
      */
     public async flowV1DocumentsJobsMergeXlsxAsync(input: MergeXlsxRequest, abortSignal?: AbortSignal): Promise<DocumentProcessingResponse> {
         const requestPath = `/flow/v1/Documents/jobs/MergeXlsx`;
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<DocumentProcessingResponse>("POST", url, undefined, input, abortSignal);
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<DocumentProcessingResponse>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
             throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
@@ -1332,8 +1332,8 @@ export class PlumsailClient extends ConnectorClientBase {
             queryParams.push(`processId=${encodeURIComponent(String(processId))}`);
         }
         const requestPath = `/flow/v1/ProcessesFlow/jobs/ExecuteProcess` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<Blob>("POST", url, undefined, input, abortSignal);
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<Blob>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
             throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
@@ -1352,8 +1352,8 @@ export class PlumsailClient extends ConnectorClientBase {
             queryParams.push(`processId=${encodeURIComponent(String(processId))}`);
         }
         const requestPath = `/flow/v1/ProcessesFlow/jobs/ExecuteProcessWithGeneratedData` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<Blob>("POST", url, undefined, input, abortSignal);
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<Blob>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
             throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);

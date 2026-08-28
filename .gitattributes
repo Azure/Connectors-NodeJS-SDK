@@ -3,3 +3,4 @@
 # hash is identical on every platform. Without this, Windows core.autocrlf rewrites them to
 # CRLF and the recorded hashes stop matching what Linux CI computes.
 swagger-cache/*.swagger.json text eol=lf
+generator-patches/*.patch text eol=lf

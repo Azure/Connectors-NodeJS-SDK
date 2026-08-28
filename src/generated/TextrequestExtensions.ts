@@ -619,8 +619,8 @@ export class TextrequestClient extends ConnectorClientBase {
             queryParams.push(`page_size=${encodeURIComponent(String(pageSize))}`);
         }
         const requestPath = `/dashboards/${dashboardId}/contacts/${phoneNumber}/messages` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<GetMessagesByContactPhoneResponse>("GET", url, undefined, undefined, abortSignal);
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<GetMessagesByContactPhoneResponse>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
             throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
@@ -635,8 +635,8 @@ export class TextrequestClient extends ConnectorClientBase {
      */
     public async sendMessageByPhoneNumberAsync(input: SendMessageByPhoneNumberInput, dashboardId: string, phoneNumber: string, abortSignal?: AbortSignal): Promise<SendMessageByPhoneNumberResponse> {
         const requestPath = `/dashboards/${dashboardId}/contacts/${phoneNumber}/messages`;
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<SendMessageByPhoneNumberResponse>("POST", url, undefined, input, abortSignal);
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<SendMessageByPhoneNumberResponse>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
             throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
@@ -651,8 +651,8 @@ export class TextrequestClient extends ConnectorClientBase {
      */
     public async archiveConversationAsync(dashboardId: string, phoneNumber: string, abortSignal?: AbortSignal): Promise<string> {
         const requestPath = `/dashboards/${dashboardId}/contacts/${phoneNumber}/conversations/archive`;
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<string>("PUT", url, undefined, undefined, abortSignal);
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<string>("PUT", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
             throw new ConnectorException(this.connectorName, `PUT ${requestPath}`, httpResponse.statusCode, httpResponse.text);
@@ -667,8 +667,8 @@ export class TextrequestClient extends ConnectorClientBase {
      */
     public async unarchiveConversationAsync(dashboardId: string, phoneNumber: string, abortSignal?: AbortSignal): Promise<string> {
         const requestPath = `/dashboards/${dashboardId}/contacts/${phoneNumber}/conversations/unarchive`;
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<string>("PUT", url, undefined, undefined, abortSignal);
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<string>("PUT", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
             throw new ConnectorException(this.connectorName, `PUT ${requestPath}`, httpResponse.statusCode, httpResponse.text);
@@ -683,8 +683,8 @@ export class TextrequestClient extends ConnectorClientBase {
      */
     public async getContactByPhoneNumberAsync(dashboardId: string, phoneNumber: string, abortSignal?: AbortSignal): Promise<GetContactByPhoneNumberResponse> {
         const requestPath = `/dashboards/${dashboardId}/contacts/${phoneNumber}`;
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<GetContactByPhoneNumberResponse>("GET", url, undefined, undefined, abortSignal);
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<GetContactByPhoneNumberResponse>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
             throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
@@ -699,8 +699,8 @@ export class TextrequestClient extends ConnectorClientBase {
      */
     public async deleteContactAsync(dashboardId: string, phoneNumber: string, abortSignal?: AbortSignal): Promise<string> {
         const requestPath = `/dashboards/${dashboardId}/contacts/${phoneNumber}`;
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<string>("DELETE", url, undefined, undefined, abortSignal);
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<string>("DELETE", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
             throw new ConnectorException(this.connectorName, `DELETE ${requestPath}`, httpResponse.statusCode, httpResponse.text);
@@ -715,8 +715,8 @@ export class TextrequestClient extends ConnectorClientBase {
      */
     public async createContactAsync(input: CreateContactInput, dashboardId: string, phoneNumber: string, abortSignal?: AbortSignal): Promise<CreateContactResponse> {
         const requestPath = `/dashboards/${dashboardId}/contacts/${phoneNumber}`;
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<CreateContactResponse>("POST", url, undefined, input, abortSignal);
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<CreateContactResponse>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
             throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
@@ -804,8 +804,8 @@ export class TextrequestClient extends ConnectorClientBase {
             queryParams.push(`page_size=${encodeURIComponent(String(pageSize))}`);
         }
         const requestPath = `/dashboards/${dashboardId}/contacts` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<GetContactsResponse>("GET", url, undefined, undefined, abortSignal);
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<GetContactsResponse>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
             throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
@@ -820,8 +820,8 @@ export class TextrequestClient extends ConnectorClientBase {
      */
     public async bulkUpdateContactsAsync(input: BulkUpdateContactsInput, dashboardId: string, abortSignal?: AbortSignal): Promise<Array<Record<string, unknown>>> {
         const requestPath = `/dashboards/${dashboardId}/contacts`;
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<Array<Record<string, unknown>>>("POST", url, undefined, input, abortSignal);
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<Array<Record<string, unknown>>>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
             throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
@@ -836,8 +836,8 @@ export class TextrequestClient extends ConnectorClientBase {
      */
     public async getGroupByIdAsync(dashboardId: string, groupId: string, abortSignal?: AbortSignal): Promise<GetGroupByIdResponse> {
         const requestPath = `/dashboards/${dashboardId}/groups/${groupId}`;
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<GetGroupByIdResponse>("GET", url, undefined, undefined, abortSignal);
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<GetGroupByIdResponse>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
             throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
@@ -852,8 +852,8 @@ export class TextrequestClient extends ConnectorClientBase {
      */
     public async deleteGroupAsync(dashboardId: string, groupId: string, abortSignal?: AbortSignal): Promise<string> {
         const requestPath = `/dashboards/${dashboardId}/groups/${groupId}`;
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<string>("DELETE", url, undefined, undefined, abortSignal);
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<string>("DELETE", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
             throw new ConnectorException(this.connectorName, `DELETE ${requestPath}`, httpResponse.statusCode, httpResponse.text);
@@ -868,8 +868,8 @@ export class TextrequestClient extends ConnectorClientBase {
      */
     public async updateGroupAsync(input: UpdateGroupInput, dashboardId: string, groupId: string, abortSignal?: AbortSignal): Promise<UpdateGroupResponse> {
         const requestPath = `/dashboards/${dashboardId}/groups/${groupId}`;
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<UpdateGroupResponse>("PUT", url, undefined, input, abortSignal);
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<UpdateGroupResponse>("PUT", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
             throw new ConnectorException(this.connectorName, `PUT ${requestPath}`, httpResponse.statusCode, httpResponse.text);
@@ -891,8 +891,8 @@ export class TextrequestClient extends ConnectorClientBase {
             queryParams.push(`page_size=${encodeURIComponent(String(pageSize))}`);
         }
         const requestPath = `/dashboards/${dashboardId}/groups` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<GetGroupsResponse>("GET", url, undefined, undefined, abortSignal);
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<GetGroupsResponse>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
             throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
@@ -907,8 +907,8 @@ export class TextrequestClient extends ConnectorClientBase {
      */
     public async createGroupAsync(input: CreateGroupInput, dashboardId: string, abortSignal?: AbortSignal): Promise<CreateGroupResponse> {
         const requestPath = `/dashboards/${dashboardId}/groups`;
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<CreateGroupResponse>("POST", url, undefined, input, abortSignal);
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<CreateGroupResponse>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
             throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
@@ -930,8 +930,8 @@ export class TextrequestClient extends ConnectorClientBase {
             queryParams.push(`page_size=${encodeURIComponent(String(pageSize))}`);
         }
         const requestPath = `/dashboards/${dashboardId}/tags` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<GetTagsResponse>("GET", url, undefined, undefined, abortSignal);
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<GetTagsResponse>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
             throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
@@ -946,8 +946,8 @@ export class TextrequestClient extends ConnectorClientBase {
      */
     public async getCustomFieldsAsync(dashboardId: string, abortSignal?: AbortSignal): Promise<Array<Record<string, unknown>>> {
         const requestPath = `/dashboards/${dashboardId}/fields`;
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<Array<Record<string, unknown>>>("GET", url, undefined, undefined, abortSignal);
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<Array<Record<string, unknown>>>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
             throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
@@ -962,8 +962,8 @@ export class TextrequestClient extends ConnectorClientBase {
      */
     public async getPaymentAsync(dashboardId: string, paymentId: string, abortSignal?: AbortSignal): Promise<GetPaymentResponse> {
         const requestPath = `/dashboards/${dashboardId}/payments/${paymentId}`;
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<GetPaymentResponse>("GET", url, undefined, undefined, abortSignal);
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<GetPaymentResponse>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
             throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
@@ -978,8 +978,8 @@ export class TextrequestClient extends ConnectorClientBase {
      */
     public async markPaymentPaidAsync(dashboardId: string, paymentId: string, abortSignal?: AbortSignal): Promise<MarkPaymentPaidResponse> {
         const requestPath = `/dashboards/${dashboardId}/payments/${paymentId}/mark_as_paid`;
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<MarkPaymentPaidResponse>("POST", url, undefined, undefined, abortSignal);
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<MarkPaymentPaidResponse>("POST", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
             throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
@@ -994,8 +994,8 @@ export class TextrequestClient extends ConnectorClientBase {
      */
     public async sendPaymentReminderAsync(dashboardId: string, paymentId: string, abortSignal?: AbortSignal): Promise<SendPaymentReminderResponse> {
         const requestPath = `/dashboards/${dashboardId}/payments/${paymentId}/resend`;
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<SendPaymentReminderResponse>("POST", url, undefined, undefined, abortSignal);
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<SendPaymentReminderResponse>("POST", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
             throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
@@ -1010,8 +1010,8 @@ export class TextrequestClient extends ConnectorClientBase {
      */
     public async cancelPaymentAsync(dashboardId: string, paymentId: string, abortSignal?: AbortSignal): Promise<CancelPaymentResponse> {
         const requestPath = `/dashboards/${dashboardId}/payments/${paymentId}/cancel`;
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<CancelPaymentResponse>("POST", url, undefined, undefined, abortSignal);
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<CancelPaymentResponse>("POST", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
             throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
@@ -1045,8 +1045,8 @@ export class TextrequestClient extends ConnectorClientBase {
             queryParams.push(`page_size=${encodeURIComponent(String(pageSize))}`);
         }
         const requestPath = `/dashboards/${dashboardId}/payments` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<GetPaymentsResponse>("GET", url, undefined, undefined, abortSignal);
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<GetPaymentsResponse>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
             throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
@@ -1061,8 +1061,8 @@ export class TextrequestClient extends ConnectorClientBase {
      */
     public async createPaymentAsync(input: CreatePaymentInput, dashboardId: string, abortSignal?: AbortSignal): Promise<CreatePaymentResponse> {
         const requestPath = `/dashboards/${dashboardId}/payments`;
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<CreatePaymentResponse>("POST", url, undefined, input, abortSignal);
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<CreatePaymentResponse>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
             throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
@@ -1077,8 +1077,8 @@ export class TextrequestClient extends ConnectorClientBase {
      */
     public async getDashboardAsync(dashboardId: string, abortSignal?: AbortSignal): Promise<GetDashboardResponse> {
         const requestPath = `/dashboards/${dashboardId}`;
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<GetDashboardResponse>("GET", url, undefined, undefined, abortSignal);
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<GetDashboardResponse>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
             throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
@@ -1093,8 +1093,8 @@ export class TextrequestClient extends ConnectorClientBase {
      */
     public async deleteDashboardAsync(dashboardId: string, abortSignal?: AbortSignal): Promise<string> {
         const requestPath = `/dashboards/${dashboardId}`;
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<string>("DELETE", url, undefined, undefined, abortSignal);
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<string>("DELETE", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
             throw new ConnectorException(this.connectorName, `DELETE ${requestPath}`, httpResponse.statusCode, httpResponse.text);
@@ -1109,8 +1109,8 @@ export class TextrequestClient extends ConnectorClientBase {
      */
     public async updateDashboardsNameAsync(input: UpdateDashboardsNameInput, dashboardId: string, abortSignal?: AbortSignal): Promise<UpdateDashboardsNameResponse> {
         const requestPath = `/dashboards/${dashboardId}`;
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<UpdateDashboardsNameResponse>("PUT", url, undefined, input, abortSignal);
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<UpdateDashboardsNameResponse>("PUT", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
             throw new ConnectorException(this.connectorName, `PUT ${requestPath}`, httpResponse.statusCode, httpResponse.text);
@@ -1144,8 +1144,8 @@ export class TextrequestClient extends ConnectorClientBase {
             queryParams.push(`page_size=${encodeURIComponent(String(pageSize))}`);
         }
         const requestPath = `/dashboards/${dashboardId}/conversations` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<GetConversationsResponse>("GET", url, undefined, undefined, abortSignal);
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<GetConversationsResponse>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
             throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
@@ -1167,8 +1167,8 @@ export class TextrequestClient extends ConnectorClientBase {
             queryParams.push(`page_size=${encodeURIComponent(String(pageSize))}`);
         }
         const requestPath = `/dashboards` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<GetDashboardsResponse>("GET", url, undefined, undefined, abortSignal);
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<GetDashboardsResponse>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
             throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
@@ -1183,8 +1183,8 @@ export class TextrequestClient extends ConnectorClientBase {
      */
     public async createDashboardAsync(input: CreateDashboardInput, abortSignal?: AbortSignal): Promise<CreateDashboardResponse> {
         const requestPath = `/dashboards`;
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<CreateDashboardResponse>("POST", url, undefined, input, abortSignal);
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<CreateDashboardResponse>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
             throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);

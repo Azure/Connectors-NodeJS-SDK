@@ -33,12 +33,25 @@ interface ManifestDroppedTriggerRoute {
 }
 
 /**
+ * A trigger operation and its normalized route from a pinned Swagger snapshot.
+ */
+interface SwaggerTriggerRoute {
+    operationId: string;
+    path: string;
+}
+
+/**
  * The provenance record persisted in generation.manifest.json.
  */
 interface GenerationManifest {
+    manifestVersion: number;
     status: string;
     generator: {
-        bpmCommit: string | null;
+        bpmBaseCommit: string | null;
+        sourcePatch: {
+            path: string;
+            sha256: string;
+        };
     };
     connectors: ManifestConnectorEntry[];
     routeIdentityLoss?: {
@@ -54,15 +67,6 @@ function loadManifest(): GenerationManifest {
 }
 
 /**
- * Computes the lowercase hex SHA-256 of the file at the given repository-relative path.
- */
-function computeSha256(relativePath: string): string {
-    return createHash("sha256")
-        .update(fs.readFileSync(path.join(RepositoryRoot, relativePath)))
-        .digest("hex");
-}
-
-/**
  * Computes the lowercase hex SHA-256 of UTF-8 text after normalizing CRLF line endings to LF.
  */
 function computeCanonicalTextSha256(relativePath: string): string {
@@ -73,6 +77,37 @@ function computeCanonicalTextSha256(relativePath: string): string {
     return createHash("sha256")
         .update(canonicalContent, "utf8")
         .digest("hex");
+}
+
+/**
+ * Reads trigger operation IDs and routes from a pinned connector Swagger snapshot.
+ */
+function loadSwaggerTriggerRoutes(swaggerSnapshot: string): SwaggerTriggerRoute[] {
+    const swagger = JSON.parse(
+        fs.readFileSync(path.join(RepositoryRoot, swaggerSnapshot), "utf8"),
+    ) as {
+        paths: Record<string, Record<string, Record<string, unknown>>>;
+    };
+    const httpMethods = new Set(["delete", "get", "head", "options", "patch", "post", "put", "trace"]);
+    const triggerRoutes = new Array<SwaggerTriggerRoute>();
+
+    for (const [swaggerPath, pathItem] of Object.entries(swagger.paths)) {
+        for (const [method, operation] of Object.entries(pathItem)) {
+            if (!httpMethods.has(method.toLowerCase()) || operation["x-ms-trigger"] === undefined) {
+                continue;
+            }
+
+            const operationId = operation.operationId;
+            if (typeof operationId === "string") {
+                triggerRoutes.push({
+                    operationId,
+                    path: swaggerPath.replace(/^\/\{connectionId\}/, ""),
+                });
+            }
+        }
+    }
+
+    return triggerRoutes;
 }
 
 // ──────────────────────────────────────────────
@@ -86,13 +121,20 @@ describe("generation.manifest.json provenance", () => {
         expect(manifest.status).toBe("generated");
     });
 
-    it("should record a non-empty BPM generator commit", () => {
-        expect(typeof manifest.generator.bpmCommit).toBe("string");
-        expect((manifest.generator.bpmCommit ?? "").length).toBeGreaterThan(0);
+    it("should use the source-patch-aware manifest schema", () => {
+        expect(manifest.manifestVersion).toBe(2);
     });
 
-    it("should record the BPM generator commit as a 40-character hex SHA", () => {
-        expect(manifest.generator.bpmCommit ?? "").toMatch(/^[0-9a-f]{40}$/);
+    it("should record the BPM generator base commit as a 40-character hex SHA", () => {
+        expect(manifest.generator.bpmBaseCommit ?? "").toMatch(/^[0-9a-f]{40}$/);
+    });
+
+    it("should match the recorded generator source patch hash", () => {
+        expect(manifest.generator.sourcePatch.path).toBeTruthy();
+        expect(manifest.generator.sourcePatch.sha256).toMatch(/^[0-9a-f]{64}$/);
+        expect(fs.existsSync(path.join(RepositoryRoot, manifest.generator.sourcePatch.path))).toBe(true);
+        expect(computeCanonicalTextSha256(manifest.generator.sourcePatch.path))
+            .toBe(manifest.generator.sourcePatch.sha256);
     });
 
     it("should list at least one connector", () => {
@@ -108,7 +150,7 @@ describe("generation.manifest.json provenance", () => {
         (_apiName: string, connector: ManifestConnectorEntry) => {
             expect(fs.existsSync(path.join(RepositoryRoot, connector.swaggerSnapshot))).toBe(true);
             expect(fs.existsSync(path.join(RepositoryRoot, connector.outputFile))).toBe(true);
-            expect(computeSha256(connector.swaggerSnapshot)).toBe(connector.swaggerSha256);
+            expect(computeCanonicalTextSha256(connector.swaggerSnapshot)).toBe(connector.swaggerSha256);
         },
     );
 
@@ -135,21 +177,30 @@ describe("generation.manifest.json provenance", () => {
         expect(manifestOutputFiles).toEqual(generatedExtensionFiles);
     });
 
-    it("should record any dropped trigger routes with a well-formed shape", () => {
+    it("should match dropped and kept trigger routes to the pinned swagger snapshots", () => {
         expect(manifest.routeIdentityLoss).toBeDefined();
         expect(Array.isArray(manifest.routeIdentityLoss?.droppedTriggerRoutes)).toBe(true);
 
-        // NOTE(swapnilnagar): Shape-only, and an empty list is valid — a future regeneration that drops no
-        // routes should still pass. Each recorded entry must be fully populated so the record cannot rot.
         for (const droppedRoute of manifest.routeIdentityLoss?.droppedTriggerRoutes ?? []) {
-            expect(typeof droppedRoute.connector).toBe("string");
-            expect(droppedRoute.connector.length).toBeGreaterThan(0);
-            expect(typeof droppedRoute.droppedOperationId).toBe("string");
-            expect(droppedRoute.droppedOperationId.length).toBeGreaterThan(0);
-            expect(typeof droppedRoute.path).toBe("string");
-            expect(droppedRoute.path.length).toBeGreaterThan(0);
-            expect(typeof droppedRoute.keptOperationId).toBe("string");
-            expect(droppedRoute.keptOperationId.length).toBeGreaterThan(0);
+            const connector = manifest.connectors.find(entry => entry.apiName === droppedRoute.connector);
+            if (connector === undefined) {
+                throw new Error(`Connector '${droppedRoute.connector}' is missing from the generation manifest.`);
+            }
+
+            const triggerRoutes = loadSwaggerTriggerRoutes(connector.swaggerSnapshot);
+            const droppedMatches = triggerRoutes.filter(
+                triggerRoute => triggerRoute.operationId === droppedRoute.droppedOperationId,
+            );
+            const keptMatches = triggerRoutes.filter(
+                triggerRoute => triggerRoute.operationId === droppedRoute.keptOperationId,
+            );
+
+            expect(droppedMatches).toEqual([{
+                operationId: droppedRoute.droppedOperationId,
+                path: droppedRoute.path,
+            }]);
+            expect(keptMatches).toHaveLength(1);
+            expect(keptMatches[0].path).toMatch(/^\//);
         }
     });
 });

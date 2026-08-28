@@ -726,8 +726,8 @@ export class MailchimpClient extends ConnectorClientBase {
      */
     public async getCampaignsAsync(abortSignal?: AbortSignal): Promise<GetCampaignsResponse> {
         const requestPath = `/campaigns`;
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<GetCampaignsResponse>("GET", url, undefined, undefined, abortSignal);
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<GetCampaignsResponse>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
             throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
@@ -742,8 +742,8 @@ export class MailchimpClient extends ConnectorClientBase {
      */
     public async sendcampaignAsync(campaignId: string, abortSignal?: AbortSignal): Promise<void> {
         const requestPath = `/campaigns/${campaignId}/actions/send`;
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<void>("POST", url, undefined, undefined, abortSignal);
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<void>("POST", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
             throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
@@ -763,8 +763,8 @@ export class MailchimpClient extends ConnectorClientBase {
             queryParams.push(`offset=${encodeURIComponent(String(offset))}`);
         }
         const requestPath = `/lists` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<GetListsResponseModel>("GET", url, undefined, undefined, abortSignal);
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<GetListsResponseModel>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
             throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
@@ -779,8 +779,8 @@ export class MailchimpClient extends ConnectorClientBase {
      */
     public async newlistAsync(input: NewListRequest, abortSignal?: AbortSignal): Promise<CreateNewListResponseModel> {
         const requestPath = `/lists`;
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<CreateNewListResponseModel>("POST", url, undefined, input, abortSignal);
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<CreateNewListResponseModel>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
             throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
@@ -802,8 +802,8 @@ export class MailchimpClient extends ConnectorClientBase {
             queryParams.push(`skip_duplicate_check=${encodeURIComponent(String(skipDuplicateCheck))}`);
         }
         const requestPath = `/lists/${listId}` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<GetAddMembersBatchResponseModel>("POST", url, undefined, input, abortSignal);
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<GetAddMembersBatchResponseModel>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
             throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
@@ -825,8 +825,8 @@ export class MailchimpClient extends ConnectorClientBase {
             queryParams.push(`offset=${encodeURIComponent(String(offset))}`);
         }
         const requestPath = `/lists/${listId}/members` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<GetAllMembersResponseModel>("GET", url, undefined, undefined, abortSignal);
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<GetAllMembersResponseModel>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
             throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
@@ -841,8 +841,8 @@ export class MailchimpClient extends ConnectorClientBase {
      */
     public async addmemberAsync(input: NewMemberInListRequest, listId: string, abortSignal?: AbortSignal): Promise<MemberResponseModel> {
         const requestPath = `/lists/${listId}/members`;
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<MemberResponseModel>("POST", url, undefined, input, abortSignal);
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<MemberResponseModel>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
             throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
@@ -857,8 +857,8 @@ export class MailchimpClient extends ConnectorClientBase {
      */
     public async newcampaignAsync(input: NewCampaignRequest, abortSignal?: AbortSignal): Promise<CampaignResponseModel> {
         const requestPath = `/v2/campaigns`;
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<CampaignResponseModel>("POST", url, undefined, input, abortSignal);
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<CampaignResponseModel>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
             throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
@@ -873,8 +873,8 @@ export class MailchimpClient extends ConnectorClientBase {
      */
     public async removememberAsync(listId: string, abortSignal?: AbortSignal): Promise<void> {
         const requestPath = `/lists/replacemailwithhash/${listId}/members`;
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<void>("DELETE", url, undefined, undefined, abortSignal);
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<void>("DELETE", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
             throw new ConnectorException(this.connectorName, `DELETE ${requestPath}`, httpResponse.statusCode, httpResponse.text);
@@ -887,8 +887,8 @@ export class MailchimpClient extends ConnectorClientBase {
      */
     public async updatememberAsync(input: UpdateMemberInListRequest, listId: string, abortSignal?: AbortSignal): Promise<MemberResponseModel> {
         const requestPath = `/lists/replacemailwithhash/${listId}/members`;
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<MemberResponseModel>("PATCH", url, undefined, input, abortSignal);
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<MemberResponseModel>("PATCH", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
             throw new ConnectorException(this.connectorName, `PATCH ${requestPath}`, httpResponse.statusCode, httpResponse.text);

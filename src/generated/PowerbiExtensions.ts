@@ -847,8 +847,8 @@ export class PowerbiClient extends ConnectorClientBase {
             queryParams.push(`pbi_source=${encodeURIComponent(String(pbiSource))}`);
         }
         const requestPath = `/v1.0/myOrg/groups/${groupid}/internalScorecards` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<ListedScorecards>("GET", url, undefined, undefined, abortSignal);
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<ListedScorecards>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
             throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
@@ -867,8 +867,8 @@ export class PowerbiClient extends ConnectorClientBase {
             queryParams.push(`pbi_source=${encodeURIComponent(String(pbiSource))}`);
         }
         const requestPath = `/v1.0/myOrg/groups/${groupid}/internalScorecards` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<CreatedScorecard>("POST", url, undefined, input, abortSignal);
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<CreatedScorecard>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
             throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
@@ -890,8 +890,8 @@ export class PowerbiClient extends ConnectorClientBase {
             queryParams.push(`pbi_source=${encodeURIComponent(String(pbiSource))}`);
         }
         const requestPath = `/v1.0/myOrg/groups/${groupid}/internalScorecards(${scorecardId})/goals` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<FetchedGoals>("GET", url, undefined, undefined, abortSignal);
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<FetchedGoals>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
             throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
@@ -910,8 +910,8 @@ export class PowerbiClient extends ConnectorClientBase {
             queryParams.push(`pbi_source=${encodeURIComponent(String(pbiSource))}`);
         }
         const requestPath = `/v1.0/myOrg/groups/${groupid}/internalScorecards(${scorecardId})/goals` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<CreateGoalResponse>("POST", url, undefined, input, abortSignal);
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<CreateGoalResponse>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
             throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
@@ -933,8 +933,8 @@ export class PowerbiClient extends ConnectorClientBase {
             queryParams.push(`$expand=${encodeURIComponent(String(expand))}`);
         }
         const requestPath = `/v1.0/myOrg/groups/${groupid}/internalScorecards(${scorecardId})/goals(${goalId})` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<FetchedGoal>("GET", url, undefined, undefined, abortSignal);
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<FetchedGoal>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
             throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
@@ -953,8 +953,8 @@ export class PowerbiClient extends ConnectorClientBase {
             queryParams.push(`pbi_source=${encodeURIComponent(String(pbiSource))}`);
         }
         const requestPath = `/v1.0/myOrg/groups/${groupid}/internalScorecards(${scorecardId})/goals(${goalId})` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<void>("PATCH", url, undefined, input, abortSignal);
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<void>("PATCH", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
             throw new ConnectorException(this.connectorName, `PATCH ${requestPath}`, httpResponse.statusCode, httpResponse.text);
@@ -971,8 +971,8 @@ export class PowerbiClient extends ConnectorClientBase {
             queryParams.push(`pbi_source=${encodeURIComponent(String(pbiSource))}`);
         }
         const requestPath = `/v1.0/myorg/groups/${groupid}/datasets/${datasetid}/executeQueries` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<QueryExecutionResults>("POST", url, undefined, input, abortSignal);
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<QueryExecutionResults>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
             throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
@@ -991,8 +991,8 @@ export class PowerbiClient extends ConnectorClientBase {
             queryParams.push(`pbi_source=${encodeURIComponent(String(pbiSource))}`);
         }
         const requestPath = `/internalFlowActionOverloadAsJson/v1.0/myorg/groups/${groupid}/datasets/${datasetid}/executeQueries` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<ExecuteDatasetQueriesJsonResponse>("POST", url, undefined, input, abortSignal);
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<ExecuteDatasetQueriesJsonResponse>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
             throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
@@ -1011,8 +1011,8 @@ export class PowerbiClient extends ConnectorClientBase {
             queryParams.push(`pbi_source=${encodeURIComponent(String(pbiSource))}`);
         }
         const requestPath = `/v1.0/myorg/groups/${groupid}/datasets/${datasetid}/tables/${tablename}/rows` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<void>("POST", url, undefined, input, abortSignal);
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<void>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
             throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
@@ -1029,8 +1029,8 @@ export class PowerbiClient extends ConnectorClientBase {
             queryParams.push(`pbi_source=${encodeURIComponent(String(pbiSource))}`);
         }
         const requestPath = `/v1.0/myorg/groups/${groupid}/internalScorecards(${scorecardId})/goals(${goalId})/goalValues(${goalCheckin})/notes` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<void>("POST", url, undefined, input, abortSignal);
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<void>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
             throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
@@ -1047,8 +1047,8 @@ export class PowerbiClient extends ConnectorClientBase {
             queryParams.push(`pbi_source=${encodeURIComponent(String(pbiSource))}`);
         }
         const requestPath = `/v1.0/myorg/groups/${groupid}/internalScorecards(${scorecardId})/goals(${goalId})/goalValues` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<void>("POST", url, undefined, input, abortSignal);
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<void>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
             throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
@@ -1068,8 +1068,8 @@ export class PowerbiClient extends ConnectorClientBase {
             queryParams.push(`$expand=${encodeURIComponent(String(expand))}`);
         }
         const requestPath = `/v1.0/myorg/groups/${groupid}/internalScorecards(${scorecardId})/goals(${goalId})/goalValues` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<GetGoalCheckinsResponse>("GET", url, undefined, undefined, abortSignal);
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<GetGoalCheckinsResponse>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
             throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
@@ -1088,8 +1088,8 @@ export class PowerbiClient extends ConnectorClientBase {
             queryParams.push(`pbi_source=${encodeURIComponent(String(pbiSource))}`);
         }
         const requestPath = `/v1.0/myorg/groups/${groupid}/internalScorecards(${scorecardId})/goals(${goalId})/goalValues(${goalCheckin})` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<void>("PATCH", url, undefined, input, abortSignal);
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<void>("PATCH", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
             throw new ConnectorException(this.connectorName, `PATCH ${requestPath}`, httpResponse.statusCode, httpResponse.text);
@@ -1109,8 +1109,8 @@ export class PowerbiClient extends ConnectorClientBase {
             queryParams.push(`$expand=${encodeURIComponent(String(expand))}`);
         }
         const requestPath = `/v1.0/myorg/groups/${groupid}/internalScorecards(${scorecardId})/goals(${goalId})/goalValues(${goalCheckin})` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<GetGoalCheckinResponse>("GET", url, undefined, undefined, abortSignal);
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<GetGoalCheckinResponse>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
             throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
@@ -1129,8 +1129,8 @@ export class PowerbiClient extends ConnectorClientBase {
             queryParams.push(`pbi_source=${encodeURIComponent(String(pbiSource))}`);
         }
         const requestPath = `/v1.0/myorg/groups/${groupid}/datasets/${datasetid}/refreshes` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<void>("POST", url, undefined, undefined, abortSignal);
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<void>("POST", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
             throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
@@ -1143,8 +1143,8 @@ export class PowerbiClient extends ConnectorClientBase {
      */
     public async initiateExportToFileForPbiReportsAsync(input: ExportPayloadPowerBIReport, groupid: string, reportid: string, abortSignal?: AbortSignal): Promise<Blob> {
         const requestPath = `/v1.0/myorg/groups/${groupid}/reports/${reportid}/ExportTo`;
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<Blob>("POST", url, undefined, input, abortSignal);
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<Blob>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
             throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
@@ -1159,8 +1159,8 @@ export class PowerbiClient extends ConnectorClientBase {
      */
     public async initiateExportToFileForPaginatedReportsAsync(input: ExportPayloadPaginatedReport, groupid: string, reportid: string, abortSignal?: AbortSignal): Promise<Blob> {
         const requestPath = `/v1.0/myorg/groups/${groupid}/reports/${reportid}/ExportToPaginatedReports`;
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<Blob>("POST", url, undefined, input, abortSignal);
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<Blob>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
             throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);

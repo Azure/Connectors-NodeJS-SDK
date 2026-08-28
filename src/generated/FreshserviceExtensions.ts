@@ -251,8 +251,8 @@ export class FreshserviceClient extends ConnectorClientBase {
      */
     public async addNoteAsync(input: AddNoteRequest, ticketId: string, abortSignal?: AbortSignal): Promise<AddNoteResponse> {
         const requestPath = `/api/v2/tickets/${ticketId}/notes`;
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<AddNoteResponse>("POST", url, undefined, input, abortSignal);
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<AddNoteResponse>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
             throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
@@ -267,8 +267,8 @@ export class FreshserviceClient extends ConnectorClientBase {
      */
     public async createTicketAsync(input: CreateTicketRequest, abortSignal?: AbortSignal): Promise<CreateUpdateTicketResponse> {
         const requestPath = `/api/v2/tickets`;
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<CreateUpdateTicketResponse>("POST", url, undefined, input, abortSignal);
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<CreateUpdateTicketResponse>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
             throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
@@ -283,8 +283,8 @@ export class FreshserviceClient extends ConnectorClientBase {
      */
     public async updateTicketAsync(input: UpdateTicketRequest, ticketId: string, abortSignal?: AbortSignal): Promise<CreateUpdateTicketResponse> {
         const requestPath = `/api/v2/tickets/${ticketId}`;
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<CreateUpdateTicketResponse>("PUT", url, undefined, input, abortSignal);
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<CreateUpdateTicketResponse>("PUT", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
             throw new ConnectorException(this.connectorName, `PUT ${requestPath}`, httpResponse.statusCode, httpResponse.text);

@@ -1,0 +1,14 @@
+diff --git a/src/tools/CodefulSdkGenerator/DirectClient/DirectClientTypeScriptCodeGenerator.cs b/src/tools/CodefulSdkGenerator/DirectClient/DirectClientTypeScriptCodeGenerator.cs
+index ffcf4c7b6fa..99fb833ad50 100644
+--- a/src/tools/CodefulSdkGenerator/DirectClient/DirectClientTypeScriptCodeGenerator.cs
++++ b/src/tools/CodefulSdkGenerator/DirectClient/DirectClientTypeScriptCodeGenerator.cs
+@@ -519,2 +519,2 @@
+-                stringBuilder.AppendLine($"        const url = this.resolveUrl(requestPath);");
+-                stringBuilder.AppendLine($"        const httpResponse = await this.httpClient.sendAsync<{method.ResponseTypeName}>(\"{httpMethod}\", url{bodyArg});");
++                stringBuilder.AppendLine($"        const requestUrl = this.resolveUrl(requestPath);");
++                stringBuilder.AppendLine($"        const httpResponse = await this.httpClient.sendAsync<{method.ResponseTypeName}>(\"{httpMethod}\", requestUrl{bodyArg});");
+@@ -530,2 +530,2 @@
+-                stringBuilder.AppendLine($"        const url = this.resolveUrl(requestPath);");
+-                stringBuilder.AppendLine($"        const httpResponse = await this.httpClient.sendAsync<void>(\"{httpMethod}\", url{bodyArg});");
++                stringBuilder.AppendLine($"        const requestUrl = this.resolveUrl(requestPath);");
++                stringBuilder.AppendLine($"        const httpResponse = await this.httpClient.sendAsync<void>(\"{httpMethod}\", requestUrl{bodyArg});");

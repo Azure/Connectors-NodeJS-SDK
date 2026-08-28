@@ -631,8 +631,8 @@ export class JiraClient extends ConnectorClientBase {
      */
     public async listResourcesAsync(abortSignal?: AbortSignal): Promise<Array<Record<string, unknown>>> {
         const requestPath = `/oauth/token/accessible-resources`;
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<Array<Record<string, unknown>>>("GET", url, undefined, undefined, abortSignal);
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<Array<Record<string, unknown>>>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
             throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
@@ -660,8 +660,8 @@ export class JiraClient extends ConnectorClientBase {
             queryParams.push(`nextPageToken=${encodeURIComponent(String(nextPageToken))}`);
         }
         const requestPath = `/2/search` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<ListIssuesResponse>("GET", url, undefined, undefined, abortSignal);
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<ListIssuesResponse>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
             throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
@@ -676,8 +676,8 @@ export class JiraClient extends ConnectorClientBase {
      */
     public async listIssuesDatacenterAsync(abortSignal?: AbortSignal): Promise<ListIssuesResponseDatacenter> {
         const requestPath = `/datacenter/search`;
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<ListIssuesResponseDatacenter>("GET", url, undefined, undefined, abortSignal);
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<ListIssuesResponseDatacenter>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
             throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
@@ -692,8 +692,8 @@ export class JiraClient extends ConnectorClientBase {
      */
     public async listTransitionsAsync(issueIdOrKey: string, abortSignal?: AbortSignal): Promise<ListTransitionsResponse> {
         const requestPath = `/3/issue/${issueIdOrKey}/transitions`;
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<ListTransitionsResponse>("GET", url, undefined, undefined, abortSignal);
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<ListTransitionsResponse>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
             throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
@@ -708,8 +708,8 @@ export class JiraClient extends ConnectorClientBase {
      */
     public async updateTransitionAsync(input: TransitionInput, issueIdOrKey: string, abortSignal?: AbortSignal): Promise<UpdateTransitionResponse> {
         const requestPath = `/3/issue/${issueIdOrKey}/transitions`;
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<UpdateTransitionResponse>("POST", url, undefined, input, abortSignal);
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<UpdateTransitionResponse>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
             throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
@@ -728,8 +728,8 @@ export class JiraClient extends ConnectorClientBase {
             queryParams.push(`expand=${encodeURIComponent(String(expand))}`);
         }
         const requestPath = `/3/myself` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<GetCurrentUserResponse>("GET", url, undefined, undefined, abortSignal);
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<GetCurrentUserResponse>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
             throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
@@ -748,8 +748,8 @@ export class JiraClient extends ConnectorClientBase {
             queryParams.push(`sessionId=${encodeURIComponent(String(sessionId))}`);
         }
         const requestPath = `/mcp/JiraIssueManagement` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<MCPQueryResponse>("POST", url, undefined, input, abortSignal);
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<MCPQueryResponse>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
             throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
@@ -764,8 +764,8 @@ export class JiraClient extends ConnectorClientBase {
      */
     public async addCommentAsync(input: Comment, issueKey: string, abortSignal?: AbortSignal): Promise<CommentResponse> {
         const requestPath = `/v2/issue/${issueKey}/comment`;
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<CommentResponse>("POST", url, undefined, input, abortSignal);
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<CommentResponse>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
             throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
@@ -780,8 +780,8 @@ export class JiraClient extends ConnectorClientBase {
      */
     public async cancelTaskAsync(taskId: string, abortSignal?: AbortSignal): Promise<CancelTaskResponse> {
         const requestPath = `/v2/task/${taskId}/cancel`;
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<CancelTaskResponse>("POST", url, undefined, undefined, abortSignal);
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<CancelTaskResponse>("POST", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
             throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
@@ -803,8 +803,8 @@ export class JiraClient extends ConnectorClientBase {
             queryParams.push(`issueTypeIds=${encodeURIComponent(String(issueTypeIds))}`);
         }
         const requestPath = `/v3/issue` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<CreateIssueResponse>("POST", url, undefined, input, abortSignal);
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<CreateIssueResponse>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
             throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
@@ -819,8 +819,8 @@ export class JiraClient extends ConnectorClientBase {
      */
     public async createProjectAsync(input: CreateProjectInput, abortSignal?: AbortSignal): Promise<CreateProjectResponse> {
         const requestPath = `/v2/project`;
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<CreateProjectResponse>("POST", url, undefined, input, abortSignal);
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<CreateProjectResponse>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
             throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
@@ -835,8 +835,8 @@ export class JiraClient extends ConnectorClientBase {
      */
     public async createProjectCategoryAsync(input: CreateProjectCategoryInput, abortSignal?: AbortSignal): Promise<CreateProjectCategoryResponse> {
         const requestPath = `/v2/projectCategory`;
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<CreateProjectCategoryResponse>("POST", url, undefined, input, abortSignal);
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<CreateProjectCategoryResponse>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
             throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
@@ -855,8 +855,8 @@ export class JiraClient extends ConnectorClientBase {
             queryParams.push(`enableUndo=${encodeURIComponent(String(enableUndo))}`);
         }
         const requestPath = `/v2/project/${projectIdOrKey}` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<void>("DELETE", url, undefined, undefined, abortSignal);
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<void>("DELETE", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
             throw new ConnectorException(this.connectorName, `DELETE ${requestPath}`, httpResponse.statusCode, httpResponse.text);
@@ -879,8 +879,8 @@ export class JiraClient extends ConnectorClientBase {
             queryParams.push(`overrideEditableFlag=${encodeURIComponent(String(overrideEditableFlag))}`);
         }
         const requestPath = `/v2/3/issue/${issueIdOrKey}` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<EditIssueResponse>("PUT", url, undefined, input, abortSignal);
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<EditIssueResponse>("PUT", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
             throw new ConnectorException(this.connectorName, `PUT ${requestPath}`, httpResponse.statusCode, httpResponse.text);
@@ -895,8 +895,8 @@ export class JiraClient extends ConnectorClientBase {
      */
     public async getAllProjectCategoriesAsync(abortSignal?: AbortSignal): Promise<Array<Record<string, unknown>>> {
         const requestPath = `/v2/projectCategory`;
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<Array<Record<string, unknown>>>("GET", url, undefined, undefined, abortSignal);
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<Array<Record<string, unknown>>>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
             throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
@@ -911,8 +911,8 @@ export class JiraClient extends ConnectorClientBase {
      */
     public async getIssueAsync(issueKey: string, abortSignal?: AbortSignal): Promise<FullIssue> {
         const requestPath = `/v2/issue/${issueKey}`;
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<FullIssue>("GET", url, undefined, undefined, abortSignal);
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<FullIssue>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
             throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
@@ -927,8 +927,8 @@ export class JiraClient extends ConnectorClientBase {
      */
     public async getTaskAsync(taskId: string, abortSignal?: AbortSignal): Promise<GetTaskResponse> {
         const requestPath = `/v2/task/${taskId}`;
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<GetTaskResponse>("GET", url, undefined, undefined, abortSignal);
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<GetTaskResponse>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
             throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
@@ -950,8 +950,8 @@ export class JiraClient extends ConnectorClientBase {
             queryParams.push(`expand=${encodeURIComponent(String(expand))}`);
         }
         const requestPath = `/v2/user` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<GetUserResponse>("GET", url, undefined, undefined, abortSignal);
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<GetUserResponse>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
             throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
@@ -966,8 +966,8 @@ export class JiraClient extends ConnectorClientBase {
      */
     public async listFiltersAsync(abortSignal?: AbortSignal): Promise<ListFiltersResponse> {
         const requestPath = `/v2/filter/search`;
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<ListFiltersResponse>("GET", url, undefined, undefined, abortSignal);
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<ListFiltersResponse>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
             throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
@@ -982,8 +982,8 @@ export class JiraClient extends ConnectorClientBase {
      */
     public async listProjectsAsync(abortSignal?: AbortSignal): Promise<ListProjectsResponse> {
         const requestPath = `/v2/project/search`;
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<ListProjectsResponse>("GET", url, undefined, undefined, abortSignal);
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<ListProjectsResponse>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
             throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
@@ -1002,8 +1002,8 @@ export class JiraClient extends ConnectorClientBase {
             queryParams.push(`projectKey=${encodeURIComponent(String(projectKey))}`);
         }
         const requestPath = `/v2/user/permission/search` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<Array<Record<string, unknown>>>("GET", url, undefined, undefined, abortSignal);
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<Array<Record<string, unknown>>>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
             throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
@@ -1018,8 +1018,8 @@ export class JiraClient extends ConnectorClientBase {
      */
     public async removeProjectCategoryAsync(id: string, abortSignal?: AbortSignal): Promise<void> {
         const requestPath = `/v2/projectCategory/${id}`;
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<void>("DELETE", url, undefined, undefined, abortSignal);
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<void>("DELETE", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
             throw new ConnectorException(this.connectorName, `DELETE ${requestPath}`, httpResponse.statusCode, httpResponse.text);
@@ -1032,8 +1032,8 @@ export class JiraClient extends ConnectorClientBase {
      */
     public async updateProjectAsync(input: UpdateProjectInput, projectIdOrKey: string, abortSignal?: AbortSignal): Promise<UpdateProjectResponse> {
         const requestPath = `/v2/project/${projectIdOrKey}`;
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<UpdateProjectResponse>("PUT", url, undefined, input, abortSignal);
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<UpdateProjectResponse>("PUT", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
             throw new ConnectorException(this.connectorName, `PUT ${requestPath}`, httpResponse.statusCode, httpResponse.text);

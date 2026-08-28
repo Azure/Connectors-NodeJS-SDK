@@ -282,7 +282,36 @@ The following connectors have been generated and validated with comprehensive te
 | **Text Request** | `@azure/connectors/generated/TextrequestExtensions` | ✅ Complete | 7 tests |
 | **Webex** | `@azure/connectors/generated/WebexExtensions` | ✅ Complete | 7 tests |
 
-**Total:** 849 tests across 64 test suites and 52 generated connectors.
+## Generated Phase 5-7 Connectors
+
+The following clients have generated SDK coverage and compile-checked ESM/CJS
+samples, but have not been validated end to end against live connector services.
+
+| Connector | Import Path | Validation |
+|-----------|-------------|------------|
+| **Twitter (X)** | `@azure/connectors/generated/TwitterExtensions` | Mocked SDK tests |
+| **WordPress** | `@azure/connectors/generated/WordpressExtensions` | Mocked SDK tests |
+| **Plivo** | `@azure/connectors/generated/PlivoExtensions` | Mocked SDK tests |
+| **Rev.ai** | `@azure/connectors/generated/RevaiExtensions` | Mocked SDK tests |
+| **Starmind** | `@azure/connectors/generated/StarmindExtensions` | Mocked SDK tests |
+| **Tallyfy** | `@azure/connectors/generated/TallyfyExtensions` | Mocked SDK tests |
+| **Eventbrite** | `@azure/connectors/generated/EventbriteExtensions` | Mocked SDK tests |
+| **Formstack Forms** | `@azure/connectors/generated/FormstackformsExtensions` | Mocked SDK tests |
+| **Typeform** | `@azure/connectors/generated/TypeformExtensions` | Mocked SDK tests |
+| **Ticketmaster** | `@azure/connectors/generated/TicketmasterExtensions` | Mocked SDK tests |
+| **Zoho Sign** | `@azure/connectors/generated/ZohosignExtensions` | Mocked SDK tests |
+| **Seismic Planner** | `@azure/connectors/generated/SeismicplannerExtensions` | Mocked SDK tests |
+| **Way We Do** | `@azure/connectors/generated/WaywedoExtensions` | Mocked SDK tests |
+| **Meeting Room Map** | `@azure/connectors/generated/MeetingroommapExtensions` | Mocked SDK tests |
+| **StarRez REST V1** | `@azure/connectors/generated/Starrezrestv1Extensions` | Mocked SDK tests |
+| **Replicon** | `@azure/connectors/generated/RepliconExtensions` | Mocked SDK tests |
+| **Etsy** | `@azure/connectors/generated/EtsyExtensions` | Mocked SDK tests |
+| **Elfsquad Data** | `@azure/connectors/generated/ElfsquaddataExtensions` | Mocked SDK tests |
+| **Impexium** | `@azure/connectors/generated/ImpexiumExtensions` | Mocked SDK tests |
+| **Jedox OData Hub** | `@azure/connectors/generated/JedoxodatahubExtensions` | Mocked SDK tests |
+| **Orderful** | `@azure/connectors/generated/OrderfulExtensions` | Mocked SDK tests; retired connector fixture |
+
+**Test coverage:** 1,038 tests across 65 test suites and 73 generated connectors.
 
 ## Authentication
 

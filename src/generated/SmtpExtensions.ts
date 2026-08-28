@@ -76,8 +76,8 @@ export class SmtpClient extends ConnectorClientBase {
      */
     public async sendEmailAsync(input: Email, abortSignal?: AbortSignal): Promise<void> {
         const requestPath = `/SendEmailV3`;
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<void>("POST", url, undefined, input, abortSignal);
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<void>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
             throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);

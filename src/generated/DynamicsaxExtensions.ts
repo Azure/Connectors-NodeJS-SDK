@@ -405,8 +405,8 @@ export class DynamicsaxClient extends ConnectorClientBase {
      */
     public async executeProcedureAsync(input: ExecuteProcedureInput, dataset: string, procedure: string, abortSignal?: AbortSignal): Promise<AxOnlineProcedureResult> {
         const requestPath = `/datasets/${encodeURIComponent(String(dataset))}/procedures/${procedure}`;
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<AxOnlineProcedureResult>("POST", url, undefined, input, abortSignal);
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<AxOnlineProcedureResult>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
             throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
@@ -443,8 +443,8 @@ export class DynamicsaxClient extends ConnectorClientBase {
             queryParams.push(`cross-company=${encodeURIComponent(String(crossCompany))}`);
         }
         const requestPath = `/datasets/${encodeURIComponent(String(dataset))}/tables/${table}/items` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<ItemsList>("GET", url, undefined, undefined, abortSignal);
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<ItemsList>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
             throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
@@ -459,8 +459,8 @@ export class DynamicsaxClient extends ConnectorClientBase {
      */
     public async postItemAsync(input: PostItemInput, dataset: string, table: string, abortSignal?: AbortSignal): Promise<PostItemResponse> {
         const requestPath = `/datasets/${encodeURIComponent(String(dataset))}/tables/${table}/items`;
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<PostItemResponse>("POST", url, undefined, input, abortSignal);
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<PostItemResponse>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
             throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
@@ -475,8 +475,8 @@ export class DynamicsaxClient extends ConnectorClientBase {
      */
     public async getItemAsync(dataset: string, table: string, id: string, abortSignal?: AbortSignal): Promise<GetItemResponse> {
         const requestPath = `/datasets/${encodeURIComponent(String(dataset))}/tables/${table}/items/${id}`;
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<GetItemResponse>("GET", url, undefined, undefined, abortSignal);
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<GetItemResponse>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
             throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
@@ -491,8 +491,8 @@ export class DynamicsaxClient extends ConnectorClientBase {
      */
     public async deleteItemAsync(dataset: string, table: string, id: string, abortSignal?: AbortSignal): Promise<void> {
         const requestPath = `/datasets/${encodeURIComponent(String(dataset))}/tables/${table}/items/${id}`;
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<void>("DELETE", url, undefined, undefined, abortSignal);
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<void>("DELETE", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
             throw new ConnectorException(this.connectorName, `DELETE ${requestPath}`, httpResponse.statusCode, httpResponse.text);
@@ -505,8 +505,8 @@ export class DynamicsaxClient extends ConnectorClientBase {
      */
     public async patchItemAsync(input: PatchItemInput, dataset: string, table: string, id: string, abortSignal?: AbortSignal): Promise<PatchItemResponse> {
         const requestPath = `/datasets/${encodeURIComponent(String(dataset))}/tables/${table}/items/${id}`;
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<PatchItemResponse>("PATCH", url, undefined, input, abortSignal);
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<PatchItemResponse>("PATCH", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
             throw new ConnectorException(this.connectorName, `PATCH ${requestPath}`, httpResponse.statusCode, httpResponse.text);
@@ -521,8 +521,8 @@ export class DynamicsaxClient extends ConnectorClientBase {
      */
     public async getTablesAsync(dataset: string, abortSignal?: AbortSignal): Promise<TablesList> {
         const requestPath = `/datasets/${encodeURIComponent(String(dataset))}/tables`;
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<TablesList>("GET", url, undefined, undefined, abortSignal);
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<TablesList>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
             throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);

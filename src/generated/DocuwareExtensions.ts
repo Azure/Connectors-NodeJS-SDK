@@ -245,8 +245,8 @@ export class DocuwareClient extends ConnectorClientBase {
             queryParams.push(`SearchDialogId=${encodeURIComponent(String(searchDialogId))}`);
         }
         const requestPath = `/FileCabinets/${fileCabinet}/Search` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<SearchForDocumentsInFileCabinetResponse>("POST", url, undefined, input, abortSignal);
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<SearchForDocumentsInFileCabinetResponse>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
             throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
@@ -261,8 +261,8 @@ export class DocuwareClient extends ConnectorClientBase {
      */
     public async getOrganizationAsync(abortSignal?: AbortSignal): Promise<GetOrganizationResponse> {
         const requestPath = `/Organization`;
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<GetOrganizationResponse>("GET", url, undefined, undefined, abortSignal);
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<GetOrganizationResponse>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
             throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
@@ -281,8 +281,8 @@ export class DocuwareClient extends ConnectorClientBase {
             queryParams.push(`FileCabinetType=${encodeURIComponent(String(fileCabinetType))}`);
         }
         const requestPath = `/FileCabinets` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<GetFileCabinetsResponse>("GET", url, undefined, undefined, abortSignal);
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<GetFileCabinetsResponse>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
             throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
@@ -297,8 +297,8 @@ export class DocuwareClient extends ConnectorClientBase {
      */
     public async getDocumentInformationAsync(fileCabinetId: string, documentId: string, abortSignal?: AbortSignal): Promise<GetDocumentInformationResponse> {
         const requestPath = `/FileCabinets/${fileCabinetId}/Documents/${documentId}`;
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<GetDocumentInformationResponse>("GET", url, undefined, undefined, abortSignal);
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<GetDocumentInformationResponse>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
             throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
@@ -313,8 +313,8 @@ export class DocuwareClient extends ConnectorClientBase {
      */
     public async deleteDocumentAsync(fileCabinetId: string, documentId: string, abortSignal?: AbortSignal): Promise<void> {
         const requestPath = `/FileCabinets/${fileCabinetId}/Documents/${documentId}`;
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<void>("DELETE", url, undefined, undefined, abortSignal);
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<void>("DELETE", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
             throw new ConnectorException(this.connectorName, `DELETE ${requestPath}`, httpResponse.statusCode, httpResponse.text);
@@ -331,8 +331,8 @@ export class DocuwareClient extends ConnectorClientBase {
             queryParams.push(`DocumentFormat=${encodeURIComponent(String(documentFormat))}`);
         }
         const requestPath = `/FileCabinets/${fileCabinetId}/Documents/${documentId}/Sections/${fileNumber}/Download` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<Blob>("GET", url, undefined, undefined, abortSignal);
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<Blob>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
             throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
@@ -351,8 +351,8 @@ export class DocuwareClient extends ConnectorClientBase {
             queryParams.push(`DocumentFormat=${encodeURIComponent(String(documentFormat))}`);
         }
         const requestPath = `/FileCabinets/${fileCabinetId}/Documents/${documentId}/Download` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<Blob>("GET", url, undefined, undefined, abortSignal);
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<Blob>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
             throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
@@ -367,8 +367,8 @@ export class DocuwareClient extends ConnectorClientBase {
      */
     public async updateIndexFieldsAsync(input: UpdateIndexFieldsInput, fileCabinetId: string, documentId: string, abortSignal?: AbortSignal): Promise<UpdateIndexFieldsResponse> {
         const requestPath = `/FileCabinets/${fileCabinetId}/Documents/${documentId}/Fields`;
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<UpdateIndexFieldsResponse>("PUT", url, undefined, input, abortSignal);
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<UpdateIndexFieldsResponse>("PUT", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
             throw new ConnectorException(this.connectorName, `PUT ${requestPath}`, httpResponse.statusCode, httpResponse.text);
@@ -387,8 +387,8 @@ export class DocuwareClient extends ConnectorClientBase {
             queryParams.push(`StoreDialogID=${encodeURIComponent(String(storeDialogId))}`);
         }
         const requestPath = `/FileCabinets/${destinationFileCabinetId}/Task/Transfer` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<TransferDocumentResponse>("POST", url, undefined, input, abortSignal);
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<TransferDocumentResponse>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
             throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
@@ -403,8 +403,8 @@ export class DocuwareClient extends ConnectorClientBase {
      */
     public async placeAStampAsync(input: PlaceAStampInput, fileCabinetId: string, documentId: string, abortSignal?: AbortSignal): Promise<PlaceAStampResponse> {
         const requestPath = `/FileCabinets/${fileCabinetId}/Documents/${documentId}/Annotation`;
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<PlaceAStampResponse>("PUT", url, undefined, input, abortSignal);
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<PlaceAStampResponse>("PUT", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
             throw new ConnectorException(this.connectorName, `PUT ${requestPath}`, httpResponse.statusCode, httpResponse.text);
@@ -423,8 +423,8 @@ export class DocuwareClient extends ConnectorClientBase {
             queryParams.push(`DialogType=${encodeURIComponent(String(dialogType))}`);
         }
         const requestPath = `/FileCabinets/${fileCabinet}/Dialogs` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<GetDialogsResponse>("GET", url, undefined, undefined, abortSignal);
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<GetDialogsResponse>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
             throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
@@ -439,8 +439,8 @@ export class DocuwareClient extends ConnectorClientBase {
      */
     public async getStampsAsync(fileCabinet: string, abortSignal?: AbortSignal): Promise<GetStampsResponse> {
         const requestPath = `/FileCabinets/${fileCabinet}/Stamps`;
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<GetStampsResponse>("GET", url, undefined, undefined, abortSignal);
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<GetStampsResponse>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
             throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
@@ -455,8 +455,8 @@ export class DocuwareClient extends ConnectorClientBase {
      */
     public async getStampFieldsAsync(fileCabinet: string, stamp: string, abortSignal?: AbortSignal): Promise<GetStampFieldsResponse> {
         const requestPath = `/FileCabinets/${fileCabinet}/Stamps/${stamp}/Fields`;
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<GetStampFieldsResponse>("GET", url, undefined, undefined, abortSignal);
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<GetStampFieldsResponse>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
             throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
@@ -475,8 +475,8 @@ export class DocuwareClient extends ConnectorClientBase {
             queryParams.push(`FieldType=${encodeURIComponent(String(fieldType))}`);
         }
         const requestPath = `/FileCabinets/${fileCabinet}/Fields` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<GetFileCabinetFieldsResponse>("GET", url, undefined, undefined, abortSignal);
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<GetFileCabinetFieldsResponse>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
             throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
@@ -491,8 +491,8 @@ export class DocuwareClient extends ConnectorClientBase {
      */
     public async getDialogFieldsAsync(fileCabinet: string, dialogId: string, abortSignal?: AbortSignal): Promise<GetDialogFieldsResponse> {
         const requestPath = `/FileCabinets/${fileCabinet}/Dialogs/${dialogId}/Fields`;
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<GetDialogFieldsResponse>("GET", url, undefined, undefined, abortSignal);
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<GetDialogFieldsResponse>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
             throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
@@ -507,8 +507,8 @@ export class DocuwareClient extends ConnectorClientBase {
      */
     public async listDocumentsInDocumentTrayAsync(documentTray: string, abortSignal?: AbortSignal): Promise<ListDocumentsInDocumentTrayResponse> {
         const requestPath = `/DocumentTrays/${documentTray}/Search`;
-        const url = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<ListDocumentsInDocumentTrayResponse>("GET", url, undefined, undefined, abortSignal);
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.httpClient.sendAsync<ListDocumentsInDocumentTrayResponse>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
             throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
