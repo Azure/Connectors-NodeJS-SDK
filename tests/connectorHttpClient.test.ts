@@ -1,12 +1,39 @@
 // Copyright (c) Microsoft Corporation.  All rights reserved.
 
-import { ConnectorHttpClient, ConnectorResponse } from "../src/azureConnectors/connectorHttpClient.ts";
 import { TokenProvider } from "../src/azureConnectors/authentication.ts";
+import { ConnectorHttpClient, ConnectorResponse } from "../src/azureConnectors/connectorHttpClient.ts";
+import type { AbortSignalLike } from "../src/azureConnectors/index.ts";
 
 class MockTokenProvider implements TokenProvider {
     public async getAccessTokenAsync(_scopes: string[]): Promise<string> {
         return "mock-bearer-token";
     }
+}
+
+function createPlainAbortSignal(): { signal: AbortSignalLike; abort: () => void } {
+    let aborted = false;
+    const listeners = new Set<(this: AbortSignalLike, event: unknown) => unknown>();
+    const signal: AbortSignalLike = {
+        get aborted(): boolean {
+            return aborted;
+        },
+        addEventListener(_type, listener): void {
+            listeners.add(listener);
+        },
+        removeEventListener(_type, listener): void {
+            listeners.delete(listener);
+        },
+    };
+
+    return {
+        signal,
+        abort: (): void => {
+            aborted = true;
+            for (const listener of listeners) {
+                listener.call(signal, { type: "abort" });
+            }
+        },
+    };
 }
 
 describe("ConnectorHttpClient", () => {
@@ -194,7 +221,7 @@ describe("ConnectorHttpClient", () => {
         ).rejects.toThrow();
     });
 
-    it("should propagate caller abort during in-flight request", async () => {
+    it("should propagate a plain-object AbortSignalLike during an in-flight request", async () => {
         global.fetch = jest.fn(async (_input: string | URL | Request, init?: RequestInit) => {
             return new Promise((_resolve, reject) => {
                 const signal = init?.signal;
@@ -207,7 +234,7 @@ describe("ConnectorHttpClient", () => {
             });
         }) as unknown as typeof fetch;
 
-        const controller = new AbortController();
+        const callerAbort = createPlainAbortSignal();
         const client = new ConnectorHttpClient(new MockTokenProvider(), {
             maxRetryAttempts: 1,
             initialRetryDelayMs: 1,
@@ -218,12 +245,13 @@ describe("ConnectorHttpClient", () => {
             "https://example.com/api/items",
             undefined,
             undefined,
-            controller.signal,
+            callerAbort.signal,
         );
 
-        controller.abort();
+        await Promise.resolve();
+        callerAbort.abort();
 
-        await expect(sendPromise).rejects.toThrow();
+        await expect(sendPromise).rejects.toThrow("AbortError");
     });
 
     it("should abort on request timeout", async () => {
