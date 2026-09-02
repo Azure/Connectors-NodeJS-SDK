@@ -80,8 +80,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
-- Changed generated `AbortSignalLike` imports to type-only imports so
-  `verbatimModuleSyntax` does not preserve a runtime import for the interface.
+- Changed `AbortSignalLike` imports in generated clients and
+  `ConnectorHttpClient` to type-only imports so `verbatimModuleSyntax` does not
+  preserve a runtime import for the interface.
 - Regenerated the 21 TypeScript connector clients under `src/generated/` against
   the AzureUX-BPM `CodefulSdkGenerator` fix for [issue #70](https://github.com/Azure/Connectors-NodeJS-SDK/issues/70)
   (`bpmCommit e5d44a0a0cd`, `assemblyVersion 1.186.0.10`). The previous

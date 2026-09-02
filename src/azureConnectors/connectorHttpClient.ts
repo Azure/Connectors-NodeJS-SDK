@@ -6,9 +6,10 @@
  * Mirrors the Python SDK's http_client.py. Uses the Node.js built-in fetch API (Node 18+).
  */
 
-import { AbortSignalLike } from "@azure/abort-controller";
-import { TokenProvider } from "./authentication.ts";
-import { ConnectorClientOptions, DefaultConnectorClientOptions } from "./options.ts";
+import type { AbortSignalLike } from "@azure/abort-controller";
+import type { TokenProvider } from "./authentication.ts";
+import { DefaultConnectorClientOptions } from "./options.ts";
+import type { ConnectorClientOptions } from "./options.ts";
 
 /**
  * Represents a response from a connector operation.
