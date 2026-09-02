@@ -6,8 +6,10 @@
  * Mirrors the Python SDK's http_client.py. Uses the Node.js built-in fetch API (Node 18+).
  */
 
-import { TokenProvider } from "./authentication.ts";
-import { ConnectorClientOptions, DefaultConnectorClientOptions } from "./options.ts";
+import type { AbortSignalLike } from "@azure/abort-controller";
+import type { TokenProvider } from "./authentication.ts";
+import { DefaultConnectorClientOptions } from "./options.ts";
+import type { ConnectorClientOptions } from "./options.ts";
 
 /**
  * Represents a response from a connector operation.
@@ -64,7 +66,7 @@ export class ConnectorHttpClient {
         url: string,
         scopes?: string[],
         body?: unknown,
-        abortSignal?: AbortSignal,
+        abortSignal?: AbortSignalLike,
     ): Promise<ConnectorResponse<TValue>> {
         const effectiveScopes = scopes ?? ConnectorHttpClient.ApiHubScopes;
         const token = await this.tokenProvider.getAccessTokenAsync(effectiveScopes);
@@ -90,7 +92,7 @@ export class ConnectorHttpClient {
         url: string,
         init: RequestInit,
         attempt: number,
-        callerSignal?: AbortSignal,
+        callerSignal?: AbortSignalLike,
     ): Promise<ConnectorResponse<TValue>> {
         const abortController = new AbortController();
         const timeoutId = setTimeout(() => abortController.abort(), this.options.timeoutMs);

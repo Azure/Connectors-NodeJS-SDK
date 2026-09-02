@@ -8,6 +8,7 @@
  * and strongly-typed generated connector clients.
  */
 
+export type { AbortSignalLike } from "@azure/abort-controller";
 export { ConnectorClientBase } from "./clientBase.ts";
 export { ConnectorClientOptions, DefaultConnectorClientOptions } from "./options.ts";
 export {

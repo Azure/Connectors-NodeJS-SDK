@@ -9,6 +9,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- Added `@azure/abort-controller` as a direct dependency and re-exported its
+  `AbortSignalLike` interface from the package root.
 - Generated 21 additional connector clients in `src/generated/` for the Phase 5,
   Phase 6, and Phase 7 rollout: Twitter, WordPress, Plivo, Rev.ai, Starmind,
   Tallyfy, Eventbrite, Formstack Forms, Typeform, Ticketmaster, Zoho Sign,
@@ -46,6 +48,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Widened cancellation parameters on `ConnectorHttpClient` and generated
+  connector methods from the DOM `AbortSignal` type to `AbortSignalLike`.
 - Updated generated registries and reproducibility metadata for all 73 connector
   clients. The Orderful input uses the checked-in AzureUX-BPM Swagger fixture
   because the retired connector is no longer returned by regional ARM catalogs.
@@ -76,6 +80,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+- Changed `AbortSignalLike` imports in generated clients and
+  `ConnectorHttpClient` to type-only imports so `verbatimModuleSyntax` does not
+  preserve a runtime import for the interface.
 - Regenerated the 21 TypeScript connector clients under `src/generated/` against
   the AzureUX-BPM `CodefulSdkGenerator` fix for [issue #70](https://github.com/Azure/Connectors-NodeJS-SDK/issues/70)
   (`bpmCommit e5d44a0a0cd`, `assemblyVersion 1.186.0.10`). The previous
