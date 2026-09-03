@@ -26,6 +26,7 @@ Azure provides a rich ecosystem of [managed connectors](https://learn.microsoft.
 - **ESM and CommonJS** — Dual-format package with separate entry points for both module systems
 - **Standard authentication** — Azure `TokenCredential` support via `@azure/core-auth` and `@azure/identity`
 - **Resilient HTTP** — Azure Core pipeline with configurable retries, timeouts, tracing, and request correlation
+- **Lazy pagination** — Paginated list operations follow validated `nextLink` URLs as you iterate
 - **1,000+ connectors** — Any Azure managed connector available via API Hub can be generated
 
 > **Note:** This is the Node.js SDK. A [Python SDK](https://github.com/Azure/Connectors-Python-SDK) and [.NET SDK](https://github.com/Azure/Connectors-NET-SDK) are also available.
@@ -171,6 +172,26 @@ async function listSharePointItems() {
 }
 
 listSharePointItems().catch(console.error);
+```
+
+### TypeScript — Iterate paginated results
+
+Paginated list operations return a lazy `PagedAsyncIterableIterator`. Requests are made only as items or pages are consumed, and continuation links are routed through the connector connection URL.
+
+```typescript
+import { ManagedIdentityCredential } from "@azure/identity";
+import { ArmClient } from "@azure/connectors/generated/ArmExtensions";
+
+const connectionUrl = "https://example.azure.com/connections/arm";
+const client = new ArmClient(connectionUrl, new ManagedIdentityCredential());
+
+for await (const subscription of client.subscriptionsListAsync()) {
+    console.log(subscription.displayName);
+}
+
+for await (const page of client.subscriptionsListAsync().byPage()) {
+    console.log(`Received ${page.length} subscriptions`);
+}
 ```
 
 ### TypeScript — Post a Teams message

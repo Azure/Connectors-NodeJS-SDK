@@ -243,9 +243,9 @@ describe("OnedriveforbusinessClient — listFolderAsync", () => {
         mockFetchResponse(mockPage);
 
         const client = new OnedriveforbusinessClient(TestConnectionUrl, createMockCredential());
-        const result = await client.listFolderAsync("folder-1");
+        const result = await client.listFolderAsync("folder-1").byPage().next();
 
-        expect(result).toEqual(mockPage);
+        expect(result.value).toEqual(mockPage.value);
         const [url] = (global.fetch as jest.Mock).mock.calls[0];
         expect(url).toContain("/datasets/default/foldersV2/folder-1");
     });

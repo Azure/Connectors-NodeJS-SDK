@@ -3,6 +3,7 @@
 
 import type { AbortSignalLike } from "@azure/abort-controller";
 import type { TokenCredential } from "@azure/core-auth";
+import type { PagedAsyncIterableIterator } from "@azure/core-paging";
 import { ConnectorClientBase } from "../azureConnectors/clientBase.ts";
 import { ConnectorException } from "../azureConnectors/connectorException.ts";
 import { ConnectorClientOptions } from "../azureConnectors/options.ts";
@@ -610,7 +611,7 @@ export class AzureblobClient extends ConnectorClientBase {
      * Lists blobs in the root folder
      * @remarks This operation lists blobs in the Azure Blob Storage root folder.
      */
-    public async listRootFolderAsync(dataset: string, nextPageMarker?: string, useFlatListing?: string, abortSignal?: AbortSignalLike): Promise<BlobMetadataPage> {
+    public listRootFolderAsync(dataset: string, nextPageMarker?: string, useFlatListing?: string, abortSignal?: AbortSignalLike): PagedAsyncIterableIterator<BlobMetadata> {
         const queryParams: string[] = [];
         if (nextPageMarker !== undefined) {
             queryParams.push(`nextPageMarker=${encodeURIComponent(String(nextPageMarker))}`);
@@ -619,14 +620,18 @@ export class AzureblobClient extends ConnectorClientBase {
             queryParams.push(`useFlatListing=${encodeURIComponent(String(useFlatListing))}`);
         }
         const requestPath = `/v2/datasets/${encodeURIComponent(String(dataset))}/foldersV2` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
-        const requestUrl = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<BlobMetadataPage>("GET", requestUrl, undefined, undefined, abortSignal);
+        return this.createPageable<BlobMetadataPage, BlobMetadata>(
+            requestPath,
+            async (requestUrl) => {
+                const httpResponse = await this.httpClient.sendAsync<BlobMetadataPage>("GET", requestUrl, undefined, undefined, abortSignal);
 
-        if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
-        }
+                if (!httpResponse.isSuccessStatusCode) {
+                    throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+                }
 
-        return httpResponse.value as BlobMetadataPage;
+                return httpResponse.value as BlobMetadataPage;
+            },
+        );
     }
 
     /**

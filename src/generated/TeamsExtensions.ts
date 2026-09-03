@@ -3,6 +3,7 @@
 
 import type { AbortSignalLike } from "@azure/abort-controller";
 import type { TokenCredential } from "@azure/core-auth";
+import type { PagedAsyncIterableIterator } from "@azure/core-paging";
 import { ConnectorClientBase } from "../azureConnectors/clientBase.ts";
 import { ConnectorException } from "../azureConnectors/connectorException.ts";
 import { ConnectorClientOptions } from "../azureConnectors/options.ts";
@@ -2123,16 +2124,20 @@ export class TeamsClient extends ConnectorClientBase {
      * Get messages in a channel
      * @remarks Gets messages from a channel in a specific team. For shared channels, the team ID must refer to the host team, which is the team that owns the shared channel.
      */
-    public async getMessagesFromChannelAsync(groupId: string, channelId: string, abortSignal?: AbortSignalLike): Promise<GetMessagesFromConversationResponse> {
+    public getMessagesFromChannelAsync(groupId: string, channelId: string, abortSignal?: AbortSignalLike): PagedAsyncIterableIterator<ChatMessage> {
         const requestPath = `/beta/teams/${groupId}/channels/${channelId}/messages`;
-        const requestUrl = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<GetMessagesFromConversationResponse>("GET", requestUrl, undefined, undefined, abortSignal);
+        return this.createPageable<GetMessagesFromConversationResponse, ChatMessage>(
+            requestPath,
+            async (requestUrl) => {
+                const httpResponse = await this.httpClient.sendAsync<GetMessagesFromConversationResponse>("GET", requestUrl, undefined, undefined, abortSignal);
 
-        if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
-        }
+                if (!httpResponse.isSuccessStatusCode) {
+                    throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+                }
 
-        return httpResponse.value as GetMessagesFromConversationResponse;
+                return httpResponse.value as GetMessagesFromConversationResponse;
+            },
+        );
     }
 
     /**
@@ -2257,7 +2262,7 @@ export class TeamsClient extends ConnectorClientBase {
      * Get messages in a chat
      * @remarks Retrieves messages from a one on one or group chat
      */
-    public async getMessagesFromChatAsync(chatId: string, filter?: string, orderby?: string, top?: string, abortSignal?: AbortSignalLike): Promise<GetMessagesFromConversationResponse> {
+    public getMessagesFromChatAsync(chatId: string, filter?: string, orderby?: string, top?: string, abortSignal?: AbortSignalLike): PagedAsyncIterableIterator<ChatMessage> {
         const queryParams: string[] = [];
         if (filter !== undefined) {
             queryParams.push(`$filter=${encodeURIComponent(String(filter))}`);
@@ -2269,14 +2274,18 @@ export class TeamsClient extends ConnectorClientBase {
             queryParams.push(`$top=${encodeURIComponent(String(top))}`);
         }
         const requestPath = `/beta/chats/${chatId}/messages` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
-        const requestUrl = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<GetMessagesFromConversationResponse>("GET", requestUrl, undefined, undefined, abortSignal);
+        return this.createPageable<GetMessagesFromConversationResponse, ChatMessage>(
+            requestPath,
+            async (requestUrl) => {
+                const httpResponse = await this.httpClient.sendAsync<GetMessagesFromConversationResponse>("GET", requestUrl, undefined, undefined, abortSignal);
 
-        if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
-        }
+                if (!httpResponse.isSuccessStatusCode) {
+                    throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+                }
 
-        return httpResponse.value as GetMessagesFromConversationResponse;
+                return httpResponse.value as GetMessagesFromConversationResponse;
+            },
+        );
     }
 
     /**

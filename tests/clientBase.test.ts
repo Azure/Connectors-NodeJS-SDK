@@ -1,8 +1,19 @@
 // Copyright (c) Microsoft Corporation.  All rights reserved.
 
 import type { TokenCredential } from "@azure/core-auth";
+import type { PagedAsyncIterableIterator } from "@azure/core-paging";
 import { ConnectorClientBase } from "../src/azureConnectors/clientBase.ts";
 import type { ConnectorClientOptions } from "../src/azureConnectors/options.ts";
+
+interface TestItem {
+    id: string;
+}
+
+interface TestPage {
+    value?: TestItem[];
+    nextLink?: string;
+    "@odata.nextLink"?: string;
+}
 
 // ──────────────────────────────────────────────
 // Test helpers
@@ -28,6 +39,13 @@ class TestConnectorClient extends ConnectorClientBase {
 
     public testGetOperationPath(url: string): string {
         return this.getOperationPath(url);
+    }
+
+    public testCreatePageable(
+        firstPageLink: string,
+        fetchPage: (url: string) => Promise<TestPage>,
+    ): PagedAsyncIterableIterator<TestItem> {
+        return this.createPageable<TestPage, TestItem>(firstPageLink, fetchPage);
     }
 }
 
@@ -87,7 +105,7 @@ describe("ConnectorClientBase", () => {
         });
 
         it("should resolve query-only continuation against the current page URL", () => {
-            const client = new TestConnectorClient(baseUrl, createMockTokenProvider());
+            const client = new TestConnectorClient(baseUrl, createMockCredential());
             const currentRequestUrl = `${baseUrl}/subscriptions?page=1`;
 
             const result = client.testResolveUrl("?page=2", currentRequestUrl);
@@ -96,7 +114,7 @@ describe("ConnectorClientBase", () => {
         });
 
         it("should resolve path-relative continuation against the current page URL", () => {
-            const client = new TestConnectorClient(baseUrl, createMockTokenProvider());
+            const client = new TestConnectorClient(baseUrl, createMockCredential());
             const currentRequestUrl = `${baseUrl}/subscriptions?page=1`;
 
             const result = client.testResolveUrl("subscriptions?page=2", currentRequestUrl);
@@ -180,7 +198,7 @@ describe("ConnectorClientBase", () => {
         const baseUrl = "https://proxy.azure-apihub.net/apim/arm/conn123";
 
         it("should remove the connection runtime URL from an operation", () => {
-            const client = new TestConnectorClient(baseUrl, createMockTokenProvider());
+            const client = new TestConnectorClient(baseUrl, createMockCredential());
 
             const result = client.testGetOperationPath(
                 `${baseUrl}/subscriptions?$skiptoken=page-2`,
@@ -190,13 +208,89 @@ describe("ConnectorClientBase", () => {
         });
 
         it("should remove a foreign origin without changing the path and query", () => {
-            const client = new TestConnectorClient(baseUrl, createMockTokenProvider());
+            const client = new TestConnectorClient(baseUrl, createMockCredential());
 
             const result = client.testGetOperationPath(
                 "https://management.azure.com/subscriptions?$skiptoken=page-2",
             );
 
             expect(result).toBe("/subscriptions?$skiptoken=page-2");
+        });
+    });
+
+    describe("createPageable", () => {
+        const baseUrl = "https://proxy.azure-apihub.net/apim/arm/conn123";
+
+        it("should lazily yield items and route a foreign nextLink through the connection URL", async () => {
+            const client = new TestConnectorClient(baseUrl, createMockCredential());
+            const requestedUrls: string[] = [];
+            const pageable = client.testCreatePageable("/items", async (url) => {
+                requestedUrls.push(url);
+                return requestedUrls.length === 1
+                    ? {
+                        value: [{ id: "first" }],
+                        nextLink: "https://management.azure.com/items?$skiptoken=second",
+                    }
+                    : { value: [{ id: "second" }] };
+            });
+
+            expect(requestedUrls).toEqual([]);
+
+            const items: TestItem[] = [];
+            for await (const item of pageable) {
+                items.push(item);
+            }
+
+            expect(items).toEqual([{ id: "first" }, { id: "second" }]);
+            expect(requestedUrls).toEqual([
+                `${baseUrl}/items`,
+                `${baseUrl}/items?$skiptoken=second`,
+            ]);
+        });
+
+        it("should start byPage from a query-only continuation token and follow an OData next link", async () => {
+            const client = new TestConnectorClient(baseUrl, createMockCredential());
+            const requestedUrls: string[] = [];
+            const pageable = client.testCreatePageable("/items?page=1", async (url) => {
+                requestedUrls.push(url);
+                return requestedUrls.length === 1
+                    ? { value: [{ id: "second" }], "@odata.nextLink": "?page=3" }
+                    : { value: [{ id: "third" }] };
+            });
+
+            const pages: TestItem[][] = [];
+            for await (const page of pageable.byPage({ continuationToken: "?page=2" })) {
+                pages.push(page);
+            }
+
+            expect(pages).toEqual([
+                [{ id: "second" }],
+                [{ id: "third" }],
+            ]);
+            expect(requestedUrls).toEqual([
+                `${baseUrl}/items?page=2`,
+                `${baseUrl}/items?page=3`,
+            ]);
+        });
+
+        it("should resolve a path-relative next link against the current page", async () => {
+            const client = new TestConnectorClient(baseUrl, createMockCredential());
+            const requestedUrls: string[] = [];
+            const pageable = client.testCreatePageable("/collections/items?page=1", async (url) => {
+                requestedUrls.push(url);
+                return requestedUrls.length === 1
+                    ? { value: [{ id: "first" }], nextLink: "next?page=2" }
+                    : { value: [{ id: "second" }] };
+            });
+
+            for await (const page of pageable.byPage()) {
+                expect(page).toHaveLength(1);
+            }
+
+            expect(requestedUrls).toEqual([
+                `${baseUrl}/collections/items?page=1`,
+                `${baseUrl}/collections/next?page=2`,
+            ]);
         });
     });
 });

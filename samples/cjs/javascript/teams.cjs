@@ -118,10 +118,10 @@ async function main() {
     if (firstTeamId && firstChannelId) {
         console.log("\n--- Get Channel Messages ---");
         try {
-            const messagesResponse = await client.getMessagesFromChannelAsync(firstTeamId, firstChannelId);
-            // NOTE: ChatMessageList is typed as [key: string]: unknown; at runtime value is an array
-            const rawValue = messagesResponse.value;
-            const messages = (Array.isArray(rawValue) ? rawValue : []);
+            const messages = [];
+            for await (const message of client.getMessagesFromChannelAsync(firstTeamId, firstChannelId)) {
+                messages.push(message);
+            }
 
             if (messages.length > 0) {
                 console.log(`Found ${messages.length} messages:`);
@@ -149,9 +149,10 @@ async function main() {
     if (firstTeamId && firstChannelId) {
         console.log("\n--- Poll Channel Messages ---");
         try {
-            const messagesResponse = await client.getMessagesFromChannelAsync(firstTeamId, firstChannelId);
-            const rawValue = messagesResponse.value;
-            const polledMessages = (Array.isArray(rawValue) ? rawValue : []);
+            const polledMessages = [];
+            for await (const message of client.getMessagesFromChannelAsync(firstTeamId, firstChannelId)) {
+                polledMessages.push(message);
+            }
 
             if (polledMessages.length > 0) {
                 console.log(`Poll returned ${polledMessages.length} messages:`);

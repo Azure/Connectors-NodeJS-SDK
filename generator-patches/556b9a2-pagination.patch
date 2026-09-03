@@ -1,0 +1,395 @@
+diff --git a/src/tools/CodefulSdkGenerator/DirectClient/DirectClientGenerator.cs b/src/tools/CodefulSdkGenerator/DirectClient/DirectClientGenerator.cs
+index ac99fe41893..228680edb7f 100644
+--- a/src/tools/CodefulSdkGenerator/DirectClient/DirectClientGenerator.cs
++++ b/src/tools/CodefulSdkGenerator/DirectClient/DirectClientGenerator.cs
+@@ -78,19 +78,6 @@ namespace Microsoft.Azure.Workflows.CodefulSdkGenerator.DirectClient
+ 
+             // NOTE(daviburg): C# uses empty string rather than null for missing descriptions.
+             result.Description ??= "";
+-
+-            // NOTE(daviburg): Detect paginated responses. A paginated response is an object type
+-            // whose properties include a 'value' array and a nextLink string ('nextLink' or '@odata.nextLink').
+-            // When detected, the generated method will return ConnectorPageable<TPage, TItem> instead of Task<TPage>.
+-            if (result.ResponseTypeName != null && result.ResponseSchema != null)
+-            {
+-                var resolvedSchema = DirectClientGenerator.ResolveSchema(result.ResponseSchema, context);
+-                if (DirectClientGenerator.DetectPagination(resolvedSchema, context, out var pageItemTypeName))
+-                {
+-                    result.IsPaginated = true;
+-                    result.PageItemTypeName = pageItemTypeName;
+-                }
+-            }
+         }
+ 
+         /// <summary>
+@@ -406,141 +393,6 @@ namespace Microsoft.Azure.Workflows.CodefulSdkGenerator.DirectClient
+             stringBuilder.AppendLine();
+         }
+ 
+-        /// <summary>
+-        /// Resolves a schema through $ref if needed, returning the concrete schema object.
+-        /// </summary>
+-        /// <param name="schema">The schema which may contain a $ref.</param>
+-        /// <param name="context">The swagger context.</param>
+-        private static JsonObject ResolveSchema(JsonObject schema, SwaggerContext context)
+-        {
+-            if (schema.TryGetPropertyValue(SchemaPropertyNames.Ref, out var refNode))
+-            {
+-                var refStr = (string)refNode;
+-                if (refStr.StartsWith(SchemaPropertyNames.DefinitionsRefPrefix, StringComparison.Ordinal) &&
+-                    context.Document.TryGetPropertyValue(SchemaPropertyNames.Definitions, out var definitionsNode))
+-                {
+-                    var definitionName = refStr.Substring(SchemaPropertyNames.DefinitionsRefPrefix.Length);
+-                    var definitions = definitionsNode.AsObject();
+-                    if (definitions.TryGetPropertyValue(definitionName, out var definitionNode))
+-                    {
+-                        return definitionNode.AsObject();
+-                    }
+-                }
+-            }
+-
+-            return schema;
+-        }
+-
+-        /// <summary>
+-        /// Detects whether a response schema represents a paginated response by checking
+-        /// for a <c>value</c> array property and a <c>nextLink</c> or <c>@odata.nextLink</c> string property.
+-        /// </summary>
+-        /// <param name="schema">The resolved response schema.</param>
+-        /// <param name="context">The swagger context.</param>
+-        /// <param name="itemTypeName">Output: the C# type name of items in the value array.</param>
+-        /// <returns>True if the schema represents a paginated response.</returns>
+-        private static bool DetectPagination(JsonObject schema, SwaggerContext context, out string itemTypeName)
+-        {
+-            itemTypeName = null;
+-
+-            // Collect all properties, merging from allOf if needed (same as GenerateTypeFromSchema)
+-            JsonObject properties = null;
+-            if (schema.TryGetPropertyValue(SchemaPropertyNames.Properties, out var propertiesNode) &&
+-                propertiesNode is JsonObject directProperties)
+-            {
+-                properties = directProperties;
+-            }
+-            else if (schema.TryGetPropertyValue(SchemaPropertyNames.AllOf, out var allOfNode) &&
+-                     allOfNode is JsonArray allOfArray)
+-            {
+-                // NOTE(daviburg): Merge properties from all allOf schemas.
+-                properties = new JsonObject();
+-                foreach (var allOfItem in allOfArray)
+-                {
+-                    var resolved = allOfItem is JsonObject itemObj && itemObj.ContainsKey(SchemaPropertyNames.Ref)
+-                        ? DirectClientGenerator.ResolveSchema(itemObj, context)
+-                        : allOfItem?.AsObject();
+-                    if (resolved?.TryGetPropertyValue(SchemaPropertyNames.Properties, out var subProps) == true &&
+-                        subProps is JsonObject subPropsObj)
+-                    {
+-                        foreach (var (propertyKey, propertyValue) in subPropsObj)
+-                        {
+-                            properties[propertyKey] = propertyValue?.DeepClone();
+-                        }
+-                    }
+-                }
+-
+-                if (properties.Count == 0)
+-                {
+-                    return false;
+-                }
+-            }
+-
+-            if (properties == null)
+-            {
+-                return false;
+-            }
+-
+-            // NOTE(daviburg): Check for nextLink property (camelCase or OData convention).
+-            var hasNextLink =
+-                properties.ContainsKey(SchemaPropertyNames.PaginationNextLink) ||
+-                properties.ContainsKey(SchemaPropertyNames.ODataNextLink);
+-
+-            if (!hasNextLink)
+-            {
+-                return false;
+-            }
+-
+-            // NOTE(daviburg): Check for value array property.
+-            if (!properties.TryGetPropertyValue(SchemaPropertyNames.PaginationValue, out var valueNode) ||
+-                valueNode is not JsonObject valueSchemaRaw)
+-            {
+-                return false;
+-            }
+-
+-            // NOTE(daviburg): Resolve $ref if the value property itself is a reference.
+-            var valueSchema = valueSchemaRaw.ContainsKey(SchemaPropertyNames.Ref)
+-                ? DirectClientGenerator.ResolveSchema(valueSchemaRaw, context)
+-                : valueSchemaRaw;
+-
+-            if (!string.Equals((string)valueSchema[SchemaPropertyNames.Type], "array", StringComparison.Ordinal))
+-            {
+-                return false;
+-            }
+-
+-            // NOTE(daviburg): Extract item type from the value array.
+-            if (valueSchema.TryGetPropertyValue(SchemaPropertyNames.Items, out var itemsNode) &&
+-                itemsNode is JsonObject items)
+-            {
+-                if (items.TryGetPropertyValue(SchemaPropertyNames.Ref, out var itemRef))
+-                {
+-                    var itemRefStr = (string)itemRef;
+-                    if (itemRefStr.StartsWith(SchemaPropertyNames.DefinitionsRefPrefix, StringComparison.Ordinal))
+-                    {
+-                        // NOTE(daviburg): The raw definition name is kept so the emitter can resolve it
+-                        // against the retained-set decision. Normalizing here produced a name the resolver
+-                        // could not look up, so the page item type fell back to plain simplification and the
+-                        // emitted IPageable<T> referenced a type that no longer existed under that name.
+-                        itemTypeName = itemRefStr.Substring(SchemaPropertyNames.DefinitionsRefPrefix.Length);
+-                        return true;
+-                    }
+-                }
+-
+-                // NOTE(daviburg): Inline item type — use the schema type directly.
+-                var schemaType = (string)items[SchemaPropertyNames.Type];
+-                itemTypeName = schemaType switch
+-                {
+-                    "string" => "string",
+-                    "integer" => "int",
+-                    "number" => "double",
+-                    "boolean" => "bool",
+-                    _ => "JsonElement?"
+-                };
+-                return true;
+-            }
+-
+-            return false;
+-        }
+     }
+ }
+ 
+diff --git a/src/tools/CodefulSdkGenerator/DirectClient/DirectClientGeneratorBase.cs b/src/tools/CodefulSdkGenerator/DirectClient/DirectClientGeneratorBase.cs
+index 538ebabcedd..f66f8b45ce7 100644
+--- a/src/tools/CodefulSdkGenerator/DirectClient/DirectClientGeneratorBase.cs
++++ b/src/tools/CodefulSdkGenerator/DirectClient/DirectClientGeneratorBase.cs
+@@ -309,6 +309,85 @@ namespace Microsoft.Azure.Workflows.CodefulSdkGenerator.DirectClient
+             {
+                 result.TriggerParameters = DirectClientGeneratorBase.ExtractTriggerParameters(methodInfo, context);
+             }
++
++            if (result.ResponseTypeName != null && result.ResponseSchema != null)
++            {
++                var resolvedSchema = SwaggerRefResolver.ResolveSchema(result.ResponseSchema, context.Document);
++                if (this.DetectPagination(resolvedSchema, context, out var pageItemTypeName))
++                {
++                    result.IsPaginated = true;
++                    result.PageItemTypeName = pageItemTypeName;
++                }
++            }
++        }
++
++        /// <summary>
++        /// Detects a response with a <c>value</c> array and a <c>nextLink</c> or <c>@odata.nextLink</c> property.
++        /// </summary>
++        /// <param name="schema">The resolved response schema.</param>
++        /// <param name="context">The swagger context.</param>
++        /// <param name="itemTypeName">The target-language item type name when pagination is detected.</param>
++        private bool DetectPagination(JsonObject schema, SwaggerContext context, out string itemTypeName)
++        {
++            itemTypeName = null;
++
++            var properties = new JsonObject();
++            SwaggerRefResolver.CollectProperties(schema, context.Document, properties);
++
++            var nextLinkPropertyNames = new[]
++            {
++                SchemaPropertyNames.PaginationNextLink,
++                SchemaPropertyNames.ODataNextLink,
++            };
++            var hasStringNextLink = nextLinkPropertyNames.Any(propertyName =>
++            {
++                if (!properties.TryGetPropertyValue(propertyName, out var nextLinkNode) ||
++                    nextLinkNode is not JsonObject nextLinkSchema)
++                {
++                    return false;
++                }
++
++                var resolvedNextLinkSchema = SwaggerRefResolver.ResolveSchema(nextLinkSchema, context.Document);
++                return resolvedNextLinkSchema.TryGetPropertyValue(SchemaPropertyNames.Type, out var nextLinkTypeNode) &&
++                    nextLinkTypeNode is JsonValue nextLinkType &&
++                    nextLinkType.TryGetValue<string>(out var nextLinkTypeName) &&
++                    string.Equals(nextLinkTypeName, "string", StringComparison.Ordinal);
++            });
++
++            if (!hasStringNextLink ||
++                !properties.TryGetPropertyValue(SchemaPropertyNames.PaginationValue, out var valueNode) ||
++                valueNode is not JsonObject rawValueSchema)
++            {
++                return false;
++            }
++
++            var valueSchema = SwaggerRefResolver.ResolveSchema(rawValueSchema, context.Document);
++            if (!string.Equals((string)valueSchema[SchemaPropertyNames.Type], "array", StringComparison.Ordinal) ||
++                !valueSchema.TryGetPropertyValue(SchemaPropertyNames.Items, out var itemsNode) ||
++                itemsNode is not JsonObject items)
++            {
++                return false;
++            }
++
++            if (items.TryGetPropertyValue(SchemaPropertyNames.Ref, out var itemReferenceNode))
++            {
++                var itemReference = (string)itemReferenceNode;
++                if (itemReference.StartsWith(SchemaPropertyNames.DefinitionsRefPrefix, StringComparison.Ordinal))
++                {
++                    itemTypeName = itemReference.Substring(SchemaPropertyNames.DefinitionsRefPrefix.Length);
++                    return true;
++                }
++            }
++
++            itemTypeName = (string)items[SchemaPropertyNames.Type] switch
++            {
++                "string" => this.TypeMap.StringType,
++                "integer" => this.TypeMap.IntegerType,
++                "number" => this.TypeMap.NumberType,
++                "boolean" => this.TypeMap.BooleanType,
++                _ => this.TypeMap.UnknownType,
++            };
++            return true;
+         }
+ 
+         /// <inheritdoc />
+diff --git a/src/tools/CodefulSdkGenerator/DirectClient/DirectClientMethodInfo.cs b/src/tools/CodefulSdkGenerator/DirectClient/DirectClientMethodInfo.cs
+index b73bafc4a28..b3c14ed22de 100644
+--- a/src/tools/CodefulSdkGenerator/DirectClient/DirectClientMethodInfo.cs
++++ b/src/tools/CodefulSdkGenerator/DirectClient/DirectClientMethodInfo.cs
+@@ -104,7 +104,7 @@ namespace Microsoft.Azure.Workflows.CodefulSdkGenerator.DirectClient
+         public bool IsPaginated { get; set; }
+ 
+         /// <summary>
+-        /// Gets or sets the C# type name of the items in a paginated response's <c>value</c> array.
++        /// Gets or sets the target-language type name of the items in a paginated response's <c>value</c> array.
+         /// Only populated when <see cref="IsPaginated"/> is true.
+         /// </summary>
+         public string PageItemTypeName { get; set; }
+diff --git a/src/tools/CodefulSdkGenerator/DirectClient/DirectClientTypeScriptCodeGenerator.cs b/src/tools/CodefulSdkGenerator/DirectClient/DirectClientTypeScriptCodeGenerator.cs
+index cf41a99379e..c3efeae85e6 100644
+--- a/src/tools/CodefulSdkGenerator/DirectClient/DirectClientTypeScriptCodeGenerator.cs
++++ b/src/tools/CodefulSdkGenerator/DirectClient/DirectClientTypeScriptCodeGenerator.cs
+@@ -48,6 +48,7 @@ namespace Microsoft.Azure.Workflows.CodefulSdkGenerator.DirectClient
+             var filteredMethods = methods.Where(method => !method.IsInternal).ToList();
+             var actionMethods = filteredMethods.Where(method => !method.IsTrigger).ToList();
+             var triggerMethods = DirectClientGeneratorBase.SelectCanonicalTriggerMethods(filteredMethods);
++            var hasPaginatedActions = actionMethods.Any(method => method.IsPaginated && method.PageItemTypeName != null);
+ 
+             // NOTE(swapnilnagar): Resolve each canonical trigger's item type once and reuse it for both the
+             // import decision and payload emission. Canonical selection keeps all trigger surfaces aligned.
+@@ -74,6 +75,11 @@ namespace Microsoft.Azure.Workflows.CodefulSdkGenerator.DirectClient
+             }
+ 
+             stringBuilder.AppendLine("import type { TokenCredential } from \"@azure/core-auth\";");
++            if (hasPaginatedActions)
++            {
++                stringBuilder.AppendLine("import type { PagedAsyncIterableIterator } from \"@azure/core-paging\";");
++            }
++
+             stringBuilder.AppendLine("import { ConnectorClientBase } from \"../azureConnectors/clientBase.ts\";");
+             stringBuilder.AppendLine("import { ConnectorException } from \"../azureConnectors/connectorException.ts\";");
+             stringBuilder.AppendLine("import { ConnectorClientOptions } from \"../azureConnectors/options.ts\";");
+@@ -314,6 +320,25 @@ namespace Microsoft.Azure.Workflows.CodefulSdkGenerator.DirectClient
+                         IdentifierNormalizer.Normalize(definitionName, isVariableName: false)));
+         }
+ 
++        /// <summary>
++        /// Resolves a paginated response's element type without normalizing TypeScript primitive names.
++        /// </summary>
++        /// <param name="pageItemTypeName">The detected page element type name.</param>
++        private string ResolvePageItemTypeName(string pageItemTypeName)
++        {
++            var retainedTypeName = this._retainedTypeNames?.ResolveTypeName(pageItemTypeName);
++            if (retainedTypeName != null)
++            {
++                return retainedTypeName;
++            }
++
++            return pageItemTypeName switch
++            {
++                "string" or "number" or "boolean" or "unknown" => pageItemTypeName,
++                _ => this.ResolveDefinitionTypeName(pageItemTypeName),
++            };
++        }
++
+         private void GenerateClient(StringBuilder stringBuilder, string className, string connectorName, IReadOnlyList<DirectClientMethodInfo> methods)
+         {
+             stringBuilder.AppendLine("/**");
+@@ -447,9 +472,14 @@ namespace Microsoft.Azure.Workflows.CodefulSdkGenerator.DirectClient
+                 signatureParams.Add($"{param.NormalizedName}?: {paramType}");
+             }
+ 
+-            var returnType = method.HasResponse
+-                ? $"Promise<{method.ResponseTypeName}>"
+-                : "Promise<void>";
++            var pageItemTypeName = method.IsPaginated && method.PageItemTypeName != null
++                ? this.ResolvePageItemTypeName(method.PageItemTypeName)
++                : null;
++            var returnType = pageItemTypeName != null
++                ? $"PagedAsyncIterableIterator<{pageItemTypeName}>"
++                : method.HasResponse
++                    ? $"Promise<{method.ResponseTypeName}>"
++                    : "Promise<void>";
+ 
+             stringBuilder.AppendLine("    /**");
+             if (!string.IsNullOrEmpty(method.Summary))
+@@ -475,7 +505,8 @@ namespace Microsoft.Azure.Workflows.CodefulSdkGenerator.DirectClient
+             signatureParams.Add("abortSignal?: AbortSignalLike");
+ 
+             var parametersString = string.Join(", ", signatureParams);
+-            stringBuilder.AppendLine($"    public async {methodName}({parametersString}): {returnType} {{");
++            var asyncModifier = pageItemTypeName == null ? "async " : string.Empty;
++            stringBuilder.AppendLine($"    public {asyncModifier}{methodName}({parametersString}): {returnType} {{");
+ 
+             // NOTE(swapnilnagar): Build path with parameter substitution.
+             var path = method.Path;
+@@ -521,19 +552,37 @@ namespace Microsoft.Azure.Workflows.CodefulSdkGenerator.DirectClient
+ 
+             if (method.HasResponse)
+             {
+-                stringBuilder.AppendLine($"        const url = this.resolveUrl(requestPath);");
+-                stringBuilder.AppendLine($"        const httpResponse = await this.httpClient.sendAsync<{method.ResponseTypeName}>(\"{httpMethod}\", url{bodyArg});");
+-                stringBuilder.AppendLine();
+-                stringBuilder.AppendLine("        if (!httpResponse.isSuccessStatusCode) {");
+-                stringBuilder.AppendLine($"            throw new ConnectorException(this.connectorName, `{httpMethod} ${{requestPath}}`, httpResponse.statusCode, httpResponse.text);");
+-                stringBuilder.AppendLine("        }");
+-                stringBuilder.AppendLine();
+-                stringBuilder.AppendLine($"        return httpResponse.value as {method.ResponseTypeName};");
++                if (pageItemTypeName != null)
++                {
++                    stringBuilder.AppendLine($"        return this.createPageable<{method.ResponseTypeName}, {pageItemTypeName}>(");
++                    stringBuilder.AppendLine("            requestPath,");
++                    stringBuilder.AppendLine("            async (requestUrl) => {");
++                    stringBuilder.AppendLine($"                const httpResponse = await this.httpClient.sendAsync<{method.ResponseTypeName}>(\"{httpMethod}\", requestUrl{bodyArg});");
++                    stringBuilder.AppendLine();
++                    stringBuilder.AppendLine("                if (!httpResponse.isSuccessStatusCode) {");
++                    stringBuilder.AppendLine($"                    throw new ConnectorException(this.connectorName, `{httpMethod} ${{requestPath}}`, httpResponse.statusCode, httpResponse.text);");
++                    stringBuilder.AppendLine("                }");
++                    stringBuilder.AppendLine();
++                    stringBuilder.AppendLine($"                return httpResponse.value as {method.ResponseTypeName};");
++                    stringBuilder.AppendLine("            },");
++                    stringBuilder.AppendLine("        );");
++                }
++                else
++                {
++                    stringBuilder.AppendLine($"        const requestUrl = this.resolveUrl(requestPath);");
++                    stringBuilder.AppendLine($"        const httpResponse = await this.httpClient.sendAsync<{method.ResponseTypeName}>(\"{httpMethod}\", requestUrl{bodyArg});");
++                    stringBuilder.AppendLine();
++                    stringBuilder.AppendLine("        if (!httpResponse.isSuccessStatusCode) {");
++                    stringBuilder.AppendLine($"            throw new ConnectorException(this.connectorName, `{httpMethod} ${{requestPath}}`, httpResponse.statusCode, httpResponse.text);");
++                    stringBuilder.AppendLine("        }");
++                    stringBuilder.AppendLine();
++                    stringBuilder.AppendLine($"        return httpResponse.value as {method.ResponseTypeName};");
++                }
+             }
+             else
+             {
+-                stringBuilder.AppendLine($"        const url = this.resolveUrl(requestPath);");
+-                stringBuilder.AppendLine($"        const httpResponse = await this.httpClient.sendAsync<void>(\"{httpMethod}\", url{bodyArg});");
++                stringBuilder.AppendLine($"        const requestUrl = this.resolveUrl(requestPath);");
++                stringBuilder.AppendLine($"        const httpResponse = await this.httpClient.sendAsync<void>(\"{httpMethod}\", requestUrl{bodyArg});");
+                 stringBuilder.AppendLine();
+                 stringBuilder.AppendLine("        if (!httpResponse.isSuccessStatusCode) {");
+                 stringBuilder.AppendLine($"            throw new ConnectorException(this.connectorName, `{httpMethod} ${{requestPath}}`, httpResponse.statusCode, httpResponse.text);");

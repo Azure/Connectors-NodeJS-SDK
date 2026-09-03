@@ -68,9 +68,9 @@ describe("AzureiotcentralClient — deviceGroupsListAsync", () => {
         mockFetchResponse(deviceGroups);
 
         const client = new AzureiotcentralClient(TestConnectionUrl, createMockCredential());
-        const result = await client.deviceGroupsListAsync();
+        const result = await client.deviceGroupsListAsync().byPage().next();
 
-        expect(result).toEqual(deviceGroups);
+        expect(result.value).toEqual(deviceGroups.value);
         expect(global.fetch).toHaveBeenCalledTimes(1);
         const [, init] = (global.fetch as jest.Mock).mock.calls[0];
         expect(init.method).toBe("GET");
@@ -82,7 +82,7 @@ describe("AzureiotcentralClient — deviceGroupsListAsync", () => {
 
         const client = new AzureiotcentralClient(TestConnectionUrl, createMockCredential());
         try {
-            await client.deviceGroupsListAsync();
+            await client.deviceGroupsListAsync().byPage().next();
             throw new Error("Expected ConnectorException to be thrown.");
         } catch (error) {
             expect(error).toBeInstanceOf(ConnectorException);

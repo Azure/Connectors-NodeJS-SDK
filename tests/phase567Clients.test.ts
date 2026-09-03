@@ -32,6 +32,10 @@ interface GeneratedConnectorClient {
     readonly connectorName: string;
 }
 
+interface PagedActionResult {
+    byPage(): AsyncIterableIterator<unknown>;
+}
+
 type GeneratedConnectorClientConstructor = new (
     connectionRuntimeUrl: string,
     credential: TokenCredential,
@@ -93,8 +97,19 @@ async function invokeRepresentativeAction(
     connector: ConnectorCase & { methodName: string },
     client: GeneratedConnectorClient,
 ): Promise<unknown> {
-    const method = Reflect.get(client, connector.methodName) as (...methodArguments: unknown[]) => Promise<unknown>;
-    return method.apply(client, connector.methodArguments ?? []);
+    const method = Reflect.get(client, connector.methodName) as (...methodArguments: unknown[]) => unknown;
+    const result = method.apply(client, connector.methodArguments ?? []);
+    if (isPagedActionResult(result)) {
+        return (await result.byPage().next()).value;
+    }
+
+    return await result;
+}
+
+function isPagedActionResult(result: unknown): result is PagedActionResult {
+    return typeof result === "object" &&
+        result !== null &&
+        typeof Reflect.get(result, "byPage") === "function";
 }
 
 describe("Phase 5-7 connector clients", () => {

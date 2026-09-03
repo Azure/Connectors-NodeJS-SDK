@@ -3,6 +3,7 @@
 
 import type { AbortSignalLike } from "@azure/abort-controller";
 import type { TokenCredential } from "@azure/core-auth";
+import type { PagedAsyncIterableIterator } from "@azure/core-paging";
 import { ConnectorClientBase } from "../azureConnectors/clientBase.ts";
 import { ConnectorException } from "../azureConnectors/connectorException.ts";
 import { ConnectorClientOptions } from "../azureConnectors/options.ts";
@@ -560,7 +561,7 @@ export class Office365usersClient extends ConnectorClientBase {
      * Search for users
      * @remarks Retrieves the user profiles that match the search term.
      */
-    public async searchUserAsync(searchTerm?: string, top?: string, isSearchTermRequired?: string, skipToken?: string, abortSignal?: AbortSignalLike): Promise<EntityListResponseIReadOnlyListUser> {
+    public searchUserAsync(searchTerm?: string, top?: string, isSearchTermRequired?: string, skipToken?: string, abortSignal?: AbortSignalLike): PagedAsyncIterableIterator<User> {
         const queryParams: string[] = [];
         if (searchTerm !== undefined) {
             queryParams.push(`searchTerm=${encodeURIComponent(String(searchTerm))}`);
@@ -575,14 +576,18 @@ export class Office365usersClient extends ConnectorClientBase {
             queryParams.push(`skipToken=${encodeURIComponent(String(skipToken))}`);
         }
         const requestPath = `/v2/users` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
-        const requestUrl = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<EntityListResponseIReadOnlyListUser>("GET", requestUrl, undefined, undefined, abortSignal);
+        return this.createPageable<EntityListResponseIReadOnlyListUser, User>(
+            requestPath,
+            async (requestUrl) => {
+                const httpResponse = await this.httpClient.sendAsync<EntityListResponseIReadOnlyListUser>("GET", requestUrl, undefined, undefined, abortSignal);
 
-        if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
-        }
+                if (!httpResponse.isSuccessStatusCode) {
+                    throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+                }
 
-        return httpResponse.value as EntityListResponseIReadOnlyListUser;
+                return httpResponse.value as EntityListResponseIReadOnlyListUser;
+            },
+        );
     }
 
     /**
