@@ -626,7 +626,7 @@ export class AzureblobClient extends ConnectorClientBase {
                 const httpResponse = await this.httpClient.sendAsync<BlobMetadataPage>("GET", requestUrl, undefined, undefined, abortSignal);
 
                 if (!httpResponse.isSuccessStatusCode) {
-                    throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+                    throw new ConnectorException(this.connectorName, `GET ${requestUrl}`, httpResponse.statusCode, httpResponse.text);
                 }
 
                 return httpResponse.value as BlobMetadataPage;

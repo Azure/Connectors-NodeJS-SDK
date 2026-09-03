@@ -2,7 +2,7 @@
   "_comment": "Provenance record for the generated clients under src/generated/. It lets a regeneration be reproduced and any cross-language surface delta be attributed to a specific generator revision and Swagger input. Regenerate and repopulate this file on every run (see the 'Provenance & Reproducibility' section of GENERATION.md). A reviewable regeneration PR must have status 'generated' with non-null provenance, swaggerSha256 values that match the committed swagger-cache/ snapshots, and outputSha256 values that match the canonical UTF-8/LF generated outputs; the tests/generationManifest.test.ts guard enforces this.",
   "manifestVersion": 2,
   "status": "generated",
-  "generatedAtUtc": "2026-09-03T17:30:59Z",
+  "generatedAtUtc": "2026-09-03T21:02:56Z",
   "generator": {
     "repository": "https://msazure.visualstudio.com/One/_git/AzureUX-BPM",
     "tool": "CodefulSdkGenerator (LogicAppsCompiler)",
@@ -12,7 +12,7 @@
     "assemblyVersion": "1.188.0.72",
     "sourcePatch": {
       "path": "generator-patches/556b9a2-pagination.patch",
-      "sha256": "043bf8947336f11de84d7c39a0af38da6c0f2acc1371db5f9c5cbcbfe5319dd7"
+      "sha256": "c9a671a5506b793a0fa1d03933e63c65e2ced270ddcc1f1be05aebec123e4737"
     }
   },
   "command": "LogicAppsCompiler.exe <output-directory> --directClient --language=typescript --connectors=arm,azureblob,azureeventgrid,azureiotcentral,azuremonitorlogs,box,campfire,clicksendsms,cloudmersiveconvert,docusign,docuware,dropbox,dynamicsax,elfsquaddata,etsy,eventbrite,excelonline,formstackforms,freshservice,ftp,github,googlecalendar,googledrive,googletasks,impexium,infusionsoft,insightly,jedoxodatahub,jira,kusto,mailchimp,meetingroommap,microsoftforms,monday,mq,msgraphgroupsanduser,office365,office365groupsmail,office365users,onedriveforbusiness,orderful,pdfco,pipedrive,plivo,plumsail,powerbi,projectplace,replicon,revai,rss,salesforce,seismicplanner,sendgrid,sharepointonline,shifts,signinghub,slack,smtp,sql,starmind,starrezrestv1,tallyfy,teams,textrequest,ticketmaster,todo,twitter,typeform,waywedo,webex,wordpress,zendesk,zohosign",
@@ -39,14 +39,14 @@
       "outputFile": "src/generated/ArmExtensions.ts",
       "swaggerSnapshot": "swagger-cache/arm.swagger.json",
       "swaggerSha256": "5974fb8aaee9a2d46d64171889a52c0cf5345aff190a52cd045b2fc5e1d79a7f",
-      "outputSha256": "6a3c2d35833110e4be386e7549fc2cfabae9fc7f4a02275b1d2d37009b7c919e"
+      "outputSha256": "cbf152cc8f79b7d24718c35bfbf9217d71f6836be915ff7f3cce7f00d4586e84"
     },
     {
       "apiName": "azureblob",
       "outputFile": "src/generated/AzureblobExtensions.ts",
       "swaggerSnapshot": "swagger-cache/azureblob.swagger.json",
       "swaggerSha256": "2913f54ac344c619768967e0a126bd5aba4e92917e9531d081daeae1b9b76f7c",
-      "outputSha256": "5e8beff2226dc9ba1637713de49456ec845befb8729a84391ece165a9dd2bcb1"
+      "outputSha256": "a89a6bfe206619884b67f7e8a0c9877f21d3c0a1f0c8ff112a086f5f4b9a91fc"
     },
     {
       "apiName": "azureeventgrid",
@@ -60,7 +60,7 @@
       "outputFile": "src/generated/AzureiotcentralExtensions.ts",
       "swaggerSnapshot": "swagger-cache/azureiotcentral.swagger.json",
       "swaggerSha256": "19613b639f5451e81d7f6be142426e3f74a6749e006f75a48e87b52a013f5751",
-      "outputSha256": "3dc6723669f39fa2f2669e0b60375b886557f3619bc22d89f9ac9a8b4e20ed15"
+      "outputSha256": "88981c88c23b156e15ab9a6ed40af45e060482e6eeae0def8cd24d33bd5a2fd7"
     },
     {
       "apiName": "azuremonitorlogs",
@@ -130,7 +130,7 @@
       "outputFile": "src/generated/ElfsquaddataExtensions.ts",
       "swaggerSnapshot": "swagger-cache/elfsquaddata.swagger.json",
       "swaggerSha256": "37bd441cdd9688a86afaefae7ea2671b42c6719b0d0774bc790c7bde7a684b82",
-      "outputSha256": "b0a4b9c718ac240d1890e8c495fa1ae30b12a3e883641af658bd7e5ef946a46d"
+      "outputSha256": "1a06af70f164773c05d09c97167807a0917bf3d0f8cfff863c5a5d531ac2c552"
     },
     {
       "apiName": "etsy",
@@ -298,21 +298,21 @@
       "outputFile": "src/generated/Office365groupsmailExtensions.ts",
       "swaggerSnapshot": "swagger-cache/office365groupsmail.swagger.json",
       "swaggerSha256": "ebf91624f5c75da8d26015e9741b36fe2e4bbde8ad3c356c326487aebbd5a2a9",
-      "outputSha256": "cfb3b3e62e86756f0c5eeff00f60b02580ded36a828062c77801eacec7f90ab5"
+      "outputSha256": "4d7491d4a3b485c54ccbf7270994fb72c1a23a0801e8d322371ac8e2660e2061"
     },
     {
       "apiName": "office365users",
       "outputFile": "src/generated/Office365usersExtensions.ts",
       "swaggerSnapshot": "swagger-cache/office365users.swagger.json",
       "swaggerSha256": "642b5779ef601327d0345f631c9a1182b27914815a854f536b84ee99f476e137",
-      "outputSha256": "f279953b9bae22776c1e7af9275ad74a51ad2f73041709455c4dc45df651e599"
+      "outputSha256": "49fd11dc5764316ab2ea6b1fdc9460d4163266b8823a53e2efe9a7b56281d8ef"
     },
     {
       "apiName": "onedriveforbusiness",
       "outputFile": "src/generated/OnedriveforbusinessExtensions.ts",
       "swaggerSnapshot": "swagger-cache/onedriveforbusiness.swagger.json",
       "swaggerSha256": "bb09c0baccb5c324d74f9cdefa979336f849fbe903204135095bbc3e04d1c568",
-      "outputSha256": "c9b0c25a0d29372c47c200cb0031aa8da2398fb36e678579bc3f2d2d6dbc7db4"
+      "outputSha256": "2b014e27ca64a5f953404480c124a7efffd7d759f10e34265201439f0116bbac"
     },
     {
       "apiName": "orderful",
@@ -431,7 +431,7 @@
       "outputFile": "src/generated/SlackExtensions.ts",
       "swaggerSnapshot": "swagger-cache/slack.swagger.json",
       "swaggerSha256": "9628ffa4396b91d06a3ef246926c86beea3513602b8b8f5a1d6f22c38386c336",
-      "outputSha256": "39bebc1b7a9683a2a40ca2a13d2eff752856ccf74547b74b435dd5059ef7c99a"
+      "outputSha256": "122288a9501d7b3fbb348fcebbdbd3fac051df04cf946d54398a4a05e5916fee"
     },
     {
       "apiName": "smtp",
@@ -473,7 +473,7 @@
       "outputFile": "src/generated/TeamsExtensions.ts",
       "swaggerSnapshot": "swagger-cache/teams.swagger.json",
       "swaggerSha256": "8130802332f0174086c050cc1e36815f77cbfc18f64d7abeb19698cf779181fb",
-      "outputSha256": "83745375c770b98316de0b62cee5b3c28f028ff656bcd4e3dbb8acb5b021db85"
+      "outputSha256": "2014ed2ccb520373f1b668a4d3fcfe4984a30eded42e2e6ee3738e3ca9a48bbc"
     },
     {
       "apiName": "textrequest",

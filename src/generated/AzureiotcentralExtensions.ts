@@ -956,7 +956,7 @@ export class AzureiotcentralClient extends ConnectorClientBase {
                 const httpResponse = await this.httpClient.sendAsync<DeviceGroupCollection>("GET", requestUrl, undefined, undefined, abortSignal);
 
                 if (!httpResponse.isSuccessStatusCode) {
-                    throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+                    throw new ConnectorException(this.connectorName, `GET ${requestUrl}`, httpResponse.statusCode, httpResponse.text);
                 }
 
                 return httpResponse.value as DeviceGroupCollection;
@@ -1038,7 +1038,7 @@ export class AzureiotcentralClient extends ConnectorClientBase {
                 const httpResponse = await this.httpClient.sendAsync<DeviceGroupDeviceCollection>("GET", requestUrl, undefined, undefined, abortSignal);
 
                 if (!httpResponse.isSuccessStatusCode) {
-                    throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+                    throw new ConnectorException(this.connectorName, `GET ${requestUrl}`, httpResponse.statusCode, httpResponse.text);
                 }
 
                 return httpResponse.value as DeviceGroupDeviceCollection;
@@ -1131,7 +1131,7 @@ export class AzureiotcentralClient extends ConnectorClientBase {
                 const httpResponse = await this.httpClient.sendAsync<DeviceRelationshipCollection>("GET", requestUrl, undefined, undefined, abortSignal);
 
                 if (!httpResponse.isSuccessStatusCode) {
-                    throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+                    throw new ConnectorException(this.connectorName, `GET ${requestUrl}`, httpResponse.statusCode, httpResponse.text);
                 }
 
                 return httpResponse.value as DeviceRelationshipCollection;
@@ -1233,7 +1233,7 @@ export class AzureiotcentralClient extends ConnectorClientBase {
                 const httpResponse = await this.httpClient.sendAsync<JobCollection>("GET", requestUrl, undefined, undefined, abortSignal);
 
                 if (!httpResponse.isSuccessStatusCode) {
-                    throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+                    throw new ConnectorException(this.connectorName, `GET ${requestUrl}`, httpResponse.statusCode, httpResponse.text);
                 }
 
                 return httpResponse.value as JobCollection;
@@ -1300,7 +1300,7 @@ export class AzureiotcentralClient extends ConnectorClientBase {
                 const httpResponse = await this.httpClient.sendAsync<JobDeviceStatusCollection>("GET", requestUrl, undefined, undefined, abortSignal);
 
                 if (!httpResponse.isSuccessStatusCode) {
-                    throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+                    throw new ConnectorException(this.connectorName, `GET ${requestUrl}`, httpResponse.statusCode, httpResponse.text);
                 }
 
                 return httpResponse.value as JobDeviceStatusCollection;
@@ -1380,7 +1380,7 @@ export class AzureiotcentralClient extends ConnectorClientBase {
                 const httpResponse = await this.httpClient.sendAsync<OrganizationCollection>("GET", requestUrl, undefined, undefined, abortSignal);
 
                 if (!httpResponse.isSuccessStatusCode) {
-                    throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+                    throw new ConnectorException(this.connectorName, `GET ${requestUrl}`, httpResponse.statusCode, httpResponse.text);
                 }
 
                 return httpResponse.value as OrganizationCollection;
@@ -1462,7 +1462,7 @@ export class AzureiotcentralClient extends ConnectorClientBase {
                 const httpResponse = await this.httpClient.sendAsync<ScheduledJobCollection>("GET", requestUrl, undefined, undefined, abortSignal);
 
                 if (!httpResponse.isSuccessStatusCode) {
-                    throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+                    throw new ConnectorException(this.connectorName, `GET ${requestUrl}`, httpResponse.statusCode, httpResponse.text);
                 }
 
                 return httpResponse.value as ScheduledJobCollection;
@@ -1573,7 +1573,7 @@ export class AzureiotcentralClient extends ConnectorClientBase {
                 const httpResponse = await this.httpClient.sendAsync<ScheduledJobJobCollection>("GET", requestUrl, undefined, undefined, abortSignal);
 
                 if (!httpResponse.isSuccessStatusCode) {
-                    throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+                    throw new ConnectorException(this.connectorName, `GET ${requestUrl}`, httpResponse.statusCode, httpResponse.text);
                 }
 
                 return httpResponse.value as ScheduledJobJobCollection;
@@ -1847,7 +1847,7 @@ export class AzureiotcentralClient extends ConnectorClientBase {
                 const httpResponse = await this.httpClient.sendAsync<DeviceCollection>("GET", requestUrl, undefined, undefined, abortSignal);
 
                 if (!httpResponse.isSuccessStatusCode) {
-                    throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+                    throw new ConnectorException(this.connectorName, `GET ${requestUrl}`, httpResponse.statusCode, httpResponse.text);
                 }
 
                 return httpResponse.value as DeviceCollection;
@@ -2067,7 +2067,7 @@ export class AzureiotcentralClient extends ConnectorClientBase {
                 const httpResponse = await this.httpClient.sendAsync<DeviceTemplateCollection>("GET", requestUrl, undefined, undefined, abortSignal);
 
                 if (!httpResponse.isSuccessStatusCode) {
-                    throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+                    throw new ConnectorException(this.connectorName, `GET ${requestUrl}`, httpResponse.statusCode, httpResponse.text);
                 }
 
                 return httpResponse.value as DeviceTemplateCollection;

@@ -143,7 +143,7 @@ export class ElfsquaddataClient extends ConnectorClientBase {
                 const httpResponse = await this.httpClient.sendAsync<GetEntitiesResponse>("GET", requestUrl, undefined, undefined, abortSignal);
 
                 if (!httpResponse.isSuccessStatusCode) {
-                    throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+                    throw new ConnectorException(this.connectorName, `GET ${requestUrl}`, httpResponse.statusCode, httpResponse.text);
                 }
 
                 return httpResponse.value as GetEntitiesResponse;

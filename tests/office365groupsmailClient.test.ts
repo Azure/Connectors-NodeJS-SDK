@@ -104,7 +104,43 @@ describe("Office365groupsmailClient — listConversationsAsync", () => {
             const connectorError = error as ConnectorException;
             expect(connectorError.statusCode).toBe(403);
             expect(connectorError.responseBody).toBe("Forbidden");
-            expect(connectorError.operation).toBe("GET /v1.0/groups/group1/conversations");
+            expect(connectorError.operation).toBe(`GET ${TestConnectionUrl}/v1.0/groups/group1/conversations`);
+        }
+    });
+
+    it("should identify the continuation URL when a later page fails", async () => {
+        global.fetch = jest.fn()
+            .mockResolvedValueOnce({
+                ok: true,
+                status: 200,
+                text: async () => JSON.stringify({
+                    value: [{ id: "conv1", topic: "Welcome" }],
+                    nextLink: "/v1.0/groups/group1/conversations?page=2",
+                }),
+                headers: new Headers(),
+            } as Response)
+            .mockResolvedValueOnce({
+                ok: false,
+                status: 403,
+                text: async () => "Forbidden",
+                headers: new Headers(),
+            } as Response);
+
+        const client = new Office365groupsmailClient(TestConnectionUrl, createMockCredential());
+        try {
+            for await (const page of client.listConversationsAsync("group1").byPage()) {
+                expect(page).toEqual([{ id: "conv1", topic: "Welcome" }]);
+            }
+
+            throw new Error("Expected ConnectorException to be thrown.");
+        } catch (error) {
+            expect(error).toBeInstanceOf(ConnectorException);
+            const connectorError = error as ConnectorException;
+            expect(connectorError.statusCode).toBe(403);
+            expect(connectorError.responseBody).toBe("Forbidden");
+            expect(connectorError.operation).toBe(
+                `GET ${TestConnectionUrl}/v1.0/groups/group1/conversations?page=2`,
+            );
         }
     });
 });
