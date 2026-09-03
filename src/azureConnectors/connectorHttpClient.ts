@@ -118,12 +118,13 @@ export class ConnectorHttpClient {
     }
 
     private getPipeline(scopes: string[]): Pipeline {
-        const key = JSON.stringify(scopes);
+        const pipelineScopes = [...scopes];
+        const key = JSON.stringify(pipelineScopes);
         let pipeline = this.pipelines.get(key);
         if (!pipeline) {
             pipeline = createPipelineFromOptions(this.pipelineOptions);
             pipeline.addPolicy(
-                bearerTokenAuthenticationPolicy({ credential: this.credential, scopes }),
+                bearerTokenAuthenticationPolicy({ credential: this.credential, scopes: pipelineScopes }),
                 { phase: "Sign" },
             );
             this.pipelines.set(key, pipeline);
