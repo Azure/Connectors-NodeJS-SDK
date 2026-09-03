@@ -61,6 +61,16 @@ describe("ConnectorClientBase", () => {
             expect(result).toBe("https://proxy.azure-apihub.net/apim/arm/conn123/subscriptions");
         });
 
+        it("should preserve connectionRuntimeUrl without trailing slashes", () => {
+            const client = new TestConnectorClient(
+                "https://proxy.azure-apihub.net/apim/arm/conn123",
+                createMockCredential(),
+            );
+
+            const result = client.testResolveUrl("/subscriptions");
+            expect(result).toBe("https://proxy.azure-apihub.net/apim/arm/conn123/subscriptions");
+        });
+
         it("should throw when credential is null", () => {
             expect(() => new TestConnectorClient("https://example.com", null as unknown as TokenCredential))
             .toThrow("credential cannot be null or undefined.");
