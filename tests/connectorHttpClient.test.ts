@@ -137,6 +137,32 @@ describe("ConnectorHttpClient", () => {
         expect(credential.requestedScopes).toEqual([["custom-scope"]]);
     });
 
+    it("should reuse the pipeline for repeated requests with the same scopes", async () => {
+        const credential = new MockTokenCredential();
+        const httpClient = new MockHttpClient(async request => createMockResponse(request, 204));
+        const client = new ConnectorHttpClient(credential, { httpClient });
+
+        await client.sendAsync("GET", "https://example.com/api/first");
+        await client.sendAsync("GET", "https://example.com/api/second");
+
+        expect(httpClient.requests).toHaveLength(2);
+        expect(credential.requestedScopes).toHaveLength(1);
+    });
+
+    it("should handle responses without body text", async () => {
+        const httpClient = new MockHttpClient(async request => ({
+            request,
+            status: 204,
+            headers: createHttpHeaders(),
+        }));
+        const client = new ConnectorHttpClient(new MockTokenCredential(), { httpClient });
+
+        const response = await client.sendAsync("GET", "https://example.com/api/items");
+
+        expect(response.text).toBe("");
+        expect(response.value).toBeUndefined();
+    });
+
     it("should report non-success status codes without retrying client errors", async () => {
         const httpClient = new MockHttpClient(async request => createMockResponse(
             request,

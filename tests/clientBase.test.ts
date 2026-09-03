@@ -246,5 +246,41 @@ describe("ConnectorClientBase", () => {
                 `${baseUrl}/collections/next?page=2`,
             ]);
         });
+
+        it("should resolve a query-only first page link from the connection root", async () => {
+            const client = new TestConnectorClient(baseUrl, createMockCredential());
+            const requestedUrls: string[] = [];
+            const pageable = client.testCreatePageable("?page=1", async (url) => {
+                requestedUrls.push(url);
+                return { value: [{ id: "first" }] };
+            });
+
+            await pageable.next();
+
+            expect(requestedUrls).toEqual([`${baseUrl}/?page=1`]);
+        });
+
+        it("should resolve a relative next link against an absolute foreign page link", async () => {
+            const client = new TestConnectorClient(baseUrl, createMockCredential());
+            const requestedUrls: string[] = [];
+            const pageable = client.testCreatePageable(
+                "https://management.azure.com/collections/items?page=1",
+                async (url) => {
+                    requestedUrls.push(url);
+                    return requestedUrls.length === 1
+                        ? { value: [{ id: "first" }], nextLink: "next?page=2" }
+                        : { value: [{ id: "second" }] };
+                },
+            );
+
+            for await (const page of pageable.byPage()) {
+                expect(page).toHaveLength(1);
+            }
+
+            expect(requestedUrls).toEqual([
+                `${baseUrl}/collections/items?page=1`,
+                `${baseUrl}/collections/next?page=2`,
+            ]);
+        });
     });
 });
