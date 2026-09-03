@@ -1,6 +1,6 @@
 // Copyright (c) Microsoft Corporation.  All rights reserved.
 
-import { TokenProvider } from "../src/azureConnectors/authentication.ts";
+import type { TokenCredential } from "@azure/core-auth";
 import { ConnectorException } from "../src/azureConnectors/connectorException.ts";
 import { ConnectorNames } from "../src/generated/connectorNames.ts";
 import { ElfsquaddataClient } from "../src/generated/ElfsquaddataExtensions.ts";
@@ -34,7 +34,7 @@ interface GeneratedConnectorClient {
 
 type GeneratedConnectorClientConstructor = new (
     connectionRuntimeUrl: string,
-    tokenProvider: TokenProvider,
+    credential: TokenCredential,
 ) => GeneratedConnectorClient;
 
 interface ConnectorCase {
@@ -74,9 +74,9 @@ const ActionConnectorCases = ConnectorCases.filter(
     (connector): connector is ConnectorCase & { methodName: string } => connector.methodName !== undefined,
 );
 
-function createMockTokenProvider(): TokenProvider {
+function createMockCredential(): TokenCredential {
     return {
-        getAccessTokenAsync: async () => "mock-bearer-token",
+        getToken: async () => ({ token: "mock-bearer-token", expiresOnTimestamp: Number.MAX_SAFE_INTEGER }),
     };
 }
 
@@ -103,14 +103,14 @@ describe("Phase 5-7 connector clients", () => {
     });
 
     it.each(ConnectorCases)("should construct $displayName", connector => {
-        const client = new connector.clientConstructor(TestConnectionUrl, createMockTokenProvider());
+        const client = new connector.clientConstructor(TestConnectionUrl, createMockCredential());
 
         expect(client.connectorName).toBe(connector.apiName);
     });
 
     it.each(ActionConnectorCases)("should invoke an authenticated $displayName action", async connector => {
         mockFetchResponse({ result: "ok" });
-        const client = new connector.clientConstructor(TestConnectionUrl, createMockTokenProvider());
+        const client = new connector.clientConstructor(TestConnectionUrl, createMockCredential());
 
         await invokeRepresentativeAction(connector, client);
 
@@ -121,7 +121,7 @@ describe("Phase 5-7 connector clients", () => {
 
     it.each(ActionConnectorCases)("should expose $displayName failure details", async connector => {
         mockFetchResponse({ error: "not found" }, 404);
-        const client = new connector.clientConstructor(TestConnectionUrl, createMockTokenProvider());
+        const client = new connector.clientConstructor(TestConnectionUrl, createMockCredential());
 
         try {
             await invokeRepresentativeAction(connector, client);

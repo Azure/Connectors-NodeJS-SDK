@@ -1,5 +1,6 @@
 // Copyright (c) Microsoft Corporation.  All rights reserved.
 
+import type { TokenCredential } from "@azure/core-auth";
 import {
     Office365usersClient,
     GraphUser,
@@ -11,7 +12,6 @@ import {
     LinklessEntityListResponseListPerson,
 } from "../src/generated/Office365usersExtensions.ts";
 import { ConnectorException } from "../src/azureConnectors/connectorException.ts";
-import { TokenProvider } from "../src/azureConnectors/authentication.ts";
 import { ConnectorNames } from "../src/generated/connectorNames.ts";
 import { availableConnectors } from "../src/generated/ManagedConnectors.ts";
 
@@ -21,9 +21,9 @@ import { availableConnectors } from "../src/generated/ManagedConnectors.ts";
 
 const TestConnectionUrl = "https://connection-runtime.azure.com/apim/office365users/abc123";
 
-function createMockTokenProvider(): TokenProvider {
+function createMockCredential(): TokenCredential {
     return {
-        getAccessTokenAsync: async () => "mock-bearer-token",
+        getToken: async () => ({ token: "mock-bearer-token", expiresOnTimestamp: Number.MAX_SAFE_INTEGER }),
     };
 }
 
@@ -66,28 +66,28 @@ const _photoMetadata: ClientPhotoMetadata = {};
 
 describe("Office365usersClient — constructor", () => {
     it("should construct with valid options", () => {
-        const client = new Office365usersClient(TestConnectionUrl, createMockTokenProvider());
+        const client = new Office365usersClient(TestConnectionUrl, createMockCredential());
         expect(client).toBeDefined();
         expect(client).toBeInstanceOf(Office365usersClient);
     });
 
     it("should strip trailing slashes from connection URL", () => {
-        const client = new Office365usersClient(TestConnectionUrl + "///", createMockTokenProvider());
+        const client = new Office365usersClient(TestConnectionUrl + "///", createMockCredential());
         expect(client).toBeDefined();
     });
 
     it("should construct with an empty connection URL", () => {
-        const client = new Office365usersClient("", createMockTokenProvider());
+        const client = new Office365usersClient("", createMockCredential());
         expect(client).toBeDefined();
     });
 
     it("should throw on null connection URL", () => {
-        expect(() => new Office365usersClient(null as unknown as string, createMockTokenProvider()))
+        expect(() => new Office365usersClient(null as unknown as string, createMockCredential()))
             .toThrow("Parameter 'connectionRuntimeUrl' cannot be null or undefined.");
     });
 
     it("should throw on undefined connection URL", () => {
-        expect(() => new Office365usersClient(undefined as unknown as string, createMockTokenProvider()))
+        expect(() => new Office365usersClient(undefined as unknown as string, createMockCredential()))
             .toThrow("Parameter 'connectionRuntimeUrl' cannot be null or undefined.");
     });
 });
@@ -104,7 +104,7 @@ describe("Office365usersClient — myProfileAsync", () => {
         };
         mockFetchResponse(mockProfile);
 
-        const client = new Office365usersClient(TestConnectionUrl, createMockTokenProvider());
+        const client = new Office365usersClient(TestConnectionUrl, createMockCredential());
         const result = await client.myProfileAsync();
 
         expect(result).toEqual(mockProfile);
@@ -117,7 +117,7 @@ describe("Office365usersClient — myProfileAsync", () => {
     it("should include select query parameter when provided", async () => {
         mockFetchResponse({});
 
-        const client = new Office365usersClient(TestConnectionUrl, createMockTokenProvider());
+        const client = new Office365usersClient(TestConnectionUrl, createMockCredential());
         await client.myProfileAsync("displayName,mail");
 
         const [url] = (global.fetch as jest.Mock).mock.calls[0];
@@ -136,7 +136,7 @@ describe("Office365usersClient — searchUserAsync", () => {
         };
         mockFetchResponse(mockResponse);
 
-        const client = new Office365usersClient(TestConnectionUrl, createMockTokenProvider());
+        const client = new Office365usersClient(TestConnectionUrl, createMockCredential());
         const result = await client.searchUserAsync("John");
 
         expect(result).toEqual(mockResponse);
@@ -155,7 +155,7 @@ describe("Office365usersClient — managerAsync", () => {
         const mockManager: GraphUser = { displayName: "Boss Person" };
         mockFetchResponse(mockManager);
 
-        const client = new Office365usersClient(TestConnectionUrl, createMockTokenProvider());
+        const client = new Office365usersClient(TestConnectionUrl, createMockCredential());
         const result = await client.managerAsync("user-123");
 
         expect(result).toEqual(mockManager);
@@ -175,7 +175,7 @@ describe("Office365usersClient — directReportsAsync", () => {
         };
         mockFetchResponse(mockResponse);
 
-        const client = new Office365usersClient(TestConnectionUrl, createMockTokenProvider());
+        const client = new Office365usersClient(TestConnectionUrl, createMockCredential());
         const result = await client.directReportsAsync("user-123");
 
         expect(result).toEqual(mockResponse);
@@ -192,7 +192,7 @@ describe("Office365usersClient — updateMyProfileAsync", () => {
     it("should PATCH /codeless/v1.0/me with body", async () => {
         mockFetchResponse(null);
 
-        const client = new Office365usersClient(TestConnectionUrl, createMockTokenProvider());
+        const client = new Office365usersClient(TestConnectionUrl, createMockCredential());
         const input: GraphUserUpdateable = { aboutMe: "Updated bio" };
 
         await client.updateMyProfileAsync(input);
@@ -215,7 +215,7 @@ describe("Office365usersClient — relevantPeopleAsync", () => {
         };
         mockFetchResponse(mockResponse);
 
-        const client = new Office365usersClient(TestConnectionUrl, createMockTokenProvider());
+        const client = new Office365usersClient(TestConnectionUrl, createMockCredential());
         const result = await client.relevantPeopleAsync("user-123");
 
         expect(result).toEqual(mockResponse);
@@ -235,7 +235,7 @@ describe("Office365usersClient — myTrendingDocumentsAsync", () => {
         };
         mockFetchResponse(mockResponse);
 
-        const client = new Office365usersClient(TestConnectionUrl, createMockTokenProvider());
+        const client = new Office365usersClient(TestConnectionUrl, createMockCredential());
         const result = await client.myTrendingDocumentsAsync();
 
         expect(result).toEqual(mockResponse);
@@ -252,7 +252,7 @@ describe("Office365usersClient — error handling", () => {
     it("should throw ConnectorException on non-OK response", async () => {
         mockFetchError(401, '{"error": "InvalidAuthenticationToken"}');
 
-        const client = new Office365usersClient(TestConnectionUrl, createMockTokenProvider());
+        const client = new Office365usersClient(TestConnectionUrl, createMockCredential());
 
         await expect(client.myProfileAsync()).rejects.toThrow(ConnectorException);
     });
@@ -261,7 +261,7 @@ describe("Office365usersClient — error handling", () => {
         const errorBody = '{"code": "Request_ResourceNotFound"}';
         mockFetchError(404, errorBody);
 
-        const client = new Office365usersClient(TestConnectionUrl, createMockTokenProvider());
+        const client = new Office365usersClient(TestConnectionUrl, createMockCredential());
 
         try {
             await client.managerAsync("nonexistent-user");

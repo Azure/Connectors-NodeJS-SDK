@@ -1,8 +1,8 @@
 // Copyright (c) Microsoft Corporation.  All rights reserved.
 
+import type { TokenCredential } from "@azure/core-auth";
 import * as fs from "node:fs";
 import * as path from "node:path";
-import { TokenProvider } from "../src/azureConnectors/authentication.ts";
 import {
     TeamsClient,
     TeamsTriggerOperations,
@@ -24,9 +24,9 @@ interface GeneratedExtensionFile {
     content: string;
 }
 
-function createMockTokenProvider(): TokenProvider {
+function createMockCredential(): TokenCredential {
     return {
-        getAccessTokenAsync: async () => "mock-bearer-token",
+        getToken: async () => ({ token: "mock-bearer-token", expiresOnTimestamp: Number.MAX_SAFE_INTEGER }),
     };
 }
 
@@ -141,7 +141,7 @@ describe("Teams generated surface — trigger parameter metadata", () => {
 
 describe("Teams generated surface — triggers are not data-plane methods", () => {
     it("should not expose onNewChannelMessageAsync on TeamsClient", () => {
-        const client = new TeamsClient(TeamsConnectionUrl, createMockTokenProvider());
+        const client = new TeamsClient(TeamsConnectionUrl, createMockCredential());
         const clientMembers = client as unknown as Record<string, unknown>;
 
         expect(clientMembers.onNewChannelMessageAsync).toBeUndefined();
@@ -149,7 +149,7 @@ describe("Teams generated surface — triggers are not data-plane methods", () =
     });
 
     it("should not expose any Teams trigger operation as a client method", () => {
-        const client = new TeamsClient(TeamsConnectionUrl, createMockTokenProvider());
+        const client = new TeamsClient(TeamsConnectionUrl, createMockCredential());
         const clientMembers = client as unknown as Record<string, unknown>;
 
         const triggerOperationIds = [

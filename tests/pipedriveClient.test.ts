@@ -1,8 +1,8 @@
 // Copyright (c) Microsoft Corporation.  All rights reserved.
 
+import type { TokenCredential } from "@azure/core-auth";
 import { PipedriveClient } from "../src/generated/PipedriveExtensions.ts";
 import { ConnectorException } from "../src/azureConnectors/connectorException.ts";
-import { TokenProvider } from "../src/azureConnectors/authentication.ts";
 import { ConnectorNames } from "../src/generated/connectorNames.ts";
 import { availableConnectors } from "../src/generated/ManagedConnectors.ts";
 
@@ -12,9 +12,9 @@ import { availableConnectors } from "../src/generated/ManagedConnectors.ts";
 
 const TestConnectionUrl = "https://connection-runtime.azure.com/apim/pipedrive/abc123";
 
-function createMockTokenProvider(): TokenProvider {
+function createMockCredential(): TokenCredential {
     return {
-        getAccessTokenAsync: async () => "mock-bearer-token",
+        getToken: async () => ({ token: "mock-bearer-token", expiresOnTimestamp: Number.MAX_SAFE_INTEGER }),
     };
 }
 
@@ -42,18 +42,18 @@ function mockFetchError(status: number, errorBody: string): void {
 
 describe("PipedriveClient — constructor", () => {
     it("should construct with valid options", () => {
-        const client = new PipedriveClient(TestConnectionUrl, createMockTokenProvider());
+        const client = new PipedriveClient(TestConnectionUrl, createMockCredential());
         expect(client).toBeDefined();
         expect(client).toBeInstanceOf(PipedriveClient);
     });
 
     it("should throw on null connection URL", () => {
-        expect(() => new PipedriveClient(null as unknown as string, createMockTokenProvider()))
+        expect(() => new PipedriveClient(null as unknown as string, createMockCredential()))
             .toThrow("Parameter 'connectionRuntimeUrl' cannot be null or undefined.");
     });
 
     it("should throw on undefined connection URL", () => {
-        expect(() => new PipedriveClient(undefined as unknown as string, createMockTokenProvider()))
+        expect(() => new PipedriveClient(undefined as unknown as string, createMockCredential()))
             .toThrow("Parameter 'connectionRuntimeUrl' cannot be null or undefined.");
     });
 });
@@ -67,7 +67,7 @@ describe("PipedriveClient — getDealAsync", () => {
         const deal = { data: { id: 123, title: "New opportunity", value: 5000, currency: "USD" } };
         mockFetchResponse(deal);
 
-        const client = new PipedriveClient(TestConnectionUrl, createMockTokenProvider());
+        const client = new PipedriveClient(TestConnectionUrl, createMockCredential());
         const result = await client.getDealAsync("123");
 
         expect(result).toEqual(deal);
@@ -80,7 +80,7 @@ describe("PipedriveClient — getDealAsync", () => {
     it("should throw ConnectorException on non-OK response", async () => {
         mockFetchError(404, "Not Found");
 
-        const client = new PipedriveClient(TestConnectionUrl, createMockTokenProvider());
+        const client = new PipedriveClient(TestConnectionUrl, createMockCredential());
         try {
             await client.getDealAsync("123");
             throw new Error("Expected ConnectorException to be thrown.");

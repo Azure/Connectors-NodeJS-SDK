@@ -3,28 +3,17 @@
 /**
  * Authentication token providers for connector clients.
  *
- * Mirrors the Python SDK's authentication.py — provides a TokenProvider interface
- * and concrete implementations for Managed Identity and API key authentication.
+ * Provides compatibility credentials for managed identity and API key authentication.
  */
 
+import type { AccessToken, GetTokenOptions, TokenCredential } from "@azure/core-auth";
 import { DefaultAzureCredential, ManagedIdentityCredential } from "@azure/identity";
-
-/**
- * Interface for providing authentication tokens.
- */
-export interface TokenProvider {
-    /**
-     * Gets an access token for the specified scopes.
-     * @param scopes The authentication scopes.
-     */
-    getAccessTokenAsync(scopes: string[]): Promise<string>;
-}
 
 /**
  * Token provider using Azure Managed Identity.
  */
-export class ManagedIdentityTokenProvider implements TokenProvider {
-    private readonly credential: DefaultAzureCredential | ManagedIdentityCredential;
+export class ManagedIdentityTokenProvider implements TokenCredential {
+    private readonly credential: TokenCredential;
 
     /**
      * Initializes a new ManagedIdentityTokenProvider.
@@ -38,24 +27,27 @@ export class ManagedIdentityTokenProvider implements TokenProvider {
         }
     }
 
-    public async getAccessTokenAsync(scopes: string[]): Promise<string> {
-        if (!scopes || scopes.length === 0) {
+    /**
+     * Gets an access token from the configured Azure Identity credential.
+     * @param scopes The authentication scopes.
+     * @param options Optional token request settings.
+     */
+    public async getToken(
+        scopes: string | string[],
+        options?: GetTokenOptions,
+    ): Promise<AccessToken | null> {
+        if (!scopes || (Array.isArray(scopes) && scopes.length === 0)) {
             throw new Error("At least one scope must be provided.");
         }
 
-        const token = await this.credential.getToken(scopes);
-        if (!token) {
-            throw new Error("Failed to acquire access token.");
-        }
-
-        return token.token;
+        return this.credential.getToken(scopes, options);
     }
 }
 
 /**
  * Token provider using a pre-configured API key or connection string.
  */
-export class ConnectionStringTokenProvider implements TokenProvider {
+export class ConnectionStringTokenProvider implements TokenCredential {
     private readonly apiKey: string;
 
     /**
@@ -70,7 +62,18 @@ export class ConnectionStringTokenProvider implements TokenProvider {
         this.apiKey = apiKey;
     }
 
-    public async getAccessTokenAsync(_scopes: string[]): Promise<string> {
-        return this.apiKey;
+    /**
+     * Gets a non-expiring access token containing the configured API key.
+     * @param _scopes The authentication scopes.
+     * @param _options Optional token request settings.
+     */
+    public async getToken(
+        _scopes: string | string[],
+        _options?: GetTokenOptions,
+    ): Promise<AccessToken> {
+        return {
+            token: this.apiKey,
+            expiresOnTimestamp: Number.MAX_SAFE_INTEGER,
+        };
     }
 }

@@ -1,19 +1,19 @@
 // Copyright (c) Microsoft Corporation.  All rights reserved.
 
+import type { TokenCredential } from "@azure/core-auth";
 import {
     JiraClient,
     ListIssuesResponse,
 } from "../src/generated/JiraExtensions.ts";
 import { ConnectorException } from "../src/azureConnectors/connectorException.ts";
-import { TokenProvider } from "../src/azureConnectors/authentication.ts";
 import { ConnectorNames } from "../src/generated/connectorNames.ts";
 import { availableConnectors } from "../src/generated/ManagedConnectors.ts";
 
 const TestConnectionUrl = "https://connection-runtime.azure.com/apim/jira/abc123";
 
-function createMockTokenProvider(): TokenProvider {
+function createMockCredential(): TokenCredential {
     return {
-        getAccessTokenAsync: async () => "mock-bearer-token",
+        getToken: async () => ({ token: "mock-bearer-token", expiresOnTimestamp: Number.MAX_SAFE_INTEGER }),
     };
 }
 
@@ -37,7 +37,7 @@ function mockFetchError(status: number, errorBody: string): void {
 
 describe("JiraClient — constructor", () => {
     it("should construct with valid options", () => {
-        const client = new JiraClient(TestConnectionUrl, createMockTokenProvider());
+        const client = new JiraClient(TestConnectionUrl, createMockCredential());
         expect(client).toBeDefined();
         expect(client).toBeInstanceOf(JiraClient);
     });
@@ -52,7 +52,7 @@ describe("JiraClient — listResourcesAsync", () => {
         const mockResponse: Array<Record<string, unknown>> = [{ id: "res-1" }];
         mockFetchResponse(mockResponse);
 
-        const client = new JiraClient(TestConnectionUrl, createMockTokenProvider());
+        const client = new JiraClient(TestConnectionUrl, createMockCredential());
         const result = await client.listResourcesAsync();
 
         expect(result).toEqual(mockResponse);
@@ -64,7 +64,7 @@ describe("JiraClient — listResourcesAsync", () => {
     it("should throw ConnectorException on non-OK response", async () => {
         mockFetchError(403, '{"error":"Forbidden"}');
 
-        const client = new JiraClient(TestConnectionUrl, createMockTokenProvider());
+        const client = new JiraClient(TestConnectionUrl, createMockCredential());
         await expect(client.listResourcesAsync()).rejects.toThrow(ConnectorException);
     });
 });
@@ -78,7 +78,7 @@ describe("JiraClient — listIssuesAsync", () => {
         const mockResponse: ListIssuesResponse = {};
         mockFetchResponse(mockResponse);
 
-        const client = new JiraClient(TestConnectionUrl, createMockTokenProvider());
+        const client = new JiraClient(TestConnectionUrl, createMockCredential());
         await client.listIssuesAsync("project = DEMO", "names", "summary");
 
         const [url] = (global.fetch as jest.Mock).mock.calls[0];

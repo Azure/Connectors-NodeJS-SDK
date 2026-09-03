@@ -1,5 +1,6 @@
 // Copyright (c) Microsoft Corporation.  All rights reserved.
 
+import type { TokenCredential } from "@azure/core-auth";
 import {
     MqClient,
     SendValidDataOptions,
@@ -10,7 +11,6 @@ import {
     ItemsList,
 } from "../src/generated/MqExtensions.ts";
 import { ConnectorException } from "../src/azureConnectors/connectorException.ts";
-import { TokenProvider } from "../src/azureConnectors/authentication.ts";
 import { ConnectorNames } from "../src/generated/connectorNames.ts";
 import { availableConnectors } from "../src/generated/ManagedConnectors.ts";
 
@@ -20,9 +20,9 @@ import { availableConnectors } from "../src/generated/ManagedConnectors.ts";
 
 const TestConnectionUrl = "https://connection-runtime.azure.com/apim/mq/abc123";
 
-function createMockTokenProvider(): TokenProvider {
+function createMockCredential(): TokenCredential {
     return {
-        getAccessTokenAsync: async () => "mock-bearer-token",
+        getToken: async () => ({ token: "mock-bearer-token", expiresOnTimestamp: Number.MAX_SAFE_INTEGER }),
     };
 }
 
@@ -71,28 +71,28 @@ const _sendResponse: SendResponse = {
 
 describe("MqClient — constructor", () => {
     it("should construct with valid options", () => {
-        const client = new MqClient(TestConnectionUrl, createMockTokenProvider());
+        const client = new MqClient(TestConnectionUrl, createMockCredential());
         expect(client).toBeDefined();
         expect(client).toBeInstanceOf(MqClient);
     });
 
     it("should strip trailing slashes from connection URL", () => {
-        const client = new MqClient(TestConnectionUrl + "///", createMockTokenProvider());
+        const client = new MqClient(TestConnectionUrl + "///", createMockCredential());
         expect(client).toBeDefined();
     });
 
     it("should construct with an empty connection URL", () => {
-        const client = new MqClient("", createMockTokenProvider());
+        const client = new MqClient("", createMockCredential());
         expect(client).toBeDefined();
     });
 
     it("should throw on null connection URL", () => {
-        expect(() => new MqClient(null as unknown as string, createMockTokenProvider()))
+        expect(() => new MqClient(null as unknown as string, createMockCredential()))
             .toThrow("Parameter 'connectionRuntimeUrl' cannot be null or undefined.");
     });
 
     it("should throw on undefined connection URL", () => {
-        expect(() => new MqClient(undefined as unknown as string, createMockTokenProvider()))
+        expect(() => new MqClient(undefined as unknown as string, createMockCredential()))
             .toThrow("Parameter 'connectionRuntimeUrl' cannot be null or undefined.");
     });
 });
@@ -106,7 +106,7 @@ describe("MqClient — sendAsync", () => {
         const mockResponse: SendResponse = { ItemInternalId: "msg-001" };
         mockFetchResponse(mockResponse);
 
-        const client = new MqClient(TestConnectionUrl, createMockTokenProvider());
+        const client = new MqClient(TestConnectionUrl, createMockCredential());
         const input: SendValidDataOptions = {
             Queue: "MY.QUEUE",
             Message: "Test message",
@@ -136,7 +136,7 @@ describe("MqClient — receiveAsync", () => {
         const mockItem: Item = { MessageData: "test-data" };
         mockFetchResponse(mockItem);
 
-        const client = new MqClient(TestConnectionUrl, createMockTokenProvider());
+        const client = new MqClient(TestConnectionUrl, createMockCredential());
         const input: SingleGetValidOptions = { Queue: "MY.QUEUE" };
 
         const result = await client.receiveAsync(input);
@@ -157,7 +157,7 @@ describe("MqClient — receiveAllAsync", () => {
         const mockItems: ItemsList = {};
         mockFetchResponse(mockItems);
 
-        const client = new MqClient(TestConnectionUrl, createMockTokenProvider());
+        const client = new MqClient(TestConnectionUrl, createMockCredential());
         const input: MultipleGetValidOptions = { Queue: "MY.QUEUE" };
 
         const result = await client.receiveAllAsync(input);
@@ -177,7 +177,7 @@ describe("MqClient — readAsync", () => {
         const mockItem: Item = { MessageData: "test-data" };
         mockFetchResponse(mockItem);
 
-        const client = new MqClient(TestConnectionUrl, createMockTokenProvider());
+        const client = new MqClient(TestConnectionUrl, createMockCredential());
         const result = await client.readAsync({ Queue: "MY.QUEUE" });
 
         expect(result).toEqual(mockItem);
@@ -195,7 +195,7 @@ describe("MqClient — readAllAsync", () => {
         const mockItems: ItemsList = {};
         mockFetchResponse(mockItems);
 
-        const client = new MqClient(TestConnectionUrl, createMockTokenProvider());
+        const client = new MqClient(TestConnectionUrl, createMockCredential());
         const result = await client.readAllAsync({ Queue: "MY.QUEUE" });
 
         expect(result).toEqual(mockItems);
@@ -213,7 +213,7 @@ describe("MqClient — deleteAsync", () => {
         const mockItem: Item = { MessageData: "test-data" };
         mockFetchResponse(mockItem);
 
-        const client = new MqClient(TestConnectionUrl, createMockTokenProvider());
+        const client = new MqClient(TestConnectionUrl, createMockCredential());
         const result = await client.deleteAsync({ Queue: "MY.QUEUE", MessageId: "msg-1" });
 
         expect(result).toEqual(mockItem);
@@ -232,7 +232,7 @@ describe("MqClient — deleteAllAsync", () => {
         const mockItems: ItemsList = {};
         mockFetchResponse(mockItems);
 
-        const client = new MqClient(TestConnectionUrl, createMockTokenProvider());
+        const client = new MqClient(TestConnectionUrl, createMockCredential());
         const result = await client.deleteAllAsync({ Queue: "MY.QUEUE" });
 
         expect(result).toEqual(mockItems);
@@ -249,7 +249,7 @@ describe("MqClient — error handling", () => {
     it("should throw ConnectorException on non-OK response", async () => {
         mockFetchError(500, '{"error": "QueueNotFound"}');
 
-        const client = new MqClient(TestConnectionUrl, createMockTokenProvider());
+        const client = new MqClient(TestConnectionUrl, createMockCredential());
 
         await expect(
             client.sendAsync({ Queue: "BAD.QUEUE", Message: "test" }),
@@ -260,7 +260,7 @@ describe("MqClient — error handling", () => {
         const errorBody = '{"code": "Unauthorized"}';
         mockFetchError(401, errorBody);
 
-        const client = new MqClient(TestConnectionUrl, createMockTokenProvider());
+        const client = new MqClient(TestConnectionUrl, createMockCredential());
 
         try {
             await client.receiveAsync({ Queue: "MY.QUEUE" });

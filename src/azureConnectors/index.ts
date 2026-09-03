@@ -9,10 +9,10 @@
  */
 
 export type { AbortSignalLike } from "@azure/abort-controller";
+export type { TokenCredential } from "@azure/core-auth";
 export { ConnectorClientBase } from "./clientBase.ts";
 export { ConnectorClientOptions, DefaultConnectorClientOptions } from "./options.ts";
 export {
-    TokenProvider,
     ManagedIdentityTokenProvider,
     ConnectionStringTokenProvider,
 } from "./authentication.ts";
