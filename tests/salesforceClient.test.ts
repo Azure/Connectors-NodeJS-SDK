@@ -38,7 +38,11 @@ function mockFetchError(status: number, errorBody: string): void {
 
 describe("SalesforceClient — constructor", () => {
     it("should construct with valid options", () => {
-        const client = new SalesforceClient(TestConnectionUrl, createMockCredential());
+        const client = new SalesforceClient(
+            TestConnectionUrl,
+            createMockCredential(),
+            { retryOptions: { maxRetries: 0 } },
+        );
         expect(client).toBeDefined();
         expect(client).toBeInstanceOf(SalesforceClient);
     });
@@ -65,7 +69,11 @@ describe("SalesforceClient — getTablesAsync", () => {
     it("should throw ConnectorException on non-OK response", async () => {
         mockFetchError(500, '{"error":"Internal"}');
 
-        const client = new SalesforceClient(TestConnectionUrl, createMockCredential());
+        const client = new SalesforceClient(
+            TestConnectionUrl,
+            createMockCredential(),
+            { retryOptions: { maxRetries: 0 } },
+        );
         await expect(client.getTablesAsync()).rejects.toThrow(ConnectorException);
     });
 });

@@ -1,22 +1,26 @@
 // Copyright (c) Microsoft Corporation.  All rights reserved.
 
-import { ConnectorClientOptions, DefaultConnectorClientOptions } from "../src/azureConnectors/options.ts";
+import { DefaultConnectorClientOptions } from "../src/azureConnectors/options.ts";
+import type { ConnectorClientOptions } from "../src/azureConnectors/options.ts";
 
 describe("ConnectorClientOptions", () => {
-    it("should have sensible defaults", () => {
-        expect(DefaultConnectorClientOptions.maxRetryAttempts).toBe(3);
-        expect(DefaultConnectorClientOptions.timeoutMs).toBe(30000);
-        expect(DefaultConnectorClientOptions.useExponentialBackoff).toBe(true);
-        expect(DefaultConnectorClientOptions.initialRetryDelayMs).toBe(500);
+    it("should default the connector base URI", () => {
+        expect(DefaultConnectorClientOptions).toEqual({ baseUri: "" });
     });
 
-    it("should allow partial overrides", () => {
+    it("should accept standard pipeline options", () => {
         const options: ConnectorClientOptions = {
-            timeoutMs: 60000,
+            retryOptions: {
+                maxRetries: 4,
+                retryDelayInMs: 1000,
+                maxRetryDelayInMs: 60000,
+            },
+            telemetryOptions: {
+                clientRequestIdHeaderName: "x-custom-request-id",
+            },
         };
 
-        const merged = { ...DefaultConnectorClientOptions, ...options };
-        expect(merged.timeoutMs).toBe(60000);
-        expect(merged.maxRetryAttempts).toBe(3);
+        expect(options.retryOptions?.maxRetries).toBe(4);
+        expect(options.telemetryOptions?.clientRequestIdHeaderName).toBe("x-custom-request-id");
     });
 });

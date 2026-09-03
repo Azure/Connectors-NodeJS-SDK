@@ -71,7 +71,11 @@ const _sendResponse: SendResponse = {
 
 describe("MqClient — constructor", () => {
     it("should construct with valid options", () => {
-        const client = new MqClient(TestConnectionUrl, createMockCredential());
+        const client = new MqClient(
+            TestConnectionUrl,
+            createMockCredential(),
+            { retryOptions: { maxRetries: 0 } },
+        );
         expect(client).toBeDefined();
         expect(client).toBeInstanceOf(MqClient);
     });
@@ -249,7 +253,11 @@ describe("MqClient — error handling", () => {
     it("should throw ConnectorException on non-OK response", async () => {
         mockFetchError(500, '{"error": "QueueNotFound"}');
 
-        const client = new MqClient(TestConnectionUrl, createMockCredential());
+        const client = new MqClient(
+            TestConnectionUrl,
+            createMockCredential(),
+            { retryOptions: { maxRetries: 0 } },
+        );
 
         await expect(
             client.sendAsync({ Queue: "BAD.QUEUE", Message: "test" }),
