@@ -53,7 +53,7 @@ describe("Office365groupsmailClient — constructor", () => {
     it("should strip trailing slashes from connection URL", async () => {
         mockFetchResponse([]);
         const client = new Office365groupsmailClient(TestConnectionUrl + "///", createMockCredential());
-        await client.listConversationsAsync("group1");
+        await client.listConversationsAsync("group1").byPage().next();
         const [url] = (global.fetch as jest.Mock).mock.calls[0];
         // NOTE: Confirms the trailing slashes were stripped by inspecting the
         //       outbound URL: after the scheme, no `//` should remain.
@@ -82,9 +82,9 @@ describe("Office365groupsmailClient — listConversationsAsync", () => {
         mockFetchResponse(conversations);
 
         const client = new Office365groupsmailClient(TestConnectionUrl, createMockCredential());
-        const result = await client.listConversationsAsync("group1");
+        const result = await client.listConversationsAsync("group1").byPage().next();
 
-        expect(result).toEqual(conversations);
+        expect(result.value).toEqual(conversations.value);
         expect(global.fetch).toHaveBeenCalledTimes(1);
         const [url, init] = (global.fetch as jest.Mock).mock.calls[0];
         expect(init.method).toBe("GET");
@@ -97,7 +97,7 @@ describe("Office365groupsmailClient — listConversationsAsync", () => {
 
         const client = new Office365groupsmailClient(TestConnectionUrl, createMockCredential());
         try {
-            await client.listConversationsAsync("group1");
+            await client.listConversationsAsync("group1").byPage().next();
             throw new Error("Expected ConnectorException to be thrown.");
         } catch (error) {
             expect(error).toBeInstanceOf(ConnectorException);

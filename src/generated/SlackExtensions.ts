@@ -3,6 +3,7 @@
 
 import type { AbortSignalLike } from "@azure/abort-controller";
 import type { TokenCredential } from "@azure/core-auth";
+import type { PagedAsyncIterableIterator } from "@azure/core-paging";
 import { ConnectorClientBase } from "../azureConnectors/clientBase.ts";
 import { ConnectorException } from "../azureConnectors/connectorException.ts";
 import { ConnectorClientOptions } from "../azureConnectors/options.ts";
@@ -211,16 +212,20 @@ export class SlackClient extends ConnectorClientBase {
      * List public channels (Pagination support)
      * @remarks List the public channels in slack.
      */
-    public async listChannelsAsync(abortSignal?: AbortSignalLike): Promise<ListChannelsResponse> {
+    public listChannelsAsync(abortSignal?: AbortSignalLike): PagedAsyncIterableIterator<Channel> {
         const requestPath = `/v3/conversations.list`;
-        const requestUrl = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<ListChannelsResponse>("GET", requestUrl, undefined, undefined, abortSignal);
+        return this.createPageable<ListChannelsResponse, Channel>(
+            requestPath,
+            async (requestUrl) => {
+                const httpResponse = await this.httpClient.sendAsync<ListChannelsResponse>("GET", requestUrl, undefined, undefined, abortSignal);
 
-        if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
-        }
+                if (!httpResponse.isSuccessStatusCode) {
+                    throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+                }
 
-        return httpResponse.value as ListChannelsResponse;
+                return httpResponse.value as ListChannelsResponse;
+            },
+        );
     }
 
     /**

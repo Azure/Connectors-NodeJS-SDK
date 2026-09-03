@@ -3,6 +3,7 @@
 
 import type { AbortSignalLike } from "@azure/abort-controller";
 import type { TokenCredential } from "@azure/core-auth";
+import type { PagedAsyncIterableIterator } from "@azure/core-paging";
 import { ConnectorClientBase } from "../azureConnectors/clientBase.ts";
 import { ConnectorException } from "../azureConnectors/connectorException.ts";
 import { ConnectorClientOptions } from "../azureConnectors/options.ts";
@@ -628,20 +629,24 @@ export class ArmClient extends ConnectorClientBase {
      * List subscriptions
      * @remarks Gets a list of all the subscriptions to which the principal has access.
      */
-    public async subscriptionsListAsync(xMsApiVersion?: string, abortSignal?: AbortSignalLike): Promise<SubscriptionListResult> {
+    public subscriptionsListAsync(xMsApiVersion?: string, abortSignal?: AbortSignalLike): PagedAsyncIterableIterator<Subscription> {
         const queryParams: string[] = [];
         if (xMsApiVersion !== undefined) {
             queryParams.push(`x-ms-api-version=${encodeURIComponent(String(xMsApiVersion))}`);
         }
         const requestPath = `/subscriptions` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
-        const requestUrl = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<SubscriptionListResult>("GET", requestUrl, undefined, undefined, abortSignal);
+        return this.createPageable<SubscriptionListResult, Subscription>(
+            requestPath,
+            async (requestUrl) => {
+                const httpResponse = await this.httpClient.sendAsync<SubscriptionListResult>("GET", requestUrl, undefined, undefined, abortSignal);
 
-        if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
-        }
+                if (!httpResponse.isSuccessStatusCode) {
+                    throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+                }
 
-        return httpResponse.value as SubscriptionListResult;
+                return httpResponse.value as SubscriptionListResult;
+            },
+        );
     }
 
     /**
@@ -770,7 +775,7 @@ export class ArmClient extends ConnectorClientBase {
      * List template deployments
      * @remarks Lists all the resource group template deployments. This operation is useful to know what has been provisioned thus far.
      */
-    public async deploymentsListAsync(subscriptionId: string, resourceGroupName: string, filter?: string, top?: string, xMsApiVersion?: string, abortSignal?: AbortSignalLike): Promise<DeploymentListResult> {
+    public deploymentsListAsync(subscriptionId: string, resourceGroupName: string, filter?: string, top?: string, xMsApiVersion?: string, abortSignal?: AbortSignalLike): PagedAsyncIterableIterator<DeploymentExtended> {
         const queryParams: string[] = [];
         if (filter !== undefined) {
             queryParams.push(`$filter=${encodeURIComponent(String(filter))}`);
@@ -782,14 +787,18 @@ export class ArmClient extends ConnectorClientBase {
             queryParams.push(`x-ms-api-version=${encodeURIComponent(String(xMsApiVersion))}`);
         }
         const requestPath = `/subscriptions/${subscriptionId}/resourcegroups/${resourceGroupName}/providers/Microsoft.Resources/deployments` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
-        const requestUrl = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<DeploymentListResult>("GET", requestUrl, undefined, undefined, abortSignal);
+        return this.createPageable<DeploymentListResult, DeploymentExtended>(
+            requestPath,
+            async (requestUrl) => {
+                const httpResponse = await this.httpClient.sendAsync<DeploymentListResult>("GET", requestUrl, undefined, undefined, abortSignal);
 
-        if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
-        }
+                if (!httpResponse.isSuccessStatusCode) {
+                    throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+                }
 
-        return httpResponse.value as DeploymentListResult;
+                return httpResponse.value as DeploymentListResult;
+            },
+        );
     }
 
     /**
@@ -816,7 +825,7 @@ export class ArmClient extends ConnectorClientBase {
      * Lists template deployment operations
      * @remarks Lists all the template deployment operations. This is useful for troubleshooting failed template deployments.
      */
-    public async deploymentOperationsListAsync(subscriptionId: string, resourceGroupName: string, deploymentName: string, top?: string, xMsApiVersion?: string, abortSignal?: AbortSignalLike): Promise<DeploymentOperationsListResult> {
+    public deploymentOperationsListAsync(subscriptionId: string, resourceGroupName: string, deploymentName: string, top?: string, xMsApiVersion?: string, abortSignal?: AbortSignalLike): PagedAsyncIterableIterator<DeploymentOperation> {
         const queryParams: string[] = [];
         if (top !== undefined) {
             queryParams.push(`$top=${encodeURIComponent(String(top))}`);
@@ -825,14 +834,18 @@ export class ArmClient extends ConnectorClientBase {
             queryParams.push(`x-ms-api-version=${encodeURIComponent(String(xMsApiVersion))}`);
         }
         const requestPath = `/subscriptions/${subscriptionId}/resourcegroups/${resourceGroupName}/deployments/${deploymentName}/operations` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
-        const requestUrl = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<DeploymentOperationsListResult>("GET", requestUrl, undefined, undefined, abortSignal);
+        return this.createPageable<DeploymentOperationsListResult, DeploymentOperation>(
+            requestPath,
+            async (requestUrl) => {
+                const httpResponse = await this.httpClient.sendAsync<DeploymentOperationsListResult>("GET", requestUrl, undefined, undefined, abortSignal);
 
-        if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
-        }
+                if (!httpResponse.isSuccessStatusCode) {
+                    throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+                }
 
-        return httpResponse.value as DeploymentOperationsListResult;
+                return httpResponse.value as DeploymentOperationsListResult;
+            },
+        );
     }
 
     /**
@@ -879,7 +892,7 @@ export class ArmClient extends ConnectorClientBase {
      * List resource providers
      * @remarks Lists the resource providers available for the subscription.
      */
-    public async providersListAsync(subscriptionId: string, top?: string, expand?: string, xMsApiVersion?: string, abortSignal?: AbortSignalLike): Promise<ProviderListResult> {
+    public providersListAsync(subscriptionId: string, top?: string, expand?: string, xMsApiVersion?: string, abortSignal?: AbortSignalLike): PagedAsyncIterableIterator<Provider> {
         const queryParams: string[] = [];
         if (top !== undefined) {
             queryParams.push(`$top=${encodeURIComponent(String(top))}`);
@@ -891,14 +904,18 @@ export class ArmClient extends ConnectorClientBase {
             queryParams.push(`x-ms-api-version=${encodeURIComponent(String(xMsApiVersion))}`);
         }
         const requestPath = `/subscriptions/${subscriptionId}/providers` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
-        const requestUrl = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<ProviderListResult>("GET", requestUrl, undefined, undefined, abortSignal);
+        return this.createPageable<ProviderListResult, Provider>(
+            requestPath,
+            async (requestUrl) => {
+                const httpResponse = await this.httpClient.sendAsync<ProviderListResult>("GET", requestUrl, undefined, undefined, abortSignal);
 
-        if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
-        }
+                if (!httpResponse.isSuccessStatusCode) {
+                    throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+                }
 
-        return httpResponse.value as ProviderListResult;
+                return httpResponse.value as ProviderListResult;
+            },
+        );
     }
 
     /**
@@ -928,7 +945,7 @@ export class ArmClient extends ConnectorClientBase {
      * List resources by resource group
      * @remarks Lists all the resources under a resource group.
      */
-    public async resourceGroupsListResourcesAsync(subscriptionId: string, resourceGroupName: string, xMsApiVersion?: string, filter?: string, expand?: string, top?: string, abortSignal?: AbortSignalLike): Promise<ResourceListResult> {
+    public resourceGroupsListResourcesAsync(subscriptionId: string, resourceGroupName: string, xMsApiVersion?: string, filter?: string, expand?: string, top?: string, abortSignal?: AbortSignalLike): PagedAsyncIterableIterator<GenericResource> {
         const queryParams: string[] = [];
         if (xMsApiVersion !== undefined) {
             queryParams.push(`x-ms-api-version=${encodeURIComponent(String(xMsApiVersion))}`);
@@ -943,14 +960,18 @@ export class ArmClient extends ConnectorClientBase {
             queryParams.push(`$top=${encodeURIComponent(String(top))}`);
         }
         const requestPath = `/subscriptions/${subscriptionId}/resourceGroups/${resourceGroupName}/resources` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
-        const requestUrl = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<ResourceListResult>("GET", requestUrl, undefined, undefined, abortSignal);
+        return this.createPageable<ResourceListResult, GenericResource>(
+            requestPath,
+            async (requestUrl) => {
+                const httpResponse = await this.httpClient.sendAsync<ResourceListResult>("GET", requestUrl, undefined, undefined, abortSignal);
 
-        if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
-        }
+                if (!httpResponse.isSuccessStatusCode) {
+                    throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+                }
 
-        return httpResponse.value as ResourceListResult;
+                return httpResponse.value as ResourceListResult;
+            },
+        );
     }
 
     /**
@@ -1055,7 +1076,7 @@ export class ArmClient extends ConnectorClientBase {
      * List resource groups
      * @remarks Lists all the resource groups within the subscription. The results are paginated at 1,000+ records.
      */
-    public async resourceGroupsListAsync(subscriptionId: string, xMsApiVersion?: string, filter?: string, top?: string, abortSignal?: AbortSignalLike): Promise<ResourceGroupListResult> {
+    public resourceGroupsListAsync(subscriptionId: string, xMsApiVersion?: string, filter?: string, top?: string, abortSignal?: AbortSignalLike): PagedAsyncIterableIterator<ResourceGroup> {
         const queryParams: string[] = [];
         if (xMsApiVersion !== undefined) {
             queryParams.push(`x-ms-api-version=${encodeURIComponent(String(xMsApiVersion))}`);
@@ -1067,21 +1088,25 @@ export class ArmClient extends ConnectorClientBase {
             queryParams.push(`$top=${encodeURIComponent(String(top))}`);
         }
         const requestPath = `/subscriptions/${subscriptionId}/resourcegroups` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
-        const requestUrl = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<ResourceGroupListResult>("GET", requestUrl, undefined, undefined, abortSignal);
+        return this.createPageable<ResourceGroupListResult, ResourceGroup>(
+            requestPath,
+            async (requestUrl) => {
+                const httpResponse = await this.httpClient.sendAsync<ResourceGroupListResult>("GET", requestUrl, undefined, undefined, abortSignal);
 
-        if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
-        }
+                if (!httpResponse.isSuccessStatusCode) {
+                    throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+                }
 
-        return httpResponse.value as ResourceGroupListResult;
+                return httpResponse.value as ResourceGroupListResult;
+            },
+        );
     }
 
     /**
      * List resources by subscription
      * @remarks Reads all of the resources under a particular subscription. The results are paginated at 1,000+ records.
      */
-    public async resourcesListAsync(subscriptionId: string, filter?: string, expand?: string, top?: string, xMsApiVersion?: string, abortSignal?: AbortSignalLike): Promise<ResourceListResult> {
+    public resourcesListAsync(subscriptionId: string, filter?: string, expand?: string, top?: string, xMsApiVersion?: string, abortSignal?: AbortSignalLike): PagedAsyncIterableIterator<GenericResource> {
         const queryParams: string[] = [];
         if (filter !== undefined) {
             queryParams.push(`$filter=${encodeURIComponent(String(filter))}`);
@@ -1096,14 +1121,18 @@ export class ArmClient extends ConnectorClientBase {
             queryParams.push(`x-ms-api-version=${encodeURIComponent(String(xMsApiVersion))}`);
         }
         const requestPath = `/subscriptions/${subscriptionId}/resources` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
-        const requestUrl = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<ResourceListResult>("GET", requestUrl, undefined, undefined, abortSignal);
+        return this.createPageable<ResourceListResult, GenericResource>(
+            requestPath,
+            async (requestUrl) => {
+                const httpResponse = await this.httpClient.sendAsync<ResourceListResult>("GET", requestUrl, undefined, undefined, abortSignal);
 
-        if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
-        }
+                if (!httpResponse.isSuccessStatusCode) {
+                    throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+                }
 
-        return httpResponse.value as ResourceListResult;
+                return httpResponse.value as ResourceListResult;
+            },
+        );
     }
 
     /**
@@ -1304,20 +1333,24 @@ export class ArmClient extends ConnectorClientBase {
      * List subscription resource tags
      * @remarks Lists all the subscription resource tags.
      */
-    public async tagsListAsync(subscriptionId: string, xMsApiVersion?: string, abortSignal?: AbortSignalLike): Promise<TagsListResult> {
+    public tagsListAsync(subscriptionId: string, xMsApiVersion?: string, abortSignal?: AbortSignalLike): PagedAsyncIterableIterator<TagDetails> {
         const queryParams: string[] = [];
         if (xMsApiVersion !== undefined) {
             queryParams.push(`x-ms-api-version=${encodeURIComponent(String(xMsApiVersion))}`);
         }
         const requestPath = `/subscriptions/${subscriptionId}/tagNames` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
-        const requestUrl = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<TagsListResult>("GET", requestUrl, undefined, undefined, abortSignal);
+        return this.createPageable<TagsListResult, TagDetails>(
+            requestPath,
+            async (requestUrl) => {
+                const httpResponse = await this.httpClient.sendAsync<TagsListResult>("GET", requestUrl, undefined, undefined, abortSignal);
 
-        if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
-        }
+                if (!httpResponse.isSuccessStatusCode) {
+                    throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+                }
 
-        return httpResponse.value as TagsListResult;
+                return httpResponse.value as TagsListResult;
+            },
+        );
     }
 
 }

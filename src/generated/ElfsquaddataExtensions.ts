@@ -3,6 +3,7 @@
 
 import type { AbortSignalLike } from "@azure/abort-controller";
 import type { TokenCredential } from "@azure/core-auth";
+import type { PagedAsyncIterableIterator } from "@azure/core-paging";
 import { ConnectorClientBase } from "../azureConnectors/clientBase.ts";
 import { ConnectorException } from "../azureConnectors/connectorException.ts";
 import { ConnectorClientOptions } from "../azureConnectors/options.ts";
@@ -112,7 +113,7 @@ export class ElfsquaddataClient extends ConnectorClientBase {
      * Get entities
      * @remarks Get entities
      */
-    public async getEntitiesAsync(entityName: string, top?: string, skip?: string, orderby?: string, filter?: string, select?: string, expand?: string, count?: string, abortSignal?: AbortSignalLike): Promise<GetEntitiesResponse> {
+    public getEntitiesAsync(entityName: string, top?: string, skip?: string, orderby?: string, filter?: string, select?: string, expand?: string, count?: string, abortSignal?: AbortSignalLike): PagedAsyncIterableIterator<unknown> {
         const queryParams: string[] = [];
         if (top !== undefined) {
             queryParams.push(`$top=${encodeURIComponent(String(top))}`);
@@ -136,14 +137,18 @@ export class ElfsquaddataClient extends ConnectorClientBase {
             queryParams.push(`$count=${encodeURIComponent(String(count))}`);
         }
         const requestPath = `/data/1/${entityName}` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
-        const requestUrl = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<GetEntitiesResponse>("GET", requestUrl, undefined, undefined, abortSignal);
+        return this.createPageable<GetEntitiesResponse, unknown>(
+            requestPath,
+            async (requestUrl) => {
+                const httpResponse = await this.httpClient.sendAsync<GetEntitiesResponse>("GET", requestUrl, undefined, undefined, abortSignal);
 
-        if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
-        }
+                if (!httpResponse.isSuccessStatusCode) {
+                    throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+                }
 
-        return httpResponse.value as GetEntitiesResponse;
+                return httpResponse.value as GetEntitiesResponse;
+            },
+        );
     }
 
     /**

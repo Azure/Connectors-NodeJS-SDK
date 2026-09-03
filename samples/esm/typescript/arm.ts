@@ -24,7 +24,7 @@
  */
 
 import { ManagedIdentityTokenProvider, ConnectorException } from "@azure/connectors";
-import { ArmClient, SubscriptionListResult, LocationListResult, ResourceGroupListResult } from "@azure/connectors/generated/ArmExtensions";
+import { ArmClient, Subscription, LocationListResult, ResourceGroup } from "@azure/connectors/generated/ArmExtensions";
 
 const CONNECTION_URL = process.env.ARM_CONNECTION_URL ?? "";
 const SUBSCRIPTION_ID = process.env.ARM_SUBSCRIPTION_ID ?? "";
@@ -44,12 +44,14 @@ async function main(): Promise<void> {
     // Example 1: List subscriptions
     console.log("\n--- List Subscriptions ---");
     try {
-        const subscriptions: SubscriptionListResult = await client.subscriptionsListAsync();
-        const subs = subscriptions.value ?? [];
+        const subscriptions: Subscription[] = [];
+        for await (const subscription of client.subscriptionsListAsync()) {
+            subscriptions.push(subscription);
+        }
 
-        if (subs.length > 0) {
-            console.log(`Found ${subs.length} subscriptions:`);
-            for (const sub of subs.slice(0, 5)) {
+        if (subscriptions.length > 0) {
+            console.log(`Found ${subscriptions.length} subscriptions:`);
+            for (const sub of subscriptions.slice(0, 5)) {
                 console.log(`  - ${sub.displayName ?? "Unknown"} (${sub.subscriptionId})`);
             }
         } else {
@@ -89,12 +91,14 @@ async function main(): Promise<void> {
         // Example 3: List resource groups
         console.log("\n--- List Resource Groups ---");
         try {
-            const groups: ResourceGroupListResult = await client.resourceGroupsListAsync(SUBSCRIPTION_ID);
-            const groupValues = groups.value ?? [];
+            const groups: ResourceGroup[] = [];
+            for await (const group of client.resourceGroupsListAsync(SUBSCRIPTION_ID)) {
+                groups.push(group);
+            }
 
-            if (groupValues.length > 0) {
-                console.log(`Found ${groupValues.length} resource groups:`);
-                for (const group of groupValues.slice(0, 10)) {
+            if (groups.length > 0) {
+                console.log(`Found ${groups.length} resource groups:`);
+                for (const group of groups.slice(0, 10)) {
                     console.log(`  - ${group.name} (${group.location})`);
                 }
             } else {

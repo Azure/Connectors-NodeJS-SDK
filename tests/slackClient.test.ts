@@ -56,9 +56,9 @@ describe("SlackClient — listChannelsAsync", () => {
         mockFetchResponse(mockResponse);
 
         const client = new SlackClient(TestConnectionUrl, createMockCredential());
-        const result = await client.listChannelsAsync();
+        const result = await client.listChannelsAsync().byPage().next();
 
-        expect(result).toEqual(mockResponse);
+        expect(result.value).toEqual(mockResponse.value);
         const [url, init] = (global.fetch as jest.Mock).mock.calls[0];
         expect(url).toContain("/v3/conversations.list");
         expect(init.method).toBe("GET");
@@ -68,7 +68,7 @@ describe("SlackClient — listChannelsAsync", () => {
         mockFetchError(429, '{"error":"rate_limited"}');
 
         const client = new SlackClient(TestConnectionUrl, createMockCredential());
-        await expect(client.listChannelsAsync()).rejects.toThrow(ConnectorException);
+        await expect(client.listChannelsAsync().byPage().next()).rejects.toThrow(ConnectorException);
     });
 });
 

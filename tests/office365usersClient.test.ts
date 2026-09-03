@@ -137,9 +137,9 @@ describe("Office365usersClient — searchUserAsync", () => {
         mockFetchResponse(mockResponse);
 
         const client = new Office365usersClient(TestConnectionUrl, createMockCredential());
-        const result = await client.searchUserAsync("John");
+        const result = await client.searchUserAsync("John").byPage().next();
 
-        expect(result).toEqual(mockResponse);
+        expect(result.value).toEqual(mockResponse.value);
         const [url] = (global.fetch as jest.Mock).mock.calls[0];
         expect(url).toContain("/v2/users");
         expect(url).toContain("searchTerm=John");

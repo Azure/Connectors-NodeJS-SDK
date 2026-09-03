@@ -121,9 +121,9 @@ describe("ArmClient — subscriptionsListAsync", () => {
         mockFetchResponse(mockResponse);
 
         const client = new ArmClient(TestConnectionUrl, createMockCredential());
-        const result = await client.subscriptionsListAsync(TestSubscriptionId);
+        const result = await client.subscriptionsListAsync(TestSubscriptionId).byPage().next();
 
-        expect(result).toEqual(mockResponse);
+        expect(result.value).toEqual(mockResponse.value);
         const [url, init] = (global.fetch as jest.Mock).mock.calls[0];
         expect(url).toContain("/subscriptions");
         expect(init.method).toBe("GET");
@@ -184,9 +184,9 @@ describe("ArmClient — resourceGroupsListAsync", () => {
         mockFetchResponse(mockResponse);
 
         const client = new ArmClient(TestConnectionUrl, createMockCredential());
-        const result = await client.resourceGroupsListAsync(TestSubscriptionId);
+        const result = await client.resourceGroupsListAsync(TestSubscriptionId).byPage().next();
 
-        expect(result).toEqual(mockResponse);
+        expect(result.value).toEqual(mockResponse.value);
         const [url, init] = (global.fetch as jest.Mock).mock.calls[0];
         expect(url).toContain("/resourcegroups");
         expect(init.method).toBe("GET");
@@ -312,9 +312,9 @@ describe("ArmClient — providersListAsync", () => {
         mockFetchResponse(mockResponse);
 
         const client = new ArmClient(TestConnectionUrl, createMockCredential());
-        const result = await client.providersListAsync(TestSubscriptionId);
+        const result = await client.providersListAsync(TestSubscriptionId).byPage().next();
 
-        expect(result).toEqual(mockResponse);
+        expect(result.value).toEqual(mockResponse.value);
         const [url] = (global.fetch as jest.Mock).mock.calls[0];
         expect(url).toContain("/providers");
     });
@@ -331,7 +331,7 @@ describe("ArmClient — error handling", () => {
         const client = new ArmClient(TestConnectionUrl, createMockCredential());
 
         await expect(
-            client.subscriptionsListAsync(TestSubscriptionId),
+            client.subscriptionsListAsync(TestSubscriptionId).byPage().next(),
         ).rejects.toThrow(ConnectorException);
     });
 

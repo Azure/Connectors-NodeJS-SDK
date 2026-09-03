@@ -112,9 +112,9 @@ describe("AzureblobClient — listRootFolderAsync", () => {
         mockFetchResponse(mockResponse);
 
         const client = new AzureblobClient(TestConnectionUrl, createMockCredential());
-        const result = await client.listRootFolderAsync(TestDataset);
+        const result = await client.listRootFolderAsync(TestDataset).byPage().next();
 
-        expect(result).toEqual(mockResponse);
+        expect(result.value).toEqual(mockResponse.value);
         const [url, init] = (global.fetch as jest.Mock).mock.calls[0];
         expect(url).toContain("/foldersV2");
         expect(init.method).toBe("GET");
@@ -256,7 +256,7 @@ describe("AzureblobClient — error handling", () => {
         const client = new AzureblobClient(TestConnectionUrl, createMockCredential());
 
         await expect(
-            client.listRootFolderAsync(TestDataset),
+            client.listRootFolderAsync(TestDataset).byPage().next(),
         ).rejects.toThrow(ConnectorException);
     });
 

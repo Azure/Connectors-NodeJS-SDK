@@ -3,6 +3,7 @@
 
 import type { AbortSignalLike } from "@azure/abort-controller";
 import type { TokenCredential } from "@azure/core-auth";
+import type { PagedAsyncIterableIterator } from "@azure/core-paging";
 import { ConnectorClientBase } from "../azureConnectors/clientBase.ts";
 import { ConnectorException } from "../azureConnectors/connectorException.ts";
 import { ConnectorClientOptions } from "../azureConnectors/options.ts";
@@ -815,7 +816,7 @@ export class OnedriveforbusinessClient extends ConnectorClientBase {
      * List files in folder
      * @remarks This operation gets the list of files and subfolders in a folder.
      */
-    public async listFolderAsync(id: string, skipToken?: string, top?: string, abortSignal?: AbortSignalLike): Promise<BlobMetadataPage> {
+    public listFolderAsync(id: string, skipToken?: string, top?: string, abortSignal?: AbortSignalLike): PagedAsyncIterableIterator<BlobMetadata> {
         const queryParams: string[] = [];
         if (skipToken !== undefined) {
             queryParams.push(`skipToken=${encodeURIComponent(String(skipToken))}`);
@@ -824,14 +825,18 @@ export class OnedriveforbusinessClient extends ConnectorClientBase {
             queryParams.push(`top=${encodeURIComponent(String(top))}`);
         }
         const requestPath = `/datasets/default/foldersV2/${id}` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
-        const requestUrl = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<BlobMetadataPage>("GET", requestUrl, undefined, undefined, abortSignal);
+        return this.createPageable<BlobMetadataPage, BlobMetadata>(
+            requestPath,
+            async (requestUrl) => {
+                const httpResponse = await this.httpClient.sendAsync<BlobMetadataPage>("GET", requestUrl, undefined, undefined, abortSignal);
 
-        if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
-        }
+                if (!httpResponse.isSuccessStatusCode) {
+                    throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+                }
 
-        return httpResponse.value as BlobMetadataPage;
+                return httpResponse.value as BlobMetadataPage;
+            },
+        );
     }
 
 }
