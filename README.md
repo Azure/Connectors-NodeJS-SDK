@@ -367,10 +367,14 @@ import { ConnectorClientOptions } from "@azure/connectors";
 import { Office365Client } from "@azure/connectors/generated/Office365Extensions";
 
 const options: ConnectorClientOptions = {
-    timeoutMs: 60000,                   // Request timeout (default: 30000)
-    maxRetryAttempts: 5,                // Total request attempts (default: 3)
-    useExponentialBackoff: true,        // Exponential backoff (default: true)
-    initialRetryDelayMs: 1000,          // Initial retry delay (default: 500)
+    retryOptions: {
+        maxRetries: 4,
+        retryDelayInMs: 1000,
+        maxRetryDelayInMs: 60000,
+    },
+    telemetryOptions: {
+        clientRequestIdHeaderName: "x-custom-request-id",
+    },
 };
 
 const client = new Office365Client(connectionUrl, credential, options);
@@ -380,10 +384,11 @@ const client = new Office365Client(connectionUrl, credential, options);
 import { Office365Client } from "@azure/connectors/generated/Office365Extensions";
 
 const client = new Office365Client(connectionUrl, credential, {
-    timeoutMs: 60000,
-    maxRetryAttempts: 5,
-    useExponentialBackoff: true,
-    initialRetryDelayMs: 1000,
+    retryOptions: {
+        maxRetries: 4,
+        retryDelayInMs: 1000,
+        maxRetryDelayInMs: 60000,
+    },
 });
 ```
 
@@ -434,7 +439,7 @@ try {
 ├── src/azureConnectors/            # Core SDK infrastructure
 │   ├── authentication.ts           # Token providers
 │   ├── clientBase.ts               # Base connector client
-│   ├── connectorHttpClient.ts      # HTTP client with retry
+│   ├── connectorHttpClient.ts      # Azure Core HTTP pipeline
 │   ├── options.ts                  # Configuration options
 │   ├── connectorException.ts       # Exception types
 │   └── triggerPayload.ts           # Trigger callback types

@@ -17,11 +17,10 @@ import {
 import type {
     HttpClient,
     HttpMethods,
-    InternalPipelineOptions,
     Pipeline,
+    PipelineOptions,
     PipelineResponse,
 } from "@azure/core-rest-pipeline";
-import { DefaultConnectorClientOptions } from "./options.ts";
 import type { ConnectorClientOptions } from "./options.ts";
 
 /**
@@ -52,9 +51,8 @@ export class ConnectorHttpClient {
 
     private readonly credential: TokenCredential;
     private readonly httpClient: HttpClient;
-    private readonly pipelineOptions: InternalPipelineOptions;
+    private readonly pipelineOptions: PipelineOptions;
     private readonly pipelines = new Map<string, Pipeline>();
-    private readonly timeoutMs: number;
 
     /**
      * Initializes a ConnectorHttpClient.
@@ -66,23 +64,12 @@ export class ConnectorHttpClient {
             throw new Error("credential cannot be null or undefined.");
         }
 
-        const effectiveOptions = {
-            ...DefaultConnectorClientOptions,
-            ...options,
-        };
-
         this.credential = credential;
         this.httpClient = options?.httpClient ?? createDefaultHttpClient();
-        this.timeoutMs = effectiveOptions.timeoutMs;
-        this.pipelineOptions = {
-            retryOptions: {
-                maxRetries: Math.max(0, effectiveOptions.maxRetryAttempts - 1),
-                retryDelayInMs: effectiveOptions.initialRetryDelayMs,
-                maxRetryDelayInMs: effectiveOptions.useExponentialBackoff
-                    ? undefined
-                    : effectiveOptions.initialRetryDelayMs,
-            },
-        };
+        const pipelineOptions: ConnectorClientOptions = { ...options };
+        delete pipelineOptions.baseUri;
+        delete pipelineOptions.httpClient;
+        this.pipelineOptions = pipelineOptions;
     }
 
     /**
@@ -106,7 +93,6 @@ export class ConnectorHttpClient {
             method: method as HttpMethods,
             body: body === undefined ? undefined : JSON.stringify(body),
             abortSignal,
-            timeout: this.timeoutMs,
         });
 
         if (body !== undefined) {

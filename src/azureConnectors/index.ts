@@ -11,7 +11,8 @@
 export type { AbortSignalLike } from "@azure/abort-controller";
 export type { TokenCredential } from "@azure/core-auth";
 export { ConnectorClientBase } from "./clientBase.ts";
-export { ConnectorClientOptions, DefaultConnectorClientOptions } from "./options.ts";
+export { DefaultConnectorClientOptions } from "./options.ts";
+export type { ConnectorClientOptions } from "./options.ts";
 export {
     ManagedIdentityTokenProvider,
     ConnectionStringTokenProvider,

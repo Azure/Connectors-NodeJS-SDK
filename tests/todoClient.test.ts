@@ -38,7 +38,11 @@ function mockFetchError(status: number, errorBody: string): void {
 
 describe("TodoClient — constructor", () => {
     it("should construct with valid options", () => {
-        const client = new TodoClient(TestConnectionUrl, createMockCredential());
+        const client = new TodoClient(
+            TestConnectionUrl,
+            createMockCredential(),
+            { retryOptions: { maxRetries: 0 } },
+        );
         expect(client).toBeDefined();
         expect(client).toBeInstanceOf(TodoClient);
     });
@@ -70,7 +74,11 @@ describe("TodoClient — getAllTodoListsAsync", () => {
     it("should throw ConnectorException on non-OK response", async () => {
         mockFetchError(500, '{"error":"InternalServerError"}');
 
-        const client = new TodoClient(TestConnectionUrl, createMockCredential());
+        const client = new TodoClient(
+            TestConnectionUrl,
+            createMockCredential(),
+            { retryOptions: { maxRetries: 0 } },
+        );
         await expect(client.getAllTodoListsAsync()).rejects.toThrow(ConnectorException);
     });
 });

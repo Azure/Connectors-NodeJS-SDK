@@ -102,6 +102,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed (BREAKING)
 
+- `ConnectorClientOptions` now extends Azure Core `PipelineOptions`. Replace
+  `maxRetryAttempts`, `initialRetryDelayMs`, and `useExponentialBackoff` with
+  `retryOptions`; client-wide `timeoutMs` is removed in favor of request
+  cancellation through `AbortSignalLike`.
 - Replaced the custom `TokenProvider` interface with Azure Core
   `TokenCredential`. Generated client, `ConnectorClientBase`, and
   `ConnectorHttpClient` constructors now accept `credential`; custom

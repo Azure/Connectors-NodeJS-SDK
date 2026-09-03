@@ -63,7 +63,11 @@ const _attachment: Attachment = {
 
 describe("SmtpClient — constructor", () => {
     it("should construct with valid options", () => {
-        const client = new SmtpClient(TestConnectionUrl, createMockCredential());
+        const client = new SmtpClient(
+            TestConnectionUrl,
+            createMockCredential(),
+            { retryOptions: { maxRetries: 0 } },
+        );
         expect(client).toBeDefined();
         expect(client).toBeInstanceOf(SmtpClient);
     });
@@ -169,7 +173,11 @@ describe("SmtpClient — error handling", () => {
     it("should throw ConnectorException on non-OK response", async () => {
         mockFetchError(550, '{"error": "MailboxNotFound"}');
 
-        const client = new SmtpClient(TestConnectionUrl, createMockCredential());
+        const client = new SmtpClient(
+            TestConnectionUrl,
+            createMockCredential(),
+            { retryOptions: { maxRetries: 0 } },
+        );
 
         await expect(
             client.sendEmailAsync({

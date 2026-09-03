@@ -105,7 +105,7 @@ describe("ConnectorHttpClient", () => {
         const request = httpClient.requests.at(0)!;
         expect(request.url).toBe("https://example.com/api/items");
         expect(request.method).toBe("GET");
-        expect(request.timeout).toBe(30000);
+        expect(request.timeout).toBe(0);
         expect(request.headers.get("Authorization")).toBe("Bearer mock-bearer-token");
         expect(request.headers.get("x-ms-client-request-id")).toBe(request.requestId);
         expect(credential.requestedScopes).toEqual([["https://apihub.azure.com/.default"]]);
@@ -146,8 +146,7 @@ describe("ConnectorHttpClient", () => {
         ));
         const client = new ConnectorHttpClient(new MockTokenCredential(), {
             httpClient,
-            maxRetryAttempts: 3,
-            initialRetryDelayMs: 1,
+            retryOptions: { maxRetries: 2, retryDelayInMs: 1, maxRetryDelayInMs: 1 },
         });
 
         const response = await client.sendAsync("GET", "https://example.com/api/secret");
@@ -165,9 +164,7 @@ describe("ConnectorHttpClient", () => {
         const credential = new MockTokenCredential();
         const client = new ConnectorHttpClient(credential, {
             httpClient,
-            maxRetryAttempts: 3,
-            initialRetryDelayMs: 1,
-            useExponentialBackoff: false,
+            retryOptions: { maxRetries: 2, retryDelayInMs: 1, maxRetryDelayInMs: 1 },
         });
 
         const response = await client.sendAsync<{ ok: boolean }>("GET", "https://example.com/api/items");
@@ -182,9 +179,7 @@ describe("ConnectorHttpClient", () => {
         const httpClient = new MockHttpClient(async request => createMockResponse(request, 503, "Unavailable"));
         const client = new ConnectorHttpClient(new MockTokenCredential(), {
             httpClient,
-            maxRetryAttempts: 3,
-            initialRetryDelayMs: 1,
-            useExponentialBackoff: false,
+            retryOptions: { maxRetries: 2, retryDelayInMs: 1, maxRetryDelayInMs: 1 },
         });
 
         const response = await client.sendAsync("GET", "https://example.com/api/items");
@@ -200,24 +195,25 @@ describe("ConnectorHttpClient", () => {
         });
         const client = new ConnectorHttpClient(new MockTokenCredential(), {
             httpClient,
-            maxRetryAttempts: 3,
-            initialRetryDelayMs: 1,
+            retryOptions: { maxRetries: 2, retryDelayInMs: 1 },
         });
 
         await expect(client.sendAsync("GET", "https://example.com/api/items")).rejects.toThrow(TypeError);
         expect(httpClient.requests).toHaveLength(1);
     });
 
-    it("should pass the configured timeout to the transport", async () => {
+    it("should use a custom client request ID header", async () => {
         const httpClient = new MockHttpClient(async request => createMockResponse(request, 204));
         const client = new ConnectorHttpClient(new MockTokenCredential(), {
             httpClient,
-            timeoutMs: 1234,
+            telemetryOptions: { clientRequestIdHeaderName: "x-custom-request-id" },
         });
 
         await client.sendAsync("GET", "https://example.com/api/items");
 
-        expect(httpClient.requests.at(0)!.timeout).toBe(1234);
+        const request = httpClient.requests.at(0)!;
+        expect(request.headers.get("x-custom-request-id")).toBe(request.requestId);
+        expect(request.headers.has("x-ms-client-request-id")).toBe(false);
     });
 
     it("should reject bearer authentication over HTTP", async () => {
@@ -241,7 +237,7 @@ describe("ConnectorHttpClient", () => {
         controller.abort();
         const client = new ConnectorHttpClient(new MockTokenCredential(), {
             httpClient,
-            maxRetryAttempts: 1,
+            retryOptions: { maxRetries: 0 },
         });
 
         await expect(client.sendAsync(
@@ -270,7 +266,7 @@ describe("ConnectorHttpClient", () => {
         const callerAbort = createPlainAbortSignal();
         const client = new ConnectorHttpClient(new MockTokenCredential(), {
             httpClient,
-            maxRetryAttempts: 1,
+            retryOptions: { maxRetries: 0 },
         });
 
         const sendPromise = client.sendAsync(
