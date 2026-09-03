@@ -1,8 +1,8 @@
 // Copyright (c) Microsoft Corporation.  All rights reserved.
 
+import type { TokenCredential } from "@azure/core-auth";
 import { SqlClient } from "../src/generated/SqlExtensions.ts";
 import { ConnectorException } from "../src/azureConnectors/connectorException.ts";
-import { TokenProvider } from "../src/azureConnectors/authentication.ts";
 import { ConnectorNames } from "../src/generated/connectorNames.ts";
 import { availableConnectors } from "../src/generated/ManagedConnectors.ts";
 
@@ -12,9 +12,9 @@ import { availableConnectors } from "../src/generated/ManagedConnectors.ts";
 
 const TestConnectionUrl = "https://connection-runtime.azure.com/apim/sql/abc123";
 
-function createMockTokenProvider(): TokenProvider {
+function createMockCredential(): TokenCredential {
     return {
-        getAccessTokenAsync: async () => "mock-bearer-token",
+        getToken: async () => ({ token: "mock-bearer-token", expiresOnTimestamp: Number.MAX_SAFE_INTEGER }),
     };
 }
 
@@ -42,18 +42,18 @@ function mockFetchError(status: number, errorBody: string): void {
 
 describe("SqlClient — constructor", () => {
     it("should construct with valid options", () => {
-        const client = new SqlClient(TestConnectionUrl, createMockTokenProvider());
+        const client = new SqlClient(TestConnectionUrl, createMockCredential());
         expect(client).toBeDefined();
         expect(client).toBeInstanceOf(SqlClient);
     });
 
     it("should throw on null connection URL", () => {
-        expect(() => new SqlClient(null as unknown as string, createMockTokenProvider()))
+        expect(() => new SqlClient(null as unknown as string, createMockCredential()))
             .toThrow("Parameter 'connectionRuntimeUrl' cannot be null or undefined.");
     });
 
     it("should throw on undefined connection URL", () => {
-        expect(() => new SqlClient(undefined as unknown as string, createMockTokenProvider()))
+        expect(() => new SqlClient(undefined as unknown as string, createMockCredential()))
             .toThrow("Parameter 'connectionRuntimeUrl' cannot be null or undefined.");
     });
 });
@@ -67,7 +67,7 @@ describe("SqlClient — getItemAsync", () => {
         const item = { Id: "id123", Name: "Widget", Quantity: 42 };
         mockFetchResponse(item);
 
-        const client = new SqlClient(TestConnectionUrl, createMockTokenProvider());
+        const client = new SqlClient(TestConnectionUrl, createMockCredential());
         const result = await client.getItemAsync("server", "database", "table", "id123");
 
         expect(result).toEqual(item);
@@ -80,7 +80,7 @@ describe("SqlClient — getItemAsync", () => {
     it("should throw ConnectorException on non-OK response", async () => {
         mockFetchError(404, "Not Found");
 
-        const client = new SqlClient(TestConnectionUrl, createMockTokenProvider());
+        const client = new SqlClient(TestConnectionUrl, createMockCredential());
         try {
             await client.getItemAsync("server", "database", "table", "id123");
             throw new Error("Expected ConnectorException to be thrown.");

@@ -1,11 +1,11 @@
 // Copyright (c) Microsoft Corporation.  All rights reserved.
 
+import type { TokenCredential } from "@azure/core-auth";
 import {
     ForwardPostBody,
     Office365groupsmailClient,
 } from "../src/generated/Office365groupsmailExtensions.ts";
 import { ConnectorException } from "../src/azureConnectors/connectorException.ts";
-import { TokenProvider } from "../src/azureConnectors/authentication.ts";
 import { ConnectorNames } from "../src/generated/connectorNames.ts";
 import { availableConnectors } from "../src/generated/ManagedConnectors.ts";
 
@@ -15,9 +15,9 @@ import { availableConnectors } from "../src/generated/ManagedConnectors.ts";
 
 const TestConnectionUrl = "https://connection-runtime.azure.com/apim/office365groupsmail/abc123";
 
-function createMockTokenProvider(): TokenProvider {
+function createMockCredential(): TokenCredential {
     return {
-        getAccessTokenAsync: async () => "mock-bearer-token",
+        getToken: async () => ({ token: "mock-bearer-token", expiresOnTimestamp: Number.MAX_SAFE_INTEGER }),
     };
 }
 
@@ -45,14 +45,14 @@ function mockFetchError(status: number, errorBody: string): void {
 
 describe("Office365groupsmailClient — constructor", () => {
     it("should construct with valid options", () => {
-        const client = new Office365groupsmailClient(TestConnectionUrl, createMockTokenProvider());
+        const client = new Office365groupsmailClient(TestConnectionUrl, createMockCredential());
         expect(client).toBeDefined();
         expect(client).toBeInstanceOf(Office365groupsmailClient);
     });
 
     it("should strip trailing slashes from connection URL", async () => {
         mockFetchResponse([]);
-        const client = new Office365groupsmailClient(TestConnectionUrl + "///", createMockTokenProvider());
+        const client = new Office365groupsmailClient(TestConnectionUrl + "///", createMockCredential());
         await client.listConversationsAsync("group1");
         const [url] = (global.fetch as jest.Mock).mock.calls[0];
         // NOTE: Confirms the trailing slashes were stripped by inspecting the
@@ -62,12 +62,12 @@ describe("Office365groupsmailClient — constructor", () => {
     });
 
     it("should throw on null connection URL", () => {
-        expect(() => new Office365groupsmailClient(null as unknown as string, createMockTokenProvider()))
+        expect(() => new Office365groupsmailClient(null as unknown as string, createMockCredential()))
             .toThrow("Parameter 'connectionRuntimeUrl' cannot be null or undefined.");
     });
 
     it("should throw on undefined connection URL", () => {
-        expect(() => new Office365groupsmailClient(undefined as unknown as string, createMockTokenProvider()))
+        expect(() => new Office365groupsmailClient(undefined as unknown as string, createMockCredential()))
             .toThrow("Parameter 'connectionRuntimeUrl' cannot be null or undefined.");
     });
 });
@@ -81,7 +81,7 @@ describe("Office365groupsmailClient — listConversationsAsync", () => {
         const conversations = { value: [{ id: "conv1", topic: "Welcome" }] };
         mockFetchResponse(conversations);
 
-        const client = new Office365groupsmailClient(TestConnectionUrl, createMockTokenProvider());
+        const client = new Office365groupsmailClient(TestConnectionUrl, createMockCredential());
         const result = await client.listConversationsAsync("group1");
 
         expect(result).toEqual(conversations);
@@ -95,7 +95,7 @@ describe("Office365groupsmailClient — listConversationsAsync", () => {
     it("should throw ConnectorException on non-OK response", async () => {
         mockFetchError(403, "Forbidden");
 
-        const client = new Office365groupsmailClient(TestConnectionUrl, createMockTokenProvider());
+        const client = new Office365groupsmailClient(TestConnectionUrl, createMockCredential());
         try {
             await client.listConversationsAsync("group1");
             throw new Error("Expected ConnectorException to be thrown.");
@@ -121,7 +121,7 @@ describe("Office365groupsmailClient — forwardAsync", () => {
             ToRecipients: [{ EmailAddress: { address: "recipient@example.com" } }],
         };
 
-        const client = new Office365groupsmailClient(TestConnectionUrl, createMockTokenProvider());
+        const client = new Office365groupsmailClient(TestConnectionUrl, createMockCredential());
         await client.forwardAsync(input, "group1", "conversation1", "thread1", "post1");
 
         expect(global.fetch).toHaveBeenCalledTimes(1);

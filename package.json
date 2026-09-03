@@ -59,7 +59,11 @@
     },
     "dependencies": {
         "@azure/abort-controller": "~2.1.2",
+        "@azure/core-rest-pipeline": "~1.24.0",
         "@azure/identity": "^4.0.0"
+    },
+    "peerDependencies": {
+        "@azure/core-auth": "~1.10.1"
     },
     "devDependencies": {
         "@types/jest": "^30.0.0",

@@ -1,20 +1,20 @@
 // Copyright (c) Microsoft Corporation.  All rights reserved.
 
+import type { TokenCredential } from "@azure/core-auth";
 import {
     GithubClient,
     RepositoryDetails,
     GeneralAPIModel,
 } from "../src/generated/GithubExtensions.ts";
 import { ConnectorException } from "../src/azureConnectors/connectorException.ts";
-import { TokenProvider } from "../src/azureConnectors/authentication.ts";
 import { ConnectorNames } from "../src/generated/connectorNames.ts";
 import { availableConnectors } from "../src/generated/ManagedConnectors.ts";
 
 const TestConnectionUrl = "https://connection-runtime.azure.com/apim/github/abc123";
 
-function createMockTokenProvider(): TokenProvider {
+function createMockCredential(): TokenCredential {
     return {
-        getAccessTokenAsync: async () => "mock-bearer-token",
+        getToken: async () => ({ token: "mock-bearer-token", expiresOnTimestamp: Number.MAX_SAFE_INTEGER }),
     };
 }
 
@@ -38,7 +38,7 @@ function mockFetchError(status: number, errorBody: string): void {
 
 describe("GithubClient — constructor", () => {
     it("should construct with valid options", () => {
-        const client = new GithubClient(TestConnectionUrl, createMockTokenProvider());
+        const client = new GithubClient(TestConnectionUrl, createMockCredential());
         expect(client).toBeDefined();
         expect(client).toBeInstanceOf(GithubClient);
     });
@@ -53,7 +53,7 @@ describe("GithubClient — getRepositoryByIdAsync", () => {
         const mockResponse: RepositoryDetails = { id: 123, name: "repo" };
         mockFetchResponse(mockResponse);
 
-        const client = new GithubClient(TestConnectionUrl, createMockTokenProvider());
+        const client = new GithubClient(TestConnectionUrl, createMockCredential());
         const result = await client.getRepositoryByIdAsync("123");
 
         expect(result).toEqual(mockResponse);
@@ -65,7 +65,7 @@ describe("GithubClient — getRepositoryByIdAsync", () => {
     it("should throw ConnectorException on non-OK response", async () => {
         mockFetchError(404, '{"error":"NotFound"}');
 
-        const client = new GithubClient(TestConnectionUrl, createMockTokenProvider());
+        const client = new GithubClient(TestConnectionUrl, createMockCredential());
         await expect(client.getRepositoryByIdAsync("123")).rejects.toThrow(ConnectorException);
     });
 });
@@ -79,7 +79,7 @@ describe("GithubClient — getPullRequestsAsync", () => {
         const mockResponse: GeneralAPIModel[] = [];
         mockFetchResponse(mockResponse);
 
-        const client = new GithubClient(TestConnectionUrl, createMockTokenProvider());
+        const client = new GithubClient(TestConnectionUrl, createMockCredential());
         await client.getPullRequestsAsync("owner", "repo", "open");
 
         const [url] = (global.fetch as jest.Mock).mock.calls[0];

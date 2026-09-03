@@ -6,9 +6,9 @@
  * Mirrors the Python SDK's client_base.py.
  */
 
-import { TokenProvider } from "./authentication.ts";
+import type { TokenCredential } from "@azure/core-auth";
 import { ConnectorHttpClient } from "./connectorHttpClient.ts";
-import { ConnectorClientOptions } from "./options.ts";
+import type { ConnectorClientOptions } from "./options.ts";
 
 /**
  * Abstract base class for generated connector clients.
@@ -21,21 +21,21 @@ export abstract class ConnectorClientBase {
     /**
      * Initializes a ConnectorClientBase.
      * @param connectionRuntimeUrl The connection runtime URL from Azure Portal.
-     * @param tokenProvider The token provider for authentication.
+    * @param credential The credential used for authentication.
      * @param options Optional connector client options.
      */
-    constructor(connectionRuntimeUrl: string, tokenProvider: TokenProvider, options?: ConnectorClientOptions) {
+    constructor(connectionRuntimeUrl: string, credential: TokenCredential, options?: ConnectorClientOptions) {
         if (!connectionRuntimeUrl && connectionRuntimeUrl !== "") {
             throw new Error("Parameter 'connectionRuntimeUrl' cannot be null or undefined.");
         }
 
-        if (!tokenProvider) {
-            throw new Error("tokenProvider cannot be null or undefined.");
+        if (!credential) {
+            throw new Error("credential cannot be null or undefined.");
         }
 
         this.connectionRuntimeUrl = connectionRuntimeUrl.replace(/\/+$/, "");
         this.options = options ?? {};
-        this.httpClient = new ConnectorHttpClient(tokenProvider, this.options);
+        this.httpClient = new ConnectorHttpClient(credential, this.options);
     }
 
     /**

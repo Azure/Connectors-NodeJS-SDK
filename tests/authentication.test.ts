@@ -22,10 +22,13 @@ describe("ConnectionStringTokenProvider", () => {
         expect(() => new ConnectionStringTokenProvider("")).toThrow("API key cannot be null or empty.");
     });
 
-    it("should return the API key as token", async () => {
+    it("should return the API key as a non-expiring access token", async () => {
         const provider = new ConnectionStringTokenProvider("test-api-key");
-        const token = await provider.getAccessTokenAsync(["scope"]);
-        expect(token).toBe("test-api-key");
+        const token = await provider.getToken(["scope"]);
+        expect(token).toEqual({
+            token: "test-api-key",
+            expiresOnTimestamp: Number.MAX_SAFE_INTEGER,
+        });
     });
 });
 
@@ -50,25 +53,27 @@ describe("ManagedIdentityTokenProvider", () => {
 
     it("should throw when scopes are empty", async () => {
         const provider = new ManagedIdentityTokenProvider();
-        await expect(provider.getAccessTokenAsync([])).rejects.toThrow("At least one scope must be provided.");
+        await expect(provider.getToken([])).rejects.toThrow("At least one scope must be provided.");
     });
 
     it("should throw when scopes are null or undefined", async () => {
         const provider = new ManagedIdentityTokenProvider();
-        await expect(provider.getAccessTokenAsync(null as unknown as string[])).rejects.toThrow("At least one scope must be provided.");
+        await expect(provider.getToken(null as unknown as string[])).rejects.toThrow("At least one scope must be provided.");
     });
 
-    it("should throw when credential returns null token", async () => {
+    it("should return null when the underlying credential has no token", async () => {
         mockGetToken.mockResolvedValueOnce(null);
         const provider = new ManagedIdentityTokenProvider();
-        await expect(provider.getAccessTokenAsync(["scope"])).rejects.toThrow("Failed to acquire access token.");
+        await expect(provider.getToken(["scope"])).resolves.toBeNull();
     });
 
-    it("should return the token string when credential succeeds", async () => {
-        mockGetToken.mockResolvedValueOnce({ token: "issued-token", expiresOnTimestamp: Date.now() + 3600_000 });
+    it("should return the access token and forward token options", async () => {
+        const accessToken = { token: "issued-token", expiresOnTimestamp: Date.now() + 3600_000 };
+        const options = { enableCae: true };
+        mockGetToken.mockResolvedValueOnce(accessToken);
         const provider = new ManagedIdentityTokenProvider();
-        const token = await provider.getAccessTokenAsync(["scope"]);
-        expect(token).toBe("issued-token");
-        expect(mockGetToken).toHaveBeenCalledWith(["scope"]);
+        const token = await provider.getToken(["scope"], options);
+        expect(token).toBe(accessToken);
+        expect(mockGetToken).toHaveBeenCalledWith(["scope"], options);
     });
 });

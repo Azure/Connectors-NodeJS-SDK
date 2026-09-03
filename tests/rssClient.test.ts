@@ -1,8 +1,8 @@
 // Copyright (c) Microsoft Corporation.  All rights reserved.
 
+import type { TokenCredential } from "@azure/core-auth";
 import { RssClient } from "../src/generated/RssExtensions.ts";
 import { ConnectorException } from "../src/azureConnectors/connectorException.ts";
-import { TokenProvider } from "../src/azureConnectors/authentication.ts";
 import { ConnectorNames } from "../src/generated/connectorNames.ts";
 import { availableConnectors } from "../src/generated/ManagedConnectors.ts";
 
@@ -12,9 +12,9 @@ import { availableConnectors } from "../src/generated/ManagedConnectors.ts";
 
 const TestConnectionUrl = "https://connection-runtime.azure.com/apim/rss/abc123";
 
-function createMockTokenProvider(): TokenProvider {
+function createMockCredential(): TokenCredential {
     return {
-        getAccessTokenAsync: async () => "mock-bearer-token",
+        getToken: async () => ({ token: "mock-bearer-token", expiresOnTimestamp: Number.MAX_SAFE_INTEGER }),
     };
 }
 
@@ -42,14 +42,14 @@ function mockFetchError(status: number, errorBody: string): void {
 
 describe("RssClient — constructor", () => {
     it("should construct with valid options", () => {
-        const client = new RssClient(TestConnectionUrl, createMockTokenProvider());
+        const client = new RssClient(TestConnectionUrl, createMockCredential());
         expect(client).toBeDefined();
         expect(client).toBeInstanceOf(RssClient);
     });
 
     it("should strip trailing slashes from connection URL", async () => {
         mockFetchResponse([]);
-        const client = new RssClient(TestConnectionUrl + "///", createMockTokenProvider());
+        const client = new RssClient(TestConnectionUrl + "///", createMockCredential());
         await client.listFeedItemsAsync("https://example.com/feed.xml");
         const [url] = (global.fetch as jest.Mock).mock.calls[0];
         // NOTE: Confirms the trailing slashes were stripped by inspecting the
@@ -59,12 +59,12 @@ describe("RssClient — constructor", () => {
     });
 
     it("should throw on null connection URL", () => {
-        expect(() => new RssClient(null as unknown as string, createMockTokenProvider()))
+        expect(() => new RssClient(null as unknown as string, createMockCredential()))
             .toThrow("Parameter 'connectionRuntimeUrl' cannot be null or undefined.");
     });
 
     it("should throw on undefined connection URL", () => {
-        expect(() => new RssClient(undefined as unknown as string, createMockTokenProvider()))
+        expect(() => new RssClient(undefined as unknown as string, createMockCredential()))
             .toThrow("Parameter 'connectionRuntimeUrl' cannot be null or undefined.");
     });
 });
@@ -81,7 +81,7 @@ describe("RssClient — listFeedItemsAsync", () => {
         ];
         mockFetchResponse(feedItems);
 
-        const client = new RssClient(TestConnectionUrl, createMockTokenProvider());
+        const client = new RssClient(TestConnectionUrl, createMockCredential());
         const result = await client.listFeedItemsAsync("https://example.com/feed.xml");
 
         expect(result).toEqual(feedItems);
@@ -95,7 +95,7 @@ describe("RssClient — listFeedItemsAsync", () => {
     it("should throw ConnectorException on non-OK response", async () => {
         mockFetchError(400, "Bad Request");
 
-        const client = new RssClient(TestConnectionUrl, createMockTokenProvider());
+        const client = new RssClient(TestConnectionUrl, createMockCredential());
         try {
             await client.listFeedItemsAsync("https://example.com/feed.xml");
             throw new Error("Expected ConnectorException to be thrown.");

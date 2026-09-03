@@ -1,8 +1,8 @@
 // Copyright (c) Microsoft Corporation.  All rights reserved.
 
+import type { TokenCredential } from "@azure/core-auth";
 import { BoxClient } from "../src/generated/BoxExtensions.ts";
 import { ConnectorException } from "../src/azureConnectors/connectorException.ts";
-import { TokenProvider } from "../src/azureConnectors/authentication.ts";
 import { ConnectorNames } from "../src/generated/connectorNames.ts";
 import { availableConnectors } from "../src/generated/ManagedConnectors.ts";
 
@@ -12,9 +12,9 @@ import { availableConnectors } from "../src/generated/ManagedConnectors.ts";
 
 const TestConnectionUrl = "https://connection-runtime.azure.com/apim/box/abc123";
 
-function createMockTokenProvider(): TokenProvider {
+function createMockCredential(): TokenCredential {
     return {
-        getAccessTokenAsync: async () => "mock-bearer-token",
+        getToken: async () => ({ token: "mock-bearer-token", expiresOnTimestamp: Number.MAX_SAFE_INTEGER }),
     };
 }
 
@@ -42,14 +42,14 @@ function mockFetchError(status: number, errorBody: string): void {
 
 describe("BoxClient — constructor", () => {
     it("should construct with valid options", () => {
-        const client = new BoxClient(TestConnectionUrl, createMockTokenProvider());
+        const client = new BoxClient(TestConnectionUrl, createMockCredential());
         expect(client).toBeDefined();
         expect(client).toBeInstanceOf(BoxClient);
     });
 
     it("should strip trailing slashes from connection URL", async () => {
         mockFetchResponse({});
-        const client = new BoxClient(TestConnectionUrl + "///", createMockTokenProvider());
+        const client = new BoxClient(TestConnectionUrl + "///", createMockCredential());
         await client.getFileMetadataAsync("file1");
         const [url] = (global.fetch as jest.Mock).mock.calls[0];
         // NOTE: Confirms the trailing slashes were stripped by inspecting the
@@ -59,12 +59,12 @@ describe("BoxClient — constructor", () => {
     });
 
     it("should throw on null connection URL", () => {
-        expect(() => new BoxClient(null as unknown as string, createMockTokenProvider()))
+        expect(() => new BoxClient(null as unknown as string, createMockCredential()))
             .toThrow("Parameter 'connectionRuntimeUrl' cannot be null or undefined.");
     });
 
     it("should throw on undefined connection URL", () => {
-        expect(() => new BoxClient(undefined as unknown as string, createMockTokenProvider()))
+        expect(() => new BoxClient(undefined as unknown as string, createMockCredential()))
             .toThrow("Parameter 'connectionRuntimeUrl' cannot be null or undefined.");
     });
 });
@@ -78,7 +78,7 @@ describe("BoxClient — getFileMetadataAsync", () => {
         const metadata = { Id: "file1", Name: "document.txt", DisplayName: "document.txt" };
         mockFetchResponse(metadata);
 
-        const client = new BoxClient(TestConnectionUrl, createMockTokenProvider());
+        const client = new BoxClient(TestConnectionUrl, createMockCredential());
         const result = await client.getFileMetadataAsync("file1");
 
         expect(result).toEqual(metadata);
@@ -93,7 +93,7 @@ describe("BoxClient — getFileMetadataAsync", () => {
     it("should throw ConnectorException on non-OK response", async () => {
         mockFetchError(404, "Not Found");
 
-        const client = new BoxClient(TestConnectionUrl, createMockTokenProvider());
+        const client = new BoxClient(TestConnectionUrl, createMockCredential());
         try {
             await client.getFileMetadataAsync("missing");
             throw new Error("Expected ConnectorException to be thrown.");

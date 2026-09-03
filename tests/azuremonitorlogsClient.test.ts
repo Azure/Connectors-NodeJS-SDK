@@ -1,5 +1,6 @@
 // Copyright (c) Microsoft Corporation.  All rights reserved.
 
+import type { TokenCredential } from "@azure/core-auth";
 import {
     AzuremonitorlogsClient,
     QueryDataInput,
@@ -8,7 +9,6 @@ import {
     VisualizeResults,
 } from "../src/generated/AzuremonitorlogsExtensions.ts";
 import { ConnectorException } from "../src/azureConnectors/connectorException.ts";
-import { TokenProvider } from "../src/azureConnectors/authentication.ts";
 import { ConnectorNames } from "../src/generated/connectorNames.ts";
 import { availableConnectors } from "../src/generated/ManagedConnectors.ts";
 
@@ -18,9 +18,9 @@ import { availableConnectors } from "../src/generated/ManagedConnectors.ts";
 
 const TestConnectionUrl = "https://connection-runtime.azure.com/apim/azuremonitorlogs/abc123";
 
-function createMockTokenProvider(): TokenProvider {
+function createMockCredential(): TokenCredential {
     return {
-        getAccessTokenAsync: async () => "mock-bearer-token",
+        getToken: async () => ({ token: "mock-bearer-token", expiresOnTimestamp: Number.MAX_SAFE_INTEGER }),
     };
 }
 
@@ -68,28 +68,28 @@ const _visualizeInput: VisualizeQueryInput = {
 
 describe("AzuremonitorlogsClient — constructor", () => {
     it("should construct with valid options", () => {
-        const client = new AzuremonitorlogsClient(TestConnectionUrl, createMockTokenProvider());
+        const client = new AzuremonitorlogsClient(TestConnectionUrl, createMockCredential());
         expect(client).toBeDefined();
         expect(client).toBeInstanceOf(AzuremonitorlogsClient);
     });
 
     it("should strip trailing slashes from connection URL", () => {
-        const client = new AzuremonitorlogsClient(TestConnectionUrl + "///", createMockTokenProvider());
+        const client = new AzuremonitorlogsClient(TestConnectionUrl + "///", createMockCredential());
         expect(client).toBeDefined();
     });
 
     it("should construct with an empty connection URL", () => {
-        const client = new AzuremonitorlogsClient("", createMockTokenProvider());
+        const client = new AzuremonitorlogsClient("", createMockCredential());
         expect(client).toBeDefined();
     });
 
     it("should throw on null connection URL", () => {
-        expect(() => new AzuremonitorlogsClient(null as unknown as string, createMockTokenProvider()))
+        expect(() => new AzuremonitorlogsClient(null as unknown as string, createMockCredential()))
             .toThrow("Parameter 'connectionRuntimeUrl' cannot be null or undefined.");
     });
 
     it("should throw on undefined connection URL", () => {
-        expect(() => new AzuremonitorlogsClient(undefined as unknown as string, createMockTokenProvider()))
+        expect(() => new AzuremonitorlogsClient(undefined as unknown as string, createMockCredential()))
             .toThrow("Parameter 'connectionRuntimeUrl' cannot be null or undefined.");
     });
 });
@@ -103,7 +103,7 @@ describe("AzuremonitorlogsClient — queryDataAsync", () => {
         const mockTable: Table = { value: [] };
         mockFetchResponse(mockTable);
 
-        const client = new AzuremonitorlogsClient(TestConnectionUrl, createMockTokenProvider());
+        const client = new AzuremonitorlogsClient(TestConnectionUrl, createMockCredential());
         const input: QueryDataInput = {
             query: "Heartbeat | take 10",
             timerangetype: "Last hour",
@@ -126,7 +126,7 @@ describe("AzuremonitorlogsClient — queryDataAsync", () => {
     it("should include subscription query parameter when provided", async () => {
         mockFetchResponse({});
 
-        const client = new AzuremonitorlogsClient(TestConnectionUrl, createMockTokenProvider());
+        const client = new AzuremonitorlogsClient(TestConnectionUrl, createMockCredential());
         await client.queryDataAsync(
             { query: "test", timerangetype: "Last hour", timerange: {} },
             "sub-123",
@@ -146,7 +146,7 @@ describe("AzuremonitorlogsClient — visualizeQueryAsync", () => {
         const mockResult: VisualizeResults = { body: "chart-data" };
         mockFetchResponse(mockResult);
 
-        const client = new AzuremonitorlogsClient(TestConnectionUrl, createMockTokenProvider());
+        const client = new AzuremonitorlogsClient(TestConnectionUrl, createMockCredential());
         const input: VisualizeQueryInput = {
             query: "Heartbeat | summarize count()",
             timerangetype: "Last 24 hours",
@@ -165,7 +165,7 @@ describe("AzuremonitorlogsClient — visualizeQueryAsync", () => {
     it("should include visType query parameter when provided", async () => {
         mockFetchResponse({});
 
-        const client = new AzuremonitorlogsClient(TestConnectionUrl, createMockTokenProvider());
+        const client = new AzuremonitorlogsClient(TestConnectionUrl, createMockCredential());
         await client.visualizeQueryAsync(
             { query: "test", timerangetype: "Last hour", timerange: {} },
             undefined,
@@ -188,7 +188,7 @@ describe("AzuremonitorlogsClient — error handling", () => {
     it("should throw ConnectorException on non-OK response", async () => {
         mockFetchError(400, '{"error": "BadRequest"}');
 
-        const client = new AzuremonitorlogsClient(TestConnectionUrl, createMockTokenProvider());
+        const client = new AzuremonitorlogsClient(TestConnectionUrl, createMockCredential());
 
         await expect(
             client.queryDataAsync({ query: "invalid", timerangetype: "Last hour", timerange: {} }),
@@ -199,7 +199,7 @@ describe("AzuremonitorlogsClient — error handling", () => {
         const errorBody = '{"code": "Unauthorized"}';
         mockFetchError(401, errorBody);
 
-        const client = new AzuremonitorlogsClient(TestConnectionUrl, createMockTokenProvider());
+        const client = new AzuremonitorlogsClient(TestConnectionUrl, createMockCredential());
 
         try {
             await client.queryDataAsync({ query: "test", timerangetype: "Last hour", timerange: {} });

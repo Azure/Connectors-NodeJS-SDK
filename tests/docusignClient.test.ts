@@ -1,19 +1,19 @@
 // Copyright (c) Microsoft Corporation.  All rights reserved.
 
+import type { TokenCredential } from "@azure/core-auth";
 import {
     DocusignClient,
     EnvelopeResendResponse,
 } from "../src/generated/DocusignExtensions.ts";
 import { ConnectorException } from "../src/azureConnectors/connectorException.ts";
-import { TokenProvider } from "../src/azureConnectors/authentication.ts";
 import { ConnectorNames } from "../src/generated/connectorNames.ts";
 import { availableConnectors } from "../src/generated/ManagedConnectors.ts";
 
 const TestConnectionUrl = "https://connection-runtime.azure.com/apim/docusign/abc123";
 
-function createMockTokenProvider(): TokenProvider {
+function createMockCredential(): TokenCredential {
     return {
-        getAccessTokenAsync: async () => "mock-bearer-token",
+        getToken: async () => ({ token: "mock-bearer-token", expiresOnTimestamp: Number.MAX_SAFE_INTEGER }),
     };
 }
 
@@ -37,13 +37,13 @@ function mockFetchError(status: number, errorBody: string): void {
 
 describe("DocusignClient — constructor", () => {
     it("should construct with valid options", () => {
-        const client = new DocusignClient(TestConnectionUrl, createMockTokenProvider());
+        const client = new DocusignClient(TestConnectionUrl, createMockCredential());
         expect(client).toBeDefined();
         expect(client).toBeInstanceOf(DocusignClient);
     });
 
     it("should throw on null connection URL", () => {
-        expect(() => new DocusignClient(null as unknown as string, createMockTokenProvider()))
+        expect(() => new DocusignClient(null as unknown as string, createMockCredential()))
             .toThrow("Parameter 'connectionRuntimeUrl' cannot be null or undefined.");
     });
 });
@@ -57,7 +57,7 @@ describe("DocusignClient — resendEnvelopeAsync", () => {
         const mockResponse: EnvelopeResendResponse = {};
         mockFetchResponse(mockResponse);
 
-        const client = new DocusignClient(TestConnectionUrl, createMockTokenProvider());
+        const client = new DocusignClient(TestConnectionUrl, createMockCredential());
         const result = await client.resendEnvelopeAsync("env-123");
 
         expect(result).toEqual(mockResponse);
@@ -70,7 +70,7 @@ describe("DocusignClient — resendEnvelopeAsync", () => {
     it("should throw ConnectorException on non-OK response", async () => {
         mockFetchError(400, '{"error":"BadRequest"}');
 
-        const client = new DocusignClient(TestConnectionUrl, createMockTokenProvider());
+        const client = new DocusignClient(TestConnectionUrl, createMockCredential());
         await expect(client.resendEnvelopeAsync("env-123")).rejects.toThrow(ConnectorException);
     });
 });

@@ -1,5 +1,6 @@
 // Copyright (c) Microsoft Corporation.  All rights reserved.
 
+import type { TokenCredential } from "@azure/core-auth";
 import {
     PowerbiClient,
     ListedScorecards,
@@ -7,15 +8,14 @@ import {
     CreatedScorecard,
 } from "../src/generated/PowerbiExtensions.ts";
 import { ConnectorException } from "../src/azureConnectors/connectorException.ts";
-import { TokenProvider } from "../src/azureConnectors/authentication.ts";
 import { ConnectorNames } from "../src/generated/connectorNames.ts";
 import { availableConnectors } from "../src/generated/ManagedConnectors.ts";
 
 const TestConnectionUrl = "https://connection-runtime.azure.com/apim/powerbi/abc123";
 
-function createMockTokenProvider(): TokenProvider {
+function createMockCredential(): TokenCredential {
     return {
-        getAccessTokenAsync: async () => "mock-bearer-token",
+        getToken: async () => ({ token: "mock-bearer-token", expiresOnTimestamp: Number.MAX_SAFE_INTEGER }),
     };
 }
 
@@ -39,7 +39,7 @@ function mockFetchError(status: number, errorBody: string): void {
 
 describe("PowerbiClient — constructor", () => {
     it("should construct with valid options", () => {
-        const client = new PowerbiClient(TestConnectionUrl, createMockTokenProvider());
+        const client = new PowerbiClient(TestConnectionUrl, createMockCredential());
         expect(client).toBeDefined();
         expect(client).toBeInstanceOf(PowerbiClient);
     });
@@ -54,7 +54,7 @@ describe("PowerbiClient — getScorecardsAsync", () => {
         const mockResponse: ListedScorecards = {};
         mockFetchResponse(mockResponse);
 
-        const client = new PowerbiClient(TestConnectionUrl, createMockTokenProvider());
+        const client = new PowerbiClient(TestConnectionUrl, createMockCredential());
         const result = await client.getScorecardsAsync("group-1", "firstparty");
 
         expect(result).toEqual(mockResponse);
@@ -67,7 +67,7 @@ describe("PowerbiClient — getScorecardsAsync", () => {
     it("should throw ConnectorException on non-OK response", async () => {
         mockFetchError(401, '{"error":"Unauthorized"}');
 
-        const client = new PowerbiClient(TestConnectionUrl, createMockTokenProvider());
+        const client = new PowerbiClient(TestConnectionUrl, createMockCredential());
         await expect(client.getScorecardsAsync("group-1")).rejects.toThrow(ConnectorException);
     });
 });
@@ -82,7 +82,7 @@ describe("PowerbiClient — createScorecardAsync", () => {
         const mockResponse: CreatedScorecard = { id: "scorecard-1" };
         mockFetchResponse(mockResponse);
 
-        const client = new PowerbiClient(TestConnectionUrl, createMockTokenProvider());
+        const client = new PowerbiClient(TestConnectionUrl, createMockCredential());
         const result = await client.createScorecardAsync(input, "group-1");
 
         expect(result).toEqual(mockResponse);
