@@ -268,7 +268,7 @@ index b73bafc4a28..b3c14ed22de 100644
          /// </summary>
          public string PageItemTypeName { get; set; }
 diff --git a/src/tools/CodefulSdkGenerator/DirectClient/DirectClientTypeScriptCodeGenerator.cs b/src/tools/CodefulSdkGenerator/DirectClient/DirectClientTypeScriptCodeGenerator.cs
-index cf41a99379e..c3efeae85e6 100644
+index cf41a99379e..c6c1f91eff0 100644
 --- a/src/tools/CodefulSdkGenerator/DirectClient/DirectClientTypeScriptCodeGenerator.cs
 +++ b/src/tools/CodefulSdkGenerator/DirectClient/DirectClientTypeScriptCodeGenerator.cs
 @@ -48,6 +48,7 @@ namespace Microsoft.Azure.Workflows.CodefulSdkGenerator.DirectClient
@@ -365,7 +365,7 @@ index cf41a99379e..c3efeae85e6 100644
 +                    stringBuilder.AppendLine($"                const httpResponse = await this.httpClient.sendAsync<{method.ResponseTypeName}>(\"{httpMethod}\", requestUrl{bodyArg});");
 +                    stringBuilder.AppendLine();
 +                    stringBuilder.AppendLine("                if (!httpResponse.isSuccessStatusCode) {");
-+                    stringBuilder.AppendLine($"                    throw new ConnectorException(this.connectorName, `{httpMethod} ${{requestPath}}`, httpResponse.statusCode, httpResponse.text);");
++                    stringBuilder.AppendLine($"                    throw new ConnectorException(this.connectorName, `{httpMethod} ${{requestUrl}}`, httpResponse.statusCode, httpResponse.text);");
 +                    stringBuilder.AppendLine("                }");
 +                    stringBuilder.AppendLine();
 +                    stringBuilder.AppendLine($"                return httpResponse.value as {method.ResponseTypeName};");
