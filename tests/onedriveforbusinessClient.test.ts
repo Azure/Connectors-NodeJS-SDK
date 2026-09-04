@@ -1,5 +1,6 @@
 // Copyright (c) Microsoft Corporation.  All rights reserved.
 
+import type { TokenCredential } from "@azure/core-auth";
 import {
     OnedriveforbusinessClient,
     BlobMetadata,
@@ -10,7 +11,6 @@ import {
     Thumbnail,
 } from "../src/generated/OnedriveforbusinessExtensions.ts";
 import { ConnectorException } from "../src/azureConnectors/connectorException.ts";
-import { TokenProvider } from "../src/azureConnectors/authentication.ts";
 import { ConnectorNames } from "../src/generated/connectorNames.ts";
 import { availableConnectors } from "../src/generated/ManagedConnectors.ts";
 
@@ -20,9 +20,9 @@ import { availableConnectors } from "../src/generated/ManagedConnectors.ts";
 
 const TestConnectionUrl = "https://connection-runtime.azure.com/apim/onedriveforbusiness/abc123";
 
-function createMockTokenProvider(): TokenProvider {
+function createMockCredential(): TokenCredential {
     return {
-        getAccessTokenAsync: async () => "mock-bearer-token",
+        getToken: async () => ({ token: "mock-bearer-token", expiresOnTimestamp: Number.MAX_SAFE_INTEGER }),
     };
 }
 
@@ -64,28 +64,28 @@ const _sharingLink: SharingLink = {
 
 describe("OnedriveforbusinessClient — constructor", () => {
     it("should construct with valid options", () => {
-        const client = new OnedriveforbusinessClient(TestConnectionUrl, createMockTokenProvider());
+        const client = new OnedriveforbusinessClient(TestConnectionUrl, createMockCredential());
         expect(client).toBeDefined();
         expect(client).toBeInstanceOf(OnedriveforbusinessClient);
     });
 
     it("should strip trailing slashes from connection URL", () => {
-        const client = new OnedriveforbusinessClient(TestConnectionUrl + "///", createMockTokenProvider());
+        const client = new OnedriveforbusinessClient(TestConnectionUrl + "///", createMockCredential());
         expect(client).toBeDefined();
     });
 
     it("should construct with an empty connection URL", () => {
-        const client = new OnedriveforbusinessClient("", createMockTokenProvider());
+        const client = new OnedriveforbusinessClient("", createMockCredential());
         expect(client).toBeDefined();
     });
 
     it("should throw on null connection URL", () => {
-        expect(() => new OnedriveforbusinessClient(null as unknown as string, createMockTokenProvider()))
+        expect(() => new OnedriveforbusinessClient(null as unknown as string, createMockCredential()))
             .toThrow("Parameter 'connectionRuntimeUrl' cannot be null or undefined.");
     });
 
     it("should throw on undefined connection URL", () => {
-        expect(() => new OnedriveforbusinessClient(undefined as unknown as string, createMockTokenProvider()))
+        expect(() => new OnedriveforbusinessClient(undefined as unknown as string, createMockCredential()))
             .toThrow("Parameter 'connectionRuntimeUrl' cannot be null or undefined.");
     });
 });
@@ -102,7 +102,7 @@ describe("OnedriveforbusinessClient — listRootFolderAsync", () => {
         ];
         mockFetchResponse(mockFiles);
 
-        const client = new OnedriveforbusinessClient(TestConnectionUrl, createMockTokenProvider());
+        const client = new OnedriveforbusinessClient(TestConnectionUrl, createMockCredential());
         const result = await client.listRootFolderAsync();
 
         expect(result).toEqual(mockFiles);
@@ -126,7 +126,7 @@ describe("OnedriveforbusinessClient — getFileMetadataAsync", () => {
         };
         mockFetchResponse(mockMetadata);
 
-        const client = new OnedriveforbusinessClient(TestConnectionUrl, createMockTokenProvider());
+        const client = new OnedriveforbusinessClient(TestConnectionUrl, createMockCredential());
         const result = await client.getFileMetadataAsync("file-1");
 
         expect(result).toEqual(mockMetadata);
@@ -144,7 +144,7 @@ describe("OnedriveforbusinessClient — createFileAsync", () => {
         const mockResult: BlobMetadata = { Name: "newfile.txt" };
         mockFetchResponse(mockResult);
 
-        const client = new OnedriveforbusinessClient(TestConnectionUrl, createMockTokenProvider());
+        const client = new OnedriveforbusinessClient(TestConnectionUrl, createMockCredential());
         const input: CreateFileInput = "file content";
         const result = await client.createFileAsync(input, "/Documents", "newfile.txt");
 
@@ -164,7 +164,7 @@ describe("OnedriveforbusinessClient — updateFileAsync", () => {
         const mockResult: BlobMetadata = { Name: "updated.txt" };
         mockFetchResponse(mockResult);
 
-        const client = new OnedriveforbusinessClient(TestConnectionUrl, createMockTokenProvider());
+        const client = new OnedriveforbusinessClient(TestConnectionUrl, createMockCredential());
         const input: UpdateFileInput = "updated content";
         const result = await client.updateFileAsync(input, "file-1");
 
@@ -182,7 +182,7 @@ describe("OnedriveforbusinessClient — deleteFileAsync", () => {
     it("should send DELETE request for file", async () => {
         mockFetchResponse(null);
 
-        const client = new OnedriveforbusinessClient(TestConnectionUrl, createMockTokenProvider());
+        const client = new OnedriveforbusinessClient(TestConnectionUrl, createMockCredential());
         await client.deleteFileAsync("file-1");
 
         const [url, init] = (global.fetch as jest.Mock).mock.calls[0];
@@ -200,7 +200,7 @@ describe("OnedriveforbusinessClient — copyFileAsync", () => {
         const mockResult: BlobMetadata = { Name: "copied.docx" };
         mockFetchResponse(mockResult);
 
-        const client = new OnedriveforbusinessClient(TestConnectionUrl, createMockTokenProvider());
+        const client = new OnedriveforbusinessClient(TestConnectionUrl, createMockCredential());
         const result = await client.copyFileAsync("/source.docx", "/dest/source.docx");
 
         expect(result).toEqual(mockResult);
@@ -221,7 +221,7 @@ describe("OnedriveforbusinessClient — createShareLinkAsync", () => {
         };
         mockFetchResponse(mockLink);
 
-        const client = new OnedriveforbusinessClient(TestConnectionUrl, createMockTokenProvider());
+        const client = new OnedriveforbusinessClient(TestConnectionUrl, createMockCredential());
         const result = await client.createShareLinkAsync("file-1", "view", "organization");
 
         expect(result).toEqual(mockLink);
@@ -242,10 +242,10 @@ describe("OnedriveforbusinessClient — listFolderAsync", () => {
         };
         mockFetchResponse(mockPage);
 
-        const client = new OnedriveforbusinessClient(TestConnectionUrl, createMockTokenProvider());
-        const result = await client.listFolderAsync("folder-1");
+        const client = new OnedriveforbusinessClient(TestConnectionUrl, createMockCredential());
+        const result = await client.listFolderAsync("folder-1").byPage().next();
 
-        expect(result).toEqual(mockPage);
+        expect(result.value).toEqual(mockPage.value);
         const [url] = (global.fetch as jest.Mock).mock.calls[0];
         expect(url).toContain("/datasets/default/foldersV2/folder-1");
     });
@@ -260,7 +260,7 @@ describe("OnedriveforbusinessClient — findFilesAsync", () => {
         const mockResults: BlobMetadata[] = [{ Name: "match.docx" }];
         mockFetchResponse(mockResults);
 
-        const client = new OnedriveforbusinessClient(TestConnectionUrl, createMockTokenProvider());
+        const client = new OnedriveforbusinessClient(TestConnectionUrl, createMockCredential());
         const result = await client.findFilesAsync("folder-1", "report");
 
         expect(result).toEqual(mockResults);
@@ -278,7 +278,7 @@ describe("OnedriveforbusinessClient — error handling", () => {
     it("should throw ConnectorException on non-OK response", async () => {
         mockFetchError(404, '{"error": "itemNotFound"}');
 
-        const client = new OnedriveforbusinessClient(TestConnectionUrl, createMockTokenProvider());
+        const client = new OnedriveforbusinessClient(TestConnectionUrl, createMockCredential());
 
         await expect(
             client.getFileMetadataAsync("nonexistent-id"),
@@ -289,7 +289,7 @@ describe("OnedriveforbusinessClient — error handling", () => {
         const errorBody = '{"code": "accessDenied"}';
         mockFetchError(403, errorBody);
 
-        const client = new OnedriveforbusinessClient(TestConnectionUrl, createMockTokenProvider());
+        const client = new OnedriveforbusinessClient(TestConnectionUrl, createMockCredential());
 
         try {
             await client.listRootFolderAsync();

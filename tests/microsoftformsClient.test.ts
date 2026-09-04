@@ -1,20 +1,20 @@
 // Copyright (c) Microsoft Corporation.  All rights reserved.
 
+import type { TokenCredential } from "@azure/core-auth";
 import {
     MicrosoftformsClient,
     GetFormDetailsByIdResult,
     GetFormResponseByIdResult,
 } from "../src/generated/MicrosoftformsExtensions.ts";
 import { ConnectorException } from "../src/azureConnectors/connectorException.ts";
-import { TokenProvider } from "../src/azureConnectors/authentication.ts";
 import { ConnectorNames } from "../src/generated/connectorNames.ts";
 import { availableConnectors } from "../src/generated/ManagedConnectors.ts";
 
 const TestConnectionUrl = "https://connection-runtime.azure.com/apim/microsoftforms/abc123";
 
-function createMockTokenProvider(): TokenProvider {
+function createMockCredential(): TokenCredential {
     return {
-        getAccessTokenAsync: async () => "mock-bearer-token",
+        getToken: async () => ({ token: "mock-bearer-token", expiresOnTimestamp: Number.MAX_SAFE_INTEGER }),
     };
 }
 
@@ -38,7 +38,7 @@ function mockFetchError(status: number, errorBody: string): void {
 
 describe("MicrosoftformsClient — constructor", () => {
     it("should construct with valid options", () => {
-        const client = new MicrosoftformsClient(TestConnectionUrl, createMockTokenProvider());
+        const client = new MicrosoftformsClient(TestConnectionUrl, createMockCredential());
         expect(client).toBeDefined();
         expect(client).toBeInstanceOf(MicrosoftformsClient);
     });
@@ -53,7 +53,7 @@ describe("MicrosoftformsClient — getFormDetailsByIdAsync", () => {
         const mockResponse: GetFormDetailsByIdResult = {};
         mockFetchResponse(mockResponse);
 
-        const client = new MicrosoftformsClient(TestConnectionUrl, createMockTokenProvider());
+        const client = new MicrosoftformsClient(TestConnectionUrl, createMockCredential());
         const result = await client.getFormDetailsByIdAsync("form-1", "id,title");
 
         expect(result).toEqual(mockResponse);
@@ -66,7 +66,7 @@ describe("MicrosoftformsClient — getFormDetailsByIdAsync", () => {
     it("should throw ConnectorException on non-OK response", async () => {
         mockFetchError(400, '{"error":"BadRequest"}');
 
-        const client = new MicrosoftformsClient(TestConnectionUrl, createMockTokenProvider());
+        const client = new MicrosoftformsClient(TestConnectionUrl, createMockCredential());
         await expect(client.getFormDetailsByIdAsync("form-1")).rejects.toThrow(ConnectorException);
     });
 });
@@ -80,7 +80,7 @@ describe("MicrosoftformsClient — getFormResponseByIdAsync", () => {
         const mockResponse: GetFormResponseByIdResult = {};
         mockFetchResponse(mockResponse);
 
-        const client = new MicrosoftformsClient(TestConnectionUrl, createMockTokenProvider());
+        const client = new MicrosoftformsClient(TestConnectionUrl, createMockCredential());
         await client.getFormResponseByIdAsync("form-1", "resp-2");
 
         const [url] = (global.fetch as jest.Mock).mock.calls[0];

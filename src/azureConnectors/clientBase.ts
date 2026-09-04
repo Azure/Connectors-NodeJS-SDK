@@ -6,9 +6,19 @@
  * Mirrors the Python SDK's client_base.py.
  */
 
-import { TokenProvider } from "./authentication.ts";
+import type { TokenCredential } from "@azure/core-auth";
+import { getPagedAsyncIterator, type PagedAsyncIterableIterator } from "@azure/core-paging";
 import { ConnectorHttpClient } from "./connectorHttpClient.ts";
-import { ConnectorClientOptions } from "./options.ts";
+import type { ConnectorClientOptions } from "./options.ts";
+
+/**
+ * Common wire shape for paginated connector responses.
+ */
+interface ConnectorPage {
+    value?: unknown;
+    nextLink?: string;
+    "@odata.nextLink"?: string;
+}
 
 /**
  * Abstract base class for generated connector clients.
@@ -21,27 +31,57 @@ export abstract class ConnectorClientBase {
     /**
      * Initializes a ConnectorClientBase.
      * @param connectionRuntimeUrl The connection runtime URL from Azure Portal.
-     * @param tokenProvider The token provider for authentication.
+    * @param credential The credential used for authentication.
      * @param options Optional connector client options.
      */
-    constructor(connectionRuntimeUrl: string, tokenProvider: TokenProvider, options?: ConnectorClientOptions) {
+    constructor(connectionRuntimeUrl: string, credential: TokenCredential, options?: ConnectorClientOptions) {
         if (!connectionRuntimeUrl && connectionRuntimeUrl !== "") {
             throw new Error("Parameter 'connectionRuntimeUrl' cannot be null or undefined.");
         }
 
-        if (!tokenProvider) {
-            throw new Error("tokenProvider cannot be null or undefined.");
+        if (!credential) {
+            throw new Error("credential cannot be null or undefined.");
         }
 
-        this.connectionRuntimeUrl = connectionRuntimeUrl.replace(/\/+$/, "");
+        let connectionRuntimeUrlEnd = connectionRuntimeUrl.length;
+        while (connectionRuntimeUrlEnd > 0 && connectionRuntimeUrl[connectionRuntimeUrlEnd - 1] === "/") {
+            connectionRuntimeUrlEnd--;
+        }
+
+        this.connectionRuntimeUrl = connectionRuntimeUrl.slice(0, connectionRuntimeUrlEnd);
         this.options = options ?? {};
-        this.httpClient = new ConnectorHttpClient(tokenProvider, this.options);
+        this.httpClient = new ConnectorHttpClient(credential, this.options);
     }
 
     /**
      * Gets the connector name.
      */
     public abstract get connectorName(): string;
+
+    /**
+     * Creates a lazy iterator that resolves and fetches connector response pages on demand.
+     * @param firstPageLink The relative or absolute link for the first page.
+     * @param fetchPage Fetches one page from an already resolved URL.
+     */
+    protected createPageable<TPage extends ConnectorPage, TItem>(
+        firstPageLink: string,
+        fetchPage: (url: string) => Promise<TPage>,
+    ): PagedAsyncIterableIterator<TItem> {
+        return getPagedAsyncIterator<TItem>({
+            firstPageLink,
+            getPage: async (pageLink) => {
+                const resolvedPageLink = this.resolvePageLink(pageLink, firstPageLink);
+                const response = await fetchPage(this.resolveUrl(resolvedPageLink));
+                const nextPageLink = response.nextLink ?? response["@odata.nextLink"];
+                return {
+                    page: Array.isArray(response.value) ? response.value as TItem[] : [],
+                    nextPageLink: nextPageLink === undefined
+                        ? undefined
+                        : this.resolvePageLink(nextPageLink, resolvedPageLink),
+                };
+            },
+        });
+    }
 
     /**
      * Resolves a relative path or validates an absolute URL against the connection runtime URL.
@@ -97,5 +137,26 @@ export abstract class ConnectorClientBase {
         }
 
         return `${this.connectionRuntimeUrl}${path}`;
+    }
+
+    private resolvePageLink(pageLink: string, basePageLink: string): string {
+        try {
+            new URL(pageLink);
+            return pageLink;
+        } catch {
+            const placeholderOrigin = "https://connector.invalid";
+            let baseUrl: URL;
+            try {
+                baseUrl = new URL(basePageLink);
+            } catch {
+                const basePath = basePageLink.startsWith("/") ? basePageLink : `/${basePageLink}`;
+                baseUrl = new URL(basePath, placeholderOrigin);
+            }
+
+            const resolvedUrl = new URL(pageLink, baseUrl);
+            return resolvedUrl.origin === placeholderOrigin
+                ? `${resolvedUrl.pathname}${resolvedUrl.search}`
+                : resolvedUrl.toString();
+        }
     }
 }

@@ -1,8 +1,8 @@
 // Copyright (c) Microsoft Corporation.  All rights reserved.
 
+import type { TokenCredential } from "@azure/core-auth";
 import { SigninghubClient } from "../src/generated/SigninghubExtensions.ts";
 import { ConnectorException } from "../src/azureConnectors/connectorException.ts";
-import { TokenProvider } from "../src/azureConnectors/authentication.ts";
 import { ConnectorNames } from "../src/generated/connectorNames.ts";
 import { availableConnectors } from "../src/generated/ManagedConnectors.ts";
 
@@ -12,9 +12,9 @@ import { availableConnectors } from "../src/generated/ManagedConnectors.ts";
 
 const TestConnectionUrl = "https://connection-runtime.azure.com/apim/signinghub/abc123";
 
-function createMockTokenProvider(): TokenProvider {
+function createMockCredential(): TokenCredential {
     return {
-        getAccessTokenAsync: async () => "mock-bearer-token",
+        getToken: async () => ({ token: "mock-bearer-token", expiresOnTimestamp: Number.MAX_SAFE_INTEGER }),
     };
 }
 
@@ -42,18 +42,18 @@ function mockFetchError(status: number, errorBody: string): void {
 
 describe("SigninghubClient — constructor", () => {
     it("should construct with valid options", () => {
-        const client = new SigninghubClient(TestConnectionUrl, createMockTokenProvider());
+        const client = new SigninghubClient(TestConnectionUrl, createMockCredential());
         expect(client).toBeDefined();
         expect(client).toBeInstanceOf(SigninghubClient);
     });
 
     it("should throw on null connection URL", () => {
-        expect(() => new SigninghubClient(null as unknown as string, createMockTokenProvider()))
+        expect(() => new SigninghubClient(null as unknown as string, createMockCredential()))
             .toThrow("Parameter 'connectionRuntimeUrl' cannot be null or undefined.");
     });
 
     it("should throw on undefined connection URL", () => {
-        expect(() => new SigninghubClient(undefined as unknown as string, createMockTokenProvider()))
+        expect(() => new SigninghubClient(undefined as unknown as string, createMockCredential()))
             .toThrow("Parameter 'connectionRuntimeUrl' cannot be null or undefined.");
     });
 });
@@ -67,7 +67,7 @@ describe("SigninghubClient — attachmentDownloadAttachmentAsync", () => {
         const attachment = { fileName: "contract.pdf", contentType: "application/pdf" };
         mockFetchResponse(attachment);
 
-        const client = new SigninghubClient(TestConnectionUrl, createMockTokenProvider());
+        const client = new SigninghubClient(TestConnectionUrl, createMockCredential());
         const result = await client.attachmentDownloadAttachmentAsync("123", "456", "789");
 
         expect(result).toEqual(attachment);
@@ -80,7 +80,7 @@ describe("SigninghubClient — attachmentDownloadAttachmentAsync", () => {
     it("should throw ConnectorException on non-OK response", async () => {
         mockFetchError(404, "Not Found");
 
-        const client = new SigninghubClient(TestConnectionUrl, createMockTokenProvider());
+        const client = new SigninghubClient(TestConnectionUrl, createMockCredential());
         try {
             await client.attachmentDownloadAttachmentAsync("123", "456", "789");
             throw new Error("Expected ConnectorException to be thrown.");

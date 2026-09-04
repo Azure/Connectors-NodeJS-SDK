@@ -1,12 +1,12 @@
 // Copyright (c) Microsoft Corporation.  All rights reserved.
 
+import type { TokenCredential } from "@azure/core-auth";
 import {
     SharepointonlineClient,
     TablesList,
     PostItemInput,
 } from "../src/generated/SharepointonlineExtensions.ts";
 import { ConnectorException } from "../src/azureConnectors/connectorException.ts";
-import { TokenProvider } from "../src/azureConnectors/authentication.ts";
 import { ConnectorNames } from "../src/generated/connectorNames.ts";
 import { availableConnectors } from "../src/generated/ManagedConnectors.ts";
 
@@ -14,9 +14,9 @@ import { availableConnectors } from "../src/generated/ManagedConnectors.ts";
 
 const TestConnectionUrl = "https://connection-runtime.azure.com/apim/sharepointonline/abc123";
 
-function createMockTokenProvider(): TokenProvider {
+function createMockCredential(): TokenCredential {
     return {
-        getAccessTokenAsync: async () => "mock-bearer-token",
+        getToken: async () => ({ token: "mock-bearer-token", expiresOnTimestamp: Number.MAX_SAFE_INTEGER }),
     };
 }
 
@@ -42,23 +42,23 @@ function mockFetchError(status: number, errorBody: string): void {
 
 describe("SharepointonlineClient — constructor", () => {
     it("should construct with valid options", () => {
-        const client = new SharepointonlineClient(TestConnectionUrl, createMockTokenProvider());
+        const client = new SharepointonlineClient(TestConnectionUrl, createMockCredential());
         expect(client).toBeDefined();
         expect(client).toBeInstanceOf(SharepointonlineClient);
     });
 
     it("should strip trailing slashes from connection URL", () => {
-        const client = new SharepointonlineClient(TestConnectionUrl + "///", createMockTokenProvider());
+        const client = new SharepointonlineClient(TestConnectionUrl + "///", createMockCredential());
         expect(client).toBeDefined();
     });
 
     it("should throw on null connection URL", () => {
-        expect(() => new SharepointonlineClient(null as unknown as string, createMockTokenProvider()))
+        expect(() => new SharepointonlineClient(null as unknown as string, createMockCredential()))
             .toThrow("Parameter 'connectionRuntimeUrl' cannot be null or undefined.");
     });
 
     it("should throw on undefined connection URL", () => {
-        expect(() => new SharepointonlineClient(undefined as unknown as string, createMockTokenProvider()))
+        expect(() => new SharepointonlineClient(undefined as unknown as string, createMockCredential()))
             .toThrow("Parameter 'connectionRuntimeUrl' cannot be null or undefined.");
     });
 });
@@ -70,7 +70,7 @@ describe("SharepointonlineClient — getTablesAsync", () => {
         const mockTables: TablesList = {};
         mockFetchResponse(mockTables);
 
-        const client = new SharepointonlineClient(TestConnectionUrl, createMockTokenProvider());
+        const client = new SharepointonlineClient(TestConnectionUrl, createMockCredential());
         const result = await client.getTablesAsync("https://contoso.sharepoint.com/sites/team");
 
         expect(result).toEqual(mockTables);
@@ -88,7 +88,7 @@ describe("SharepointonlineClient — getAllTablesAsync", () => {
         const mockTables: TablesList = {};
         mockFetchResponse(mockTables);
 
-        const client = new SharepointonlineClient(TestConnectionUrl, createMockTokenProvider());
+        const client = new SharepointonlineClient(TestConnectionUrl, createMockCredential());
         const result = await client.getAllTablesAsync("https://contoso.sharepoint.com/sites/team");
 
         expect(result).toEqual(mockTables);
@@ -106,7 +106,7 @@ describe("SharepointonlineClient — getItemAsync", () => {
         const mockItem = { Id: 42, Title: "Important Document" };
         mockFetchResponse(mockItem);
 
-        const client = new SharepointonlineClient(TestConnectionUrl, createMockTokenProvider());
+        const client = new SharepointonlineClient(TestConnectionUrl, createMockCredential());
         const result = await client.getItemAsync("https://contoso.sharepoint.com", "Documents", "42");
 
         expect(result).toEqual(mockItem);
@@ -123,7 +123,7 @@ describe("SharepointonlineClient — postItemAsync", () => {
         const newItem = { Id: 99, Title: "New Item" };
         mockFetchResponse(newItem);
 
-        const client = new SharepointonlineClient(TestConnectionUrl, createMockTokenProvider());
+        const client = new SharepointonlineClient(TestConnectionUrl, createMockCredential());
         const input: PostItemInput = { Title: "New Item" };
         const result = await client.postItemAsync(input, "https://contoso.sharepoint.com", "Tasks");
 
@@ -141,7 +141,7 @@ describe("SharepointonlineClient — deleteItemAsync", () => {
     it("should send DELETE request", async () => {
         mockFetchResponse(null);
 
-        const client = new SharepointonlineClient(TestConnectionUrl, createMockTokenProvider());
+        const client = new SharepointonlineClient(TestConnectionUrl, createMockCredential());
         await client.deleteItemAsync("https://contoso.sharepoint.com", "Tasks", "42");
 
         const [, init] = (global.fetch as jest.Mock).mock.calls[0];
@@ -155,7 +155,7 @@ describe("SharepointonlineClient — error handling", () => {
     it("should throw ConnectorException on non-OK response", async () => {
         mockFetchError(404, '{"error": "List not found"}');
 
-        const client = new SharepointonlineClient(TestConnectionUrl, createMockTokenProvider());
+        const client = new SharepointonlineClient(TestConnectionUrl, createMockCredential());
         await expect(client.getTablesAsync("https://contoso.sharepoint.com")).rejects.toThrow(ConnectorException);
     });
 
@@ -163,7 +163,7 @@ describe("SharepointonlineClient — error handling", () => {
         const errorBody = '{"code": "Forbidden"}';
         mockFetchError(403, errorBody);
 
-        const client = new SharepointonlineClient(TestConnectionUrl, createMockTokenProvider());
+        const client = new SharepointonlineClient(TestConnectionUrl, createMockCredential());
 
         try {
             await client.getTablesAsync("https://contoso.sharepoint.com");

@@ -1,12 +1,12 @@
 // Copyright (c) Microsoft Corporation.  All rights reserved.
 
+import type { TokenCredential } from "@azure/core-auth";
 import {
     SmtpClient,
     Email,
     Attachment,
 } from "../src/generated/SmtpExtensions.ts";
 import { ConnectorException } from "../src/azureConnectors/connectorException.ts";
-import { TokenProvider } from "../src/azureConnectors/authentication.ts";
 import { ConnectorNames } from "../src/generated/connectorNames.ts";
 import { availableConnectors } from "../src/generated/ManagedConnectors.ts";
 
@@ -16,9 +16,9 @@ import { availableConnectors } from "../src/generated/ManagedConnectors.ts";
 
 const TestConnectionUrl = "https://connection-runtime.azure.com/apim/smtp/abc123";
 
-function createMockTokenProvider(): TokenProvider {
+function createMockCredential(): TokenCredential {
     return {
-        getAccessTokenAsync: async () => "mock-bearer-token",
+        getToken: async () => ({ token: "mock-bearer-token", expiresOnTimestamp: Number.MAX_SAFE_INTEGER }),
     };
 }
 
@@ -63,28 +63,32 @@ const _attachment: Attachment = {
 
 describe("SmtpClient — constructor", () => {
     it("should construct with valid options", () => {
-        const client = new SmtpClient(TestConnectionUrl, createMockTokenProvider());
+        const client = new SmtpClient(
+            TestConnectionUrl,
+            createMockCredential(),
+            { retryOptions: { maxRetries: 0 } },
+        );
         expect(client).toBeDefined();
         expect(client).toBeInstanceOf(SmtpClient);
     });
 
     it("should strip trailing slashes from connection URL", () => {
-        const client = new SmtpClient(TestConnectionUrl + "///", createMockTokenProvider());
+        const client = new SmtpClient(TestConnectionUrl + "///", createMockCredential());
         expect(client).toBeDefined();
     });
 
     it("should construct with an empty connection URL", () => {
-        const client = new SmtpClient("", createMockTokenProvider());
+        const client = new SmtpClient("", createMockCredential());
         expect(client).toBeDefined();
     });
 
     it("should throw on null connection URL", () => {
-        expect(() => new SmtpClient(null as unknown as string, createMockTokenProvider()))
+        expect(() => new SmtpClient(null as unknown as string, createMockCredential()))
             .toThrow("Parameter 'connectionRuntimeUrl' cannot be null or undefined.");
     });
 
     it("should throw on undefined connection URL", () => {
-        expect(() => new SmtpClient(undefined as unknown as string, createMockTokenProvider()))
+        expect(() => new SmtpClient(undefined as unknown as string, createMockCredential()))
             .toThrow("Parameter 'connectionRuntimeUrl' cannot be null or undefined.");
     });
 });
@@ -97,7 +101,7 @@ describe("SmtpClient — sendEmailAsync", () => {
     it("should POST to /SendEmailV3 with correct body and headers", async () => {
         mockFetchResponse(null);
 
-        const client = new SmtpClient(TestConnectionUrl, createMockTokenProvider());
+        const client = new SmtpClient(TestConnectionUrl, createMockCredential());
         const input: Email = {
             From: "sender@contoso.com",
             To: "recipient@contoso.com",
@@ -120,7 +124,7 @@ describe("SmtpClient — sendEmailAsync", () => {
     it("should send email with attachments", async () => {
         mockFetchResponse(null);
 
-        const client = new SmtpClient(TestConnectionUrl, createMockTokenProvider());
+        const client = new SmtpClient(TestConnectionUrl, createMockCredential());
         const input: Email = {
             From: "sender@contoso.com",
             To: "recipient@contoso.com",
@@ -142,7 +146,7 @@ describe("SmtpClient — sendEmailAsync", () => {
     it("should send email with CC and BCC", async () => {
         mockFetchResponse(null);
 
-        const client = new SmtpClient(TestConnectionUrl, createMockTokenProvider());
+        const client = new SmtpClient(TestConnectionUrl, createMockCredential());
         const input: Email = {
             From: "sender@contoso.com",
             To: "recipient@contoso.com",
@@ -169,7 +173,11 @@ describe("SmtpClient — error handling", () => {
     it("should throw ConnectorException on non-OK response", async () => {
         mockFetchError(550, '{"error": "MailboxNotFound"}');
 
-        const client = new SmtpClient(TestConnectionUrl, createMockTokenProvider());
+        const client = new SmtpClient(
+            TestConnectionUrl,
+            createMockCredential(),
+            { retryOptions: { maxRetries: 0 } },
+        );
 
         await expect(
             client.sendEmailAsync({
@@ -185,7 +193,7 @@ describe("SmtpClient — error handling", () => {
         const errorBody = '{"code": "AuthenticationRequired"}';
         mockFetchError(401, errorBody);
 
-        const client = new SmtpClient(TestConnectionUrl, createMockTokenProvider());
+        const client = new SmtpClient(TestConnectionUrl, createMockCredential());
 
         try {
             await client.sendEmailAsync({

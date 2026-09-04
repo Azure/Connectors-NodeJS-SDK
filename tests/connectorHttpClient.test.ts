@@ -1,13 +1,60 @@
 // Copyright (c) Microsoft Corporation.  All rights reserved.
 
-import { TokenProvider } from "../src/azureConnectors/authentication.ts";
-import { ConnectorHttpClient, ConnectorResponse } from "../src/azureConnectors/connectorHttpClient.ts";
-import type { AbortSignalLike } from "../src/azureConnectors/index.ts";
+import { createHttpHeaders } from "@azure/core-rest-pipeline";
+import type { HttpClient, PipelineRequest, PipelineResponse } from "@azure/core-rest-pipeline";
+import { ConnectorHttpClient } from "../src/azureConnectors/connectorHttpClient.ts";
+import type { AbortSignalLike, TokenCredential } from "../src/azureConnectors/index.ts";
 
-class MockTokenProvider implements TokenProvider {
-    public async getAccessTokenAsync(_scopes: string[]): Promise<string> {
-        return "mock-bearer-token";
+type MockRequestHandler = (
+    request: PipelineRequest,
+    attempt: number,
+) => PipelineResponse | Promise<PipelineResponse>;
+
+class MockTokenCredential implements TokenCredential {
+    public readonly requestedScopes = new Array<string[]>();
+
+    public async getToken(scopes: string | string[]): Promise<{ token: string; expiresOnTimestamp: number }> {
+        this.requestedScopes.push(Array.isArray(scopes) ? [...scopes] : [scopes]);
+        return {
+            token: "mock-bearer-token",
+            expiresOnTimestamp: Number.MAX_SAFE_INTEGER,
+        };
     }
+}
+
+class MockHttpClient implements HttpClient {
+    public readonly requests = new Array<PipelineRequest>();
+
+    private readonly handler: MockRequestHandler;
+
+    public constructor(handler: MockRequestHandler) {
+        this.handler = handler;
+    }
+
+    public async sendRequest(request: PipelineRequest): Promise<PipelineResponse> {
+        this.requests.push(request);
+        return this.handler(request, this.requests.length);
+    }
+}
+
+function createMockResponse(
+    request: PipelineRequest,
+    status: number,
+    bodyAsText = "",
+    headers: Record<string, string> = {},
+): PipelineResponse {
+    return {
+        request,
+        status,
+        headers: createHttpHeaders(headers),
+        bodyAsText,
+    };
+}
+
+function createAbortError(message: string): Error {
+    const error = new Error(message);
+    error.name = "AbortError";
+    return error;
 }
 
 function createPlainAbortSignal(): { signal: AbortSignalLike; abort: () => void } {
@@ -37,207 +84,215 @@ function createPlainAbortSignal(): { signal: AbortSignalLike; abort: () => void 
 }
 
 describe("ConnectorHttpClient", () => {
-    const originalFetch = global.fetch;
-
-    afterEach(() => {
-        global.fetch = originalFetch;
+    it("should reject a null credential", () => {
+        expect(() => new ConnectorHttpClient(null as unknown as TokenCredential))
+            .toThrow("credential cannot be null or undefined.");
     });
 
-    it("should send GET request with auth header", async () => {
-        let capturedUrl: string | undefined;
-        let capturedInit: RequestInit | undefined;
+    it("should send GET request through the pipeline with authentication and correlation", async () => {
+        const credential = new MockTokenCredential();
+        const httpClient = new MockHttpClient(async request => createMockResponse(
+            request,
+            200,
+            JSON.stringify({ id: "123" }),
+            { "x-response-header": "response-value" },
+        ));
+        const client = new ConnectorHttpClient(credential, { httpClient });
 
-        global.fetch = async (input: string | URL | Request, init?: RequestInit) => {
-            capturedUrl = typeof input === "string" ? input : input.toString();
-            capturedInit = init;
-            return new Response(JSON.stringify({ id: "123" }), {
-                status: 200,
-                headers: { "Content-Type": "application/json" },
-            });
-        };
-
-        const client = new ConnectorHttpClient(new MockTokenProvider());
         const response = await client.sendAsync<{ id: string }>("GET", "https://example.com/api/items");
 
-        expect(capturedUrl).toBe("https://example.com/api/items");
-        expect(capturedInit?.method).toBe("GET");
-
-        const headers = capturedInit!.headers as Record<string, string>;
-        expect(headers["Authorization"]).toBe("Bearer mock-bearer-token");
+        expect(httpClient.requests).toHaveLength(1);
+        const request = httpClient.requests.at(0)!;
+        expect(request.url).toBe("https://example.com/api/items");
+        expect(request.method).toBe("GET");
+        expect(request.timeout).toBe(0);
+        expect(request.headers.get("Authorization")).toBe("Bearer mock-bearer-token");
+        expect(request.headers.get("x-ms-client-request-id")).toBe(request.requestId);
+        expect(credential.requestedScopes).toEqual([["https://apihub.azure.com/.default"]]);
         expect(response.isSuccessStatusCode).toBe(true);
         expect(response.statusCode).toBe(200);
+        expect(response.headers["x-response-header"]).toBe("response-value");
         expect(response.value?.id).toBe("123");
     });
 
-    it("should send POST request with body", async () => {
-        let capturedInit: RequestInit | undefined;
+    it("should send POST request with a JSON body", async () => {
+        const httpClient = new MockHttpClient(async request => createMockResponse(request, 201));
+        const client = new ConnectorHttpClient(new MockTokenCredential(), { httpClient });
 
-        global.fetch = async (_input: string | URL | Request, init?: RequestInit) => {
-            capturedInit = init;
-            return new Response(null, { status: 201 });
-        };
-
-        const client = new ConnectorHttpClient(new MockTokenProvider());
         await client.sendAsync("POST", "https://example.com/api/items", undefined, { name: "test" });
 
-        expect(capturedInit?.method).toBe("POST");
-        const headers = capturedInit!.headers as Record<string, string>;
-        expect(headers["Content-Type"]).toBe("application/json");
-
-        const body = JSON.parse(capturedInit!.body as string);
-        expect(body.name).toBe("test");
+        const request = httpClient.requests.at(0)!;
+        expect(request.method).toBe("POST");
+        expect(request.headers.get("Content-Type")).toBe("application/json");
+        expect(JSON.parse(request.body as string)).toEqual({ name: "test" });
     });
 
-    it("should report non-success status codes", async () => {
-        global.fetch = async () => {
-            return new Response("Unauthorized", { status: 401 });
-        };
+    it("should request a token for custom scopes", async () => {
+        const credential = new MockTokenCredential();
+        const httpClient = new MockHttpClient(async request => createMockResponse(request, 204));
+        const client = new ConnectorHttpClient(credential, { httpClient });
 
-        const client = new ConnectorHttpClient(new MockTokenProvider());
+        await client.sendAsync("GET", "https://example.com/api/items", ["custom-scope"]);
+
+        expect(credential.requestedScopes).toEqual([["custom-scope"]]);
+    });
+
+    it("should reuse the pipeline for repeated requests with the same scopes", async () => {
+        const credential = new MockTokenCredential();
+        const httpClient = new MockHttpClient(async request => createMockResponse(request, 204));
+        const client = new ConnectorHttpClient(credential, { httpClient });
+
+        await client.sendAsync("GET", "https://example.com/api/first");
+        await client.sendAsync("GET", "https://example.com/api/second");
+
+        expect(httpClient.requests).toHaveLength(2);
+        expect(credential.requestedScopes).toHaveLength(1);
+    });
+
+    it("should handle responses without body text", async () => {
+        const httpClient = new MockHttpClient(async request => ({
+            request,
+            status: 204,
+            headers: createHttpHeaders(),
+        }));
+        const client = new ConnectorHttpClient(new MockTokenCredential(), { httpClient });
+
+        const response = await client.sendAsync("GET", "https://example.com/api/items");
+
+        expect(response.text).toBe("");
+        expect(response.value).toBeUndefined();
+    });
+
+    it("should report non-success status codes without retrying client errors", async () => {
+        const httpClient = new MockHttpClient(async request => createMockResponse(
+            request,
+            401,
+            "Unauthorized",
+            { "WWW-Authenticate": "Bearer realm=\"example\"" },
+        ));
+        const client = new ConnectorHttpClient(new MockTokenCredential(), {
+            httpClient,
+            retryOptions: { maxRetries: 2, retryDelayInMs: 1, maxRetryDelayInMs: 1 },
+        });
+
         const response = await client.sendAsync("GET", "https://example.com/api/secret");
 
+        expect(httpClient.requests).toHaveLength(1);
         expect(response.isSuccessStatusCode).toBe(false);
         expect(response.statusCode).toBe(401);
         expect(response.text).toBe("Unauthorized");
     });
 
-    it("should retry on transient failure and succeed", async () => {
-        let attempts = 0;
-        global.fetch = jest.fn(async () => {
-            attempts++;
-            if (attempts < 2) {
-                throw new Error("network down");
-            }
-
-            return new Response(JSON.stringify({ ok: true }), { status: 200 });
-        }) as unknown as typeof fetch;
-
-        const client = new ConnectorHttpClient(new MockTokenProvider(), {
-            maxRetryAttempts: 3,
-            initialRetryDelayMs: 1,
-            useExponentialBackoff: false,
+    it("should retry transient server responses and succeed", async () => {
+        const httpClient = new MockHttpClient(async (request, attempt) => attempt < 3
+            ? createMockResponse(request, 503, "Unavailable")
+            : createMockResponse(request, 200, JSON.stringify({ ok: true })));
+        const credential = new MockTokenCredential();
+        const client = new ConnectorHttpClient(credential, {
+            httpClient,
+            retryOptions: { maxRetries: 2, retryDelayInMs: 1, maxRetryDelayInMs: 1 },
         });
+
         const response = await client.sendAsync<{ ok: boolean }>("GET", "https://example.com/api/items");
 
-        expect(attempts).toBe(2);
+        expect(httpClient.requests).toHaveLength(3);
+        expect(credential.requestedScopes).toHaveLength(1);
         expect(response.statusCode).toBe(200);
         expect(response.value?.ok).toBe(true);
     });
 
-    it("should throw after exhausting retry attempts", async () => {
-        let attempts = 0;
-        global.fetch = jest.fn(async () => {
-            attempts++;
-            throw new Error("persistent failure");
-        }) as unknown as typeof fetch;
-
-        const client = new ConnectorHttpClient(new MockTokenProvider(), {
-            maxRetryAttempts: 3,
-            initialRetryDelayMs: 1,
-            useExponentialBackoff: false,
+    it("should return the last response after exhausting retry attempts", async () => {
+        const httpClient = new MockHttpClient(async request => createMockResponse(request, 503, "Unavailable"));
+        const client = new ConnectorHttpClient(new MockTokenCredential(), {
+            httpClient,
+            retryOptions: { maxRetries: 2, retryDelayInMs: 1, maxRetryDelayInMs: 1 },
         });
 
-        await expect(client.sendAsync("GET", "https://example.com/api/items")).rejects.toThrow("persistent failure");
-        expect(attempts).toBe(3);
-    });
-
-    it("should use exponential backoff between retries when enabled", async () => {
-        let attempts = 0;
-        global.fetch = jest.fn(async () => {
-            attempts++;
-            if (attempts < 3) {
-                throw new Error("network down");
-            }
-
-            return new Response(null, { status: 204 });
-        }) as unknown as typeof fetch;
-
-        const client = new ConnectorHttpClient(new MockTokenProvider(), {
-            maxRetryAttempts: 3,
-            initialRetryDelayMs: 1,
-            useExponentialBackoff: true,
-        });
         const response = await client.sendAsync("GET", "https://example.com/api/items");
 
-        expect(attempts).toBe(3);
-        expect(response.statusCode).toBe(204);
+        expect(httpClient.requests).toHaveLength(3);
+        expect(response.statusCode).toBe(503);
+        expect(response.text).toBe("Unavailable");
     });
 
-    it("should not retry on TypeError (non-transient)", async () => {
-        let attempts = 0;
-        global.fetch = jest.fn(async () => {
-            attempts++;
-            throw new TypeError("invalid url");
-        }) as unknown as typeof fetch;
-
-        const client = new ConnectorHttpClient(new MockTokenProvider(), {
-            maxRetryAttempts: 3,
-            initialRetryDelayMs: 1,
+    it("should not retry non-pipeline errors", async () => {
+        const httpClient = new MockHttpClient(async () => {
+            throw new TypeError("invalid request");
+        });
+        const client = new ConnectorHttpClient(new MockTokenCredential(), {
+            httpClient,
+            retryOptions: { maxRetries: 2, retryDelayInMs: 1 },
         });
 
-        await expect(client.sendAsync("GET", "bad-url")).rejects.toThrow(TypeError);
-        expect(attempts).toBe(1);
+        await expect(client.sendAsync("GET", "https://example.com/api/items")).rejects.toThrow(TypeError);
+        expect(httpClient.requests).toHaveLength(1);
     });
 
-    it("should not retry on SyntaxError (non-transient)", async () => {
-        let attempts = 0;
-        global.fetch = jest.fn(async () => {
-            attempts++;
-            throw new SyntaxError("bad syntax");
-        }) as unknown as typeof fetch;
-
-        const client = new ConnectorHttpClient(new MockTokenProvider(), {
-            maxRetryAttempts: 3,
-            initialRetryDelayMs: 1,
+    it("should use a custom client request ID header", async () => {
+        const httpClient = new MockHttpClient(async request => createMockResponse(request, 204));
+        const client = new ConnectorHttpClient(new MockTokenCredential(), {
+            httpClient,
+            telemetryOptions: { clientRequestIdHeaderName: "x-custom-request-id" },
         });
 
-        await expect(client.sendAsync("GET", "https://example.com")).rejects.toThrow(SyntaxError);
-        expect(attempts).toBe(1);
+        await client.sendAsync("GET", "https://example.com/api/items");
+
+        const request = httpClient.requests.at(0)!;
+        expect(request.headers.get("x-custom-request-id")).toBe(request.requestId);
+        expect(request.headers.has("x-ms-client-request-id")).toBe(false);
+    });
+
+    it("should reject bearer authentication over HTTP", async () => {
+        const httpClient = new MockHttpClient(async request => createMockResponse(request, 200));
+        const client = new ConnectorHttpClient(new MockTokenCredential(), { httpClient });
+
+        await expect(client.sendAsync("GET", "http://example.com/api/items"))
+            .rejects.toThrow("non-TLS protected");
+        expect(httpClient.requests).toHaveLength(0);
     });
 
     it("should abort immediately when caller signal is already aborted", async () => {
-        global.fetch = jest.fn(async (_input: string | URL | Request, init?: RequestInit) => {
-            return new Promise((_resolve, reject) => {
-                const signal = init?.signal;
-                if (signal?.aborted) {
-                    reject(new Error("AbortError"));
-                    return;
-                }
+        const httpClient = new MockHttpClient(async request => {
+            if (request.abortSignal?.aborted) {
+                throw createAbortError("Transport should not send an aborted request.");
+            }
 
-                signal?.addEventListener("abort", () => reject(new Error("AbortError")));
-            });
-        }) as unknown as typeof fetch;
-
+            return createMockResponse(request, 200);
+        });
         const controller = new AbortController();
         controller.abort();
-
-        const client = new ConnectorHttpClient(new MockTokenProvider(), {
-            maxRetryAttempts: 1,
-            initialRetryDelayMs: 1,
+        const client = new ConnectorHttpClient(new MockTokenCredential(), {
+            httpClient,
+            retryOptions: { maxRetries: 0 },
         });
 
-        await expect(
-            client.sendAsync("GET", "https://example.com/api/items", undefined, undefined, controller.signal),
-        ).rejects.toThrow();
+        await expect(client.sendAsync(
+            "GET",
+            "https://example.com/api/items",
+            undefined,
+            undefined,
+            controller.signal,
+        )).rejects.toMatchObject({ name: "AbortError" });
     });
 
     it("should propagate a plain-object AbortSignalLike during an in-flight request", async () => {
-        global.fetch = jest.fn(async (_input: string | URL | Request, init?: RequestInit) => {
-            return new Promise((_resolve, reject) => {
-                const signal = init?.signal;
-                if (signal?.aborted) {
-                    reject(new Error("AbortError"));
-                    return;
-                }
+        let markRequestStarted: (() => void) | undefined;
+        const requestStarted = new Promise<void>(resolve => {
+            markRequestStarted = resolve;
+        });
+        const httpClient = new MockHttpClient(async request => new Promise<PipelineResponse>((_resolve, reject) => {
+            if (request.abortSignal?.aborted) {
+                reject(createAbortError("Request was already aborted."));
+                return;
+            }
 
-                signal?.addEventListener("abort", () => reject(new Error("AbortError")));
-            });
-        }) as unknown as typeof fetch;
-
+            request.abortSignal?.addEventListener("abort", () => reject(createAbortError("Request was aborted.")));
+            markRequestStarted?.();
+        }));
         const callerAbort = createPlainAbortSignal();
-        const client = new ConnectorHttpClient(new MockTokenProvider(), {
-            maxRetryAttempts: 1,
-            initialRetryDelayMs: 1,
+        const client = new ConnectorHttpClient(new MockTokenCredential(), {
+            httpClient,
+            retryOptions: { maxRetries: 0 },
         });
 
         const sendPromise = client.sendAsync(
@@ -248,66 +303,9 @@ describe("ConnectorHttpClient", () => {
             callerAbort.signal,
         );
 
-        await Promise.resolve();
+        await requestStarted;
         callerAbort.abort();
 
-        await expect(sendPromise).rejects.toThrow("AbortError");
-    });
-
-    it("should abort on request timeout", async () => {
-        global.fetch = jest.fn(async (_input: string | URL | Request, init?: RequestInit) => {
-            return new Promise((_resolve, reject) => {
-                const signal = init?.signal;
-                if (signal?.aborted) {
-                    reject(new Error("AbortError"));
-                    return;
-                }
-
-                signal?.addEventListener("abort", () => reject(new Error("AbortError")));
-            });
-        }) as unknown as typeof fetch;
-
-        const client = new ConnectorHttpClient(new MockTokenProvider(), {
-            maxRetryAttempts: 1,
-            timeoutMs: 1,
-            initialRetryDelayMs: 1,
-        });
-
-        await expect(client.sendAsync("GET", "https://example.com/slow")).rejects.toThrow("AbortError");
-    });
-
-    it("should abort internal signal when caller aborts after listener registration", async () => {
-        global.fetch = jest.fn(async (_input: string | URL | Request, init?: RequestInit) => {
-            return new Promise((_resolve, reject) => {
-                const signal = init?.signal;
-                if (signal?.aborted) {
-                    reject(new Error("AbortError"));
-                    return;
-                }
-
-                signal?.addEventListener("abort", () => reject(new Error("AbortError")));
-            });
-        }) as unknown as typeof fetch;
-
-        const controller = new AbortController();
-        const client = new ConnectorHttpClient(new MockTokenProvider(), {
-            maxRetryAttempts: 1,
-            initialRetryDelayMs: 1,
-            timeoutMs: 1000,
-        });
-
-        const sendPromise = client.sendAsync(
-            "GET",
-            "https://example.com/api/items",
-            undefined,
-            undefined,
-            controller.signal,
-        );
-
-        // Ensure sendWithRetry has attached the caller abort listener before aborting.
-        await Promise.resolve();
-        controller.abort();
-
-        await expect(sendPromise).rejects.toThrow("AbortError");
+        await expect(sendPromise).rejects.toMatchObject({ name: "AbortError" });
     });
 });

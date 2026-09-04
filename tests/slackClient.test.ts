@@ -1,5 +1,6 @@
 // Copyright (c) Microsoft Corporation.  All rights reserved.
 
+import type { TokenCredential } from "@azure/core-auth";
 import {
     JoinChannelResponse,
     SlackClient,
@@ -8,15 +9,14 @@ import {
     PostMessageResponse,
 } from "../src/generated/SlackExtensions.ts";
 import { ConnectorException } from "../src/azureConnectors/connectorException.ts";
-import { TokenProvider } from "../src/azureConnectors/authentication.ts";
 import { ConnectorNames } from "../src/generated/connectorNames.ts";
 import { availableConnectors } from "../src/generated/ManagedConnectors.ts";
 
 const TestConnectionUrl = "https://connection-runtime.azure.com/apim/slack/abc123";
 
-function createMockTokenProvider(): TokenProvider {
+function createMockCredential(): TokenCredential {
     return {
-        getAccessTokenAsync: async () => "mock-bearer-token",
+        getToken: async () => ({ token: "mock-bearer-token", expiresOnTimestamp: Number.MAX_SAFE_INTEGER }),
     };
 }
 
@@ -40,7 +40,7 @@ function mockFetchError(status: number, errorBody: string): void {
 
 describe("SlackClient — constructor", () => {
     it("should construct with valid options", () => {
-        const client = new SlackClient(TestConnectionUrl, createMockTokenProvider());
+        const client = new SlackClient(TestConnectionUrl, createMockCredential());
         expect(client).toBeDefined();
         expect(client).toBeInstanceOf(SlackClient);
     });
@@ -55,10 +55,10 @@ describe("SlackClient — listChannelsAsync", () => {
         const mockResponse: ListChannelsResponse = { value: [] };
         mockFetchResponse(mockResponse);
 
-        const client = new SlackClient(TestConnectionUrl, createMockTokenProvider());
-        const result = await client.listChannelsAsync();
+        const client = new SlackClient(TestConnectionUrl, createMockCredential());
+        const result = await client.listChannelsAsync().byPage().next();
 
-        expect(result).toEqual(mockResponse);
+        expect(result.value).toEqual(mockResponse.value);
         const [url, init] = (global.fetch as jest.Mock).mock.calls[0];
         expect(url).toContain("/v3/conversations.list");
         expect(init.method).toBe("GET");
@@ -67,8 +67,8 @@ describe("SlackClient — listChannelsAsync", () => {
     it("should throw ConnectorException on non-OK response", async () => {
         mockFetchError(429, '{"error":"rate_limited"}');
 
-        const client = new SlackClient(TestConnectionUrl, createMockTokenProvider());
-        await expect(client.listChannelsAsync()).rejects.toThrow(ConnectorException);
+        const client = new SlackClient(TestConnectionUrl, createMockCredential());
+        await expect(client.listChannelsAsync().byPage().next()).rejects.toThrow(ConnectorException);
     });
 });
 
@@ -84,7 +84,7 @@ describe("SlackClient — joinChannelAsync", () => {
         };
         mockFetchResponse(mockResponse);
 
-        const client = new SlackClient(TestConnectionUrl, createMockTokenProvider());
+        const client = new SlackClient(TestConnectionUrl, createMockCredential());
         const result = await client.joinChannelAsync("C123");
 
         expect(result.warning).toBe("already_in_channel");
@@ -107,7 +107,7 @@ describe("SlackClient — postMessageAsync", () => {
         const mockResponse: PostMessageResponse = { ok: true, channel: "C123" };
         mockFetchResponse(mockResponse);
 
-        const client = new SlackClient(TestConnectionUrl, createMockTokenProvider());
+        const client = new SlackClient(TestConnectionUrl, createMockCredential());
         const result = await client.postMessageAsync(input);
 
         expect(result).toEqual(mockResponse);

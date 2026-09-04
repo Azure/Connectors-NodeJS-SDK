@@ -23,7 +23,7 @@
  */
 
 import { ManagedIdentityTokenProvider, ConnectorException } from "@azure/connectors";
-import { Office365usersClient, MyTrendingDocumentsResponse, DirectReportsResponse } from "@azure/connectors/generated/Office365usersExtensions";
+import { Office365usersClient, MyTrendingDocumentsResponse, DirectReportsResponse, User } from "@azure/connectors/generated/Office365usersExtensions";
 
 const CONNECTION_URL = process.env.OFFICE365USERS_CONNECTION_URL ?? "";
 
@@ -106,8 +106,10 @@ async function main(): Promise<void> {
     if (searchUser) {
         console.log(`\n--- Search for User ("${searchUser}") ---`);
         try {
-            const results = await client.searchUserAsync(searchUser);
-            const users = results.value ?? [];
+            const users: User[] = [];
+            for await (const user of client.searchUserAsync(searchUser)) {
+                users.push(user);
+            }
 
             if (users.length > 0) {
                 console.log(`Found ${users.length} matching users:`);

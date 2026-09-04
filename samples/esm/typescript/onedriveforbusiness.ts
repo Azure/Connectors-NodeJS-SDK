@@ -89,8 +89,10 @@ async function main(): Promise<void> {
     if (folderId) {
         console.log(`\n--- List Folder Contents ---`);
         try {
-            const contents = await client.listFolderAsync(folderId);
-            const contentList = contents.value ?? [];
+            const contentList: BlobMetadata[] = [];
+            for await (const item of client.listFolderAsync(folderId)) {
+                contentList.push(item);
+            }
 
             if (contentList.length > 0) {
                 console.log(`Found ${contentList.length} items:`);

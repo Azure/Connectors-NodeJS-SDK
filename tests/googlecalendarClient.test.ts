@@ -1,8 +1,8 @@
 // Copyright (c) Microsoft Corporation.  All rights reserved.
 
+import type { TokenCredential } from "@azure/core-auth";
 import { GooglecalendarClient } from "../src/generated/GooglecalendarExtensions.ts";
 import { ConnectorException } from "../src/azureConnectors/connectorException.ts";
-import { TokenProvider } from "../src/azureConnectors/authentication.ts";
 import { ConnectorNames } from "../src/generated/connectorNames.ts";
 import { availableConnectors } from "../src/generated/ManagedConnectors.ts";
 
@@ -12,9 +12,9 @@ import { availableConnectors } from "../src/generated/ManagedConnectors.ts";
 
 const TestConnectionUrl = "https://connection-runtime.azure.com/apim/googlecalendar/abc123";
 
-function createMockTokenProvider(): TokenProvider {
+function createMockCredential(): TokenCredential {
     return {
-        getAccessTokenAsync: async () => "mock-bearer-token",
+        getToken: async () => ({ token: "mock-bearer-token", expiresOnTimestamp: Number.MAX_SAFE_INTEGER }),
     };
 }
 
@@ -42,14 +42,14 @@ function mockFetchError(status: number, errorBody: string): void {
 
 describe("GooglecalendarClient — constructor", () => {
     it("should construct with valid options", () => {
-        const client = new GooglecalendarClient(TestConnectionUrl, createMockTokenProvider());
+        const client = new GooglecalendarClient(TestConnectionUrl, createMockCredential());
         expect(client).toBeDefined();
         expect(client).toBeInstanceOf(GooglecalendarClient);
     });
 
     it("should strip trailing slashes from connection URL", async () => {
         mockFetchResponse({});
-        const client = new GooglecalendarClient(TestConnectionUrl + "///", createMockTokenProvider());
+        const client = new GooglecalendarClient(TestConnectionUrl + "///", createMockCredential());
         await client.getEventAsync("cal1", "evt1");
         const [url] = (global.fetch as jest.Mock).mock.calls[0];
         // NOTE: Confirms the trailing slashes were stripped by inspecting the
@@ -59,12 +59,12 @@ describe("GooglecalendarClient — constructor", () => {
     });
 
     it("should throw on null connection URL", () => {
-        expect(() => new GooglecalendarClient(null as unknown as string, createMockTokenProvider()))
+        expect(() => new GooglecalendarClient(null as unknown as string, createMockCredential()))
             .toThrow("Parameter 'connectionRuntimeUrl' cannot be null or undefined.");
     });
 
     it("should throw on undefined connection URL", () => {
-        expect(() => new GooglecalendarClient(undefined as unknown as string, createMockTokenProvider()))
+        expect(() => new GooglecalendarClient(undefined as unknown as string, createMockCredential()))
             .toThrow("Parameter 'connectionRuntimeUrl' cannot be null or undefined.");
     });
 });
@@ -78,7 +78,7 @@ describe("GooglecalendarClient — getEventAsync", () => {
         const event = { id: "evt1", subject: "Team Sync" };
         mockFetchResponse(event);
 
-        const client = new GooglecalendarClient(TestConnectionUrl, createMockTokenProvider());
+        const client = new GooglecalendarClient(TestConnectionUrl, createMockCredential());
         const result = await client.getEventAsync("cal1", "evt1");
 
         expect(result).toEqual(event);
@@ -93,7 +93,7 @@ describe("GooglecalendarClient — getEventAsync", () => {
     it("should throw ConnectorException on non-OK response", async () => {
         mockFetchError(404, "Not Found");
 
-        const client = new GooglecalendarClient(TestConnectionUrl, createMockTokenProvider());
+        const client = new GooglecalendarClient(TestConnectionUrl, createMockCredential());
         try {
             await client.getEventAsync("cal1", "missing");
             throw new Error("Expected ConnectorException to be thrown.");

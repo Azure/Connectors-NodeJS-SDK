@@ -2,17 +2,17 @@
   "_comment": "Provenance record for the generated clients under src/generated/. It lets a regeneration be reproduced and any cross-language surface delta be attributed to a specific generator revision and Swagger input. Regenerate and repopulate this file on every run (see the 'Provenance & Reproducibility' section of GENERATION.md). A reviewable regeneration PR must have status 'generated' with non-null provenance, swaggerSha256 values that match the committed swagger-cache/ snapshots, and outputSha256 values that match the canonical UTF-8/LF generated outputs; the tests/generationManifest.test.ts guard enforces this.",
   "manifestVersion": 2,
   "status": "generated",
-  "generatedAtUtc": "2026-09-02T02:21:02Z",
+  "generatedAtUtc": "2026-09-03T21:02:56Z",
   "generator": {
     "repository": "https://msazure.visualstudio.com/One/_git/AzureUX-BPM",
     "tool": "CodefulSdkGenerator (LogicAppsCompiler)",
     "projectPath": "src/tools/CodefulSdkGenerator/LogicAppsCompiler.Cli/LogicAppsCompiler.Cli.csproj",
-    "bpmBaseCommit": "f817c3c25786565dbff102064740ea09072bd5b9",
-    "bpmBranch": "swapnilnagar/fix/typescript-abortsignallike",
-    "assemblyVersion": "1.188.0.53",
+    "bpmBaseCommit": "556b9a2b89275fbdb30721064e1588cba57e917d",
+    "bpmBranch": "swapnil/issue27",
+    "assemblyVersion": "1.188.0.72",
     "sourcePatch": {
-      "path": "generator-patches/a176b2b-request-url.patch",
-      "sha256": "7913821ca9cbef3d9576c1f0fd886eed3d7f5effd8b19b41f9f278757f7b23f6"
+      "path": "generator-patches/556b9a2-pagination.patch",
+      "sha256": "c9a671a5506b793a0fa1d03933e63c65e2ced270ddcc1f1be05aebec123e4737"
     }
   },
   "command": "LogicAppsCompiler.exe <output-directory> --directClient --language=typescript --connectors=arm,azureblob,azureeventgrid,azureiotcentral,azuremonitorlogs,box,campfire,clicksendsms,cloudmersiveconvert,docusign,docuware,dropbox,dynamicsax,elfsquaddata,etsy,eventbrite,excelonline,formstackforms,freshservice,ftp,github,googlecalendar,googledrive,googletasks,impexium,infusionsoft,insightly,jedoxodatahub,jira,kusto,mailchimp,meetingroommap,microsoftforms,monday,mq,msgraphgroupsanduser,office365,office365groupsmail,office365users,onedriveforbusiness,orderful,pdfco,pipedrive,plivo,plumsail,powerbi,projectplace,replicon,revai,rss,salesforce,seismicplanner,sendgrid,sharepointonline,shifts,signinghub,slack,smtp,sql,starmind,starrezrestv1,tallyfy,teams,textrequest,ticketmaster,todo,twitter,typeform,waywedo,webex,wordpress,zendesk,zohosign",
@@ -39,511 +39,511 @@
       "outputFile": "src/generated/ArmExtensions.ts",
       "swaggerSnapshot": "swagger-cache/arm.swagger.json",
       "swaggerSha256": "5974fb8aaee9a2d46d64171889a52c0cf5345aff190a52cd045b2fc5e1d79a7f",
-      "outputSha256": "957e50467634b6f69eb6fdd5fb019fe46f00e7b7080987514b5b3ec076e992fe"
+      "outputSha256": "cbf152cc8f79b7d24718c35bfbf9217d71f6836be915ff7f3cce7f00d4586e84"
     },
     {
       "apiName": "azureblob",
       "outputFile": "src/generated/AzureblobExtensions.ts",
       "swaggerSnapshot": "swagger-cache/azureblob.swagger.json",
       "swaggerSha256": "2913f54ac344c619768967e0a126bd5aba4e92917e9531d081daeae1b9b76f7c",
-      "outputSha256": "93b42e7adae25900a152b5ba9e0dd34e7d1374cd2d29b40d0672fe3397eae0f2"
+      "outputSha256": "a89a6bfe206619884b67f7e8a0c9877f21d3c0a1f0c8ff112a086f5f4b9a91fc"
     },
     {
       "apiName": "azureeventgrid",
       "outputFile": "src/generated/AzureeventgridExtensions.ts",
       "swaggerSnapshot": "swagger-cache/azureeventgrid.swagger.json",
       "swaggerSha256": "7c66da60e8a32a159118d1117682e54571423b327ebd86ea4716d93438897d32",
-      "outputSha256": "bd9e9baba18329df00db13ceca89193af96b31b1699455b534218a49794b1fe1"
+      "outputSha256": "dda0b6175185ff5dcf7c30c690b5634a262390a9b175a695da536e111a39eb36"
     },
     {
       "apiName": "azureiotcentral",
       "outputFile": "src/generated/AzureiotcentralExtensions.ts",
       "swaggerSnapshot": "swagger-cache/azureiotcentral.swagger.json",
       "swaggerSha256": "19613b639f5451e81d7f6be142426e3f74a6749e006f75a48e87b52a013f5751",
-      "outputSha256": "98619bcd553f040ad2021e33cee53444fe5f5613254205a7046112c1ed00f320"
+      "outputSha256": "88981c88c23b156e15ab9a6ed40af45e060482e6eeae0def8cd24d33bd5a2fd7"
     },
     {
       "apiName": "azuremonitorlogs",
       "outputFile": "src/generated/AzuremonitorlogsExtensions.ts",
       "swaggerSnapshot": "swagger-cache/azuremonitorlogs.swagger.json",
       "swaggerSha256": "d6910d0894785e464d92a3cef07bebb473d6e175797bfd43e3600338d4b9c3cd",
-      "outputSha256": "23119b237a7300fb0a9e8da352a5e656077cf6b80c2cb5dfb14507590159801c"
+      "outputSha256": "908b3ec2d064a37b8c9ee97c5384b7c5f339542ca7c739c9be2d05cff602b66a"
     },
     {
       "apiName": "box",
       "outputFile": "src/generated/BoxExtensions.ts",
       "swaggerSnapshot": "swagger-cache/box.swagger.json",
       "swaggerSha256": "fe54c9b5095095f2aa30b78847b006330f3a3f2d3e2c7410527e18d7d1e1e408",
-      "outputSha256": "19f1794939889d068af3c99f418531d75f9ef74e8bd6a766a642fe7d9c8d55ea"
+      "outputSha256": "449eb8ddad3cf8f828c71260346888ba99ce26d7ad5a54b391db5deb01576c5e"
     },
     {
       "apiName": "campfire",
       "outputFile": "src/generated/CampfireExtensions.ts",
       "swaggerSnapshot": "swagger-cache/campfire.swagger.json",
       "swaggerSha256": "c86087b24f20b9f7a792c695ea265bd0f1ba84233057fc9ebebd474b443a8b7d",
-      "outputSha256": "9f33ac4fdb4c40faebdf10a853790068eca897216668e615ed6785691f378482"
+      "outputSha256": "c6448eb9f4d1f2c75f39d68bbbc83e697d6d5a80adffe47f693ceb116ea1d000"
     },
     {
       "apiName": "clicksendsms",
       "outputFile": "src/generated/ClicksendsmsExtensions.ts",
       "swaggerSnapshot": "swagger-cache/clicksendsms.swagger.json",
       "swaggerSha256": "4b231296afcdada895783d197201e3e91b0ec4347239209c44b56f78c47774af",
-      "outputSha256": "b8d39f991a71e34127cc9e16dcdf053e43681e5062c92b951d246dc9304d2cc8"
+      "outputSha256": "49db9f6fe2be549b3e79613102882ab47aead41e1f2f3ba758a9296f477e54e5"
     },
     {
       "apiName": "cloudmersiveconvert",
       "outputFile": "src/generated/CloudmersiveconvertExtensions.ts",
       "swaggerSnapshot": "swagger-cache/cloudmersiveconvert.swagger.json",
       "swaggerSha256": "860768b6ceff8ca5fd5f41b118b06d0cfe55076e15636295b3894e6c78cf067c",
-      "outputSha256": "8483cfd9b4b745a918a43696b4710e9c9a02cefd32aa7c010e401017bdd5cde2"
+      "outputSha256": "205ae471cda0a31e8b6c5e5dd32dc3c796c1a15eedaa604a747b02b91414c8cf"
     },
     {
       "apiName": "docusign",
       "outputFile": "src/generated/DocusignExtensions.ts",
       "swaggerSnapshot": "swagger-cache/docusign.swagger.json",
       "swaggerSha256": "4a8742b7bf35b705558a5ddb7607219e7ac46fd6582a1f2fe964ec72c1d435dd",
-      "outputSha256": "cd97697cb53d6ced2097b07ab12be72c55e872ebba48079eaf67f35ff9a12e3d"
+      "outputSha256": "9da79e38b46a778383c1def7e27f0b643263986eac4897f512e37ac48d440f7a"
     },
     {
       "apiName": "docuware",
       "outputFile": "src/generated/DocuwareExtensions.ts",
       "swaggerSnapshot": "swagger-cache/docuware.swagger.json",
       "swaggerSha256": "7ebc04b5a47c35f5da9a2afddb9de3bb022e169744f5362f92449939f07df143",
-      "outputSha256": "21ca6d1721009ace93a9d28d6b01a64eed3d1b78087d71f4b97ed9ad5a8ab2eb"
+      "outputSha256": "466cc89afd9779be9399248c9ef2ec95698f43397f8847bc3eec9d83abed2646"
     },
     {
       "apiName": "dropbox",
       "outputFile": "src/generated/DropboxExtensions.ts",
       "swaggerSnapshot": "swagger-cache/dropbox.swagger.json",
       "swaggerSha256": "d096ccafa3e65ca96c504d4a8335760f0fc8c38b9a446f9e6d6db13b83809df1",
-      "outputSha256": "b552009b50bdf4ea2e918287ed17b673d2914812d0f980ebfc234277eb0f6230"
+      "outputSha256": "8c358e231c9f7cab03eeb2e9a970882931f00d83d338dfab4ec1c771321c6663"
     },
     {
       "apiName": "dynamicsax",
       "outputFile": "src/generated/DynamicsaxExtensions.ts",
       "swaggerSnapshot": "swagger-cache/dynamicsax.swagger.json",
       "swaggerSha256": "7ad46b64824a9857eef0cd657182f571258f4e2e3127c5b5ed0f0313e80c6e55",
-      "outputSha256": "c936d3955c746e29cf6e3ca0e607508815f41acf788d737c9950d7d02bf66c40"
+      "outputSha256": "7a193fa10cf34c73cdbd72558932e422254c271d7b9de09919482a22152a8539"
     },
     {
       "apiName": "elfsquaddata",
       "outputFile": "src/generated/ElfsquaddataExtensions.ts",
       "swaggerSnapshot": "swagger-cache/elfsquaddata.swagger.json",
       "swaggerSha256": "37bd441cdd9688a86afaefae7ea2671b42c6719b0d0774bc790c7bde7a684b82",
-      "outputSha256": "a6c0ca595313f70609eda5e8a1bb0853d8cbc07697f02b2945fb519feb027b31"
+      "outputSha256": "1a06af70f164773c05d09c97167807a0917bf3d0f8cfff863c5a5d531ac2c552"
     },
     {
       "apiName": "etsy",
       "outputFile": "src/generated/EtsyExtensions.ts",
       "swaggerSnapshot": "swagger-cache/etsy.swagger.json",
       "swaggerSha256": "faf7a145d822258d612c7d1e9f6655e83e71d9a61f08f39e86909c6105a5916e",
-      "outputSha256": "223d7ef9168ad84181fb2e4b85bd6e3f0831efaa9300086036a35f1b54214b92"
+      "outputSha256": "d17ba9e417ae6fcabe29887601a5dbb3e12e8a5ea35df9c82eaa5974333892a9"
     },
     {
       "apiName": "eventbrite",
       "outputFile": "src/generated/EventbriteExtensions.ts",
       "swaggerSnapshot": "swagger-cache/eventbrite.swagger.json",
       "swaggerSha256": "6f2b23b6c2db52ecc1cb09a5cfc52bcf00dd070c24bdbf1b025627e34397f475",
-      "outputSha256": "8b0b16bf03fc635f2995e95a1d00a70535371d9e8971ad4c894facdd0f6ce578"
+      "outputSha256": "0186f2d7354eed3b74a16c1ce64377fb785bf7fc58e32ade1eb1cd559a9940da"
     },
     {
       "apiName": "excelonline",
       "outputFile": "src/generated/ExcelonlineExtensions.ts",
       "swaggerSnapshot": "swagger-cache/excelonline.swagger.json",
       "swaggerSha256": "55b95c5aa93a92f02f3258e0daecbb158cb3dbc27abc67aecbf20375c07f6489",
-      "outputSha256": "620b8e2ced2cc5d68362b88a0e51c90dcf16265525edd3ec0a02aacea9ec5300"
+      "outputSha256": "5552fa00555d067811e9ba72bd95251c9094e3028326b763aecd0357fb05e2ce"
     },
     {
       "apiName": "formstackforms",
       "outputFile": "src/generated/FormstackformsExtensions.ts",
       "swaggerSnapshot": "swagger-cache/formstackforms.swagger.json",
       "swaggerSha256": "bdecc6d0d2005bac25b31b874fe3ab9ce98c7209f4bdb069b10b4a1afaff902b",
-      "outputSha256": "684b52044a3c338a646f8f3dbb09efdb00f35fc716045d0eb23b7ea367b8bfd0"
+      "outputSha256": "6a35a4bb9e6cb5c0a8561296d4c4b5e4222b1a76918b0ae06da9374b99e554cf"
     },
     {
       "apiName": "freshservice",
       "outputFile": "src/generated/FreshserviceExtensions.ts",
       "swaggerSnapshot": "swagger-cache/freshservice.swagger.json",
       "swaggerSha256": "9f0d6655b631ee3c07f50be93d62fe02ac166573f2ee79bb8a3781bca96aaee3",
-      "outputSha256": "452220f9899ef9d157bc9e8cd853d4ce68777a6af61a48b5cf8696dbe5825866"
+      "outputSha256": "1ecf78bc1dc5d3ac3192e0beffa05b950f29165df3ac8bc2a66af2bddb0ed7c1"
     },
     {
       "apiName": "ftp",
       "outputFile": "src/generated/FtpExtensions.ts",
       "swaggerSnapshot": "swagger-cache/ftp.swagger.json",
       "swaggerSha256": "ae060ad49d55f2e651e8f04a3e5ab33454f6546a67af7cc67e724cecba63eaec",
-      "outputSha256": "c057ef42ba1f23644a8b5b0b437047ee5fff5f664acda897d0aaa462647d2abb"
+      "outputSha256": "ea84034c67351711f23b25797419e77844091b9d4d3044a9a09755d59034e638"
     },
     {
       "apiName": "github",
       "outputFile": "src/generated/GithubExtensions.ts",
       "swaggerSnapshot": "swagger-cache/github.swagger.json",
       "swaggerSha256": "ab508ed2ea1f9c4cf3216d440e2d50cf86b3cc0f5312fa39ee036185d493c73e",
-      "outputSha256": "6167157972331867d82b105c32db1484fb8596c4bded2f358413bda7eb5f8dc6"
+      "outputSha256": "4c546719f72279b4045be9c7e01f29d0d81a4d74b5eec5b9bbc003a39b467a3f"
     },
     {
       "apiName": "googlecalendar",
       "outputFile": "src/generated/GooglecalendarExtensions.ts",
       "swaggerSnapshot": "swagger-cache/googlecalendar.swagger.json",
       "swaggerSha256": "dd09f24015298cc95328572c4bfdb47c3be3ee1c56a7bd48cd2c0751b2d35e2c",
-      "outputSha256": "34360af8409247b827fcf92c0cefb555ddbad8349aeec421852e532cd4701b3b"
+      "outputSha256": "73fab7b70ce99f63dc0b585d24c736a74ba9b1df4a2e326f15c14ec3ba6ee269"
     },
     {
       "apiName": "googledrive",
       "outputFile": "src/generated/GoogledriveExtensions.ts",
       "swaggerSnapshot": "swagger-cache/googledrive.swagger.json",
       "swaggerSha256": "c77bf8e2a2b80669f82d97d0341ba332392b964afc962f07e78728a4421ad338",
-      "outputSha256": "4a4e9c227bf1fcbfe404c7e1263ba11edea229516cc14de8e4f8b088cadc4e07"
+      "outputSha256": "d1bae7a9c22fe1a491d345b541788e140edcce7412cf9e7763792a832df915ef"
     },
     {
       "apiName": "googletasks",
       "outputFile": "src/generated/GoogletasksExtensions.ts",
       "swaggerSnapshot": "swagger-cache/googletasks.swagger.json",
       "swaggerSha256": "0c7f04201868f4f31b01a72191cf9c28617bf09cb07265ef1bab75723c20efb6",
-      "outputSha256": "6809ada208ec1be0645b8f612396a77dc53154abfc57016b17841d0c08343a4a"
+      "outputSha256": "4bdd8c54bf0d7854e4d89c0c4d2b31c82559a94557517d00079506265cd6d73f"
     },
     {
       "apiName": "impexium",
       "outputFile": "src/generated/ImpexiumExtensions.ts",
       "swaggerSnapshot": "swagger-cache/impexium.swagger.json",
       "swaggerSha256": "cabec9c237eebcae532854cdb32766e502be672e6c404e86860bdbeaefaf6c7b",
-      "outputSha256": "f82ef94bef31743a7f632e7245f20f6895957bb315906839fa6963c9dd50677d"
+      "outputSha256": "3b632c82dba7cd90d26440e669e045c8f07290ee55388d4ab76e240263a5cc16"
     },
     {
       "apiName": "infusionsoft",
       "outputFile": "src/generated/InfusionsoftExtensions.ts",
       "swaggerSnapshot": "swagger-cache/infusionsoft.swagger.json",
       "swaggerSha256": "dbbb0d24f6d67dc9ae36c12ab2ee38d1b7daea90bef97af5b04677e8381b0482",
-      "outputSha256": "ac879838b116522cc73783d56949c1d1b2137944c9849586c0a94b721dc53e99"
+      "outputSha256": "47dae23bb1a8981a563041d09af10fd3a53abc8ea7e910f3e007663352fb221e"
     },
     {
       "apiName": "insightly",
       "outputFile": "src/generated/InsightlyExtensions.ts",
       "swaggerSnapshot": "swagger-cache/insightly.swagger.json",
       "swaggerSha256": "f5ead046092417e8c47bada3c0f12cc07b7b2efe62d3a7d025d0205c7b9c7924",
-      "outputSha256": "8b25747dcde21c3c2e8564d6baa70d8a5ee549fd23ef89f9887b5f0567467f8d"
+      "outputSha256": "f07fc09d46aaee1b4c53161383fd33d9e51abb6bf07a4f93f70c276cd7f5a866"
     },
     {
       "apiName": "jedoxodatahub",
       "outputFile": "src/generated/JedoxodatahubExtensions.ts",
       "swaggerSnapshot": "swagger-cache/jedoxodatahub.swagger.json",
       "swaggerSha256": "c733673ea33c7babcae0570e83eeabbe3682ae71932fcfb8bee281b9954a2199",
-      "outputSha256": "91726fdd2ca3d2f7cda0d9f88c815e7453da39e623df8d29266644d42228d6c9"
+      "outputSha256": "f30dead7b8e5fade59efa443e56d49c02a790456d8e01c1ed7f6bf6dee71d9c8"
     },
     {
       "apiName": "jira",
       "outputFile": "src/generated/JiraExtensions.ts",
       "swaggerSnapshot": "swagger-cache/jira.swagger.json",
       "swaggerSha256": "8dc4dffa5057af7b5b22c7f6db1ef8862f8cf018fed1198c035753865bf5e6d1",
-      "outputSha256": "26eec8586b7a9bef1392a629d813f6a8effeea230b835c9ccf52f48e19b37b0d"
+      "outputSha256": "ad02e26e5e4d86b78ba1d0cf47069a1c2aabb574b3679fe77b04216515729af8"
     },
     {
       "apiName": "kusto",
       "outputFile": "src/generated/KustoExtensions.ts",
       "swaggerSnapshot": "swagger-cache/kusto.swagger.json",
       "swaggerSha256": "2a087d76fd239a5f9abf80f4e9b4b57b8e8aca4cf7bf913d22aea1a32ca05cb7",
-      "outputSha256": "debfa4471f16b2f8daf7d3106b9035a413d2c774ef77d68e23ffba6c04d4b109"
+      "outputSha256": "b689a3b6a8eb6f2f6eb1f288a2bca90a513935ab6bd17c55f808cf50cf8ecc75"
     },
     {
       "apiName": "mailchimp",
       "outputFile": "src/generated/MailchimpExtensions.ts",
       "swaggerSnapshot": "swagger-cache/mailchimp.swagger.json",
       "swaggerSha256": "2cf5f68881a233e7f1c9850bc4d3649231bad35ac2d883b02b94c24962308fa6",
-      "outputSha256": "508aeca922fa373f2103826da3ad5e82a07cd5a942abdb0a3e7b429601c338ff"
+      "outputSha256": "cb31fdd215de5b28475c3eaba3b1cd40c66acbb052df6eeec5e7f614151d2fdb"
     },
     {
       "apiName": "meetingroommap",
       "outputFile": "src/generated/MeetingroommapExtensions.ts",
       "swaggerSnapshot": "swagger-cache/meetingroommap.swagger.json",
       "swaggerSha256": "d78285d9fa59597e5e8f2ff0ef55db439c1e85ed565f2257231ea215a9246465",
-      "outputSha256": "7a7ec98b94aa2d7b81a786c57ab6bb954311736b19033885e14384170bd23f39"
+      "outputSha256": "efe6930b777821cb769ec1ae22ca1896c2e37c36eb9b33fb27834ef5e3e3ae27"
     },
     {
       "apiName": "microsoftforms",
       "outputFile": "src/generated/MicrosoftformsExtensions.ts",
       "swaggerSnapshot": "swagger-cache/microsoftforms.swagger.json",
       "swaggerSha256": "41fe0302637470344eebd0ebc2837253a6501cdf708a5297d7002408f5f2d19d",
-      "outputSha256": "6e1afa602a501468ff4f2023fad0497ff18f3fe32355b349e0e823380a544585"
+      "outputSha256": "893b3a9574ff17cb5c43f179751697deb23b1546a7073ec9832ce3184c79c65f"
     },
     {
       "apiName": "monday",
       "outputFile": "src/generated/MondayExtensions.ts",
       "swaggerSnapshot": "swagger-cache/monday.swagger.json",
       "swaggerSha256": "c3510aa18fd7e2ce8349c28ab83e10598ffa2f25ff0dbaa6b9ccd4d2fe1e0797",
-      "outputSha256": "12ccc87faccc7377aeef0b9c4110af01577adcc027725e655d30b9df4cc1e3b9"
+      "outputSha256": "7299372db8e2fc54382a368004c25c3f1fc4f59a5d80df5dcfaddb0c650c1edb"
     },
     {
       "apiName": "mq",
       "outputFile": "src/generated/MqExtensions.ts",
       "swaggerSnapshot": "swagger-cache/mq.swagger.json",
       "swaggerSha256": "ffd294fd756815f011740d654360b95e5acdbbe9ee0de2d05b64c0edd158de18",
-      "outputSha256": "87241bd0b9fd2b10ba3c1f442f0da451251f5d10cc1cec85762516fe6bc21b68"
+      "outputSha256": "f1a1ab0c328c874dcec4d4659291c128ddd749a238cc6e12e2a94bc18feee6ba"
     },
     {
       "apiName": "msgraphgroupsanduser",
       "outputFile": "src/generated/MsgraphgroupsanduserExtensions.ts",
       "swaggerSnapshot": "swagger-cache/msgraphgroupsanduser.swagger.json",
       "swaggerSha256": "cf7a73b0df7b3e26ab4c2c19a595f4c7eb3d3c935f47675735b074b00ea0af7b",
-      "outputSha256": "2db13c3393653d26e1b578a65502cddc96a90461c181ab38fcadab3ff4687b3e"
+      "outputSha256": "43a149ee5b654e9929412a97754e3da2c402937cb201fd1652ff5a1ed99d4632"
     },
     {
       "apiName": "office365",
       "outputFile": "src/generated/Office365Extensions.ts",
       "swaggerSnapshot": "swagger-cache/office365.swagger.json",
       "swaggerSha256": "b58a10baa9a5ca6914bd7dff75d050cba3949c1186ef962abc2365fabdc96f05",
-      "outputSha256": "35f432522e3ba37018cb2967ae676f2d4e8b3eb7d77bf632d4362cd231bb0489"
+      "outputSha256": "654a81e1daa9b199ba080d1ceffdd63602794920f20825ebb80e92c2904f242f"
     },
     {
       "apiName": "office365groupsmail",
       "outputFile": "src/generated/Office365groupsmailExtensions.ts",
       "swaggerSnapshot": "swagger-cache/office365groupsmail.swagger.json",
       "swaggerSha256": "ebf91624f5c75da8d26015e9741b36fe2e4bbde8ad3c356c326487aebbd5a2a9",
-      "outputSha256": "d6da6765db2acbc46ac96ad2c6805a26f920e8f07663ba631d211666b79d4376"
+      "outputSha256": "4d7491d4a3b485c54ccbf7270994fb72c1a23a0801e8d322371ac8e2660e2061"
     },
     {
       "apiName": "office365users",
       "outputFile": "src/generated/Office365usersExtensions.ts",
       "swaggerSnapshot": "swagger-cache/office365users.swagger.json",
       "swaggerSha256": "642b5779ef601327d0345f631c9a1182b27914815a854f536b84ee99f476e137",
-      "outputSha256": "123dee23bb028d5216173b04fce7b0e5ba9a8c7984184e03ab8d1431ebd329e3"
+      "outputSha256": "49fd11dc5764316ab2ea6b1fdc9460d4163266b8823a53e2efe9a7b56281d8ef"
     },
     {
       "apiName": "onedriveforbusiness",
       "outputFile": "src/generated/OnedriveforbusinessExtensions.ts",
       "swaggerSnapshot": "swagger-cache/onedriveforbusiness.swagger.json",
       "swaggerSha256": "bb09c0baccb5c324d74f9cdefa979336f849fbe903204135095bbc3e04d1c568",
-      "outputSha256": "0dd04b0ca1009f1d47547d8d0d9e745cf847af34baebc4c3ab1edf477c9ed6b5"
+      "outputSha256": "2b014e27ca64a5f953404480c124a7efffd7d759f10e34265201439f0116bbac"
     },
     {
       "apiName": "orderful",
       "outputFile": "src/generated/OrderfulExtensions.ts",
       "swaggerSnapshot": "swagger-cache/orderful.swagger.json",
       "swaggerSha256": "9ebaadc1cb1e3d0b1676f83c0c762a42dc6cfd5ef8eef953dad90ddfbeb4b75b",
-      "outputSha256": "b7059891fad5b91269032067613c16bbf5b72bf0797622df68c223c20c035934"
+      "outputSha256": "8c370aaac8778d9ebc683a620fadb93b0f698a738cfb1d0f699b892ceb6b697a"
     },
     {
       "apiName": "pdfco",
       "outputFile": "src/generated/PdfcoExtensions.ts",
       "swaggerSnapshot": "swagger-cache/pdfco.swagger.json",
       "swaggerSha256": "c9fb18e541124ef0cd7d867173a4c61eabd2c7a0b0be95bcdf5d4b1c4ede3702",
-      "outputSha256": "bd48f41417eb98b996feffee40405e78af517155714a662143c4beccec9b7a38"
+      "outputSha256": "34f151f1517480658194be753faa9e2daac59a0dca95a16f4cd69a7116b37ea5"
     },
     {
       "apiName": "pipedrive",
       "outputFile": "src/generated/PipedriveExtensions.ts",
       "swaggerSnapshot": "swagger-cache/pipedrive.swagger.json",
       "swaggerSha256": "0ad01a515fe55402fd96669a2b37c420dbad740db51520e52d7b1e187e174770",
-      "outputSha256": "2cabad0ecaf26d61f8ef081da0307ab7da1462af2d173dc3c50f3880e104a576"
+      "outputSha256": "9e893c59719f4ad404bbd538b81f11a14183cd2d09ae2e405a28eb299212779a"
     },
     {
       "apiName": "plivo",
       "outputFile": "src/generated/PlivoExtensions.ts",
       "swaggerSnapshot": "swagger-cache/plivo.swagger.json",
       "swaggerSha256": "85071ba3c076fc92eef5af2272cb2a775b9fe1b04242fdc86a7cf1429d78790a",
-      "outputSha256": "8651380f89322d981a976f2c25057aec257016a929fa842ab4471e349e6c55d5"
+      "outputSha256": "043612704a4c73b7104e95984a05033a08d1d0a196907605d1b02d487b7c0126"
     },
     {
       "apiName": "plumsail",
       "outputFile": "src/generated/PlumsailExtensions.ts",
       "swaggerSnapshot": "swagger-cache/plumsail.swagger.json",
       "swaggerSha256": "08a9a832487f5c1e414757a4dab88f6c3719aaf3bdb37d4fe72dce69e9f46adb",
-      "outputSha256": "d5133bc72b0def90dfa5b43e5cc67c09146acd3abab7c6b2cab0c9a9af6b7ab7"
+      "outputSha256": "65acce77f561bafefdbdcbc33c3ca5e7bf8c6ba61319e777c8ea21aa58247714"
     },
     {
       "apiName": "powerbi",
       "outputFile": "src/generated/PowerbiExtensions.ts",
       "swaggerSnapshot": "swagger-cache/powerbi.swagger.json",
       "swaggerSha256": "27efea205500f3a160a3c0ade08b31522cd6bb5b7601221c118c930f82efa24b",
-      "outputSha256": "e8924f2bcdd787569a21c8e03aec44b40ff52d6e431d2ae719b6df15cffa9a3c"
+      "outputSha256": "be4c902da9a157bbe790c8d95b39d0ab441fb07724cd53601aec7b06443775ed"
     },
     {
       "apiName": "projectplace",
       "outputFile": "src/generated/ProjectplaceExtensions.ts",
       "swaggerSnapshot": "swagger-cache/projectplace.swagger.json",
       "swaggerSha256": "2dadbee3dfee2d60eeac8df831bd8a7b51cbbcded8480cbb7a14180fe7e50c11",
-      "outputSha256": "06e76d907833bca59261ae658c9404ee40048b6d7bf0b2c855d64be6d0ac3314"
+      "outputSha256": "900e97067c4f7f3e38b21d02c10cfcab336efb64108097fcd8eeeacd1861e8ee"
     },
     {
       "apiName": "replicon",
       "outputFile": "src/generated/RepliconExtensions.ts",
       "swaggerSnapshot": "swagger-cache/replicon.swagger.json",
       "swaggerSha256": "3f7d209af19172bbadb0f372f00bb6193a755079f26d22dff9acf3b1bb768fc4",
-      "outputSha256": "f5411407fdf7ed8bd0047a8af33beeeb3ae39aca25b3cebbfd19ada61f860e31"
+      "outputSha256": "c48468a9aec2d91427c95a0d557110d86fccf66fcef1e76ede2537ad2688261c"
     },
     {
       "apiName": "revai",
       "outputFile": "src/generated/RevaiExtensions.ts",
       "swaggerSnapshot": "swagger-cache/revai.swagger.json",
       "swaggerSha256": "0b0aa956275624c23f31a2c3c3315f49fb26d8559e80e6ec536f6364c04e1037",
-      "outputSha256": "c78957d23277d67b63276a84f25cbc473facace04c2b414e0e3b1da6ab08b27a"
+      "outputSha256": "53221f06995e3d3cf36122db2cb0110cff2c3d934f1254a0ab6ecb3ff75161ac"
     },
     {
       "apiName": "rss",
       "outputFile": "src/generated/RssExtensions.ts",
       "swaggerSnapshot": "swagger-cache/rss.swagger.json",
       "swaggerSha256": "e8470f461e7b966cc86b51733674510b7cc3a4f719611e1a337f8fad7fcf96d2",
-      "outputSha256": "083b0e919cab350dc632c1bef1431b56cae52c3e8446cc44e6a608b1744964aa"
+      "outputSha256": "732739f504cbced0bcd47a918d0cd66ba04b22b6f6dd514626ff82307e74c0b7"
     },
     {
       "apiName": "salesforce",
       "outputFile": "src/generated/SalesforceExtensions.ts",
       "swaggerSnapshot": "swagger-cache/salesforce.swagger.json",
       "swaggerSha256": "57ad15ab50d2d1796a1520b9a03d85dbabbf52b5ac722b05e390f1787926051f",
-      "outputSha256": "9be0412b7866550969eb490ceb6157a7959d12995a512bbf3e724b5f613af4bf"
+      "outputSha256": "a09210d8bd3bb73cd78bc6397100556dce2ed6f810828f96e53e5fe8c7bde6f2"
     },
     {
       "apiName": "seismicplanner",
       "outputFile": "src/generated/SeismicplannerExtensions.ts",
       "swaggerSnapshot": "swagger-cache/seismicplanner.swagger.json",
       "swaggerSha256": "adb321a0255847eab5f08294342cc59e9a12124b02b3676e5c43176fab460670",
-      "outputSha256": "5a0467062b3517971f4a9cbece2a6d3dfd919147b17a15ab68529c5c6a4748e7"
+      "outputSha256": "171adea3fbd20ed9187543c7b17dd9bca2fe1c914d027b0a579b83be9706559f"
     },
     {
       "apiName": "sendgrid",
       "outputFile": "src/generated/SendgridExtensions.ts",
       "swaggerSnapshot": "swagger-cache/sendgrid.swagger.json",
       "swaggerSha256": "a5d7caddb68834238831a5a808180c5f84c0c7075130fc09a0a2a998a0dc7fd6",
-      "outputSha256": "7f6ee6229247c57a99f6c8e436496f94a05567d43bd15e755f591dbba4ca76be"
+      "outputSha256": "3a300cf4c04bf2f9b5a97a7479935bc02f2cf67658ef7f1ca559380214c37983"
     },
     {
       "apiName": "sharepointonline",
       "outputFile": "src/generated/SharepointonlineExtensions.ts",
       "swaggerSnapshot": "swagger-cache/sharepointonline.swagger.json",
       "swaggerSha256": "2407765778e4079f7ee5b7a5cb7abcbf9ede7b294e62a8203150cbb25b7a722d",
-      "outputSha256": "b61233d164990951861c8e3eb200453b5b9e76636326864cc03adfe5944d16f7"
+      "outputSha256": "97eaeeafa9804b4497386f863ac5532c9e8332ce408ee891e775e989b82280dc"
     },
     {
       "apiName": "shifts",
       "outputFile": "src/generated/ShiftsExtensions.ts",
       "swaggerSnapshot": "swagger-cache/shifts.swagger.json",
       "swaggerSha256": "db4ed2f1af41c20cf583de3ebf7351ffa12baae52abb565906c7e46ef7eb86b9",
-      "outputSha256": "27a1b04db10085154323eb3b2f6b1c131678767c7784033ce0a5563c6cfefa93"
+      "outputSha256": "fb06ce7566a0018766e67283f7fcc6561332e9c185f868bc0026650b5642bbb7"
     },
     {
       "apiName": "signinghub",
       "outputFile": "src/generated/SigninghubExtensions.ts",
       "swaggerSnapshot": "swagger-cache/signinghub.swagger.json",
       "swaggerSha256": "209a58f4fa78b19845cd3d7b6f4e01d94f73ace0a9832c73f804449f68263404",
-      "outputSha256": "c2d7964bc271b8091ea0cbc9d8369a80e99c78ae1d45ffca24780a4ef0a44845"
+      "outputSha256": "e5047969d30d4e96b57faca9c9403910e0de0aea3b26db4ef3370ab63e237ee8"
     },
     {
       "apiName": "slack",
       "outputFile": "src/generated/SlackExtensions.ts",
       "swaggerSnapshot": "swagger-cache/slack.swagger.json",
       "swaggerSha256": "9628ffa4396b91d06a3ef246926c86beea3513602b8b8f5a1d6f22c38386c336",
-      "outputSha256": "d849681209f80d27876a0d1c1fb9a8623515ffc9883c71b57cbdb7f420fa1793"
+      "outputSha256": "122288a9501d7b3fbb348fcebbdbd3fac051df04cf946d54398a4a05e5916fee"
     },
     {
       "apiName": "smtp",
       "outputFile": "src/generated/SmtpExtensions.ts",
       "swaggerSnapshot": "swagger-cache/smtp.swagger.json",
       "swaggerSha256": "095d7b6b4ccace265ee4df85f523c7af655711baf374293cb33bfc727ff35c7e",
-      "outputSha256": "49f48923bd48f558b14df301ce4dec188aed2217fd676b399243eaf86e4d0823"
+      "outputSha256": "1687ccd37104d813cba7bef1a7f810133ecb159e4a36a085bed180047cdcf72a"
     },
     {
       "apiName": "sql",
       "outputFile": "src/generated/SqlExtensions.ts",
       "swaggerSnapshot": "swagger-cache/sql.swagger.json",
       "swaggerSha256": "ce1b8d471f2a8ca04e7919434266694173a456b0af27710de3694cbf84f01972",
-      "outputSha256": "a1b2acb6b6d914bcbc014b508139c948f9b66efe196045746408ec4f27ed3c03"
+      "outputSha256": "b61bf436f9beac5070a6c09e91b5932f376dd544abb9179fbad597538c8cdfa5"
     },
     {
       "apiName": "starmind",
       "outputFile": "src/generated/StarmindExtensions.ts",
       "swaggerSnapshot": "swagger-cache/starmind.swagger.json",
       "swaggerSha256": "68e8f77b6ab9fe0b7b86784efb7e9f551dce53499940f4728db1f85809255340",
-      "outputSha256": "19e2b30ec5e79c50f27095582d92802b0aa82371b1d19a50b57238ab3958c388"
+      "outputSha256": "18eb55934f70241b033499b68196b378e541db23a16e044ee73eb128dfdac6ba"
     },
     {
       "apiName": "starrezrestv1",
       "outputFile": "src/generated/Starrezrestv1Extensions.ts",
       "swaggerSnapshot": "swagger-cache/starrezrestv1.swagger.json",
       "swaggerSha256": "ec00ac764f396b41b9725414ad10f2b358ee583bbea760ae99a91799d48d0e73",
-      "outputSha256": "7cf16461ffc0d5c0beb5bf27f7f8579e8e72960ebfc08e30024e3c09b4e7ba8c"
+      "outputSha256": "9875927eb8d0049f4139521b76549b8e1f68b3b5fc61b8c12769c38bc64ee925"
     },
     {
       "apiName": "tallyfy",
       "outputFile": "src/generated/TallyfyExtensions.ts",
       "swaggerSnapshot": "swagger-cache/tallyfy.swagger.json",
       "swaggerSha256": "fc196fdc54606cac820bcf67025b6505b9f6e4c5c74fad4d7da44533e5aad464",
-      "outputSha256": "9c822eeac2ccdc518f300f478c42f42236ee9f977e6935bbea3d7adef782ded0"
+      "outputSha256": "14867c3d56de8c2a33a506d8cda0a73cbc07c04ee825aa8ff783f208193fe956"
     },
     {
       "apiName": "teams",
       "outputFile": "src/generated/TeamsExtensions.ts",
       "swaggerSnapshot": "swagger-cache/teams.swagger.json",
       "swaggerSha256": "8130802332f0174086c050cc1e36815f77cbfc18f64d7abeb19698cf779181fb",
-      "outputSha256": "5516444463df94eff0aa5f1a191b80f602608d6c9acf0ee9f1f2ec6a94cf76fb"
+      "outputSha256": "2014ed2ccb520373f1b668a4d3fcfe4984a30eded42e2e6ee3738e3ca9a48bbc"
     },
     {
       "apiName": "textrequest",
       "outputFile": "src/generated/TextrequestExtensions.ts",
       "swaggerSnapshot": "swagger-cache/textrequest.swagger.json",
       "swaggerSha256": "ae8e02fd550831232602aed510c23be86b8287c394d9b4ffdfc3f8657b9d7adb",
-      "outputSha256": "1e35ac7367e16f6c010c3f38adeb0ad8aacc293faa7930941a358f251a325bc0"
+      "outputSha256": "185a3bbdf65525cb96dc09470be35c8f40a754c619fec54b20fde54cc6cdadcb"
     },
     {
       "apiName": "ticketmaster",
       "outputFile": "src/generated/TicketmasterExtensions.ts",
       "swaggerSnapshot": "swagger-cache/ticketmaster.swagger.json",
       "swaggerSha256": "70eb7108409c5e0a3010a6564300b595825e2e700e30f721c9f0bc2b16cf17ca",
-      "outputSha256": "b26c74855529cf6aeb47de54eaf91247c84b7b0a6d55935a20274f1ab73e7d7c"
+      "outputSha256": "56367c5c8720effa30e4f59f83593b83ad9cb163f59cb7c5d5075c32c224d679"
     },
     {
       "apiName": "todo",
       "outputFile": "src/generated/TodoExtensions.ts",
       "swaggerSnapshot": "swagger-cache/todo.swagger.json",
       "swaggerSha256": "d500a1028c6e81a051a849c6a6382082363f5bcc0c74d1c132d825210670ca6a",
-      "outputSha256": "d025a2c8e03544de5a36dd47efa9b5804c68de312b5ffb0cd62f2d272c27b088"
+      "outputSha256": "497e3d08b477c6d853424e216b9e9b8ca213c95b111fa2a1b7c48a7cb085fe53"
     },
     {
       "apiName": "twitter",
       "outputFile": "src/generated/TwitterExtensions.ts",
       "swaggerSnapshot": "swagger-cache/twitter.swagger.json",
       "swaggerSha256": "e617b4c93b41a36d2a645edd420063a56b17302a5c25c6d9f7725cb10c218abd",
-      "outputSha256": "5c90117286fa303499caee31dbfade87f990c44a47cb9196e331de37e8dadba2"
+      "outputSha256": "8240c4f58d63e51efc95d5fd13277737ff4b6d130ccb427e925b17acec8bcb28"
     },
     {
       "apiName": "typeform",
       "outputFile": "src/generated/TypeformExtensions.ts",
       "swaggerSnapshot": "swagger-cache/typeform.swagger.json",
       "swaggerSha256": "9c6a2b915765e47cbe1416322f810908e82ef991cf124f9ec89569d149fa9625",
-      "outputSha256": "81e676f01f1ea302679b6745489dcd6deb9b38a51b09340e00ca8845f932d6df"
+      "outputSha256": "9d87f3bc1aee5ea206d69f66c61ad46fcccc3130112e104c1dab7ba944acd597"
     },
     {
       "apiName": "waywedo",
       "outputFile": "src/generated/WaywedoExtensions.ts",
       "swaggerSnapshot": "swagger-cache/waywedo.swagger.json",
       "swaggerSha256": "7f5fc1e2e00c11874a8c9bf6b2301ebfe325de3f70e4b786f316d11f3555d21a",
-      "outputSha256": "a3be65686339c382dc056b51853a2be0bd3fa314f36b861eb44c761b3bfee66f"
+      "outputSha256": "93355c558f5fa711b85c880313a97343e508cb3cf39759076f7d0cb3272a89f2"
     },
     {
       "apiName": "webex",
       "outputFile": "src/generated/WebexExtensions.ts",
       "swaggerSnapshot": "swagger-cache/webex.swagger.json",
       "swaggerSha256": "171e92c116967fbfef49546c895cc4f1de3304102c7d45b6ed2ba371e9ad07dc",
-      "outputSha256": "b1e416e0b85e9739e07aa1a12cdf377e08d2475b9c8e3dd580d4e20aff99ee6e"
+      "outputSha256": "425b778173bd6b6561011c9cc5ffa480f927411576ee8592cc6fb0aba3745afd"
     },
     {
       "apiName": "wordpress",
       "outputFile": "src/generated/WordpressExtensions.ts",
       "swaggerSnapshot": "swagger-cache/wordpress.swagger.json",
       "swaggerSha256": "a9386247d5261e0746aa5d8ee445d014ec0151f26594837d95b7c3d9dd68cb06",
-      "outputSha256": "d3d36c06c8296d7f04f0d95c093ece5a9fd972da4b437bc4d882492878e9ac3f"
+      "outputSha256": "89fb0057eeef315885dc579fb229c05493bad2cd7bf4fcb5788f61b41cce35e0"
     },
     {
       "apiName": "zendesk",
       "outputFile": "src/generated/ZendeskExtensions.ts",
       "swaggerSnapshot": "swagger-cache/zendesk.swagger.json",
       "swaggerSha256": "f568516a726b1eb89d50c38c34582f20fd3bb315d29f5f139eb563ddf84b1f8a",
-      "outputSha256": "fd5670cc57a77a43e3b22260767d31dc9c18bdca9155f27c61a85cb9a35fd1a1"
+      "outputSha256": "26a2b5283dd509eca30f3d84a3fce60c2f0dc36f99b9ca8ed0c68581f2a6354c"
     },
     {
       "apiName": "zohosign",
       "outputFile": "src/generated/ZohosignExtensions.ts",
       "swaggerSnapshot": "swagger-cache/zohosign.swagger.json",
       "swaggerSha256": "ce62c4d774b291d1ccbf5a1f258613e938f894400c77cec02eefca0bbd9c8239",
-      "outputSha256": "c72c75185a521376fa6fca43d4d79b608f3438acc7362223811cc29093d0b048"
+      "outputSha256": "c099eb2e59aeb002a5afb9b9a2af12ace853a69c7e9246cbd5b6fd950cdcd3a6"
     }
   ],
   "routeIdentityLoss": {

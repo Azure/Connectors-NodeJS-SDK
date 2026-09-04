@@ -1,8 +1,8 @@
 // Copyright (c) Microsoft Corporation.  All rights reserved.
 
+import type { TokenCredential } from "@azure/core-auth";
 import { MailchimpClient } from "../src/generated/MailchimpExtensions.ts";
 import { ConnectorException } from "../src/azureConnectors/connectorException.ts";
-import { TokenProvider } from "../src/azureConnectors/authentication.ts";
 import { ConnectorNames } from "../src/generated/connectorNames.ts";
 import { availableConnectors } from "../src/generated/ManagedConnectors.ts";
 
@@ -12,9 +12,9 @@ import { availableConnectors } from "../src/generated/ManagedConnectors.ts";
 
 const TestConnectionUrl = "https://connection-runtime.azure.com/apim/mailchimp/abc123";
 
-function createMockTokenProvider(): TokenProvider {
+function createMockCredential(): TokenCredential {
     return {
-        getAccessTokenAsync: async () => "mock-bearer-token",
+        getToken: async () => ({ token: "mock-bearer-token", expiresOnTimestamp: Number.MAX_SAFE_INTEGER }),
     };
 }
 
@@ -42,18 +42,18 @@ function mockFetchError(status: number, errorBody: string): void {
 
 describe("MailchimpClient — constructor", () => {
     it("should construct with valid options", () => {
-        const client = new MailchimpClient(TestConnectionUrl, createMockTokenProvider());
+        const client = new MailchimpClient(TestConnectionUrl, createMockCredential());
         expect(client).toBeDefined();
         expect(client).toBeInstanceOf(MailchimpClient);
     });
 
     it("should throw on null connection URL", () => {
-        expect(() => new MailchimpClient(null as unknown as string, createMockTokenProvider()))
+        expect(() => new MailchimpClient(null as unknown as string, createMockCredential()))
             .toThrow("Parameter 'connectionRuntimeUrl' cannot be null or undefined.");
     });
 
     it("should throw on undefined connection URL", () => {
-        expect(() => new MailchimpClient(undefined as unknown as string, createMockTokenProvider()))
+        expect(() => new MailchimpClient(undefined as unknown as string, createMockCredential()))
             .toThrow("Parameter 'connectionRuntimeUrl' cannot be null or undefined.");
     });
 });
@@ -67,7 +67,7 @@ describe("MailchimpClient — getCampaignsAsync", () => {
         const campaigns = { campaigns: [{ id: "camp1", type: "regular", status: "sent" }] };
         mockFetchResponse(campaigns);
 
-        const client = new MailchimpClient(TestConnectionUrl, createMockTokenProvider());
+        const client = new MailchimpClient(TestConnectionUrl, createMockCredential());
         const result = await client.getCampaignsAsync();
 
         expect(result).toEqual(campaigns);
@@ -80,7 +80,7 @@ describe("MailchimpClient — getCampaignsAsync", () => {
     it("should throw ConnectorException on non-OK response", async () => {
         mockFetchError(404, "Not Found");
 
-        const client = new MailchimpClient(TestConnectionUrl, createMockTokenProvider());
+        const client = new MailchimpClient(TestConnectionUrl, createMockCredential());
         try {
             await client.getCampaignsAsync();
             throw new Error("Expected ConnectorException to be thrown.");

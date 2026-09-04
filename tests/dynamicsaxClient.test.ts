@@ -1,8 +1,8 @@
 // Copyright (c) Microsoft Corporation.  All rights reserved.
 
+import type { TokenCredential } from "@azure/core-auth";
 import { DynamicsaxClient } from "../src/generated/DynamicsaxExtensions.ts";
 import { ConnectorException } from "../src/azureConnectors/connectorException.ts";
-import { TokenProvider } from "../src/azureConnectors/authentication.ts";
 import { ConnectorNames } from "../src/generated/connectorNames.ts";
 import { availableConnectors } from "../src/generated/ManagedConnectors.ts";
 
@@ -12,9 +12,9 @@ import { availableConnectors } from "../src/generated/ManagedConnectors.ts";
 
 const TestConnectionUrl = "https://connection-runtime.azure.com/apim/dynamicsax/abc123";
 
-function createMockTokenProvider(): TokenProvider {
+function createMockCredential(): TokenCredential {
     return {
-        getAccessTokenAsync: async () => "mock-bearer-token",
+        getToken: async () => ({ token: "mock-bearer-token", expiresOnTimestamp: Number.MAX_SAFE_INTEGER }),
     };
 }
 
@@ -42,18 +42,18 @@ function mockFetchError(status: number, errorBody: string): void {
 
 describe("DynamicsaxClient — constructor", () => {
     it("should construct with valid options", () => {
-        const client = new DynamicsaxClient(TestConnectionUrl, createMockTokenProvider());
+        const client = new DynamicsaxClient(TestConnectionUrl, createMockCredential());
         expect(client).toBeDefined();
         expect(client).toBeInstanceOf(DynamicsaxClient);
     });
 
     it("should throw on null connection URL", () => {
-        expect(() => new DynamicsaxClient(null as unknown as string, createMockTokenProvider()))
+        expect(() => new DynamicsaxClient(null as unknown as string, createMockCredential()))
             .toThrow("Parameter 'connectionRuntimeUrl' cannot be null or undefined.");
     });
 
     it("should throw on undefined connection URL", () => {
-        expect(() => new DynamicsaxClient(undefined as unknown as string, createMockTokenProvider()))
+        expect(() => new DynamicsaxClient(undefined as unknown as string, createMockCredential()))
             .toThrow("Parameter 'connectionRuntimeUrl' cannot be null or undefined.");
     });
 });
@@ -67,7 +67,7 @@ describe("DynamicsaxClient — getItemsAsync", () => {
         const items = { value: [{ CustomerAccount: "US-001", Name: "Contoso" }] };
         mockFetchResponse(items);
 
-        const client = new DynamicsaxClient(TestConnectionUrl, createMockTokenProvider());
+        const client = new DynamicsaxClient(TestConnectionUrl, createMockCredential());
         const result = await client.getItemsAsync("default", "Customers");
 
         expect(result).toEqual(items);
@@ -80,7 +80,7 @@ describe("DynamicsaxClient — getItemsAsync", () => {
     it("should throw ConnectorException on non-OK response", async () => {
         mockFetchError(404, "Not Found");
 
-        const client = new DynamicsaxClient(TestConnectionUrl, createMockTokenProvider());
+        const client = new DynamicsaxClient(TestConnectionUrl, createMockCredential());
         try {
             await client.getItemsAsync("default", "Customers");
             throw new Error("Expected ConnectorException to be thrown.");

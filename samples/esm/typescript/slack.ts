@@ -5,7 +5,7 @@
  */
 
 import { ManagedIdentityTokenProvider, ConnectorException } from "@azure/connectors";
-import { SlackClient, ListChannelsResponse } from "@azure/connectors/generated/SlackExtensions";
+import { SlackClient } from "@azure/connectors/generated/SlackExtensions";
 
 const CONNECTION_URL = process.env.SLACK_CONNECTION_URL ?? "";
 
@@ -19,8 +19,13 @@ async function main(): Promise<void> {
     const client = new SlackClient(CONNECTION_URL, tokenProvider);
 
     try {
-        const result: ListChannelsResponse = await client.listChannelsAsync();
-        console.log(`Channels returned: ${(result.value ?? []).length}`);
+        let channelCount = 0;
+        for await (const channel of client.listChannelsAsync()) {
+            console.log(`  - ${channel.name ?? channel.id ?? "Unknown"}`);
+            channelCount++;
+        }
+
+        console.log(`Channels returned: ${channelCount}`);
     } catch (error) {
         if (error instanceof ConnectorException) {
             console.log(`Connector error (${error.statusCode}): ${error.message}`);

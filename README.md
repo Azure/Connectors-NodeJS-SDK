@@ -24,8 +24,9 @@ Azure provides a rich ecosystem of [managed connectors](https://learn.microsoft.
 
 - **Fully typed** — Generated async methods with TypeScript interfaces and JSDoc for full IntelliSense
 - **ESM and CommonJS** — Dual-format package with separate entry points for both module systems
-- **Built-in authentication** — Managed identity and API key token providers via `@azure/identity`
-- **Resilient HTTP** — Configurable retry policies with exponential backoff for transient failures
+- **Standard authentication** — Azure `TokenCredential` support via `@azure/core-auth` and `@azure/identity`
+- **Resilient HTTP** — Azure Core pipeline with configurable retries, timeouts, tracing, and request correlation
+- **Lazy pagination** — Paginated list operations follow validated `nextLink` URLs as you iterate
 - **1,000+ connectors** — Any Azure managed connector available via API Hub can be generated
 
 > **Note:** This is the Node.js SDK. A [Python SDK](https://github.com/Azure/Connectors-Python-SDK) and [.NET SDK](https://github.com/Azure/Connectors-NET-SDK) are also available.
@@ -55,8 +56,8 @@ Azure provides a rich ecosystem of [managed connectors](https://learn.microsoft.
 │   Azure Connectors Node.js SDK      │
 │   @azure/connectors                 │
 │                                     │
-│  • ManagedIdentityTokenProvider     │
-│  • ConnectorHttpClient + retry      │
+│  • Standard TokenCredential         │
+│  • ConnectorHttpClient pipeline     │
 │  • ConnectorClientBase              │
 └─────────────────────────────────────┘
 ```
@@ -74,7 +75,8 @@ npm install @azure/connectors
 ### TypeScript — Send an email with Office 365
 
 ```typescript
-import { ManagedIdentityTokenProvider, ConnectorException } from "@azure/connectors";
+import { ManagedIdentityCredential } from "@azure/identity";
+import { ConnectorException } from "@azure/connectors";
 import { Office365Client, SendEmailInput } from "@azure/connectors/generated/Office365Extensions";
 
 async function sendEmailExample(): Promise<void> {
@@ -82,10 +84,10 @@ async function sendEmailExample(): Promise<void> {
     const connectionUrl = "https://example.azure.com/connections/office365";
 
     // Use managed identity for authentication
-    const tokenProvider = new ManagedIdentityTokenProvider();
+    const credential = new ManagedIdentityCredential();
 
     // Create client and send email
-    const client = new Office365Client(connectionUrl, tokenProvider);
+    const client = new Office365Client(connectionUrl, credential);
 
     const email: SendEmailInput = {
         To: "recipient@example.com",
@@ -103,13 +105,14 @@ sendEmailExample().catch(console.error);
 ### JavaScript (ESM) — Send an email with Office 365
 
 ```javascript
-import { ManagedIdentityTokenProvider, ConnectorException } from "@azure/connectors";
+import { ManagedIdentityCredential } from "@azure/identity";
+import { ConnectorException } from "@azure/connectors";
 import { Office365Client } from "@azure/connectors/generated/Office365Extensions";
 
 async function sendEmailExample() {
     const connectionUrl = "https://example.azure.com/connections/office365";
-    const tokenProvider = new ManagedIdentityTokenProvider();
-    const client = new Office365Client(connectionUrl, tokenProvider);
+    const credential = new ManagedIdentityCredential();
+    const client = new Office365Client(connectionUrl, credential);
 
     await client.sendEmailAsync({
         To: "recipient@example.com",
@@ -126,13 +129,13 @@ sendEmailExample().catch(console.error);
 ### TypeScript — List SharePoint items
 
 ```typescript
-import { ManagedIdentityTokenProvider } from "@azure/connectors";
+import { ManagedIdentityCredential } from "@azure/identity";
 import { SharepointonlineClient, ItemsList } from "@azure/connectors/generated/SharepointonlineExtensions";
 
 async function listSharePointItems(): Promise<void> {
     const connectionUrl = "https://example.azure.com/connections/sharepointonline";
-    const tokenProvider = new ManagedIdentityTokenProvider();
-    const client = new SharepointonlineClient(connectionUrl, tokenProvider);
+    const credential = new ManagedIdentityCredential();
+    const client = new SharepointonlineClient(connectionUrl, credential);
 
     const items: ItemsList = await client.getItemsAsync(
         "https://contoso.sharepoint.com/sites/MySite",
@@ -150,13 +153,13 @@ listSharePointItems().catch(console.error);
 ### JavaScript (ESM) — List SharePoint items
 
 ```javascript
-import { ManagedIdentityTokenProvider } from "@azure/connectors";
+import { ManagedIdentityCredential } from "@azure/identity";
 import { SharepointonlineClient } from "@azure/connectors/generated/SharepointonlineExtensions";
 
 async function listSharePointItems() {
     const connectionUrl = "https://example.azure.com/connections/sharepointonline";
-    const tokenProvider = new ManagedIdentityTokenProvider();
-    const client = new SharepointonlineClient(connectionUrl, tokenProvider);
+    const credential = new ManagedIdentityCredential();
+    const client = new SharepointonlineClient(connectionUrl, credential);
 
     const items = await client.getItemsAsync(
         "https://contoso.sharepoint.com/sites/MySite",
@@ -171,16 +174,36 @@ async function listSharePointItems() {
 listSharePointItems().catch(console.error);
 ```
 
+### TypeScript — Iterate paginated results
+
+Paginated list operations return a lazy `PagedAsyncIterableIterator`. Requests are made only as items or pages are consumed, and continuation links are routed through the connector connection URL.
+
+```typescript
+import { ManagedIdentityCredential } from "@azure/identity";
+import { ArmClient } from "@azure/connectors/generated/ArmExtensions";
+
+const connectionUrl = "https://example.azure.com/connections/arm";
+const client = new ArmClient(connectionUrl, new ManagedIdentityCredential());
+
+for await (const subscription of client.subscriptionsListAsync()) {
+    console.log(subscription.displayName);
+}
+
+for await (const page of client.subscriptionsListAsync().byPage()) {
+    console.log(`Received ${page.length} subscriptions`);
+}
+```
+
 ### TypeScript — Post a Teams message
 
 ```typescript
-import { ManagedIdentityTokenProvider } from "@azure/connectors";
+import { ManagedIdentityCredential } from "@azure/identity";
 import { TeamsClient } from "@azure/connectors/generated/TeamsExtensions";
 
 async function postTeamsMessage(): Promise<void> {
     const connectionUrl = "https://example.azure.com/connections/teams";
-    const tokenProvider = new ManagedIdentityTokenProvider();
-    const client = new TeamsClient(connectionUrl, tokenProvider);
+    const credential = new ManagedIdentityCredential();
+    const client = new TeamsClient(connectionUrl, credential);
 
     await client.postMessageToConversationAsync(
         "team-group-id",
@@ -202,13 +225,13 @@ postTeamsMessage().catch(console.error);
 ### JavaScript (ESM) — Post a Teams message
 
 ```javascript
-import { ManagedIdentityTokenProvider } from "@azure/connectors";
+import { ManagedIdentityCredential } from "@azure/identity";
 import { TeamsClient } from "@azure/connectors/generated/TeamsExtensions";
 
 async function postTeamsMessage() {
     const connectionUrl = "https://example.azure.com/connections/teams";
-    const tokenProvider = new ManagedIdentityTokenProvider();
-    const client = new TeamsClient(connectionUrl, tokenProvider);
+    const credential = new ManagedIdentityCredential();
+    const client = new TeamsClient(connectionUrl, credential);
 
     await client.postMessageToConversationAsync("team-group-id", "19:channel-id", {
         body: {
@@ -315,28 +338,31 @@ samples, but have not been validated end to end against live connector services.
 
 ## Authentication
 
-The SDK supports multiple authentication methods:
+Generated clients accept any `TokenCredential` from `@azure/core-auth`, so
+credentials from `@azure/identity` can be passed directly. The existing
+`ManagedIdentityTokenProvider` and `ConnectionStringTokenProvider` classes
+remain available as compatibility credentials.
 
 ### Managed Identity (Recommended for Azure)
 
 ```typescript
-import { ManagedIdentityTokenProvider } from "@azure/connectors";
+import { ManagedIdentityCredential } from "@azure/identity";
 
 // System-assigned managed identity
-const tokenProvider = new ManagedIdentityTokenProvider();
+const credential = new ManagedIdentityCredential();
 
 // User-assigned managed identity
-const tokenProvider = new ManagedIdentityTokenProvider("your-client-id");
+const credential = new ManagedIdentityCredential("your-client-id");
 ```
 
 ```javascript
-import { ManagedIdentityTokenProvider } from "@azure/connectors";
+import { ManagedIdentityCredential } from "@azure/identity";
 
 // System-assigned managed identity
-const tokenProvider = new ManagedIdentityTokenProvider();
+const credential = new ManagedIdentityCredential();
 
 // User-assigned managed identity
-const tokenProvider = new ManagedIdentityTokenProvider("your-client-id");
+const credential = new ManagedIdentityCredential("your-client-id");
 ```
 
 ### Connection String / API Key
@@ -344,13 +370,13 @@ const tokenProvider = new ManagedIdentityTokenProvider("your-client-id");
 ```typescript
 import { ConnectionStringTokenProvider } from "@azure/connectors";
 
-const tokenProvider = new ConnectionStringTokenProvider("your-api-key");
+const credential = new ConnectionStringTokenProvider("your-api-key");
 ```
 
 ```javascript
 import { ConnectionStringTokenProvider } from "@azure/connectors";
 
-const tokenProvider = new ConnectionStringTokenProvider("your-api-key");
+const credential = new ConnectionStringTokenProvider("your-api-key");
 ```
 
 ## Configuration Options
@@ -362,25 +388,34 @@ import { ConnectorClientOptions } from "@azure/connectors";
 import { Office365Client } from "@azure/connectors/generated/Office365Extensions";
 
 const options: ConnectorClientOptions = {
-    timeoutMs: 60000,                   // Request timeout (default: 30000)
-    maxRetryAttempts: 5,                // Max retry count (default: 3)
-    useExponentialBackoff: true,        // Exponential backoff (default: true)
-    initialRetryDelayMs: 1000,          // Initial retry delay (default: 500)
+    retryOptions: {
+        maxRetries: 4,
+        retryDelayInMs: 1000,
+        maxRetryDelayInMs: 60000,
+    },
+    telemetryOptions: {
+        clientRequestIdHeaderName: "x-custom-request-id",
+    },
 };
 
-const client = new Office365Client(connectionUrl, tokenProvider, options);
+const client = new Office365Client(connectionUrl, credential, options);
 ```
 
 ```javascript
 import { Office365Client } from "@azure/connectors/generated/Office365Extensions";
 
-const client = new Office365Client(connectionUrl, tokenProvider, {
-    timeoutMs: 60000,
-    maxRetryAttempts: 5,
-    useExponentialBackoff: true,
-    initialRetryDelayMs: 1000,
+const client = new Office365Client(connectionUrl, credential, {
+    retryOptions: {
+        maxRetries: 4,
+        retryDelayInMs: 1000,
+        maxRetryDelayInMs: 60000,
+    },
 });
 ```
+
+For testing or a custom host transport, set `httpClient` to an implementation
+of `HttpClient` from `@azure/core-rest-pipeline`. Authentication, retries,
+request correlation, tracing, and logging remain pipeline policies.
 
 ## Error Handling
 
@@ -425,7 +460,7 @@ try {
 ├── src/azureConnectors/            # Core SDK infrastructure
 │   ├── authentication.ts           # Token providers
 │   ├── clientBase.ts               # Base connector client
-│   ├── connectorHttpClient.ts      # HTTP client with retry
+│   ├── connectorHttpClient.ts      # Azure Core HTTP pipeline
 │   ├── options.ts                  # Configuration options
 │   ├── connectorException.ts       # Exception types
 │   └── triggerPayload.ts           # Trigger callback types
