@@ -20,6 +20,7 @@ interface ManifestConnectorEntry {
     swaggerSnapshot: string;
     swaggerSha256: string;
     outputSha256: string;
+    generatorCommit?: string;
 }
 
 /**
@@ -161,6 +162,15 @@ describe("generation.manifest.json provenance", () => {
             expect(connector.outputSha256).toMatch(/^[0-9a-f]{64}$/);
             expect(fs.existsSync(path.join(RepositoryRoot, connector.outputFile))).toBe(true);
             expect(computeCanonicalTextSha256(connector.outputFile)).toBe(connector.outputSha256);
+        },
+    );
+
+    it.each(connectorCases)(
+        "should record a valid connector-specific generator commit for '%s' when present",
+        (_apiName: string, connector: ManifestConnectorEntry) => {
+            if (connector.generatorCommit !== undefined) {
+                expect(connector.generatorCommit).toMatch(/^[0-9a-f]{40}$/);
+            }
         },
     );
 

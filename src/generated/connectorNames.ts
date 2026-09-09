@@ -14,6 +14,7 @@ export const ConnectorNames = {
     Campfire: "campfire",
     ClickSend: "clicksendsms",
     CloudmersiveDocumentConversion: "cloudmersiveconvert",
+    MicrosoftDataverse: "commondataservice",
     Docusign: "docusign",
     DocuWare: "docuware",
     Dropbox: "dropbox",

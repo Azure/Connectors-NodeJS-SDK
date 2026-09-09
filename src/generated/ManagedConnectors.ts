@@ -11,6 +11,7 @@
 //   import { CampfireClient } from './CampfireExtensions.ts';
 //   import { ClicksendsmsClient } from './ClicksendsmsExtensions.ts';
 //   import { CloudmersiveconvertClient } from './CloudmersiveconvertExtensions.ts';
+//   import { CommondataserviceClient } from './CommondataserviceExtensions.ts';
 //   import { DocusignClient } from './DocusignExtensions.ts';
 //   import { DocuwareClient } from './DocuwareExtensions.ts';
 //   import { DropboxClient } from './DropboxExtensions.ts';
@@ -89,6 +90,7 @@ export const availableConnectors: string[] = [
     "campfire",
     "clicksendsms",
     "cloudmersiveconvert",
+    "commondataservice",
     "docusign",
     "docuware",
     "dropbox",
@@ -164,6 +166,7 @@ export { BoxClient } from './BoxExtensions.ts';
 export { CampfireClient } from './CampfireExtensions.ts';
 export { ClicksendsmsClient } from './ClicksendsmsExtensions.ts';
 export { CloudmersiveconvertClient } from './CloudmersiveconvertExtensions.ts';
+export { CommondataserviceClient } from './CommondataserviceExtensions.ts';
 export { DocusignClient } from './DocusignExtensions.ts';
 export { DocuwareClient } from './DocuwareExtensions.ts';
 export { DropboxClient } from './DropboxExtensions.ts';
