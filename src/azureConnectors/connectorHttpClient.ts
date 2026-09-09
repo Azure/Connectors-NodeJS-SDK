@@ -72,6 +72,7 @@ export class ConnectorHttpClient {
         const token = await this.tokenProvider.getAccessTokenAsync(effectiveScopes);
 
         const headers: Record<string, string> = {
+            "Accept": "application/json",
             "Authorization": `Bearer ${token}`,
         };
 
