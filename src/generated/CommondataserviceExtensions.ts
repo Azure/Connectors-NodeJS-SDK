@@ -487,14 +487,13 @@ export class CommondataserviceClient extends ConnectorClientBase {
             queryParams.push(`$expand=${encodeURIComponent(String(expand))}`);
         }
         const requestPath = `/v2/datasets/${encodeURIComponent(encodeURIComponent(String(dataset)))}/tables/${encodeURIComponent(encodeURIComponent(String(table)))}/items` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
-        let nextRequest = requestPath;
+        let requestUrl = this.resolveUrl(requestPath);
         let requestBody = undefined;
         while (true) {
-            const url = this.resolveUrl(nextRequest);
-            const httpResponse = await this.httpClient.sendAsync<ItemsList>("GET", url, undefined, requestBody, abortSignal);
+            const httpResponse = await this.httpClient.sendAsync<ItemsList>("GET", requestUrl, undefined, requestBody, abortSignal);
 
             if (!httpResponse.isSuccessStatusCode) {
-                const operationPath = this.getOperationPath(url);
+                const operationPath = this.getOperationPath(requestUrl);
                 throw new ConnectorException(this.connectorName, `GET ${operationPath}`, httpResponse.statusCode, httpResponse.text);
             }
 
@@ -508,7 +507,7 @@ export class CommondataserviceClient extends ConnectorClientBase {
                 return;
             }
 
-            nextRequest = nextLink;
+            requestUrl = this.resolveUrl(nextLink, requestUrl);
             requestBody = undefined;
         }
     }

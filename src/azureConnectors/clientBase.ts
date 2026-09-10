@@ -48,9 +48,10 @@ export abstract class ConnectorClientBase {
      * When the URL host matches the connection URL, it is used as-is.
      * When it does not match (codeless connectors like ARM return nextLink pointing to the backend
      * host e.g. management.azure.com), the path+query is extracted and routed through the APIM proxy.
-     * @param path The relative path or absolute URL to resolve.
+    * @param path The relative path or absolute URL to resolve.
+    * @param currentRequestUrl The current page URL for resolving relative continuations.
      */
-    protected resolveUrl(path: string): string {
+    protected resolveUrl(path: string, currentRequestUrl?: string): string {
         let parsedUrl: URL | undefined;
 
         try {
@@ -94,6 +95,10 @@ export abstract class ConnectorClientBase {
             throw new Error(
                 "Cannot resolve relative path because no connection runtime URL was configured.",
             );
+        }
+
+        if (currentRequestUrl !== undefined && !path.startsWith("/")) {
+            return new URL(path, currentRequestUrl).toString();
         }
 
         return `${this.connectionRuntimeUrl}${path}`;
