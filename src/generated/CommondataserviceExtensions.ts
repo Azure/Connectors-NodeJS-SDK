@@ -499,7 +499,7 @@ export class CommondataserviceClient extends ConnectorClientBase {
             }
 
             const page = httpResponse.value as ItemsList;
-            for (const item of page.value ?? []) {
+            for (const item of page["value"] ?? []) {
                 yield item;
             }
 

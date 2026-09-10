@@ -102,8 +102,8 @@
       "outputFile": "src/generated/CommondataserviceExtensions.ts",
       "swaggerSnapshot": "swagger-cache/commondataservice.swagger.json",
       "swaggerSha256": "8c07cdc661241079cbd8f801bb28444f7f5907b68518c161be98bc6aa6c3e24c",
-      "outputSha256": "4c2ee778abf2107faa5c8521dfe20278c43f25d21755483448de87e589a92d35",
-      "generatorCommit": "f828c39baa56572dc491c89232cea04ba61ecda0"
+      "outputSha256": "92558bf69ee9a6e6334e8e5b319334030dcffa62e978e05a34877ee54cc0acc0",
+      "generatorCommit": "31e9d372e76c049c71f411e50fed3e420946e571"
     },
     {
       "apiName": "docusign",
