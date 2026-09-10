@@ -25,6 +25,10 @@ class TestConnectorClient extends ConnectorClientBase {
     public testResolveUrl(path: string): string {
         return this.resolveUrl(path);
     }
+
+    public testGetOperationPath(url: string): string {
+        return this.getOperationPath(url);
+    }
 }
 
 // ──────────────────────────────────────────────
@@ -151,6 +155,30 @@ describe("ConnectorClientBase", () => {
             );
 
             expect(result).toBe("https://PROXY.AZURE-APIHUB.NET/apim/arm/conn123/subscriptions?page=2");
+        });
+    });
+
+    describe("getOperationPath", () => {
+        const baseUrl = "https://proxy.azure-apihub.net/apim/arm/conn123";
+
+        it("should remove the connection runtime URL from an operation", () => {
+            const client = new TestConnectorClient(baseUrl, createMockTokenProvider());
+
+            const result = client.testGetOperationPath(
+                `${baseUrl}/subscriptions?$skiptoken=page-2`,
+            );
+
+            expect(result).toBe("/subscriptions?$skiptoken=page-2");
+        });
+
+        it("should remove a foreign origin without changing the path and query", () => {
+            const client = new TestConnectorClient(baseUrl, createMockTokenProvider());
+
+            const result = client.testGetOperationPath(
+                "https://management.azure.com/subscriptions?$skiptoken=page-2",
+            );
+
+            expect(result).toBe("/subscriptions?$skiptoken=page-2");
         });
     });
 });

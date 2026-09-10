@@ -494,7 +494,8 @@ export class CommondataserviceClient extends ConnectorClientBase {
             const httpResponse = await this.httpClient.sendAsync<ItemsList>("GET", url, undefined, requestBody, abortSignal);
 
             if (!httpResponse.isSuccessStatusCode) {
-                throw new ConnectorException(this.connectorName, `GET ${nextRequest}`, httpResponse.statusCode, httpResponse.text);
+                const operationPath = this.getOperationPath(url);
+                throw new ConnectorException(this.connectorName, `GET ${operationPath}`, httpResponse.statusCode, httpResponse.text);
             }
 
             const page = httpResponse.value as ItemsList;

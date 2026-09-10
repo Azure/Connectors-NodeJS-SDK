@@ -98,4 +98,22 @@ export abstract class ConnectorClientBase {
 
         return `${this.connectionRuntimeUrl}${path}`;
     }
+
+    /**
+     * Gets the operation path for a resolved connector request URL.
+     * @param url The resolved request URL.
+     */
+    protected getOperationPath(url: string): string {
+        const operationUrl = new URL(url);
+        const baseUrl = new URL(this.connectionRuntimeUrl);
+        const basePath = baseUrl.pathname.replace(/\/+$/, "");
+
+        if (operationUrl.origin.toLowerCase() === baseUrl.origin.toLowerCase() &&
+            (operationUrl.pathname === basePath || operationUrl.pathname.startsWith(`${basePath}/`))) {
+            const relativePath = operationUrl.pathname.substring(basePath.length) || "/";
+            return `${relativePath}${operationUrl.search}`;
+        }
+
+        return `${operationUrl.pathname}${operationUrl.search}`;
+    }
 }
