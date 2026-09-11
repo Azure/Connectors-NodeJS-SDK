@@ -14,6 +14,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   Callers can access typed localization values directly, such as
   `localizations["en-US"].name` ([Azure/Connectors-NET-SDK#262](https://github.com/Azure/Connectors-NET-SDK/issues/262),
   [BPM PR 17131877](https://msazure.visualstudio.com/One/_git/AzureUX-BPM/pullrequest/17131877)).
+- The regenerated `SeismicplannerClient` constructor now accepts the Azure SDK
+  `TokenCredential` contract. `ManagedIdentityTokenProvider` implements both
+  `TokenCredential` and the legacy `TokenProvider`; custom legacy providers must
+  expose `getToken` or be adapted to `TokenCredential` when constructing this client.
 
 ### Changed
 
