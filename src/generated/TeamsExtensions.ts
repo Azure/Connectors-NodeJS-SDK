@@ -2132,7 +2132,8 @@ export class TeamsClient extends ConnectorClientBase {
                 const httpResponse = await this.httpClient.sendAsync<GetMessagesFromConversationResponse>("GET", requestUrl, undefined, undefined, abortSignal);
 
                 if (!httpResponse.isSuccessStatusCode) {
-                    throw new ConnectorException(this.connectorName, `GET ${requestUrl}`, httpResponse.statusCode, httpResponse.text);
+                    const operationPath = this.getOperationPath(requestUrl);
+                    throw new ConnectorException(this.connectorName, `GET ${operationPath}`, httpResponse.statusCode, httpResponse.text);
                 }
 
                 return httpResponse.value as GetMessagesFromConversationResponse;
@@ -2280,7 +2281,8 @@ export class TeamsClient extends ConnectorClientBase {
                 const httpResponse = await this.httpClient.sendAsync<GetMessagesFromConversationResponse>("GET", requestUrl, undefined, undefined, abortSignal);
 
                 if (!httpResponse.isSuccessStatusCode) {
-                    throw new ConnectorException(this.connectorName, `GET ${requestUrl}`, httpResponse.statusCode, httpResponse.text);
+                    const operationPath = this.getOperationPath(requestUrl);
+                    throw new ConnectorException(this.connectorName, `GET ${operationPath}`, httpResponse.statusCode, httpResponse.text);
                 }
 
                 return httpResponse.value as GetMessagesFromConversationResponse;

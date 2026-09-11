@@ -641,7 +641,8 @@ export class ArmClient extends ConnectorClientBase {
                 const httpResponse = await this.httpClient.sendAsync<SubscriptionListResult>("GET", requestUrl, undefined, undefined, abortSignal);
 
                 if (!httpResponse.isSuccessStatusCode) {
-                    throw new ConnectorException(this.connectorName, `GET ${requestUrl}`, httpResponse.statusCode, httpResponse.text);
+                    const operationPath = this.getOperationPath(requestUrl);
+                    throw new ConnectorException(this.connectorName, `GET ${operationPath}`, httpResponse.statusCode, httpResponse.text);
                 }
 
                 return httpResponse.value as SubscriptionListResult;
@@ -793,7 +794,8 @@ export class ArmClient extends ConnectorClientBase {
                 const httpResponse = await this.httpClient.sendAsync<DeploymentListResult>("GET", requestUrl, undefined, undefined, abortSignal);
 
                 if (!httpResponse.isSuccessStatusCode) {
-                    throw new ConnectorException(this.connectorName, `GET ${requestUrl}`, httpResponse.statusCode, httpResponse.text);
+                    const operationPath = this.getOperationPath(requestUrl);
+                    throw new ConnectorException(this.connectorName, `GET ${operationPath}`, httpResponse.statusCode, httpResponse.text);
                 }
 
                 return httpResponse.value as DeploymentListResult;
@@ -840,7 +842,8 @@ export class ArmClient extends ConnectorClientBase {
                 const httpResponse = await this.httpClient.sendAsync<DeploymentOperationsListResult>("GET", requestUrl, undefined, undefined, abortSignal);
 
                 if (!httpResponse.isSuccessStatusCode) {
-                    throw new ConnectorException(this.connectorName, `GET ${requestUrl}`, httpResponse.statusCode, httpResponse.text);
+                    const operationPath = this.getOperationPath(requestUrl);
+                    throw new ConnectorException(this.connectorName, `GET ${operationPath}`, httpResponse.statusCode, httpResponse.text);
                 }
 
                 return httpResponse.value as DeploymentOperationsListResult;
@@ -910,7 +913,8 @@ export class ArmClient extends ConnectorClientBase {
                 const httpResponse = await this.httpClient.sendAsync<ProviderListResult>("GET", requestUrl, undefined, undefined, abortSignal);
 
                 if (!httpResponse.isSuccessStatusCode) {
-                    throw new ConnectorException(this.connectorName, `GET ${requestUrl}`, httpResponse.statusCode, httpResponse.text);
+                    const operationPath = this.getOperationPath(requestUrl);
+                    throw new ConnectorException(this.connectorName, `GET ${operationPath}`, httpResponse.statusCode, httpResponse.text);
                 }
 
                 return httpResponse.value as ProviderListResult;
@@ -966,7 +970,8 @@ export class ArmClient extends ConnectorClientBase {
                 const httpResponse = await this.httpClient.sendAsync<ResourceListResult>("GET", requestUrl, undefined, undefined, abortSignal);
 
                 if (!httpResponse.isSuccessStatusCode) {
-                    throw new ConnectorException(this.connectorName, `GET ${requestUrl}`, httpResponse.statusCode, httpResponse.text);
+                    const operationPath = this.getOperationPath(requestUrl);
+                    throw new ConnectorException(this.connectorName, `GET ${operationPath}`, httpResponse.statusCode, httpResponse.text);
                 }
 
                 return httpResponse.value as ResourceListResult;
@@ -1094,7 +1099,8 @@ export class ArmClient extends ConnectorClientBase {
                 const httpResponse = await this.httpClient.sendAsync<ResourceGroupListResult>("GET", requestUrl, undefined, undefined, abortSignal);
 
                 if (!httpResponse.isSuccessStatusCode) {
-                    throw new ConnectorException(this.connectorName, `GET ${requestUrl}`, httpResponse.statusCode, httpResponse.text);
+                    const operationPath = this.getOperationPath(requestUrl);
+                    throw new ConnectorException(this.connectorName, `GET ${operationPath}`, httpResponse.statusCode, httpResponse.text);
                 }
 
                 return httpResponse.value as ResourceGroupListResult;
@@ -1127,7 +1133,8 @@ export class ArmClient extends ConnectorClientBase {
                 const httpResponse = await this.httpClient.sendAsync<ResourceListResult>("GET", requestUrl, undefined, undefined, abortSignal);
 
                 if (!httpResponse.isSuccessStatusCode) {
-                    throw new ConnectorException(this.connectorName, `GET ${requestUrl}`, httpResponse.statusCode, httpResponse.text);
+                    const operationPath = this.getOperationPath(requestUrl);
+                    throw new ConnectorException(this.connectorName, `GET ${operationPath}`, httpResponse.statusCode, httpResponse.text);
                 }
 
                 return httpResponse.value as ResourceListResult;
@@ -1345,7 +1352,8 @@ export class ArmClient extends ConnectorClientBase {
                 const httpResponse = await this.httpClient.sendAsync<TagsListResult>("GET", requestUrl, undefined, undefined, abortSignal);
 
                 if (!httpResponse.isSuccessStatusCode) {
-                    throw new ConnectorException(this.connectorName, `GET ${requestUrl}`, httpResponse.statusCode, httpResponse.text);
+                    const operationPath = this.getOperationPath(requestUrl);
+                    throw new ConnectorException(this.connectorName, `GET ${operationPath}`, httpResponse.statusCode, httpResponse.text);
                 }
 
                 return httpResponse.value as TagsListResult;

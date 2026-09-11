@@ -12,7 +12,7 @@
     "assemblyVersion": "1.188.0.72",
     "sourcePatch": {
       "path": "generator-patches/556b9a2-pagination.patch",
-      "sha256": "c9a671a5506b793a0fa1d03933e63c65e2ced270ddcc1f1be05aebec123e4737"
+      "sha256": "9d2fa97a104aeafd9e067d7b8250c3e07cb3181a5299d0d45d8afacc9e3db939"
     }
   },
   "command": "LogicAppsCompiler.exe <output-directory> --directClient --language=typescript --connectors=arm,azureblob,azureeventgrid,azureiotcentral,azuremonitorlogs,box,campfire,clicksendsms,cloudmersiveconvert,commondataservice,docusign,docuware,dropbox,dynamicsax,elfsquaddata,etsy,eventbrite,excelonline,formstackforms,freshservice,ftp,github,googlecalendar,googledrive,googletasks,impexium,infusionsoft,insightly,jedoxodatahub,jira,kusto,mailchimp,meetingroommap,microsoftforms,monday,mq,msgraphgroupsanduser,office365,office365groupsmail,office365users,onedriveforbusiness,orderful,pdfco,pipedrive,plivo,plumsail,powerbi,projectplace,replicon,revai,rss,salesforce,seismicplanner,sendgrid,sharepointonline,shifts,signinghub,slack,smtp,sql,starmind,starrezrestv1,tallyfy,teams,textrequest,ticketmaster,todo,twitter,typeform,waywedo,webex,wordpress,zendesk,zohosign",
@@ -39,14 +39,14 @@
       "outputFile": "src/generated/ArmExtensions.ts",
       "swaggerSnapshot": "swagger-cache/arm.swagger.json",
       "swaggerSha256": "5974fb8aaee9a2d46d64171889a52c0cf5345aff190a52cd045b2fc5e1d79a7f",
-      "outputSha256": "cbf152cc8f79b7d24718c35bfbf9217d71f6836be915ff7f3cce7f00d4586e84"
+      "outputSha256": "5fd33788d35f879eea97ba3a34d091f32f3401b2df3c888a769ebdf01f42b07f"
     },
     {
       "apiName": "azureblob",
       "outputFile": "src/generated/AzureblobExtensions.ts",
       "swaggerSnapshot": "swagger-cache/azureblob.swagger.json",
       "swaggerSha256": "2913f54ac344c619768967e0a126bd5aba4e92917e9531d081daeae1b9b76f7c",
-      "outputSha256": "a89a6bfe206619884b67f7e8a0c9877f21d3c0a1f0c8ff112a086f5f4b9a91fc"
+      "outputSha256": "7389a1cce0958bd3eca415e4ff48ade22d123ed0040181d82b8cd217f157e7fe"
     },
     {
       "apiName": "azureeventgrid",
@@ -60,7 +60,7 @@
       "outputFile": "src/generated/AzureiotcentralExtensions.ts",
       "swaggerSnapshot": "swagger-cache/azureiotcentral.swagger.json",
       "swaggerSha256": "19613b639f5451e81d7f6be142426e3f74a6749e006f75a48e87b52a013f5751",
-      "outputSha256": "88981c88c23b156e15ab9a6ed40af45e060482e6eeae0def8cd24d33bd5a2fd7"
+      "outputSha256": "ad9f98dbeb64cfc6dfd4ced67ba1b225e0b85e45efdb7e9c6a77143f78b5ddbd"
     },
     {
       "apiName": "azuremonitorlogs",
@@ -102,11 +102,11 @@
       "outputFile": "src/generated/CommondataserviceExtensions.ts",
       "swaggerSnapshot": "swagger-cache/commondataservice.swagger.json",
       "swaggerSha256": "8c07cdc661241079cbd8f801bb28444f7f5907b68518c161be98bc6aa6c3e24c",
-      "outputSha256": "6e102b5f5a9678994752800bada354374b16b95ee283a592e7a2ac97d7adb805",
+      "outputSha256": "9f3e1d84e3191f169441a919decb58d76df6a4d5f538db6143fee02c814b8f48",
       "generatorCommit": "3025a1b9db1162ed4a5e621d1592f2e75ed1bf81",
       "sourcePatch": {
         "path": "generator-patches/3025a1b-dataverse-azure-core-paging.patch",
-        "sha256": "a88d030102907d64e5bceff98ab2e1b7160b103be12f5c5a3f3289d70c4da6eb"
+        "sha256": "f8b292beeffa5983705d6b37f6e1ab2ca9871a8aed7b1b259dbaeb02492512d8"
       }
     },
     {
@@ -142,7 +142,7 @@
       "outputFile": "src/generated/ElfsquaddataExtensions.ts",
       "swaggerSnapshot": "swagger-cache/elfsquaddata.swagger.json",
       "swaggerSha256": "37bd441cdd9688a86afaefae7ea2671b42c6719b0d0774bc790c7bde7a684b82",
-      "outputSha256": "1a06af70f164773c05d09c97167807a0917bf3d0f8cfff863c5a5d531ac2c552"
+      "outputSha256": "d8c0fd0e850a136b89349b651e8cafc701ef87d0819c5d78b0b6f583d2d05358"
     },
     {
       "apiName": "etsy",
@@ -310,21 +310,21 @@
       "outputFile": "src/generated/Office365groupsmailExtensions.ts",
       "swaggerSnapshot": "swagger-cache/office365groupsmail.swagger.json",
       "swaggerSha256": "ebf91624f5c75da8d26015e9741b36fe2e4bbde8ad3c356c326487aebbd5a2a9",
-      "outputSha256": "4d7491d4a3b485c54ccbf7270994fb72c1a23a0801e8d322371ac8e2660e2061"
+      "outputSha256": "458f4df5d38fab21c69d1089ff3511ea5ec416af3fb170f925bd02318a3016fe"
     },
     {
       "apiName": "office365users",
       "outputFile": "src/generated/Office365usersExtensions.ts",
       "swaggerSnapshot": "swagger-cache/office365users.swagger.json",
       "swaggerSha256": "642b5779ef601327d0345f631c9a1182b27914815a854f536b84ee99f476e137",
-      "outputSha256": "49fd11dc5764316ab2ea6b1fdc9460d4163266b8823a53e2efe9a7b56281d8ef"
+      "outputSha256": "d02387c86d88d5ebf728b1de36e765e7cdb4775c56435250d6492d4ac1293227"
     },
     {
       "apiName": "onedriveforbusiness",
       "outputFile": "src/generated/OnedriveforbusinessExtensions.ts",
       "swaggerSnapshot": "swagger-cache/onedriveforbusiness.swagger.json",
       "swaggerSha256": "bb09c0baccb5c324d74f9cdefa979336f849fbe903204135095bbc3e04d1c568",
-      "outputSha256": "2b014e27ca64a5f953404480c124a7efffd7d759f10e34265201439f0116bbac"
+      "outputSha256": "110674baeef13224bb0ef6d9b072971a65e9df348ccb6bc0d5edbcb464b74b1c"
     },
     {
       "apiName": "orderful",
@@ -443,7 +443,7 @@
       "outputFile": "src/generated/SlackExtensions.ts",
       "swaggerSnapshot": "swagger-cache/slack.swagger.json",
       "swaggerSha256": "9628ffa4396b91d06a3ef246926c86beea3513602b8b8f5a1d6f22c38386c336",
-      "outputSha256": "122288a9501d7b3fbb348fcebbdbd3fac051df04cf946d54398a4a05e5916fee"
+      "outputSha256": "b8e9e017c72a58631ce65edb87f15efde7b108d80355528637a9ea6a77cad3ad"
     },
     {
       "apiName": "smtp",
@@ -485,7 +485,7 @@
       "outputFile": "src/generated/TeamsExtensions.ts",
       "swaggerSnapshot": "swagger-cache/teams.swagger.json",
       "swaggerSha256": "8130802332f0174086c050cc1e36815f77cbfc18f64d7abeb19698cf779181fb",
-      "outputSha256": "2014ed2ccb520373f1b668a4d3fcfe4984a30eded42e2e6ee3738e3ca9a48bbc"
+      "outputSha256": "5fe6453d9fb996db770e20610b01cfe3f98187ef948f7b7e04d34a1319fe5af7"
     },
     {
       "apiName": "textrequest",

@@ -104,11 +104,11 @@ describe("Office365groupsmailClient — listConversationsAsync", () => {
             const connectorError = error as ConnectorException;
             expect(connectorError.statusCode).toBe(403);
             expect(connectorError.responseBody).toBe("Forbidden");
-            expect(connectorError.operation).toBe(`GET ${TestConnectionUrl}/v1.0/groups/group1/conversations`);
+            expect(connectorError.operation).toBe("GET /v1.0/groups/group1/conversations");
         }
     });
 
-    it("should identify the continuation URL when a later page fails", async () => {
+    it("should identify the continuation operation path when a later page fails", async () => {
         global.fetch = jest.fn()
             .mockResolvedValueOnce({
                 ok: true,
@@ -139,7 +139,7 @@ describe("Office365groupsmailClient — listConversationsAsync", () => {
             expect(connectorError.statusCode).toBe(403);
             expect(connectorError.responseBody).toBe("Forbidden");
             expect(connectorError.operation).toBe(
-                `GET ${TestConnectionUrl}/v1.0/groups/group1/conversations?page=2`,
+                "GET /v1.0/groups/group1/conversations?page=2",
             );
         }
     });

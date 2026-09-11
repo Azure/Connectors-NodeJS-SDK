@@ -387,7 +387,8 @@ export class Office365groupsmailClient extends ConnectorClientBase {
                 const httpResponse = await this.httpClient.sendAsync<ListConversationsResponse>("GET", requestUrl, undefined, undefined, abortSignal);
 
                 if (!httpResponse.isSuccessStatusCode) {
-                    throw new ConnectorException(this.connectorName, `GET ${requestUrl}`, httpResponse.statusCode, httpResponse.text);
+                    const operationPath = this.getOperationPath(requestUrl);
+                    throw new ConnectorException(this.connectorName, `GET ${operationPath}`, httpResponse.statusCode, httpResponse.text);
                 }
 
                 return httpResponse.value as ListConversationsResponse;
@@ -439,7 +440,8 @@ export class Office365groupsmailClient extends ConnectorClientBase {
                 const httpResponse = await this.httpClient.sendAsync<ListConversationThreadsResponse>("GET", requestUrl, undefined, undefined, abortSignal);
 
                 if (!httpResponse.isSuccessStatusCode) {
-                    throw new ConnectorException(this.connectorName, `GET ${requestUrl}`, httpResponse.statusCode, httpResponse.text);
+                    const operationPath = this.getOperationPath(requestUrl);
+                    throw new ConnectorException(this.connectorName, `GET ${operationPath}`, httpResponse.statusCode, httpResponse.text);
                 }
 
                 return httpResponse.value as ListConversationThreadsResponse;
@@ -475,7 +477,8 @@ export class Office365groupsmailClient extends ConnectorClientBase {
                 const httpResponse = await this.httpClient.sendAsync<ListGroupThreadsResponse>("GET", requestUrl, undefined, undefined, abortSignal);
 
                 if (!httpResponse.isSuccessStatusCode) {
-                    throw new ConnectorException(this.connectorName, `GET ${requestUrl}`, httpResponse.statusCode, httpResponse.text);
+                    const operationPath = this.getOperationPath(requestUrl);
+                    throw new ConnectorException(this.connectorName, `GET ${operationPath}`, httpResponse.statusCode, httpResponse.text);
                 }
 
                 return httpResponse.value as ListGroupThreadsResponse;
@@ -541,7 +544,8 @@ export class Office365groupsmailClient extends ConnectorClientBase {
                 const httpResponse = await this.httpClient.sendAsync<ListThreadPostsResponse>("GET", requestUrl, undefined, undefined, abortSignal);
 
                 if (!httpResponse.isSuccessStatusCode) {
-                    throw new ConnectorException(this.connectorName, `GET ${requestUrl}`, httpResponse.statusCode, httpResponse.text);
+                    const operationPath = this.getOperationPath(requestUrl);
+                    throw new ConnectorException(this.connectorName, `GET ${operationPath}`, httpResponse.statusCode, httpResponse.text);
                 }
 
                 return httpResponse.value as ListThreadPostsResponse;
@@ -581,7 +585,8 @@ export class Office365groupsmailClient extends ConnectorClientBase {
                 const httpResponse = await this.httpClient.sendAsync<GetAttachmentsResponse>("GET", requestUrl, undefined, undefined, abortSignal);
 
                 if (!httpResponse.isSuccessStatusCode) {
-                    throw new ConnectorException(this.connectorName, `GET ${requestUrl}`, httpResponse.statusCode, httpResponse.text);
+                    const operationPath = this.getOperationPath(requestUrl);
+                    throw new ConnectorException(this.connectorName, `GET ${operationPath}`, httpResponse.statusCode, httpResponse.text);
                 }
 
                 return httpResponse.value as GetAttachmentsResponse;

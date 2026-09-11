@@ -122,7 +122,7 @@ describe("CommondataserviceClient — getItemsAsync", () => {
         await expect(iterator.next()).rejects.toMatchObject<Partial<ConnectorException>>({
             name: "ConnectorException",
             connectorName: "commondataservice",
-            operation: `GET ${nextLink}`,
+            operation: "GET /v2/datasets/default/tables/accounts/items?$skiptoken=page-2",
             statusCode: 503,
             responseBody: "Service unavailable",
         });
