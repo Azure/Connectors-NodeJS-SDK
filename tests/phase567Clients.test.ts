@@ -117,7 +117,9 @@ describe("Phase 5-7 connector clients", () => {
         const model: CustomPropertyValues = {
             localizations: { "en-US": localization },
         };
+        const localizationName: string | undefined = model.localizations?.["en-US"].name;
 
+        expect(localizationName).toBe("English");
         expect(JSON.parse(JSON.stringify(model))).toEqual({
             localizations: { "en-US": { name: "English" } },
         });

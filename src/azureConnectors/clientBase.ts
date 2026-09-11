@@ -35,7 +35,7 @@ export abstract class ConnectorClientBase {
         }
 
         if (!credential) {
-            throw new Error("tokenProvider cannot be null or undefined.");
+            throw new Error("credential cannot be null or undefined.");
         }
 
         let connectionRuntimeUrlEnd = connectionRuntimeUrl.length;

@@ -48,9 +48,9 @@ describe("ConnectorClientBase", () => {
             expect(result).toBe("https://proxy.azure-apihub.net/apim/arm/conn123/subscriptions");
         });
 
-        it("should throw when tokenProvider is null", () => {
+        it("should throw when credential is null", () => {
             expect(() => new TestConnectorClient("https://example.com", null as unknown as TokenProvider))
-                .toThrow("tokenProvider cannot be null or undefined.");
+            .toThrow("credential cannot be null or undefined.");
         });
 
         it("should throw when connectionRuntimeUrl is null", () => {
