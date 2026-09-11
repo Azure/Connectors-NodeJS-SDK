@@ -64,7 +64,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   connector operations with `retryUnsafeHttpMethods`.
 - Widened cancellation parameters on `ConnectorHttpClient` and generated
   connector methods from the DOM `AbortSignal` type to `AbortSignalLike`.
-- Updated generated registries and reproducibility metadata for all 73 connector
+- Updated generated registries and reproducibility metadata for all 74 connector
   clients. The Orderful input uses the checked-in AzureUX-BPM Swagger fixture
   because the retired connector is no longer returned by regional ARM catalogs.
 - Updated generated connector registries (`connectorNames.ts`,
