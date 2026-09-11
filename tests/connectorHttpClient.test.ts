@@ -63,6 +63,7 @@ describe("ConnectorHttpClient", () => {
         expect(capturedInit?.method).toBe("GET");
 
         const headers = capturedInit!.headers as Record<string, string>;
+        expect(headers["Accept"]).toBe("application/json, */*;q=0.8");
         expect(headers["Authorization"]).toBe("Bearer mock-bearer-token");
         expect(response.isSuccessStatusCode).toBe(true);
         expect(response.statusCode).toBe(200);

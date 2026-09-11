@@ -22,8 +22,12 @@ class TestConnectorClient extends ConnectorClientBase {
         return "TestConnector";
     }
 
-    public testResolveUrl(path: string): string {
-        return this.resolveUrl(path);
+    public testResolveUrl(path: string, currentRequestUrl?: string): string {
+        return this.resolveUrl(path, currentRequestUrl);
+    }
+
+    public testGetOperationPath(url: string): string {
+        return this.getOperationPath(url);
     }
 }
 
@@ -80,6 +84,24 @@ describe("ConnectorClientBase", () => {
             const result = client.testResolveUrl("/subscriptions?page=2&size=10");
 
             expect(result).toBe("https://proxy.azure-apihub.net/apim/arm/conn123/subscriptions?page=2&size=10");
+        });
+
+        it("should resolve query-only continuation against the current page URL", () => {
+            const client = new TestConnectorClient(baseUrl, createMockTokenProvider());
+            const currentRequestUrl = `${baseUrl}/subscriptions?page=1`;
+
+            const result = client.testResolveUrl("?page=2", currentRequestUrl);
+
+            expect(result).toBe(`${baseUrl}/subscriptions?page=2`);
+        });
+
+        it("should resolve path-relative continuation against the current page URL", () => {
+            const client = new TestConnectorClient(baseUrl, createMockTokenProvider());
+            const currentRequestUrl = `${baseUrl}/subscriptions?page=1`;
+
+            const result = client.testResolveUrl("subscriptions?page=2", currentRequestUrl);
+
+            expect(result).toBe(`${baseUrl}/subscriptions?page=2`);
         });
 
         it("should pass through absolute URL with same host, scheme, and port", () => {
@@ -151,6 +173,30 @@ describe("ConnectorClientBase", () => {
             );
 
             expect(result).toBe("https://PROXY.AZURE-APIHUB.NET/apim/arm/conn123/subscriptions?page=2");
+        });
+    });
+
+    describe("getOperationPath", () => {
+        const baseUrl = "https://proxy.azure-apihub.net/apim/arm/conn123";
+
+        it("should remove the connection runtime URL from an operation", () => {
+            const client = new TestConnectorClient(baseUrl, createMockTokenProvider());
+
+            const result = client.testGetOperationPath(
+                `${baseUrl}/subscriptions?$skiptoken=page-2`,
+            );
+
+            expect(result).toBe("/subscriptions?$skiptoken=page-2");
+        });
+
+        it("should remove a foreign origin without changing the path and query", () => {
+            const client = new TestConnectorClient(baseUrl, createMockTokenProvider());
+
+            const result = client.testGetOperationPath(
+                "https://management.azure.com/subscriptions?$skiptoken=page-2",
+            );
+
+            expect(result).toBe("/subscriptions?$skiptoken=page-2");
         });
     });
 });

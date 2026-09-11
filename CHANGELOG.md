@@ -9,6 +9,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- Added the generated Microsoft Dataverse client with automatic async iteration
+  over `@odata.nextLink` pages ([Azure/Connectors-NET-SDK#208](https://github.com/Azure/Connectors-NET-SDK/issues/208),
+  [BPM PR 17086991](https://msazure.visualstudio.com/One/_git/AzureUX-BPM/pullrequest/17086991)).
 - Added `@azure/abort-controller` as a direct dependency and re-exported its
   `AbortSignalLike` interface from the package root.
 - Generated 21 additional connector clients in `src/generated/` for the Phase 5,
