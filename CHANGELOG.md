@@ -7,6 +7,20 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Breaking Changes
+
+- Seismic Planner `CustomPropertyValues.localizations` now exposes
+  `Record<string, CustomPropertyDataDisplay>` instead of `Record<string, unknown>`.
+  Callers can access typed localization values directly, such as
+  `localizations["en-US"].name` ([Azure/Connectors-NET-SDK#262](https://github.com/Azure/Connectors-NET-SDK/issues/262),
+  [BPM PR 17131877](https://msazure.visualstudio.com/One/_git/AzureUX-BPM/pullrequest/17131877)).
+
+### Changed
+
+- Generated clients can use Azure SDK `TokenCredential` implementations directly.
+  The runtime continues to accept the existing `TokenProvider` interface for
+  compatibility with previously generated clients.
+
 ### Added
 
 - Added the generated Microsoft Dataverse client with automatic async iteration

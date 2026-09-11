@@ -7,6 +7,7 @@
  * and concrete implementations for Managed Identity and API key authentication.
  */
 
+import type { AccessToken, GetTokenOptions, TokenCredential } from "@azure/core-auth";
 import { DefaultAzureCredential, ManagedIdentityCredential } from "@azure/identity";
 
 /**
@@ -23,7 +24,7 @@ export interface TokenProvider {
 /**
  * Token provider using Azure Managed Identity.
  */
-export class ManagedIdentityTokenProvider implements TokenProvider {
+export class ManagedIdentityTokenProvider implements TokenProvider, TokenCredential {
     private readonly credential: DefaultAzureCredential | ManagedIdentityCredential;
 
     /**
@@ -49,6 +50,18 @@ export class ManagedIdentityTokenProvider implements TokenProvider {
         }
 
         return token.token;
+    }
+
+    /**
+     * Gets an Azure SDK access token for the specified scopes.
+     * @param scopes The authentication scopes.
+     * @param options Optional Azure SDK token request options.
+     */
+    public async getToken(
+        scopes: string | string[],
+        options?: GetTokenOptions,
+    ): Promise<AccessToken | null> {
+        return this.credential.getToken(scopes, options);
     }
 }
 

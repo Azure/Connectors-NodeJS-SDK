@@ -71,4 +71,15 @@ describe("ManagedIdentityTokenProvider", () => {
         expect(token).toBe("issued-token");
         expect(mockGetToken).toHaveBeenCalledWith(["scope"]);
     });
+
+    it("should delegate Azure SDK token requests", async () => {
+        const accessToken = { token: "issued-token", expiresOnTimestamp: Date.now() + 3600_000 };
+        mockGetToken.mockResolvedValueOnce(accessToken);
+        const provider = new ManagedIdentityTokenProvider();
+
+        const token = await provider.getToken("scope");
+
+        expect(token).toBe(accessToken);
+        expect(mockGetToken).toHaveBeenCalledWith("scope", undefined);
+    });
 });

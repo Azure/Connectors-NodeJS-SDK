@@ -14,7 +14,11 @@ import { OrderfulClient } from "../src/generated/OrderfulExtensions.ts";
 import { PlivoClient } from "../src/generated/PlivoExtensions.ts";
 import { RepliconClient } from "../src/generated/RepliconExtensions.ts";
 import { RevaiClient } from "../src/generated/RevaiExtensions.ts";
-import { SeismicplannerClient } from "../src/generated/SeismicplannerExtensions.ts";
+import {
+    CustomPropertyDataDisplay,
+    CustomPropertyValues,
+    SeismicplannerClient,
+} from "../src/generated/SeismicplannerExtensions.ts";
 import { StarmindClient } from "../src/generated/StarmindExtensions.ts";
 import { Starrezrestv1Client } from "../src/generated/Starrezrestv1Extensions.ts";
 import { TallyfyClient } from "../src/generated/TallyfyExtensions.ts";
@@ -34,7 +38,7 @@ interface GeneratedConnectorClient {
 
 type GeneratedConnectorClientConstructor = new (
     connectionRuntimeUrl: string,
-    tokenProvider: TokenProvider,
+    credential: TokenProvider,
 ) => GeneratedConnectorClient;
 
 interface ConnectorCase {
@@ -58,7 +62,7 @@ const ConnectorCases: ConnectorCase[] = [
     { displayName: "Typeform", apiName: "typeform", connectorNameKey: "Typeform", clientConstructor: TypeformClient },
     { displayName: "Ticketmaster", apiName: "ticketmaster", connectorNameKey: "TicketmasterIndependentPublisher", clientConstructor: TicketmasterClient, methodName: "eventGetAsync", methodArguments: ["event-id"] },
     { displayName: "Zoho Sign", apiName: "zohosign", connectorNameKey: "ZohoSign", clientConstructor: ZohosignClient, methodName: "downloadCompletionCertificateAsync", methodArguments: ["request-id"] },
-    { displayName: "Seismic Planner", apiName: "seismicplanner", connectorNameKey: "SeismicPlanner", clientConstructor: SeismicplannerClient, methodName: "getCommentsAsync", methodArguments: ["space-id", "node-id"] },
+    { displayName: "Seismic Planner", apiName: "seismicplanner", connectorNameKey: "SeismicPlanner", clientConstructor: SeismicplannerClient as unknown as GeneratedConnectorClientConstructor, methodName: "getCommentsAsync", methodArguments: ["space-id", "node-id"] },
     { displayName: "Way We Do", apiName: "waywedo", connectorNameKey: "WayWeDo", clientConstructor: WaywedoClient, methodName: "checklistInstancesGetAsync", methodArguments: ["instance-id"] },
     { displayName: "Meeting Room Map", apiName: "meetingroommap", connectorNameKey: "MeetingRoomMap", clientConstructor: MeetingroommapClient, methodName: "getCategoriesAsync" },
     { displayName: "StarRez REST V1", apiName: "starrezrestv1", connectorNameKey: "StarRezRESTV1", clientConstructor: Starrezrestv1Client, methodName: "selectEntryAsync", methodArguments: [{}] },
@@ -106,6 +110,17 @@ describe("Phase 5-7 connector clients", () => {
         const client = new connector.clientConstructor(TestConnectionUrl, createMockTokenProvider());
 
         expect(client.connectorName).toBe(connector.apiName);
+    });
+
+    it("should preserve typed Seismic Planner localization map values", () => {
+        const localization: CustomPropertyDataDisplay = { name: "English" };
+        const model: CustomPropertyValues = {
+            localizations: { "en-US": localization },
+        };
+
+        expect(JSON.parse(JSON.stringify(model))).toEqual({
+            localizations: { "en-US": { name: "English" } },
+        });
     });
 
     it.each(ActionConnectorCases)("should invoke an authenticated $displayName action", async connector => {

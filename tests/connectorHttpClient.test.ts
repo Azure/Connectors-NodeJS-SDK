@@ -1,5 +1,6 @@
 // Copyright (c) Microsoft Corporation.  All rights reserved.
 
+import type { TokenCredential } from "@azure/core-auth";
 import { TokenProvider } from "../src/azureConnectors/authentication.ts";
 import { ConnectorHttpClient, ConnectorResponse } from "../src/azureConnectors/connectorHttpClient.ts";
 import type { AbortSignalLike } from "../src/azureConnectors/index.ts";
@@ -68,6 +69,26 @@ describe("ConnectorHttpClient", () => {
         expect(response.isSuccessStatusCode).toBe(true);
         expect(response.statusCode).toBe(200);
         expect(response.value?.id).toBe("123");
+    });
+
+    it("should send an Azure credential token in the auth header", async () => {
+        let capturedInit: RequestInit | undefined;
+        const credential: TokenCredential = {
+            getToken: async () => ({
+                token: "azure-credential-token",
+                expiresOnTimestamp: Date.now() + 3_600_000,
+            }),
+        };
+        global.fetch = async (_input: string | URL | Request, init?: RequestInit) => {
+            capturedInit = init;
+            return new Response(null, { status: 200 });
+        };
+
+        const client = new ConnectorHttpClient(credential);
+        await client.sendAsync("GET", "https://example.com/api/items");
+
+        const headers = capturedInit!.headers as Record<string, string>;
+        expect(headers["Authorization"]).toBe("Bearer azure-credential-token");
     });
 
     it("should send POST request with body", async () => {

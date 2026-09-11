@@ -7,6 +7,7 @@
  */
 
 import type { AbortSignalLike } from "@azure/abort-controller";
+import type { TokenCredential } from "@azure/core-auth";
 import type { TokenProvider } from "./authentication.ts";
 import { DefaultConnectorClientOptions } from "./options.ts";
 import type { ConnectorClientOptions } from "./options.ts";
@@ -37,16 +38,16 @@ export interface ConnectorResponse<TValue = unknown> {
 export class ConnectorHttpClient {
     private static readonly ApiHubScopes = ["https://apihub.azure.com/.default"];
 
-    private readonly tokenProvider: TokenProvider;
+    private readonly credential: TokenCredential | TokenProvider;
     private readonly options: Required<ConnectorClientOptions>;
 
     /**
      * Initializes a ConnectorHttpClient.
-     * @param tokenProvider The token provider for authentication.
+     * @param credential The Azure credential or legacy token provider for authentication.
      * @param options The client options.
      */
-    constructor(tokenProvider: TokenProvider, options?: ConnectorClientOptions) {
-        this.tokenProvider = tokenProvider;
+    constructor(credential: TokenCredential | TokenProvider, options?: ConnectorClientOptions) {
+        this.credential = credential;
         this.options = {
             ...DefaultConnectorClientOptions,
             ...options,
@@ -69,7 +70,12 @@ export class ConnectorHttpClient {
         abortSignal?: AbortSignalLike,
     ): Promise<ConnectorResponse<TValue>> {
         const effectiveScopes = scopes ?? ConnectorHttpClient.ApiHubScopes;
-        const token = await this.tokenProvider.getAccessTokenAsync(effectiveScopes);
+        const token = "getToken" in this.credential
+            ? (await this.credential.getToken(effectiveScopes))?.token
+            : await this.credential.getAccessTokenAsync(effectiveScopes);
+        if (!token) {
+            throw new Error("Failed to acquire access token.");
+        }
 
         const headers: Record<string, string> = {
             "Accept": "application/json, */*;q=0.8",

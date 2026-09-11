@@ -404,7 +404,8 @@
       "outputFile": "src/generated/SeismicplannerExtensions.ts",
       "swaggerSnapshot": "swagger-cache/seismicplanner.swagger.json",
       "swaggerSha256": "adb321a0255847eab5f08294342cc59e9a12124b02b3676e5c43176fab460670",
-      "outputSha256": "5a0467062b3517971f4a9cbece2a6d3dfd919147b17a15ab68529c5c6a4748e7"
+      "outputSha256": "589c845b1987ef52e33719f69301daa458e3aa09fc24d2486c8a5ee58f6258ff",
+      "generatorCommit": "08204b6fe8ed4bd59f75b6af3ba3db308688a0bc"
     },
     {
       "apiName": "sendgrid",
