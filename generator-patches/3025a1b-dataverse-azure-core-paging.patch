@@ -1,5 +1,5 @@
 diff --git a/src/tools/CodefulSdkGenerator.Tests/DirectClientTypeScriptGeneratorTests.cs b/src/tools/CodefulSdkGenerator.Tests/DirectClientTypeScriptGeneratorTests.cs
-index 7db57ad7592..0575734c8eb 100644
+index 7db57ad7592..620c4041ede 100644
 --- a/src/tools/CodefulSdkGenerator.Tests/DirectClientTypeScriptGeneratorTests.cs
 +++ b/src/tools/CodefulSdkGenerator.Tests/DirectClientTypeScriptGeneratorTests.cs
 @@ -1052,8 +1052,11 @@ namespace LogicApps.Tests
@@ -25,7 +25,7 @@ index 7db57ad7592..0575734c8eb 100644
          {
              var swagger = JsonObject.Parse(TestSwaggerFixtures.AnnotationOnlyPagination).AsObject();
              var generator = new DirectClientTypeScriptGenerator();
-@@ -2284,19 +2287,19 @@ namespace LogicApps.Tests
+@@ -2284,19 +2287,20 @@ namespace LogicApps.Tests
                  output.Contains("\"@odata.nextLink\"?: string;", StringComparison.Ordinal),
                  message: "TypeScript should synthesize the annotated continuation property.");
              Assert.IsTrue(
@@ -47,15 +47,14 @@ index 7db57ad7592..0575734c8eb 100644
 +                output.Contains("            \"value\",", StringComparison.Ordinal),
 +                message: "TypeScript paging should use the declared item property.");
              Assert.IsTrue(
--                output.Contains("const operationPath = this.getOperationPath(requestUrl);", StringComparison.Ordinal) &&
--                output.Contains("`GET ${operationPath}`", StringComparison.Ordinal),
+                 output.Contains("const operationPath = this.getOperationPath(requestUrl);", StringComparison.Ordinal) &&
+                 output.Contains("`GET ${operationPath}`", StringComparison.Ordinal),
 -                message: "Pagination errors should report a relative operation instead of the raw continuation URL.");
-+                output.Contains("`GET ${requestUrl}`", StringComparison.Ordinal),
-+                message: "Pagination errors should report the URL of the page that failed.");
++                message: "Pagination errors should report the sanitized operation path of the page that failed.");
          }
  
          [TestMethod]
-@@ -2318,8 +2321,8 @@ namespace LogicApps.Tests
+@@ -2318,8 +2322,8 @@ namespace LogicApps.Tests
  
              var output = writer.ToString();
              Assert.IsTrue(
@@ -67,7 +66,7 @@ index 7db57ad7592..0575734c8eb 100644
  
          private static void GenerateTypeScriptCapturingConsole(string swagger, out string consoleOutput)
 diff --git a/src/tools/CodefulSdkGenerator.Tests/DirectClientTypeScriptOutputFormatTests.cs b/src/tools/CodefulSdkGenerator.Tests/DirectClientTypeScriptOutputFormatTests.cs
-index 7166a69dbac..b264f005dcc 100644
+index 7166a69dbac..3df4f905117 100644
 --- a/src/tools/CodefulSdkGenerator.Tests/DirectClientTypeScriptOutputFormatTests.cs
 +++ b/src/tools/CodefulSdkGenerator.Tests/DirectClientTypeScriptOutputFormatTests.cs
 @@ -80,6 +80,12 @@ namespace LogicApps.Tests
@@ -150,7 +149,7 @@ index 7166a69dbac..b264f005dcc 100644
              Assert.IsFalse(
                  output.Contains("${this.connectionRuntimeUrl}", StringComparison.Ordinal),
                  message: "Generated methods should NOT use template string with connectionRuntimeUrl.");
-@@ -372,13 +387,68 @@ namespace LogicApps.Tests
+@@ -372,13 +387,69 @@ namespace LogicApps.Tests
                  output.Contains("abortSignal?: AbortSignalLike", StringComparison.Ordinal),
                  message: "Generated methods should include abortSignal?: AbortSignalLike parameter.");
  
@@ -192,8 +191,9 @@ index 7166a69dbac..b264f005dcc 100644
 +                output.Contains("sendAsync<ItemListResult>(\"GET\", requestUrl, undefined, undefined, abortSignal)", StringComparison.Ordinal),
 +                message: "Every paginated page request should forward the caller's abort signal.");
 +            Assert.IsTrue(
-+                output.Contains("throw new ConnectorException(this.connectorName, `GET ${requestUrl}`, httpResponse.statusCode, httpResponse.text);", StringComparison.Ordinal),
-+                message: "Paginated failures should identify the URL of the page request that failed.");
++                output.Contains("const operationPath = this.getOperationPath(requestUrl);", StringComparison.Ordinal) &&
++                output.Contains("throw new ConnectorException(this.connectorName, `GET ${operationPath}`, httpResponse.statusCode, httpResponse.text);", StringComparison.Ordinal),
++                message: "Paginated failures should identify the sanitized operation path of the page request that failed.");
 +            Assert.IsTrue(
 +                output.Contains("public async updateItemAsync(", StringComparison.Ordinal),
 +                message: "Non-paginated methods should retain their async Promise-based implementation.");
@@ -304,7 +304,7 @@ index fd78f02f76a..4d2d26d982d 100644
          /// </summary>
          public string PageItemTypeName { get; set; }
 diff --git a/src/tools/CodefulSdkGenerator/DirectClient/DirectClientTypeScriptCodeGenerator.cs b/src/tools/CodefulSdkGenerator/DirectClient/DirectClientTypeScriptCodeGenerator.cs
-index 50722c82cbf..0bdf17a4c31 100644
+index 50722c82cbf..67636df2b9b 100644
 --- a/src/tools/CodefulSdkGenerator/DirectClient/DirectClientTypeScriptCodeGenerator.cs
 +++ b/src/tools/CodefulSdkGenerator/DirectClient/DirectClientTypeScriptCodeGenerator.cs
 @@ -50,6 +50,7 @@ namespace Microsoft.Azure.Workflows.CodefulSdkGenerator.DirectClient
@@ -404,7 +404,7 @@ index 50722c82cbf..0bdf17a4c31 100644
  
              // NOTE(swapnilnagar): Build path with parameter substitution.
              var path = method.Path;
-@@ -529,49 +554,43 @@ namespace Microsoft.Azure.Workflows.CodefulSdkGenerator.DirectClient
+@@ -529,49 +554,44 @@ namespace Microsoft.Azure.Workflows.CodefulSdkGenerator.DirectClient
              // Generated code never passes custom scopes, so we always pass undefined for scopes.
              var bodyArg = hasBodyParam ? ", undefined, input, abortSignal" : ", undefined, undefined, abortSignal";
  
@@ -457,7 +457,8 @@ index 50722c82cbf..0bdf17a4c31 100644
 +                    stringBuilder.AppendLine($"                const httpResponse = await this.httpClient.sendAsync<{method.ResponseTypeName}>(\"{httpMethod}\", requestUrl{bodyArg});");
 +                    stringBuilder.AppendLine();
 +                    stringBuilder.AppendLine("                if (!httpResponse.isSuccessStatusCode) {");
-+                    stringBuilder.AppendLine($"                    throw new ConnectorException(this.connectorName, `{httpMethod} ${{requestUrl}}`, httpResponse.statusCode, httpResponse.text);");
++                    stringBuilder.AppendLine("                    const operationPath = this.getOperationPath(requestUrl);");
++                    stringBuilder.AppendLine($"                    throw new ConnectorException(this.connectorName, `{httpMethod} ${{operationPath}}`, httpResponse.statusCode, httpResponse.text);");
 +                    stringBuilder.AppendLine("                }");
 +                    stringBuilder.AppendLine();
 +                    stringBuilder.AppendLine($"                return httpResponse.value as {method.ResponseTypeName};");
@@ -487,7 +488,7 @@ index 50722c82cbf..0bdf17a4c31 100644
                  stringBuilder.AppendLine();
                  stringBuilder.AppendLine("        if (!httpResponse.isSuccessStatusCode) {");
                  stringBuilder.AppendLine($"            throw new ConnectorException(this.connectorName, `{httpMethod} ${{requestPath}}`, httpResponse.statusCode, httpResponse.text);");
-@@ -599,19 +618,6 @@ namespace Microsoft.Azure.Workflows.CodefulSdkGenerator.DirectClient
+@@ -599,19 +619,6 @@ namespace Microsoft.Azure.Workflows.CodefulSdkGenerator.DirectClient
              this._paginationNextLinkNames[responseTypeName] = method.PaginationNextLinkName;
          }
  
