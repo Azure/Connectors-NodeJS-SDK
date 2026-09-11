@@ -1,0 +1,509 @@
+diff --git a/src/tools/CodefulSdkGenerator.Tests/DirectClientTypeScriptGeneratorTests.cs b/src/tools/CodefulSdkGenerator.Tests/DirectClientTypeScriptGeneratorTests.cs
+index 7db57ad7592..0575734c8eb 100644
+--- a/src/tools/CodefulSdkGenerator.Tests/DirectClientTypeScriptGeneratorTests.cs
++++ b/src/tools/CodefulSdkGenerator.Tests/DirectClientTypeScriptGeneratorTests.cs
+@@ -1052,8 +1052,11 @@ namespace LogicApps.Tests
+                 output.Contains("import { ConnectorClientOptions }", StringComparison.Ordinal),
+                 message: "Output should import ConnectorClientOptions from the SDK.");
+             Assert.IsTrue(
+-                output.Contains("import { TokenProvider }", StringComparison.Ordinal),
+-                message: "Output should import TokenProvider from the SDK.");
++                output.Contains("import type { TokenCredential } from \"@azure/core-auth\";", StringComparison.Ordinal),
++                message: "Output should type-import TokenCredential from Azure Core.");
++            Assert.IsFalse(
++                output.Contains("TokenProvider", StringComparison.Ordinal),
++                message: "Output should not reference the legacy TokenProvider interface.");
+         }
+ 
+         [TestMethod]
+@@ -2271,7 +2274,7 @@ namespace LogicApps.Tests
+ 
+         [TestMethod]
+         [Owner("daviburg")]
+-        public void Generate_AnnotationOnlyPagination_EmitsAsyncIterableAndContinuation()
++        public void Generate_AnnotationOnlyPagination_EmitsPagedIteratorAndContinuation()
+         {
+             var swagger = JsonObject.Parse(TestSwaggerFixtures.AnnotationOnlyPagination).AsObject();
+             var generator = new DirectClientTypeScriptGenerator();
+@@ -2284,19 +2287,19 @@ namespace LogicApps.Tests
+                 output.Contains("\"@odata.nextLink\"?: string;", StringComparison.Ordinal),
+                 message: "TypeScript should synthesize the annotated continuation property.");
+             Assert.IsTrue(
+-                output.Contains("public async *getRowsAsync(", StringComparison.Ordinal) &&
+-                output.Contains("): AsyncIterable<Row>", StringComparison.Ordinal),
+-                message: "A pageable TypeScript operation should expose async iteration.");
++                output.Contains("public getRowsAsync(", StringComparison.Ordinal) &&
++                output.Contains("): PagedAsyncIterableIterator<Row", StringComparison.Ordinal),
++                message: "A pageable TypeScript operation should expose the Azure Core pageable iterator.");
+             Assert.IsTrue(
+-                output.Contains("const nextLink = page[\"@odata.nextLink\"]", StringComparison.Ordinal),
+-                message: "TypeScript iteration should follow the declared continuation property.");
++                output.Contains("return this.createPageable<RowPage, Row>(", StringComparison.Ordinal) &&
++                output.Contains("            \"@odata.nextLink\",", StringComparison.Ordinal),
++                message: "TypeScript paging should follow the declared continuation property.");
+             Assert.IsTrue(
+-                output.Contains("requestUrl = this.resolveUrl(nextLink, requestUrl);", StringComparison.Ordinal),
+-                message: "Relative continuations should resolve against the current page URL.");
++                output.Contains("            \"value\",", StringComparison.Ordinal),
++                message: "TypeScript paging should use the declared item property.");
+             Assert.IsTrue(
+-                output.Contains("const operationPath = this.getOperationPath(requestUrl);", StringComparison.Ordinal) &&
+-                output.Contains("`GET ${operationPath}`", StringComparison.Ordinal),
+-                message: "Pagination errors should report a relative operation instead of the raw continuation URL.");
++                output.Contains("`GET ${requestUrl}`", StringComparison.Ordinal),
++                message: "Pagination errors should report the URL of the page that failed.");
+         }
+ 
+         [TestMethod]
+@@ -2318,8 +2321,8 @@ namespace LogicApps.Tests
+ 
+             var output = writer.ToString();
+             Assert.IsTrue(
+-                output.Contains("for (const item of page[\"records\"] ?? [])", StringComparison.Ordinal),
+-                message: "TypeScript iteration should use the x-ms-pageable itemName property.");
++                output.Contains("            \"records\",", StringComparison.Ordinal),
++                message: "TypeScript paging should use the x-ms-pageable itemName property.");
+         }
+ 
+         private static void GenerateTypeScriptCapturingConsole(string swagger, out string consoleOutput)
+diff --git a/src/tools/CodefulSdkGenerator.Tests/DirectClientTypeScriptOutputFormatTests.cs b/src/tools/CodefulSdkGenerator.Tests/DirectClientTypeScriptOutputFormatTests.cs
+index 7166a69dbac..b264f005dcc 100644
+--- a/src/tools/CodefulSdkGenerator.Tests/DirectClientTypeScriptOutputFormatTests.cs
++++ b/src/tools/CodefulSdkGenerator.Tests/DirectClientTypeScriptOutputFormatTests.cs
+@@ -80,6 +80,12 @@ namespace LogicApps.Tests
+                                 "required": true,
+                                 "type": "string"
+                             },
++                            {
++                                "name": "url",
++                                "in": "query",
++                                "required": false,
++                                "type": "string"
++                            },
+                             {
+                                 "name": "body",
+                                 "in": "body",
+@@ -103,14 +109,17 @@ namespace LogicApps.Tests
+                 "ItemListResult": {
+                     "type": "object",
+                     "properties": {
+-                        "value": {
+-                            "type": "array",
+-                            "items": { "$ref": "#/definitions/ItemModel" },
+-                            "description": "The list of items."
+-                        },
++                        "value": { "$ref": "#/definitions/ItemModelList" },
+                         "nextLink": { "type": "string", "description": "Pagination link." }
+                     }
+                 },
++                "ItemModelList": {
++                    "$ref": "#/definitions/ItemModelListAlias"
++                },
++                "ItemModelListAlias": {
++                    "type": "array",
++                    "items": { "$ref": "#/definitions/ItemModel" }
++                },
+                 "ItemModel": {
+                     "type": "object",
+                     "properties": {
+@@ -251,7 +260,7 @@ namespace LogicApps.Tests
+ 
+             var output = writer.ToString();
+ 
+-            // NOTE(swapnilnagar): All import paths must include the .ts extension for ESM compatibility.
++            // NOTE(swapnilnagar): All relative import paths must include the .ts extension for ESM compatibility.
+             Assert.IsTrue(
+                 output.Contains("from \"../azureConnectors/clientBase.ts\"", StringComparison.Ordinal),
+                 message: "Import for ConnectorClientBase should include .ts extension.");
+@@ -262,8 +271,8 @@ namespace LogicApps.Tests
+                 output.Contains("from \"../azureConnectors/connectorException.ts\"", StringComparison.Ordinal),
+                 message: "Import for ConnectorException should include .ts extension.");
+             Assert.IsTrue(
+-                output.Contains("from \"../azureConnectors/authentication.ts\"", StringComparison.Ordinal),
+-                message: "Import for TokenProvider should include .ts extension.");
++                output.Contains("import type { TokenCredential } from \"@azure/core-auth\";", StringComparison.Ordinal),
++                message: "TokenCredential should be type-imported from Azure Core.");
+         }
+ 
+         [TestMethod]
+@@ -280,8 +289,8 @@ namespace LogicApps.Tests
+ 
+             // NOTE(swapnilnagar): The constructor must pass connectionRuntimeUrl as first argument to super().
+             Assert.IsTrue(
+-                output.Contains("super(connectionRuntimeUrl, tokenProvider, options)", StringComparison.Ordinal),
+-                message: "Constructor should call super(connectionRuntimeUrl, tokenProvider, options).");
++                output.Contains("super(connectionRuntimeUrl, credential, options)", StringComparison.Ordinal),
++                message: "Constructor should call super(connectionRuntimeUrl, credential, options).");
+         }
+ 
+         [TestMethod]
+@@ -323,6 +332,12 @@ namespace LogicApps.Tests
+             Assert.IsTrue(
+                 output.Contains("this.resolveUrl(requestPath)", StringComparison.Ordinal),
+                 message: "Generated methods should call this.resolveUrl(requestPath).");
++            Assert.IsTrue(
++                output.Contains("const requestUrl = this.resolveUrl(requestPath)", StringComparison.Ordinal),
++                message: "Generated methods should avoid colliding with an operation parameter named 'url'.");
++            Assert.IsFalse(
++                output.Contains("const url = this.resolveUrl(requestPath)", StringComparison.Ordinal),
++                message: "Generated request URL locals should not use the collision-prone name 'url'.");
+             Assert.IsFalse(
+                 output.Contains("${this.connectionRuntimeUrl}", StringComparison.Ordinal),
+                 message: "Generated methods should NOT use template string with connectionRuntimeUrl.");
+@@ -372,13 +387,68 @@ namespace LogicApps.Tests
+                 output.Contains("abortSignal?: AbortSignalLike", StringComparison.Ordinal),
+                 message: "Generated methods should include abortSignal?: AbortSignalLike parameter.");
+ 
+-            // NOTE(swapnilnagar): Count occurrences — should match number of generated methods.
+-            var methodCount = CountOccurrences(output, "public async ");
+             var abortSignalCount = CountOccurrences(output, "abortSignal?: AbortSignalLike");
+             Assert.AreEqual(
+-                expected: methodCount,
++                expected: 2,
+                 actual: abortSignalCount,
+-                message: "Every generated async method should have an abortSignal parameter.");
++                message: "Every generated action method should have an abortSignal parameter.");
++        }
++
++        /// <summary>
++        /// Verifies paginated actions return a lazy Azure Core paging iterator while ordinary actions remain async.
++        /// </summary>
++        [TestMethod]
++        [Owner("swapnilnagar")]
++        public void Generate_PaginatedMethod_EmitsPagedAsyncIterableIterator()
++        {
++            var swagger = JsonObject.Parse(FormatTestSwagger).AsObject();
++            var generator = new DirectClientTypeScriptGenerator();
++            using var writer = new StringWriter();
++
++            generator.Generate(swagger, "formattest", writer);
++
++            var output = writer.ToString();
++            Assert.IsTrue(
++                output.Contains("import type { PagedAsyncIterableIterator } from \"@azure/core-paging\";", StringComparison.Ordinal),
++                message: "Paginated clients should type-import PagedAsyncIterableIterator from Azure Core.");
++            Assert.IsTrue(
++                output.Contains("public listItemsAsync(filter?: string, abortSignal?: AbortSignalLike): PagedAsyncIterableIterator<ItemModel>", StringComparison.Ordinal),
++                message: "Paginated methods should synchronously return a typed item iterator.");
++            Assert.IsTrue(
++                output.Contains("return this.createPageable<ItemListResult, ItemModel>(", StringComparison.Ordinal),
++                message: "Paginated methods should delegate lazy page traversal to ConnectorClientBase.");
++            Assert.IsTrue(
++                output.Contains("sendAsync<ItemListResult>(\"GET\", requestUrl, undefined, undefined, abortSignal)", StringComparison.Ordinal),
++                message: "Every paginated page request should forward the caller's abort signal.");
++            Assert.IsTrue(
++                output.Contains("throw new ConnectorException(this.connectorName, `GET ${requestUrl}`, httpResponse.statusCode, httpResponse.text);", StringComparison.Ordinal),
++                message: "Paginated failures should identify the URL of the page request that failed.");
++            Assert.IsTrue(
++                output.Contains("public async updateItemAsync(", StringComparison.Ordinal),
++                message: "Non-paginated methods should retain their async Promise-based implementation.");
++        }
++
++        /// <summary>
++        /// Verifies a non-string continuation property does not classify an ordinary value response as pageable.
++        /// </summary>
++        [TestMethod]
++        [Owner("swapnilnagar")]
++        public void Generate_NonStringNextLink_DoesNotEmitPagedAsyncIterableIterator()
++        {
++            var swagger = JsonObject.Parse(FormatTestSwagger).AsObject();
++            swagger[SchemaPropertyNames.Definitions]["ItemListResult"][SchemaPropertyNames.Properties][SchemaPropertyNames.PaginationNextLink][SchemaPropertyNames.Type] = "integer";
++            var generator = new DirectClientTypeScriptGenerator();
++            using var writer = new StringWriter();
++
++            generator.Generate(swagger, "formattest", writer);
++
++            var output = writer.ToString();
++            Assert.IsFalse(
++                output.Contains("PagedAsyncIterableIterator", StringComparison.Ordinal),
++                message: "A non-string nextLink property should not trigger pagination generation.");
++            Assert.IsTrue(
++                output.Contains("public async listItemsAsync(filter?: string, abortSignal?: AbortSignalLike): Promise<ItemListResult>", StringComparison.Ordinal),
++                message: "A response without a valid continuation link should retain its Promise return type.");
+         }
+ 
+         /// <summary>
+diff --git a/src/tools/CodefulSdkGenerator/DirectClient/DirectClientGeneratorBase.cs b/src/tools/CodefulSdkGenerator/DirectClient/DirectClientGeneratorBase.cs
+index 6c5f796fd51..59dee6a4f86 100644
+--- a/src/tools/CodefulSdkGenerator/DirectClient/DirectClientGeneratorBase.cs
++++ b/src/tools/CodefulSdkGenerator/DirectClient/DirectClientGeneratorBase.cs
+@@ -389,18 +389,32 @@ namespace Microsoft.Azure.Workflows.CodefulSdkGenerator.DirectClient
+                 nextLinkName = !string.IsNullOrWhiteSpace(annotatedNextLinkName)
+                     ? annotatedNextLinkName
+                     : SchemaPropertyNames.PaginationNextLink;
+-            }
+-            else if (properties.ContainsKey(SchemaPropertyNames.PaginationNextLink))
+-            {
+-                nextLinkName = SchemaPropertyNames.PaginationNextLink;
+-            }
+-            else if (properties.ContainsKey(SchemaPropertyNames.ODataNextLink))
+-            {
+-                nextLinkName = SchemaPropertyNames.ODataNextLink;
++
++                if (properties.TryGetPropertyValue(nextLinkName, out var annotatedNextLinkNode))
++                {
++                    if (annotatedNextLinkNode is not JsonObject annotatedNextLinkSchema ||
++                        !DirectClientGeneratorBase.IsStringPaginationLink(annotatedNextLinkSchema, context))
++                    {
++                        return false;
++                    }
++                }
+             }
+             else
+             {
+-                return false;
++                nextLinkName = new[]
++                {
++                    SchemaPropertyNames.PaginationNextLink,
++                    SchemaPropertyNames.ODataNextLink,
++                }
++                    .FirstOrDefault(propertyName =>
++                        properties.TryGetPropertyValue(propertyName, out var nextLinkNode) &&
++                        nextLinkNode is JsonObject nextLinkSchema &&
++                        DirectClientGeneratorBase.IsStringPaginationLink(nextLinkSchema, context));
++
++                if (nextLinkName == null)
++                {
++                    return false;
++                }
+             }
+ 
+             if (!properties.TryGetPropertyValue(itemName, out var valueNode) ||
+@@ -431,6 +445,20 @@ namespace Microsoft.Azure.Workflows.CodefulSdkGenerator.DirectClient
+             return true;
+         }
+ 
++        /// <summary>
++        /// Determines whether a pagination link schema resolves to a string.
++        /// </summary>
++        /// <param name="nextLinkSchema">The pagination link schema.</param>
++        /// <param name="context">The swagger context.</param>
++        private static bool IsStringPaginationLink(JsonObject nextLinkSchema, SwaggerContext context)
++        {
++            var resolvedNextLinkSchema = SwaggerRefResolver.ResolveSchema(nextLinkSchema, context.Document);
++            return resolvedNextLinkSchema.TryGetPropertyValue(SchemaPropertyNames.Type, out var nextLinkTypeNode) &&
++                nextLinkTypeNode is JsonValue nextLinkType &&
++                nextLinkType.TryGetValue<string>(out var nextLinkTypeName) &&
++                string.Equals(nextLinkTypeName, "string", StringComparison.Ordinal);
++        }
++
+         /// <inheritdoc />
+         protected override DirectClientMethodInfo ProcessMethod(SwaggerContext context, string path, string method, JsonObject methodInfo)
+         {
+diff --git a/src/tools/CodefulSdkGenerator/DirectClient/DirectClientMethodInfo.cs b/src/tools/CodefulSdkGenerator/DirectClient/DirectClientMethodInfo.cs
+index fd78f02f76a..4d2d26d982d 100644
+--- a/src/tools/CodefulSdkGenerator/DirectClient/DirectClientMethodInfo.cs
++++ b/src/tools/CodefulSdkGenerator/DirectClient/DirectClientMethodInfo.cs
+@@ -104,7 +104,7 @@ namespace Microsoft.Azure.Workflows.CodefulSdkGenerator.DirectClient
+         public bool IsPaginated { get; set; }
+ 
+         /// <summary>
+-        /// Gets or sets the C# type name of the items in a paginated response's <c>value</c> array.
++        /// Gets or sets the target-language type name of the items in a paginated response's <c>value</c> array.
+         /// Only populated when <see cref="IsPaginated"/> is true.
+         /// </summary>
+         public string PageItemTypeName { get; set; }
+diff --git a/src/tools/CodefulSdkGenerator/DirectClient/DirectClientTypeScriptCodeGenerator.cs b/src/tools/CodefulSdkGenerator/DirectClient/DirectClientTypeScriptCodeGenerator.cs
+index 50722c82cbf..0bdf17a4c31 100644
+--- a/src/tools/CodefulSdkGenerator/DirectClient/DirectClientTypeScriptCodeGenerator.cs
++++ b/src/tools/CodefulSdkGenerator/DirectClient/DirectClientTypeScriptCodeGenerator.cs
+@@ -50,6 +50,7 @@ namespace Microsoft.Azure.Workflows.CodefulSdkGenerator.DirectClient
+             var filteredMethods = methods.Where(method => !method.IsInternal).ToList();
+             var actionMethods = filteredMethods.Where(method => !method.IsTrigger).ToList();
+             var triggerMethods = DirectClientGeneratorBase.SelectCanonicalTriggerMethods(filteredMethods);
++            var hasPaginatedActions = actionMethods.Any(method => method.IsPaginated && method.PageItemTypeName != null);
+ 
+             foreach (var method in actionMethods.Where(method => method.IsPaginated))
+             {
+@@ -80,10 +81,15 @@ namespace Microsoft.Azure.Workflows.CodefulSdkGenerator.DirectClient
+                 stringBuilder.AppendLine("import type { AbortSignalLike } from \"@azure/abort-controller\";");
+             }
+ 
++            stringBuilder.AppendLine("import type { TokenCredential } from \"@azure/core-auth\";");
++            if (hasPaginatedActions)
++            {
++                stringBuilder.AppendLine("import type { PagedAsyncIterableIterator } from \"@azure/core-paging\";");
++            }
++
+             stringBuilder.AppendLine("import { ConnectorClientBase } from \"../azureConnectors/clientBase.ts\";");
+             stringBuilder.AppendLine("import { ConnectorException } from \"../azureConnectors/connectorException.ts\";");
+             stringBuilder.AppendLine("import { ConnectorClientOptions } from \"../azureConnectors/options.ts\";");
+-            stringBuilder.AppendLine("import { TokenProvider } from \"../azureConnectors/authentication.ts\";");
+             if (shouldEmitTriggerPayloadContracts)
+             {
+                 stringBuilder.AppendLine("import { TriggerCallbackPayload } from \"../azureConnectors/triggerPayload.ts\";");
+@@ -322,6 +328,25 @@ namespace Microsoft.Azure.Workflows.CodefulSdkGenerator.DirectClient
+                         IdentifierNormalizer.Normalize(definitionName, isVariableName: false)));
+         }
+ 
++        /// <summary>
++        /// Resolves a paginated response's element type without normalizing TypeScript primitive names.
++        /// </summary>
++        /// <param name="pageItemTypeName">The detected page element type name.</param>
++        private string ResolvePageItemTypeName(string pageItemTypeName)
++        {
++            var retainedTypeName = this._retainedTypeNames?.ResolveTypeName(pageItemTypeName);
++            if (retainedTypeName != null)
++            {
++                return retainedTypeName;
++            }
++
++            return pageItemTypeName switch
++            {
++                "string" or "number" or "boolean" or "unknown" or "Record<string, unknown>" => pageItemTypeName,
++                _ => this.ResolveDefinitionTypeName(pageItemTypeName),
++            };
++        }
++
+         private void GenerateClient(StringBuilder stringBuilder, string className, string connectorName, IReadOnlyList<DirectClientMethodInfo> methods)
+         {
+             stringBuilder.AppendLine("/**");
+@@ -332,11 +357,11 @@ namespace Microsoft.Azure.Workflows.CodefulSdkGenerator.DirectClient
+             stringBuilder.AppendLine("    /**");
+             stringBuilder.AppendLine($"     * Creates a new {className}Client.");
+             stringBuilder.AppendLine("     * @param connectionRuntimeUrl The connection runtime URL from Azure Portal.");
+-            stringBuilder.AppendLine("     * @param tokenProvider The token provider for authentication.");
++            stringBuilder.AppendLine("     * @param credential The credential used for authentication.");
+             stringBuilder.AppendLine("     * @param options Optional connector client options.");
+             stringBuilder.AppendLine("     */");
+-            stringBuilder.AppendLine($"    constructor(connectionRuntimeUrl: string, tokenProvider: TokenProvider, options?: ConnectorClientOptions) {{");
+-            stringBuilder.AppendLine("        super(connectionRuntimeUrl, tokenProvider, options);");
++            stringBuilder.AppendLine($"    constructor(connectionRuntimeUrl: string, credential: TokenCredential, options?: ConnectorClientOptions) {{");
++            stringBuilder.AppendLine("        super(connectionRuntimeUrl, credential, options);");
+             stringBuilder.AppendLine("    }");
+             stringBuilder.AppendLine();
+             stringBuilder.AppendLine($"    public get connectorName(): string {{");
+@@ -455,14 +480,14 @@ namespace Microsoft.Azure.Workflows.CodefulSdkGenerator.DirectClient
+                 signatureParams.Add($"{param.NormalizedName}?: {paramType}");
+             }
+ 
+-            var pageItemType = method.IsPaginated
++            var pageItemTypeName = method.IsPaginated && method.PageItemTypeName != null
+                 ? this.ResolvePageItemTypeName(method.PageItemTypeName)
+                 : null;
+-            var returnType = method.IsPaginated
+-                ? $"AsyncIterable<{pageItemType}>"
++            var returnType = pageItemTypeName != null
++                ? $"PagedAsyncIterableIterator<{pageItemTypeName}>"
+                 : method.HasResponse
+-                ? $"Promise<{method.ResponseTypeName}>"
+-                : "Promise<void>";
++                    ? $"Promise<{method.ResponseTypeName}>"
++                    : "Promise<void>";
+ 
+             stringBuilder.AppendLine("    /**");
+             if (!string.IsNullOrEmpty(method.Summary))
+@@ -488,8 +513,8 @@ namespace Microsoft.Azure.Workflows.CodefulSdkGenerator.DirectClient
+             signatureParams.Add("abortSignal?: AbortSignalLike");
+ 
+             var parametersString = string.Join(", ", signatureParams);
+-            var generatorMarker = method.IsPaginated ? "async *" : "async ";
+-            stringBuilder.AppendLine($"    public {generatorMarker}{methodName}({parametersString}): {returnType} {{");
++            var asyncModifier = pageItemTypeName == null ? "async " : string.Empty;
++            stringBuilder.AppendLine($"    public {asyncModifier}{methodName}({parametersString}): {returnType} {{");
+ 
+             // NOTE(swapnilnagar): Build path with parameter substitution.
+             var path = method.Path;
+@@ -529,49 +554,43 @@ namespace Microsoft.Azure.Workflows.CodefulSdkGenerator.DirectClient
+             // Generated code never passes custom scopes, so we always pass undefined for scopes.
+             var bodyArg = hasBodyParam ? ", undefined, input, abortSignal" : ", undefined, undefined, abortSignal";
+ 
+-            if (method.IsPaginated)
++            if (method.HasResponse)
+             {
+-                var escapedNextLinkName = DirectClientTypeScriptCodeGenerator.EscapeTypeScriptString(method.PaginationNextLinkName);
+-                var escapedItemName = DirectClientTypeScriptCodeGenerator.EscapeTypeScriptString(method.PaginationItemName);
+-                stringBuilder.AppendLine("        let requestUrl = this.resolveUrl(requestPath);");
+-                stringBuilder.AppendLine($"        let requestBody = {(hasBodyParam ? "input" : "undefined")};");
+-                stringBuilder.AppendLine("        while (true) {");
+-                stringBuilder.AppendLine($"            const httpResponse = await this.httpClient.sendAsync<{method.ResponseTypeName}>(\"{httpMethod}\", requestUrl, undefined, requestBody, abortSignal);");
+-                stringBuilder.AppendLine();
+-                stringBuilder.AppendLine("            if (!httpResponse.isSuccessStatusCode) {");
+-                stringBuilder.AppendLine("                const operationPath = this.getOperationPath(requestUrl);");
+-                stringBuilder.AppendLine($"                throw new ConnectorException(this.connectorName, `{httpMethod} ${{operationPath}}`, httpResponse.statusCode, httpResponse.text);");
+-                stringBuilder.AppendLine("            }");
+-                stringBuilder.AppendLine();
+-                stringBuilder.AppendLine($"            const page = httpResponse.value as {method.ResponseTypeName};");
+-                stringBuilder.AppendLine($"            for (const item of page[\"{escapedItemName}\"] ?? []) {{");
+-                stringBuilder.AppendLine("                yield item;");
+-                stringBuilder.AppendLine("            }");
+-                stringBuilder.AppendLine();
+-                stringBuilder.AppendLine($"            const nextLink = page[\"{escapedNextLinkName}\"];");
+-                stringBuilder.AppendLine("            if (!nextLink) {");
+-                stringBuilder.AppendLine("                return;");
+-                stringBuilder.AppendLine("            }");
+-                stringBuilder.AppendLine();
+-                stringBuilder.AppendLine("            requestUrl = this.resolveUrl(nextLink, requestUrl);");
+-                stringBuilder.AppendLine("            requestBody = undefined;");
+-                stringBuilder.AppendLine("        }");
+-            }
+-            else if (method.HasResponse)
+-            {
+-                stringBuilder.AppendLine($"        const url = this.resolveUrl(requestPath);");
+-                stringBuilder.AppendLine($"        const httpResponse = await this.httpClient.sendAsync<{method.ResponseTypeName}>(\"{httpMethod}\", url{bodyArg});");
+-                stringBuilder.AppendLine();
+-                stringBuilder.AppendLine("        if (!httpResponse.isSuccessStatusCode) {");
+-                stringBuilder.AppendLine($"            throw new ConnectorException(this.connectorName, `{httpMethod} ${{requestPath}}`, httpResponse.statusCode, httpResponse.text);");
+-                stringBuilder.AppendLine("        }");
+-                stringBuilder.AppendLine();
+-                stringBuilder.AppendLine($"        return httpResponse.value as {method.ResponseTypeName};");
++                if (pageItemTypeName != null)
++                {
++                    var escapedItemName = DirectClientTypeScriptCodeGenerator.EscapeTypeScriptString(method.PaginationItemName);
++                    var escapedNextLinkName = DirectClientTypeScriptCodeGenerator.EscapeTypeScriptString(method.PaginationNextLinkName);
++                    stringBuilder.AppendLine($"        return this.createPageable<{method.ResponseTypeName}, {pageItemTypeName}>(");
++                    stringBuilder.AppendLine("            requestPath,");
++                    stringBuilder.AppendLine("            async (requestUrl) => {");
++                    stringBuilder.AppendLine($"                const httpResponse = await this.httpClient.sendAsync<{method.ResponseTypeName}>(\"{httpMethod}\", requestUrl{bodyArg});");
++                    stringBuilder.AppendLine();
++                    stringBuilder.AppendLine("                if (!httpResponse.isSuccessStatusCode) {");
++                    stringBuilder.AppendLine($"                    throw new ConnectorException(this.connectorName, `{httpMethod} ${{requestUrl}}`, httpResponse.statusCode, httpResponse.text);");
++                    stringBuilder.AppendLine("                }");
++                    stringBuilder.AppendLine();
++                    stringBuilder.AppendLine($"                return httpResponse.value as {method.ResponseTypeName};");
++                    stringBuilder.AppendLine("            },");
++                    stringBuilder.AppendLine($"            \"{escapedItemName}\",");
++                    stringBuilder.AppendLine($"            \"{escapedNextLinkName}\",");
++                    stringBuilder.AppendLine("        );");
++                }
++                else
++                {
++                    stringBuilder.AppendLine($"        const requestUrl = this.resolveUrl(requestPath);");
++                    stringBuilder.AppendLine($"        const httpResponse = await this.httpClient.sendAsync<{method.ResponseTypeName}>(\"{httpMethod}\", requestUrl{bodyArg});");
++                    stringBuilder.AppendLine();
++                    stringBuilder.AppendLine("        if (!httpResponse.isSuccessStatusCode) {");
++                    stringBuilder.AppendLine($"            throw new ConnectorException(this.connectorName, `{httpMethod} ${{requestPath}}`, httpResponse.statusCode, httpResponse.text);");
++                    stringBuilder.AppendLine("        }");
++                    stringBuilder.AppendLine();
++                    stringBuilder.AppendLine($"        return httpResponse.value as {method.ResponseTypeName};");
++                }
+             }
+             else
+             {
+-                stringBuilder.AppendLine($"        const url = this.resolveUrl(requestPath);");
+-                stringBuilder.AppendLine($"        const httpResponse = await this.httpClient.sendAsync<void>(\"{httpMethod}\", url{bodyArg});");
++                stringBuilder.AppendLine($"        const requestUrl = this.resolveUrl(requestPath);");
++                stringBuilder.AppendLine($"        const httpResponse = await this.httpClient.sendAsync<void>(\"{httpMethod}\", requestUrl{bodyArg});");
+                 stringBuilder.AppendLine();
+                 stringBuilder.AppendLine("        if (!httpResponse.isSuccessStatusCode) {");
+                 stringBuilder.AppendLine($"            throw new ConnectorException(this.connectorName, `{httpMethod} ${{requestPath}}`, httpResponse.statusCode, httpResponse.text);");
+@@ -599,19 +618,6 @@ namespace Microsoft.Azure.Workflows.CodefulSdkGenerator.DirectClient
+             this._paginationNextLinkNames[responseTypeName] = method.PaginationNextLinkName;
+         }
+ 
+-        /// <summary>
+-        /// Resolves a pageable item type without treating target-language primitives as definition names.
+-        /// </summary>
+-        /// <param name="pageItemTypeName">The item type captured by shared pagination detection.</param>
+-        private string ResolvePageItemTypeName(string pageItemTypeName)
+-        {
+-            return pageItemTypeName switch
+-            {
+-                "string" or "number" or "boolean" or "unknown" or "Record<string, unknown>" => pageItemTypeName,
+-                _ => this.ResolveDefinitionTypeName(pageItemTypeName)
+-            };
+-        }
+-
+         private string GetBodyTypeName(DirectClientMethodInfo method)
+         {
+             if (method.BodyParameter?.Schema == null)

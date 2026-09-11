@@ -12,15 +12,6 @@ import { ConnectorHttpClient } from "./connectorHttpClient.ts";
 import type { ConnectorClientOptions } from "./options.ts";
 
 /**
- * Common wire shape for paginated connector responses.
- */
-interface ConnectorPage {
-    value?: unknown;
-    nextLink?: string;
-    "@odata.nextLink"?: string;
-}
-
-/**
  * Abstract base class for generated connector clients.
  */
 export abstract class ConnectorClientBase {
@@ -62,19 +53,30 @@ export abstract class ConnectorClientBase {
      * Creates a lazy iterator that resolves and fetches connector response pages on demand.
      * @param firstPageLink The relative or absolute link for the first page.
      * @param fetchPage Fetches one page from an already resolved URL.
+     * @param itemPropertyName The response property containing page items.
+     * @param nextLinkPropertyName The response property containing the next-page URL.
      */
-    protected createPageable<TPage extends ConnectorPage, TItem>(
+    protected createPageable<TPage extends object, TItem>(
         firstPageLink: string,
         fetchPage: (url: string) => Promise<TPage>,
+        itemPropertyName = "value",
+        nextLinkPropertyName?: string,
     ): PagedAsyncIterableIterator<TItem> {
         return getPagedAsyncIterator<TItem>({
             firstPageLink,
             getPage: async (pageLink) => {
                 const resolvedPageLink = this.resolvePageLink(pageLink, firstPageLink);
                 const response = await fetchPage(this.resolveUrl(resolvedPageLink));
-                const nextPageLink = response.nextLink ?? response["@odata.nextLink"];
+                const page = response as unknown as Record<string, unknown>;
+                const items = page[itemPropertyName];
+                const nextPageLinkValue = nextLinkPropertyName === undefined
+                    ? page.nextLink ?? page["@odata.nextLink"]
+                    : page[nextLinkPropertyName];
+                const nextPageLink = typeof nextPageLinkValue === "string"
+                    ? nextPageLinkValue
+                    : undefined;
                 return {
-                    page: Array.isArray(response.value) ? response.value as TItem[] : [],
+                    page: Array.isArray(items) ? items as TItem[] : [],
                     nextPageLink: nextPageLink === undefined
                         ? undefined
                         : this.resolvePageLink(nextPageLink, resolvedPageLink),

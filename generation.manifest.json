@@ -102,8 +102,12 @@
       "outputFile": "src/generated/CommondataserviceExtensions.ts",
       "swaggerSnapshot": "swagger-cache/commondataservice.swagger.json",
       "swaggerSha256": "8c07cdc661241079cbd8f801bb28444f7f5907b68518c161be98bc6aa6c3e24c",
-      "outputSha256": "644e31ab4df7b97088f78e828e6e1ee3946f0e4f67d4956f25c0ccbfd280883e",
-      "generatorCommit": "3025a1b9db1162ed4a5e621d1592f2e75ed1bf81"
+      "outputSha256": "6e102b5f5a9678994752800bada354374b16b95ee283a592e7a2ac97d7adb805",
+      "generatorCommit": "3025a1b9db1162ed4a5e621d1592f2e75ed1bf81",
+      "sourcePatch": {
+        "path": "generator-patches/3025a1b-dataverse-azure-core-paging.patch",
+        "sha256": "a88d030102907d64e5bceff98ab2e1b7160b103be12f5c5a3f3289d70c4da6eb"
+      }
     },
     {
       "apiName": "docusign",

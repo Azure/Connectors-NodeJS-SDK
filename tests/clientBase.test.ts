@@ -13,6 +13,8 @@ interface TestPage {
     value?: TestItem[];
     nextLink?: string;
     "@odata.nextLink"?: string;
+    records?: TestItem[];
+    cursor?: string;
 }
 
 // ──────────────────────────────────────────────
@@ -44,8 +46,15 @@ class TestConnectorClient extends ConnectorClientBase {
     public testCreatePageable(
         firstPageLink: string,
         fetchPage: (url: string) => Promise<TestPage>,
+        itemPropertyName?: string,
+        nextLinkPropertyName?: string,
     ): PagedAsyncIterableIterator<TestItem> {
-        return this.createPageable<TestPage, TestItem>(firstPageLink, fetchPage);
+        return this.createPageable<TestPage, TestItem>(
+            firstPageLink,
+            fetchPage,
+            itemPropertyName,
+            nextLinkPropertyName,
+        );
     }
 }
 
@@ -217,6 +226,14 @@ describe("ConnectorClientBase", () => {
             expect(result).toBe("/subscriptions?$skiptoken=page-2");
         });
 
+        it("should return the root path when the operation matches the connection URL", () => {
+            const client = new TestConnectorClient(baseUrl, createMockCredential());
+
+            const result = client.testGetOperationPath(baseUrl);
+
+            expect(result).toBe("/");
+        });
+
         it("should remove a foreign origin without changing the path and query", () => {
             const client = new TestConnectorClient(baseUrl, createMockCredential());
 
@@ -300,6 +317,33 @@ describe("ConnectorClientBase", () => {
             expect(requestedUrls).toEqual([
                 `${baseUrl}/collections/items?page=1`,
                 `${baseUrl}/collections/next?page=2`,
+            ]);
+        });
+
+        it("should read custom item and next-link properties", async () => {
+            const client = new TestConnectorClient(baseUrl, createMockCredential());
+            const requestedUrls: string[] = [];
+            const pageable = client.testCreatePageable(
+                "/items",
+                async (url) => {
+                    requestedUrls.push(url);
+                    return requestedUrls.length === 1
+                        ? { records: [{ id: "first" }], cursor: "?page=2" }
+                        : { records: [{ id: "second" }] };
+                },
+                "records",
+                "cursor",
+            );
+
+            const items: TestItem[] = [];
+            for await (const item of pageable) {
+                items.push(item);
+            }
+
+            expect(items).toEqual([{ id: "first" }, { id: "second" }]);
+            expect(requestedUrls).toEqual([
+                `${baseUrl}/items`,
+                `${baseUrl}/items?page=2`,
             ]);
         });
 
