@@ -38,7 +38,12 @@ export abstract class ConnectorClientBase {
             throw new Error("tokenProvider cannot be null or undefined.");
         }
 
-        this.connectionRuntimeUrl = connectionRuntimeUrl.replace(/\/+$/, "");
+        let connectionRuntimeUrlEnd = connectionRuntimeUrl.length;
+        while (connectionRuntimeUrlEnd > 0 && connectionRuntimeUrl.charCodeAt(connectionRuntimeUrlEnd - 1) === 47) {
+            connectionRuntimeUrlEnd--;
+        }
+
+        this.connectionRuntimeUrl = connectionRuntimeUrl.slice(0, connectionRuntimeUrlEnd);
         this.options = options ?? {};
         this.httpClient = new ConnectorHttpClient(credential, this.options);
     }

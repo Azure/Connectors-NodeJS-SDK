@@ -38,8 +38,9 @@ class TestConnectorClient extends ConnectorClientBase {
 describe("ConnectorClientBase", () => {
     describe("constructor", () => {
         it("should strip trailing slashes from connectionRuntimeUrl", () => {
+            const trailingSlashes = "/".repeat(10_000);
             const client = new TestConnectorClient(
-                "https://proxy.azure-apihub.net/apim/arm/conn123///",
+                `https://proxy.azure-apihub.net/apim/arm/conn123${trailingSlashes}`,
                 createMockTokenProvider(),
             );
 
