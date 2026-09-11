@@ -39,7 +39,7 @@ export abstract class ConnectorClientBase {
         }
 
         let connectionRuntimeUrlEnd = connectionRuntimeUrl.length;
-        while (connectionRuntimeUrlEnd > 0 && connectionRuntimeUrl.charCodeAt(connectionRuntimeUrlEnd - 1) === 47) {
+        while (connectionRuntimeUrlEnd > 0 && connectionRuntimeUrl[connectionRuntimeUrlEnd - 1] === "/") {
             connectionRuntimeUrlEnd--;
         }
 

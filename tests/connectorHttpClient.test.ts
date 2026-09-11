@@ -91,6 +91,19 @@ describe("ConnectorHttpClient", () => {
         expect(headers["Authorization"]).toBe("Bearer azure-credential-token");
     });
 
+    it("should reject a null Azure credential token before sending", async () => {
+        const credential: TokenCredential = {
+            getToken: async () => null,
+        };
+        global.fetch = jest.fn();
+
+        const client = new ConnectorHttpClient(credential);
+
+        await expect(client.sendAsync("GET", "https://example.com/api/items"))
+            .rejects.toThrow("Failed to acquire access token.");
+        expect(global.fetch).not.toHaveBeenCalled();
+    });
+
     it("should send POST request with body", async () => {
         let capturedInit: RequestInit | undefined;
 
