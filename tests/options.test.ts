@@ -18,9 +18,11 @@ describe("ConnectorClientOptions", () => {
             telemetryOptions: {
                 clientRequestIdHeaderName: "x-custom-request-id",
             },
+            retryUnsafeHttpMethods: true,
         };
 
         expect(options.retryOptions?.maxRetries).toBe(4);
         expect(options.telemetryOptions?.clientRequestIdHeaderName).toBe("x-custom-request-id");
+        expect(options.retryUnsafeHttpMethods).toBe(true);
     });
 });

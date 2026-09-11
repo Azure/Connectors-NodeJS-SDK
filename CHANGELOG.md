@@ -59,7 +59,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Replaced `ConnectorHttpClient`'s raw `fetch` retry loop with the Azure Core
   REST pipeline for standard retries, bearer authentication, request IDs,
-  tracing, logging, and transport composition.
+  tracing, logging, and transport composition. Retries apply only to safe HTTP
+  methods by default; callers can explicitly enable retries for mutating
+  connector operations with `retryUnsafeHttpMethods`.
 - Widened cancellation parameters on `ConnectorHttpClient` and generated
   connector methods from the DOM `AbortSignal` type to `AbortSignalLike`.
 - Updated generated registries and reproducibility metadata for all 73 connector

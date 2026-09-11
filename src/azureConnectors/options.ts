@@ -17,6 +17,12 @@ export interface ConnectorClientOptions extends PipelineOptions {
 
     /** The HTTP transport used by the request pipeline. */
     httpClient?: HttpClient;
+
+    /**
+     * Whether retries are allowed for unsafe HTTP methods such as POST, PUT, PATCH, and DELETE.
+     * Defaults to false because retrying a completed connector action can duplicate side effects.
+     */
+    retryUnsafeHttpMethods?: boolean;
 }
 
 /**

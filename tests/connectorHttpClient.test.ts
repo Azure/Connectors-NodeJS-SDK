@@ -202,6 +202,42 @@ describe("ConnectorHttpClient", () => {
         expect(response.value?.ok).toBe(true);
     });
 
+    it("should not retry transient server responses for unsafe HTTP methods", async () => {
+        const httpClient = new MockHttpClient(async request => createMockResponse(request, 503, "Unavailable"));
+        const client = new ConnectorHttpClient(new MockTokenCredential(), {
+            httpClient,
+            retryOptions: { maxRetries: 2, retryDelayInMs: 1, maxRetryDelayInMs: 1 },
+        });
+
+        const response = await client.sendAsync("POST", "https://example.com/api/items", undefined, { name: "test" });
+
+        expect(httpClient.requests).toHaveLength(1);
+        expect(response.statusCode).toBe(503);
+        expect(response.text).toBe("Unavailable");
+    });
+
+    it("should retry unsafe HTTP methods when explicitly enabled", async () => {
+        const httpClient = new MockHttpClient(async (request, attempt) => attempt < 2
+            ? createMockResponse(request, 503, "Unavailable")
+            : createMockResponse(request, 201, JSON.stringify({ id: "123" })));
+        const client = new ConnectorHttpClient(new MockTokenCredential(), {
+            httpClient,
+            retryOptions: { maxRetries: 2, retryDelayInMs: 1, maxRetryDelayInMs: 1 },
+            retryUnsafeHttpMethods: true,
+        });
+
+        const response = await client.sendAsync<{ id: string }>(
+            "POST",
+            "https://example.com/api/items",
+            undefined,
+            { name: "test" },
+        );
+
+        expect(httpClient.requests).toHaveLength(2);
+        expect(response.statusCode).toBe(201);
+        expect(response.value?.id).toBe("123");
+    });
+
     it("should return the last response after exhausting retry attempts", async () => {
         const httpClient = new MockHttpClient(async request => createMockResponse(request, 503, "Unavailable"));
         const client = new ConnectorHttpClient(new MockTokenCredential(), {

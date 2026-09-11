@@ -13,6 +13,7 @@ import {
     createDefaultHttpClient,
     createPipelineFromOptions,
     createPipelineRequest,
+    defaultRetryPolicy,
 } from "@azure/core-rest-pipeline";
 import type {
     HttpClient,
@@ -48,11 +49,14 @@ export interface ConnectorResponse<TValue = unknown> {
  */
 export class ConnectorHttpClient {
     private static readonly ApiHubScopes = ["https://apihub.azure.com/.default"];
+    private static readonly DefaultRetryPolicyName = "defaultRetryPolicy";
+    private static readonly SafeHttpMethods = new Set<HttpMethods>(["GET", "HEAD", "OPTIONS", "TRACE"]);
 
     private readonly credential: TokenCredential;
     private readonly httpClient: HttpClient;
     private readonly pipelineOptions: PipelineOptions;
     private readonly pipelines = new Map<string, Pipeline>();
+    private readonly retryUnsafeHttpMethods: boolean;
 
     /**
      * Initializes a ConnectorHttpClient.
@@ -66,9 +70,11 @@ export class ConnectorHttpClient {
 
         this.credential = credential;
         this.httpClient = options?.httpClient ?? createDefaultHttpClient();
+        this.retryUnsafeHttpMethods = options?.retryUnsafeHttpMethods ?? false;
         const pipelineOptions: ConnectorClientOptions = { ...options };
         delete pipelineOptions.baseUri;
         delete pipelineOptions.httpClient;
+        delete pipelineOptions.retryUnsafeHttpMethods;
         this.pipelineOptions = pipelineOptions;
     }
 
@@ -110,6 +116,18 @@ export class ConnectorHttpClient {
         let pipeline = this.pipelines.get(key);
         if (!pipeline) {
             pipeline = createPipelineFromOptions(this.pipelineOptions);
+            pipeline.removePolicy({ name: ConnectorHttpClient.DefaultRetryPolicyName });
+            const retryPolicy = defaultRetryPolicy(this.pipelineOptions.retryOptions);
+            pipeline.addPolicy(
+                {
+                    name: ConnectorHttpClient.DefaultRetryPolicyName,
+                    sendRequest: (request, next) => this.retryUnsafeHttpMethods ||
+                        ConnectorHttpClient.SafeHttpMethods.has(request.method)
+                        ? retryPolicy.sendRequest(request, next)
+                        : next(request),
+                },
+                { phase: "Retry" },
+            );
             pipeline.addPolicy(
                 bearerTokenAuthenticationPolicy({ credential: this.credential, scopes: pipelineScopes }),
                 { phase: "Sign" },
