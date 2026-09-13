@@ -1,8 +1,8 @@
 // Copyright (c) Microsoft Corporation.  All rights reserved.
 
+import type { TokenCredential } from "@azure/core-auth";
 import { PlumsailClient } from "../src/generated/PlumsailExtensions.ts";
 import { ConnectorException } from "../src/azureConnectors/connectorException.ts";
-import { TokenProvider } from "../src/azureConnectors/authentication.ts";
 import { ConnectorNames } from "../src/generated/connectorNames.ts";
 import { availableConnectors } from "../src/generated/ManagedConnectors.ts";
 
@@ -12,9 +12,9 @@ import { availableConnectors } from "../src/generated/ManagedConnectors.ts";
 
 const TestConnectionUrl = "https://connection-runtime.azure.com/apim/plumsail/abc123";
 
-function createMockTokenProvider(): TokenProvider {
+function createMockCredential(): TokenCredential {
     return {
-        getAccessTokenAsync: async () => "mock-bearer-token",
+        getToken: async () => ({ token: "mock-bearer-token", expiresOnTimestamp: Number.MAX_SAFE_INTEGER }),
     };
 }
 
@@ -42,18 +42,18 @@ function mockFetchError(status: number, errorBody: string): void {
 
 describe("PlumsailClient — constructor", () => {
     it("should construct with valid options", () => {
-        const client = new PlumsailClient(TestConnectionUrl, createMockTokenProvider());
+        const client = new PlumsailClient(TestConnectionUrl, createMockCredential());
         expect(client).toBeDefined();
         expect(client).toBeInstanceOf(PlumsailClient);
     });
 
     it("should throw on null connection URL", () => {
-        expect(() => new PlumsailClient(null as unknown as string, createMockTokenProvider()))
+        expect(() => new PlumsailClient(null as unknown as string, createMockCredential()))
             .toThrow("Parameter 'connectionRuntimeUrl' cannot be null or undefined.");
     });
 
     it("should throw on undefined connection URL", () => {
-        expect(() => new PlumsailClient(undefined as unknown as string, createMockTokenProvider()))
+        expect(() => new PlumsailClient(undefined as unknown as string, createMockCredential()))
             .toThrow("Parameter 'connectionRuntimeUrl' cannot be null or undefined.");
     });
 });
@@ -67,7 +67,7 @@ describe("PlumsailClient — profilesMeGetAsync", () => {
         const profile = { id: "me", email: "user@example.com", documentsLeft: 100 };
         mockFetchResponse(profile);
 
-        const client = new PlumsailClient(TestConnectionUrl, createMockTokenProvider());
+        const client = new PlumsailClient(TestConnectionUrl, createMockCredential());
         const result = await client.profilesMeGetAsync();
 
         expect(result).toEqual(profile);
@@ -80,7 +80,7 @@ describe("PlumsailClient — profilesMeGetAsync", () => {
     it("should throw ConnectorException on non-OK response", async () => {
         mockFetchError(404, "Not Found");
 
-        const client = new PlumsailClient(TestConnectionUrl, createMockTokenProvider());
+        const client = new PlumsailClient(TestConnectionUrl, createMockCredential());
         try {
             await client.profilesMeGetAsync();
             throw new Error("Expected ConnectorException to be thrown.");

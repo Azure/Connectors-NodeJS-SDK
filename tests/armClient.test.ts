@@ -1,5 +1,6 @@
 // Copyright (c) Microsoft Corporation.  All rights reserved.
 
+import type { TokenCredential } from "@azure/core-auth";
 import {
     ArmClient,
     Deployment,
@@ -20,7 +21,6 @@ import {
     SubscriptionListResult,
 } from "../src/generated/ArmExtensions.ts";
 import { ConnectorException } from "../src/azureConnectors/connectorException.ts";
-import { TokenProvider } from "../src/azureConnectors/authentication.ts";
 import { ConnectorNames } from "../src/generated/connectorNames.ts";
 import { availableConnectors } from "../src/generated/ManagedConnectors.ts";
 
@@ -32,9 +32,9 @@ const TestConnectionUrl = "https://connection-runtime.azure.com/apim/arm/abc123"
 const TestSubscriptionId = "sub-12345";
 const TestResourceGroupName = "rg-test";
 
-function createMockTokenProvider(): TokenProvider {
+function createMockCredential(): TokenCredential {
     return {
-        getAccessTokenAsync: async () => "mock-bearer-token",
+        getToken: async () => ({ token: "mock-bearer-token", expiresOnTimestamp: Number.MAX_SAFE_INTEGER }),
     };
 }
 
@@ -83,28 +83,28 @@ const _deployment: Deployment = {
 
 describe("ArmClient — constructor", () => {
     it("should construct with valid options", () => {
-        const client = new ArmClient(TestConnectionUrl, createMockTokenProvider());
+        const client = new ArmClient(TestConnectionUrl, createMockCredential());
         expect(client).toBeDefined();
         expect(client).toBeInstanceOf(ArmClient);
     });
 
     it("should strip trailing slashes from connection URL", () => {
-        const client = new ArmClient(TestConnectionUrl + "///", createMockTokenProvider());
+        const client = new ArmClient(TestConnectionUrl + "///", createMockCredential());
         expect(client).toBeDefined();
     });
 
     it("should construct with an empty connection URL", () => {
-        const client = new ArmClient("", createMockTokenProvider());
+        const client = new ArmClient("", createMockCredential());
         expect(client).toBeDefined();
     });
 
     it("should throw on null connection URL", () => {
-        expect(() => new ArmClient(null as unknown as string, createMockTokenProvider()))
+        expect(() => new ArmClient(null as unknown as string, createMockCredential()))
             .toThrow("Parameter 'connectionRuntimeUrl' cannot be null or undefined.");
     });
 
     it("should throw on undefined connection URL", () => {
-        expect(() => new ArmClient(undefined as unknown as string, createMockTokenProvider()))
+        expect(() => new ArmClient(undefined as unknown as string, createMockCredential()))
             .toThrow("Parameter 'connectionRuntimeUrl' cannot be null or undefined.");
     });
 });
@@ -120,10 +120,10 @@ describe("ArmClient — subscriptionsListAsync", () => {
         };
         mockFetchResponse(mockResponse);
 
-        const client = new ArmClient(TestConnectionUrl, createMockTokenProvider());
-        const result = await client.subscriptionsListAsync(TestSubscriptionId);
+        const client = new ArmClient(TestConnectionUrl, createMockCredential());
+        const result = await client.subscriptionsListAsync(TestSubscriptionId).byPage().next();
 
-        expect(result).toEqual(mockResponse);
+        expect(result.value).toEqual(mockResponse.value);
         const [url, init] = (global.fetch as jest.Mock).mock.calls[0];
         expect(url).toContain("/subscriptions");
         expect(init.method).toBe("GET");
@@ -143,7 +143,7 @@ describe("ArmClient — subscriptionsGetAsync", () => {
         };
         mockFetchResponse(mockSubscription);
 
-        const client = new ArmClient(TestConnectionUrl, createMockTokenProvider());
+        const client = new ArmClient(TestConnectionUrl, createMockCredential());
         const result = await client.subscriptionsGetAsync(TestSubscriptionId);
 
         expect(result).toEqual(mockSubscription);
@@ -163,7 +163,7 @@ describe("ArmClient — subscriptionsListLocationsAsync", () => {
         };
         mockFetchResponse(mockLocations);
 
-        const client = new ArmClient(TestConnectionUrl, createMockTokenProvider());
+        const client = new ArmClient(TestConnectionUrl, createMockCredential());
         const result = await client.subscriptionsListLocationsAsync(TestSubscriptionId);
 
         expect(result).toEqual(mockLocations);
@@ -183,10 +183,10 @@ describe("ArmClient — resourceGroupsListAsync", () => {
         };
         mockFetchResponse(mockResponse);
 
-        const client = new ArmClient(TestConnectionUrl, createMockTokenProvider());
-        const result = await client.resourceGroupsListAsync(TestSubscriptionId);
+        const client = new ArmClient(TestConnectionUrl, createMockCredential());
+        const result = await client.resourceGroupsListAsync(TestSubscriptionId).byPage().next();
 
-        expect(result).toEqual(mockResponse);
+        expect(result.value).toEqual(mockResponse.value);
         const [url, init] = (global.fetch as jest.Mock).mock.calls[0];
         expect(url).toContain("/resourcegroups");
         expect(init.method).toBe("GET");
@@ -202,7 +202,7 @@ describe("ArmClient — resourceGroupsGetAsync", () => {
         const mockGroup: ResourceGroup = { name: TestResourceGroupName, location: "westus2" };
         mockFetchResponse(mockGroup);
 
-        const client = new ArmClient(TestConnectionUrl, createMockTokenProvider());
+        const client = new ArmClient(TestConnectionUrl, createMockCredential());
         const result = await client.resourceGroupsGetAsync(TestSubscriptionId, TestResourceGroupName);
 
         expect(result).toEqual(mockGroup);
@@ -221,7 +221,7 @@ describe("ArmClient — resourceGroupsCreateOrUpdateAsync", () => {
         const mockResponse: ResourceGroup = { name: TestResourceGroupName, location: "eastus" };
         mockFetchResponse(mockResponse);
 
-        const client = new ArmClient(TestConnectionUrl, createMockTokenProvider());
+        const client = new ArmClient(TestConnectionUrl, createMockCredential());
         const result = await client.resourceGroupsCreateOrUpdateAsync(
             input,
             TestSubscriptionId,
@@ -244,7 +244,7 @@ describe("ArmClient — resourceGroupsDeleteAsync", () => {
     it("should send DELETE request", async () => {
         mockFetchResponse(null);
 
-        const client = new ArmClient(TestConnectionUrl, createMockTokenProvider());
+        const client = new ArmClient(TestConnectionUrl, createMockCredential());
         await client.resourceGroupsDeleteAsync(TestSubscriptionId, TestResourceGroupName);
 
         const [, init] = (global.fetch as jest.Mock).mock.calls[0];
@@ -262,7 +262,7 @@ describe("ArmClient — deploymentsCreateOrUpdateAsync", () => {
         const mockResponse: DeploymentExtended = { name: "deploy-1" };
         mockFetchResponse(mockResponse);
 
-        const client = new ArmClient(TestConnectionUrl, createMockTokenProvider());
+        const client = new ArmClient(TestConnectionUrl, createMockCredential());
         const result = await client.deploymentsCreateOrUpdateAsync(
             input,
             TestSubscriptionId,
@@ -287,7 +287,7 @@ describe("ArmClient — deploymentsGetAsync", () => {
         const mockDeployment: DeploymentExtended = { name: "deploy-1" };
         mockFetchResponse(mockDeployment);
 
-        const client = new ArmClient(TestConnectionUrl, createMockTokenProvider());
+        const client = new ArmClient(TestConnectionUrl, createMockCredential());
         const result = await client.deploymentsGetAsync(
             TestSubscriptionId,
             TestResourceGroupName,
@@ -311,10 +311,10 @@ describe("ArmClient — providersListAsync", () => {
         };
         mockFetchResponse(mockResponse);
 
-        const client = new ArmClient(TestConnectionUrl, createMockTokenProvider());
-        const result = await client.providersListAsync(TestSubscriptionId);
+        const client = new ArmClient(TestConnectionUrl, createMockCredential());
+        const result = await client.providersListAsync(TestSubscriptionId).byPage().next();
 
-        expect(result).toEqual(mockResponse);
+        expect(result.value).toEqual(mockResponse.value);
         const [url] = (global.fetch as jest.Mock).mock.calls[0];
         expect(url).toContain("/providers");
     });
@@ -328,10 +328,10 @@ describe("ArmClient — error handling", () => {
     it("should throw ConnectorException on non-OK response", async () => {
         mockFetchError(403, '{"error": "Forbidden"}');
 
-        const client = new ArmClient(TestConnectionUrl, createMockTokenProvider());
+        const client = new ArmClient(TestConnectionUrl, createMockCredential());
 
         await expect(
-            client.subscriptionsListAsync(TestSubscriptionId),
+            client.subscriptionsListAsync(TestSubscriptionId).byPage().next(),
         ).rejects.toThrow(ConnectorException);
     });
 
@@ -339,7 +339,7 @@ describe("ArmClient — error handling", () => {
         const errorBody = '{"code": "NotFound"}';
         mockFetchError(404, errorBody);
 
-        const client = new ArmClient(TestConnectionUrl, createMockTokenProvider());
+        const client = new ArmClient(TestConnectionUrl, createMockCredential());
 
         try {
             await client.subscriptionsGetAsync(TestSubscriptionId);

@@ -1,8 +1,8 @@
 // Copyright (c) Microsoft Corporation.  All rights reserved.
 
+import type { TokenCredential } from "@azure/core-auth";
 import { ClicksendsmsClient } from "../src/generated/ClicksendsmsExtensions.ts";
 import { ConnectorException } from "../src/azureConnectors/connectorException.ts";
-import { TokenProvider } from "../src/azureConnectors/authentication.ts";
 import { ConnectorNames } from "../src/generated/connectorNames.ts";
 import { availableConnectors } from "../src/generated/ManagedConnectors.ts";
 
@@ -12,9 +12,9 @@ import { availableConnectors } from "../src/generated/ManagedConnectors.ts";
 
 const TestConnectionUrl = "https://connection-runtime.azure.com/apim/clicksendsms/abc123";
 
-function createMockTokenProvider(): TokenProvider {
+function createMockCredential(): TokenCredential {
     return {
-        getAccessTokenAsync: async () => "mock-bearer-token",
+        getToken: async () => ({ token: "mock-bearer-token", expiresOnTimestamp: Number.MAX_SAFE_INTEGER }),
     };
 }
 
@@ -42,18 +42,18 @@ function mockFetchError(status: number, errorBody: string): void {
 
 describe("ClicksendsmsClient — constructor", () => {
     it("should construct with valid options", () => {
-        const client = new ClicksendsmsClient(TestConnectionUrl, createMockTokenProvider());
+        const client = new ClicksendsmsClient(TestConnectionUrl, createMockCredential());
         expect(client).toBeDefined();
         expect(client).toBeInstanceOf(ClicksendsmsClient);
     });
 
     it("should throw on null connection URL", () => {
-        expect(() => new ClicksendsmsClient(null as unknown as string, createMockTokenProvider()))
+        expect(() => new ClicksendsmsClient(null as unknown as string, createMockCredential()))
             .toThrow("Parameter 'connectionRuntimeUrl' cannot be null or undefined.");
     });
 
     it("should throw on undefined connection URL", () => {
-        expect(() => new ClicksendsmsClient(undefined as unknown as string, createMockTokenProvider()))
+        expect(() => new ClicksendsmsClient(undefined as unknown as string, createMockCredential()))
             .toThrow("Parameter 'connectionRuntimeUrl' cannot be null or undefined.");
     });
 });
@@ -67,7 +67,7 @@ describe("ClicksendsmsClient — getContactListsAsync", () => {
         const contactLists = { data: { total: 1, data: [{ list_id: 1, list_name: "Customers" }] } };
         mockFetchResponse(contactLists);
 
-        const client = new ClicksendsmsClient(TestConnectionUrl, createMockTokenProvider());
+        const client = new ClicksendsmsClient(TestConnectionUrl, createMockCredential());
         const result = await client.getContactListsAsync();
 
         expect(result).toEqual(contactLists);
@@ -80,7 +80,7 @@ describe("ClicksendsmsClient — getContactListsAsync", () => {
     it("should throw ConnectorException on non-OK response", async () => {
         mockFetchError(404, "Not Found");
 
-        const client = new ClicksendsmsClient(TestConnectionUrl, createMockTokenProvider());
+        const client = new ClicksendsmsClient(TestConnectionUrl, createMockCredential());
         try {
             await client.getContactListsAsync();
             throw new Error("Expected ConnectorException to be thrown.");

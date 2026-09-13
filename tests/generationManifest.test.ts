@@ -21,6 +21,10 @@ interface ManifestConnectorEntry {
     swaggerSha256: string;
     outputSha256: string;
     generatorCommit?: string;
+    sourcePatch?: {
+        path: string;
+        sha256: string;
+    };
 }
 
 /**
@@ -170,6 +174,20 @@ describe("generation.manifest.json provenance", () => {
         (_apiName: string, connector: ManifestConnectorEntry) => {
             if (connector.generatorCommit !== undefined) {
                 expect(connector.generatorCommit).toMatch(/^[0-9a-f]{40}$/);
+            }
+        },
+    );
+
+    it.each(connectorCases)(
+        "should match the connector-specific source patch for '%s' when present",
+        (_apiName: string, connector: ManifestConnectorEntry) => {
+            if (connector.sourcePatch !== undefined) {
+                expect(connector.generatorCommit).toMatch(/^[0-9a-f]{40}$/);
+                expect(connector.sourcePatch.path).toBeTruthy();
+                expect(connector.sourcePatch.sha256).toMatch(/^[0-9a-f]{64}$/);
+                expect(fs.existsSync(path.join(RepositoryRoot, connector.sourcePatch.path))).toBe(true);
+                expect(computeCanonicalTextSha256(connector.sourcePatch.path))
+                    .toBe(connector.sourcePatch.sha256);
             }
         },
     );

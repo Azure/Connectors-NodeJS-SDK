@@ -5,6 +5,7 @@ module.exports = {
     rootDir: '..',
     roots: ['<rootDir>/src', '<rootDir>/tests'],
     testMatch: ['**/*.test.ts'],
+    setupFilesAfterEnv: ['<rootDir>/tests/setup.ts'],
     collectCoverageFrom: [
         '<rootDir>/src/azureConnectors/**/*.ts',
     ],

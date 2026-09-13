@@ -1,20 +1,20 @@
 // Copyright (c) Microsoft Corporation.  All rights reserved.
 
+import type { TokenCredential } from "@azure/core-auth";
 import {
     SalesforceClient,
     TablesList,
     GetItemByExternalIdResponse,
 } from "../src/generated/SalesforceExtensions.ts";
 import { ConnectorException } from "../src/azureConnectors/connectorException.ts";
-import { TokenProvider } from "../src/azureConnectors/authentication.ts";
 import { ConnectorNames } from "../src/generated/connectorNames.ts";
 import { availableConnectors } from "../src/generated/ManagedConnectors.ts";
 
 const TestConnectionUrl = "https://connection-runtime.azure.com/apim/salesforce/abc123";
 
-function createMockTokenProvider(): TokenProvider {
+function createMockCredential(): TokenCredential {
     return {
-        getAccessTokenAsync: async () => "mock-bearer-token",
+        getToken: async () => ({ token: "mock-bearer-token", expiresOnTimestamp: Number.MAX_SAFE_INTEGER }),
     };
 }
 
@@ -38,7 +38,11 @@ function mockFetchError(status: number, errorBody: string): void {
 
 describe("SalesforceClient — constructor", () => {
     it("should construct with valid options", () => {
-        const client = new SalesforceClient(TestConnectionUrl, createMockTokenProvider());
+        const client = new SalesforceClient(
+            TestConnectionUrl,
+            createMockCredential(),
+            { retryOptions: { maxRetries: 0 } },
+        );
         expect(client).toBeDefined();
         expect(client).toBeInstanceOf(SalesforceClient);
     });
@@ -53,7 +57,7 @@ describe("SalesforceClient — getTablesAsync", () => {
         const mockResponse: TablesList = { value: [] };
         mockFetchResponse(mockResponse);
 
-        const client = new SalesforceClient(TestConnectionUrl, createMockTokenProvider());
+        const client = new SalesforceClient(TestConnectionUrl, createMockCredential());
         const result = await client.getTablesAsync();
 
         expect(result).toEqual(mockResponse);
@@ -65,7 +69,11 @@ describe("SalesforceClient — getTablesAsync", () => {
     it("should throw ConnectorException on non-OK response", async () => {
         mockFetchError(500, '{"error":"Internal"}');
 
-        const client = new SalesforceClient(TestConnectionUrl, createMockTokenProvider());
+        const client = new SalesforceClient(
+            TestConnectionUrl,
+            createMockCredential(),
+            { retryOptions: { maxRetries: 0 } },
+        );
         await expect(client.getTablesAsync()).rejects.toThrow(ConnectorException);
     });
 });
@@ -79,7 +87,7 @@ describe("SalesforceClient — getItemByExternalIdAsync", () => {
         const mockResponse: GetItemByExternalIdResponse = {};
         mockFetchResponse(mockResponse);
 
-        const client = new SalesforceClient(TestConnectionUrl, createMockTokenProvider());
+        const client = new SalesforceClient(TestConnectionUrl, createMockCredential());
         await client.getItemByExternalIdAsync("Account", "ExternalId", "ABC123");
 
         const [url] = (global.fetch as jest.Mock).mock.calls[0];

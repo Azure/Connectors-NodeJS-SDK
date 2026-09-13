@@ -1,8 +1,8 @@
 // Copyright (c) Microsoft Corporation.  All rights reserved.
 
+import type { TokenCredential } from "@azure/core-auth";
 import { ExcelonlineClient } from "../src/generated/ExcelonlineExtensions.ts";
 import { ConnectorException } from "../src/azureConnectors/connectorException.ts";
-import { TokenProvider } from "../src/azureConnectors/authentication.ts";
 import { ConnectorNames } from "../src/generated/connectorNames.ts";
 import { availableConnectors } from "../src/generated/ManagedConnectors.ts";
 
@@ -12,9 +12,9 @@ import { availableConnectors } from "../src/generated/ManagedConnectors.ts";
 
 const TestConnectionUrl = "https://connection-runtime.azure.com/apim/excelonline/abc123";
 
-function createMockTokenProvider(): TokenProvider {
+function createMockCredential(): TokenCredential {
     return {
-        getAccessTokenAsync: async () => "mock-bearer-token",
+        getToken: async () => ({ token: "mock-bearer-token", expiresOnTimestamp: Number.MAX_SAFE_INTEGER }),
     };
 }
 
@@ -42,14 +42,14 @@ function mockFetchError(status: number, errorBody: string): void {
 
 describe("ExcelonlineClient — constructor", () => {
     it("should construct with valid options", () => {
-        const client = new ExcelonlineClient(TestConnectionUrl, createMockTokenProvider());
+        const client = new ExcelonlineClient(TestConnectionUrl, createMockCredential());
         expect(client).toBeDefined();
         expect(client).toBeInstanceOf(ExcelonlineClient);
     });
 
     it("should strip trailing slashes from connection URL", async () => {
         mockFetchResponse([]);
-        const client = new ExcelonlineClient(TestConnectionUrl + "///", createMockTokenProvider());
+        const client = new ExcelonlineClient(TestConnectionUrl + "///", createMockCredential());
         await client.getTablesAsync("drive1", "file1");
         const [url] = (global.fetch as jest.Mock).mock.calls[0];
         // NOTE: Confirms the trailing slashes were stripped by inspecting the
@@ -59,12 +59,12 @@ describe("ExcelonlineClient — constructor", () => {
     });
 
     it("should throw on null connection URL", () => {
-        expect(() => new ExcelonlineClient(null as unknown as string, createMockTokenProvider()))
+        expect(() => new ExcelonlineClient(null as unknown as string, createMockCredential()))
             .toThrow("Parameter 'connectionRuntimeUrl' cannot be null or undefined.");
     });
 
     it("should throw on undefined connection URL", () => {
-        expect(() => new ExcelonlineClient(undefined as unknown as string, createMockTokenProvider()))
+        expect(() => new ExcelonlineClient(undefined as unknown as string, createMockCredential()))
             .toThrow("Parameter 'connectionRuntimeUrl' cannot be null or undefined.");
     });
 });
@@ -78,7 +78,7 @@ describe("ExcelonlineClient — getTablesAsync", () => {
         const tables = { value: [{ id: "table1", name: "Sales" }] };
         mockFetchResponse(tables);
 
-        const client = new ExcelonlineClient(TestConnectionUrl, createMockTokenProvider());
+        const client = new ExcelonlineClient(TestConnectionUrl, createMockCredential());
         const result = await client.getTablesAsync("drive1", "file1");
 
         expect(result).toEqual(tables);
@@ -94,7 +94,7 @@ describe("ExcelonlineClient — getTablesAsync", () => {
     it("should append optional query parameters when provided", async () => {
         mockFetchResponse({ value: [] });
 
-        const client = new ExcelonlineClient(TestConnectionUrl, createMockTokenProvider());
+        const client = new ExcelonlineClient(TestConnectionUrl, createMockCredential());
         await client.getTablesAsync("drive1", "file1", undefined, "id");
 
         const [url] = (global.fetch as jest.Mock).mock.calls[0];
@@ -104,7 +104,7 @@ describe("ExcelonlineClient — getTablesAsync", () => {
     it("should throw ConnectorException on non-OK response", async () => {
         mockFetchError(403, "Forbidden");
 
-        const client = new ExcelonlineClient(TestConnectionUrl, createMockTokenProvider());
+        const client = new ExcelonlineClient(TestConnectionUrl, createMockCredential());
         try {
             await client.getTablesAsync("drive1", "file1");
             throw new Error("Expected ConnectorException to be thrown.");

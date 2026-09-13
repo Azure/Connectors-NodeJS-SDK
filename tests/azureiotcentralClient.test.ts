@@ -1,8 +1,8 @@
 // Copyright (c) Microsoft Corporation.  All rights reserved.
 
+import type { TokenCredential } from "@azure/core-auth";
 import { AzureiotcentralClient } from "../src/generated/AzureiotcentralExtensions.ts";
 import { ConnectorException } from "../src/azureConnectors/connectorException.ts";
-import { TokenProvider } from "../src/azureConnectors/authentication.ts";
 import { ConnectorNames } from "../src/generated/connectorNames.ts";
 import { availableConnectors } from "../src/generated/ManagedConnectors.ts";
 
@@ -12,9 +12,9 @@ import { availableConnectors } from "../src/generated/ManagedConnectors.ts";
 
 const TestConnectionUrl = "https://connection-runtime.azure.com/apim/azureiotcentral/abc123";
 
-function createMockTokenProvider(): TokenProvider {
+function createMockCredential(): TokenCredential {
     return {
-        getAccessTokenAsync: async () => "mock-bearer-token",
+        getToken: async () => ({ token: "mock-bearer-token", expiresOnTimestamp: Number.MAX_SAFE_INTEGER }),
     };
 }
 
@@ -42,18 +42,18 @@ function mockFetchError(status: number, errorBody: string): void {
 
 describe("AzureiotcentralClient — constructor", () => {
     it("should construct with valid options", () => {
-        const client = new AzureiotcentralClient(TestConnectionUrl, createMockTokenProvider());
+        const client = new AzureiotcentralClient(TestConnectionUrl, createMockCredential());
         expect(client).toBeDefined();
         expect(client).toBeInstanceOf(AzureiotcentralClient);
     });
 
     it("should throw on null connection URL", () => {
-        expect(() => new AzureiotcentralClient(null as unknown as string, createMockTokenProvider()))
+        expect(() => new AzureiotcentralClient(null as unknown as string, createMockCredential()))
             .toThrow("Parameter 'connectionRuntimeUrl' cannot be null or undefined.");
     });
 
     it("should throw on undefined connection URL", () => {
-        expect(() => new AzureiotcentralClient(undefined as unknown as string, createMockTokenProvider()))
+        expect(() => new AzureiotcentralClient(undefined as unknown as string, createMockCredential()))
             .toThrow("Parameter 'connectionRuntimeUrl' cannot be null or undefined.");
     });
 });
@@ -67,10 +67,10 @@ describe("AzureiotcentralClient — deviceGroupsListAsync", () => {
         const deviceGroups = { value: [{ id: "dg1", displayName: "Device Group 1" }] };
         mockFetchResponse(deviceGroups);
 
-        const client = new AzureiotcentralClient(TestConnectionUrl, createMockTokenProvider());
-        const result = await client.deviceGroupsListAsync();
+        const client = new AzureiotcentralClient(TestConnectionUrl, createMockCredential());
+        const result = await client.deviceGroupsListAsync().byPage().next();
 
-        expect(result).toEqual(deviceGroups);
+        expect(result.value).toEqual(deviceGroups.value);
         expect(global.fetch).toHaveBeenCalledTimes(1);
         const [, init] = (global.fetch as jest.Mock).mock.calls[0];
         expect(init.method).toBe("GET");
@@ -80,9 +80,9 @@ describe("AzureiotcentralClient — deviceGroupsListAsync", () => {
     it("should throw ConnectorException on non-OK response", async () => {
         mockFetchError(404, "Not Found");
 
-        const client = new AzureiotcentralClient(TestConnectionUrl, createMockTokenProvider());
+        const client = new AzureiotcentralClient(TestConnectionUrl, createMockCredential());
         try {
-            await client.deviceGroupsListAsync();
+            await client.deviceGroupsListAsync().byPage().next();
             throw new Error("Expected ConnectorException to be thrown.");
         } catch (error) {
             expect(error).toBeInstanceOf(ConnectorException);

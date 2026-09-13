@@ -1,8 +1,8 @@
 // Copyright (c) Microsoft Corporation.  All rights reserved.
 
+import type { TokenCredential } from "@azure/core-auth";
 import { ProjectplaceClient } from "../src/generated/ProjectplaceExtensions.ts";
 import { ConnectorException } from "../src/azureConnectors/connectorException.ts";
-import { TokenProvider } from "../src/azureConnectors/authentication.ts";
 import { ConnectorNames } from "../src/generated/connectorNames.ts";
 import { availableConnectors } from "../src/generated/ManagedConnectors.ts";
 
@@ -12,9 +12,9 @@ import { availableConnectors } from "../src/generated/ManagedConnectors.ts";
 
 const TestConnectionUrl = "https://connection-runtime.azure.com/apim/projectplace/abc123";
 
-function createMockTokenProvider(): TokenProvider {
+function createMockCredential(): TokenCredential {
     return {
-        getAccessTokenAsync: async () => "mock-bearer-token",
+        getToken: async () => ({ token: "mock-bearer-token", expiresOnTimestamp: Number.MAX_SAFE_INTEGER }),
     };
 }
 
@@ -42,18 +42,18 @@ function mockFetchError(status: number, errorBody: string): void {
 
 describe("ProjectplaceClient — constructor", () => {
     it("should construct with valid options", () => {
-        const client = new ProjectplaceClient(TestConnectionUrl, createMockTokenProvider());
+        const client = new ProjectplaceClient(TestConnectionUrl, createMockCredential());
         expect(client).toBeDefined();
         expect(client).toBeInstanceOf(ProjectplaceClient);
     });
 
     it("should throw on null connection URL", () => {
-        expect(() => new ProjectplaceClient(null as unknown as string, createMockTokenProvider()))
+        expect(() => new ProjectplaceClient(null as unknown as string, createMockCredential()))
             .toThrow("Parameter 'connectionRuntimeUrl' cannot be null or undefined.");
     });
 
     it("should throw on undefined connection URL", () => {
-        expect(() => new ProjectplaceClient(undefined as unknown as string, createMockTokenProvider()))
+        expect(() => new ProjectplaceClient(undefined as unknown as string, createMockCredential()))
             .toThrow("Parameter 'connectionRuntimeUrl' cannot be null or undefined.");
     });
 });
@@ -67,7 +67,7 @@ describe("ProjectplaceClient — createCardAsync", () => {
         const response = { id: 4242, title: "Design review", board_id: 123, is_done: false };
         mockFetchResponse(response);
 
-        const client = new ProjectplaceClient(TestConnectionUrl, createMockTokenProvider());
+        const client = new ProjectplaceClient(TestConnectionUrl, createMockCredential());
         const result = await client.createCardAsync({ title: "Design review" }, "123");
 
         expect(result).toEqual(response);
@@ -80,7 +80,7 @@ describe("ProjectplaceClient — createCardAsync", () => {
     it("should throw ConnectorException on non-OK response", async () => {
         mockFetchError(400, "Bad Request");
 
-        const client = new ProjectplaceClient(TestConnectionUrl, createMockTokenProvider());
+        const client = new ProjectplaceClient(TestConnectionUrl, createMockCredential());
         try {
             await client.createCardAsync({ title: "Design review" }, "123");
             throw new Error("Expected ConnectorException to be thrown.");

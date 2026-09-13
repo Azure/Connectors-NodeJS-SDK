@@ -1,8 +1,8 @@
 // Copyright (c) Microsoft Corporation.  All rights reserved.
 
+import type { TokenCredential } from "@azure/core-auth";
 import { DocuwareClient } from "../src/generated/DocuwareExtensions.ts";
 import { ConnectorException } from "../src/azureConnectors/connectorException.ts";
-import { TokenProvider } from "../src/azureConnectors/authentication.ts";
 import { ConnectorNames } from "../src/generated/connectorNames.ts";
 import { availableConnectors } from "../src/generated/ManagedConnectors.ts";
 
@@ -12,9 +12,9 @@ import { availableConnectors } from "../src/generated/ManagedConnectors.ts";
 
 const TestConnectionUrl = "https://connection-runtime.azure.com/apim/docuware/abc123";
 
-function createMockTokenProvider(): TokenProvider {
+function createMockCredential(): TokenCredential {
     return {
-        getAccessTokenAsync: async () => "mock-bearer-token",
+        getToken: async () => ({ token: "mock-bearer-token", expiresOnTimestamp: Number.MAX_SAFE_INTEGER }),
     };
 }
 
@@ -42,18 +42,18 @@ function mockFetchError(status: number, errorBody: string): void {
 
 describe("DocuwareClient — constructor", () => {
     it("should construct with valid options", () => {
-        const client = new DocuwareClient(TestConnectionUrl, createMockTokenProvider());
+        const client = new DocuwareClient(TestConnectionUrl, createMockCredential());
         expect(client).toBeDefined();
         expect(client).toBeInstanceOf(DocuwareClient);
     });
 
     it("should throw on null connection URL", () => {
-        expect(() => new DocuwareClient(null as unknown as string, createMockTokenProvider()))
+        expect(() => new DocuwareClient(null as unknown as string, createMockCredential()))
             .toThrow("Parameter 'connectionRuntimeUrl' cannot be null or undefined.");
     });
 
     it("should throw on undefined connection URL", () => {
-        expect(() => new DocuwareClient(undefined as unknown as string, createMockTokenProvider()))
+        expect(() => new DocuwareClient(undefined as unknown as string, createMockCredential()))
             .toThrow("Parameter 'connectionRuntimeUrl' cannot be null or undefined.");
     });
 });
@@ -67,7 +67,7 @@ describe("DocuwareClient — getOrganizationAsync", () => {
         const organization = { Id: "org1", Name: "Contoso", Guid: "00000000-0000-0000-0000-000000000000" };
         mockFetchResponse(organization);
 
-        const client = new DocuwareClient(TestConnectionUrl, createMockTokenProvider());
+        const client = new DocuwareClient(TestConnectionUrl, createMockCredential());
         const result = await client.getOrganizationAsync();
 
         expect(result).toEqual(organization);
@@ -80,7 +80,7 @@ describe("DocuwareClient — getOrganizationAsync", () => {
     it("should throw ConnectorException on non-OK response", async () => {
         mockFetchError(404, "Not Found");
 
-        const client = new DocuwareClient(TestConnectionUrl, createMockTokenProvider());
+        const client = new DocuwareClient(TestConnectionUrl, createMockCredential());
         try {
             await client.getOrganizationAsync();
             throw new Error("Expected ConnectorException to be thrown.");

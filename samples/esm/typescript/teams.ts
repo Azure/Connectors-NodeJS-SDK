@@ -23,7 +23,7 @@
  */
 
 import { ManagedIdentityTokenProvider, ConnectorException } from "@azure/connectors";
-import { TeamsClient, GetAllTeamsResponse, GetChannelsForGroupResponse } from "@azure/connectors/generated/TeamsExtensions";
+import { TeamsClient, GetAllTeamsResponse, GetChannelsForGroupResponse, ChatMessage } from "@azure/connectors/generated/TeamsExtensions";
 
 const CONNECTION_URL = process.env.TEAMS_CONNECTION_URL ?? "";
 
@@ -120,10 +120,10 @@ async function main(): Promise<void> {
     if (firstTeamId && firstChannelId) {
         console.log("\n--- Get Channel Messages ---");
         try {
-            const messagesResponse = await client.getMessagesFromChannelAsync(firstTeamId, firstChannelId);
-            // NOTE: ChatMessageList is typed as [key: string]: unknown; at runtime value is an array
-            const rawValue = messagesResponse.value as unknown;
-            const messages = (Array.isArray(rawValue) ? rawValue : []) as Array<Record<string, unknown>>;
+            const messages: ChatMessage[] = [];
+            for await (const message of client.getMessagesFromChannelAsync(firstTeamId, firstChannelId)) {
+                messages.push(message);
+            }
 
             if (messages.length > 0) {
                 console.log(`Found ${messages.length} messages:`);
@@ -151,9 +151,10 @@ async function main(): Promise<void> {
     if (firstTeamId && firstChannelId) {
         console.log("\n--- Poll Channel Messages ---");
         try {
-            const messagesResponse = await client.getMessagesFromChannelAsync(firstTeamId, firstChannelId);
-            const rawValue = messagesResponse.value as unknown;
-            const polledMessages = (Array.isArray(rawValue) ? rawValue : []) as Array<Record<string, unknown>>;
+            const polledMessages: ChatMessage[] = [];
+            for await (const message of client.getMessagesFromChannelAsync(firstTeamId, firstChannelId)) {
+                polledMessages.push(message);
+            }
 
             if (polledMessages.length > 0) {
                 console.log(`Poll returned ${polledMessages.length} messages:`);

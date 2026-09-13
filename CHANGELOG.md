@@ -12,6 +12,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added the generated Microsoft Dataverse client with automatic async iteration
   over `@odata.nextLink` pages ([Azure/Connectors-NET-SDK#208](https://github.com/Azure/Connectors-NET-SDK/issues/208),
   [BPM PR 17086991](https://msazure.visualstudio.com/One/_git/AzureUX-BPM/pullrequest/17086991)).
+- Added `@azure/core-auth` as a peer dependency and re-exported its
+  `TokenCredential` interface from the package root.
+- Added `@azure/core-rest-pipeline` as a direct dependency and optional
+  `ConnectorClientOptions.httpClient` transport injection.
+- Added `@azure/core-paging` and lazy item/page iteration for generated
+  paginated list operations.
 - Added `@azure/abort-controller` as a direct dependency and re-exported its
   `AbortSignalLike` interface from the package root.
 - Generated 21 additional connector clients in `src/generated/` for the Phase 5,
@@ -51,9 +57,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Replaced `ConnectorHttpClient`'s raw `fetch` retry loop with the Azure Core
+  REST pipeline for standard retries, bearer authentication, request IDs,
+  tracing, logging, and transport composition. Retries apply only to safe HTTP
+  methods by default; callers can explicitly enable retries for mutating
+  connector operations with `retryUnsafeHttpMethods`.
 - Widened cancellation parameters on `ConnectorHttpClient` and generated
   connector methods from the DOM `AbortSignal` type to `AbortSignalLike`.
-- Updated generated registries and reproducibility metadata for all 73 connector
+- Updated generated registries and reproducibility metadata for all 74 connector
   clients. The Orderful input uses the checked-in AzureUX-BPM Swagger fixture
   because the retired connector is no longer returned by regional ARM catalogs.
 - Updated generated connector registries (`connectorNames.ts`,
@@ -98,6 +109,20 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed (BREAKING)
 
+- Paginated list operations now return
+  `PagedAsyncIterableIterator<TItem>` instead of `Promise<TPage>` and
+  automatically follow SSRF-protected `nextLink` and `@odata.nextLink` values.
+  Consume items with `for await...of` or pages with `.byPage()`.
+- `ConnectorClientOptions` now extends Azure Core `PipelineOptions`. Replace
+  `maxRetryAttempts`, `initialRetryDelayMs`, and `useExponentialBackoff` with
+  `retryOptions`; client-wide `timeoutMs` is removed in favor of request
+  cancellation through `AbortSignalLike`.
+- Replaced the custom `TokenProvider` interface with Azure Core
+  `TokenCredential`. Generated client, `ConnectorClientBase`, and
+  `ConnectorHttpClient` constructors now accept `credential`; custom
+  implementations must return an `AccessToken` from `getToken`. Existing
+  managed identity and connection-string helpers now implement
+  `TokenCredential` and preserve token expiration metadata.
 - `GoogledriveExtensions.createFileAsync` now accepts `folderId` instead of
   `folderPath` and calls the current `/datasets/default/v2/files` route.
 - `JiraExtensions.listIssuesAsync` adds `nextPageToken` before `abortSignal`.

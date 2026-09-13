@@ -6,33 +6,28 @@
  * Mirrors the Python SDK's options.py.
  */
 
+import type { HttpClient, PipelineOptions } from "@azure/core-rest-pipeline";
+
 /**
  * Configuration options for connector clients.
  */
-export interface ConnectorClientOptions {
+export interface ConnectorClientOptions extends PipelineOptions {
     /** The base URI for the connector endpoint. */
     baseUri?: string;
 
-    /** The maximum number of retry attempts. Defaults to 3. */
-    maxRetryAttempts?: number;
+    /** The HTTP transport used by the request pipeline. */
+    httpClient?: HttpClient;
 
-    /** The timeout for HTTP requests in milliseconds. Defaults to 30000. */
-    timeoutMs?: number;
-
-    /** Whether to use exponential backoff for retries. Defaults to true. */
-    useExponentialBackoff?: boolean;
-
-    /** The initial retry delay in milliseconds. Defaults to 500. */
-    initialRetryDelayMs?: number;
+    /**
+     * Whether retries are allowed for unsafe HTTP methods such as POST, PUT, PATCH, and DELETE.
+     * Defaults to false because retrying a completed connector action can duplicate side effects.
+     */
+    retryUnsafeHttpMethods?: boolean;
 }
 
 /**
  * Default values for connector client options.
  */
-export const DefaultConnectorClientOptions: Required<ConnectorClientOptions> = {
+export const DefaultConnectorClientOptions: Required<Pick<ConnectorClientOptions, "baseUri">> = {
     baseUri: "",
-    maxRetryAttempts: 3,
-    timeoutMs: 30000,
-    useExponentialBackoff: true,
-    initialRetryDelayMs: 500,
 };

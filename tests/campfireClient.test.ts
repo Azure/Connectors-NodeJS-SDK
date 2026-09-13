@@ -1,8 +1,8 @@
 // Copyright (c) Microsoft Corporation.  All rights reserved.
 
+import type { TokenCredential } from "@azure/core-auth";
 import { CampfireClient } from "../src/generated/CampfireExtensions.ts";
 import { ConnectorException } from "../src/azureConnectors/connectorException.ts";
-import { TokenProvider } from "../src/azureConnectors/authentication.ts";
 import { ConnectorNames } from "../src/generated/connectorNames.ts";
 import { availableConnectors } from "../src/generated/ManagedConnectors.ts";
 
@@ -12,9 +12,9 @@ import { availableConnectors } from "../src/generated/ManagedConnectors.ts";
 
 const TestConnectionUrl = "https://connection-runtime.azure.com/apim/campfire/abc123";
 
-function createMockTokenProvider(): TokenProvider {
+function createMockCredential(): TokenCredential {
     return {
-        getAccessTokenAsync: async () => "mock-bearer-token",
+        getToken: async () => ({ token: "mock-bearer-token", expiresOnTimestamp: Number.MAX_SAFE_INTEGER }),
     };
 }
 
@@ -42,18 +42,18 @@ function mockFetchError(status: number, errorBody: string): void {
 
 describe("CampfireClient — constructor", () => {
     it("should construct with valid options", () => {
-        const client = new CampfireClient(TestConnectionUrl, createMockTokenProvider());
+        const client = new CampfireClient(TestConnectionUrl, createMockCredential());
         expect(client).toBeDefined();
         expect(client).toBeInstanceOf(CampfireClient);
     });
 
     it("should throw on null connection URL", () => {
-        expect(() => new CampfireClient(null as unknown as string, createMockTokenProvider()))
+        expect(() => new CampfireClient(null as unknown as string, createMockCredential()))
             .toThrow("Parameter 'connectionRuntimeUrl' cannot be null or undefined.");
     });
 
     it("should throw on undefined connection URL", () => {
-        expect(() => new CampfireClient(undefined as unknown as string, createMockTokenProvider()))
+        expect(() => new CampfireClient(undefined as unknown as string, createMockCredential()))
             .toThrow("Parameter 'connectionRuntimeUrl' cannot be null or undefined.");
     });
 });
@@ -67,7 +67,7 @@ describe("CampfireClient — getUserAsync", () => {
         const user = { id: 123, name: "Ada Lovelace", email_address: "ada@example.com" };
         mockFetchResponse(user);
 
-        const client = new CampfireClient(TestConnectionUrl, createMockTokenProvider());
+        const client = new CampfireClient(TestConnectionUrl, createMockCredential());
         const result = await client.getUserAsync("123");
 
         expect(result).toEqual(user);
@@ -80,7 +80,7 @@ describe("CampfireClient — getUserAsync", () => {
     it("should throw ConnectorException on non-OK response", async () => {
         mockFetchError(404, "Not Found");
 
-        const client = new CampfireClient(TestConnectionUrl, createMockTokenProvider());
+        const client = new CampfireClient(TestConnectionUrl, createMockCredential());
         try {
             await client.getUserAsync("123");
             throw new Error("Expected ConnectorException to be thrown.");

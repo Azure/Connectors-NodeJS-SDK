@@ -1,16 +1,29 @@
 // Copyright (c) Microsoft Corporation.  All rights reserved.
 
+import type { TokenCredential } from "@azure/core-auth";
+import type { PagedAsyncIterableIterator } from "@azure/core-paging";
 import { ConnectorClientBase } from "../src/azureConnectors/clientBase.ts";
-import { TokenProvider } from "../src/azureConnectors/authentication.ts";
-import { ConnectorClientOptions } from "../src/azureConnectors/options.ts";
+import type { ConnectorClientOptions } from "../src/azureConnectors/options.ts";
+
+interface TestItem {
+    id: string;
+}
+
+interface TestPage {
+    value?: TestItem[];
+    nextLink?: string;
+    "@odata.nextLink"?: string;
+    records?: TestItem[];
+    cursor?: string;
+}
 
 // ──────────────────────────────────────────────
 // Test helpers
 // ──────────────────────────────────────────────
 
-function createMockTokenProvider(): TokenProvider {
+function createMockCredential(): TokenCredential {
     return {
-        getAccessTokenAsync: async () => "mock-bearer-token",
+        getToken: async () => ({ token: "mock-bearer-token", expiresOnTimestamp: Number.MAX_SAFE_INTEGER }),
     };
 }
 
@@ -29,6 +42,20 @@ class TestConnectorClient extends ConnectorClientBase {
     public testGetOperationPath(url: string): string {
         return this.getOperationPath(url);
     }
+
+    public testCreatePageable(
+        firstPageLink: string,
+        fetchPage: (url: string) => Promise<TestPage>,
+        itemPropertyName?: string,
+        nextLinkPropertyName?: string,
+    ): PagedAsyncIterableIterator<TestItem> {
+        return this.createPageable<TestPage, TestItem>(
+            firstPageLink,
+            fetchPage,
+            itemPropertyName,
+            nextLinkPropertyName,
+        );
+    }
 }
 
 // ──────────────────────────────────────────────
@@ -40,30 +67,40 @@ describe("ConnectorClientBase", () => {
         it("should strip trailing slashes from connectionRuntimeUrl", () => {
             const client = new TestConnectorClient(
                 "https://proxy.azure-apihub.net/apim/arm/conn123///",
-                createMockTokenProvider(),
+                createMockCredential(),
             );
 
             const result = client.testResolveUrl("/subscriptions");
             expect(result).toBe("https://proxy.azure-apihub.net/apim/arm/conn123/subscriptions");
         });
 
-        it("should throw when tokenProvider is null", () => {
-            expect(() => new TestConnectorClient("https://example.com", null as unknown as TokenProvider))
-                .toThrow("tokenProvider cannot be null or undefined.");
+        it("should preserve connectionRuntimeUrl without trailing slashes", () => {
+            const client = new TestConnectorClient(
+                "https://proxy.azure-apihub.net/apim/arm/conn123",
+                createMockCredential(),
+            );
+
+            const result = client.testResolveUrl("/subscriptions");
+            expect(result).toBe("https://proxy.azure-apihub.net/apim/arm/conn123/subscriptions");
+        });
+
+        it("should throw when credential is null", () => {
+            expect(() => new TestConnectorClient("https://example.com", null as unknown as TokenCredential))
+            .toThrow("credential cannot be null or undefined.");
         });
 
         it("should throw when connectionRuntimeUrl is null", () => {
-            expect(() => new TestConnectorClient(null as unknown as string, createMockTokenProvider()))
+            expect(() => new TestConnectorClient(null as unknown as string, createMockCredential()))
                 .toThrow("Parameter 'connectionRuntimeUrl' cannot be null or undefined.");
         });
 
         it("should throw when connectionRuntimeUrl is undefined", () => {
-            expect(() => new TestConnectorClient(undefined as unknown as string, createMockTokenProvider()))
+            expect(() => new TestConnectorClient(undefined as unknown as string, createMockCredential()))
                 .toThrow("Parameter 'connectionRuntimeUrl' cannot be null or undefined.");
         });
 
         it("should accept empty string connectionRuntimeUrl", () => {
-            expect(() => new TestConnectorClient("", createMockTokenProvider())).not.toThrow();
+            expect(() => new TestConnectorClient("", createMockCredential())).not.toThrow();
         });
     });
 
@@ -71,7 +108,7 @@ describe("ConnectorClientBase", () => {
         const baseUrl = "https://proxy.azure-apihub.net/apim/arm/conn123";
 
         it("should resolve relative path by prepending connectionRuntimeUrl", () => {
-            const client = new TestConnectorClient(baseUrl, createMockTokenProvider());
+            const client = new TestConnectorClient(baseUrl, createMockCredential());
 
             const result = client.testResolveUrl("/subscriptions");
 
@@ -79,7 +116,7 @@ describe("ConnectorClientBase", () => {
         });
 
         it("should resolve relative path with query string", () => {
-            const client = new TestConnectorClient(baseUrl, createMockTokenProvider());
+            const client = new TestConnectorClient(baseUrl, createMockCredential());
 
             const result = client.testResolveUrl("/subscriptions?page=2&size=10");
 
@@ -87,7 +124,7 @@ describe("ConnectorClientBase", () => {
         });
 
         it("should resolve query-only continuation against the current page URL", () => {
-            const client = new TestConnectorClient(baseUrl, createMockTokenProvider());
+            const client = new TestConnectorClient(baseUrl, createMockCredential());
             const currentRequestUrl = `${baseUrl}/subscriptions?page=1`;
 
             const result = client.testResolveUrl("?page=2", currentRequestUrl);
@@ -96,7 +133,7 @@ describe("ConnectorClientBase", () => {
         });
 
         it("should resolve path-relative continuation against the current page URL", () => {
-            const client = new TestConnectorClient(baseUrl, createMockTokenProvider());
+            const client = new TestConnectorClient(baseUrl, createMockCredential());
             const currentRequestUrl = `${baseUrl}/subscriptions?page=1`;
 
             const result = client.testResolveUrl("subscriptions?page=2", currentRequestUrl);
@@ -105,7 +142,7 @@ describe("ConnectorClientBase", () => {
         });
 
         it("should pass through absolute URL with same host, scheme, and port", () => {
-            const client = new TestConnectorClient(baseUrl, createMockTokenProvider());
+            const client = new TestConnectorClient(baseUrl, createMockCredential());
 
             const result = client.testResolveUrl(
                 "https://proxy.azure-apihub.net/apim/arm/conn123/subscriptions?page=2",
@@ -115,7 +152,7 @@ describe("ConnectorClientBase", () => {
         });
 
         it("should rewrite foreign host URL through connection runtime URL", () => {
-            const client = new TestConnectorClient(baseUrl, createMockTokenProvider());
+            const client = new TestConnectorClient(baseUrl, createMockCredential());
 
             const result = client.testResolveUrl(
                 "https://management.azure.com/subscriptions/sub-id/resourceGroups?$skiptoken=abc",
@@ -127,7 +164,7 @@ describe("ConnectorClientBase", () => {
         });
 
         it("should reject same host with different scheme (http vs https)", () => {
-            const client = new TestConnectorClient(baseUrl, createMockTokenProvider());
+            const client = new TestConnectorClient(baseUrl, createMockCredential());
 
             expect(() => client.testResolveUrl(
                 "http://proxy.azure-apihub.net/apim/arm/conn123/subscriptions",
@@ -135,7 +172,7 @@ describe("ConnectorClientBase", () => {
         });
 
         it("should reject same host with different port", () => {
-            const client = new TestConnectorClient(baseUrl, createMockTokenProvider());
+            const client = new TestConnectorClient(baseUrl, createMockCredential());
 
             expect(() => client.testResolveUrl(
                 "https://proxy.azure-apihub.net:8443/apim/arm/conn123/subscriptions",
@@ -143,7 +180,7 @@ describe("ConnectorClientBase", () => {
         });
 
         it("should throw for absolute URL when connectionRuntimeUrl is empty", () => {
-            const client = new TestConnectorClient("", createMockTokenProvider());
+            const client = new TestConnectorClient("", createMockCredential());
 
             expect(() => client.testResolveUrl(
                 "https://management.azure.com/subscriptions",
@@ -151,14 +188,14 @@ describe("ConnectorClientBase", () => {
         });
 
         it("should throw for relative path when connectionRuntimeUrl is empty", () => {
-            const client = new TestConnectorClient("", createMockTokenProvider());
+            const client = new TestConnectorClient("", createMockCredential());
 
             expect(() => client.testResolveUrl("/subscriptions"))
                 .toThrow("Cannot resolve relative path because no connection runtime URL was configured.");
         });
 
         it("should handle foreign host URL with path only (no query string)", () => {
-            const client = new TestConnectorClient(baseUrl, createMockTokenProvider());
+            const client = new TestConnectorClient(baseUrl, createMockCredential());
 
             const result = client.testResolveUrl("https://management.azure.com/subscriptions");
 
@@ -166,7 +203,7 @@ describe("ConnectorClientBase", () => {
         });
 
         it("should perform case-insensitive host comparison", () => {
-            const client = new TestConnectorClient(baseUrl, createMockTokenProvider());
+            const client = new TestConnectorClient(baseUrl, createMockCredential());
 
             const result = client.testResolveUrl(
                 "https://PROXY.AZURE-APIHUB.NET/apim/arm/conn123/subscriptions?page=2",
@@ -180,7 +217,7 @@ describe("ConnectorClientBase", () => {
         const baseUrl = "https://proxy.azure-apihub.net/apim/arm/conn123";
 
         it("should remove the connection runtime URL from an operation", () => {
-            const client = new TestConnectorClient(baseUrl, createMockTokenProvider());
+            const client = new TestConnectorClient(baseUrl, createMockCredential());
 
             const result = client.testGetOperationPath(
                 `${baseUrl}/subscriptions?$skiptoken=page-2`,
@@ -189,14 +226,161 @@ describe("ConnectorClientBase", () => {
             expect(result).toBe("/subscriptions?$skiptoken=page-2");
         });
 
+        it("should return the root path when the operation matches the connection URL", () => {
+            const client = new TestConnectorClient(baseUrl, createMockCredential());
+
+            const result = client.testGetOperationPath(baseUrl);
+
+            expect(result).toBe("/");
+        });
+
         it("should remove a foreign origin without changing the path and query", () => {
-            const client = new TestConnectorClient(baseUrl, createMockTokenProvider());
+            const client = new TestConnectorClient(baseUrl, createMockCredential());
 
             const result = client.testGetOperationPath(
                 "https://management.azure.com/subscriptions?$skiptoken=page-2",
             );
 
             expect(result).toBe("/subscriptions?$skiptoken=page-2");
+        });
+    });
+
+    describe("createPageable", () => {
+        const baseUrl = "https://proxy.azure-apihub.net/apim/arm/conn123";
+
+        it("should lazily yield items and route a foreign nextLink through the connection URL", async () => {
+            const client = new TestConnectorClient(baseUrl, createMockCredential());
+            const requestedUrls: string[] = [];
+            const pageable = client.testCreatePageable("/items", async (url) => {
+                requestedUrls.push(url);
+                return requestedUrls.length === 1
+                    ? {
+                        value: [{ id: "first" }],
+                        nextLink: "https://management.azure.com/items?$skiptoken=second",
+                    }
+                    : { value: [{ id: "second" }] };
+            });
+
+            expect(requestedUrls).toEqual([]);
+
+            const items: TestItem[] = [];
+            for await (const item of pageable) {
+                items.push(item);
+            }
+
+            expect(items).toEqual([{ id: "first" }, { id: "second" }]);
+            expect(requestedUrls).toEqual([
+                `${baseUrl}/items`,
+                `${baseUrl}/items?$skiptoken=second`,
+            ]);
+        });
+
+        it("should start byPage from a query-only continuation token and follow an OData next link", async () => {
+            const client = new TestConnectorClient(baseUrl, createMockCredential());
+            const requestedUrls: string[] = [];
+            const pageable = client.testCreatePageable("/items?page=1", async (url) => {
+                requestedUrls.push(url);
+                return requestedUrls.length === 1
+                    ? { value: [{ id: "second" }], "@odata.nextLink": "?page=3" }
+                    : { value: [{ id: "third" }] };
+            });
+
+            const pages: TestItem[][] = [];
+            for await (const page of pageable.byPage({ continuationToken: "?page=2" })) {
+                pages.push(page);
+            }
+
+            expect(pages).toEqual([
+                [{ id: "second" }],
+                [{ id: "third" }],
+            ]);
+            expect(requestedUrls).toEqual([
+                `${baseUrl}/items?page=2`,
+                `${baseUrl}/items?page=3`,
+            ]);
+        });
+
+        it("should resolve a path-relative next link against the current page", async () => {
+            const client = new TestConnectorClient(baseUrl, createMockCredential());
+            const requestedUrls: string[] = [];
+            const pageable = client.testCreatePageable("/collections/items?page=1", async (url) => {
+                requestedUrls.push(url);
+                return requestedUrls.length === 1
+                    ? { value: [{ id: "first" }], nextLink: "next?page=2" }
+                    : { value: [{ id: "second" }] };
+            });
+
+            for await (const page of pageable.byPage()) {
+                expect(page).toHaveLength(1);
+            }
+
+            expect(requestedUrls).toEqual([
+                `${baseUrl}/collections/items?page=1`,
+                `${baseUrl}/collections/next?page=2`,
+            ]);
+        });
+
+        it("should read custom item and next-link properties", async () => {
+            const client = new TestConnectorClient(baseUrl, createMockCredential());
+            const requestedUrls: string[] = [];
+            const pageable = client.testCreatePageable(
+                "/items",
+                async (url) => {
+                    requestedUrls.push(url);
+                    return requestedUrls.length === 1
+                        ? { records: [{ id: "first" }], cursor: "?page=2" }
+                        : { records: [{ id: "second" }] };
+                },
+                "records",
+                "cursor",
+            );
+
+            const items: TestItem[] = [];
+            for await (const item of pageable) {
+                items.push(item);
+            }
+
+            expect(items).toEqual([{ id: "first" }, { id: "second" }]);
+            expect(requestedUrls).toEqual([
+                `${baseUrl}/items`,
+                `${baseUrl}/items?page=2`,
+            ]);
+        });
+
+        it("should resolve a query-only first page link from the connection root", async () => {
+            const client = new TestConnectorClient(baseUrl, createMockCredential());
+            const requestedUrls: string[] = [];
+            const pageable = client.testCreatePageable("?page=1", async (url) => {
+                requestedUrls.push(url);
+                return { value: [{ id: "first" }] };
+            });
+
+            await pageable.next();
+
+            expect(requestedUrls).toEqual([`${baseUrl}/?page=1`]);
+        });
+
+        it("should resolve a relative next link against an absolute foreign page link", async () => {
+            const client = new TestConnectorClient(baseUrl, createMockCredential());
+            const requestedUrls: string[] = [];
+            const pageable = client.testCreatePageable(
+                "https://management.azure.com/collections/items?page=1",
+                async (url) => {
+                    requestedUrls.push(url);
+                    return requestedUrls.length === 1
+                        ? { value: [{ id: "first" }], nextLink: "next?page=2" }
+                        : { value: [{ id: "second" }] };
+                },
+            );
+
+            for await (const page of pageable.byPage()) {
+                expect(page).toHaveLength(1);
+            }
+
+            expect(requestedUrls).toEqual([
+                `${baseUrl}/collections/items?page=1`,
+                `${baseUrl}/collections/next?page=2`,
+            ]);
         });
     });
 });
