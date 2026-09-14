@@ -3,13 +3,25 @@
 /**
  * HTTP client for connector operations with retry and authentication.
  *
- * Mirrors the Python SDK's http_client.py. Uses the Node.js built-in fetch API (Node 18+).
+ * Uses the Azure Core REST pipeline for transport policies and diagnostics.
  */
 
 import type { AbortSignalLike } from "@azure/abort-controller";
 import type { TokenCredential } from "@azure/core-auth";
-import type { TokenProvider } from "./authentication.ts";
-import { DefaultConnectorClientOptions } from "./options.ts";
+import {
+    bearerTokenAuthenticationPolicy,
+    createDefaultHttpClient,
+    createPipelineFromOptions,
+    createPipelineRequest,
+    defaultRetryPolicy,
+} from "@azure/core-rest-pipeline";
+import type {
+    HttpClient,
+    HttpMethods,
+    Pipeline,
+    PipelineOptions,
+    PipelineResponse,
+} from "@azure/core-rest-pipeline";
 import type { ConnectorClientOptions } from "./options.ts";
 
 /**
@@ -37,21 +49,33 @@ export interface ConnectorResponse<TValue = unknown> {
  */
 export class ConnectorHttpClient {
     private static readonly ApiHubScopes = ["https://apihub.azure.com/.default"];
+    private static readonly DefaultRetryPolicyName = "defaultRetryPolicy";
+    private static readonly SafeHttpMethods = new Set<HttpMethods>(["GET", "HEAD", "OPTIONS", "TRACE"]);
 
-    private readonly credential: TokenCredential | TokenProvider;
-    private readonly options: Required<ConnectorClientOptions>;
+    private readonly credential: TokenCredential;
+    private readonly httpClient: HttpClient;
+    private readonly pipelineOptions: PipelineOptions;
+    private readonly pipelines = new Map<string, Pipeline>();
+    private readonly retryUnsafeHttpMethods: boolean;
 
     /**
      * Initializes a ConnectorHttpClient.
-     * @param credential The Azure credential or legacy token provider for authentication.
+     * @param credential The credential used for authentication.
      * @param options The client options.
      */
-    constructor(credential: TokenCredential | TokenProvider, options?: ConnectorClientOptions) {
+    constructor(credential: TokenCredential, options?: ConnectorClientOptions) {
+        if (!credential) {
+            throw new Error("credential cannot be null or undefined.");
+        }
+
         this.credential = credential;
-        this.options = {
-            ...DefaultConnectorClientOptions,
-            ...options,
-        };
+        this.httpClient = options?.httpClient ?? createDefaultHttpClient();
+        this.retryUnsafeHttpMethods = options?.retryUnsafeHttpMethods ?? false;
+        const pipelineOptions: ConnectorClientOptions = { ...options };
+        delete pipelineOptions.baseUri;
+        delete pipelineOptions.httpClient;
+        delete pipelineOptions.retryUnsafeHttpMethods;
+        this.pipelineOptions = pipelineOptions;
     }
 
     /**
@@ -70,96 +94,67 @@ export class ConnectorHttpClient {
         abortSignal?: AbortSignalLike,
     ): Promise<ConnectorResponse<TValue>> {
         const effectiveScopes = scopes ?? ConnectorHttpClient.ApiHubScopes;
-        const token = "getToken" in this.credential
-            ? (await this.credential.getToken(effectiveScopes))?.token
-            : await this.credential.getAccessTokenAsync(effectiveScopes);
-        if (!token) {
-            throw new Error("Failed to acquire access token.");
-        }
-
-        const headers: Record<string, string> = {
-            "Accept": "application/json, */*;q=0.8",
-            "Authorization": `Bearer ${token}`,
-        };
-
-        const init: RequestInit = { method, headers };
+        const request = createPipelineRequest({
+            url,
+            method: method as HttpMethods,
+            body: body === undefined ? undefined : JSON.stringify(body),
+            abortSignal,
+        });
+        request.headers.set("Accept", "application/json, */*;q=0.8");
 
         if (body !== undefined) {
-            headers["Content-Type"] = "application/json";
-            init.body = JSON.stringify(body);
+            request.headers.set("Content-Type", "application/json");
         }
 
-        return this.sendWithRetry<TValue>(url, init, 0, abortSignal);
+        const response = await this.getPipeline(effectiveScopes).sendRequest(this.httpClient, request);
+        return ConnectorHttpClient.createConnectorResponse<TValue>(response);
     }
 
-    /**
-     * Sends request with retry logic.
-     */
-    private async sendWithRetry<TValue>(
-        url: string,
-        init: RequestInit,
-        attempt: number,
-        callerSignal?: AbortSignalLike,
-    ): Promise<ConnectorResponse<TValue>> {
-        const abortController = new AbortController();
-        const timeoutId = setTimeout(() => abortController.abort(), this.options.timeoutMs);
+    private getPipeline(scopes: string[]): Pipeline {
+        const pipelineScopes = [...scopes];
+        const key = JSON.stringify(pipelineScopes);
+        let pipeline = this.pipelines.get(key);
+        if (!pipeline) {
+            pipeline = createPipelineFromOptions(this.pipelineOptions);
+            pipeline.removePolicy({ name: ConnectorHttpClient.DefaultRetryPolicyName });
+            const retryPolicy = defaultRetryPolicy(this.pipelineOptions.retryOptions);
+            pipeline.addPolicy(
+                {
+                    name: ConnectorHttpClient.DefaultRetryPolicyName,
+                    sendRequest: (request, next) => this.retryUnsafeHttpMethods ||
+                        ConnectorHttpClient.SafeHttpMethods.has(request.method)
+                        ? retryPolicy.sendRequest(request, next)
+                        : next(request),
+                },
+                { phase: "Retry" },
+            );
+            pipeline.addPolicy(
+                bearerTokenAuthenticationPolicy({ credential: this.credential, scopes: pipelineScopes }),
+                { phase: "Sign" },
+            );
+            this.pipelines.set(key, pipeline);
+        }
 
-        // NOTE(swapnilnagar): Merge caller-provided abort signal with the internal timeout controller.
-        // When the caller aborts, abort the internal controller as well.
-        const onCallerAbort = (): void => abortController.abort();
-        if (callerSignal) {
-            if (callerSignal.aborted) {
-                abortController.abort();
-            } else {
-                callerSignal.addEventListener("abort", onCallerAbort, { once: true });
+        return pipeline;
+    }
+
+    private static createConnectorResponse<TValue>(response: PipelineResponse): ConnectorResponse<TValue> {
+        const text = response.bodyAsText ?? "";
+        let value: TValue | undefined;
+        if (text) {
+            try {
+                value = JSON.parse(text) as TValue;
+            } catch {
+                value = undefined;
             }
         }
 
-        try {
-            const response = await fetch(url, { ...init, signal: abortController.signal });
-            const text = await response.text();
-
-            const responseHeaders: Record<string, string> = {};
-            response.headers.forEach((headerValue, headerKey) => {
-                responseHeaders[headerKey] = headerValue;
-            });
-
-            let value: TValue | undefined;
-            if (text) {
-                try {
-                    value = JSON.parse(text) as TValue;
-                } catch {
-                    value = undefined;
-                }
-            }
-
-            return {
-                statusCode: response.status,
-                headers: responseHeaders,
-                value,
-                text,
-                isSuccessStatusCode: response.ok,
-            };
-        } catch (error) {
-            // Don't retry on non-transient programming errors.
-            if (error instanceof TypeError || error instanceof SyntaxError) {
-                throw error;
-            }
-
-            if (attempt < this.options.maxRetryAttempts - 1) {
-                const delay = this.options.useExponentialBackoff
-                    ? this.options.initialRetryDelayMs * Math.pow(2, attempt)
-                    : this.options.initialRetryDelayMs;
-                await new Promise<void>((resolve) => setTimeout(resolve, delay));
-                return this.sendWithRetry<TValue>(url, init, attempt + 1, callerSignal);
-            }
-
-            throw error;
-        } finally {
-            clearTimeout(timeoutId);
-            if (callerSignal) {
-                callerSignal.removeEventListener("abort", onCallerAbort);
-            }
-        }
+        return {
+            statusCode: response.status,
+            headers: response.headers.toJSON(),
+            value,
+            text,
+            isSuccessStatusCode: response.status >= 200 && response.status < 300,
+        };
     }
 }

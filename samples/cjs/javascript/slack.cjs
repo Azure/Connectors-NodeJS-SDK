@@ -21,8 +21,13 @@ async function main() {
     const client = new SlackClient(CONNECTION_URL, tokenProvider);
 
     try {
-        const result = await client.listChannelsAsync();
-        console.log(`Channels returned: ${(result.value ?? []).length}`);
+        let channelCount = 0;
+        for await (const channel of client.listChannelsAsync()) {
+            console.log(`  - ${channel.name ?? channel.id ?? "Unknown"}`);
+            channelCount++;
+        }
+
+        console.log(`Channels returned: ${channelCount}`);
     } catch (error) {
         if (error instanceof ConnectorException) {
             console.log(`Connector error (${error.statusCode}): ${error.message}`);

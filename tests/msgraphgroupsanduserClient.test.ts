@@ -1,5 +1,6 @@
 // Copyright (c) Microsoft Corporation.  All rights reserved.
 
+import type { TokenCredential } from "@azure/core-auth";
 import {
     MsgraphgroupsanduserClient,
     ListUsersResponse,
@@ -12,7 +13,6 @@ import {
     GetMemberGroupsResponse,
 } from "../src/generated/MsgraphgroupsanduserExtensions.ts";
 import { ConnectorException } from "../src/azureConnectors/connectorException.ts";
-import { TokenProvider } from "../src/azureConnectors/authentication.ts";
 import { ConnectorNames } from "../src/generated/connectorNames.ts";
 import { availableConnectors } from "../src/generated/ManagedConnectors.ts";
 
@@ -22,9 +22,9 @@ import { availableConnectors } from "../src/generated/ManagedConnectors.ts";
 
 const TestConnectionUrl = "https://connection-runtime.azure.com/apim/msgraphgroupsanduser/abc123";
 
-function createMockTokenProvider(): TokenProvider {
+function createMockCredential(): TokenCredential {
     return {
-        getAccessTokenAsync: async () => "mock-bearer-token",
+        getToken: async () => ({ token: "mock-bearer-token", expiresOnTimestamp: Number.MAX_SAFE_INTEGER }),
     };
 }
 
@@ -65,28 +65,28 @@ const _groupProperties: GetGroupPropertiesResponse = {
 
 describe("MsgraphgroupsanduserClient — constructor", () => {
     it("should construct with valid options", () => {
-        const client = new MsgraphgroupsanduserClient(TestConnectionUrl, createMockTokenProvider());
+        const client = new MsgraphgroupsanduserClient(TestConnectionUrl, createMockCredential());
         expect(client).toBeDefined();
         expect(client).toBeInstanceOf(MsgraphgroupsanduserClient);
     });
 
     it("should strip trailing slashes from connection URL", () => {
-        const client = new MsgraphgroupsanduserClient(TestConnectionUrl + "///", createMockTokenProvider());
+        const client = new MsgraphgroupsanduserClient(TestConnectionUrl + "///", createMockCredential());
         expect(client).toBeDefined();
     });
 
     it("should construct with an empty connection URL", () => {
-        const client = new MsgraphgroupsanduserClient("", createMockTokenProvider());
+        const client = new MsgraphgroupsanduserClient("", createMockCredential());
         expect(client).toBeDefined();
     });
 
     it("should throw on null connection URL", () => {
-        expect(() => new MsgraphgroupsanduserClient(null as unknown as string, createMockTokenProvider()))
+        expect(() => new MsgraphgroupsanduserClient(null as unknown as string, createMockCredential()))
             .toThrow("Parameter 'connectionRuntimeUrl' cannot be null or undefined.");
     });
 
     it("should throw on undefined connection URL", () => {
-        expect(() => new MsgraphgroupsanduserClient(undefined as unknown as string, createMockTokenProvider()))
+        expect(() => new MsgraphgroupsanduserClient(undefined as unknown as string, createMockCredential()))
             .toThrow("Parameter 'connectionRuntimeUrl' cannot be null or undefined.");
     });
 });
@@ -102,7 +102,7 @@ describe("MsgraphgroupsanduserClient — listUsersAsync", () => {
         };
         mockFetchResponse(mockResponse);
 
-        const client = new MsgraphgroupsanduserClient(TestConnectionUrl, createMockTokenProvider());
+        const client = new MsgraphgroupsanduserClient(TestConnectionUrl, createMockCredential());
         const result = await client.listUsersAsync();
 
         expect(result).toEqual(mockResponse);
@@ -124,7 +124,7 @@ describe("MsgraphgroupsanduserClient — listGroupsByDisplayNameSearchAsync", ()
         };
         mockFetchResponse(mockResponse);
 
-        const client = new MsgraphgroupsanduserClient(TestConnectionUrl, createMockTokenProvider());
+        const client = new MsgraphgroupsanduserClient(TestConnectionUrl, createMockCredential());
         const result = await client.listGroupsByDisplayNameSearchAsync("Engineering");
 
         expect(result).toEqual(mockResponse);
@@ -146,7 +146,7 @@ describe("MsgraphgroupsanduserClient — getGroupPropertiesAsync", () => {
         };
         mockFetchResponse(mockResponse);
 
-        const client = new MsgraphgroupsanduserClient(TestConnectionUrl, createMockTokenProvider());
+        const client = new MsgraphgroupsanduserClient(TestConnectionUrl, createMockCredential());
         const result = await client.getGroupPropertiesAsync("group-123");
 
         expect(result).toEqual(mockResponse);
@@ -166,7 +166,7 @@ describe("MsgraphgroupsanduserClient — listDirectGroupMembersAsync", () => {
         };
         mockFetchResponse(mockResponse);
 
-        const client = new MsgraphgroupsanduserClient(TestConnectionUrl, createMockTokenProvider());
+        const client = new MsgraphgroupsanduserClient(TestConnectionUrl, createMockCredential());
         const result = await client.listDirectGroupMembersAsync("group-1");
 
         expect(result).toEqual(mockResponse);
@@ -186,7 +186,7 @@ describe("MsgraphgroupsanduserClient — getMemberGroupsAsync", () => {
         };
         mockFetchResponse(mockResponse);
 
-        const client = new MsgraphgroupsanduserClient(TestConnectionUrl, createMockTokenProvider());
+        const client = new MsgraphgroupsanduserClient(TestConnectionUrl, createMockCredential());
         const input: GetMemberGroupsInput = { securityEnabledOnly: false };
         const result = await client.getMemberGroupsAsync(input, "user-123");
 
@@ -209,7 +209,7 @@ describe("MsgraphgroupsanduserClient — listSubscribedSkusAsync", () => {
         };
         mockFetchResponse(mockResponse);
 
-        const client = new MsgraphgroupsanduserClient(TestConnectionUrl, createMockTokenProvider());
+        const client = new MsgraphgroupsanduserClient(TestConnectionUrl, createMockCredential());
         const result = await client.listSubscribedSkusAsync();
 
         expect(result).toEqual(mockResponse);
@@ -229,7 +229,7 @@ describe("MsgraphgroupsanduserClient — getMemberLicenseDetailsAsync", () => {
         };
         mockFetchResponse(mockResponse);
 
-        const client = new MsgraphgroupsanduserClient(TestConnectionUrl, createMockTokenProvider());
+        const client = new MsgraphgroupsanduserClient(TestConnectionUrl, createMockCredential());
         const result = await client.getMemberLicenseDetailsAsync("user-1");
 
         expect(result).toEqual(mockResponse);
@@ -246,7 +246,7 @@ describe("MsgraphgroupsanduserClient — error handling", () => {
     it("should throw ConnectorException on non-OK response", async () => {
         mockFetchError(403, '{"error": "InsufficientPermissions"}');
 
-        const client = new MsgraphgroupsanduserClient(TestConnectionUrl, createMockTokenProvider());
+        const client = new MsgraphgroupsanduserClient(TestConnectionUrl, createMockCredential());
 
         await expect(client.listUsersAsync()).rejects.toThrow(ConnectorException);
     });
@@ -255,7 +255,7 @@ describe("MsgraphgroupsanduserClient — error handling", () => {
         const errorBody = '{"code": "NotFound"}';
         mockFetchError(404, errorBody);
 
-        const client = new MsgraphgroupsanduserClient(TestConnectionUrl, createMockTokenProvider());
+        const client = new MsgraphgroupsanduserClient(TestConnectionUrl, createMockCredential());
 
         try {
             await client.getGroupPropertiesAsync("nonexistent-group");

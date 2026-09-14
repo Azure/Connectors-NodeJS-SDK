@@ -106,6 +106,9 @@ inputs it consumed.
 | `connectors[].swaggerSnapshot` | Path to the persisted Swagger the run consumed for that connector. |
 | `connectors[].swaggerSha256` | SHA-256 of the snapshot as UTF-8 text with CRLF normalized to LF, so provenance is platform-independent. |
 | `connectors[].outputSha256` | SHA-256 of the generated `outputFile` as UTF-8 text with CRLF normalized to LF, so provenance is platform-independent. |
+| `connectors[].generatorCommit` | Optional immutable BPM commit used instead of `generator.bpmBaseCommit` for one connector. |
+| `connectors[].sourcePatch.path` | Optional repository-relative patch applied to that connector's `generatorCommit`. |
+| `connectors[].sourcePatch.sha256` | SHA-256 of the connector-specific patch as canonical UTF-8/LF text. |
 
 ### Recording provenance for a run
 
@@ -118,6 +121,10 @@ When `generator.sourcePatch` is present, reproduce the generator source before b
 git -C <BPM-repo-root> checkout <bpmBaseCommit>
 git -C <BPM-repo-root> apply --unidiff-zero <SDK-repo-root>/<sourcePatch.path>
 ```
+
+When a connector records `generatorCommit` and `sourcePatch`, apply that patch to
+the connector-specific commit instead of the top-level generator source before
+regenerating that connector.
 
 ```powershell
 function Get-CanonicalTextSha256 {

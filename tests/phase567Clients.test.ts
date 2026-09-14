@@ -1,6 +1,6 @@
 // Copyright (c) Microsoft Corporation.  All rights reserved.
 
-import { TokenProvider } from "../src/azureConnectors/authentication.ts";
+import type { TokenCredential } from "@azure/core-auth";
 import { ConnectorException } from "../src/azureConnectors/connectorException.ts";
 import { ConnectorNames } from "../src/generated/connectorNames.ts";
 import { ElfsquaddataClient } from "../src/generated/ElfsquaddataExtensions.ts";
@@ -36,9 +36,13 @@ interface GeneratedConnectorClient {
     readonly connectorName: string;
 }
 
+interface PagedActionResult {
+    byPage(): AsyncIterableIterator<unknown>;
+}
+
 type GeneratedConnectorClientConstructor = new (
     connectionRuntimeUrl: string,
-    credential: TokenProvider,
+    credential: TokenCredential,
 ) => GeneratedConnectorClient;
 
 interface ConnectorCase {
@@ -62,7 +66,7 @@ const ConnectorCases: ConnectorCase[] = [
     { displayName: "Typeform", apiName: "typeform", connectorNameKey: "Typeform", clientConstructor: TypeformClient },
     { displayName: "Ticketmaster", apiName: "ticketmaster", connectorNameKey: "TicketmasterIndependentPublisher", clientConstructor: TicketmasterClient, methodName: "eventGetAsync", methodArguments: ["event-id"] },
     { displayName: "Zoho Sign", apiName: "zohosign", connectorNameKey: "ZohoSign", clientConstructor: ZohosignClient, methodName: "downloadCompletionCertificateAsync", methodArguments: ["request-id"] },
-    { displayName: "Seismic Planner", apiName: "seismicplanner", connectorNameKey: "SeismicPlanner", clientConstructor: SeismicplannerClient as unknown as GeneratedConnectorClientConstructor, methodName: "getCommentsAsync", methodArguments: ["space-id", "node-id"] },
+    { displayName: "Seismic Planner", apiName: "seismicplanner", connectorNameKey: "SeismicPlanner", clientConstructor: SeismicplannerClient, methodName: "getCommentsAsync", methodArguments: ["space-id", "node-id"] },
     { displayName: "Way We Do", apiName: "waywedo", connectorNameKey: "WayWeDo", clientConstructor: WaywedoClient, methodName: "checklistInstancesGetAsync", methodArguments: ["instance-id"] },
     { displayName: "Meeting Room Map", apiName: "meetingroommap", connectorNameKey: "MeetingRoomMap", clientConstructor: MeetingroommapClient, methodName: "getCategoriesAsync" },
     { displayName: "StarRez REST V1", apiName: "starrezrestv1", connectorNameKey: "StarRezRESTV1", clientConstructor: Starrezrestv1Client, methodName: "selectEntryAsync", methodArguments: [{}] },
@@ -78,9 +82,9 @@ const ActionConnectorCases = ConnectorCases.filter(
     (connector): connector is ConnectorCase & { methodName: string } => connector.methodName !== undefined,
 );
 
-function createMockTokenProvider(): TokenProvider {
+function createMockCredential(): TokenCredential {
     return {
-        getAccessTokenAsync: async () => "mock-bearer-token",
+        getToken: async () => ({ token: "mock-bearer-token", expiresOnTimestamp: Number.MAX_SAFE_INTEGER }),
     };
 }
 
@@ -97,8 +101,19 @@ async function invokeRepresentativeAction(
     connector: ConnectorCase & { methodName: string },
     client: GeneratedConnectorClient,
 ): Promise<unknown> {
-    const method = Reflect.get(client, connector.methodName) as (...methodArguments: unknown[]) => Promise<unknown>;
-    return method.apply(client, connector.methodArguments ?? []);
+    const method = Reflect.get(client, connector.methodName) as (...methodArguments: unknown[]) => unknown;
+    const result = method.apply(client, connector.methodArguments ?? []);
+    if (isPagedActionResult(result)) {
+        return (await result.byPage().next()).value;
+    }
+
+    return await result;
+}
+
+function isPagedActionResult(result: unknown): result is PagedActionResult {
+    return typeof result === "object" &&
+        result !== null &&
+        typeof Reflect.get(result, "byPage") === "function";
 }
 
 describe("Phase 5-7 connector clients", () => {
@@ -107,7 +122,7 @@ describe("Phase 5-7 connector clients", () => {
     });
 
     it.each(ConnectorCases)("should construct $displayName", connector => {
-        const client = new connector.clientConstructor(TestConnectionUrl, createMockTokenProvider());
+        const client = new connector.clientConstructor(TestConnectionUrl, createMockCredential());
 
         expect(client.connectorName).toBe(connector.apiName);
     });
@@ -127,7 +142,7 @@ describe("Phase 5-7 connector clients", () => {
 
     it.each(ActionConnectorCases)("should invoke an authenticated $displayName action", async connector => {
         mockFetchResponse({ result: "ok" });
-        const client = new connector.clientConstructor(TestConnectionUrl, createMockTokenProvider());
+        const client = new connector.clientConstructor(TestConnectionUrl, createMockCredential());
 
         await invokeRepresentativeAction(connector, client);
 
@@ -138,7 +153,7 @@ describe("Phase 5-7 connector clients", () => {
 
     it.each(ActionConnectorCases)("should expose $displayName failure details", async connector => {
         mockFetchResponse({ error: "not found" }, 404);
-        const client = new connector.clientConstructor(TestConnectionUrl, createMockTokenProvider());
+        const client = new connector.clientConstructor(TestConnectionUrl, createMockCredential());
 
         try {
             await invokeRepresentativeAction(connector, client);

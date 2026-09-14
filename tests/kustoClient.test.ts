@@ -1,5 +1,6 @@
 // Copyright (c) Microsoft Corporation.  All rights reserved.
 
+import type { TokenCredential } from "@azure/core-auth";
 import {
     KustoClient,
     Query,
@@ -17,7 +18,6 @@ import {
     MCPQueryResponse,
 } from "../src/generated/KustoExtensions.ts";
 import { ConnectorException } from "../src/azureConnectors/connectorException.ts";
-import { TokenProvider } from "../src/azureConnectors/authentication.ts";
 import { ConnectorNames } from "../src/generated/connectorNames.ts";
 import { availableConnectors } from "../src/generated/ManagedConnectors.ts";
 
@@ -27,9 +27,9 @@ import { availableConnectors } from "../src/generated/ManagedConnectors.ts";
 
 const TestConnectionUrl = "https://connection-runtime.azure.com/apim/kusto/abc123";
 
-function createMockTokenProvider(): TokenProvider {
+function createMockCredential(): TokenCredential {
     return {
-        getAccessTokenAsync: async () => "mock-bearer-token",
+        getToken: async () => ({ token: "mock-bearer-token", expiresOnTimestamp: Number.MAX_SAFE_INTEGER }),
     };
 }
 
@@ -93,23 +93,23 @@ const _mcpRequest: MCPQueryRequest = {
 
 describe("KustoClient — constructor", () => {
     it("should construct with valid options", () => {
-        const client = new KustoClient(TestConnectionUrl, createMockTokenProvider());
+        const client = new KustoClient(TestConnectionUrl, createMockCredential());
         expect(client).toBeDefined();
         expect(client).toBeInstanceOf(KustoClient);
     });
 
     it("should strip trailing slashes from connection URL", () => {
-        const client = new KustoClient(TestConnectionUrl + "///", createMockTokenProvider());
+        const client = new KustoClient(TestConnectionUrl + "///", createMockCredential());
         expect(client).toBeDefined();
     });
 
     it("should throw on null connection URL", () => {
-        expect(() => new KustoClient(null as unknown as string, createMockTokenProvider()))
+        expect(() => new KustoClient(null as unknown as string, createMockCredential()))
             .toThrow("Parameter 'connectionRuntimeUrl' cannot be null or undefined.");
     });
 
     it("should throw on undefined connection URL", () => {
-        expect(() => new KustoClient(undefined as unknown as string, createMockTokenProvider()))
+        expect(() => new KustoClient(undefined as unknown as string, createMockCredential()))
             .toThrow("Parameter 'connectionRuntimeUrl' cannot be null or undefined.");
     });
 });
@@ -123,7 +123,7 @@ describe("KustoClient — listKustoResultsAsync", () => {
         const mockTable: Table = { value: [{ value: ["val1"] }] };
         mockFetchResponse(mockTable);
 
-        const client = new KustoClient(TestConnectionUrl, createMockTokenProvider());
+        const client = new KustoClient(TestConnectionUrl, createMockCredential());
         const input: QueryAndListSchema = {
             csl: "TestTable | take 10" as unknown as Query,
             db: "testdb" as unknown as DatabaseName,
@@ -153,7 +153,7 @@ describe("KustoClient — listKustoShowCommandResultsAsync", () => {
         const mockTable: Table = { value: [{ value: ["MyTable"] }] };
         mockFetchResponse(mockTable);
 
-        const client = new KustoClient(TestConnectionUrl, createMockTokenProvider());
+        const client = new KustoClient(TestConnectionUrl, createMockCredential());
         const input: ControlCommandAndListSchema = {
             csl: ".show tables",
             db: "testdb" as unknown as DatabaseName,
@@ -179,7 +179,7 @@ describe("KustoClient — runKustoQueryAndVisualizeResultsAsync", () => {
         const mockResult: VisualizeResults = { body: "bar-chart-data" };
         mockFetchResponse(mockResult);
 
-        const client = new KustoClient(TestConnectionUrl, createMockTokenProvider());
+        const client = new KustoClient(TestConnectionUrl, createMockCredential());
         const input: QueryAndVisualizeSchema = {
             csl: "TestTable | take 10" as unknown as Query,
             db: "testdb" as unknown as DatabaseName,
@@ -204,7 +204,7 @@ describe("KustoClient — runKustoCommandAndVisualizeResultsAsync", () => {
         const mockResult: VisualizeResults = { body: "pie-chart-data" };
         mockFetchResponse(mockResult);
 
-        const client = new KustoClient(TestConnectionUrl, createMockTokenProvider());
+        const client = new KustoClient(TestConnectionUrl, createMockCredential());
         const input: CommandAndVisualizeSchema = {
             csl: ".show tables",
             db: "testdb" as unknown as DatabaseName,
@@ -229,7 +229,7 @@ describe("KustoClient — runAsyncControlCommandAndWaitAsync", () => {
         const mockResult: AsyncCommandResult = { state: "Completed" };
         mockFetchResponse(mockResult);
 
-        const client = new KustoClient(TestConnectionUrl, createMockTokenProvider());
+        const client = new KustoClient(TestConnectionUrl, createMockCredential());
         const input: ControlCommandAndListSchema = {
             csl: ".set-or-append async TargetTable <| SourceTable",
             db: "testdb" as unknown as DatabaseName,
@@ -254,7 +254,7 @@ describe("KustoClient — mcpKustoQueryManagementAsync", () => {
         const mockResponse: MCPQueryResponse = { result: { status: "ok" } };
         mockFetchResponse(mockResponse);
 
-        const client = new KustoClient(TestConnectionUrl, createMockTokenProvider());
+        const client = new KustoClient(TestConnectionUrl, createMockCredential());
         const input: MCPQueryRequest = {
             jsonrpc: "2.0",
             id: "1",
@@ -272,7 +272,7 @@ describe("KustoClient — mcpKustoQueryManagementAsync", () => {
     it("should include sessionId query parameter when provided", async () => {
         mockFetchResponse({});
 
-        const client = new KustoClient(TestConnectionUrl, createMockTokenProvider());
+        const client = new KustoClient(TestConnectionUrl, createMockCredential());
         const input: MCPQueryRequest = {
             jsonrpc: "2.0",
             id: "2",
@@ -288,7 +288,7 @@ describe("KustoClient — mcpKustoQueryManagementAsync", () => {
     it("should URL-encode sessionId when it contains special characters", async () => {
         mockFetchResponse({});
 
-        const client = new KustoClient(TestConnectionUrl, createMockTokenProvider());
+        const client = new KustoClient(TestConnectionUrl, createMockCredential());
         await client.mcpKustoQueryManagementAsync(
             { jsonrpc: "2.0", id: "3", method: "tools/call" },
             "session with spaces",
@@ -308,7 +308,7 @@ describe("KustoClient — error handling", () => {
     it("should throw ConnectorException on non-OK response", async () => {
         mockFetchError(401, "Unauthorized");
 
-        const client = new KustoClient(TestConnectionUrl, createMockTokenProvider());
+        const client = new KustoClient(TestConnectionUrl, createMockCredential());
         await expect(
             client.listKustoResultsAsync({ csl: "test" as unknown as Query, db: "testdb" as unknown as DatabaseName, cluster: "testcluster" as unknown as ClusterName }),
         ).rejects.toThrow(ConnectorException);
@@ -318,7 +318,7 @@ describe("KustoClient — error handling", () => {
         const errorBody = '{"code": "Forbidden", "message": "Access denied"}';
         mockFetchError(403, errorBody);
 
-        const client = new KustoClient(TestConnectionUrl, createMockTokenProvider());
+        const client = new KustoClient(TestConnectionUrl, createMockCredential());
 
         try {
             await client.listKustoResultsAsync({ csl: "test" as unknown as Query, db: "testdb" as unknown as DatabaseName, cluster: "testcluster" as unknown as ClusterName });

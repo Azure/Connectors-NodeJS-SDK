@@ -1,8 +1,8 @@
 // Copyright (c) Microsoft Corporation.  All rights reserved.
 
+import type { TokenCredential } from "@azure/core-auth";
 import { MondayClient } from "../src/generated/MondayExtensions.ts";
 import { ConnectorException } from "../src/azureConnectors/connectorException.ts";
-import { TokenProvider } from "../src/azureConnectors/authentication.ts";
 import { ConnectorNames } from "../src/generated/connectorNames.ts";
 import { availableConnectors } from "../src/generated/ManagedConnectors.ts";
 
@@ -12,9 +12,9 @@ import { availableConnectors } from "../src/generated/ManagedConnectors.ts";
 
 const TestConnectionUrl = "https://connection-runtime.azure.com/apim/monday/abc123";
 
-function createMockTokenProvider(): TokenProvider {
+function createMockCredential(): TokenCredential {
     return {
-        getAccessTokenAsync: async () => "mock-bearer-token",
+        getToken: async () => ({ token: "mock-bearer-token", expiresOnTimestamp: Number.MAX_SAFE_INTEGER }),
     };
 }
 
@@ -42,18 +42,18 @@ function mockFetchError(status: number, errorBody: string): void {
 
 describe("MondayClient — constructor", () => {
     it("should construct with valid options", () => {
-        const client = new MondayClient(TestConnectionUrl, createMockTokenProvider());
+        const client = new MondayClient(TestConnectionUrl, createMockCredential());
         expect(client).toBeDefined();
         expect(client).toBeInstanceOf(MondayClient);
     });
 
     it("should throw on null connection URL", () => {
-        expect(() => new MondayClient(null as unknown as string, createMockTokenProvider()))
+        expect(() => new MondayClient(null as unknown as string, createMockCredential()))
             .toThrow("Parameter 'connectionRuntimeUrl' cannot be null or undefined.");
     });
 
     it("should throw on undefined connection URL", () => {
-        expect(() => new MondayClient(undefined as unknown as string, createMockTokenProvider()))
+        expect(() => new MondayClient(undefined as unknown as string, createMockCredential()))
             .toThrow("Parameter 'connectionRuntimeUrl' cannot be null or undefined.");
     });
 });
@@ -67,7 +67,7 @@ describe("MondayClient — createItemAsync", () => {
         const response = { data: { create_item: { id: "998877", name: "New item" } } };
         mockFetchResponse(response);
 
-        const client = new MondayClient(TestConnectionUrl, createMockTokenProvider());
+        const client = new MondayClient(TestConnectionUrl, createMockCredential());
         const result = await client.createItemAsync({
             workspaceId: "ws123",
             boardId: "board123",
@@ -85,7 +85,7 @@ describe("MondayClient — createItemAsync", () => {
     it("should throw ConnectorException on non-OK response", async () => {
         mockFetchError(400, "Bad Request");
 
-        const client = new MondayClient(TestConnectionUrl, createMockTokenProvider());
+        const client = new MondayClient(TestConnectionUrl, createMockCredential());
         try {
             await client.createItemAsync({
                 workspaceId: "ws123",

@@ -5,14 +5,17 @@ import {
     Item,
     ItemsList,
 } from "../src/generated/CommondataserviceExtensions.ts";
-import { TokenProvider } from "../src/azureConnectors/authentication.ts";
 import { ConnectorException } from "../src/azureConnectors/connectorException.ts";
+import type { TokenCredential } from "../src/azureConnectors/index.ts";
 
 const TestConnectionUrl = "https://connection-runtime.azure.com/apim/commondataservice/abc123";
 
-function createMockTokenProvider(): TokenProvider {
+function createMockCredential(): TokenCredential {
     return {
-        getAccessTokenAsync: async () => "mock-bearer-token",
+        getToken: async () => ({
+            token: "mock-bearer-token",
+            expiresOnTimestamp: Number.MAX_SAFE_INTEGER,
+        }),
     };
 }
 
@@ -50,7 +53,7 @@ describe("CommondataserviceClient — getItemsAsync", () => {
             }))
             .mockResolvedValueOnce(createFetchResponse({ value: [secondItem] }));
 
-        const client = new CommondataserviceClient(TestConnectionUrl, createMockTokenProvider());
+        const client = new CommondataserviceClient(TestConnectionUrl, createMockCredential());
         const items: Item[] = [];
         for await (const item of client.getItemsAsync("default", "accounts")) {
             items.push(item);
@@ -74,7 +77,7 @@ describe("CommondataserviceClient — getItemsAsync", () => {
             }))
             .mockResolvedValueOnce(createFetchResponse({ value: [secondItem] }));
 
-        const client = new CommondataserviceClient(TestConnectionUrl, createMockTokenProvider());
+        const client = new CommondataserviceClient(TestConnectionUrl, createMockCredential());
         const items: Item[] = [];
         for await (const item of client.getItemsAsync("default", "accounts")) {
             items.push(item);
@@ -86,7 +89,7 @@ describe("CommondataserviceClient — getItemsAsync", () => {
 
     it("should double encode Dataverse dataset and table path parameters", async () => {
         global.fetch = jest.fn().mockResolvedValueOnce(createFetchResponse({ value: [] }));
-        const client = new CommondataserviceClient(TestConnectionUrl, createMockTokenProvider());
+        const client = new CommondataserviceClient(TestConnectionUrl, createMockCredential());
         const items: Item[] = [];
 
         for await (const item of client.getItemsAsync("https://contoso.crm.dynamics.com", "account/details")) {
@@ -110,7 +113,9 @@ describe("CommondataserviceClient — getItemsAsync", () => {
             }))
             .mockResolvedValueOnce(createErrorResponse(503, "Service unavailable"));
 
-        const client = new CommondataserviceClient(TestConnectionUrl, createMockTokenProvider());
+        const client = new CommondataserviceClient(TestConnectionUrl, createMockCredential(), {
+            retryOptions: { maxRetries: 0 },
+        });
         const iterator = client.getItemsAsync("default", "accounts")[Symbol.asyncIterator]();
 
         await expect(iterator.next()).resolves.toEqual({ done: false, value: firstItem });

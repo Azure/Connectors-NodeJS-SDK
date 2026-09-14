@@ -102,8 +102,10 @@ async function main() {
     if (searchUser) {
         console.log(`\n--- Search for User ("${searchUser}") ---`);
         try {
-            const results = await client.searchUserAsync(searchUser);
-            const users = results.value ?? [];
+            const users = [];
+            for await (const user of client.searchUserAsync(searchUser)) {
+                users.push(user);
+            }
 
             if (users.length > 0) {
                 console.log(`Found ${users.length} matching users:`);

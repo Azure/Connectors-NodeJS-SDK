@@ -1,5 +1,6 @@
 // Copyright (c) Microsoft Corporation.  All rights reserved.
 
+import type { TokenCredential } from "@azure/core-auth";
 import {
     TeamsClient,
     NewMeeting,
@@ -11,7 +12,6 @@ import {
     GetTagsResponseSchema,
 } from "../src/generated/TeamsExtensions.ts";
 import { ConnectorException } from "../src/azureConnectors/connectorException.ts";
-import { TokenProvider } from "../src/azureConnectors/authentication.ts";
 import { ConnectorNames } from "../src/generated/connectorNames.ts";
 import { availableConnectors } from "../src/generated/ManagedConnectors.ts";
 
@@ -21,9 +21,9 @@ import { availableConnectors } from "../src/generated/ManagedConnectors.ts";
 
 const TestConnectionUrl = "https://connection-runtime.azure.com/apim/teams/abc123";
 
-function createMockTokenProvider(): TokenProvider {
+function createMockCredential(): TokenCredential {
     return {
-        getAccessTokenAsync: async () => "mock-bearer-token",
+        getToken: async () => ({ token: "mock-bearer-token", expiresOnTimestamp: Number.MAX_SAFE_INTEGER }),
     };
 }
 
@@ -70,23 +70,23 @@ const _meetingResponse: NewMeetingResponse = {
 
 describe("TeamsClient — constructor", () => {
     it("should construct with valid options", () => {
-        const client = new TeamsClient(TestConnectionUrl, createMockTokenProvider());
+        const client = new TeamsClient(TestConnectionUrl, createMockCredential());
         expect(client).toBeDefined();
         expect(client).toBeInstanceOf(TeamsClient);
     });
 
     it("should strip trailing slashes from connection URL", () => {
-        const client = new TeamsClient(TestConnectionUrl + "///", createMockTokenProvider());
+        const client = new TeamsClient(TestConnectionUrl + "///", createMockCredential());
         expect(client).toBeDefined();
     });
 
     it("should throw on null connection URL", () => {
-        expect(() => new TeamsClient(null as unknown as string, createMockTokenProvider()))
+        expect(() => new TeamsClient(null as unknown as string, createMockCredential()))
             .toThrow("Parameter 'connectionRuntimeUrl' cannot be null or undefined.");
     });
 
     it("should throw on undefined connection URL", () => {
-        expect(() => new TeamsClient(undefined as unknown as string, createMockTokenProvider()))
+        expect(() => new TeamsClient(undefined as unknown as string, createMockCredential()))
             .toThrow("Parameter 'connectionRuntimeUrl' cannot be null or undefined.");
     });
 });
@@ -102,7 +102,7 @@ describe("TeamsClient — getAllTeamsAsync", () => {
         };
         mockFetchResponse(mockResponse);
 
-        const client = new TeamsClient(TestConnectionUrl, createMockTokenProvider());
+        const client = new TeamsClient(TestConnectionUrl, createMockCredential());
         const result = await client.getAllTeamsAsync();
 
         expect(result).toEqual(mockResponse);
@@ -125,7 +125,7 @@ describe("TeamsClient — createTeamsMeetingAsync", () => {
         };
         mockFetchResponse(mockResponse);
 
-        const client = new TeamsClient(TestConnectionUrl, createMockTokenProvider());
+        const client = new TeamsClient(TestConnectionUrl, createMockCredential());
         const input: NewMeeting = {
             subject: "Standup",
             body: { content: "Discussion" },
@@ -160,7 +160,7 @@ describe("TeamsClient — getChannelsForGroupAsync", () => {
         };
         mockFetchResponse(mockResponse);
 
-        const client = new TeamsClient(TestConnectionUrl, createMockTokenProvider());
+        const client = new TeamsClient(TestConnectionUrl, createMockCredential());
         const result = await client.getChannelsForGroupAsync("team-123");
 
         expect(result).toEqual(mockResponse);
@@ -171,7 +171,7 @@ describe("TeamsClient — getChannelsForGroupAsync", () => {
     it("should include query parameters when provided", async () => {
         mockFetchResponse({ value: [] });
 
-        const client = new TeamsClient(TestConnectionUrl, createMockTokenProvider());
+        const client = new TeamsClient(TestConnectionUrl, createMockCredential());
         await client.getChannelsForGroupAsync("team-1", "$filter=name eq 'General'");
 
         const [url] = (global.fetch as jest.Mock).mock.calls[0];
@@ -191,7 +191,7 @@ describe("TeamsClient — createChannelAsync", () => {
         };
         mockFetchResponse(mockResponse);
 
-        const client = new TeamsClient(TestConnectionUrl, createMockTokenProvider());
+        const client = new TeamsClient(TestConnectionUrl, createMockCredential());
         const input: CreateChannelInput = {
             displayName: "New Channel",
         };
@@ -216,7 +216,7 @@ describe("TeamsClient — getTagsAsync", () => {
         };
         mockFetchResponse(mockResponse);
 
-        const client = new TeamsClient(TestConnectionUrl, createMockTokenProvider());
+        const client = new TeamsClient(TestConnectionUrl, createMockCredential());
         const result = await client.getTagsAsync("team-1");
 
         expect(result).toEqual(mockResponse);
@@ -234,7 +234,7 @@ describe("TeamsClient — deleteTagAsync", () => {
     it("should send DELETE request", async () => {
         mockFetchResponse(null);
 
-        const client = new TeamsClient(TestConnectionUrl, createMockTokenProvider());
+        const client = new TeamsClient(TestConnectionUrl, createMockCredential());
         await client.deleteTagAsync("team-1", "tag-1");
 
         const [, init] = (global.fetch as jest.Mock).mock.calls[0];
@@ -250,7 +250,7 @@ describe("TeamsClient — error handling", () => {
     it("should throw ConnectorException on non-OK response", async () => {
         mockFetchError(403, '{"error": "Access denied"}');
 
-        const client = new TeamsClient(TestConnectionUrl, createMockTokenProvider());
+        const client = new TeamsClient(TestConnectionUrl, createMockCredential());
 
         await expect(client.getAllTeamsAsync()).rejects.toThrow(
         );
@@ -260,7 +260,7 @@ describe("TeamsClient — error handling", () => {
         const errorBody = '{"code": "NotFound"}';
         mockFetchError(404, errorBody);
 
-        const client = new TeamsClient(TestConnectionUrl, createMockTokenProvider());
+        const client = new TeamsClient(TestConnectionUrl, createMockCredential());
 
         try {
             await client.getAllTeamsAsync();

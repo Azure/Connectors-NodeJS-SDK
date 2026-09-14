@@ -1,8 +1,8 @@
 // Copyright (c) Microsoft Corporation.  All rights reserved.
 
+import type { TokenCredential } from "@azure/core-auth";
 import { TextrequestClient } from "../src/generated/TextrequestExtensions.ts";
 import { ConnectorException } from "../src/azureConnectors/connectorException.ts";
-import { TokenProvider } from "../src/azureConnectors/authentication.ts";
 import { ConnectorNames } from "../src/generated/connectorNames.ts";
 import { availableConnectors } from "../src/generated/ManagedConnectors.ts";
 
@@ -12,9 +12,9 @@ import { availableConnectors } from "../src/generated/ManagedConnectors.ts";
 
 const TestConnectionUrl = "https://connection-runtime.azure.com/apim/textrequest/abc123";
 
-function createMockTokenProvider(): TokenProvider {
+function createMockCredential(): TokenCredential {
     return {
-        getAccessTokenAsync: async () => "mock-bearer-token",
+        getToken: async () => ({ token: "mock-bearer-token", expiresOnTimestamp: Number.MAX_SAFE_INTEGER }),
     };
 }
 
@@ -42,18 +42,18 @@ function mockFetchError(status: number, errorBody: string): void {
 
 describe("TextrequestClient — constructor", () => {
     it("should construct with valid options", () => {
-        const client = new TextrequestClient(TestConnectionUrl, createMockTokenProvider());
+        const client = new TextrequestClient(TestConnectionUrl, createMockCredential());
         expect(client).toBeDefined();
         expect(client).toBeInstanceOf(TextrequestClient);
     });
 
     it("should throw on null connection URL", () => {
-        expect(() => new TextrequestClient(null as unknown as string, createMockTokenProvider()))
+        expect(() => new TextrequestClient(null as unknown as string, createMockCredential()))
             .toThrow("Parameter 'connectionRuntimeUrl' cannot be null or undefined.");
     });
 
     it("should throw on undefined connection URL", () => {
-        expect(() => new TextrequestClient(undefined as unknown as string, createMockTokenProvider()))
+        expect(() => new TextrequestClient(undefined as unknown as string, createMockCredential()))
             .toThrow("Parameter 'connectionRuntimeUrl' cannot be null or undefined.");
     });
 });
@@ -67,7 +67,7 @@ describe("TextrequestClient — getMessagesByContactPhoneAsync", () => {
         const messages = { data: [{ id: "m1", body: "Hi there", direction: "outbound" }] };
         mockFetchResponse(messages);
 
-        const client = new TextrequestClient(TestConnectionUrl, createMockTokenProvider());
+        const client = new TextrequestClient(TestConnectionUrl, createMockCredential());
         const result = await client.getMessagesByContactPhoneAsync("123", "+15555550100");
 
         expect(result).toEqual(messages);
@@ -80,7 +80,7 @@ describe("TextrequestClient — getMessagesByContactPhoneAsync", () => {
     it("should throw ConnectorException on non-OK response", async () => {
         mockFetchError(404, "Not Found");
 
-        const client = new TextrequestClient(TestConnectionUrl, createMockTokenProvider());
+        const client = new TextrequestClient(TestConnectionUrl, createMockCredential());
         try {
             await client.getMessagesByContactPhoneAsync("123", "+15555550100");
             throw new Error("Expected ConnectorException to be thrown.");
