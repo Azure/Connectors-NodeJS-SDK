@@ -7,9 +7,13 @@
  */
 
 import type { TokenCredential } from "@azure/core-auth";
-import { getPagedAsyncIterator, type PagedAsyncIterableIterator } from "@azure/core-paging";
+import { getPagedAsyncIterator, type PagedAsyncIterableIterator, type PageSettings } from "@azure/core-paging";
 import { ConnectorHttpClient } from "./connectorHttpClient.ts";
 import type { ConnectorClientOptions } from "./options.ts";
+
+interface InitialPageLink {
+    readonly url: string;
+}
 
 /**
  * Abstract base class for generated connector clients.
@@ -52,21 +56,24 @@ export abstract class ConnectorClientBase {
     /**
      * Creates a lazy iterator that resolves and fetches connector response pages on demand.
      * @param firstPageLink The relative or absolute link for the first page.
-     * @param fetchPage Fetches one page from an already resolved URL.
+    * @param fetchPage Fetches one page from an already resolved URL and identifies the initial request.
      * @param itemPropertyName The response property containing page items.
      * @param nextLinkPropertyName The response property containing the next-page URL.
      */
     protected createPageable<TPage extends object, TItem>(
         firstPageLink: string,
-        fetchPage: (url: string) => Promise<TPage>,
+        fetchPage: (url: string, isFirstPage: boolean) => Promise<TPage>,
         itemPropertyName = "value",
         nextLinkPropertyName?: string,
     ): PagedAsyncIterableIterator<TItem> {
-        return getPagedAsyncIterator<TItem>({
-            firstPageLink,
+        const initialPageLink: InitialPageLink = { url: firstPageLink };
+        return getPagedAsyncIterator<TItem, TItem[], PageSettings, string | InitialPageLink>({
+            firstPageLink: initialPageLink,
             getPage: async (pageLink) => {
-                const resolvedPageLink = this.resolvePageLink(pageLink, firstPageLink);
-                const response = await fetchPage(this.resolveUrl(resolvedPageLink));
+                const isFirstPage = typeof pageLink !== "string";
+                const unresolvedPageLink = isFirstPage ? pageLink.url : pageLink;
+                const resolvedPageLink = this.resolvePageLink(unresolvedPageLink, firstPageLink);
+                const response = await fetchPage(this.resolveUrl(resolvedPageLink), isFirstPage);
                 const page = response as unknown as Record<string, unknown>;
                 const items = page[itemPropertyName];
                 const nextPageLinkValue = nextLinkPropertyName === undefined

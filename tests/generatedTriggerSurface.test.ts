@@ -53,11 +53,11 @@ function toClientMethodName(operationId: string): string {
 }
 
 /**
- * Extracts the names of every generated <c>public async</c> client method in the source text.
+ * Extracts the names of every generated public client method in the source text.
  */
 function extractClientMethodNames(content: string): string[] {
     const methodNames: string[] = [];
-    const methodRegex = /public\s+async\s+(\w+)\s*\(/g;
+     const methodRegex = /public\s+(?:async\s+)?(\w+)\s*\(/g;
     let match: RegExpExecArray | null;
     while ((match = methodRegex.exec(content)) !== null) {
         methodNames.push(match[1]);
@@ -168,6 +168,14 @@ describe("Generated clients — no trigger operation is invoked as a data-plane 
 
     it("should discover the generated extension files", () => {
         expect(generatedFiles.length).toBeGreaterThanOrEqual(10);
+    });
+
+    it("should discover Promise and pageable client methods", () => {
+        const arm = generatedFiles.find(file => file.connector === "Arm");
+        expect(arm).toBeDefined();
+
+        const methodNames = extractClientMethodNames(arm!.content);
+        expect(methodNames).toEqual(expect.arrayContaining(["getSubscription", "listSubscriptions"]));
     });
 
     it.each(generatedFiles)(

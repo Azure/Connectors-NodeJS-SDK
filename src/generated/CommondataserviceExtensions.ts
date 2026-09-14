@@ -490,12 +490,13 @@ export class CommondataserviceClient extends ConnectorClientBase {
         const requestPath = `/v2/datasets/${encodeURIComponent(encodeURIComponent(String(dataset)))}/tables/${encodeURIComponent(encodeURIComponent(String(table)))}/items` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         return this.createPageable<ItemsList, Item>(
             requestPath,
-            async (requestUrl) => {
-                const httpResponse = await this.httpClient.sendAsync<ItemsList>("GET", requestUrl, undefined, undefined, abortSignal);
+            async (requestUrl, isFirstPage) => {
+                const requestMethod = isFirstPage ? "GET" : "GET";
+                const httpResponse = await this.httpClient.sendAsync<ItemsList>(requestMethod, requestUrl, undefined, undefined, abortSignal);
 
                 if (!httpResponse.isSuccessStatusCode) {
                     const operationPath = this.getOperationPath(requestUrl);
-                    throw new ConnectorError(this.connectorName, `GET ${operationPath}`, httpResponse.statusCode, httpResponse.text);
+                    throw new ConnectorError(this.connectorName, `${requestMethod} ${operationPath}`, httpResponse.statusCode, httpResponse.text);
                 }
 
                 return httpResponse.value as ItemsList;

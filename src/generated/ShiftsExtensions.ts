@@ -836,12 +836,13 @@ export class ShiftsClient extends ConnectorClientBase {
         const requestPath = `/v1.0/teams/${teamId}/schedule/timesoff` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         return this.createPageable<ListTimesOffResponse, TimeOffResponse>(
             requestPath,
-            async (requestUrl) => {
-                const httpResponse = await this.httpClient.sendAsync<ListTimesOffResponse>("GET", requestUrl, undefined, undefined, abortSignal);
+            async (requestUrl, isFirstPage) => {
+                const requestMethod = isFirstPage ? "GET" : "GET";
+                const httpResponse = await this.httpClient.sendAsync<ListTimesOffResponse>(requestMethod, requestUrl, undefined, undefined, abortSignal);
 
                 if (!httpResponse.isSuccessStatusCode) {
                     const operationPath = this.getOperationPath(requestUrl);
-                    throw new ConnectorError(this.connectorName, `GET ${operationPath}`, httpResponse.statusCode, httpResponse.text);
+                    throw new ConnectorError(this.connectorName, `${requestMethod} ${operationPath}`, httpResponse.statusCode, httpResponse.text);
                 }
 
                 return httpResponse.value as ListTimesOffResponse;
@@ -915,12 +916,13 @@ export class ShiftsClient extends ConnectorClientBase {
         const requestPath = `/v1.0/teams/${teamId}/schedule/shifts` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         return this.createPageable<ListShiftsResponse, ShiftResponse>(
             requestPath,
-            async (requestUrl) => {
-                const httpResponse = await this.httpClient.sendAsync<ListShiftsResponse>("GET", requestUrl, undefined, undefined, abortSignal);
+            async (requestUrl, isFirstPage) => {
+                const requestMethod = isFirstPage ? "GET" : "GET";
+                const httpResponse = await this.httpClient.sendAsync<ListShiftsResponse>(requestMethod, requestUrl, undefined, undefined, abortSignal);
 
                 if (!httpResponse.isSuccessStatusCode) {
                     const operationPath = this.getOperationPath(requestUrl);
-                    throw new ConnectorError(this.connectorName, `GET ${operationPath}`, httpResponse.statusCode, httpResponse.text);
+                    throw new ConnectorError(this.connectorName, `${requestMethod} ${operationPath}`, httpResponse.statusCode, httpResponse.text);
                 }
 
                 return httpResponse.value as ListShiftsResponse;
@@ -994,12 +996,13 @@ export class ShiftsClient extends ConnectorClientBase {
         const requestPath = `/v1.0/teams/${teamId}/schedule/openShifts` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         return this.createPageable<ListOpenShiftsResponse, OpenShiftResponse>(
             requestPath,
-            async (requestUrl) => {
-                const httpResponse = await this.httpClient.sendAsync<ListOpenShiftsResponse>("GET", requestUrl, undefined, undefined, abortSignal);
+            async (requestUrl, isFirstPage) => {
+                const requestMethod = isFirstPage ? "GET" : "GET";
+                const httpResponse = await this.httpClient.sendAsync<ListOpenShiftsResponse>(requestMethod, requestUrl, undefined, undefined, abortSignal);
 
                 if (!httpResponse.isSuccessStatusCode) {
                     const operationPath = this.getOperationPath(requestUrl);
-                    throw new ConnectorError(this.connectorName, `GET ${operationPath}`, httpResponse.statusCode, httpResponse.text);
+                    throw new ConnectorError(this.connectorName, `${requestMethod} ${operationPath}`, httpResponse.statusCode, httpResponse.text);
                 }
 
                 return httpResponse.value as ListOpenShiftsResponse;
@@ -1083,12 +1086,13 @@ export class ShiftsClient extends ConnectorClientBase {
         const requestPath = `/v1.0/teams/${teamId}/schedule/timeOffReasons` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         return this.createPageable<GetTimeOffReasonsResponse, unknown>(
             requestPath,
-            async (requestUrl) => {
-                const httpResponse = await this.httpClient.sendAsync<GetTimeOffReasonsResponse>("GET", requestUrl, undefined, undefined, abortSignal);
+            async (requestUrl, isFirstPage) => {
+                const requestMethod = isFirstPage ? "GET" : "GET";
+                const httpResponse = await this.httpClient.sendAsync<GetTimeOffReasonsResponse>(requestMethod, requestUrl, undefined, undefined, abortSignal);
 
                 if (!httpResponse.isSuccessStatusCode) {
                     const operationPath = this.getOperationPath(requestUrl);
-                    throw new ConnectorError(this.connectorName, `GET ${operationPath}`, httpResponse.statusCode, httpResponse.text);
+                    throw new ConnectorError(this.connectorName, `${requestMethod} ${operationPath}`, httpResponse.statusCode, httpResponse.text);
                 }
 
                 return httpResponse.value as GetTimeOffReasonsResponse;
@@ -1110,12 +1114,13 @@ export class ShiftsClient extends ConnectorClientBase {
         const requestPath = `/v1.0/teams/${teamId}/schedule/schedulinggroups` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         return this.createPageable<ListSchedulingGroupsResponse, SchedulingGroupResponse>(
             requestPath,
-            async (requestUrl) => {
-                const httpResponse = await this.httpClient.sendAsync<ListSchedulingGroupsResponse>("GET", requestUrl, undefined, undefined, abortSignal);
+            async (requestUrl, isFirstPage) => {
+                const requestMethod = isFirstPage ? "GET" : "GET";
+                const httpResponse = await this.httpClient.sendAsync<ListSchedulingGroupsResponse>(requestMethod, requestUrl, undefined, undefined, abortSignal);
 
                 if (!httpResponse.isSuccessStatusCode) {
                     const operationPath = this.getOperationPath(requestUrl);
-                    throw new ConnectorError(this.connectorName, `GET ${operationPath}`, httpResponse.statusCode, httpResponse.text);
+                    throw new ConnectorError(this.connectorName, `${requestMethod} ${operationPath}`, httpResponse.statusCode, httpResponse.text);
                 }
 
                 return httpResponse.value as ListSchedulingGroupsResponse;
@@ -1156,12 +1161,13 @@ export class ShiftsClient extends ConnectorClientBase {
         const requestPath = `/v1.0/teams/${teamId}/schedule/timeOffRequests` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         return this.createPageable<ListTimeOffRequestsResponse, TimeOffRequestResponse>(
             requestPath,
-            async (requestUrl) => {
-                const httpResponse = await this.httpClient.sendAsync<ListTimeOffRequestsResponse>("GET", requestUrl, undefined, undefined, abortSignal);
+            async (requestUrl, isFirstPage) => {
+                const requestMethod = isFirstPage ? "GET" : "GET";
+                const httpResponse = await this.httpClient.sendAsync<ListTimeOffRequestsResponse>(requestMethod, requestUrl, undefined, undefined, abortSignal);
 
                 if (!httpResponse.isSuccessStatusCode) {
                     const operationPath = this.getOperationPath(requestUrl);
-                    throw new ConnectorError(this.connectorName, `GET ${operationPath}`, httpResponse.statusCode, httpResponse.text);
+                    throw new ConnectorError(this.connectorName, `${requestMethod} ${operationPath}`, httpResponse.statusCode, httpResponse.text);
                 }
 
                 return httpResponse.value as ListTimeOffRequestsResponse;
@@ -1234,12 +1240,13 @@ export class ShiftsClient extends ConnectorClientBase {
         const requestPath = `/v1.0/teams/${teamId}/schedule/offerShiftRequests` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         return this.createPageable<ListOfferShiftRequestsResponse, OfferShiftRequestResponse>(
             requestPath,
-            async (requestUrl) => {
-                const httpResponse = await this.httpClient.sendAsync<ListOfferShiftRequestsResponse>("GET", requestUrl, undefined, undefined, abortSignal);
+            async (requestUrl, isFirstPage) => {
+                const requestMethod = isFirstPage ? "GET" : "GET";
+                const httpResponse = await this.httpClient.sendAsync<ListOfferShiftRequestsResponse>(requestMethod, requestUrl, undefined, undefined, abortSignal);
 
                 if (!httpResponse.isSuccessStatusCode) {
                     const operationPath = this.getOperationPath(requestUrl);
-                    throw new ConnectorError(this.connectorName, `GET ${operationPath}`, httpResponse.statusCode, httpResponse.text);
+                    throw new ConnectorError(this.connectorName, `${requestMethod} ${operationPath}`, httpResponse.statusCode, httpResponse.text);
                 }
 
                 return httpResponse.value as ListOfferShiftRequestsResponse;
@@ -1312,12 +1319,13 @@ export class ShiftsClient extends ConnectorClientBase {
         const requestPath = `/v1.0/teams/${teamId}/schedule/swapShiftsChangeRequests` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         return this.createPageable<ListSwapShiftsChangeRequestsResponse, SwapShiftsChangeRequestResponse>(
             requestPath,
-            async (requestUrl) => {
-                const httpResponse = await this.httpClient.sendAsync<ListSwapShiftsChangeRequestsResponse>("GET", requestUrl, undefined, undefined, abortSignal);
+            async (requestUrl, isFirstPage) => {
+                const requestMethod = isFirstPage ? "GET" : "GET";
+                const httpResponse = await this.httpClient.sendAsync<ListSwapShiftsChangeRequestsResponse>(requestMethod, requestUrl, undefined, undefined, abortSignal);
 
                 if (!httpResponse.isSuccessStatusCode) {
                     const operationPath = this.getOperationPath(requestUrl);
-                    throw new ConnectorError(this.connectorName, `GET ${operationPath}`, httpResponse.statusCode, httpResponse.text);
+                    throw new ConnectorError(this.connectorName, `${requestMethod} ${operationPath}`, httpResponse.statusCode, httpResponse.text);
                 }
 
                 return httpResponse.value as ListSwapShiftsChangeRequestsResponse;
@@ -1390,12 +1398,13 @@ export class ShiftsClient extends ConnectorClientBase {
         const requestPath = `/v1.0/teams/${teamId}/schedule/openShiftChangeRequests` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         return this.createPageable<ListOpenShiftChangeRequestsResponse, OpenShiftChangeRequestResponse>(
             requestPath,
-            async (requestUrl) => {
-                const httpResponse = await this.httpClient.sendAsync<ListOpenShiftChangeRequestsResponse>("GET", requestUrl, undefined, undefined, abortSignal);
+            async (requestUrl, isFirstPage) => {
+                const requestMethod = isFirstPage ? "GET" : "GET";
+                const httpResponse = await this.httpClient.sendAsync<ListOpenShiftChangeRequestsResponse>(requestMethod, requestUrl, undefined, undefined, abortSignal);
 
                 if (!httpResponse.isSuccessStatusCode) {
                     const operationPath = this.getOperationPath(requestUrl);
-                    throw new ConnectorError(this.connectorName, `GET ${operationPath}`, httpResponse.statusCode, httpResponse.text);
+                    throw new ConnectorError(this.connectorName, `${requestMethod} ${operationPath}`, httpResponse.statusCode, httpResponse.text);
                 }
 
                 return httpResponse.value as ListOpenShiftChangeRequestsResponse;
@@ -1471,12 +1480,13 @@ export class ShiftsClient extends ConnectorClientBase {
         const requestPath = `/beta/me/joinedTeams/getOpenShifts` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         return this.createPageable<ListOpenShiftsCrossTeamResponse, OpenShiftResponse>(
             requestPath,
-            async (requestUrl) => {
-                const httpResponse = await this.httpClient.sendAsync<ListOpenShiftsCrossTeamResponse>("GET", requestUrl, undefined, undefined, abortSignal);
+            async (requestUrl, isFirstPage) => {
+                const requestMethod = isFirstPage ? "GET" : "GET";
+                const httpResponse = await this.httpClient.sendAsync<ListOpenShiftsCrossTeamResponse>(requestMethod, requestUrl, undefined, undefined, abortSignal);
 
                 if (!httpResponse.isSuccessStatusCode) {
                     const operationPath = this.getOperationPath(requestUrl);
-                    throw new ConnectorError(this.connectorName, `GET ${operationPath}`, httpResponse.statusCode, httpResponse.text);
+                    throw new ConnectorError(this.connectorName, `${requestMethod} ${operationPath}`, httpResponse.statusCode, httpResponse.text);
                 }
 
                 return httpResponse.value as ListOpenShiftsCrossTeamResponse;
@@ -1507,12 +1517,13 @@ export class ShiftsClient extends ConnectorClientBase {
         const requestPath = `/beta/me/joinedTeams/getShifts` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         return this.createPageable<ListShiftsCrossTeamResponse, ShiftResponse>(
             requestPath,
-            async (requestUrl) => {
-                const httpResponse = await this.httpClient.sendAsync<ListShiftsCrossTeamResponse>("GET", requestUrl, undefined, undefined, abortSignal);
+            async (requestUrl, isFirstPage) => {
+                const requestMethod = isFirstPage ? "GET" : "GET";
+                const httpResponse = await this.httpClient.sendAsync<ListShiftsCrossTeamResponse>(requestMethod, requestUrl, undefined, undefined, abortSignal);
 
                 if (!httpResponse.isSuccessStatusCode) {
                     const operationPath = this.getOperationPath(requestUrl);
-                    throw new ConnectorError(this.connectorName, `GET ${operationPath}`, httpResponse.statusCode, httpResponse.text);
+                    throw new ConnectorError(this.connectorName, `${requestMethod} ${operationPath}`, httpResponse.statusCode, httpResponse.text);
                 }
 
                 return httpResponse.value as ListShiftsCrossTeamResponse;
@@ -1543,12 +1554,13 @@ export class ShiftsClient extends ConnectorClientBase {
         const requestPath = `/beta/me/joinedTeams/getTimesOff` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         return this.createPageable<ListTimesOffCrossTeamResponse, TimeOffResponse>(
             requestPath,
-            async (requestUrl) => {
-                const httpResponse = await this.httpClient.sendAsync<ListTimesOffCrossTeamResponse>("GET", requestUrl, undefined, undefined, abortSignal);
+            async (requestUrl, isFirstPage) => {
+                const requestMethod = isFirstPage ? "GET" : "GET";
+                const httpResponse = await this.httpClient.sendAsync<ListTimesOffCrossTeamResponse>(requestMethod, requestUrl, undefined, undefined, abortSignal);
 
                 if (!httpResponse.isSuccessStatusCode) {
                     const operationPath = this.getOperationPath(requestUrl);
-                    throw new ConnectorError(this.connectorName, `GET ${operationPath}`, httpResponse.statusCode, httpResponse.text);
+                    throw new ConnectorError(this.connectorName, `${requestMethod} ${operationPath}`, httpResponse.statusCode, httpResponse.text);
                 }
 
                 return httpResponse.value as ListTimesOffCrossTeamResponse;

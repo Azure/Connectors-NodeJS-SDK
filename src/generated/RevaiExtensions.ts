@@ -700,7 +700,7 @@ export class RevaiClient extends ConnectorClientBase {
      * Get sentiment analysis job
      * @remarks Returns information about a sentiment analysis job.
      */
-    public async getAnalysi(id: string, abortSignal?: AbortSignalLike): Promise<AnalysisGetResponse> {
+    public async getAnalysis(id: string, abortSignal?: AbortSignalLike): Promise<AnalysisGetResponse> {
         const requestPath = `/sentiment_analysis/v1/jobs/${id}`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<AnalysisGetResponse>("GET", requestUrl, undefined, undefined, abortSignal);
@@ -716,7 +716,7 @@ export class RevaiClient extends ConnectorClientBase {
      * Delete sentiment analysis job
      * @remarks Deletes a sentiment analysis job. All data related to the job will be permanently deleted.
      */
-    public async deleteAnalysi(id: string, abortSignal?: AbortSignalLike): Promise<string> {
+    public async deleteAnalysis(id: string, abortSignal?: AbortSignalLike): Promise<string> {
         const requestPath = `/sentiment_analysis/v1/jobs/${id}`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<string>("DELETE", requestUrl, undefined, undefined, abortSignal);

@@ -45,7 +45,7 @@ class TestConnectorClient extends ConnectorClientBase {
 
     public testCreatePageable(
         firstPageLink: string,
-        fetchPage: (url: string) => Promise<TestPage>,
+        fetchPage: (url: string, isFirstPage: boolean) => Promise<TestPage>,
         itemPropertyName?: string,
         nextLinkPropertyName?: string,
     ): PagedAsyncIterableIterator<TestItem> {
@@ -250,10 +250,10 @@ describe("ConnectorClientBase", () => {
 
         it("should lazily yield items and route a foreign nextLink through the connection URL", async () => {
             const client = new TestConnectorClient(baseUrl, createMockCredential());
-            const requestedUrls: string[] = [];
-            const pageable = client.testCreatePageable("/items", async (url) => {
-                requestedUrls.push(url);
-                return requestedUrls.length === 1
+            const requests: Array<{ url: string; isFirstPage: boolean }> = [];
+            const pageable = client.testCreatePageable("/items", async (url, isFirstPage) => {
+                requests.push({ url, isFirstPage });
+                return requests.length === 1
                     ? {
                         value: [{ id: "first" }],
                         nextLink: "https://management.azure.com/items?$skiptoken=second",
@@ -261,7 +261,7 @@ describe("ConnectorClientBase", () => {
                     : { value: [{ id: "second" }] };
             });
 
-            expect(requestedUrls).toEqual([]);
+            expect(requests).toEqual([]);
 
             const items: TestItem[] = [];
             for await (const item of pageable) {
@@ -269,18 +269,18 @@ describe("ConnectorClientBase", () => {
             }
 
             expect(items).toEqual([{ id: "first" }, { id: "second" }]);
-            expect(requestedUrls).toEqual([
-                `${baseUrl}/items`,
-                `${baseUrl}/items?$skiptoken=second`,
+            expect(requests).toEqual([
+                { url: `${baseUrl}/items`, isFirstPage: true },
+                { url: `${baseUrl}/items?$skiptoken=second`, isFirstPage: false },
             ]);
         });
 
         it("should start byPage from a query-only continuation token and follow an OData next link", async () => {
             const client = new TestConnectorClient(baseUrl, createMockCredential());
-            const requestedUrls: string[] = [];
-            const pageable = client.testCreatePageable("/items?page=1", async (url) => {
-                requestedUrls.push(url);
-                return requestedUrls.length === 1
+            const requests: Array<{ url: string; isFirstPage: boolean }> = [];
+            const pageable = client.testCreatePageable("/items?page=1", async (url, isFirstPage) => {
+                requests.push({ url, isFirstPage });
+                return requests.length === 1
                     ? { value: [{ id: "second" }], "@odata.nextLink": "?page=3" }
                     : { value: [{ id: "third" }] };
             });
@@ -294,10 +294,24 @@ describe("ConnectorClientBase", () => {
                 [{ id: "second" }],
                 [{ id: "third" }],
             ]);
-            expect(requestedUrls).toEqual([
-                `${baseUrl}/items?page=2`,
-                `${baseUrl}/items?page=3`,
+            expect(requests).toEqual([
+                { url: `${baseUrl}/items?page=2`, isFirstPage: false },
+                { url: `${baseUrl}/items?page=3`, isFirstPage: false },
             ]);
+        });
+
+        it("should identify the initial request for each byPage iterator", async () => {
+            const client = new TestConnectorClient(baseUrl, createMockCredential());
+            const firstPageStates: boolean[] = [];
+            const pageable = client.testCreatePageable("/items", async (_url, isFirstPage) => {
+                firstPageStates.push(isFirstPage);
+                return { value: [{ id: "first" }] };
+            });
+
+            await pageable.byPage().next();
+            await pageable.byPage().next();
+
+            expect(firstPageStates).toEqual([true, true]);
         });
 
         it("should resolve a path-relative next link against the current page", async () => {

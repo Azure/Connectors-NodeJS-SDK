@@ -637,12 +637,13 @@ export class SalesforceClient extends ConnectorClientBase {
         const requestPath = `/datasets/default/tables`;
         return this.createPageable<TablesList, Table>(
             requestPath,
-            async (requestUrl) => {
-                const httpResponse = await this.httpClient.sendAsync<TablesList>("GET", requestUrl, undefined, undefined, abortSignal);
+            async (requestUrl, isFirstPage) => {
+                const requestMethod = isFirstPage ? "GET" : "GET";
+                const httpResponse = await this.httpClient.sendAsync<TablesList>(requestMethod, requestUrl, undefined, undefined, abortSignal);
 
                 if (!httpResponse.isSuccessStatusCode) {
                     const operationPath = this.getOperationPath(requestUrl);
-                    throw new ConnectorError(this.connectorName, `GET ${operationPath}`, httpResponse.statusCode, httpResponse.text);
+                    throw new ConnectorError(this.connectorName, `${requestMethod} ${operationPath}`, httpResponse.statusCode, httpResponse.text);
                 }
 
                 return httpResponse.value as TablesList;
@@ -692,12 +693,13 @@ export class SalesforceClient extends ConnectorClientBase {
         const requestPath = `/datasets/default/tables/${encodeURIComponent(encodeURIComponent(String(table)))}/items` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         return this.createPageable<ItemsList, Item>(
             requestPath,
-            async (requestUrl) => {
-                const httpResponse = await this.httpClient.sendAsync<ItemsList>("GET", requestUrl, undefined, undefined, abortSignal);
+            async (requestUrl, isFirstPage) => {
+                const requestMethod = isFirstPage ? "GET" : "GET";
+                const httpResponse = await this.httpClient.sendAsync<ItemsList>(requestMethod, requestUrl, undefined, undefined, abortSignal);
 
                 if (!httpResponse.isSuccessStatusCode) {
                     const operationPath = this.getOperationPath(requestUrl);
-                    throw new ConnectorError(this.connectorName, `GET ${operationPath}`, httpResponse.statusCode, httpResponse.text);
+                    throw new ConnectorError(this.connectorName, `${requestMethod} ${operationPath}`, httpResponse.statusCode, httpResponse.text);
                 }
 
                 return httpResponse.value as ItemsList;
@@ -731,12 +733,13 @@ export class SalesforceClient extends ConnectorClientBase {
         const requestPath = `/datasets/default/tables/account/items` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         return this.createPageable<ItemsList, Item>(
             requestPath,
-            async (requestUrl) => {
-                const httpResponse = await this.httpClient.sendAsync<ItemsList>("GET", requestUrl, undefined, undefined, abortSignal);
+            async (requestUrl, isFirstPage) => {
+                const requestMethod = isFirstPage ? "GET" : "GET";
+                const httpResponse = await this.httpClient.sendAsync<ItemsList>(requestMethod, requestUrl, undefined, undefined, abortSignal);
 
                 if (!httpResponse.isSuccessStatusCode) {
                     const operationPath = this.getOperationPath(requestUrl);
-                    throw new ConnectorError(this.connectorName, `GET ${operationPath}`, httpResponse.statusCode, httpResponse.text);
+                    throw new ConnectorError(this.connectorName, `${requestMethod} ${operationPath}`, httpResponse.statusCode, httpResponse.text);
                 }
 
                 return httpResponse.value as ItemsList;
@@ -770,12 +773,13 @@ export class SalesforceClient extends ConnectorClientBase {
         const requestPath = `/datasets/default/tables/user/items` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         return this.createPageable<ItemsList, Item>(
             requestPath,
-            async (requestUrl) => {
-                const httpResponse = await this.httpClient.sendAsync<ItemsList>("GET", requestUrl, undefined, undefined, abortSignal);
+            async (requestUrl, isFirstPage) => {
+                const requestMethod = isFirstPage ? "GET" : "GET";
+                const httpResponse = await this.httpClient.sendAsync<ItemsList>(requestMethod, requestUrl, undefined, undefined, abortSignal);
 
                 if (!httpResponse.isSuccessStatusCode) {
                     const operationPath = this.getOperationPath(requestUrl);
-                    throw new ConnectorError(this.connectorName, `GET ${operationPath}`, httpResponse.statusCode, httpResponse.text);
+                    throw new ConnectorError(this.connectorName, `${requestMethod} ${operationPath}`, httpResponse.statusCode, httpResponse.text);
                 }
 
                 return httpResponse.value as ItemsList;
@@ -809,12 +813,13 @@ export class SalesforceClient extends ConnectorClientBase {
         const requestPath = `/datasets/default/tables/case/items` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         return this.createPageable<ItemsList, Item>(
             requestPath,
-            async (requestUrl) => {
-                const httpResponse = await this.httpClient.sendAsync<ItemsList>("GET", requestUrl, undefined, undefined, abortSignal);
+            async (requestUrl, isFirstPage) => {
+                const requestMethod = isFirstPage ? "GET" : "GET";
+                const httpResponse = await this.httpClient.sendAsync<ItemsList>(requestMethod, requestUrl, undefined, undefined, abortSignal);
 
                 if (!httpResponse.isSuccessStatusCode) {
                     const operationPath = this.getOperationPath(requestUrl);
-                    throw new ConnectorError(this.connectorName, `GET ${operationPath}`, httpResponse.statusCode, httpResponse.text);
+                    throw new ConnectorError(this.connectorName, `${requestMethod} ${operationPath}`, httpResponse.statusCode, httpResponse.text);
                 }
 
                 return httpResponse.value as ItemsList;
@@ -848,12 +853,13 @@ export class SalesforceClient extends ConnectorClientBase {
         const requestPath = `/datasets/default/tables/opportunity/items` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         return this.createPageable<ItemsList, Item>(
             requestPath,
-            async (requestUrl) => {
-                const httpResponse = await this.httpClient.sendAsync<ItemsList>("GET", requestUrl, undefined, undefined, abortSignal);
+            async (requestUrl, isFirstPage) => {
+                const requestMethod = isFirstPage ? "GET" : "GET";
+                const httpResponse = await this.httpClient.sendAsync<ItemsList>(requestMethod, requestUrl, undefined, undefined, abortSignal);
 
                 if (!httpResponse.isSuccessStatusCode) {
                     const operationPath = this.getOperationPath(requestUrl);
-                    throw new ConnectorError(this.connectorName, `GET ${operationPath}`, httpResponse.statusCode, httpResponse.text);
+                    throw new ConnectorError(this.connectorName, `${requestMethod} ${operationPath}`, httpResponse.statusCode, httpResponse.text);
                 }
 
                 return httpResponse.value as ItemsList;
@@ -887,12 +893,13 @@ export class SalesforceClient extends ConnectorClientBase {
         const requestPath = `/datasets/default/tables/product2/items` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         return this.createPageable<ItemsList, Item>(
             requestPath,
-            async (requestUrl) => {
-                const httpResponse = await this.httpClient.sendAsync<ItemsList>("GET", requestUrl, undefined, undefined, abortSignal);
+            async (requestUrl, isFirstPage) => {
+                const requestMethod = isFirstPage ? "GET" : "GET";
+                const httpResponse = await this.httpClient.sendAsync<ItemsList>(requestMethod, requestUrl, undefined, undefined, abortSignal);
 
                 if (!httpResponse.isSuccessStatusCode) {
                     const operationPath = this.getOperationPath(requestUrl);
-                    throw new ConnectorError(this.connectorName, `GET ${operationPath}`, httpResponse.statusCode, httpResponse.text);
+                    throw new ConnectorError(this.connectorName, `${requestMethod} ${operationPath}`, httpResponse.statusCode, httpResponse.text);
                 }
 
                 return httpResponse.value as ItemsList;
@@ -926,12 +933,13 @@ export class SalesforceClient extends ConnectorClientBase {
         const requestPath = `/datasets/default/tables/contact/items` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         return this.createPageable<ItemsList, Item>(
             requestPath,
-            async (requestUrl) => {
-                const httpResponse = await this.httpClient.sendAsync<ItemsList>("GET", requestUrl, undefined, undefined, abortSignal);
+            async (requestUrl, isFirstPage) => {
+                const requestMethod = isFirstPage ? "GET" : "GET";
+                const httpResponse = await this.httpClient.sendAsync<ItemsList>(requestMethod, requestUrl, undefined, undefined, abortSignal);
 
                 if (!httpResponse.isSuccessStatusCode) {
                     const operationPath = this.getOperationPath(requestUrl);
-                    throw new ConnectorError(this.connectorName, `GET ${operationPath}`, httpResponse.statusCode, httpResponse.text);
+                    throw new ConnectorError(this.connectorName, `${requestMethod} ${operationPath}`, httpResponse.statusCode, httpResponse.text);
                 }
 
                 return httpResponse.value as ItemsList;

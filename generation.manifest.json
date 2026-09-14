@@ -2,7 +2,7 @@
   "_comment": "Provenance record for the generated clients under src/generated/. It lets a regeneration be reproduced and any cross-language surface delta be attributed to a specific generator revision and Swagger input. Regenerate and repopulate this file on every run (see the 'Provenance & Reproducibility' section of GENERATION.md). A reviewable regeneration PR must have status 'generated' with non-null provenance, swaggerSha256 values that match the committed swagger-cache/ snapshots, and outputSha256 values that match the canonical UTF-8/LF generated outputs; the tests/generationManifest.test.ts guard enforces this.",
   "manifestVersion": 2,
   "status": "generated",
-  "generatedAtUtc": "2026-09-14T18:24:34Z",
+  "generatedAtUtc": "2026-09-14T21:09:25Z",
   "generator": {
     "repository": "https://msazure.visualstudio.com/One/_git/AzureUX-BPM",
     "tool": "CodefulSdkGenerator (LogicAppsCompiler)",
@@ -11,8 +11,8 @@
     "bpmBranch": "swapnil/feature/typescript-generator-conventions",
     "assemblyVersion": "1.190.0.22",
     "sourcePatch": {
-      "path": "generator-patches/cf997a5-typescript-azure-sdk-conventions.patch",
-      "sha256": "d25b01b629a180a2f8955caf171de79e7ec0971d365c5227762428512777d900"
+      "path": "generator-patches/5e207bb-typescript-azure-sdk-conventions.patch",
+      "sha256": "eb0f808c4759a7668735ff2f1917bd23639e42cfd05a989211ef469c88a3c156"
     }
   },
   "command": "LogicAppsCompiler.exe <output-directory> --directClient --language=typescript --connectors=arm,azureblob,azureeventgrid,azureiotcentral,azuremonitorlogs,box,campfire,clicksendsms,cloudmersiveconvert,commondataservice,docusign,docuware,dropbox,dynamicsax,elfsquaddata,etsy,eventbrite,excelonline,formstackforms,freshservice,ftp,github,googlecalendar,googledrive,googletasks,impexium,infusionsoft,insightly,jedoxodatahub,jira,kusto,mailchimp,meetingroommap,microsoftforms,monday,mq,msgraphgroupsanduser,office365,office365groupsmail,office365users,onedriveforbusiness,orderful,pdfco,pipedrive,plivo,plumsail,powerbi,projectplace,replicon,revai,rss,salesforce,seismicplanner,sendgrid,sharepointonline,shifts,signinghub,slack,smtp,sql,starmind,starrezrestv1,tallyfy,teams,textrequest,ticketmaster,todo,twitter,typeform,waywedo,webex,wordpress,zendesk,zohosign",
@@ -39,14 +39,14 @@
       "outputFile": "src/generated/ArmExtensions.ts",
       "swaggerSnapshot": "swagger-cache/arm.swagger.json",
       "swaggerSha256": "5974fb8aaee9a2d46d64171889a52c0cf5345aff190a52cd045b2fc5e1d79a7f",
-      "outputSha256": "eb56dbd1ece91db80b000c39cedec93fe74b47b3e32f4b561a18918da21910b6"
+      "outputSha256": "dd537d29bc18f740151aed9468de8250dec7477150b7915cdb968e47b874ff21"
     },
     {
       "apiName": "azureblob",
       "outputFile": "src/generated/AzureblobExtensions.ts",
       "swaggerSnapshot": "swagger-cache/azureblob.swagger.json",
       "swaggerSha256": "2913f54ac344c619768967e0a126bd5aba4e92917e9531d081daeae1b9b76f7c",
-      "outputSha256": "323770d89597107d6b2e0d896d1f1a01a7ae75da2b5f8b14ea2c9602374ee9e1"
+      "outputSha256": "739ccece0aca9e2fbc22ba4739daafa86646c597828bc889e85cbe8946fe6223"
     },
     {
       "apiName": "azureeventgrid",
@@ -60,7 +60,7 @@
       "outputFile": "src/generated/AzureiotcentralExtensions.ts",
       "swaggerSnapshot": "swagger-cache/azureiotcentral.swagger.json",
       "swaggerSha256": "19613b639f5451e81d7f6be142426e3f74a6749e006f75a48e87b52a013f5751",
-      "outputSha256": "d28749676e7f21633b2ecb3af621ccd96bc04bd9c6899e6a95d2aff96b9a281a"
+      "outputSha256": "e5dc9bcbab01aaf1714771c3f2a0c5cbc2a2590b73ed17341bae5c161e3af41e"
     },
     {
       "apiName": "azuremonitorlogs",
@@ -102,7 +102,7 @@
       "outputFile": "src/generated/CommondataserviceExtensions.ts",
       "swaggerSnapshot": "swagger-cache/commondataservice.swagger.json",
       "swaggerSha256": "8c07cdc661241079cbd8f801bb28444f7f5907b68518c161be98bc6aa6c3e24c",
-      "outputSha256": "4c7958ecbc2d5350fd1d41e8fc54afbd58ed34975eba9021b015e2df420b3ead"
+      "outputSha256": "1f03e7ea38b871de0c74f3c51ef96fa876d3349f44d358f729dd608270050b2c"
     },
     {
       "apiName": "docusign",
@@ -130,14 +130,14 @@
       "outputFile": "src/generated/DynamicsaxExtensions.ts",
       "swaggerSnapshot": "swagger-cache/dynamicsax.swagger.json",
       "swaggerSha256": "7ad46b64824a9857eef0cd657182f571258f4e2e3127c5b5ed0f0313e80c6e55",
-      "outputSha256": "4afc23a3b2f1793d106110352716b163eed8526d3029e49aa6f03169e809f709"
+      "outputSha256": "91c01f1813b06940abdbad1377f8f23ba679528f88ed493adf79e517870f60dd"
     },
     {
       "apiName": "elfsquaddata",
       "outputFile": "src/generated/ElfsquaddataExtensions.ts",
       "swaggerSnapshot": "swagger-cache/elfsquaddata.swagger.json",
       "swaggerSha256": "37bd441cdd9688a86afaefae7ea2671b42c6719b0d0774bc790c7bde7a684b82",
-      "outputSha256": "418b0ac90ac378715f20ac7eda8cf4a6e256d27d9955b80fccf9cb081c56ea01"
+      "outputSha256": "49afb526739a52c60c4a7685c6e7d11e30492aba8df0e72e082c3e3ee95a39a1"
     },
     {
       "apiName": "etsy",
@@ -158,7 +158,7 @@
       "outputFile": "src/generated/ExcelonlineExtensions.ts",
       "swaggerSnapshot": "swagger-cache/excelonline.swagger.json",
       "swaggerSha256": "55b95c5aa93a92f02f3258e0daecbb158cb3dbc27abc67aecbf20375c07f6489",
-      "outputSha256": "38841fe659928c6be1195a3ce160365632f9757fe903e0ec6665d4a15a98399f"
+      "outputSha256": "3d71dd3efc67836d88e998fd9edce225e2e71ca31d8131abacff37b553776b29"
     },
     {
       "apiName": "formstackforms",
@@ -298,28 +298,28 @@
       "outputFile": "src/generated/Office365Extensions.ts",
       "swaggerSnapshot": "swagger-cache/office365.swagger.json",
       "swaggerSha256": "b58a10baa9a5ca6914bd7dff75d050cba3949c1186ef962abc2365fabdc96f05",
-      "outputSha256": "1b0fdfec5bfdc3811f09e81815c48879d93d5b257be91dc2fe0482d471a003f9"
+      "outputSha256": "93b128aaab9ecf8dd3492ef162ff1171b45b12d854d12a242013a77a9d748ffc"
     },
     {
       "apiName": "office365groupsmail",
       "outputFile": "src/generated/Office365groupsmailExtensions.ts",
       "swaggerSnapshot": "swagger-cache/office365groupsmail.swagger.json",
       "swaggerSha256": "ebf91624f5c75da8d26015e9741b36fe2e4bbde8ad3c356c326487aebbd5a2a9",
-      "outputSha256": "aae9c161d07e66a52b45fca69053c2af3e5aac179b15aeeb188e2113c90a13cd"
+      "outputSha256": "ad1bf6477b54566d1cf37f298b5a15962879954ab2accbc8f4c41a24a988260a"
     },
     {
       "apiName": "office365users",
       "outputFile": "src/generated/Office365usersExtensions.ts",
       "swaggerSnapshot": "swagger-cache/office365users.swagger.json",
       "swaggerSha256": "642b5779ef601327d0345f631c9a1182b27914815a854f536b84ee99f476e137",
-      "outputSha256": "c9972276168940c0cacb0347a653a98c611d61d19cdbd16fa8a5f36c583129b9"
+      "outputSha256": "8443e2c267811fcb9b43afb8a121fa0d1542c802e6c16c97244a463acea3a818"
     },
     {
       "apiName": "onedriveforbusiness",
       "outputFile": "src/generated/OnedriveforbusinessExtensions.ts",
       "swaggerSnapshot": "swagger-cache/onedriveforbusiness.swagger.json",
       "swaggerSha256": "bb09c0baccb5c324d74f9cdefa979336f849fbe903204135095bbc3e04d1c568",
-      "outputSha256": "29e3d1b9b4a374ce76f6d210daded58c7b6f6e3d448e7e20061dcd9ce6acbf91"
+      "outputSha256": "6f991edb8be38cef75801f7bac46fb3fb25e32966509c5090269206d0a1dd659"
     },
     {
       "apiName": "orderful",
@@ -382,7 +382,7 @@
       "outputFile": "src/generated/RevaiExtensions.ts",
       "swaggerSnapshot": "swagger-cache/revai.swagger.json",
       "swaggerSha256": "0b0aa956275624c23f31a2c3c3315f49fb26d8559e80e6ec536f6364c04e1037",
-      "outputSha256": "effd68a603ad0e2003ec8c7b58b1dedf0d551b5208aa1007452e4a9560b9720a"
+      "outputSha256": "8930deb6f1f43d011d1408f3404982521cace1746d00b60f28012ed9a30be2ab"
     },
     {
       "apiName": "rss",
@@ -396,7 +396,7 @@
       "outputFile": "src/generated/SalesforceExtensions.ts",
       "swaggerSnapshot": "swagger-cache/salesforce.swagger.json",
       "swaggerSha256": "57ad15ab50d2d1796a1520b9a03d85dbabbf52b5ac722b05e390f1787926051f",
-      "outputSha256": "cd82eab9cf58fc1a66a6ed5202b780dec3cb5202f2c79171b0276d7da62e5f46"
+      "outputSha256": "6329f9d810c4e39cdf88c3b06bd553924df192ae01ccedfad0f963d5422f73cb"
     },
     {
       "apiName": "seismicplanner",
@@ -417,14 +417,14 @@
       "outputFile": "src/generated/SharepointonlineExtensions.ts",
       "swaggerSnapshot": "swagger-cache/sharepointonline.swagger.json",
       "swaggerSha256": "2407765778e4079f7ee5b7a5cb7abcbf9ede7b294e62a8203150cbb25b7a722d",
-      "outputSha256": "0c67c3fc54561da714fd9d6dc5cc52d0c3fbc0b3330c9770b782e9c2d0fd402d"
+      "outputSha256": "64ded5620c0c2183f757a79140a1eac5cf920b71f56731a2ccfc3eed9d385c0f"
     },
     {
       "apiName": "shifts",
       "outputFile": "src/generated/ShiftsExtensions.ts",
       "swaggerSnapshot": "swagger-cache/shifts.swagger.json",
       "swaggerSha256": "db4ed2f1af41c20cf583de3ebf7351ffa12baae52abb565906c7e46ef7eb86b9",
-      "outputSha256": "0d9c78d3335ac4e515b76d9df617b27c01db2b87cb627a1cfa290a8dde33e7be"
+      "outputSha256": "c98d7322bde686a317bce2eb18887c3549382ba3d14ff9872283c403dc797b33"
     },
     {
       "apiName": "signinghub",
@@ -438,7 +438,7 @@
       "outputFile": "src/generated/SlackExtensions.ts",
       "swaggerSnapshot": "swagger-cache/slack.swagger.json",
       "swaggerSha256": "9628ffa4396b91d06a3ef246926c86beea3513602b8b8f5a1d6f22c38386c336",
-      "outputSha256": "d9f7ce52899b7fd98b13f9b4a9041b5fe3938c7e6097ba6aada2c9407319d4aa"
+      "outputSha256": "c60e8fb50c771ba882bd372baa160fc69f15e31d40b1a3b71ae44ed2c7ac4a27"
     },
     {
       "apiName": "smtp",
@@ -452,7 +452,7 @@
       "outputFile": "src/generated/SqlExtensions.ts",
       "swaggerSnapshot": "swagger-cache/sql.swagger.json",
       "swaggerSha256": "ce1b8d471f2a8ca04e7919434266694173a456b0af27710de3694cbf84f01972",
-      "outputSha256": "fd02c86bbb5234f4033e706ad2632de8c90040a73b9b36ef62d5f9698f3b68c6"
+      "outputSha256": "6788b42d693c2b3cc652822faf20234bf633d72fb0964c6fc21a4e8adfb22430"
     },
     {
       "apiName": "starmind",
@@ -480,7 +480,7 @@
       "outputFile": "src/generated/TeamsExtensions.ts",
       "swaggerSnapshot": "swagger-cache/teams.swagger.json",
       "swaggerSha256": "8130802332f0174086c050cc1e36815f77cbfc18f64d7abeb19698cf779181fb",
-      "outputSha256": "5267078de88a2cb0f625ab27f7d540daa0604634a4b2293e2c5f7c2442777a9c"
+      "outputSha256": "06789f9af93469991baa64d673d9c633fdbc84c70417f5bd686c0ec0d7fa426a"
     },
     {
       "apiName": "textrequest",
@@ -543,7 +543,7 @@
       "outputFile": "src/generated/ZendeskExtensions.ts",
       "swaggerSnapshot": "swagger-cache/zendesk.swagger.json",
       "swaggerSha256": "f568516a726b1eb89d50c38c34582f20fd3bb315d29f5f139eb563ddf84b1f8a",
-      "outputSha256": "87fa68abcbf7dff138cdf36c7d83f01c85ca56b5393e9b49e6e2f087ea47d839"
+      "outputSha256": "9f7647fb56442134d7c793bbf49ea3f0a1381a7ca44a5b33ef15b3aa41cb22e8"
     },
     {
       "apiName": "zohosign",

@@ -383,12 +383,13 @@ export class Office365groupsmailClient extends ConnectorClientBase {
         const requestPath = `/v1.0/groups/${groupId}/conversations`;
         return this.createPageable<ListConversationsResponse, Conversation>(
             requestPath,
-            async (requestUrl) => {
-                const httpResponse = await this.httpClient.sendAsync<ListConversationsResponse>("GET", requestUrl, undefined, undefined, abortSignal);
+            async (requestUrl, isFirstPage) => {
+                const requestMethod = isFirstPage ? "GET" : "GET";
+                const httpResponse = await this.httpClient.sendAsync<ListConversationsResponse>(requestMethod, requestUrl, undefined, undefined, abortSignal);
 
                 if (!httpResponse.isSuccessStatusCode) {
                     const operationPath = this.getOperationPath(requestUrl);
-                    throw new ConnectorError(this.connectorName, `GET ${operationPath}`, httpResponse.statusCode, httpResponse.text);
+                    throw new ConnectorError(this.connectorName, `${requestMethod} ${operationPath}`, httpResponse.statusCode, httpResponse.text);
                 }
 
                 return httpResponse.value as ListConversationsResponse;
@@ -438,12 +439,13 @@ export class Office365groupsmailClient extends ConnectorClientBase {
         const requestPath = `/v1.0/groups/${groupId}/conversations/${conversationId}/threads`;
         return this.createPageable<ListConversationThreadsResponse, ConversationThread>(
             requestPath,
-            async (requestUrl) => {
-                const httpResponse = await this.httpClient.sendAsync<ListConversationThreadsResponse>("GET", requestUrl, undefined, undefined, abortSignal);
+            async (requestUrl, isFirstPage) => {
+                const requestMethod = isFirstPage ? "GET" : "GET";
+                const httpResponse = await this.httpClient.sendAsync<ListConversationThreadsResponse>(requestMethod, requestUrl, undefined, undefined, abortSignal);
 
                 if (!httpResponse.isSuccessStatusCode) {
                     const operationPath = this.getOperationPath(requestUrl);
-                    throw new ConnectorError(this.connectorName, `GET ${operationPath}`, httpResponse.statusCode, httpResponse.text);
+                    throw new ConnectorError(this.connectorName, `${requestMethod} ${operationPath}`, httpResponse.statusCode, httpResponse.text);
                 }
 
                 return httpResponse.value as ListConversationThreadsResponse;
@@ -477,12 +479,13 @@ export class Office365groupsmailClient extends ConnectorClientBase {
         const requestPath = `/v1.0/groups/${groupId}/threads`;
         return this.createPageable<ListGroupThreadsResponse, ConversationThread>(
             requestPath,
-            async (requestUrl) => {
-                const httpResponse = await this.httpClient.sendAsync<ListGroupThreadsResponse>("GET", requestUrl, undefined, undefined, abortSignal);
+            async (requestUrl, isFirstPage) => {
+                const requestMethod = isFirstPage ? "GET" : "GET";
+                const httpResponse = await this.httpClient.sendAsync<ListGroupThreadsResponse>(requestMethod, requestUrl, undefined, undefined, abortSignal);
 
                 if (!httpResponse.isSuccessStatusCode) {
                     const operationPath = this.getOperationPath(requestUrl);
-                    throw new ConnectorError(this.connectorName, `GET ${operationPath}`, httpResponse.statusCode, httpResponse.text);
+                    throw new ConnectorError(this.connectorName, `${requestMethod} ${operationPath}`, httpResponse.statusCode, httpResponse.text);
                 }
 
                 return httpResponse.value as ListGroupThreadsResponse;
@@ -546,12 +549,13 @@ export class Office365groupsmailClient extends ConnectorClientBase {
         const requestPath = `/v1.0/groups/${groupId}/threads/${threadId}/posts`;
         return this.createPageable<ListThreadPostsResponse, Post>(
             requestPath,
-            async (requestUrl) => {
-                const httpResponse = await this.httpClient.sendAsync<ListThreadPostsResponse>("GET", requestUrl, undefined, undefined, abortSignal);
+            async (requestUrl, isFirstPage) => {
+                const requestMethod = isFirstPage ? "GET" : "GET";
+                const httpResponse = await this.httpClient.sendAsync<ListThreadPostsResponse>(requestMethod, requestUrl, undefined, undefined, abortSignal);
 
                 if (!httpResponse.isSuccessStatusCode) {
                     const operationPath = this.getOperationPath(requestUrl);
-                    throw new ConnectorError(this.connectorName, `GET ${operationPath}`, httpResponse.statusCode, httpResponse.text);
+                    throw new ConnectorError(this.connectorName, `${requestMethod} ${operationPath}`, httpResponse.statusCode, httpResponse.text);
                 }
 
                 return httpResponse.value as ListThreadPostsResponse;
@@ -589,12 +593,13 @@ export class Office365groupsmailClient extends ConnectorClientBase {
         const requestPath = `/v1.0/groups/${groupId}/threads/${threadId}/posts/${postId}/attachments`;
         return this.createPageable<GetAttachmentsResponse, Attachment>(
             requestPath,
-            async (requestUrl) => {
-                const httpResponse = await this.httpClient.sendAsync<GetAttachmentsResponse>("GET", requestUrl, undefined, undefined, abortSignal);
+            async (requestUrl, isFirstPage) => {
+                const requestMethod = isFirstPage ? "GET" : "GET";
+                const httpResponse = await this.httpClient.sendAsync<GetAttachmentsResponse>(requestMethod, requestUrl, undefined, undefined, abortSignal);
 
                 if (!httpResponse.isSuccessStatusCode) {
                     const operationPath = this.getOperationPath(requestUrl);
-                    throw new ConnectorError(this.connectorName, `GET ${operationPath}`, httpResponse.statusCode, httpResponse.text);
+                    throw new ConnectorError(this.connectorName, `${requestMethod} ${operationPath}`, httpResponse.statusCode, httpResponse.text);
                 }
 
                 return httpResponse.value as GetAttachmentsResponse;

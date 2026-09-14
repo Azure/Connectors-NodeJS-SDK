@@ -3029,12 +3029,13 @@ export class Office365Client extends ConnectorClientBase {
         const requestPath = `/codeless/v1.0/me/contactFolders/${encodeURIComponent(encodeURIComponent(String(folder)))}/contacts` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         return this.createPageable<EntityListResponseContactResponse, ContactResponse>(
             requestPath,
-            async (requestUrl) => {
-                const httpResponse = await this.httpClient.sendAsync<EntityListResponseContactResponse>("GET", requestUrl, undefined, undefined, abortSignal);
+            async (requestUrl, isFirstPage) => {
+                const requestMethod = isFirstPage ? "GET" : "GET";
+                const httpResponse = await this.httpClient.sendAsync<EntityListResponseContactResponse>(requestMethod, requestUrl, undefined, undefined, abortSignal);
 
                 if (!httpResponse.isSuccessStatusCode) {
                     const operationPath = this.getOperationPath(requestUrl);
-                    throw new ConnectorError(this.connectorName, `GET ${operationPath}`, httpResponse.statusCode, httpResponse.text);
+                    throw new ConnectorError(this.connectorName, `${requestMethod} ${operationPath}`, httpResponse.statusCode, httpResponse.text);
                 }
 
                 return httpResponse.value as EntityListResponseContactResponse;

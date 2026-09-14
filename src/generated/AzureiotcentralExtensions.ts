@@ -950,12 +950,13 @@ export class AzureiotcentralClient extends ConnectorClientBase {
         const requestPath = `/api/ga_2022_07_31/deviceGroups` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         return this.createPageable<DeviceGroupCollection, DeviceGroup>(
             requestPath,
-            async (requestUrl) => {
-                const httpResponse = await this.httpClient.sendAsync<DeviceGroupCollection>("GET", requestUrl, undefined, undefined, abortSignal);
+            async (requestUrl, isFirstPage) => {
+                const requestMethod = isFirstPage ? "GET" : "GET";
+                const httpResponse = await this.httpClient.sendAsync<DeviceGroupCollection>(requestMethod, requestUrl, undefined, undefined, abortSignal);
 
                 if (!httpResponse.isSuccessStatusCode) {
                     const operationPath = this.getOperationPath(requestUrl);
-                    throw new ConnectorError(this.connectorName, `GET ${operationPath}`, httpResponse.statusCode, httpResponse.text);
+                    throw new ConnectorError(this.connectorName, `${requestMethod} ${operationPath}`, httpResponse.statusCode, httpResponse.text);
                 }
 
                 return httpResponse.value as DeviceGroupCollection;
@@ -1035,12 +1036,13 @@ export class AzureiotcentralClient extends ConnectorClientBase {
         const requestPath = `/api/ga_2022_07_31/deviceGroups/${deviceGroupId}/devices` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         return this.createPageable<DeviceGroupDeviceCollection, DeviceV1>(
             requestPath,
-            async (requestUrl) => {
-                const httpResponse = await this.httpClient.sendAsync<DeviceGroupDeviceCollection>("GET", requestUrl, undefined, undefined, abortSignal);
+            async (requestUrl, isFirstPage) => {
+                const requestMethod = isFirstPage ? "GET" : "GET";
+                const httpResponse = await this.httpClient.sendAsync<DeviceGroupDeviceCollection>(requestMethod, requestUrl, undefined, undefined, abortSignal);
 
                 if (!httpResponse.isSuccessStatusCode) {
                     const operationPath = this.getOperationPath(requestUrl);
-                    throw new ConnectorError(this.connectorName, `GET ${operationPath}`, httpResponse.statusCode, httpResponse.text);
+                    throw new ConnectorError(this.connectorName, `${requestMethod} ${operationPath}`, httpResponse.statusCode, httpResponse.text);
                 }
 
                 return httpResponse.value as DeviceGroupDeviceCollection;
@@ -1131,12 +1133,13 @@ export class AzureiotcentralClient extends ConnectorClientBase {
         const requestPath = `/api/ga_2022_07_31/devices/${deviceId}/relationships` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         return this.createPageable<DeviceRelationshipCollection, DeviceRelationshipStatic>(
             requestPath,
-            async (requestUrl) => {
-                const httpResponse = await this.httpClient.sendAsync<DeviceRelationshipCollection>("GET", requestUrl, undefined, undefined, abortSignal);
+            async (requestUrl, isFirstPage) => {
+                const requestMethod = isFirstPage ? "GET" : "GET";
+                const httpResponse = await this.httpClient.sendAsync<DeviceRelationshipCollection>(requestMethod, requestUrl, undefined, undefined, abortSignal);
 
                 if (!httpResponse.isSuccessStatusCode) {
                     const operationPath = this.getOperationPath(requestUrl);
-                    throw new ConnectorError(this.connectorName, `GET ${operationPath}`, httpResponse.statusCode, httpResponse.text);
+                    throw new ConnectorError(this.connectorName, `${requestMethod} ${operationPath}`, httpResponse.statusCode, httpResponse.text);
                 }
 
                 return httpResponse.value as DeviceRelationshipCollection;
@@ -1236,12 +1239,13 @@ export class AzureiotcentralClient extends ConnectorClientBase {
         const requestPath = `/api/ga_2022_07_31/jobs` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         return this.createPageable<JobCollection, JobStatic>(
             requestPath,
-            async (requestUrl) => {
-                const httpResponse = await this.httpClient.sendAsync<JobCollection>("GET", requestUrl, undefined, undefined, abortSignal);
+            async (requestUrl, isFirstPage) => {
+                const requestMethod = isFirstPage ? "GET" : "GET";
+                const httpResponse = await this.httpClient.sendAsync<JobCollection>(requestMethod, requestUrl, undefined, undefined, abortSignal);
 
                 if (!httpResponse.isSuccessStatusCode) {
                     const operationPath = this.getOperationPath(requestUrl);
-                    throw new ConnectorError(this.connectorName, `GET ${operationPath}`, httpResponse.statusCode, httpResponse.text);
+                    throw new ConnectorError(this.connectorName, `${requestMethod} ${operationPath}`, httpResponse.statusCode, httpResponse.text);
                 }
 
                 return httpResponse.value as JobCollection;
@@ -1306,12 +1310,13 @@ export class AzureiotcentralClient extends ConnectorClientBase {
         const requestPath = `/api/ga_2022_07_31/jobs/${jobId}/devices` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         return this.createPageable<JobDeviceStatusCollection, JobDeviceStatus>(
             requestPath,
-            async (requestUrl) => {
-                const httpResponse = await this.httpClient.sendAsync<JobDeviceStatusCollection>("GET", requestUrl, undefined, undefined, abortSignal);
+            async (requestUrl, isFirstPage) => {
+                const requestMethod = isFirstPage ? "GET" : "GET";
+                const httpResponse = await this.httpClient.sendAsync<JobDeviceStatusCollection>(requestMethod, requestUrl, undefined, undefined, abortSignal);
 
                 if (!httpResponse.isSuccessStatusCode) {
                     const operationPath = this.getOperationPath(requestUrl);
-                    throw new ConnectorError(this.connectorName, `GET ${operationPath}`, httpResponse.statusCode, httpResponse.text);
+                    throw new ConnectorError(this.connectorName, `${requestMethod} ${operationPath}`, httpResponse.statusCode, httpResponse.text);
                 }
 
                 return httpResponse.value as JobDeviceStatusCollection;
@@ -1389,12 +1394,13 @@ export class AzureiotcentralClient extends ConnectorClientBase {
         const requestPath = `/api/ga_2022_07_31/organizations` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         return this.createPageable<OrganizationCollection, Organization>(
             requestPath,
-            async (requestUrl) => {
-                const httpResponse = await this.httpClient.sendAsync<OrganizationCollection>("GET", requestUrl, undefined, undefined, abortSignal);
+            async (requestUrl, isFirstPage) => {
+                const requestMethod = isFirstPage ? "GET" : "GET";
+                const httpResponse = await this.httpClient.sendAsync<OrganizationCollection>(requestMethod, requestUrl, undefined, undefined, abortSignal);
 
                 if (!httpResponse.isSuccessStatusCode) {
                     const operationPath = this.getOperationPath(requestUrl);
-                    throw new ConnectorError(this.connectorName, `GET ${operationPath}`, httpResponse.statusCode, httpResponse.text);
+                    throw new ConnectorError(this.connectorName, `${requestMethod} ${operationPath}`, httpResponse.statusCode, httpResponse.text);
                 }
 
                 return httpResponse.value as OrganizationCollection;
@@ -1474,12 +1480,13 @@ export class AzureiotcentralClient extends ConnectorClientBase {
         const requestPath = `/api/ga_2022_07_31/scheduledJobs` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         return this.createPageable<ScheduledJobCollection, ScheduledJob>(
             requestPath,
-            async (requestUrl) => {
-                const httpResponse = await this.httpClient.sendAsync<ScheduledJobCollection>("GET", requestUrl, undefined, undefined, abortSignal);
+            async (requestUrl, isFirstPage) => {
+                const requestMethod = isFirstPage ? "GET" : "GET";
+                const httpResponse = await this.httpClient.sendAsync<ScheduledJobCollection>(requestMethod, requestUrl, undefined, undefined, abortSignal);
 
                 if (!httpResponse.isSuccessStatusCode) {
                     const operationPath = this.getOperationPath(requestUrl);
-                    throw new ConnectorError(this.connectorName, `GET ${operationPath}`, httpResponse.statusCode, httpResponse.text);
+                    throw new ConnectorError(this.connectorName, `${requestMethod} ${operationPath}`, httpResponse.statusCode, httpResponse.text);
                 }
 
                 return httpResponse.value as ScheduledJobCollection;
@@ -1588,12 +1595,13 @@ export class AzureiotcentralClient extends ConnectorClientBase {
         const requestPath = `/api/ga_2022_07_31/scheduledJobs/${scheduledJobId}/jobs` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         return this.createPageable<ScheduledJobJobCollection, JobStatic>(
             requestPath,
-            async (requestUrl) => {
-                const httpResponse = await this.httpClient.sendAsync<ScheduledJobJobCollection>("GET", requestUrl, undefined, undefined, abortSignal);
+            async (requestUrl, isFirstPage) => {
+                const requestMethod = isFirstPage ? "GET" : "GET";
+                const httpResponse = await this.httpClient.sendAsync<ScheduledJobJobCollection>(requestMethod, requestUrl, undefined, undefined, abortSignal);
 
                 if (!httpResponse.isSuccessStatusCode) {
                     const operationPath = this.getOperationPath(requestUrl);
-                    throw new ConnectorError(this.connectorName, `GET ${operationPath}`, httpResponse.statusCode, httpResponse.text);
+                    throw new ConnectorError(this.connectorName, `${requestMethod} ${operationPath}`, httpResponse.statusCode, httpResponse.text);
                 }
 
                 return httpResponse.value as ScheduledJobJobCollection;
@@ -1865,12 +1873,13 @@ export class AzureiotcentralClient extends ConnectorClientBase {
         const requestPath = `/api/v1/devices` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         return this.createPageable<DeviceCollection, DeviceV1>(
             requestPath,
-            async (requestUrl) => {
-                const httpResponse = await this.httpClient.sendAsync<DeviceCollection>("GET", requestUrl, undefined, undefined, abortSignal);
+            async (requestUrl, isFirstPage) => {
+                const requestMethod = isFirstPage ? "GET" : "GET";
+                const httpResponse = await this.httpClient.sendAsync<DeviceCollection>(requestMethod, requestUrl, undefined, undefined, abortSignal);
 
                 if (!httpResponse.isSuccessStatusCode) {
                     const operationPath = this.getOperationPath(requestUrl);
-                    throw new ConnectorError(this.connectorName, `GET ${operationPath}`, httpResponse.statusCode, httpResponse.text);
+                    throw new ConnectorError(this.connectorName, `${requestMethod} ${operationPath}`, httpResponse.statusCode, httpResponse.text);
                 }
 
                 return httpResponse.value as DeviceCollection;
@@ -2088,12 +2097,13 @@ export class AzureiotcentralClient extends ConnectorClientBase {
         const requestPath = `/api/v1/deviceTemplates` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         return this.createPageable<DeviceTemplateCollection, DeviceTemplate>(
             requestPath,
-            async (requestUrl) => {
-                const httpResponse = await this.httpClient.sendAsync<DeviceTemplateCollection>("GET", requestUrl, undefined, undefined, abortSignal);
+            async (requestUrl, isFirstPage) => {
+                const requestMethod = isFirstPage ? "GET" : "GET";
+                const httpResponse = await this.httpClient.sendAsync<DeviceTemplateCollection>(requestMethod, requestUrl, undefined, undefined, abortSignal);
 
                 if (!httpResponse.isSuccessStatusCode) {
                     const operationPath = this.getOperationPath(requestUrl);
-                    throw new ConnectorError(this.connectorName, `GET ${operationPath}`, httpResponse.statusCode, httpResponse.text);
+                    throw new ConnectorError(this.connectorName, `${requestMethod} ${operationPath}`, httpResponse.statusCode, httpResponse.text);
                 }
 
                 return httpResponse.value as DeviceTemplateCollection;

@@ -578,12 +578,13 @@ export class Office365usersClient extends ConnectorClientBase {
         const requestPath = `/v2/users` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         return this.createPageable<EntityListResponseIReadOnlyListUser, User>(
             requestPath,
-            async (requestUrl) => {
-                const httpResponse = await this.httpClient.sendAsync<EntityListResponseIReadOnlyListUser>("GET", requestUrl, undefined, undefined, abortSignal);
+            async (requestUrl, isFirstPage) => {
+                const requestMethod = isFirstPage ? "GET" : "GET";
+                const httpResponse = await this.httpClient.sendAsync<EntityListResponseIReadOnlyListUser>(requestMethod, requestUrl, undefined, undefined, abortSignal);
 
                 if (!httpResponse.isSuccessStatusCode) {
                     const operationPath = this.getOperationPath(requestUrl);
-                    throw new ConnectorError(this.connectorName, `GET ${operationPath}`, httpResponse.statusCode, httpResponse.text);
+                    throw new ConnectorError(this.connectorName, `${requestMethod} ${operationPath}`, httpResponse.statusCode, httpResponse.text);
                 }
 
                 return httpResponse.value as EntityListResponseIReadOnlyListUser;

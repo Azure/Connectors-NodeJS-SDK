@@ -601,12 +601,13 @@ export class AzureblobClient extends ConnectorClientBase {
         const requestPath = `/v2/datasets/${encodeURIComponent(encodeURIComponent(String(dataset)))}/foldersV2/${encodeURIComponent(encodeURIComponent(String(id)))}` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         return this.createPageable<ListOfBlobsWithSensitivityLabels, DataWithSensitivityLabelInfo>(
             requestPath,
-            async (requestUrl) => {
-                const httpResponse = await this.httpClient.sendAsync<ListOfBlobsWithSensitivityLabels>("GET", requestUrl, undefined, undefined, abortSignal);
+            async (requestUrl, isFirstPage) => {
+                const requestMethod = isFirstPage ? "GET" : "GET";
+                const httpResponse = await this.httpClient.sendAsync<ListOfBlobsWithSensitivityLabels>(requestMethod, requestUrl, undefined, undefined, abortSignal);
 
                 if (!httpResponse.isSuccessStatusCode) {
                     const operationPath = this.getOperationPath(requestUrl);
-                    throw new ConnectorError(this.connectorName, `GET ${operationPath}`, httpResponse.statusCode, httpResponse.text);
+                    throw new ConnectorError(this.connectorName, `${requestMethod} ${operationPath}`, httpResponse.statusCode, httpResponse.text);
                 }
 
                 return httpResponse.value as ListOfBlobsWithSensitivityLabels;
@@ -631,12 +632,13 @@ export class AzureblobClient extends ConnectorClientBase {
         const requestPath = `/v2/datasets/${encodeURIComponent(encodeURIComponent(String(dataset)))}/foldersV2` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         return this.createPageable<BlobMetadataPage, BlobMetadata>(
             requestPath,
-            async (requestUrl) => {
-                const httpResponse = await this.httpClient.sendAsync<BlobMetadataPage>("GET", requestUrl, undefined, undefined, abortSignal);
+            async (requestUrl, isFirstPage) => {
+                const requestMethod = isFirstPage ? "GET" : "GET";
+                const httpResponse = await this.httpClient.sendAsync<BlobMetadataPage>(requestMethod, requestUrl, undefined, undefined, abortSignal);
 
                 if (!httpResponse.isSuccessStatusCode) {
                     const operationPath = this.getOperationPath(requestUrl);
-                    throw new ConnectorError(this.connectorName, `GET ${operationPath}`, httpResponse.statusCode, httpResponse.text);
+                    throw new ConnectorError(this.connectorName, `${requestMethod} ${operationPath}`, httpResponse.statusCode, httpResponse.text);
                 }
 
                 return httpResponse.value as BlobMetadataPage;

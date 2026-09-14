@@ -96,6 +96,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+- Corrected generated pagination requests so continuation URLs use GET by
+  default, honor explicit continuation operation methods, and never replay the
+  first-page request body.
+- Preserved singular resource names ending in `sis`; Rev.ai now exposes
+  `getAnalysis` and `deleteAnalysis` instead of truncated method names.
 - Preserved typed array aliases, numeric integer-enum values, and inherited plus
   inline properties from `allOf` definitions in generated TypeScript models.
 - Aligned TypeScript compiler settings with Azure SDK guidance by using `tslib`

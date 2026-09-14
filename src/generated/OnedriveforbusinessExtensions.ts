@@ -827,12 +827,13 @@ export class OnedriveforbusinessClient extends ConnectorClientBase {
         const requestPath = `/datasets/default/foldersV2/${encodeURIComponent(encodeURIComponent(String(id)))}` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         return this.createPageable<BlobMetadataPage, BlobMetadata>(
             requestPath,
-            async (requestUrl) => {
-                const httpResponse = await this.httpClient.sendAsync<BlobMetadataPage>("GET", requestUrl, undefined, undefined, abortSignal);
+            async (requestUrl, isFirstPage) => {
+                const requestMethod = isFirstPage ? "GET" : "GET";
+                const httpResponse = await this.httpClient.sendAsync<BlobMetadataPage>(requestMethod, requestUrl, undefined, undefined, abortSignal);
 
                 if (!httpResponse.isSuccessStatusCode) {
                     const operationPath = this.getOperationPath(requestUrl);
-                    throw new ConnectorError(this.connectorName, `GET ${operationPath}`, httpResponse.statusCode, httpResponse.text);
+                    throw new ConnectorError(this.connectorName, `${requestMethod} ${operationPath}`, httpResponse.statusCode, httpResponse.text);
                 }
 
                 return httpResponse.value as BlobMetadataPage;
