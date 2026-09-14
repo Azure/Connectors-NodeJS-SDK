@@ -16,7 +16,7 @@
  *     npm start
  */
 
-import { ManagedIdentityTokenProvider, ConnectorException } from "@azure/connectors";
+import { ManagedIdentityTokenProvider, ConnectorError } from "@azure/connectors";
 import { MondayClient } from "@azure/connectors/generated/MondayExtensions";
 
 const CONNECTION_URL = process.env.MONDAY_CONNECTION_URL ?? "";
@@ -35,7 +35,7 @@ async function main() {
     const boardId = process.env.MONDAY_BOARD_ID ?? "board123";
     const groupId = process.env.MONDAY_GROUP_ID ?? "group123";
     try {
-        const item = await client.createItemAsync({
+        const item = await client.createItem({
             workspaceId,
             boardId,
             groupId,
@@ -43,7 +43,7 @@ async function main() {
         });
         console.log("Item:", JSON.stringify(item, null, 2));
     } catch (error) {
-        if (error instanceof ConnectorException) {
+        if (error instanceof ConnectorError) {
             console.log(`Connector error (${error.statusCode}): ${error.message}`);
         } else {
             throw error;

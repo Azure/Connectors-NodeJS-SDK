@@ -3,8 +3,9 @@
 
 import type { AbortSignalLike } from "@azure/abort-controller";
 import type { TokenCredential } from "@azure/core-auth";
+import type { PagedAsyncIterableIterator } from "@azure/core-paging";
 import { ConnectorClientBase } from "../azureConnectors/clientBase.ts";
-import { ConnectorException } from "../azureConnectors/connectorException.ts";
+import { ConnectorError } from "../azureConnectors/connectorError.ts";
 import { ConnectorClientOptions } from "../azureConnectors/options.ts";
 import { TriggerCallbackPayload } from "../azureConnectors/triggerPayload.ts";
 
@@ -13,9 +14,7 @@ import { TriggerCallbackPayload } from "../azureConnectors/triggerPayload.ts";
 /**
  * Assign a category to multiple emails
  */
-export interface AssignCategoryBulkInput {
-    [key: string]: unknown;
-}
+export type AssignCategoryBulkInput = Array<string>;
 
 /**
  * Update my contact's photo
@@ -167,8 +166,8 @@ export interface TableMetadata {
     /** Table permission */
     "x-ms-permission"?: string;
     "x-ms-capabilities"?: TableCapabilitiesMetadata;
-    schema?: ObjectEntity;
-    referencedEntities?: ObjectEntity;
+    schema?: Record<string, unknown>;
+    referencedEntities?: Record<string, unknown>;
     /** Url link */
     webUrl?: string;
 }
@@ -1854,9 +1853,7 @@ export interface DirectForwardMessage {
 /**
  * Definition: MeetingTimeSuggestions
  */
-export interface MeetingTimeSuggestions {
-    [key: string]: unknown;
-}
+export type MeetingTimeSuggestions = Array<Record<string, unknown>>;
 
 /**
  * Definition: LocationConstraint
@@ -1886,6 +1883,8 @@ export interface DateTimeTimeZone {
 export interface EntityListResponseContactResponse {
     /** List of values */
     value?: Array<ContactResponse>;
+    /** The URL to retrieve the next page. */
+    "@odata.nextLink"?: string;
 }
 
 /**
@@ -2633,13 +2632,13 @@ export class Office365Client extends ConnectorClientBase {
      * Get Outlook category names
      * @remarks This operation gets Outlook category display names.
      */
-    public async getOutlookCategoryNamesAsync(abortSignal?: AbortSignalLike): Promise<Array<GraphOutlookCategory>> {
+    public async getOutlookCategoryNames(abortSignal?: AbortSignalLike): Promise<Array<GraphOutlookCategory>> {
         const requestPath = `/Categories`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<Array<GraphOutlookCategory>>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as Array<GraphOutlookCategory>;
@@ -2649,7 +2648,7 @@ export class Office365Client extends ConnectorClientBase {
      * Draft an email message
      * @remarks This operation drafts an email message.
      */
-    public async draftEmailAsync(input: DraftEmailInput, messageId?: string, draftType?: string, comment?: string, abortSignal?: AbortSignalLike): Promise<OutlookReceiveMessage> {
+    public async draftEmail(input: DraftEmailInput, messageId?: string, draftType?: string, comment?: string, abortSignal?: AbortSignalLike): Promise<OutlookReceiveMessage> {
         const queryParams: string[] = [];
         if (messageId !== undefined) {
             queryParams.push(`messageId=${encodeURIComponent(String(messageId))}`);
@@ -2665,7 +2664,7 @@ export class Office365Client extends ConnectorClientBase {
         const httpResponse = await this.httpClient.sendAsync<OutlookReceiveMessage>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as OutlookReceiveMessage;
@@ -2675,7 +2674,7 @@ export class Office365Client extends ConnectorClientBase {
      * Updates an email Draft message
      * @remarks This operation updates an an email Draft message.
      */
-    public async updateDraftEmailAsync(input: DraftEmailInput, messageId?: string, abortSignal?: AbortSignalLike): Promise<void> {
+    public async updateDraftEmail(input: DraftEmailInput, messageId?: string, abortSignal?: AbortSignalLike): Promise<void> {
         const queryParams: string[] = [];
         if (messageId !== undefined) {
             queryParams.push(`messageId=${encodeURIComponent(String(messageId))}`);
@@ -2685,7 +2684,7 @@ export class Office365Client extends ConnectorClientBase {
         const httpResponse = await this.httpClient.sendAsync<void>("PATCH", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `PATCH ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `PATCH ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
     }
 
@@ -2693,13 +2692,13 @@ export class Office365Client extends ConnectorClientBase {
      * Send a Draft message
      * @remarks This operation sends a Draft message.
      */
-    public async sendDraftEmailAsync(messageId: string, abortSignal?: AbortSignalLike): Promise<void> {
+    public async sendDraftEmail(messageId: string, abortSignal?: AbortSignalLike): Promise<void> {
         const requestPath = `/Draft/Send/${messageId}`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<void>("POST", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
     }
 
@@ -2707,7 +2706,7 @@ export class Office365Client extends ConnectorClientBase {
      * Assigns an Outlook category
      * @remarks This operation assigns an Outlook category to an email.
      */
-    public async assignCategoryAsync(messageId?: string, category?: string, abortSignal?: AbortSignalLike): Promise<void> {
+    public async assignCategory(messageId?: string, category?: string, abortSignal?: AbortSignalLike): Promise<void> {
         const queryParams: string[] = [];
         if (messageId !== undefined) {
             queryParams.push(`messageId=${encodeURIComponent(String(messageId))}`);
@@ -2720,7 +2719,7 @@ export class Office365Client extends ConnectorClientBase {
         const httpResponse = await this.httpClient.sendAsync<void>("POST", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
     }
 
@@ -2728,13 +2727,13 @@ export class Office365Client extends ConnectorClientBase {
      * Assign a category to multiple emails
      * @remarks This operation assigns an Outlook category to multiple emails.
      */
-    public async assignCategoryBulkAsync(input: AssignCategoryBulkInput, categoryName: string, abortSignal?: AbortSignalLike): Promise<BatchOperationResult> {
+    public async assignCategoryBulk(input: AssignCategoryBulkInput, categoryName: string, abortSignal?: AbortSignalLike): Promise<BatchOperationResult> {
         const requestPath = `/Mail/Category/Bulk/${categoryName}`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<BatchOperationResult>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as BatchOperationResult;
@@ -2744,13 +2743,13 @@ export class Office365Client extends ConnectorClientBase {
      * Send email with options
      * @remarks This operation sends an email with multiple options and waits for the recipient to respond back with one of the options. Please refer to the following link regarding the support of actionable messages in different mail clients: https://docs.microsoft.com/outlook/actionable-messages/#outlook-version-requirements-for-actionable-messages.
      */
-    public async sendMailWithOptionsAsync(input: OptionsEmailSubscription, abortSignal?: AbortSignalLike): Promise<SubscriptionResponse> {
+    public async sendMailWithOptions(input: OptionsEmailSubscription, abortSignal?: AbortSignalLike): Promise<SubscriptionResponse> {
         const requestPath = `/mailwithoptions/$subscriptions`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<SubscriptionResponse>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as SubscriptionResponse;
@@ -2760,13 +2759,13 @@ export class Office365Client extends ConnectorClientBase {
      * Send approval email
      * @remarks This operation sends an approval email and waits for a response from the recipient. Please refer to the following link regarding the support of actionable messages in different mail clients: https://docs.microsoft.com/outlook/actionable-messages/#outlook-version-requirements-for-actionable-messages.
      */
-    public async sendApprovalMailAsync(input: ApprovalEmailSubscription, abortSignal?: AbortSignalLike): Promise<SubscriptionResponse> {
+    public async sendApprovalMail(input: ApprovalEmailSubscription, abortSignal?: AbortSignalLike): Promise<SubscriptionResponse> {
         const requestPath = `/approvalmail/$subscriptions`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<SubscriptionResponse>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as SubscriptionResponse;
@@ -2776,13 +2775,13 @@ export class Office365Client extends ConnectorClientBase {
      * Update my contact's photo
      * @remarks Updates the photo of the specified contact of the current user. The size of the photo must be less than 4 MB.
      */
-    public async updateMyContactPhotoAsync(input: UpdateMyContactPhotoInput, folder: string, id: string, abortSignal?: AbortSignalLike): Promise<void> {
-        const requestPath = `/codeless/v1.0/me/contactFolders/${folder}/contacts/${id}/photo/$value`;
+    public async updateMyContactPhoto(input: UpdateMyContactPhotoInput, folder: string, id: string, abortSignal?: AbortSignalLike): Promise<void> {
+        const requestPath = `/codeless/v1.0/me/contactFolders/${encodeURIComponent(encodeURIComponent(String(folder)))}/contacts/${encodeURIComponent(encodeURIComponent(String(id)))}/photo/$value`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<void>("PUT", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `PUT ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `PUT ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
     }
 
@@ -2790,13 +2789,13 @@ export class Office365Client extends ConnectorClientBase {
      * Send an HTTP request
      * @remarks Construct a Microsoft Graph REST API request to invoke. These segments are supported: 1st segement: /me, /users/<userId> 2nd segment: messages, mailFolders, events, calendar, calendars, outlook, inferenceClassification. Learn more: https://docs.microsoft.com/en-us/graph/use-the-api.
      */
-    public async httpRequestAsync(input: HttpRequestInput, abortSignal?: AbortSignalLike): Promise<ObjectWithoutType> {
+    public async httpRequest(input: HttpRequestInput, abortSignal?: AbortSignalLike): Promise<ObjectWithoutType> {
         const requestPath = `/codeless/httprequest`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<ObjectWithoutType>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as ObjectWithoutType;
@@ -2806,7 +2805,7 @@ export class Office365Client extends ConnectorClientBase {
      * Email Management MCP Server (deprecated)
      * @remarks This MCP server manages email messages from your Office 365 account
      */
-    public async mcpEmailsManagementAsync(input: MCPQueryRequest, sessionId?: string, abortSignal?: AbortSignalLike): Promise<MCPQueryResponse> {
+    public async mcpEmailsManagement(input: MCPQueryRequest, sessionId?: string, abortSignal?: AbortSignalLike): Promise<MCPQueryResponse> {
         const queryParams: string[] = [];
         if (sessionId !== undefined) {
             queryParams.push(`sessionId=${encodeURIComponent(String(sessionId))}`);
@@ -2816,7 +2815,7 @@ export class Office365Client extends ConnectorClientBase {
         const httpResponse = await this.httpClient.sendAsync<MCPQueryResponse>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as MCPQueryResponse;
@@ -2826,7 +2825,7 @@ export class Office365Client extends ConnectorClientBase {
      * Meeting Management MCP Server (deprecated)
      * @remarks This MCP server manages events, calendars and meetings
      */
-    public async mcpMeetingManagementAsync(input: MCPQueryRequest, sessionId?: string, abortSignal?: AbortSignalLike): Promise<MCPQueryResponse> {
+    public async mcpMeetingManagement(input: MCPQueryRequest, sessionId?: string, abortSignal?: AbortSignalLike): Promise<MCPQueryResponse> {
         const queryParams: string[] = [];
         if (sessionId !== undefined) {
             queryParams.push(`sessionId=${encodeURIComponent(String(sessionId))}`);
@@ -2836,7 +2835,7 @@ export class Office365Client extends ConnectorClientBase {
         const httpResponse = await this.httpClient.sendAsync<MCPQueryResponse>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as MCPQueryResponse;
@@ -2846,7 +2845,7 @@ export class Office365Client extends ConnectorClientBase {
      * Contact Management MCP Server
      * @remarks This MCP server manages contacts
      */
-    public async mcpContactsManagementAsync(input: MCPQueryRequest, sessionId?: string, abortSignal?: AbortSignalLike): Promise<MCPQueryResponse> {
+    public async mcpContactsManagement(input: MCPQueryRequest, sessionId?: string, abortSignal?: AbortSignalLike): Promise<MCPQueryResponse> {
         const queryParams: string[] = [];
         if (sessionId !== undefined) {
             queryParams.push(`sessionId=${encodeURIComponent(String(sessionId))}`);
@@ -2856,7 +2855,7 @@ export class Office365Client extends ConnectorClientBase {
         const httpResponse = await this.httpClient.sendAsync<MCPQueryResponse>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as MCPQueryResponse;
@@ -2866,13 +2865,13 @@ export class Office365Client extends ConnectorClientBase {
      * Delete event
      * @remarks This operation deletes an event in a calendar.
      */
-    public async calendarDeleteItemAsync(calendar: string, event_: string, abortSignal?: AbortSignalLike): Promise<void> {
-        const requestPath = `/codeless/v1.0/me/calendars/${calendar}/events/${event_}`;
+    public async deleteCalendarItem(calendar: string, event_: string, abortSignal?: AbortSignalLike): Promise<void> {
+        const requestPath = `/codeless/v1.0/me/calendars/${encodeURIComponent(encodeURIComponent(String(calendar)))}/events/${encodeURIComponent(encodeURIComponent(String(event_)))}`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<void>("DELETE", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `DELETE ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `DELETE ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
     }
 
@@ -2880,13 +2879,13 @@ export class Office365Client extends ConnectorClientBase {
      * Get event
      * @remarks This operation gets a specific event from a calendar using Graph API.
      */
-    public async calendarGetItemAsync(table: string, id: string, abortSignal?: AbortSignalLike): Promise<GraphCalendarEventClientReceive> {
-        const requestPath = `/datasets/calendars/v3/tables/${table}/items/${id}`;
+    public async getCalendarItem(table: string, id: string, abortSignal?: AbortSignalLike): Promise<GraphCalendarEventClientReceive> {
+        const requestPath = `/datasets/calendars/v3/tables/${encodeURIComponent(encodeURIComponent(String(table)))}/items/${encodeURIComponent(encodeURIComponent(String(id)))}`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<GraphCalendarEventClientReceive>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as GraphCalendarEventClientReceive;
@@ -2896,7 +2895,7 @@ export class Office365Client extends ConnectorClientBase {
      * Get events
      * @remarks This operation gets events from a calendar using Graph API.
      */
-    public async calendarGetItemsAsync(table: string, filter?: string, orderby?: string, top?: string, skip?: string, abortSignal?: AbortSignalLike): Promise<GraphCalendarEventListClientReceive> {
+    public async getCalendarItems(table: string, filter?: string, orderby?: string, top?: string, skip?: string, abortSignal?: AbortSignalLike): Promise<GraphCalendarEventListClientReceive> {
         const queryParams: string[] = [];
         if (filter !== undefined) {
             queryParams.push(`$filter=${encodeURIComponent(String(filter))}`);
@@ -2910,12 +2909,12 @@ export class Office365Client extends ConnectorClientBase {
         if (skip !== undefined) {
             queryParams.push(`$skip=${encodeURIComponent(String(skip))}`);
         }
-        const requestPath = `/datasets/calendars/v4/tables/${table}/items` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
+        const requestPath = `/datasets/calendars/v4/tables/${encodeURIComponent(encodeURIComponent(String(table)))}/items` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<GraphCalendarEventListClientReceive>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as GraphCalendarEventListClientReceive;
@@ -2925,7 +2924,7 @@ export class Office365Client extends ConnectorClientBase {
      * Get calendars
      * @remarks This operation lists available calendars.
      */
-    public async calendarGetTablesAsync(skip?: string, top?: string, orderBy?: string, abortSignal?: AbortSignalLike): Promise<CalendarGetTablesResponse> {
+    public async getCalendarTables(skip?: string, top?: string, orderBy?: string, abortSignal?: AbortSignalLike): Promise<CalendarGetTablesResponse> {
         const queryParams: string[] = [];
         if (skip !== undefined) {
             queryParams.push(`skip=${encodeURIComponent(String(skip))}`);
@@ -2941,7 +2940,7 @@ export class Office365Client extends ConnectorClientBase {
         const httpResponse = await this.httpClient.sendAsync<CalendarGetTablesResponse>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as CalendarGetTablesResponse;
@@ -2951,13 +2950,13 @@ export class Office365Client extends ConnectorClientBase {
      * Update event
      * @remarks This operation updates an event in a calendar using Graph API.
      */
-    public async calendarPatchItemAsync(input: GraphCalendarEventClient, table: string, id: string, abortSignal?: AbortSignalLike): Promise<GraphCalendarEventClientReceive> {
-        const requestPath = `/datasets/calendars/v4/tables/${table}/items/${id}`;
+    public async calendarPatchItem(input: GraphCalendarEventClient, table: string, id: string, abortSignal?: AbortSignalLike): Promise<GraphCalendarEventClientReceive> {
+        const requestPath = `/datasets/calendars/v4/tables/${encodeURIComponent(encodeURIComponent(String(table)))}/items/${encodeURIComponent(encodeURIComponent(String(id)))}`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<GraphCalendarEventClientReceive>("PATCH", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `PATCH ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `PATCH ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as GraphCalendarEventClientReceive;
@@ -2967,13 +2966,13 @@ export class Office365Client extends ConnectorClientBase {
      * Create event
      * @remarks This operation creates a new event in a calendar.
      */
-    public async calendarPostItemAsync(input: GraphCalendarEventClient, table: string, abortSignal?: AbortSignalLike): Promise<GraphCalendarEventClientReceive> {
-        const requestPath = `/datasets/calendars/v4/tables/${table}/items`;
+    public async calendarPostItem(input: GraphCalendarEventClient, table: string, abortSignal?: AbortSignalLike): Promise<GraphCalendarEventClientReceive> {
+        const requestPath = `/datasets/calendars/v4/tables/${encodeURIComponent(encodeURIComponent(String(table)))}/items`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<GraphCalendarEventClientReceive>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as GraphCalendarEventClientReceive;
@@ -2983,13 +2982,13 @@ export class Office365Client extends ConnectorClientBase {
      * Delete contact
      * @remarks This operation deletes a contact from a contacts folder.
      */
-    public async contactDeleteItemAsync(folder: string, id: string, abortSignal?: AbortSignalLike): Promise<void> {
-        const requestPath = `/codeless/v1.0/me/contactFolders/${folder}/contacts/${id}`;
+    public async deleteContactItem(folder: string, id: string, abortSignal?: AbortSignalLike): Promise<void> {
+        const requestPath = `/codeless/v1.0/me/contactFolders/${encodeURIComponent(encodeURIComponent(String(folder)))}/contacts/${encodeURIComponent(encodeURIComponent(String(id)))}`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<void>("DELETE", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `DELETE ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `DELETE ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
     }
 
@@ -2997,13 +2996,13 @@ export class Office365Client extends ConnectorClientBase {
      * Get contact
      * @remarks This operation gets a specific contact from a contacts folder.
      */
-    public async contactGetItemAsync(folder: string, id: string, abortSignal?: AbortSignalLike): Promise<ContactResponse> {
-        const requestPath = `/codeless/v1.0/me/contactFolders/${folder}/contacts/${id}`;
+    public async getContactItem(folder: string, id: string, abortSignal?: AbortSignalLike): Promise<ContactResponse> {
+        const requestPath = `/codeless/v1.0/me/contactFolders/${encodeURIComponent(encodeURIComponent(String(folder)))}/contacts/${encodeURIComponent(encodeURIComponent(String(id)))}`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<ContactResponse>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as ContactResponse;
@@ -3013,7 +3012,7 @@ export class Office365Client extends ConnectorClientBase {
      * Get contacts
      * @remarks This operation gets contacts from a contacts folder.
      */
-    public async contactGetItemsAsync(folder: string, filter?: string, orderby?: string, top?: string, skip?: string, abortSignal?: AbortSignalLike): Promise<EntityListResponseContactResponse> {
+    public getContactItems(folder: string, filter?: string, orderby?: string, top?: string, skip?: string, abortSignal?: AbortSignalLike): PagedAsyncIterableIterator<ContactResponse> {
         const queryParams: string[] = [];
         if (filter !== undefined) {
             queryParams.push(`$filter=${encodeURIComponent(String(filter))}`);
@@ -3027,28 +3026,35 @@ export class Office365Client extends ConnectorClientBase {
         if (skip !== undefined) {
             queryParams.push(`$skip=${encodeURIComponent(String(skip))}`);
         }
-        const requestPath = `/codeless/v1.0/me/contactFolders/${folder}/contacts` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
-        const requestUrl = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<EntityListResponseContactResponse>("GET", requestUrl, undefined, undefined, abortSignal);
+        const requestPath = `/codeless/v1.0/me/contactFolders/${encodeURIComponent(encodeURIComponent(String(folder)))}/contacts` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
+        return this.createPageable<EntityListResponseContactResponse, ContactResponse>(
+            requestPath,
+            async (requestUrl) => {
+                const httpResponse = await this.httpClient.sendAsync<EntityListResponseContactResponse>("GET", requestUrl, undefined, undefined, abortSignal);
 
-        if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
-        }
+                if (!httpResponse.isSuccessStatusCode) {
+                    const operationPath = this.getOperationPath(requestUrl);
+                    throw new ConnectorError(this.connectorName, `GET ${operationPath}`, httpResponse.statusCode, httpResponse.text);
+                }
 
-        return httpResponse.value as EntityListResponseContactResponse;
+                return httpResponse.value as EntityListResponseContactResponse;
+            },
+            "value",
+            "@odata.nextLink",
+        );
     }
 
     /**
      * Get contact folders
      * @remarks This operation lists available contacts folders using Graph API
      */
-    public async contactGetTablesAsync(abortSignal?: AbortSignalLike): Promise<EntityListResponseGraphContactFolder> {
+    public async getContactTables(abortSignal?: AbortSignalLike): Promise<EntityListResponseGraphContactFolder> {
         const requestPath = `/v2/datasets/contacts/tables`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<EntityListResponseGraphContactFolder>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as EntityListResponseGraphContactFolder;
@@ -3058,13 +3064,13 @@ export class Office365Client extends ConnectorClientBase {
      * Update contact
      * @remarks This operation updates a contact in a contacts folder.
      */
-    public async contactPatchItemAsync(input: Contact, folder: string, id: string, abortSignal?: AbortSignalLike): Promise<ContactResponse> {
-        const requestPath = `/codeless/v1.0/me/contactFolders/${folder}/contacts/${id}`;
+    public async contactPatchItem(input: Contact, folder: string, id: string, abortSignal?: AbortSignalLike): Promise<ContactResponse> {
+        const requestPath = `/codeless/v1.0/me/contactFolders/${encodeURIComponent(encodeURIComponent(String(folder)))}/contacts/${encodeURIComponent(encodeURIComponent(String(id)))}`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<ContactResponse>("PATCH", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `PATCH ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `PATCH ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as ContactResponse;
@@ -3074,13 +3080,13 @@ export class Office365Client extends ConnectorClientBase {
      * Create contact
      * @remarks This operation creates a new contact in a contacts folder.
      */
-    public async contactPostItemAsync(input: Contact, folder: string, abortSignal?: AbortSignalLike): Promise<ContactResponse> {
-        const requestPath = `/codeless/v1.0/me/contactFolders/${folder}/contacts`;
+    public async contactPostItem(input: Contact, folder: string, abortSignal?: AbortSignalLike): Promise<ContactResponse> {
+        const requestPath = `/codeless/v1.0/me/contactFolders/${encodeURIComponent(encodeURIComponent(String(folder)))}/contacts`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<ContactResponse>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as ContactResponse;
@@ -3090,7 +3096,7 @@ export class Office365Client extends ConnectorClientBase {
      * Delete email
      * @remarks This operation deletes an email by id.
      */
-    public async deleteEmailAsync(messageId: string, mailboxAddress?: string, abortSignal?: AbortSignalLike): Promise<void> {
+    public async deleteEmail(messageId: string, mailboxAddress?: string, abortSignal?: AbortSignalLike): Promise<void> {
         const queryParams: string[] = [];
         if (mailboxAddress !== undefined) {
             queryParams.push(`mailboxAddress=${encodeURIComponent(String(mailboxAddress))}`);
@@ -3100,7 +3106,7 @@ export class Office365Client extends ConnectorClientBase {
         const httpResponse = await this.httpClient.sendAsync<void>("DELETE", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `DELETE ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `DELETE ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
     }
 
@@ -3108,7 +3114,7 @@ export class Office365Client extends ConnectorClientBase {
      * Export email
      * @remarks Export the content of the email in the EML file format.
      */
-    public async exportEmailAsync(messageId: string, mailboxAddress?: string, abortSignal?: AbortSignalLike): Promise<Blob> {
+    public async exportEmail(messageId: string, mailboxAddress?: string, abortSignal?: AbortSignalLike): Promise<Blob> {
         const queryParams: string[] = [];
         if (mailboxAddress !== undefined) {
             queryParams.push(`mailboxAddress=${encodeURIComponent(String(mailboxAddress))}`);
@@ -3118,7 +3124,7 @@ export class Office365Client extends ConnectorClientBase {
         const httpResponse = await this.httpClient.sendAsync<Blob>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as Blob;
@@ -3128,13 +3134,13 @@ export class Office365Client extends ConnectorClientBase {
      * Find meeting times
      * @remarks Find meeting time suggestions based on organizer, attendee availability, and time or location constraints
      */
-    public async findMeetingTimesAsync(input: FindMeetingTimesInput, abortSignal?: AbortSignalLike): Promise<FindMeetingTimesResponse> {
+    public async findMeetingTimes(input: FindMeetingTimesInput, abortSignal?: AbortSignalLike): Promise<FindMeetingTimesResponse> {
         const requestPath = `/codeless/beta/me/findMeetingTimes`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<FindMeetingTimesResponse>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as FindMeetingTimesResponse;
@@ -3144,7 +3150,7 @@ export class Office365Client extends ConnectorClientBase {
      * Flag email
      * @remarks This operation updates an email flag.
      */
-    public async flagAsync(input: UpdateEmailFlag, messageId: string, mailboxAddress?: string, abortSignal?: AbortSignalLike): Promise<void> {
+    public async flag(input: UpdateEmailFlag, messageId: string, mailboxAddress?: string, abortSignal?: AbortSignalLike): Promise<void> {
         const queryParams: string[] = [];
         if (mailboxAddress !== undefined) {
             queryParams.push(`mailboxAddress=${encodeURIComponent(String(mailboxAddress))}`);
@@ -3154,7 +3160,7 @@ export class Office365Client extends ConnectorClientBase {
         const httpResponse = await this.httpClient.sendAsync<void>("PATCH", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `PATCH ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `PATCH ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
     }
 
@@ -3162,7 +3168,7 @@ export class Office365Client extends ConnectorClientBase {
      * Forward an email
      * @remarks Forward an email.
      */
-    public async forwardEmailAsync(input: DirectForwardMessage, messageId: string, mailboxAddress?: string, extractSensitivityLabel?: string, fetchSensitivityLabelMetadata?: string, abortSignal?: AbortSignalLike): Promise<void> {
+    public async forwardEmail(input: DirectForwardMessage, messageId: string, mailboxAddress?: string, extractSensitivityLabel?: string, fetchSensitivityLabelMetadata?: string, abortSignal?: AbortSignalLike): Promise<void> {
         const queryParams: string[] = [];
         if (mailboxAddress !== undefined) {
             queryParams.push(`mailboxAddress=${encodeURIComponent(String(mailboxAddress))}`);
@@ -3178,7 +3184,7 @@ export class Office365Client extends ConnectorClientBase {
         const httpResponse = await this.httpClient.sendAsync<void>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
     }
 
@@ -3186,7 +3192,7 @@ export class Office365Client extends ConnectorClientBase {
      * Get Attachment
      * @remarks This operation gets an email attachment by id.
      */
-    public async getAttachmentAsync(messageId: string, attachmentId: string, mailboxAddress?: string, extractSensitivityLabel?: string, fetchSensitivityLabelMetadata?: string, abortSignal?: AbortSignalLike): Promise<GetAttachmentResponse> {
+    public async getAttachment(messageId: string, attachmentId: string, mailboxAddress?: string, extractSensitivityLabel?: string, fetchSensitivityLabelMetadata?: string, abortSignal?: AbortSignalLike): Promise<GetAttachmentResponse> {
         const queryParams: string[] = [];
         if (mailboxAddress !== undefined) {
             queryParams.push(`mailboxAddress=${encodeURIComponent(String(mailboxAddress))}`);
@@ -3202,7 +3208,7 @@ export class Office365Client extends ConnectorClientBase {
         const httpResponse = await this.httpClient.sendAsync<GetAttachmentResponse>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as GetAttachmentResponse;
@@ -3212,7 +3218,7 @@ export class Office365Client extends ConnectorClientBase {
      * Get email
      * @remarks This operation gets an email by id.
      */
-    public async getEmailAsync(messageId: string, mailboxAddress?: string, includeAttachments?: string, internetMessageId?: string, extractSensitivityLabel?: string, fetchSensitivityLabelMetadata?: string, abortSignal?: AbortSignalLike): Promise<GraphClientReceiveMessage> {
+    public async getEmail(messageId: string, mailboxAddress?: string, includeAttachments?: string, internetMessageId?: string, extractSensitivityLabel?: string, fetchSensitivityLabelMetadata?: string, abortSignal?: AbortSignalLike): Promise<GraphClientReceiveMessage> {
         const queryParams: string[] = [];
         if (mailboxAddress !== undefined) {
             queryParams.push(`mailboxAddress=${encodeURIComponent(String(mailboxAddress))}`);
@@ -3234,7 +3240,7 @@ export class Office365Client extends ConnectorClientBase {
         const httpResponse = await this.httpClient.sendAsync<GraphClientReceiveMessage>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as GraphClientReceiveMessage;
@@ -3244,7 +3250,7 @@ export class Office365Client extends ConnectorClientBase {
      * Get emails
      * @remarks This operation gets emails from a folder via graph apis. Please note that filtering related to these fields: To, Cc, To Or Cc, From, Importance, Fetch Only With Attachments, Subject Filter, is performed using first 250 items in a given mail folder. To avoid that limitation you can use 'Search Query' field.
      */
-    public async getEmailsAsync(folderPath?: string, to?: string, cc?: string, toOrCc?: string, from?: string, importance?: string, fetchOnlyWithAttachment?: string, subjectFilter?: string, fetchOnlyUnread?: string, fetchOnlyFlagged?: string, mailboxAddress?: string, includeAttachments?: string, searchQuery?: string, top?: string, abortSignal?: AbortSignalLike): Promise<BatchResponseGraphClientReceiveMessage> {
+    public async getEmails(folderPath?: string, to?: string, cc?: string, toOrCc?: string, from?: string, importance?: string, fetchOnlyWithAttachment?: string, subjectFilter?: string, fetchOnlyUnread?: string, fetchOnlyFlagged?: string, mailboxAddress?: string, includeAttachments?: string, searchQuery?: string, top?: string, abortSignal?: AbortSignalLike): Promise<BatchResponseGraphClientReceiveMessage> {
         const queryParams: string[] = [];
         if (folderPath !== undefined) {
             queryParams.push(`folderPath=${encodeURIComponent(String(folderPath))}`);
@@ -3293,7 +3299,7 @@ export class Office365Client extends ConnectorClientBase {
         const httpResponse = await this.httpClient.sendAsync<BatchResponseGraphClientReceiveMessage>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as BatchResponseGraphClientReceiveMessage;
@@ -3303,7 +3309,7 @@ export class Office365Client extends ConnectorClientBase {
      * Get calendar view of events
      * @remarks This operation gets all events (including instances of recurrences) in a calendar using Graph API. Recurrence property is null in this case.
      */
-    public async getEventsCalendarViewAsync(calendarId?: string, startDateTimeUtc?: string, endDateTimeUtc?: string, filter?: string, orderby?: string, top?: string, skip?: string, search?: string, abortSignal?: AbortSignalLike): Promise<EntityListResponseGraphCalendarEventClientReceive> {
+    public async getEventsCalendarView(calendarId?: string, startDateTimeUtc?: string, endDateTimeUtc?: string, filter?: string, orderby?: string, top?: string, skip?: string, search?: string, abortSignal?: AbortSignalLike): Promise<EntityListResponseGraphCalendarEventClientReceive> {
         const queryParams: string[] = [];
         if (calendarId !== undefined) {
             queryParams.push(`calendarId=${encodeURIComponent(String(calendarId))}`);
@@ -3334,7 +3340,7 @@ export class Office365Client extends ConnectorClientBase {
         const httpResponse = await this.httpClient.sendAsync<EntityListResponseGraphCalendarEventClientReceive>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as EntityListResponseGraphCalendarEventClientReceive;
@@ -3344,13 +3350,13 @@ export class Office365Client extends ConnectorClientBase {
      * Get mail tips for a mailbox
      * @remarks Get mail tips for a mailbox such as automatic replies / OOF message or if the mailbox is full. This is not available in GccHigh and Mooncake.
      */
-    public async getMailTipsAsync(input: GetMailTipsInput, abortSignal?: AbortSignalLike): Promise<GetMailTipsResponse> {
+    public async getMailTips(input: GetMailTipsInput, abortSignal?: AbortSignalLike): Promise<GetMailTipsResponse> {
         const requestPath = `/codeless/v1.0/me/getMailTips`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<GetMailTipsResponse>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as GetMailTipsResponse;
@@ -3360,13 +3366,13 @@ export class Office365Client extends ConnectorClientBase {
      * Get room lists
      * @remarks Get all the room lists defined in the user's tenant
      */
-    public async getRoomListsAsync(abortSignal?: AbortSignalLike): Promise<GetRoomListsResponse> {
+    public async getRoomLists(abortSignal?: AbortSignalLike): Promise<GetRoomListsResponse> {
         const requestPath = `/codeless/beta/me/findRoomLists`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<GetRoomListsResponse>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as GetRoomListsResponse;
@@ -3376,13 +3382,13 @@ export class Office365Client extends ConnectorClientBase {
      * Get rooms
      * @remarks Get all the meeting rooms defined in the user's tenant
      */
-    public async getRoomsAsync(abortSignal?: AbortSignalLike): Promise<GetRoomsResponse> {
+    public async getRooms(abortSignal?: AbortSignalLike): Promise<GetRoomsResponse> {
         const requestPath = `/codeless/beta/me/findRooms`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<GetRoomsResponse>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as GetRoomsResponse;
@@ -3392,13 +3398,13 @@ export class Office365Client extends ConnectorClientBase {
      * Get rooms in room list
      * @remarks Get the meeting rooms in a specific room list
      */
-    public async getRoomsInRoomListAsync(roomList: string, abortSignal?: AbortSignalLike): Promise<GetRoomsInRoomListResponse> {
+    public async getRoomsInRoomList(roomList: string, abortSignal?: AbortSignalLike): Promise<GetRoomsInRoomListResponse> {
         const requestPath = `/codeless/beta/me/findRooms(RoomList='${roomList}')`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<GetRoomsInRoomListResponse>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as GetRoomsInRoomListResponse;
@@ -3408,7 +3414,7 @@ export class Office365Client extends ConnectorClientBase {
      * Mark as read or unread
      * @remarks This operation marks an email as read/unread.
      */
-    public async markAsReadAsync(input: MarkAsReadInput, messageId: string, mailboxAddress?: string, abortSignal?: AbortSignalLike): Promise<void> {
+    public async markAsRead(input: MarkAsReadInput, messageId: string, mailboxAddress?: string, abortSignal?: AbortSignalLike): Promise<void> {
         const queryParams: string[] = [];
         if (mailboxAddress !== undefined) {
             queryParams.push(`mailboxAddress=${encodeURIComponent(String(mailboxAddress))}`);
@@ -3418,7 +3424,7 @@ export class Office365Client extends ConnectorClientBase {
         const httpResponse = await this.httpClient.sendAsync<void>("PATCH", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `PATCH ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `PATCH ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
     }
 
@@ -3426,7 +3432,7 @@ export class Office365Client extends ConnectorClientBase {
      * Move email
      * @remarks This operation moves an email to the specified folder within the same mailbox.
      */
-    public async moveAsync(messageId: string, folderPath?: string, mailboxAddress?: string, abortSignal?: AbortSignalLike): Promise<GraphClientReceiveMessage> {
+    public async move(messageId: string, folderPath?: string, mailboxAddress?: string, abortSignal?: AbortSignalLike): Promise<GraphClientReceiveMessage> {
         const queryParams: string[] = [];
         if (folderPath !== undefined) {
             queryParams.push(`folderPath=${encodeURIComponent(String(folderPath))}`);
@@ -3439,7 +3445,7 @@ export class Office365Client extends ConnectorClientBase {
         const httpResponse = await this.httpClient.sendAsync<GraphClientReceiveMessage>("POST", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as GraphClientReceiveMessage;
@@ -3449,7 +3455,7 @@ export class Office365Client extends ConnectorClientBase {
      * Reply to email
      * @remarks This operation replies to an email.
      */
-    public async replyToAsync(input: ReplyEmailInput, messageId: string, mailboxAddress?: string, abortSignal?: AbortSignalLike): Promise<void> {
+    public async replyTo(input: ReplyEmailInput, messageId: string, mailboxAddress?: string, abortSignal?: AbortSignalLike): Promise<void> {
         const queryParams: string[] = [];
         if (mailboxAddress !== undefined) {
             queryParams.push(`mailboxAddress=${encodeURIComponent(String(mailboxAddress))}`);
@@ -3459,7 +3465,7 @@ export class Office365Client extends ConnectorClientBase {
         const httpResponse = await this.httpClient.sendAsync<void>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
     }
 
@@ -3467,13 +3473,13 @@ export class Office365Client extends ConnectorClientBase {
      * Respond to an event invite
      * @remarks Respond to an event invite.
      */
-    public async respondToEventAsync(input: ResponseToEventInvite, eventId: string, response: string, abortSignal?: AbortSignalLike): Promise<void> {
+    public async respondToEvent(input: ResponseToEventInvite, eventId: string, response: string, abortSignal?: AbortSignalLike): Promise<void> {
         const requestPath = `/codeless/v1.0/me/events/${eventId}/${response}`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<void>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
     }
 
@@ -3481,13 +3487,13 @@ export class Office365Client extends ConnectorClientBase {
      * Send an email
      * @remarks This operation sends an email message.
      */
-    public async sendEmailAsync(input: SendEmailInput, abortSignal?: AbortSignalLike): Promise<void> {
+    public async sendEmail(input: SendEmailInput, abortSignal?: AbortSignalLike): Promise<void> {
         const requestPath = `/v2/Mail`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<void>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
     }
 
@@ -3495,13 +3501,13 @@ export class Office365Client extends ConnectorClientBase {
      * Set up automatic replies
      * @remarks Set the automatic replies setting for your mailbox.
      */
-    public async setAutomaticRepliesSettingAsync(input: SetAutomaticRepliesSettingInput, abortSignal?: AbortSignalLike): Promise<SetAutomaticRepliesSettingResponse> {
+    public async setAutomaticRepliesSetting(input: SetAutomaticRepliesSettingInput, abortSignal?: AbortSignalLike): Promise<SetAutomaticRepliesSettingResponse> {
         const requestPath = `/codeless/v1.0/me/mailboxSettings`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<SetAutomaticRepliesSettingResponse>("PATCH", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `PATCH ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `PATCH ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as SetAutomaticRepliesSettingResponse;
@@ -3511,13 +3517,13 @@ export class Office365Client extends ConnectorClientBase {
      * Send an email from a shared mailbox
      * @remarks This operation sends an email from a shared mailbox. Your account should have permission to access the mailbox for this operation to succeed.
      */
-    public async sharedMailboxSendEmailAsync(input: SharedMailboxSendEmailInput, abortSignal?: AbortSignalLike): Promise<void> {
+    public async sendSharedMailboxEmail(input: SharedMailboxSendEmailInput, abortSignal?: AbortSignalLike): Promise<void> {
         const requestPath = `/v2/SharedMailbox/Mail`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<void>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
     }
 

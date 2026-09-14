@@ -22,7 +22,7 @@
 
 "use strict";
 
-const { ManagedIdentityTokenProvider, ConnectorException } = require("@azure/connectors");
+const { ManagedIdentityTokenProvider, ConnectorError } = require("@azure/connectors");
 const { SmtpClient } = require("@azure/connectors/generated/SmtpExtensions");
 
 const CONNECTION_URL = process.env.SMTP_CONNECTION_URL ?? "";
@@ -51,12 +51,12 @@ async function main() {
             Body: "<p>Hello from the <strong>SMTP TypeScript SDK</strong> sample!</p>",
         };
 
-        await client.sendEmailAsync(email);
+        await client.sendEmail(email);
         console.log("Email sent successfully.");
         console.log(`  From: ${FROM_ADDRESS}`);
         console.log(`  To: ${TO_ADDRESS}`);
     } catch (error) {
-        if (error instanceof ConnectorException) {
+        if (error instanceof ConnectorError) {
             console.log(`Connector error (${error.statusCode}): ${error.message}`);
         } else {
             throw error;
@@ -76,10 +76,10 @@ async function main() {
                 Body: "<p>This email has a CC recipient.</p>",
             };
 
-            await client.sendEmailAsync(email);
+            await client.sendEmail(email);
             console.log("Email with CC sent successfully.");
         } catch (error) {
-            if (error instanceof ConnectorException) {
+            if (error instanceof ConnectorError) {
                 console.log(`Connector error (${error.statusCode}): ${error.message}`);
             } else {
                 throw error;
@@ -97,10 +97,10 @@ async function main() {
             Body: "Test",
         };
 
-        await client.sendEmailAsync(badEmail);
+        await client.sendEmail(badEmail);
         console.log("Unexpected success.");
     } catch (error) {
-        if (error instanceof ConnectorException) {
+        if (error instanceof ConnectorError) {
             console.log("Expected error caught:");
             console.log(`  Message: ${error.message}`);
             console.log(`  Status: ${error.statusCode}`);

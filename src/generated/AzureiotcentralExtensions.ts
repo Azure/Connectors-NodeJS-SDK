@@ -5,7 +5,7 @@ import type { AbortSignalLike } from "@azure/abort-controller";
 import type { TokenCredential } from "@azure/core-auth";
 import type { PagedAsyncIterableIterator } from "@azure/core-paging";
 import { ConnectorClientBase } from "../azureConnectors/clientBase.ts";
-import { ConnectorException } from "../azureConnectors/connectorException.ts";
+import { ConnectorError } from "../azureConnectors/connectorError.ts";
 import { ConnectorClientOptions } from "../azureConnectors/options.ts";
 
 // #region Types
@@ -895,9 +895,7 @@ export interface WorkflowTrigger {
 /**
  * Definition: DynamicValues
  */
-export interface DynamicValues {
-    [key: string]: unknown;
-}
+export type DynamicValues = Array<Record<string, unknown>>;
 // #endregion Types
 
 export const AzureiotcentralTriggerOperations = {
@@ -944,7 +942,7 @@ export class AzureiotcentralClient extends ConnectorClientBase {
      * List device groups
      * @remarks Get the list of device groups in an application.
      */
-    public deviceGroupsListAsync(application?: string, abortSignal?: AbortSignalLike): PagedAsyncIterableIterator<DeviceGroup> {
+    public listDeviceGroups(application?: string, abortSignal?: AbortSignalLike): PagedAsyncIterableIterator<DeviceGroup> {
         const queryParams: string[] = [];
         if (application !== undefined) {
             queryParams.push(`application=${encodeURIComponent(String(application))}`);
@@ -957,11 +955,13 @@ export class AzureiotcentralClient extends ConnectorClientBase {
 
                 if (!httpResponse.isSuccessStatusCode) {
                     const operationPath = this.getOperationPath(requestUrl);
-                    throw new ConnectorException(this.connectorName, `GET ${operationPath}`, httpResponse.statusCode, httpResponse.text);
+                    throw new ConnectorError(this.connectorName, `GET ${operationPath}`, httpResponse.statusCode, httpResponse.text);
                 }
 
                 return httpResponse.value as DeviceGroupCollection;
             },
+            "value",
+            "nextLink",
         );
     }
 
@@ -969,7 +969,7 @@ export class AzureiotcentralClient extends ConnectorClientBase {
      * Get a device group
      * @remarks Get details about an existing device group by ID.
      */
-    public async deviceGroupsGetAsync(deviceGroupId: string, application?: string, abortSignal?: AbortSignalLike): Promise<DeviceGroup> {
+    public async getDeviceGroup(deviceGroupId: string, application?: string, abortSignal?: AbortSignalLike): Promise<DeviceGroup> {
         const queryParams: string[] = [];
         if (application !== undefined) {
             queryParams.push(`application=${encodeURIComponent(String(application))}`);
@@ -979,7 +979,7 @@ export class AzureiotcentralClient extends ConnectorClientBase {
         const httpResponse = await this.httpClient.sendAsync<DeviceGroup>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as DeviceGroup;
@@ -989,7 +989,7 @@ export class AzureiotcentralClient extends ConnectorClientBase {
      * Create a device group
      * @remarks Create or update a device group.
      */
-    public async deviceGroupsSetAsync(input: DeviceGroup, deviceGroupId: string, application?: string, abortSignal?: AbortSignalLike): Promise<DeviceGroup> {
+    public async setDeviceGroups(input: DeviceGroup, deviceGroupId: string, application?: string, abortSignal?: AbortSignalLike): Promise<DeviceGroup> {
         const queryParams: string[] = [];
         if (application !== undefined) {
             queryParams.push(`application=${encodeURIComponent(String(application))}`);
@@ -999,7 +999,7 @@ export class AzureiotcentralClient extends ConnectorClientBase {
         const httpResponse = await this.httpClient.sendAsync<DeviceGroup>("PUT", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `PUT ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `PUT ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as DeviceGroup;
@@ -1009,7 +1009,7 @@ export class AzureiotcentralClient extends ConnectorClientBase {
      * Delete device group
      * @remarks Delete an existing device group by ID
      */
-    public async deviceGroupsRemoveAsync(deviceGroupId: string, application?: string, abortSignal?: AbortSignalLike): Promise<void> {
+    public async removeDeviceGroups(deviceGroupId: string, application?: string, abortSignal?: AbortSignalLike): Promise<void> {
         const queryParams: string[] = [];
         if (application !== undefined) {
             queryParams.push(`application=${encodeURIComponent(String(application))}`);
@@ -1019,7 +1019,7 @@ export class AzureiotcentralClient extends ConnectorClientBase {
         const httpResponse = await this.httpClient.sendAsync<void>("DELETE", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `DELETE ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `DELETE ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
     }
 
@@ -1027,7 +1027,7 @@ export class AzureiotcentralClient extends ConnectorClientBase {
      * Get devices by device group ID
      * @remarks Get the list of devices in a device group in an application.
      */
-    public deviceGroupsGetDevicesAsync(deviceGroupId: string, application?: string, abortSignal?: AbortSignalLike): PagedAsyncIterableIterator<DeviceV1> {
+    public getDeviceGroupsDevices(deviceGroupId: string, application?: string, abortSignal?: AbortSignalLike): PagedAsyncIterableIterator<DeviceV1> {
         const queryParams: string[] = [];
         if (application !== undefined) {
             queryParams.push(`application=${encodeURIComponent(String(application))}`);
@@ -1040,11 +1040,13 @@ export class AzureiotcentralClient extends ConnectorClientBase {
 
                 if (!httpResponse.isSuccessStatusCode) {
                     const operationPath = this.getOperationPath(requestUrl);
-                    throw new ConnectorException(this.connectorName, `GET ${operationPath}`, httpResponse.statusCode, httpResponse.text);
+                    throw new ConnectorError(this.connectorName, `GET ${operationPath}`, httpResponse.statusCode, httpResponse.text);
                 }
 
                 return httpResponse.value as DeviceGroupDeviceCollection;
             },
+            "value",
+            "nextLink",
         );
     }
 
@@ -1052,7 +1054,7 @@ export class AzureiotcentralClient extends ConnectorClientBase {
      * Get device cloud properties (deprecated)
      * @remarks Get all cloud property values of a device by device ID (deprecated).
      */
-    public async devicesGetCloudPropertiesAsync(deviceId: string, application?: string, instanceOf?: string, abortSignal?: AbortSignalLike): Promise<DeviceCloudProperties> {
+    public async getDevicesCloudProperties(deviceId: string, application?: string, instanceOf?: string, abortSignal?: AbortSignalLike): Promise<DeviceCloudProperties> {
         const queryParams: string[] = [];
         if (application !== undefined) {
             queryParams.push(`application=${encodeURIComponent(String(application))}`);
@@ -1065,7 +1067,7 @@ export class AzureiotcentralClient extends ConnectorClientBase {
         const httpResponse = await this.httpClient.sendAsync<DeviceCloudProperties>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as DeviceCloudProperties;
@@ -1075,7 +1077,7 @@ export class AzureiotcentralClient extends ConnectorClientBase {
      * Update device cloud properties (deprecated)
      * @remarks Update all cloud property values of a device by device ID (deprecated).
      */
-    public async devicesUpdateCloudPropertiesAsync(input: DeviceCloudProperties, deviceId: string, application?: string, instanceOf?: string, abortSignal?: AbortSignalLike): Promise<DeviceCloudProperties> {
+    public async updateDevicesCloudProperties(input: DeviceCloudProperties, deviceId: string, application?: string, instanceOf?: string, abortSignal?: AbortSignalLike): Promise<DeviceCloudProperties> {
         const queryParams: string[] = [];
         if (application !== undefined) {
             queryParams.push(`application=${encodeURIComponent(String(application))}`);
@@ -1088,7 +1090,7 @@ export class AzureiotcentralClient extends ConnectorClientBase {
         const httpResponse = await this.httpClient.sendAsync<DeviceCloudProperties>("PUT", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `PUT ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `PUT ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as DeviceCloudProperties;
@@ -1098,7 +1100,7 @@ export class AzureiotcentralClient extends ConnectorClientBase {
      * Execute a device command (deprecated)
      * @remarks Execute a command on a device (deprecated).
      */
-    public async devicesExecuteComponentCommandAsync(input: DeviceCommand, deviceId: string, componentName: string, commandName: string, application?: string, instanceOf?: string, abortSignal?: AbortSignalLike): Promise<DeviceCommand> {
+    public async executeDevicesComponentCommand(input: DeviceCommand, deviceId: string, componentName: string, commandName: string, application?: string, instanceOf?: string, abortSignal?: AbortSignalLike): Promise<DeviceCommand> {
         const queryParams: string[] = [];
         if (application !== undefined) {
             queryParams.push(`application=${encodeURIComponent(String(application))}`);
@@ -1111,7 +1113,7 @@ export class AzureiotcentralClient extends ConnectorClientBase {
         const httpResponse = await this.httpClient.sendAsync<DeviceCommand>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as DeviceCommand;
@@ -1121,7 +1123,7 @@ export class AzureiotcentralClient extends ConnectorClientBase {
      * List relationships
      * @remarks List all relationships based on device ID.
      */
-    public deviceRelationshipsListAsync(deviceId: string, application?: string, abortSignal?: AbortSignalLike): PagedAsyncIterableIterator<DeviceRelationshipStatic> {
+    public listDeviceRelationships(deviceId: string, application?: string, abortSignal?: AbortSignalLike): PagedAsyncIterableIterator<DeviceRelationshipStatic> {
         const queryParams: string[] = [];
         if (application !== undefined) {
             queryParams.push(`application=${encodeURIComponent(String(application))}`);
@@ -1134,11 +1136,13 @@ export class AzureiotcentralClient extends ConnectorClientBase {
 
                 if (!httpResponse.isSuccessStatusCode) {
                     const operationPath = this.getOperationPath(requestUrl);
-                    throw new ConnectorException(this.connectorName, `GET ${operationPath}`, httpResponse.statusCode, httpResponse.text);
+                    throw new ConnectorError(this.connectorName, `GET ${operationPath}`, httpResponse.statusCode, httpResponse.text);
                 }
 
                 return httpResponse.value as DeviceRelationshipCollection;
             },
+            "value",
+            "nextLink",
         );
     }
 
@@ -1146,7 +1150,7 @@ export class AzureiotcentralClient extends ConnectorClientBase {
      * Get device relationship
      * @remarks Get details about an existing device relationship by device ID and by relationship ID.
      */
-    public async deviceRelationshipsGetAsync(deviceId: string, relationshipId: string, application?: string, abortSignal?: AbortSignalLike): Promise<DeviceRelationshipStatic> {
+    public async getDeviceRelationship(deviceId: string, relationshipId: string, application?: string, abortSignal?: AbortSignalLike): Promise<DeviceRelationshipStatic> {
         const queryParams: string[] = [];
         if (application !== undefined) {
             queryParams.push(`application=${encodeURIComponent(String(application))}`);
@@ -1156,7 +1160,7 @@ export class AzureiotcentralClient extends ConnectorClientBase {
         const httpResponse = await this.httpClient.sendAsync<DeviceRelationshipStatic>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as DeviceRelationshipStatic;
@@ -1166,7 +1170,7 @@ export class AzureiotcentralClient extends ConnectorClientBase {
      * Create a device relationship
      * @remarks Create a new device relationship between the given device and a new device given a device ID and a relationship ID.
      */
-    public async deviceRelationshipsSetAsync(input: DeviceRelationship, relationshipId: string, deviceId: string, application?: string, abortSignal?: AbortSignalLike): Promise<DeviceRelationshipStatic> {
+    public async setDeviceRelationships(input: DeviceRelationship, relationshipId: string, deviceId: string, application?: string, abortSignal?: AbortSignalLike): Promise<DeviceRelationshipStatic> {
         const queryParams: string[] = [];
         if (application !== undefined) {
             queryParams.push(`application=${encodeURIComponent(String(application))}`);
@@ -1176,7 +1180,7 @@ export class AzureiotcentralClient extends ConnectorClientBase {
         const httpResponse = await this.httpClient.sendAsync<DeviceRelationshipStatic>("PUT", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `PUT ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `PUT ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as DeviceRelationshipStatic;
@@ -1186,7 +1190,7 @@ export class AzureiotcentralClient extends ConnectorClientBase {
      * Update a device relationship
      * @remarks Update an existing device relationship between the given device and a new device given a device ID and a relationship ID.
      */
-    public async deviceRelationshipsUpdateAsync(input: DeviceRelationship, deviceId: string, relationshipId: string, application?: string, abortSignal?: AbortSignalLike): Promise<DeviceRelationshipStatic> {
+    public async updateDeviceRelationship(input: DeviceRelationship, deviceId: string, relationshipId: string, application?: string, abortSignal?: AbortSignalLike): Promise<DeviceRelationshipStatic> {
         const queryParams: string[] = [];
         if (application !== undefined) {
             queryParams.push(`application=${encodeURIComponent(String(application))}`);
@@ -1196,7 +1200,7 @@ export class AzureiotcentralClient extends ConnectorClientBase {
         const httpResponse = await this.httpClient.sendAsync<DeviceRelationshipStatic>("PATCH", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `PATCH ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `PATCH ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as DeviceRelationshipStatic;
@@ -1206,7 +1210,7 @@ export class AzureiotcentralClient extends ConnectorClientBase {
      * Delete a device relationship
      * @remarks Delete an existing device relationship by device ID and relationship ID.
      */
-    public async deviceRelationshipsRemoveAsync(deviceId: string, relationshipId: string, application?: string, abortSignal?: AbortSignalLike): Promise<void> {
+    public async removeDeviceRelationships(deviceId: string, relationshipId: string, application?: string, abortSignal?: AbortSignalLike): Promise<void> {
         const queryParams: string[] = [];
         if (application !== undefined) {
             queryParams.push(`application=${encodeURIComponent(String(application))}`);
@@ -1216,7 +1220,7 @@ export class AzureiotcentralClient extends ConnectorClientBase {
         const httpResponse = await this.httpClient.sendAsync<void>("DELETE", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `DELETE ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `DELETE ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
     }
 
@@ -1224,7 +1228,7 @@ export class AzureiotcentralClient extends ConnectorClientBase {
      * List jobs
      * @remarks Get the list of jobs in an application.
      */
-    public jobsListAsync(application?: string, abortSignal?: AbortSignalLike): PagedAsyncIterableIterator<JobStatic> {
+    public listJobs(application?: string, abortSignal?: AbortSignalLike): PagedAsyncIterableIterator<JobStatic> {
         const queryParams: string[] = [];
         if (application !== undefined) {
             queryParams.push(`application=${encodeURIComponent(String(application))}`);
@@ -1237,11 +1241,13 @@ export class AzureiotcentralClient extends ConnectorClientBase {
 
                 if (!httpResponse.isSuccessStatusCode) {
                     const operationPath = this.getOperationPath(requestUrl);
-                    throw new ConnectorException(this.connectorName, `GET ${operationPath}`, httpResponse.statusCode, httpResponse.text);
+                    throw new ConnectorError(this.connectorName, `GET ${operationPath}`, httpResponse.statusCode, httpResponse.text);
                 }
 
                 return httpResponse.value as JobCollection;
             },
+            "value",
+            "nextLink",
         );
     }
 
@@ -1249,7 +1255,7 @@ export class AzureiotcentralClient extends ConnectorClientBase {
      * Get a job
      * @remarks Get details about an existing job by ID.
      */
-    public async jobsGetAsync(jobId: string, application?: string, abortSignal?: AbortSignalLike): Promise<JobStatic> {
+    public async getJob(jobId: string, application?: string, abortSignal?: AbortSignalLike): Promise<JobStatic> {
         const queryParams: string[] = [];
         if (application !== undefined) {
             queryParams.push(`application=${encodeURIComponent(String(application))}`);
@@ -1259,7 +1265,7 @@ export class AzureiotcentralClient extends ConnectorClientBase {
         const httpResponse = await this.httpClient.sendAsync<JobStatic>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as JobStatic;
@@ -1269,7 +1275,7 @@ export class AzureiotcentralClient extends ConnectorClientBase {
      * Create a job
      * @remarks Create and execute a new job via its job definition.
      */
-    public async jobsSetAsync(input: Job, jobId: string, application?: string, jobType?: string, abortSignal?: AbortSignalLike): Promise<Job> {
+    public async setJobs(input: Job, jobId: string, application?: string, jobType?: string, abortSignal?: AbortSignalLike): Promise<Job> {
         const queryParams: string[] = [];
         if (application !== undefined) {
             queryParams.push(`application=${encodeURIComponent(String(application))}`);
@@ -1282,7 +1288,7 @@ export class AzureiotcentralClient extends ConnectorClientBase {
         const httpResponse = await this.httpClient.sendAsync<Job>("PUT", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `PUT ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `PUT ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as Job;
@@ -1292,7 +1298,7 @@ export class AzureiotcentralClient extends ConnectorClientBase {
      * Get device statuses
      * @remarks Get the list of individual device statuses by job ID.
      */
-    public jobsGetDevicesAsync(jobId: string, application?: string, abortSignal?: AbortSignalLike): PagedAsyncIterableIterator<JobDeviceStatus> {
+    public getJobsDevices(jobId: string, application?: string, abortSignal?: AbortSignalLike): PagedAsyncIterableIterator<JobDeviceStatus> {
         const queryParams: string[] = [];
         if (application !== undefined) {
             queryParams.push(`application=${encodeURIComponent(String(application))}`);
@@ -1305,11 +1311,13 @@ export class AzureiotcentralClient extends ConnectorClientBase {
 
                 if (!httpResponse.isSuccessStatusCode) {
                     const operationPath = this.getOperationPath(requestUrl);
-                    throw new ConnectorException(this.connectorName, `GET ${operationPath}`, httpResponse.statusCode, httpResponse.text);
+                    throw new ConnectorError(this.connectorName, `GET ${operationPath}`, httpResponse.statusCode, httpResponse.text);
                 }
 
                 return httpResponse.value as JobDeviceStatusCollection;
             },
+            "value",
+            "nextLink",
         );
     }
 
@@ -1317,7 +1325,7 @@ export class AzureiotcentralClient extends ConnectorClientBase {
      * Stop a running job
      * @remarks Stop execution of a job that is currently running.
      */
-    public async jobsStopAsync(jobId: string, application?: string, abortSignal?: AbortSignalLike): Promise<void> {
+    public async stopJobs(jobId: string, application?: string, abortSignal?: AbortSignalLike): Promise<void> {
         const queryParams: string[] = [];
         if (application !== undefined) {
             queryParams.push(`application=${encodeURIComponent(String(application))}`);
@@ -1327,7 +1335,7 @@ export class AzureiotcentralClient extends ConnectorClientBase {
         const httpResponse = await this.httpClient.sendAsync<void>("POST", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
     }
 
@@ -1335,7 +1343,7 @@ export class AzureiotcentralClient extends ConnectorClientBase {
      * Resume a stopped job
      * @remarks Resume execution of an existing stopped job.
      */
-    public async jobsResumeAsync(jobId: string, application?: string, abortSignal?: AbortSignalLike): Promise<void> {
+    public async jobsResume(jobId: string, application?: string, abortSignal?: AbortSignalLike): Promise<void> {
         const queryParams: string[] = [];
         if (application !== undefined) {
             queryParams.push(`application=${encodeURIComponent(String(application))}`);
@@ -1345,7 +1353,7 @@ export class AzureiotcentralClient extends ConnectorClientBase {
         const httpResponse = await this.httpClient.sendAsync<void>("POST", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
     }
 
@@ -1353,7 +1361,7 @@ export class AzureiotcentralClient extends ConnectorClientBase {
      * Resume a job on failed devices
      * @remarks Execute a rerun of an existing job on all failed devices.
      */
-    public async jobsRerunAsync(jobId: string, rerunId: string, application?: string, abortSignal?: AbortSignalLike): Promise<JobStatic> {
+    public async jobsRerun(jobId: string, rerunId: string, application?: string, abortSignal?: AbortSignalLike): Promise<JobStatic> {
         const queryParams: string[] = [];
         if (application !== undefined) {
             queryParams.push(`application=${encodeURIComponent(String(application))}`);
@@ -1363,7 +1371,7 @@ export class AzureiotcentralClient extends ConnectorClientBase {
         const httpResponse = await this.httpClient.sendAsync<JobStatic>("PUT", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `PUT ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `PUT ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as JobStatic;
@@ -1373,7 +1381,7 @@ export class AzureiotcentralClient extends ConnectorClientBase {
      * List organizations
      * @remarks Get the list of organizations in an application.
      */
-    public organizationsListAsync(application?: string, abortSignal?: AbortSignalLike): PagedAsyncIterableIterator<Organization> {
+    public listOrganizations(application?: string, abortSignal?: AbortSignalLike): PagedAsyncIterableIterator<Organization> {
         const queryParams: string[] = [];
         if (application !== undefined) {
             queryParams.push(`application=${encodeURIComponent(String(application))}`);
@@ -1386,11 +1394,13 @@ export class AzureiotcentralClient extends ConnectorClientBase {
 
                 if (!httpResponse.isSuccessStatusCode) {
                     const operationPath = this.getOperationPath(requestUrl);
-                    throw new ConnectorException(this.connectorName, `GET ${operationPath}`, httpResponse.statusCode, httpResponse.text);
+                    throw new ConnectorError(this.connectorName, `GET ${operationPath}`, httpResponse.statusCode, httpResponse.text);
                 }
 
                 return httpResponse.value as OrganizationCollection;
             },
+            "value",
+            "nextLink",
         );
     }
 
@@ -1398,7 +1408,7 @@ export class AzureiotcentralClient extends ConnectorClientBase {
      * Get an organization
      * @remarks Get details about an existing organization by ID.
      */
-    public async organizationsGetAsync(organizationId: string, application?: string, abortSignal?: AbortSignalLike): Promise<Organization> {
+    public async getOrganization(organizationId: string, application?: string, abortSignal?: AbortSignalLike): Promise<Organization> {
         const queryParams: string[] = [];
         if (application !== undefined) {
             queryParams.push(`application=${encodeURIComponent(String(application))}`);
@@ -1408,7 +1418,7 @@ export class AzureiotcentralClient extends ConnectorClientBase {
         const httpResponse = await this.httpClient.sendAsync<Organization>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as Organization;
@@ -1418,7 +1428,7 @@ export class AzureiotcentralClient extends ConnectorClientBase {
      * Create an organization
      * @remarks Create a new organization.
      */
-    public async organizationsSetAsync(input: Organization, organizationId: string, application?: string, abortSignal?: AbortSignalLike): Promise<Organization> {
+    public async setOrganizations(input: Organization, organizationId: string, application?: string, abortSignal?: AbortSignalLike): Promise<Organization> {
         const queryParams: string[] = [];
         if (application !== undefined) {
             queryParams.push(`application=${encodeURIComponent(String(application))}`);
@@ -1428,7 +1438,7 @@ export class AzureiotcentralClient extends ConnectorClientBase {
         const httpResponse = await this.httpClient.sendAsync<Organization>("PUT", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `PUT ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `PUT ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as Organization;
@@ -1438,7 +1448,7 @@ export class AzureiotcentralClient extends ConnectorClientBase {
      * Delete organization
      * @remarks Delete an existing organization by ID
      */
-    public async organizationsRemoveAsync(organizationId: string, application?: string, abortSignal?: AbortSignalLike): Promise<void> {
+    public async removeOrganizations(organizationId: string, application?: string, abortSignal?: AbortSignalLike): Promise<void> {
         const queryParams: string[] = [];
         if (application !== undefined) {
             queryParams.push(`application=${encodeURIComponent(String(application))}`);
@@ -1448,7 +1458,7 @@ export class AzureiotcentralClient extends ConnectorClientBase {
         const httpResponse = await this.httpClient.sendAsync<void>("DELETE", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `DELETE ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `DELETE ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
     }
 
@@ -1456,7 +1466,7 @@ export class AzureiotcentralClient extends ConnectorClientBase {
      * List scheduled jobs
      * @remarks Get the list of scheduled jobs in an application.
      */
-    public scheduledJobsListAsync(application?: string, abortSignal?: AbortSignalLike): PagedAsyncIterableIterator<ScheduledJob> {
+    public listScheduledJobs(application?: string, abortSignal?: AbortSignalLike): PagedAsyncIterableIterator<ScheduledJob> {
         const queryParams: string[] = [];
         if (application !== undefined) {
             queryParams.push(`application=${encodeURIComponent(String(application))}`);
@@ -1469,11 +1479,13 @@ export class AzureiotcentralClient extends ConnectorClientBase {
 
                 if (!httpResponse.isSuccessStatusCode) {
                     const operationPath = this.getOperationPath(requestUrl);
-                    throw new ConnectorException(this.connectorName, `GET ${operationPath}`, httpResponse.statusCode, httpResponse.text);
+                    throw new ConnectorError(this.connectorName, `GET ${operationPath}`, httpResponse.statusCode, httpResponse.text);
                 }
 
                 return httpResponse.value as ScheduledJobCollection;
             },
+            "value",
+            "nextLink",
         );
     }
 
@@ -1481,7 +1493,7 @@ export class AzureiotcentralClient extends ConnectorClientBase {
      * Get a scheduled job
      * @remarks Get details about an existing scheduled job by ID.
      */
-    public async scheduledJobsGetAsync(scheduledJobId: string, application?: string, abortSignal?: AbortSignalLike): Promise<ScheduledJob> {
+    public async getScheduledJob(scheduledJobId: string, application?: string, abortSignal?: AbortSignalLike): Promise<ScheduledJob> {
         const queryParams: string[] = [];
         if (application !== undefined) {
             queryParams.push(`application=${encodeURIComponent(String(application))}`);
@@ -1491,7 +1503,7 @@ export class AzureiotcentralClient extends ConnectorClientBase {
         const httpResponse = await this.httpClient.sendAsync<ScheduledJob>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as ScheduledJob;
@@ -1501,7 +1513,7 @@ export class AzureiotcentralClient extends ConnectorClientBase {
      * Create a scheduled job
      * @remarks Create and execute a new scheduled job via its job definition.
      */
-    public async scheduledJobsSetAsync(input: ScheduledJob, scheduledJobId: string, application?: string, jobType?: string, scheduledJobEndType?: string, abortSignal?: AbortSignalLike): Promise<ScheduledJob> {
+    public async setScheduledJobs(input: ScheduledJob, scheduledJobId: string, application?: string, jobType?: string, scheduledJobEndType?: string, abortSignal?: AbortSignalLike): Promise<ScheduledJob> {
         const queryParams: string[] = [];
         if (application !== undefined) {
             queryParams.push(`application=${encodeURIComponent(String(application))}`);
@@ -1517,7 +1529,7 @@ export class AzureiotcentralClient extends ConnectorClientBase {
         const httpResponse = await this.httpClient.sendAsync<ScheduledJob>("PUT", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `PUT ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `PUT ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as ScheduledJob;
@@ -1527,7 +1539,7 @@ export class AzureiotcentralClient extends ConnectorClientBase {
      * Update a scheduled job
      * @remarks Update an existing scheduled job by ID.
      */
-    public async scheduledJobsUpdateAsync(input: ScheduledJobPatch, scheduledJobId: string, application?: string, scheduledJobEndType?: string, abortSignal?: AbortSignalLike): Promise<ScheduledJobStatic> {
+    public async updateScheduledJob(input: ScheduledJobPatch, scheduledJobId: string, application?: string, scheduledJobEndType?: string, abortSignal?: AbortSignalLike): Promise<ScheduledJobStatic> {
         const queryParams: string[] = [];
         if (application !== undefined) {
             queryParams.push(`application=${encodeURIComponent(String(application))}`);
@@ -1540,7 +1552,7 @@ export class AzureiotcentralClient extends ConnectorClientBase {
         const httpResponse = await this.httpClient.sendAsync<ScheduledJobStatic>("PATCH", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `PATCH ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `PATCH ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as ScheduledJobStatic;
@@ -1550,7 +1562,7 @@ export class AzureiotcentralClient extends ConnectorClientBase {
      * Delete a scheduled job
      * @remarks Delete an existing scheduled job by ID.
      */
-    public async scheduledJobsRemoveAsync(scheduledJobId: string, application?: string, abortSignal?: AbortSignalLike): Promise<void> {
+    public async removeScheduledJobs(scheduledJobId: string, application?: string, abortSignal?: AbortSignalLike): Promise<void> {
         const queryParams: string[] = [];
         if (application !== undefined) {
             queryParams.push(`application=${encodeURIComponent(String(application))}`);
@@ -1560,7 +1572,7 @@ export class AzureiotcentralClient extends ConnectorClientBase {
         const httpResponse = await this.httpClient.sendAsync<void>("DELETE", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `DELETE ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `DELETE ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
     }
 
@@ -1568,7 +1580,7 @@ export class AzureiotcentralClient extends ConnectorClientBase {
      * Get jobs by scheduled job ID
      * @remarks Get the list of jobs for a scheduled job definition.
      */
-    public scheduledJobsListJobsAsync(scheduledJobId: string, application?: string, abortSignal?: AbortSignalLike): PagedAsyncIterableIterator<JobStatic> {
+    public listScheduledJobsJobs(scheduledJobId: string, application?: string, abortSignal?: AbortSignalLike): PagedAsyncIterableIterator<JobStatic> {
         const queryParams: string[] = [];
         if (application !== undefined) {
             queryParams.push(`application=${encodeURIComponent(String(application))}`);
@@ -1581,11 +1593,13 @@ export class AzureiotcentralClient extends ConnectorClientBase {
 
                 if (!httpResponse.isSuccessStatusCode) {
                     const operationPath = this.getOperationPath(requestUrl);
-                    throw new ConnectorException(this.connectorName, `GET ${operationPath}`, httpResponse.statusCode, httpResponse.text);
+                    throw new ConnectorError(this.connectorName, `GET ${operationPath}`, httpResponse.statusCode, httpResponse.text);
                 }
 
                 return httpResponse.value as ScheduledJobJobCollection;
             },
+            "value",
+            "nextLink",
         );
     }
 
@@ -1593,7 +1607,7 @@ export class AzureiotcentralClient extends ConnectorClientBase {
      * Get a device by ID
      * @remarks Get details about an existing device by device ID.
      */
-    public async devicesGetAsync(deviceId: string, application?: string, abortSignal?: AbortSignalLike): Promise<DeviceV1> {
+    public async getDevice(deviceId: string, application?: string, abortSignal?: AbortSignalLike): Promise<DeviceV1> {
         const queryParams: string[] = [];
         if (application !== undefined) {
             queryParams.push(`application=${encodeURIComponent(String(application))}`);
@@ -1603,7 +1617,7 @@ export class AzureiotcentralClient extends ConnectorClientBase {
         const httpResponse = await this.httpClient.sendAsync<DeviceV1>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as DeviceV1;
@@ -1613,7 +1627,7 @@ export class AzureiotcentralClient extends ConnectorClientBase {
      * Get device command response
      * @remarks Get the last response for a device command.
      */
-    public async devicesGetCommandResponseAsync(deviceId: string, commandName: string, application?: string, template?: string, abortSignal?: AbortSignalLike): Promise<DeviceCommandV1> {
+    public async getDeviceCommandResponse(deviceId: string, commandName: string, application?: string, template?: string, abortSignal?: AbortSignalLike): Promise<DeviceCommandV1> {
         const queryParams: string[] = [];
         if (application !== undefined) {
             queryParams.push(`application=${encodeURIComponent(String(application))}`);
@@ -1626,7 +1640,7 @@ export class AzureiotcentralClient extends ConnectorClientBase {
         const httpResponse = await this.httpClient.sendAsync<DeviceCommandV1>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as DeviceCommandV1;
@@ -1636,7 +1650,7 @@ export class AzureiotcentralClient extends ConnectorClientBase {
      * Get component command response
      * @remarks Get the last response for a device component command.
      */
-    public async devicesGetComponentCommandResponseAsync(deviceId: string, componentName: string, commandName: string, application?: string, template?: string, abortSignal?: AbortSignalLike): Promise<DeviceComponentCommand> {
+    public async getDeviceComponentCommandResponse(deviceId: string, componentName: string, commandName: string, application?: string, template?: string, abortSignal?: AbortSignalLike): Promise<DeviceComponentCommand> {
         const queryParams: string[] = [];
         if (application !== undefined) {
             queryParams.push(`application=${encodeURIComponent(String(application))}`);
@@ -1649,7 +1663,7 @@ export class AzureiotcentralClient extends ConnectorClientBase {
         const httpResponse = await this.httpClient.sendAsync<DeviceComponentCommand>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as DeviceComponentCommand;
@@ -1659,7 +1673,7 @@ export class AzureiotcentralClient extends ConnectorClientBase {
      * Get component telemetry value
      * @remarks Get the last telemetry value from a component.
      */
-    public async devicesGetComponentTelemetryValueAsync(deviceId: string, componentName: string, telemetryName: string, application?: string, template?: string, abortSignal?: AbortSignalLike): Promise<DeviceComponentTelemetry> {
+    public async getDeviceComponentTelemetryValue(deviceId: string, componentName: string, telemetryName: string, application?: string, template?: string, abortSignal?: AbortSignalLike): Promise<DeviceComponentTelemetry> {
         const queryParams: string[] = [];
         if (application !== undefined) {
             queryParams.push(`application=${encodeURIComponent(String(application))}`);
@@ -1672,7 +1686,7 @@ export class AzureiotcentralClient extends ConnectorClientBase {
         const httpResponse = await this.httpClient.sendAsync<DeviceComponentTelemetry>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as DeviceComponentTelemetry;
@@ -1682,7 +1696,7 @@ export class AzureiotcentralClient extends ConnectorClientBase {
      * Get module command response
      * @remarks Get the last response for a device module command
      */
-    public async devicesGetModuleCommandResponseAsync(deviceId: string, module: string, commandName: string, application?: string, template?: string, abortSignal?: AbortSignalLike): Promise<DeviceModuleCommand> {
+    public async getDeviceModuleCommandResponse(deviceId: string, module: string, commandName: string, application?: string, template?: string, abortSignal?: AbortSignalLike): Promise<DeviceModuleCommand> {
         const queryParams: string[] = [];
         if (application !== undefined) {
             queryParams.push(`application=${encodeURIComponent(String(application))}`);
@@ -1695,7 +1709,7 @@ export class AzureiotcentralClient extends ConnectorClientBase {
         const httpResponse = await this.httpClient.sendAsync<DeviceModuleCommand>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as DeviceModuleCommand;
@@ -1705,7 +1719,7 @@ export class AzureiotcentralClient extends ConnectorClientBase {
      * Get module component command response
      * @remarks Get the last response for a module component command.
      */
-    public async devicesGetModuleComponentCommandResponseAsync(deviceId: string, module: string, componentName: string, commandName: string, application?: string, template?: string, abortSignal?: AbortSignalLike): Promise<DeviceModuleComponentCommand> {
+    public async getDeviceModuleComponentCommandResponse(deviceId: string, module: string, componentName: string, commandName: string, application?: string, template?: string, abortSignal?: AbortSignalLike): Promise<DeviceModuleComponentCommand> {
         const queryParams: string[] = [];
         if (application !== undefined) {
             queryParams.push(`application=${encodeURIComponent(String(application))}`);
@@ -1718,7 +1732,7 @@ export class AzureiotcentralClient extends ConnectorClientBase {
         const httpResponse = await this.httpClient.sendAsync<DeviceModuleComponentCommand>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as DeviceModuleComponentCommand;
@@ -1728,7 +1742,7 @@ export class AzureiotcentralClient extends ConnectorClientBase {
      * Get module component telemetry value
      * @remarks Get the last telemetry value from a module component.
      */
-    public async devicesGetModuleComponentTelemetryValueAsync(deviceId: string, module: string, componentName: string, telemetryName: string, application?: string, template?: string, abortSignal?: AbortSignalLike): Promise<DeviceModuleComponentTelemetry> {
+    public async getDeviceModuleComponentTelemetryValue(deviceId: string, module: string, componentName: string, telemetryName: string, application?: string, template?: string, abortSignal?: AbortSignalLike): Promise<DeviceModuleComponentTelemetry> {
         const queryParams: string[] = [];
         if (application !== undefined) {
             queryParams.push(`application=${encodeURIComponent(String(application))}`);
@@ -1741,7 +1755,7 @@ export class AzureiotcentralClient extends ConnectorClientBase {
         const httpResponse = await this.httpClient.sendAsync<DeviceModuleComponentTelemetry>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as DeviceModuleComponentTelemetry;
@@ -1751,7 +1765,7 @@ export class AzureiotcentralClient extends ConnectorClientBase {
      * Get module properties
      * @remarks Get all property values of a module.
      */
-    public async devicesGetModulePropertiesAsync(deviceId: string, module: string, application?: string, template?: string, abortSignal?: AbortSignalLike): Promise<ModuleProperties> {
+    public async getDevicesModuleProperties(deviceId: string, module: string, application?: string, template?: string, abortSignal?: AbortSignalLike): Promise<ModuleProperties> {
         const queryParams: string[] = [];
         if (application !== undefined) {
             queryParams.push(`application=${encodeURIComponent(String(application))}`);
@@ -1764,7 +1778,7 @@ export class AzureiotcentralClient extends ConnectorClientBase {
         const httpResponse = await this.httpClient.sendAsync<ModuleProperties>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as ModuleProperties;
@@ -1774,7 +1788,7 @@ export class AzureiotcentralClient extends ConnectorClientBase {
      * Get module telemetry value
      * @remarks Get the last telemetry value from a module.
      */
-    public async devicesGetModuleTelemetryValueAsync(deviceId: string, module: string, telemetryName: string, application?: string, template?: string, abortSignal?: AbortSignalLike): Promise<DeviceModuleTelemetry> {
+    public async getDeviceModuleTelemetryValue(deviceId: string, module: string, telemetryName: string, application?: string, template?: string, abortSignal?: AbortSignalLike): Promise<DeviceModuleTelemetry> {
         const queryParams: string[] = [];
         if (application !== undefined) {
             queryParams.push(`application=${encodeURIComponent(String(application))}`);
@@ -1787,7 +1801,7 @@ export class AzureiotcentralClient extends ConnectorClientBase {
         const httpResponse = await this.httpClient.sendAsync<DeviceModuleTelemetry>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as DeviceModuleTelemetry;
@@ -1797,7 +1811,7 @@ export class AzureiotcentralClient extends ConnectorClientBase {
      * Get device properties
      * @remarks Get all property values of a device by device ID.
      */
-    public async devicesGetPropertiesAsync(deviceId: string, application?: string, template?: string, abortSignal?: AbortSignalLike): Promise<DeviceProperties> {
+    public async getDevicesProperties(deviceId: string, application?: string, template?: string, abortSignal?: AbortSignalLike): Promise<DeviceProperties> {
         const queryParams: string[] = [];
         if (application !== undefined) {
             queryParams.push(`application=${encodeURIComponent(String(application))}`);
@@ -1810,7 +1824,7 @@ export class AzureiotcentralClient extends ConnectorClientBase {
         const httpResponse = await this.httpClient.sendAsync<DeviceProperties>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as DeviceProperties;
@@ -1820,7 +1834,7 @@ export class AzureiotcentralClient extends ConnectorClientBase {
      * Get device telemetry value
      * @remarks Get the last telemetry value from a device.
      */
-    public async devicesGetTelemetryValueAsync(deviceId: string, telemetryName: string, application?: string, template?: string, abortSignal?: AbortSignalLike): Promise<DeviceTelemetry> {
+    public async getDeviceTelemetryValue(deviceId: string, telemetryName: string, application?: string, template?: string, abortSignal?: AbortSignalLike): Promise<DeviceTelemetry> {
         const queryParams: string[] = [];
         if (application !== undefined) {
             queryParams.push(`application=${encodeURIComponent(String(application))}`);
@@ -1833,7 +1847,7 @@ export class AzureiotcentralClient extends ConnectorClientBase {
         const httpResponse = await this.httpClient.sendAsync<DeviceTelemetry>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as DeviceTelemetry;
@@ -1843,7 +1857,7 @@ export class AzureiotcentralClient extends ConnectorClientBase {
      * List devices
      * @remarks Get the list of devices in an application.
      */
-    public devicesListAsync(application?: string, abortSignal?: AbortSignalLike): PagedAsyncIterableIterator<DeviceV1> {
+    public listDevices(application?: string, abortSignal?: AbortSignalLike): PagedAsyncIterableIterator<DeviceV1> {
         const queryParams: string[] = [];
         if (application !== undefined) {
             queryParams.push(`application=${encodeURIComponent(String(application))}`);
@@ -1856,11 +1870,13 @@ export class AzureiotcentralClient extends ConnectorClientBase {
 
                 if (!httpResponse.isSuccessStatusCode) {
                     const operationPath = this.getOperationPath(requestUrl);
-                    throw new ConnectorException(this.connectorName, `GET ${operationPath}`, httpResponse.statusCode, httpResponse.text);
+                    throw new ConnectorError(this.connectorName, `GET ${operationPath}`, httpResponse.statusCode, httpResponse.text);
                 }
 
                 return httpResponse.value as DeviceCollection;
             },
+            "value",
+            "nextLink",
         );
     }
 
@@ -1868,7 +1884,7 @@ export class AzureiotcentralClient extends ConnectorClientBase {
      * Delete a device
      * @remarks Delete an existing device by device ID.
      */
-    public async devicesRemoveAsync(deviceId: string, application?: string, abortSignal?: AbortSignalLike): Promise<void> {
+    public async removeDevices(deviceId: string, application?: string, abortSignal?: AbortSignalLike): Promise<void> {
         const queryParams: string[] = [];
         if (application !== undefined) {
             queryParams.push(`application=${encodeURIComponent(String(application))}`);
@@ -1878,7 +1894,7 @@ export class AzureiotcentralClient extends ConnectorClientBase {
         const httpResponse = await this.httpClient.sendAsync<void>("DELETE", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `DELETE ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `DELETE ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
     }
 
@@ -1886,7 +1902,7 @@ export class AzureiotcentralClient extends ConnectorClientBase {
      * Run a device command
      * @remarks Run a command on a device.
      */
-    public async devicesRunCommandAsync(input: DeviceCommandV1, deviceId: string, commandName: string, application?: string, template?: string, abortSignal?: AbortSignalLike): Promise<DeviceCommandV1> {
+    public async runDevicesCommand(input: DeviceCommandV1, deviceId: string, commandName: string, application?: string, template?: string, abortSignal?: AbortSignalLike): Promise<DeviceCommandV1> {
         const queryParams: string[] = [];
         if (application !== undefined) {
             queryParams.push(`application=${encodeURIComponent(String(application))}`);
@@ -1899,7 +1915,7 @@ export class AzureiotcentralClient extends ConnectorClientBase {
         const httpResponse = await this.httpClient.sendAsync<DeviceCommandV1>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as DeviceCommandV1;
@@ -1909,7 +1925,7 @@ export class AzureiotcentralClient extends ConnectorClientBase {
      * Run a component command
      * @remarks Run a command on a component.
      */
-    public async devicesRunComponentCommandAsync(input: DeviceComponentCommand, deviceId: string, componentName: string, commandName: string, application?: string, template?: string, abortSignal?: AbortSignalLike): Promise<DeviceComponentCommand> {
+    public async runDevicesComponentCommand(input: DeviceComponentCommand, deviceId: string, componentName: string, commandName: string, application?: string, template?: string, abortSignal?: AbortSignalLike): Promise<DeviceComponentCommand> {
         const queryParams: string[] = [];
         if (application !== undefined) {
             queryParams.push(`application=${encodeURIComponent(String(application))}`);
@@ -1922,7 +1938,7 @@ export class AzureiotcentralClient extends ConnectorClientBase {
         const httpResponse = await this.httpClient.sendAsync<DeviceComponentCommand>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as DeviceComponentCommand;
@@ -1932,7 +1948,7 @@ export class AzureiotcentralClient extends ConnectorClientBase {
      * Run a module command
      * @remarks Run a command on a module.
      */
-    public async devicesRunModuleCommandAsync(input: DeviceModuleCommand, deviceId: string, module: string, commandName: string, application?: string, template?: string, abortSignal?: AbortSignalLike): Promise<DeviceModuleCommand> {
+    public async runDevicesModuleCommand(input: DeviceModuleCommand, deviceId: string, module: string, commandName: string, application?: string, template?: string, abortSignal?: AbortSignalLike): Promise<DeviceModuleCommand> {
         const queryParams: string[] = [];
         if (application !== undefined) {
             queryParams.push(`application=${encodeURIComponent(String(application))}`);
@@ -1945,7 +1961,7 @@ export class AzureiotcentralClient extends ConnectorClientBase {
         const httpResponse = await this.httpClient.sendAsync<DeviceModuleCommand>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as DeviceModuleCommand;
@@ -1955,7 +1971,7 @@ export class AzureiotcentralClient extends ConnectorClientBase {
      * Run a module component command
      * @remarks Run a command on a module component.
      */
-    public async devicesRunModuleComponentCommandAsync(input: DeviceModuleComponentCommand, deviceId: string, module: string, componentName: string, commandName: string, application?: string, template?: string, abortSignal?: AbortSignalLike): Promise<DeviceModuleComponentCommand> {
+    public async runDevicesModuleComponentCommand(input: DeviceModuleComponentCommand, deviceId: string, module: string, componentName: string, commandName: string, application?: string, template?: string, abortSignal?: AbortSignalLike): Promise<DeviceModuleComponentCommand> {
         const queryParams: string[] = [];
         if (application !== undefined) {
             queryParams.push(`application=${encodeURIComponent(String(application))}`);
@@ -1968,7 +1984,7 @@ export class AzureiotcentralClient extends ConnectorClientBase {
         const httpResponse = await this.httpClient.sendAsync<DeviceModuleComponentCommand>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as DeviceModuleComponentCommand;
@@ -1978,7 +1994,7 @@ export class AzureiotcentralClient extends ConnectorClientBase {
      * Create or update a device
      * @remarks Create a new device or update an existing one by device ID.
      */
-    public async devicesSetAsync(input: DeviceV2, deviceId: string, application?: string, abortSignal?: AbortSignalLike): Promise<DeviceV2> {
+    public async setDevices(input: DeviceV2, deviceId: string, application?: string, abortSignal?: AbortSignalLike): Promise<DeviceV2> {
         const queryParams: string[] = [];
         if (application !== undefined) {
             queryParams.push(`application=${encodeURIComponent(String(application))}`);
@@ -1988,7 +2004,7 @@ export class AzureiotcentralClient extends ConnectorClientBase {
         const httpResponse = await this.httpClient.sendAsync<DeviceV2>("PUT", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `PUT ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `PUT ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as DeviceV2;
@@ -1998,7 +2014,7 @@ export class AzureiotcentralClient extends ConnectorClientBase {
      * Update module properties
      * @remarks Update all property values of a module.
      */
-    public async devicesUpdateModulePropertiesAsync(input: ModuleProperties, deviceId: string, module: string, application?: string, template?: string, abortSignal?: AbortSignalLike): Promise<ModuleProperties> {
+    public async updateDevicesModuleProperties(input: ModuleProperties, deviceId: string, module: string, application?: string, template?: string, abortSignal?: AbortSignalLike): Promise<ModuleProperties> {
         const queryParams: string[] = [];
         if (application !== undefined) {
             queryParams.push(`application=${encodeURIComponent(String(application))}`);
@@ -2011,7 +2027,7 @@ export class AzureiotcentralClient extends ConnectorClientBase {
         const httpResponse = await this.httpClient.sendAsync<ModuleProperties>("PATCH", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `PATCH ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `PATCH ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as ModuleProperties;
@@ -2021,7 +2037,7 @@ export class AzureiotcentralClient extends ConnectorClientBase {
      * Update device properties
      * @remarks Update all property values of a device by device ID.
      */
-    public async devicesUpdatePropertiesAsync(input: DeviceProperties, deviceId: string, application?: string, template?: string, abortSignal?: AbortSignalLike): Promise<DeviceProperties> {
+    public async updateDevicesProperties(input: DeviceProperties, deviceId: string, application?: string, template?: string, abortSignal?: AbortSignalLike): Promise<DeviceProperties> {
         const queryParams: string[] = [];
         if (application !== undefined) {
             queryParams.push(`application=${encodeURIComponent(String(application))}`);
@@ -2034,7 +2050,7 @@ export class AzureiotcentralClient extends ConnectorClientBase {
         const httpResponse = await this.httpClient.sendAsync<DeviceProperties>("PATCH", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `PATCH ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `PATCH ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as DeviceProperties;
@@ -2044,7 +2060,7 @@ export class AzureiotcentralClient extends ConnectorClientBase {
      * Get a device template by ID
      * @remarks Get details about an existing device template by ID.
      */
-    public async deviceTemplatesGetAsync(templateId: string, application?: string, abortSignal?: AbortSignalLike): Promise<DeviceTemplate> {
+    public async getDeviceTemplate(templateId: string, application?: string, abortSignal?: AbortSignalLike): Promise<DeviceTemplate> {
         const queryParams: string[] = [];
         if (application !== undefined) {
             queryParams.push(`application=${encodeURIComponent(String(application))}`);
@@ -2054,7 +2070,7 @@ export class AzureiotcentralClient extends ConnectorClientBase {
         const httpResponse = await this.httpClient.sendAsync<DeviceTemplate>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as DeviceTemplate;
@@ -2064,7 +2080,7 @@ export class AzureiotcentralClient extends ConnectorClientBase {
      * List device templates
      * @remarks Get the list of device templates in an application.
      */
-    public deviceTemplatesListAsync(application?: string, abortSignal?: AbortSignalLike): PagedAsyncIterableIterator<DeviceTemplate> {
+    public listDeviceTemplates(application?: string, abortSignal?: AbortSignalLike): PagedAsyncIterableIterator<DeviceTemplate> {
         const queryParams: string[] = [];
         if (application !== undefined) {
             queryParams.push(`application=${encodeURIComponent(String(application))}`);
@@ -2077,11 +2093,13 @@ export class AzureiotcentralClient extends ConnectorClientBase {
 
                 if (!httpResponse.isSuccessStatusCode) {
                     const operationPath = this.getOperationPath(requestUrl);
-                    throw new ConnectorException(this.connectorName, `GET ${operationPath}`, httpResponse.statusCode, httpResponse.text);
+                    throw new ConnectorError(this.connectorName, `GET ${operationPath}`, httpResponse.statusCode, httpResponse.text);
                 }
 
                 return httpResponse.value as DeviceTemplateCollection;
             },
+            "value",
+            "nextLink",
         );
     }
 
@@ -2089,7 +2107,7 @@ export class AzureiotcentralClient extends ConnectorClientBase {
      * Delete a device template
      * @remarks Delete an existing device template by ID.
      */
-    public async deviceTemplatesRemoveAsync(templateId: string, application?: string, abortSignal?: AbortSignalLike): Promise<void> {
+    public async removeDeviceTemplates(templateId: string, application?: string, abortSignal?: AbortSignalLike): Promise<void> {
         const queryParams: string[] = [];
         if (application !== undefined) {
             queryParams.push(`application=${encodeURIComponent(String(application))}`);
@@ -2099,7 +2117,7 @@ export class AzureiotcentralClient extends ConnectorClientBase {
         const httpResponse = await this.httpClient.sendAsync<void>("DELETE", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `DELETE ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `DELETE ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
     }
 
@@ -2107,7 +2125,7 @@ export class AzureiotcentralClient extends ConnectorClientBase {
      * Get role
      * @remarks Get a role by ID.
      */
-    public async rolesGetAsync(roleId: string, application?: string, abortSignal?: AbortSignalLike): Promise<Role> {
+    public async getRole(roleId: string, application?: string, abortSignal?: AbortSignalLike): Promise<Role> {
         const queryParams: string[] = [];
         if (application !== undefined) {
             queryParams.push(`application=${encodeURIComponent(String(application))}`);
@@ -2117,7 +2135,7 @@ export class AzureiotcentralClient extends ConnectorClientBase {
         const httpResponse = await this.httpClient.sendAsync<Role>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as Role;
@@ -2127,7 +2145,7 @@ export class AzureiotcentralClient extends ConnectorClientBase {
      * List roles
      * @remarks Get the list of roles in an application.
      */
-    public async rolesListAsync(application?: string, abortSignal?: AbortSignalLike): Promise<RoleCollection> {
+    public async listRoles(application?: string, abortSignal?: AbortSignalLike): Promise<RoleCollection> {
         const queryParams: string[] = [];
         if (application !== undefined) {
             queryParams.push(`application=${encodeURIComponent(String(application))}`);
@@ -2137,7 +2155,7 @@ export class AzureiotcentralClient extends ConnectorClientBase {
         const httpResponse = await this.httpClient.sendAsync<RoleCollection>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as RoleCollection;
@@ -2147,7 +2165,7 @@ export class AzureiotcentralClient extends ConnectorClientBase {
      * Create user
      * @remarks Create a user in the application
      */
-    public async usersCreateAsync(input: User, userId: string, application?: string, userType?: string, abortSignal?: AbortSignalLike): Promise<User> {
+    public async createUser(input: User, userId: string, application?: string, userType?: string, abortSignal?: AbortSignalLike): Promise<User> {
         const queryParams: string[] = [];
         if (application !== undefined) {
             queryParams.push(`application=${encodeURIComponent(String(application))}`);
@@ -2160,7 +2178,7 @@ export class AzureiotcentralClient extends ConnectorClientBase {
         const httpResponse = await this.httpClient.sendAsync<User>("PUT", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `PUT ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `PUT ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as User;
@@ -2170,7 +2188,7 @@ export class AzureiotcentralClient extends ConnectorClientBase {
      * Get user
      * @remarks Get a user by ID
      */
-    public async usersGetAsync(userId: string, application?: string, abortSignal?: AbortSignalLike): Promise<UserStatic> {
+    public async getUser(userId: string, application?: string, abortSignal?: AbortSignalLike): Promise<UserStatic> {
         const queryParams: string[] = [];
         if (application !== undefined) {
             queryParams.push(`application=${encodeURIComponent(String(application))}`);
@@ -2180,7 +2198,7 @@ export class AzureiotcentralClient extends ConnectorClientBase {
         const httpResponse = await this.httpClient.sendAsync<UserStatic>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as UserStatic;
@@ -2190,7 +2208,7 @@ export class AzureiotcentralClient extends ConnectorClientBase {
      * List users
      * @remarks Get the list of users in an application
      */
-    public async usersListAsync(application?: string, abortSignal?: AbortSignalLike): Promise<UserCollection> {
+    public async listUsers(application?: string, abortSignal?: AbortSignalLike): Promise<UserCollection> {
         const queryParams: string[] = [];
         if (application !== undefined) {
             queryParams.push(`application=${encodeURIComponent(String(application))}`);
@@ -2200,7 +2218,7 @@ export class AzureiotcentralClient extends ConnectorClientBase {
         const httpResponse = await this.httpClient.sendAsync<UserCollection>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as UserCollection;
@@ -2210,7 +2228,7 @@ export class AzureiotcentralClient extends ConnectorClientBase {
      * Delete user
      * @remarks Delete a user
      */
-    public async usersRemoveAsync(userId: string, application?: string, abortSignal?: AbortSignalLike): Promise<void> {
+    public async removeUsers(userId: string, application?: string, abortSignal?: AbortSignalLike): Promise<void> {
         const queryParams: string[] = [];
         if (application !== undefined) {
             queryParams.push(`application=${encodeURIComponent(String(application))}`);
@@ -2220,7 +2238,7 @@ export class AzureiotcentralClient extends ConnectorClientBase {
         const httpResponse = await this.httpClient.sendAsync<void>("DELETE", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `DELETE ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `DELETE ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
     }
 
@@ -2228,7 +2246,7 @@ export class AzureiotcentralClient extends ConnectorClientBase {
      * Update user
      * @remarks Update a user in the application via patch
      */
-    public async usersUpdateAsync(input: UserPatch, userId: string, application?: string, userType?: string, abortSignal?: AbortSignalLike): Promise<UserPatch> {
+    public async updateUser(input: UserPatch, userId: string, application?: string, userType?: string, abortSignal?: AbortSignalLike): Promise<UserPatch> {
         const queryParams: string[] = [];
         if (application !== undefined) {
             queryParams.push(`application=${encodeURIComponent(String(application))}`);
@@ -2241,7 +2259,7 @@ export class AzureiotcentralClient extends ConnectorClientBase {
         const httpResponse = await this.httpClient.sendAsync<UserPatch>("PATCH", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `PATCH ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `PATCH ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as UserPatch;

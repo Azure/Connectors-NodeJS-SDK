@@ -4,7 +4,7 @@
 import type { AbortSignalLike } from "@azure/abort-controller";
 import type { TokenCredential } from "@azure/core-auth";
 import { ConnectorClientBase } from "../azureConnectors/clientBase.ts";
-import { ConnectorException } from "../azureConnectors/connectorException.ts";
+import { ConnectorError } from "../azureConnectors/connectorError.ts";
 import { ConnectorClientOptions } from "../azureConnectors/options.ts";
 
 // #region Types
@@ -292,7 +292,7 @@ export interface OrganizationInput {
  * Definition: organizationSettings
  */
 export interface OrganizationSettings {
-    determine_deadline?: GenericObject;
+    determine_deadline?: Record<string, unknown>;
     workdays?: Array<string>;
     holidays?: Array<string>;
 }
@@ -347,7 +347,7 @@ export interface RunViewInput {
 export interface PreferenceInput {
     slug?: string;
     value?: string;
-    metadata?: GenericObject;
+    metadata?: Record<string, unknown>;
 }
 
 /**
@@ -427,7 +427,7 @@ export interface CaptureInput {
     label?: string;
     position?: number;
     required?: boolean;
-    options?: Array<GenericObject>;
+    options?: Array<Record<string, unknown>>;
 }
 
 /**
@@ -493,13 +493,13 @@ export interface CreateChecklistInput {
     title?: string;
     summary?: string;
     privacy?: string;
-    settings?: GenericObject;
+    settings?: Record<string, unknown>;
     /** The list of users who can update the checklist. */
     contributors?: Array<number>;
     tags?: Array<string>;
     /** The list of groups and users who can access the run. */
-    start_run_permissions?: GenericObject;
-    prerun?: GenericObject;
+    start_run_permissions?: Record<string, unknown>;
+    prerun?: Record<string, unknown>;
     /** Template creator ID */
     user_id?: number;
     /** Template Owner ID */
@@ -515,10 +515,10 @@ export interface Checklist {
     summary?: string;
     privacy?: string;
     starred?: number;
-    settings?: GenericObject;
+    settings?: Record<string, unknown>;
     /** The list of users who can update the Blueprint. */
     contributors?: Array<number>;
-    statistics?: GenericObject;
+    statistics?: Record<string, unknown>;
     created_by?: number;
     /** Template Owner ID */
     owner_id?: number;
@@ -602,8 +602,8 @@ export interface Message {
     created_ago?: string;
     sent_to?: Array<number>;
     author_name?: string;
-    author?: GenericObject;
-    subject?: GenericObject;
+    author?: Record<string, unknown>;
+    subject?: Record<string, unknown>;
 }
 
 /**
@@ -632,7 +632,7 @@ export interface Organization {
 export interface Preference {
     slug?: string;
     value?: string;
-    metadata?: GenericObject;
+    metadata?: Record<string, unknown>;
     last_updated?: Date;
 }
 
@@ -658,7 +658,7 @@ export interface CreateRoleInput {
 export interface Role {
     id?: number;
     name?: string;
-    permissions?: GenericObject;
+    permissions?: Record<string, unknown>;
     created_at?: Date;
     updated_at?: Date;
 }
@@ -710,12 +710,12 @@ export interface AlertIssues {
     task_id?: string;
     label?: string;
     content?: string;
-    sent_to?: GenericObject;
+    sent_to?: Record<string, unknown>;
     sent_by?: number;
     created_at?: Date;
     created_ago?: string;
     recent_updated_at?: Date;
-    author?: GenericObject;
+    author?: Record<string, unknown>;
     resolve_id?: number;
 }
 
@@ -735,7 +735,7 @@ export interface Run {
     name?: string;
     summary?: string;
     status?: string;
-    progress?: GenericObject;
+    progress?: Record<string, unknown>;
     started_by?: number;
     owner_id?: number;
     prerun?: Array<PrerunData>;
@@ -771,7 +771,7 @@ export interface Section {
     checklist_id?: string;
     name?: string;
     position?: number;
-    condition?: GenericObject;
+    condition?: Record<string, unknown>;
 }
 
 /**
@@ -800,7 +800,7 @@ export interface StandaloneTask {
     run_id?: string;
     step_id?: string;
     alias?: string;
-    taskdata?: GenericObject;
+    taskdata?: Record<string, unknown>;
     owners?: StepOwner;
     is_completable?: number;
     status?: string;
@@ -834,7 +834,7 @@ export interface CreateStandaloneTaskInput {
  * Definition: updateStandaloneTaskInput
  */
 export interface UpdateStandaloneTaskInput {
-    taskdata?: GenericObject;
+    taskdata?: Record<string, unknown>;
     owners?: StepOwner;
     name?: string;
     description?: string;
@@ -891,9 +891,9 @@ export interface CreateStepInput {
     position?: number;
     owners?: StepOwner;
     /** The list of groups the step is invisible to. */
-    invisibility?: GenericObject;
-    settings?: GenericObject;
-    metadata?: GenericObject;
+    invisibility?: Record<string, unknown>;
+    settings?: Record<string, unknown>;
+    metadata?: Record<string, unknown>;
     condition?: StepCondition;
     captures?: Array<CaptureInput>;
 }
@@ -910,12 +910,12 @@ export interface Step {
     position?: number;
     owners?: StepOwner;
     /** The list of groups the step is invisible to. */
-    invisibility?: GenericObject;
-    settings?: GenericObject;
-    metadata?: GenericObject;
+    invisibility?: Record<string, unknown>;
+    settings?: Record<string, unknown>;
+    metadata?: Record<string, unknown>;
     deadline?: StepDeadline;
-    captures?: GenericObject;
-    condition?: GenericObject;
+    captures?: Record<string, unknown>;
+    condition?: Record<string, unknown>;
     created_at?: RequestDate;
     last_updated?: RequestDate;
     archived_at?: RequestDate;
@@ -970,7 +970,7 @@ export interface TaskObject {
     run_id?: string;
     step_id?: string;
     alias?: string;
-    taskdata?: GenericObject;
+    taskdata?: Record<string, unknown>;
     owners?: StepOwner;
     is_completable?: boolean;
     status?: string;
@@ -994,7 +994,7 @@ export interface Pagination {
     per_page?: number;
     current_page?: number;
     total_pages?: number;
-    links?: GenericObject;
+    links?: Record<string, unknown>;
 }
 
 /**
@@ -1023,7 +1023,7 @@ export interface CompletedProcessTask {
     run_id?: string;
     step_id?: string;
     alias?: string;
-    taskdata?: GenericObject;
+    taskdata?: Record<string, unknown>;
     owners?: StepOwner;
     is_completable?: boolean;
     status?: string;
@@ -1036,14 +1036,14 @@ export interface CompletedProcessTask {
     starter_id?: number;
     completer_id?: number;
     run_status?: string;
-    tasks_changed_by_rules?: GenericObject;
+    tasks_changed_by_rules?: Record<string, unknown>;
 }
 
 /**
  * Definition: updateTaskInput
  */
 export interface UpdateTaskInput {
-    taskdata?: GenericObject;
+    taskdata?: Record<string, unknown>;
     threads?: Record<string, unknown>;
     owners?: StepOwner;
     status?: string;
@@ -1056,9 +1056,9 @@ export interface UpdateTaskInput {
  */
 export interface TaskGuest {
     alias?: string;
-    organization?: GenericObject;
-    taskdata?: GenericObject;
-    threads?: GenericObject;
+    organization?: Record<string, unknown>;
+    taskdata?: Record<string, unknown>;
+    threads?: Record<string, unknown>;
     status?: string;
     is_completable?: boolean;
     deadline?: Date;
@@ -1074,7 +1074,7 @@ export interface TaskGuest {
  * Definition: updateGuestsTasksInput
  */
 export interface UpdateGuestsTasksInput {
-    taskdata?: GenericObject;
+    taskdata?: Record<string, unknown>;
     status?: string;
 }
 
@@ -1090,7 +1090,7 @@ export interface CreateGuestsTasksComment {
  */
 export interface TaskMetaInput {
     slug?: string;
-    value?: GenericObject;
+    value?: Record<string, unknown>;
 }
 
 /**
@@ -1208,7 +1208,7 @@ export class TallyfyClient extends ConnectorClientBase {
      * Get a member's tasks
      * @remarks Get all tasks that belong to a specific member
      */
-    public async getUserTasksAsync(org: string, userId: string, q?: string, status?: string, sort?: string, with_?: string, tag?: string, page?: string, perPage?: string, abortSignal?: AbortSignalLike): Promise<GetUserTasksResponse> {
+    public async getUserTasks(org: string, userId: string, q?: string, status?: string, sort?: string, with_?: string, tag?: string, page?: string, perPage?: string, abortSignal?: AbortSignalLike): Promise<GetUserTasksResponse> {
         const queryParams: string[] = [];
         if (q !== undefined) {
             queryParams.push(`q=${encodeURIComponent(String(q))}`);
@@ -1236,7 +1236,7 @@ export class TallyfyClient extends ConnectorClientBase {
         const httpResponse = await this.httpClient.sendAsync<GetUserTasksResponse>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as GetUserTasksResponse;
@@ -1246,13 +1246,13 @@ export class TallyfyClient extends ConnectorClientBase {
      * Invite a new member to your organization
      * @remarks Invite a new member to your organization
      */
-    public async inviteUserToOrganizationAsync(input: InviteUserToOrganizationInput, org: string, abortSignal?: AbortSignalLike): Promise<InviteUserToOrganizationResponse> {
+    public async inviteUserToOrganization(input: InviteUserToOrganizationInput, org: string, abortSignal?: AbortSignalLike): Promise<InviteUserToOrganizationResponse> {
         const requestPath = `/organizations/${org}/users/invite`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<InviteUserToOrganizationResponse>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as InviteUserToOrganizationResponse;
@@ -1262,13 +1262,13 @@ export class TallyfyClient extends ConnectorClientBase {
      * Launch a Process
      * @remarks Launch a process using a blueprint
      */
-    public async createRunAsync(input: CreateRunInput, org: string, abortSignal?: AbortSignalLike): Promise<CreateRunResponse> {
+    public async runCreate(input: CreateRunInput, org: string, abortSignal?: AbortSignalLike): Promise<CreateRunResponse> {
         const requestPath = `/organizations/${org}/runs`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<CreateRunResponse>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as CreateRunResponse;
@@ -1278,13 +1278,13 @@ export class TallyfyClient extends ConnectorClientBase {
      * Complete One Off Task
      * @remarks Complete one off task
      */
-    public async completedOneOffTaskAsync(input: CompletedOneOffTaskInput, org: string, abortSignal?: AbortSignalLike): Promise<CompletedOneOffTaskResponse> {
+    public async completedOneOffTask(input: CompletedOneOffTaskInput, org: string, abortSignal?: AbortSignalLike): Promise<CompletedOneOffTaskResponse> {
         const requestPath = `/organizations/${org}/completed-tasks`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<CompletedOneOffTaskResponse>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as CompletedOneOffTaskResponse;
@@ -1294,13 +1294,13 @@ export class TallyfyClient extends ConnectorClientBase {
      * Reopen One Off Task
      * @remarks Reopen one off task
      */
-    public async reopenOneOffTaskAsync(org: string, task: string, abortSignal?: AbortSignalLike): Promise<ReopenOneOffTaskResponse> {
+    public async reopenOneOffTask(org: string, task: string, abortSignal?: AbortSignalLike): Promise<ReopenOneOffTaskResponse> {
         const requestPath = `/organizations/${org}/completed-tasks/${task}`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<ReopenOneOffTaskResponse>("DELETE", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `DELETE ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `DELETE ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as ReopenOneOffTaskResponse;
@@ -1310,13 +1310,13 @@ export class TallyfyClient extends ConnectorClientBase {
      * Complete process task
      * @remarks Complete process task
      */
-    public async completedProcessTaskAsync(input: CompletedProcessTaskInput, org: string, run: string, abortSignal?: AbortSignalLike): Promise<CompletedProcessTaskResponse> {
+    public async completedProcessTask(input: CompletedProcessTaskInput, org: string, run: string, abortSignal?: AbortSignalLike): Promise<CompletedProcessTaskResponse> {
         const requestPath = `/organizations/${org}/runs/${run}/completed-tasks`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<CompletedProcessTaskResponse>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as CompletedProcessTaskResponse;
@@ -1326,13 +1326,13 @@ export class TallyfyClient extends ConnectorClientBase {
      * Reopen process Task
      * @remarks Reopen process task
      */
-    public async reopenProcessTaskAsync(org: string, run: string, task: string, abortSignal?: AbortSignalLike): Promise<ReopenProcessTaskResponse> {
+    public async reopenProcessTask(org: string, run: string, task: string, abortSignal?: AbortSignalLike): Promise<ReopenProcessTaskResponse> {
         const requestPath = `/organizations/${org}/runs/${run}/completed-tasks/${task}`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<ReopenProcessTaskResponse>("POST", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as ReopenProcessTaskResponse;
@@ -1342,13 +1342,13 @@ export class TallyfyClient extends ConnectorClientBase {
      * Add comment, report issue, resolve issue on a task
      * @remarks task deadline, in date-time format
      */
-    public async commentTaskAsync(input: CommentTaskInput, org: string, task: string, abortSignal?: AbortSignalLike): Promise<CommentTaskResponse> {
+    public async commentTask(input: CommentTaskInput, org: string, task: string, abortSignal?: AbortSignalLike): Promise<CommentTaskResponse> {
         const requestPath = `/organizations/${org}/tasks/${task}/comment`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<CommentTaskResponse>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as CommentTaskResponse;
@@ -1358,13 +1358,13 @@ export class TallyfyClient extends ConnectorClientBase {
      * Create a task
      * @remarks Create Task
      */
-    public async createTaskAsync(input: CreateTaskInput, org: string, abortSignal?: AbortSignalLike): Promise<CreateTaskResponse> {
+    public async createTask(input: CreateTaskInput, org: string, abortSignal?: AbortSignalLike): Promise<CreateTaskResponse> {
         const requestPath = `/processes/micro-functions/organizations/${org}/tasks`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<CreateTaskResponse>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as CreateTaskResponse;
@@ -1374,13 +1374,13 @@ export class TallyfyClient extends ConnectorClientBase {
      * Edit task deadline
      * @remarks Edit deadline of a task
      */
-    public async editTaskDeadlineAsync(input: EditTaskDeadlineInput, org: string, task: string, abortSignal?: AbortSignalLike): Promise<EditTaskDeadlineResponse> {
+    public async editTaskDeadline(input: EditTaskDeadlineInput, org: string, task: string, abortSignal?: AbortSignalLike): Promise<EditTaskDeadlineResponse> {
         const requestPath = `/processes/micro-functions/organizations/${org}/tasks/${task}/edit-deadline`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<EditTaskDeadlineResponse>("PUT", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `PUT ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `PUT ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as EditTaskDeadlineResponse;
@@ -1390,13 +1390,13 @@ export class TallyfyClient extends ConnectorClientBase {
      * Remove guest assigned
      * @remarks Remove guest of a task
      */
-    public async removeGuestAsync(org: string, task: string, guest: string, abortSignal?: AbortSignalLike): Promise<RemoveGuestResponse> {
+    public async removeGuest(org: string, task: string, guest: string, abortSignal?: AbortSignalLike): Promise<RemoveGuestResponse> {
         const requestPath = `/processes/micro-functions/organizations/${org}/tasks/${task}/remove-guest/${guest}`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<RemoveGuestResponse>("PUT", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `PUT ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `PUT ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as RemoveGuestResponse;
@@ -1406,13 +1406,13 @@ export class TallyfyClient extends ConnectorClientBase {
      * Remove assignee
      * @remarks Remove assignee of a task
      */
-    public async removeAssigneeAsync(org: string, task: string, member: string, abortSignal?: AbortSignalLike): Promise<RemoveAssigneeResponse> {
+    public async removeAssignee(org: string, task: string, member: string, abortSignal?: AbortSignalLike): Promise<RemoveAssigneeResponse> {
         const requestPath = `/processes/micro-functions/organizations/${org}/tasks/${task}/remove-assignee/${member}`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<RemoveAssigneeResponse>("PUT", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `PUT ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `PUT ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as RemoveAssigneeResponse;
@@ -1422,13 +1422,13 @@ export class TallyfyClient extends ConnectorClientBase {
      * Edit step type
      * @remarks Edit step type
      */
-    public async editStepTypeAsync(input: EditStepTypeInput, org: string, blueprint: string, step: string, abortSignal?: AbortSignalLike): Promise<EditStepTypeResponse> {
+    public async editStepType(input: EditStepTypeInput, org: string, blueprint: string, step: string, abortSignal?: AbortSignalLike): Promise<EditStepTypeResponse> {
         const requestPath = `/processes/micro-functions/organizations/${org}/blueprints/${blueprint}/steps/${step}/edit-step-type`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<EditStepTypeResponse>("PUT", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `PUT ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `PUT ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as EditStepTypeResponse;

@@ -6,7 +6,7 @@ import {
     Email,
     Attachment,
 } from "../src/generated/SmtpExtensions.ts";
-import { ConnectorException } from "../src/azureConnectors/connectorException.ts";
+import { ConnectorError } from "../src/azureConnectors/connectorError.ts";
 import { ConnectorNames } from "../src/generated/connectorNames.ts";
 import { availableConnectors } from "../src/generated/ManagedConnectors.ts";
 
@@ -93,7 +93,7 @@ describe("SmtpClient — constructor", () => {
     });
 });
 
-describe("SmtpClient — sendEmailAsync", () => {
+describe("SmtpClient — sendEmail", () => {
     afterEach(() => {
         jest.restoreAllMocks();
     });
@@ -109,7 +109,7 @@ describe("SmtpClient — sendEmailAsync", () => {
             Body: "Hello",
         };
 
-        await client.sendEmailAsync(input);
+        await client.sendEmail(input);
 
         expect(global.fetch).toHaveBeenCalledTimes(1);
 
@@ -135,7 +135,7 @@ describe("SmtpClient — sendEmailAsync", () => {
             ],
         };
 
-        await client.sendEmailAsync(input);
+        await client.sendEmail(input);
 
         const [, init] = (global.fetch as jest.Mock).mock.calls[0];
         const body = JSON.parse(init.body);
@@ -156,7 +156,7 @@ describe("SmtpClient — sendEmailAsync", () => {
             Body: "Hello",
         };
 
-        await client.sendEmailAsync(input);
+        await client.sendEmail(input);
 
         const [, init] = (global.fetch as jest.Mock).mock.calls[0];
         const body = JSON.parse(init.body);
@@ -170,7 +170,7 @@ describe("SmtpClient — error handling", () => {
         jest.restoreAllMocks();
     });
 
-    it("should throw ConnectorException on non-OK response", async () => {
+    it("should throw ConnectorError on non-OK response", async () => {
         mockFetchError(550, '{"error": "MailboxNotFound"}');
 
         const client = new SmtpClient(
@@ -180,13 +180,13 @@ describe("SmtpClient — error handling", () => {
         );
 
         await expect(
-            client.sendEmailAsync({
+            client.sendEmail({
                 From: "sender@contoso.com",
                 To: "invalid@contoso.com",
                 Subject: "Test",
                 Body: "Hello",
             }),
-        ).rejects.toThrow(ConnectorException);
+        ).rejects.toThrow(ConnectorError);
     });
 
     it("should include status code and response body in error", async () => {
@@ -196,16 +196,16 @@ describe("SmtpClient — error handling", () => {
         const client = new SmtpClient(TestConnectionUrl, createMockCredential());
 
         try {
-            await client.sendEmailAsync({
+            await client.sendEmail({
                 From: "sender@contoso.com",
                 To: "recipient@contoso.com",
                 Subject: "Test",
                 Body: "Hello",
             });
-            throw new Error("Expected ConnectorException to be thrown.");
+            throw new Error("Expected ConnectorError to be thrown.");
         } catch (error) {
-            expect(error).toBeInstanceOf(ConnectorException);
-            const connectorError = error as ConnectorException;
+            expect(error).toBeInstanceOf(ConnectorError);
+            const connectorError = error as ConnectorError;
             expect(connectorError.statusCode).toBe(401);
             expect(connectorError.responseBody).toBe(errorBody);
             expect(connectorError.operation).toContain("POST");

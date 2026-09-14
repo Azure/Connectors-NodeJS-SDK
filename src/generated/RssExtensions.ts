@@ -4,7 +4,7 @@
 import type { AbortSignalLike } from "@azure/abort-controller";
 import type { TokenCredential } from "@azure/core-auth";
 import { ConnectorClientBase } from "../azureConnectors/clientBase.ts";
-import { ConnectorException } from "../azureConnectors/connectorException.ts";
+import { ConnectorError } from "../azureConnectors/connectorError.ts";
 import { ConnectorClientOptions } from "../azureConnectors/options.ts";
 import { TriggerCallbackPayload } from "../azureConnectors/triggerPayload.ts";
 
@@ -101,7 +101,7 @@ export class RssClient extends ConnectorClientBase {
      * List all RSS feed items
      * @remarks This operation retrieves all items from an RSS feed.
      */
-    public async listFeedItemsAsync(feedUrl?: string, since?: string, sinceProperty?: string, abortSignal?: AbortSignalLike): Promise<Array<FeedItem>> {
+    public async listFeedItems(feedUrl?: string, since?: string, sinceProperty?: string, abortSignal?: AbortSignalLike): Promise<Array<FeedItem>> {
         const queryParams: string[] = [];
         if (feedUrl !== undefined) {
             queryParams.push(`feedUrl=${encodeURIComponent(String(feedUrl))}`);
@@ -117,7 +117,7 @@ export class RssClient extends ConnectorClientBase {
         const httpResponse = await this.httpClient.sendAsync<Array<FeedItem>>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as Array<FeedItem>;

@@ -2,7 +2,7 @@
 
 import type { TokenCredential } from "@azure/core-auth";
 import { GoogletasksClient } from "../src/generated/GoogletasksExtensions.ts";
-import { ConnectorException } from "../src/azureConnectors/connectorException.ts";
+import { ConnectorError } from "../src/azureConnectors/connectorError.ts";
 import { ConnectorNames } from "../src/generated/connectorNames.ts";
 import { availableConnectors } from "../src/generated/ManagedConnectors.ts";
 
@@ -50,7 +50,7 @@ describe("GoogletasksClient — constructor", () => {
     it("should strip trailing slashes from connection URL", async () => {
         mockFetchResponse([]);
         const client = new GoogletasksClient(TestConnectionUrl + "///", createMockCredential());
-        await client.listTasksAsync("list1");
+        await client.listTasks("list1");
         const [url] = (global.fetch as jest.Mock).mock.calls[0];
         // NOTE: Confirms the trailing slashes were stripped by inspecting the
         //       outbound URL: after the scheme, no `//` should remain.
@@ -69,7 +69,7 @@ describe("GoogletasksClient — constructor", () => {
     });
 });
 
-describe("GoogletasksClient — listTasksAsync", () => {
+describe("GoogletasksClient — listTasks", () => {
     afterEach(() => {
         jest.restoreAllMocks();
     });
@@ -79,7 +79,7 @@ describe("GoogletasksClient — listTasksAsync", () => {
         mockFetchResponse(tasks);
 
         const client = new GoogletasksClient(TestConnectionUrl, createMockCredential());
-        const result = await client.listTasksAsync("list1");
+        const result = await client.listTasks("list1");
 
         expect(result).toEqual(tasks);
         expect(global.fetch).toHaveBeenCalledTimes(1);
@@ -89,16 +89,16 @@ describe("GoogletasksClient — listTasksAsync", () => {
         expect(url).toContain("/lists/list1/tasks");
     });
 
-    it("should throw ConnectorException on non-OK response", async () => {
+    it("should throw ConnectorError on non-OK response", async () => {
         mockFetchError(404, "Not Found");
 
         const client = new GoogletasksClient(TestConnectionUrl, createMockCredential());
         try {
-            await client.listTasksAsync("missing");
-            throw new Error("Expected ConnectorException to be thrown.");
+            await client.listTasks("missing");
+            throw new Error("Expected ConnectorError to be thrown.");
         } catch (error) {
-            expect(error).toBeInstanceOf(ConnectorException);
-            const connectorError = error as ConnectorException;
+            expect(error).toBeInstanceOf(ConnectorError);
+            const connectorError = error as ConnectorError;
             expect(connectorError.statusCode).toBe(404);
             expect(connectorError.responseBody).toBe("Not Found");
             expect(connectorError.operation).toBe("GET /lists/missing/tasks");

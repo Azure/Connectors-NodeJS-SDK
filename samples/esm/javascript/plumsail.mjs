@@ -13,7 +13,7 @@
  *     npm start
  */
 
-import { ManagedIdentityTokenProvider, ConnectorException } from "@azure/connectors";
+import { ManagedIdentityTokenProvider, ConnectorError } from "@azure/connectors";
 import { PlumsailClient } from "@azure/connectors/generated/PlumsailExtensions";
 
 const CONNECTION_URL = process.env.PLUMSAIL_CONNECTION_URL ?? "";
@@ -29,10 +29,10 @@ async function main() {
 
     // Example 1: Retrieve the current account profile.
     try {
-        const profile = await client.profilesMeGetAsync();
+        const profile = await client.getProfilesMe();
         console.log("Profile:", JSON.stringify(profile, null, 2));
     } catch (error) {
-        if (error instanceof ConnectorException) {
+        if (error instanceof ConnectorError) {
             console.log(`Connector error (${error.statusCode}): ${error.message}`);
         } else {
             throw error;

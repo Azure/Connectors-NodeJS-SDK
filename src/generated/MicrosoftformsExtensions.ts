@@ -4,7 +4,7 @@
 import type { AbortSignalLike } from "@azure/abort-controller";
 import type { TokenCredential } from "@azure/core-auth";
 import { ConnectorClientBase } from "../azureConnectors/clientBase.ts";
-import { ConnectorException } from "../azureConnectors/connectorException.ts";
+import { ConnectorError } from "../azureConnectors/connectorError.ts";
 import { ConnectorClientOptions } from "../azureConnectors/options.ts";
 
 // #region Types
@@ -31,16 +31,12 @@ export interface WebhookPayload {
 /**
  * Definition: FormsList
  */
-export interface FormsList {
-    [key: string]: unknown;
-}
+export type FormsList = Array<Record<string, unknown>>;
 
 /**
  * Definition: NewResponses
  */
-export interface NewResponses {
-    [key: string]: unknown;
-}
+export type NewResponses = Array<Record<string, unknown>>;
 
 /**
  * Definition: GetFormResponseByIdResult
@@ -110,7 +106,7 @@ export class MicrosoftformsClient extends ConnectorClientBase {
      * Get response details
      * @remarks This action retrieves a form response
      */
-    public async getFormResponseByIdAsync(formId: string, responseId?: string, abortSignal?: AbortSignalLike): Promise<GetFormResponseByIdResult> {
+    public async getFormResponseById(formId: string, responseId?: string, abortSignal?: AbortSignalLike): Promise<GetFormResponseByIdResult> {
         const queryParams: string[] = [];
         if (responseId !== undefined) {
             queryParams.push(`response_id=${encodeURIComponent(String(responseId))}`);
@@ -120,7 +116,7 @@ export class MicrosoftformsClient extends ConnectorClientBase {
         const httpResponse = await this.httpClient.sendAsync<GetFormResponseByIdResult>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as GetFormResponseByIdResult;
@@ -130,7 +126,7 @@ export class MicrosoftformsClient extends ConnectorClientBase {
      * Get form details
      * @remarks This action retrieves the details of a form
      */
-    public async getFormDetailsByIdAsync(formId: string, select?: string, abortSignal?: AbortSignalLike): Promise<GetFormDetailsByIdResult> {
+    public async getFormDetailsById(formId: string, select?: string, abortSignal?: AbortSignalLike): Promise<GetFormDetailsByIdResult> {
         const queryParams: string[] = [];
         if (select !== undefined) {
             queryParams.push(`$select=${encodeURIComponent(String(select))}`);
@@ -140,7 +136,7 @@ export class MicrosoftformsClient extends ConnectorClientBase {
         const httpResponse = await this.httpClient.sendAsync<GetFormDetailsByIdResult>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as GetFormDetailsByIdResult;

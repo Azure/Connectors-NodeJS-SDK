@@ -4,7 +4,7 @@
 import type { AbortSignalLike } from "@azure/abort-controller";
 import type { TokenCredential } from "@azure/core-auth";
 import { ConnectorClientBase } from "../azureConnectors/clientBase.ts";
-import { ConnectorException } from "../azureConnectors/connectorException.ts";
+import { ConnectorError } from "../azureConnectors/connectorError.ts";
 import { ConnectorClientOptions } from "../azureConnectors/options.ts";
 import { TriggerCallbackPayload } from "../azureConnectors/triggerPayload.ts";
 
@@ -216,7 +216,7 @@ export class TwitterClient extends ConnectorClientBase {
      * Get user timeline
      * @remarks This operation gets a list of the most recent tweets posted by a given user.
      */
-    public async userTimelineAsync(userName?: string, maxResults?: string, abortSignal?: AbortSignalLike): Promise<Array<TweetModel>> {
+    public async userTimeline(userName?: string, maxResults?: string, abortSignal?: AbortSignalLike): Promise<Array<TweetModel>> {
         const queryParams: string[] = [];
         if (userName !== undefined) {
             queryParams.push(`userName=${encodeURIComponent(String(userName))}`);
@@ -229,7 +229,7 @@ export class TwitterClient extends ConnectorClientBase {
         const httpResponse = await this.httpClient.sendAsync<Array<TweetModel>>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as Array<TweetModel>;
@@ -239,7 +239,7 @@ export class TwitterClient extends ConnectorClientBase {
      * Get home timeline
      * @remarks This operation gets the most recent tweets and re-tweets posted by me and my followers.
      */
-    public async homeTimelineAsync(maxResults?: string, abortSignal?: AbortSignalLike): Promise<Array<TweetModel>> {
+    public async homeTimeline(maxResults?: string, abortSignal?: AbortSignalLike): Promise<Array<TweetModel>> {
         const queryParams: string[] = [];
         if (maxResults !== undefined) {
             queryParams.push(`maxResults=${encodeURIComponent(String(maxResults))}`);
@@ -249,7 +249,7 @@ export class TwitterClient extends ConnectorClientBase {
         const httpResponse = await this.httpClient.sendAsync<Array<TweetModel>>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as Array<TweetModel>;
@@ -259,7 +259,7 @@ export class TwitterClient extends ConnectorClientBase {
      * Search tweets
      * @remarks This operation gets a list of relevant tweets matching the search query.
      */
-    public async searchTweetAsync(searchQuery?: string, maxResults?: string, sinceId?: string, abortSignal?: AbortSignalLike): Promise<Array<TweetModel>> {
+    public async searchTweet(searchQuery?: string, maxResults?: string, sinceId?: string, abortSignal?: AbortSignalLike): Promise<Array<TweetModel>> {
         const queryParams: string[] = [];
         if (searchQuery !== undefined) {
             queryParams.push(`searchQuery=${encodeURIComponent(String(searchQuery))}`);
@@ -275,7 +275,7 @@ export class TwitterClient extends ConnectorClientBase {
         const httpResponse = await this.httpClient.sendAsync<Array<TweetModel>>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as Array<TweetModel>;
@@ -285,7 +285,7 @@ export class TwitterClient extends ConnectorClientBase {
      * Get followers
      * @remarks This operation gets the list of users that follow a given user.
      */
-    public async followersAsync(userName?: string, maxResults?: string, abortSignal?: AbortSignalLike): Promise<Array<UserDetailsModel>> {
+    public async followers(userName?: string, maxResults?: string, abortSignal?: AbortSignalLike): Promise<Array<UserDetailsModel>> {
         const queryParams: string[] = [];
         if (userName !== undefined) {
             queryParams.push(`userName=${encodeURIComponent(String(userName))}`);
@@ -298,7 +298,7 @@ export class TwitterClient extends ConnectorClientBase {
         const httpResponse = await this.httpClient.sendAsync<Array<UserDetailsModel>>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as Array<UserDetailsModel>;
@@ -308,7 +308,7 @@ export class TwitterClient extends ConnectorClientBase {
      * Get my followers
      * @remarks This operation gets the list of users who are following me.
      */
-    public async myFollowersAsync(maxResults?: string, abortSignal?: AbortSignalLike): Promise<Array<UserDetailsModel>> {
+    public async myFollowers(maxResults?: string, abortSignal?: AbortSignalLike): Promise<Array<UserDetailsModel>> {
         const queryParams: string[] = [];
         if (maxResults !== undefined) {
             queryParams.push(`maxResults=${encodeURIComponent(String(maxResults))}`);
@@ -318,7 +318,7 @@ export class TwitterClient extends ConnectorClientBase {
         const httpResponse = await this.httpClient.sendAsync<Array<UserDetailsModel>>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as Array<UserDetailsModel>;
@@ -328,7 +328,7 @@ export class TwitterClient extends ConnectorClientBase {
      * Get following
      * @remarks The operation gets the list of people the given user follows.
      */
-    public async followingAsync(userName?: string, maxResults?: string, abortSignal?: AbortSignalLike): Promise<Array<UserDetailsModel>> {
+    public async following(userName?: string, maxResults?: string, abortSignal?: AbortSignalLike): Promise<Array<UserDetailsModel>> {
         const queryParams: string[] = [];
         if (userName !== undefined) {
             queryParams.push(`userName=${encodeURIComponent(String(userName))}`);
@@ -341,7 +341,7 @@ export class TwitterClient extends ConnectorClientBase {
         const httpResponse = await this.httpClient.sendAsync<Array<UserDetailsModel>>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as Array<UserDetailsModel>;
@@ -351,7 +351,7 @@ export class TwitterClient extends ConnectorClientBase {
      * Get my following
      * @remarks This operation gets the list of users that I am following.
      */
-    public async myFollowingAsync(maxResults?: string, abortSignal?: AbortSignalLike): Promise<Array<UserDetailsModel>> {
+    public async myFollowing(maxResults?: string, abortSignal?: AbortSignalLike): Promise<Array<UserDetailsModel>> {
         const queryParams: string[] = [];
         if (maxResults !== undefined) {
             queryParams.push(`maxResults=${encodeURIComponent(String(maxResults))}`);
@@ -361,7 +361,7 @@ export class TwitterClient extends ConnectorClientBase {
         const httpResponse = await this.httpClient.sendAsync<Array<UserDetailsModel>>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as Array<UserDetailsModel>;
@@ -371,7 +371,7 @@ export class TwitterClient extends ConnectorClientBase {
      * Get user
      * @remarks This operation gets the profile details for a given user, such as user name, description, followers count, and more.
      */
-    public async userAsync(userName?: string, abortSignal?: AbortSignalLike): Promise<UserDetailsModel> {
+    public async user(userName?: string, abortSignal?: AbortSignalLike): Promise<UserDetailsModel> {
         const queryParams: string[] = [];
         if (userName !== undefined) {
             queryParams.push(`userName=${encodeURIComponent(String(userName))}`);
@@ -381,7 +381,7 @@ export class TwitterClient extends ConnectorClientBase {
         const httpResponse = await this.httpClient.sendAsync<UserDetailsModel>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as UserDetailsModel;
@@ -391,7 +391,7 @@ export class TwitterClient extends ConnectorClientBase {
      * Post a tweet
      * @remarks This operation posts a new tweet.
      */
-    public async tweetAsync(input: TweetInput, tweetText?: string, abortSignal?: AbortSignalLike): Promise<TweetResponseModel> {
+    public async tweet(input: TweetInput, tweetText?: string, abortSignal?: AbortSignalLike): Promise<TweetResponseModel> {
         const queryParams: string[] = [];
         if (tweetText !== undefined) {
             queryParams.push(`tweetText=${encodeURIComponent(String(tweetText))}`);
@@ -401,7 +401,7 @@ export class TwitterClient extends ConnectorClientBase {
         const httpResponse = await this.httpClient.sendAsync<TweetResponseModel>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as TweetResponseModel;
@@ -411,7 +411,7 @@ export class TwitterClient extends ConnectorClientBase {
      * Retweet
      * @remarks This operation retweets a tweet.
      */
-    public async retweetAsync(tweetId?: string, trimUser?: string, abortSignal?: AbortSignalLike): Promise<TweetResponseModel> {
+    public async retweet(tweetId?: string, trimUser?: string, abortSignal?: AbortSignalLike): Promise<TweetResponseModel> {
         const queryParams: string[] = [];
         if (tweetId !== undefined) {
             queryParams.push(`tweetId=${encodeURIComponent(String(tweetId))}`);
@@ -424,7 +424,7 @@ export class TwitterClient extends ConnectorClientBase {
         const httpResponse = await this.httpClient.sendAsync<TweetResponseModel>("POST", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as TweetResponseModel;

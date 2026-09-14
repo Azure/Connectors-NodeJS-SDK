@@ -4,7 +4,7 @@
 import type { AbortSignalLike } from "@azure/abort-controller";
 import type { TokenCredential } from "@azure/core-auth";
 import { ConnectorClientBase } from "../azureConnectors/clientBase.ts";
-import { ConnectorException } from "../azureConnectors/connectorException.ts";
+import { ConnectorError } from "../azureConnectors/connectorError.ts";
 import { ConnectorClientOptions } from "../azureConnectors/options.ts";
 
 // #region Types
@@ -711,13 +711,13 @@ export class PlumsailClient extends ConnectorClientBase {
      * Get Profile Info
      * @remarks Get Profile Info returns information about current user and license.
      */
-    public async profilesMeGetAsync(abortSignal?: AbortSignalLike): Promise<ProfileInfo> {
+    public async getProfilesMe(abortSignal?: AbortSignalLike): Promise<ProfileInfo> {
         const requestPath = `/profiles/me`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<ProfileInfo>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as ProfileInfo;
@@ -727,13 +727,13 @@ export class PlumsailClient extends ConnectorClientBase {
      * Create document from DOCX template
      * @remarks Create document from DOCX template. More information: https://plumsail.com/docs/documents/v1.x/document-generation/docx/index.html
      */
-    public async flowV1DocumentsJobsApplyDocxTemplateAsync(input: ApplyDocxTemplateRequest, abortSignal?: AbortSignalLike): Promise<Blob> {
+    public async flowV1DocumentsJobsApplyDocxTemplate(input: ApplyDocxTemplateRequest, abortSignal?: AbortSignalLike): Promise<Blob> {
         const requestPath = `/flow/v1/Documents/jobs/ApplyDocxTemplate`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<Blob>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as Blob;
@@ -743,13 +743,13 @@ export class PlumsailClient extends ConnectorClientBase {
      * Create document from XLSX template
      * @remarks Create document from XLSX template. More information: https://plumsail.com/docs/documents/v1.x/document-generation/xlsx/index.html
      */
-    public async flowV1DocumentsJobsApplyXlsxTemplateAsync(input: ApplyXlsxTemplateRequest, abortSignal?: AbortSignalLike): Promise<Blob> {
+    public async flowV1DocumentsJobsApplyXlsxTemplate(input: ApplyXlsxTemplateRequest, abortSignal?: AbortSignalLike): Promise<Blob> {
         const requestPath = `/flow/v1/Documents/jobs/ApplyXlsxTemplate`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<Blob>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as Blob;
@@ -759,13 +759,13 @@ export class PlumsailClient extends ConnectorClientBase {
      * Create document from PPTX template
      * @remarks Create document from PPTX template. More information: https://plumsail.com/docs/documents/v1.x/document-generation/pptx/index.html
      */
-    public async flowV1DocumentsJobsApplyPptxAsync(input: ApplyPptxTemplateRequest, abortSignal?: AbortSignalLike): Promise<DocumentProcessingResponse> {
+    public async flowV1DocumentsJobsApplyPptx(input: ApplyPptxTemplateRequest, abortSignal?: AbortSignalLike): Promise<DocumentProcessingResponse> {
         const requestPath = `/flow/v1/Documents/jobs/ApplyPptx`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<DocumentProcessingResponse>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as DocumentProcessingResponse;
@@ -775,13 +775,13 @@ export class PlumsailClient extends ConnectorClientBase {
      * Fill merge fields in DOCX document
      * @remarks Fill merge fields in DOCX document takes a DOCX document with merge fields and replaces them by specified data. The keys in data object should be the same as names of MergeFields (Express block) in document. Documentation - https://plumsail.com/docs/documents/v1.x/flow/actions/document-processing.html#fill-merge-fields-in-docx-document
      */
-    public async flowV1DocumentsJobsApplyDocxAsync(input: MergeFieldsTemplateRequest, abortSignal?: AbortSignalLike): Promise<DocumentProcessingResponse> {
+    public async flowV1DocumentsJobsApplyDocx(input: MergeFieldsTemplateRequest, abortSignal?: AbortSignalLike): Promise<DocumentProcessingResponse> {
         const requestPath = `/flow/v1/Documents/jobs/ApplyDocx`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<DocumentProcessingResponse>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as DocumentProcessingResponse;
@@ -791,13 +791,13 @@ export class PlumsailClient extends ConnectorClientBase {
      * Create HTML from template
      * @remarks Create HTML takes input HTML template string or file and replaces special {{Tokens}} by specified data. We use Mustache framework for templates internally. More information about templates in Mustache docs: http://mustache.github.io/mustache.5.html. Documentation - https://plumsail.com/docs/documents/v1.x/flow/actions/document-processing.html#create-html-from-template
      */
-    public async flowV1DocumentsJobsApplyHtmlAsync(input: ApplyHtmlFlowTemplateRequest, abortSignal?: AbortSignalLike): Promise<ApplyHtmlTemplateResponse> {
+    public async flowV1DocumentsJobsApplyHtml(input: ApplyHtmlFlowTemplateRequest, abortSignal?: AbortSignalLike): Promise<ApplyHtmlTemplateResponse> {
         const requestPath = `/flow/v1/Documents/jobs/ApplyHtml`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<ApplyHtmlTemplateResponse>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as ApplyHtmlTemplateResponse;
@@ -807,13 +807,13 @@ export class PlumsailClient extends ConnectorClientBase {
      * Convert HTML to PDF
      * @remarks Convert HTML to PDF file. This action takes HTML markup, renders it and converts to PDF document. Documentation - https://plumsail.com/docs/documents/v1.x/flow/actions/document-processing.html#convert-html-to-pdf
      */
-    public async flowV1DocumentsJobsHtml2PdfAsync(input: Html2PdfFlowRequest, abortSignal?: AbortSignalLike): Promise<DocumentProcessingResponse> {
+    public async flowV1DocumentsJobsHtml2Pdf(input: Html2PdfFlowRequest, abortSignal?: AbortSignalLike): Promise<DocumentProcessingResponse> {
         const requestPath = `/flow/v1/Documents/jobs/Html2Pdf`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<DocumentProcessingResponse>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as DocumentProcessingResponse;
@@ -823,13 +823,13 @@ export class PlumsailClient extends ConnectorClientBase {
      * Convert HTML to DOCX
      * @remarks Convert HTML to DOCX document. This action takes HTML markup, renders it and converts to DOCX document. Documentation - https://plumsail.com/docs/documents/v1.x/flow/actions/document-processing.html#convert-html-to-docx
      */
-    public async flowV1DocumentsJobsHtml2DocxAsync(input: Html2DocxFlowRequest, abortSignal?: AbortSignalLike): Promise<DocumentProcessingResponse> {
+    public async flowV1DocumentsJobsHtml2Docx(input: Html2DocxFlowRequest, abortSignal?: AbortSignalLike): Promise<DocumentProcessingResponse> {
         const requestPath = `/flow/v1/Documents/jobs/Html2Docx`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<DocumentProcessingResponse>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as DocumentProcessingResponse;
@@ -839,13 +839,13 @@ export class PlumsailClient extends ConnectorClientBase {
      * Convert DOCX to PDF
      * @remarks Convert DOCX to PDF files. This action takes DOCX document and converts it to PDF. Documentation - https://plumsail.com/docs/documents/v1.x/flow/actions/document-processing.html#convert-docx-to-pdf
      */
-    public async flowV1DocumentsJobsDocx2PdfAsync(input: Docx2PdfRequest, abortSignal?: AbortSignalLike): Promise<DocumentProcessingResponse> {
+    public async flowV1DocumentsJobsDocx2Pdf(input: Docx2PdfRequest, abortSignal?: AbortSignalLike): Promise<DocumentProcessingResponse> {
         const requestPath = `/flow/v1/Documents/jobs/Docx2Pdf`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<DocumentProcessingResponse>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as DocumentProcessingResponse;
@@ -855,13 +855,13 @@ export class PlumsailClient extends ConnectorClientBase {
      * Convert XLSX to PDF
      * @remarks Convert XLSX to PDF files. This action takes XLSX document and converts it to PDF. Documentation - https://plumsail.com/docs/documents/v1.x/flow/actions/document-processing.html#convert-xlsx-to-pdf
      */
-    public async flowV1DocumentsJobsXslx2PdfAsync(input: Xlsx2PdfRequest, abortSignal?: AbortSignalLike): Promise<Blob> {
+    public async flowV1DocumentsJobsXslx2Pdf(input: Xlsx2PdfRequest, abortSignal?: AbortSignalLike): Promise<Blob> {
         const requestPath = `/flow/v1/Documents/jobs/Xslx2Pdf`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<Blob>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as Blob;
@@ -871,13 +871,13 @@ export class PlumsailClient extends ConnectorClientBase {
      * Convert PPTX to PDF
      * @remarks Convert PPTX to PDF files. This action takes PPTX document and converts it to PDF. Documentation - https://plumsail.com/docs/documents/v1.x/flow/actions/document-processing.html#convert-pptx-to-pdf
      */
-    public async flowV1DocumentsJobsPptx2PdfAsync(input: Pptx2PdfRequest, abortSignal?: AbortSignalLike): Promise<Blob> {
+    public async flowV1DocumentsJobsPptx2Pdf(input: Pptx2PdfRequest, abortSignal?: AbortSignalLike): Promise<Blob> {
         const requestPath = `/flow/v1/Documents/jobs/Pptx2Pdf`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<Blob>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as Blob;
@@ -887,13 +887,13 @@ export class PlumsailClient extends ConnectorClientBase {
      * Convert to PDF
      * @remarks Convert provided file to PDF file. Documentation - https://plumsail.com/docs/documents/v1.x/flow/actions/document-processing.html#convert-to-pdf
      */
-    public async flowV1DocumentsJobsAny2PdfV2Async(input: Any2PdfRequest, abortSignal?: AbortSignalLike): Promise<Blob> {
+    public async flowV1DocumentsJobsAny2PdfV2(input: Any2PdfRequest, abortSignal?: AbortSignalLike): Promise<Blob> {
         const requestPath = `/flow/v1/Documents/jobs/Any2PdfV2`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<Blob>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as Blob;
@@ -903,13 +903,13 @@ export class PlumsailClient extends ConnectorClientBase {
      * Convert Email to PDF
      * @remarks Convert provided Email to PDF file. Documentation - https://plumsail.com/docs/documents/v1.x/flow/actions/document-processing.html#convert-email-to-pdf
      */
-    public async flowV1DocumentsJobsEmail2PdfAsync(input: Email2PdfRequest, abortSignal?: AbortSignalLike): Promise<Blob> {
+    public async flowV1DocumentsJobsEmail2Pdf(input: Email2PdfRequest, abortSignal?: AbortSignalLike): Promise<Blob> {
         const requestPath = `/flow/v1/Documents/jobs/Email2Pdf`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<Blob>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as Blob;
@@ -919,13 +919,13 @@ export class PlumsailClient extends ConnectorClientBase {
      * Convert DOC to DOCX
      * @remarks Convert DOC to DOCX files. This action takes DOC document and converts it to DOCX. Documentation - https://plumsail.com/docs/documents/v1.x/flow/actions/document-processing.html#convert-doc-to-docx
      */
-    public async flowV1DocumentsJobsDoc2DocxAsync(input: Doc2DocxRequest, abortSignal?: AbortSignalLike): Promise<Blob> {
+    public async flowV1DocumentsJobsDoc2Docx(input: Doc2DocxRequest, abortSignal?: AbortSignalLike): Promise<Blob> {
         const requestPath = `/flow/v1/Documents/jobs/Doc2Docx`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<Blob>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as Blob;
@@ -935,13 +935,13 @@ export class PlumsailClient extends ConnectorClientBase {
      * Convert XLS to XLSX
      * @remarks Convert XLS to XLSX files. This action takes XLS document and converts it to XLSX. Documentation - https://plumsail.com/docs/documents/v1.x/flow/actions/document-processing.html#convert-xls-to-xlsx
      */
-    public async flowV1DocumentsJobsXls2XlsxAsync(input: Xls2XlsxRequest, abortSignal?: AbortSignalLike): Promise<Blob> {
+    public async flowV1DocumentsJobsXls2Xlsx(input: Xls2XlsxRequest, abortSignal?: AbortSignalLike): Promise<Blob> {
         const requestPath = `/flow/v1/Documents/jobs/Xls2Xlsx`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<Blob>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as Blob;
@@ -951,13 +951,13 @@ export class PlumsailClient extends ConnectorClientBase {
      * Convert PPT to PPTX
      * @remarks Convert PPT to PPTX files. This action takes PPT document and converts it to PPTX. Documentation - https://plumsail.com/docs/documents/v1.x/flow/actions/document-processing.html#convert-ppt-to-pptx
      */
-    public async flowV1DocumentsJobsPpt2PptxAsync(input: Ppt2PptxRequest, abortSignal?: AbortSignalLike): Promise<Blob> {
+    public async flowV1DocumentsJobsPpt2Pptx(input: Ppt2PptxRequest, abortSignal?: AbortSignalLike): Promise<Blob> {
         const requestPath = `/flow/v1/Documents/jobs/Ppt2Pptx`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<Blob>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as Blob;
@@ -967,7 +967,7 @@ export class PlumsailClient extends ConnectorClientBase {
      * Split PDF
      * @remarks Split PDF takes PDF document and splits it. Documentation - https://plumsail.com/docs/documents/v1.x/flow/actions/document-processing.html#split-pdf
      */
-    public async flowV1DocumentsJobsSplitPdfV2Async(input: FlowV1DocumentsJobsSplitPdfV2Input, type?: string, abortSignal?: AbortSignalLike): Promise<DocumentsWithFilenamesResponse> {
+    public async flowV1DocumentsJobsSplitPdfV2(input: FlowV1DocumentsJobsSplitPdfV2Input, type?: string, abortSignal?: AbortSignalLike): Promise<DocumentsWithFilenamesResponse> {
         const queryParams: string[] = [];
         if (type !== undefined) {
             queryParams.push(`type=${encodeURIComponent(String(type))}`);
@@ -977,7 +977,7 @@ export class PlumsailClient extends ConnectorClientBase {
         const httpResponse = await this.httpClient.sendAsync<DocumentsWithFilenamesResponse>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as DocumentsWithFilenamesResponse;
@@ -987,13 +987,13 @@ export class PlumsailClient extends ConnectorClientBase {
      * Merge any files into PDF
      * @remarks Convert and merge multiple files into a single PDF document. Documentation - https://plumsail.com/docs/documents/v1.x/flow/actions/document-processing.html#merge-any-files-into-pdf
      */
-    public async flowV1DocumentsJobsMergeAnyToPdfV2Async(input: MergeAny2PdfRequest, abortSignal?: AbortSignalLike): Promise<Blob> {
+    public async flowV1DocumentsJobsMergeAnyToPdfV2(input: MergeAny2PdfRequest, abortSignal?: AbortSignalLike): Promise<Blob> {
         const requestPath = `/flow/v1/Documents/jobs/MergeAnyToPdfV2`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<Blob>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as Blob;
@@ -1003,13 +1003,13 @@ export class PlumsailClient extends ConnectorClientBase {
      * Extract text from PDF document
      * @remarks Extract text from PDF takes PDF document and extracts text to Raw or HTML format. Documentation - https://plumsail.com/docs/documents/v1.x/flow/actions/document-processing.html#extract-text-from-pdf-document
      */
-    public async flowV1DocumentsJobsExtractTextFromPdfAsync(input: Pdf2TextRequest, abortSignal?: AbortSignalLike): Promise<DocumentProcessingResponse> {
+    public async flowV1DocumentsJobsExtractTextFromPdf(input: Pdf2TextRequest, abortSignal?: AbortSignalLike): Promise<DocumentProcessingResponse> {
         const requestPath = `/flow/v1/Documents/jobs/ExtractTextFromPdf`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<DocumentProcessingResponse>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as DocumentProcessingResponse;
@@ -1019,13 +1019,13 @@ export class PlumsailClient extends ConnectorClientBase {
      * Convert PDF to Image
      * @remarks Convert PDF to image. This action takes PDF document and converts it to Image (jpeg, png, gif, bmp, etc). Documentation - https://plumsail.com/docs/documents/v1.x/flow/actions/document-processing.html#convert-pdf-to-image
      */
-    public async flowV1DocumentsJobsPdf2ImageV2Async(input: Pdf2ImageRequest, abortSignal?: AbortSignalLike): Promise<DocumentsWithFilenamesResponse> {
+    public async flowV1DocumentsJobsPdf2ImageV2(input: Pdf2ImageRequest, abortSignal?: AbortSignalLike): Promise<DocumentsWithFilenamesResponse> {
         const requestPath = `/flow/v1/Documents/jobs/Pdf2ImageV2`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<DocumentsWithFilenamesResponse>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as DocumentsWithFilenamesResponse;
@@ -1035,13 +1035,13 @@ export class PlumsailClient extends ConnectorClientBase {
      * Convert Images to PDF
      * @remarks It takes images and converts them to a PDF document
      */
-    public async flowV1DocumentsJobsImage2PdfAsync(input: Image2PdfRequest, abortSignal?: AbortSignalLike): Promise<Blob> {
+    public async flowV1DocumentsJobsImage2Pdf(input: Image2PdfRequest, abortSignal?: AbortSignalLike): Promise<Blob> {
         const requestPath = `/flow/v1/Documents/jobs/Image2Pdf`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<Blob>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as Blob;
@@ -1051,13 +1051,13 @@ export class PlumsailClient extends ConnectorClientBase {
      * Fill in PDF Form
      * @remarks Fill in PDF Form fills out PDF from by provided data. Documentation - https://plumsail.com/docs/documents/v1.x/flow/actions/document-processing.html#fill-in-pdf-form
      */
-    public async flowV1DocumentsJobsFillInPdfFormAsync(input: FillInPdfFormRequest, abortSignal?: AbortSignalLike): Promise<DocumentProcessingResponse> {
+    public async flowV1DocumentsJobsFillInPdfForm(input: FillInPdfFormRequest, abortSignal?: AbortSignalLike): Promise<DocumentProcessingResponse> {
         const requestPath = `/flow/v1/Documents/jobs/FillInPdfForm`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<DocumentProcessingResponse>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as DocumentProcessingResponse;
@@ -1067,13 +1067,13 @@ export class PlumsailClient extends ConnectorClientBase {
      * Get Form from PDF
      * @remarks Get Form from PDF returns fillable form data from PDF as JSON. Documentation - https://plumsail.com/docs/documents/v1.x/flow/actions/document-processing.html#get-form-from-pdf
      */
-    public async flowV1DocumentsJobsGetPdfFormAsync(input: GetPdfFormRequest, abortSignal?: AbortSignalLike): Promise<FlowDocumentsJobsGetPdfFormPostResponse> {
+    public async getFlowV1DocumentsJobsPdfForm(input: GetPdfFormRequest, abortSignal?: AbortSignalLike): Promise<FlowDocumentsJobsGetPdfFormPostResponse> {
         const requestPath = `/flow/v1/Documents/jobs/GetPdfForm`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<FlowDocumentsJobsGetPdfFormPostResponse>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as FlowDocumentsJobsGetPdfFormPostResponse;
@@ -1083,13 +1083,13 @@ export class PlumsailClient extends ConnectorClientBase {
      * Protect PDF document
      * @remarks Protect PDF document adds passwords, copy, printing, and other protections to PDF files. Documentation - https://plumsail.com/docs/documents/v1.x/flow/actions/document-processing.html#protect-pdf-document
      */
-    public async flowV1DocumentsJobsProtectPdfAsync(input: ProtectPdfRequest, abortSignal?: AbortSignalLike): Promise<DocumentProcessingResponse> {
+    public async flowV1DocumentsJobsProtectPdf(input: ProtectPdfRequest, abortSignal?: AbortSignalLike): Promise<DocumentProcessingResponse> {
         const requestPath = `/flow/v1/Documents/jobs/ProtectPdf`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<DocumentProcessingResponse>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as DocumentProcessingResponse;
@@ -1099,13 +1099,13 @@ export class PlumsailClient extends ConnectorClientBase {
      * Get information about PDF protection
      * @remarks Get information about PDF protection returns information whether the document is password protected. Documentation - https://plumsail.com/docs/documents/v1.x/flow/actions/document-processing.html#get-pdf-protection-information
      */
-    public async flowV1DocumentsJobsGetPdfProtectionInfoAsync(input: PdfProtectionInfoRequest, abortSignal?: AbortSignalLike): Promise<GetPdfProtectionInfoResponse> {
+    public async getFlowV1DocumentsJobsPdfProtectionInfo(input: PdfProtectionInfoRequest, abortSignal?: AbortSignalLike): Promise<GetPdfProtectionInfoResponse> {
         const requestPath = `/flow/v1/Documents/jobs/GetPdfProtectionInfo`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<GetPdfProtectionInfoResponse>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as GetPdfProtectionInfoResponse;
@@ -1115,13 +1115,13 @@ export class PlumsailClient extends ConnectorClientBase {
      * Compress PDF document
      * @remarks Compress PDF document size if possible and optimize it. Documentation - https://plumsail.com/docs/documents/v1.x/flow/actions/document-processing.html#compress-pdf-document
      */
-    public async flowV1DocumentsJobsCompressPdfAsync(input: CompressPdfRequest, abortSignal?: AbortSignalLike): Promise<Blob> {
+    public async flowV1DocumentsJobsCompressPdf(input: CompressPdfRequest, abortSignal?: AbortSignalLike): Promise<Blob> {
         const requestPath = `/flow/v1/Documents/jobs/CompressPdf`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<Blob>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as Blob;
@@ -1131,7 +1131,7 @@ export class PlumsailClient extends ConnectorClientBase {
      * Add a watermark to PDF
      * @remarks Add a watermark to PDF as text, an image, HTML, or PDF. Documentation - https://plumsail.com/docs/documents/v1.x/flow/actions/document-processing.html#add-watermark-to-pdf
      */
-    public async flowV1DocumentsJobsAddWatermarkToPdfAsync(input: FlowV1DocumentsJobsAddWatermarkToPdfInput, type?: string, abortSignal?: AbortSignalLike): Promise<DocumentProcessingResponse> {
+    public async addFlowV1DocumentsJobsWatermarkToPdf(input: FlowV1DocumentsJobsAddWatermarkToPdfInput, type?: string, abortSignal?: AbortSignalLike): Promise<DocumentProcessingResponse> {
         const queryParams: string[] = [];
         if (type !== undefined) {
             queryParams.push(`type=${encodeURIComponent(String(type))}`);
@@ -1141,7 +1141,7 @@ export class PlumsailClient extends ConnectorClientBase {
         const httpResponse = await this.httpClient.sendAsync<DocumentProcessingResponse>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as DocumentProcessingResponse;
@@ -1151,13 +1151,13 @@ export class PlumsailClient extends ConnectorClientBase {
      * Merge DOCX files
      * @remarks Merge DOCX files takes an array of Docx documents and merge it into single file. Documentation - https://plumsail.com/docs/documents/v1.x/flow/actions/document-processing.html#merge-docx-files
      */
-    public async flowV1DocumentsJobsMergeDocxAsync(input: MergeDocxRequest, abortSignal?: AbortSignalLike): Promise<DocumentProcessingResponse> {
+    public async flowV1DocumentsJobsMergeDocx(input: MergeDocxRequest, abortSignal?: AbortSignalLike): Promise<DocumentProcessingResponse> {
         const requestPath = `/flow/v1/Documents/jobs/MergeDocx`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<DocumentProcessingResponse>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as DocumentProcessingResponse;
@@ -1167,13 +1167,13 @@ export class PlumsailClient extends ConnectorClientBase {
      * Parse CSV
      * @remarks Parse CSV works like Parse JSON but for CSV files. Documentation - https://plumsail.com/docs/documents/v1.x/flow/actions/document-processing.html#parse-csv
      */
-    public async flowV1DocumentsJobsParseCsvAsync(input: ParseCsvFlowRequest, abortSignal?: AbortSignalLike): Promise<ParseCsvSchemaResponse> {
+    public async flowV1DocumentsJobsParseCsv(input: ParseCsvFlowRequest, abortSignal?: AbortSignalLike): Promise<ParseCsvSchemaResponse> {
         const requestPath = `/flow/v1/Documents/jobs/ParseCsv`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<ParseCsvSchemaResponse>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as ParseCsvSchemaResponse;
@@ -1183,13 +1183,13 @@ export class PlumsailClient extends ConnectorClientBase {
      * Convert CSV to Excel
      * @remarks Convert CSV to Excel file (XLSX). Documentation - https://plumsail.com/docs/documents/v1.x/flow/actions/document-processing.html#csv-to-excel
      */
-    public async flowV1DocumentsJobsCsv2XlsxAsync(input: Csv2XlsxRequest, abortSignal?: AbortSignalLike): Promise<Blob> {
+    public async flowV1DocumentsJobsCsv2Xlsx(input: Csv2XlsxRequest, abortSignal?: AbortSignalLike): Promise<Blob> {
         const requestPath = `/flow/v1/Documents/jobs/Csv2Xlsx`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<Blob>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as Blob;
@@ -1199,13 +1199,13 @@ export class PlumsailClient extends ConnectorClientBase {
      * Convert JSON to Excel
      * @remarks Convert JSON to Excel file (XLSX). Documentation - https://plumsail.com/docs/documents/v1.x/flow/actions/document-processing.html#json-to-excel
      */
-    public async flowV1DocumentsJobsJson2XlsxAsync(input: Json2XlsxRequest, abortSignal?: AbortSignalLike): Promise<Blob> {
+    public async flowV1DocumentsJobsJson2Xlsx(input: Json2XlsxRequest, abortSignal?: AbortSignalLike): Promise<Blob> {
         const requestPath = `/flow/v1/Documents/jobs/Json2Xlsx`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<Blob>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as Blob;
@@ -1215,13 +1215,13 @@ export class PlumsailClient extends ConnectorClientBase {
      * Convert JSON to CSV
      * @remarks Convert JSON to CSV file. Documentation - https://plumsail.com/docs/documents/v1.x/flow/actions/document-processing.html#json-to-csv
      */
-    public async flowV1DocumentsJobsJson2CsvAsync(input: Json2CsvRequest, abortSignal?: AbortSignalLike): Promise<Blob> {
+    public async flowV1DocumentsJobsJson2Csv(input: Json2CsvRequest, abortSignal?: AbortSignalLike): Promise<Blob> {
         const requestPath = `/flow/v1/Documents/jobs/Json2Csv`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<Blob>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as Blob;
@@ -1231,13 +1231,13 @@ export class PlumsailClient extends ConnectorClientBase {
      * Regular Expression Match
      * @remarks Regular Expression Match searches for an input string for all occurrences of a regular expression and returns all the matches. We would recommend to use Regex Hero to test your expressions. It supports the same syntax as actions. Documentation - https://plumsail.com/docs/documents/v1.x/flow/actions/document-processing.html#regular-expression-match
      */
-    public async flowV1DocumentsJobsRegExpMatchAsync(input: RegExpMatchRequest, abortSignal?: AbortSignalLike): Promise<RegExpMatchSchemaResponseClass> {
+    public async flowV1DocumentsJobsRegExpMatch(input: RegExpMatchRequest, abortSignal?: AbortSignalLike): Promise<RegExpMatchSchemaResponseClass> {
         const requestPath = `/flow/v1/Documents/jobs/RegExpMatch`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<RegExpMatchSchemaResponseClass>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as RegExpMatchSchemaResponseClass;
@@ -1247,13 +1247,13 @@ export class PlumsailClient extends ConnectorClientBase {
      * Regular Expression Replace
      * @remarks Regular Expression Replace replaces all strings that match a regular expression pattern with a specified replacement string  in a specified input string. We would recommend  to use Regex Hero to test your expressions. It supports the same syntax as actions. Documentation - https://plumsail.com/docs/documents/v1.x/flow/actions/document-processing.html#regular-expression-replace
      */
-    public async flowV1DocumentsJobsRegExpReplaceAsync(input: RegExpReplaceRequest, abortSignal?: AbortSignalLike): Promise<StringResultResponse> {
+    public async flowV1DocumentsJobsRegExpReplace(input: RegExpReplaceRequest, abortSignal?: AbortSignalLike): Promise<StringResultResponse> {
         const requestPath = `/flow/v1/Documents/jobs/RegExpReplace`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<StringResultResponse>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as StringResultResponse;
@@ -1263,13 +1263,13 @@ export class PlumsailClient extends ConnectorClientBase {
      * Regular Expression Test
      * @remarks Regular Expression Test indicates whether the regular expression specified in the Regex constructor finds a match in a specified input string. We would recommend to use Regex Hero to test your expressions. It supports the same syntax as actions. Documentation - https://plumsail.com/docs/documents/v1.x/flow/actions/document-processing.html#regular-expression-test
      */
-    public async flowV1DocumentsJobsRegExpTestAsync(input: RegExpTestRequest, abortSignal?: AbortSignalLike): Promise<BooleanResultResponse> {
+    public async testFlowV1DocumentsJobsRegExp(input: RegExpTestRequest, abortSignal?: AbortSignalLike): Promise<BooleanResultResponse> {
         const requestPath = `/flow/v1/Documents/jobs/RegExpTest`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<BooleanResultResponse>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as BooleanResultResponse;
@@ -1279,13 +1279,13 @@ export class PlumsailClient extends ConnectorClientBase {
      * Create Archive
      * @remarks Compresses and adds files to a ZIP archive.
      */
-    public async flowV1DocumentsJobsCreateArchiveAsync(input: CreateArchiveRequest, abortSignal?: AbortSignalLike): Promise<DocumentContentWithFilenameResponse> {
+    public async createFlowV1DocumentsJobArchive(input: CreateArchiveRequest, abortSignal?: AbortSignalLike): Promise<DocumentContentWithFilenameResponse> {
         const requestPath = `/flow/v1/Documents/jobs/CreateArchive`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<DocumentContentWithFilenameResponse>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as DocumentContentWithFilenameResponse;
@@ -1295,13 +1295,13 @@ export class PlumsailClient extends ConnectorClientBase {
      * Extract Archive
      * @remarks Extract files from archive.
      */
-    public async flowV1DocumentsJobsExtractArchiveAsync(input: ExtractArchiveRequest, abortSignal?: AbortSignalLike): Promise<DocumentsWithFilenamesResponse> {
+    public async flowV1DocumentsJobsExtractArchive(input: ExtractArchiveRequest, abortSignal?: AbortSignalLike): Promise<DocumentsWithFilenamesResponse> {
         const requestPath = `/flow/v1/Documents/jobs/ExtractArchive`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<DocumentsWithFilenamesResponse>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as DocumentsWithFilenamesResponse;
@@ -1311,13 +1311,13 @@ export class PlumsailClient extends ConnectorClientBase {
      * Merge XLSX files
      * @remarks Merge XLSX files takes an array of Xlsx documents and merge it into single file. Documentation - https://plumsail.com/docs/documents/v1.x/flow/actions/document-processing.html#merge-xlsx-files
      */
-    public async flowV1DocumentsJobsMergeXlsxAsync(input: MergeXlsxRequest, abortSignal?: AbortSignalLike): Promise<DocumentProcessingResponse> {
+    public async flowV1DocumentsJobsMergeXlsx(input: MergeXlsxRequest, abortSignal?: AbortSignalLike): Promise<DocumentProcessingResponse> {
         const requestPath = `/flow/v1/Documents/jobs/MergeXlsx`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<DocumentProcessingResponse>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as DocumentProcessingResponse;
@@ -1327,7 +1327,7 @@ export class PlumsailClient extends ConnectorClientBase {
      * Start document generation process with json
      * @remarks Start document generation process fills a DOCX, XLSX, PPTX or PDF template related to the selected process with the JSON data. Documentation - https://plumsail.com/docs/documents/v1.x/flow/actions/document-processing.html##start-process-json
      */
-    public async flowV1ProcessesFlowJobsExecuteProcessAsync(input: FlowV1ProcessesFlowJobsExecuteProcessInput, processId?: string, abortSignal?: AbortSignalLike): Promise<Blob> {
+    public async executeFlowV1ProcessesFlowJobsProcess(input: FlowV1ProcessesFlowJobsExecuteProcessInput, processId?: string, abortSignal?: AbortSignalLike): Promise<Blob> {
         const queryParams: string[] = [];
         if (processId !== undefined) {
             queryParams.push(`processId=${encodeURIComponent(String(processId))}`);
@@ -1337,7 +1337,7 @@ export class PlumsailClient extends ConnectorClientBase {
         const httpResponse = await this.httpClient.sendAsync<Blob>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as Blob;
@@ -1347,7 +1347,7 @@ export class PlumsailClient extends ConnectorClientBase {
      * Start document generation process
      * @remarks Start document generation process fills a DOCX, XLSX, PPTX or PDF template related to the selected process with the JSON data. Documentation - https://plumsail.com/docs/documents/v1.x/flow/actions/document-processing.html#start-document-generation-process
      */
-    public async flowV1ProcessesFlowJobsExecuteProcessWithGeneratedDataAsync(input: ProcessJsonData, processId?: string, abortSignal?: AbortSignalLike): Promise<Blob> {
+    public async executeFlowV1ProcessesFlowJobsProcessWithGeneratedData(input: ProcessJsonData, processId?: string, abortSignal?: AbortSignalLike): Promise<Blob> {
         const queryParams: string[] = [];
         if (processId !== undefined) {
             queryParams.push(`processId=${encodeURIComponent(String(processId))}`);
@@ -1357,7 +1357,7 @@ export class PlumsailClient extends ConnectorClientBase {
         const httpResponse = await this.httpClient.sendAsync<Blob>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as Blob;

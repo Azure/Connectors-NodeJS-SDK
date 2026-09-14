@@ -4,7 +4,7 @@
 import type { AbortSignalLike } from "@azure/abort-controller";
 import type { TokenCredential } from "@azure/core-auth";
 import { ConnectorClientBase } from "../azureConnectors/clientBase.ts";
-import { ConnectorException } from "../azureConnectors/connectorException.ts";
+import { ConnectorError } from "../azureConnectors/connectorError.ts";
 import { ConnectorClientOptions } from "../azureConnectors/options.ts";
 import { TriggerCallbackPayload } from "../azureConnectors/triggerPayload.ts";
 
@@ -43,16 +43,12 @@ export interface ListTasksResponse {
 /**
  * Definition: OnNewTask_Response
  */
-export interface OnNewTaskResponse {
-    [key: string]: unknown;
-}
+export type OnNewTaskResponse = Array<TaskResponse>;
 
 /**
  * Definition: ListOrders_Response
  */
-export interface ListOrdersResponse {
-    [key: string]: unknown;
-}
+export type ListOrdersResponse = Array<Record<string, unknown>>;
 
 /**
  * Definition: CreateTask_Request
@@ -126,13 +122,13 @@ export class InfusionsoftClient extends ConnectorClientBase {
      * Create a task
      * @remarks Create a new task.
      */
-    public async createTaskAsync(input: CreateTaskRequest, abortSignal?: AbortSignalLike): Promise<TaskResponse> {
+    public async createTask(input: CreateTaskRequest, abortSignal?: AbortSignalLike): Promise<TaskResponse> {
         const requestPath = `/crm/rest/v1/tasks/`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<TaskResponse>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as TaskResponse;
@@ -142,13 +138,13 @@ export class InfusionsoftClient extends ConnectorClientBase {
      * Update a task
      * @remarks Update an existing task.
      */
-    public async updateTaskAsync(input: CreateTaskRequest, id: string, abortSignal?: AbortSignalLike): Promise<TaskResponse> {
+    public async updateTask(input: CreateTaskRequest, id: string, abortSignal?: AbortSignalLike): Promise<TaskResponse> {
         const requestPath = `/crm/rest/v1/tasks/${id}`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<TaskResponse>("PUT", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `PUT ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `PUT ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as TaskResponse;

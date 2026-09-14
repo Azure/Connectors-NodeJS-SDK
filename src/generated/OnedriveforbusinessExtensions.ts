@@ -5,7 +5,7 @@ import type { AbortSignalLike } from "@azure/abort-controller";
 import type { TokenCredential } from "@azure/core-auth";
 import type { PagedAsyncIterableIterator } from "@azure/core-paging";
 import { ConnectorClientBase } from "../azureConnectors/clientBase.ts";
-import { ConnectorException } from "../azureConnectors/connectorException.ts";
+import { ConnectorError } from "../azureConnectors/connectorError.ts";
 import { ConnectorClientOptions } from "../azureConnectors/options.ts";
 import { TriggerCallbackPayload } from "../azureConnectors/triggerPayload.ts";
 
@@ -351,13 +351,13 @@ export class OnedriveforbusinessClient extends ConnectorClientBase {
      * Get file metadata
      * @remarks This operation gets the metadata for a file.
      */
-    public async getFileMetadataAsync(id: string, abortSignal?: AbortSignalLike): Promise<BlobMetadata> {
-        const requestPath = `/datasets/default/files/${id}`;
+    public async getFileMetadata(id: string, abortSignal?: AbortSignalLike): Promise<BlobMetadata> {
+        const requestPath = `/datasets/default/files/${encodeURIComponent(encodeURIComponent(String(id)))}`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<BlobMetadata>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as BlobMetadata;
@@ -367,13 +367,13 @@ export class OnedriveforbusinessClient extends ConnectorClientBase {
      * Update file
      * @remarks This operation updates a file.
      */
-    public async updateFileAsync(input: UpdateFileInput, id: string, abortSignal?: AbortSignalLike): Promise<BlobMetadata> {
-        const requestPath = `/datasets/default/files/${id}`;
+    public async updateFile(input: UpdateFileInput, id: string, abortSignal?: AbortSignalLike): Promise<BlobMetadata> {
+        const requestPath = `/datasets/default/files/${encodeURIComponent(encodeURIComponent(String(id)))}`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<BlobMetadata>("PUT", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `PUT ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `PUT ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as BlobMetadata;
@@ -383,13 +383,13 @@ export class OnedriveforbusinessClient extends ConnectorClientBase {
      * Delete file
      * @remarks This operation deletes a file.
      */
-    public async deleteFileAsync(id: string, abortSignal?: AbortSignalLike): Promise<void> {
-        const requestPath = `/datasets/default/files/${id}`;
+    public async deleteFile(id: string, abortSignal?: AbortSignalLike): Promise<void> {
+        const requestPath = `/datasets/default/files/${encodeURIComponent(encodeURIComponent(String(id)))}`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<void>("DELETE", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `DELETE ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `DELETE ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
     }
 
@@ -397,7 +397,7 @@ export class OnedriveforbusinessClient extends ConnectorClientBase {
      * Get file metadata using path
      * @remarks This operation gets the metadata of a file using the path.
      */
-    public async getFileMetadataByPathAsync(path?: string, abortSignal?: AbortSignalLike): Promise<BlobMetadata> {
+    public async getFileMetadataByPath(path?: string, abortSignal?: AbortSignalLike): Promise<BlobMetadata> {
         const queryParams: string[] = [];
         if (path !== undefined) {
             queryParams.push(`path=${encodeURIComponent(String(path))}`);
@@ -407,7 +407,7 @@ export class OnedriveforbusinessClient extends ConnectorClientBase {
         const httpResponse = await this.httpClient.sendAsync<BlobMetadata>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as BlobMetadata;
@@ -417,7 +417,7 @@ export class OnedriveforbusinessClient extends ConnectorClientBase {
      * Get file content using path
      * @remarks This operation gets the content of a file using the path.
      */
-    public async getFileContentByPathAsync(path?: string, inferContentType?: string, abortSignal?: AbortSignalLike): Promise<Blob> {
+    public async getFileContentByPath(path?: string, inferContentType?: string, abortSignal?: AbortSignalLike): Promise<Blob> {
         const queryParams: string[] = [];
         if (path !== undefined) {
             queryParams.push(`path=${encodeURIComponent(String(path))}`);
@@ -430,7 +430,7 @@ export class OnedriveforbusinessClient extends ConnectorClientBase {
         const httpResponse = await this.httpClient.sendAsync<Blob>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as Blob;
@@ -440,17 +440,17 @@ export class OnedriveforbusinessClient extends ConnectorClientBase {
      * Get file content
      * @remarks This operation gets the content of a file.
      */
-    public async getFileContentAsync(id: string, inferContentType?: string, abortSignal?: AbortSignalLike): Promise<Blob> {
+    public async getFileContent(id: string, inferContentType?: string, abortSignal?: AbortSignalLike): Promise<Blob> {
         const queryParams: string[] = [];
         if (inferContentType !== undefined) {
             queryParams.push(`inferContentType=${encodeURIComponent(String(inferContentType))}`);
         }
-        const requestPath = `/datasets/default/files/${id}/content` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
+        const requestPath = `/datasets/default/files/${encodeURIComponent(encodeURIComponent(String(id)))}/content` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<Blob>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as Blob;
@@ -460,7 +460,7 @@ export class OnedriveforbusinessClient extends ConnectorClientBase {
      * Create file
      * @remarks This operation creates a file.
      */
-    public async createFileAsync(input: CreateFileInput, folderPath?: string, name?: string, abortSignal?: AbortSignalLike): Promise<BlobMetadata> {
+    public async createFile(input: CreateFileInput, folderPath?: string, name?: string, abortSignal?: AbortSignalLike): Promise<BlobMetadata> {
         const queryParams: string[] = [];
         if (folderPath !== undefined) {
             queryParams.push(`folderPath=${encodeURIComponent(String(folderPath))}`);
@@ -473,7 +473,7 @@ export class OnedriveforbusinessClient extends ConnectorClientBase {
         const httpResponse = await this.httpClient.sendAsync<BlobMetadata>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as BlobMetadata;
@@ -483,7 +483,7 @@ export class OnedriveforbusinessClient extends ConnectorClientBase {
      * Upload file from URL
      * @remarks This operation uploads a file from a URL to OneDrive.
      */
-    public async copyFileAsync(source?: string, destination?: string, overwrite?: string, abortSignal?: AbortSignalLike): Promise<BlobMetadata> {
+    public async copyFile(source?: string, destination?: string, overwrite?: string, abortSignal?: AbortSignalLike): Promise<BlobMetadata> {
         const queryParams: string[] = [];
         if (source !== undefined) {
             queryParams.push(`source=${encodeURIComponent(String(source))}`);
@@ -499,7 +499,7 @@ export class OnedriveforbusinessClient extends ConnectorClientBase {
         const httpResponse = await this.httpClient.sendAsync<BlobMetadata>("POST", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as BlobMetadata;
@@ -509,7 +509,7 @@ export class OnedriveforbusinessClient extends ConnectorClientBase {
      * Copy file
      * @remarks This operation copies a file within OneDrive.
      */
-    public async copyDriveFileAsync(id: string, destination?: string, overwrite?: string, abortSignal?: AbortSignalLike): Promise<BlobMetadata> {
+    public async copyDriveFile(id: string, destination?: string, overwrite?: string, abortSignal?: AbortSignalLike): Promise<BlobMetadata> {
         const queryParams: string[] = [];
         if (destination !== undefined) {
             queryParams.push(`destination=${encodeURIComponent(String(destination))}`);
@@ -517,12 +517,12 @@ export class OnedriveforbusinessClient extends ConnectorClientBase {
         if (overwrite !== undefined) {
             queryParams.push(`overwrite=${encodeURIComponent(String(overwrite))}`);
         }
-        const requestPath = `/datasets/default/files/${id}/copy` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
+        const requestPath = `/datasets/default/files/${encodeURIComponent(encodeURIComponent(String(id)))}/copy` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<BlobMetadata>("POST", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as BlobMetadata;
@@ -532,7 +532,7 @@ export class OnedriveforbusinessClient extends ConnectorClientBase {
      * Copy file using path
      * @remarks This operation copies a file within OneDrive by path.
      */
-    public async copyDriveFileByPathAsync(source?: string, destination?: string, overwrite?: string, abortSignal?: AbortSignalLike): Promise<BlobMetadata> {
+    public async copyDriveFileByPath(source?: string, destination?: string, overwrite?: string, abortSignal?: AbortSignalLike): Promise<BlobMetadata> {
         const queryParams: string[] = [];
         if (source !== undefined) {
             queryParams.push(`source=${encodeURIComponent(String(source))}`);
@@ -548,7 +548,7 @@ export class OnedriveforbusinessClient extends ConnectorClientBase {
         const httpResponse = await this.httpClient.sendAsync<BlobMetadata>("POST", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as BlobMetadata;
@@ -558,7 +558,7 @@ export class OnedriveforbusinessClient extends ConnectorClientBase {
      * Move or rename a file
      * @remarks This operation moves or renames a file.
      */
-    public async moveFileAsync(id: string, destination?: string, overwrite?: string, abortSignal?: AbortSignalLike): Promise<BlobMetadata> {
+    public async moveFile(id: string, destination?: string, overwrite?: string, abortSignal?: AbortSignalLike): Promise<BlobMetadata> {
         const queryParams: string[] = [];
         if (destination !== undefined) {
             queryParams.push(`destination=${encodeURIComponent(String(destination))}`);
@@ -566,12 +566,12 @@ export class OnedriveforbusinessClient extends ConnectorClientBase {
         if (overwrite !== undefined) {
             queryParams.push(`overwrite=${encodeURIComponent(String(overwrite))}`);
         }
-        const requestPath = `/datasets/default/files/${id}/move` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
+        const requestPath = `/datasets/default/files/${encodeURIComponent(encodeURIComponent(String(id)))}/move` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<BlobMetadata>("POST", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as BlobMetadata;
@@ -581,7 +581,7 @@ export class OnedriveforbusinessClient extends ConnectorClientBase {
      * Move or rename a file using path
      * @remarks This operation moves or renames a file using the path.
      */
-    public async moveFileByPathAsync(source?: string, destination?: string, overwrite?: string, abortSignal?: AbortSignalLike): Promise<BlobMetadata> {
+    public async moveFileByPath(source?: string, destination?: string, overwrite?: string, abortSignal?: AbortSignalLike): Promise<BlobMetadata> {
         const queryParams: string[] = [];
         if (source !== undefined) {
             queryParams.push(`source=${encodeURIComponent(String(source))}`);
@@ -597,7 +597,7 @@ export class OnedriveforbusinessClient extends ConnectorClientBase {
         const httpResponse = await this.httpClient.sendAsync<BlobMetadata>("POST", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as BlobMetadata;
@@ -607,17 +607,17 @@ export class OnedriveforbusinessClient extends ConnectorClientBase {
      * Convert file
      * @remarks This operation converts a file to another format. The list of supported conversions can be found at https://aka.ms/onedriveconversions
      */
-    public async convertFileAsync(id: string, type?: string, abortSignal?: AbortSignalLike): Promise<Blob> {
+    public async convertFile(id: string, type?: string, abortSignal?: AbortSignalLike): Promise<Blob> {
         const queryParams: string[] = [];
         if (type !== undefined) {
             queryParams.push(`type=${encodeURIComponent(String(type))}`);
         }
-        const requestPath = `/datasets/default/files/${id}/convert` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
+        const requestPath = `/datasets/default/files/${encodeURIComponent(encodeURIComponent(String(id)))}/convert` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<Blob>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as Blob;
@@ -627,7 +627,7 @@ export class OnedriveforbusinessClient extends ConnectorClientBase {
      * Convert file using path
      * @remarks This operation converts a file to another format using the path. The list of supported conversions can be found at https://aka.ms/onedriveconversions
      */
-    public async convertFileByPathAsync(path?: string, type?: string, abortSignal?: AbortSignalLike): Promise<Blob> {
+    public async convertFileByPath(path?: string, type?: string, abortSignal?: AbortSignalLike): Promise<Blob> {
         const queryParams: string[] = [];
         if (path !== undefined) {
             queryParams.push(`path=${encodeURIComponent(String(path))}`);
@@ -640,7 +640,7 @@ export class OnedriveforbusinessClient extends ConnectorClientBase {
         const httpResponse = await this.httpClient.sendAsync<Blob>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as Blob;
@@ -650,17 +650,17 @@ export class OnedriveforbusinessClient extends ConnectorClientBase {
      * Get file thumbnail
      * @remarks This operation gets the thumbnail of a file. The thumbnail will only be valid for 6 hours.
      */
-    public async getFileThumbnailAsync(id: string, size?: string, abortSignal?: AbortSignalLike): Promise<Thumbnail> {
+    public async getFileThumbnail(id: string, size?: string, abortSignal?: AbortSignalLike): Promise<Thumbnail> {
         const queryParams: string[] = [];
         if (size !== undefined) {
             queryParams.push(`size=${encodeURIComponent(String(size))}`);
         }
-        const requestPath = `/datasets/default/files/${id}/thumbnail` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
+        const requestPath = `/datasets/default/files/${encodeURIComponent(encodeURIComponent(String(id)))}/thumbnail` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<Thumbnail>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as Thumbnail;
@@ -670,13 +670,13 @@ export class OnedriveforbusinessClient extends ConnectorClientBase {
      * List files in root folder
      * @remarks This operation gets the list of files and subfolders in the root folder.
      */
-    public async listRootFolderAsync(abortSignal?: AbortSignalLike): Promise<Array<BlobMetadata>> {
+    public async listRootFolder(abortSignal?: AbortSignalLike): Promise<Array<BlobMetadata>> {
         const requestPath = `/datasets/default/folders`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<Array<BlobMetadata>>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as Array<BlobMetadata>;
@@ -686,7 +686,7 @@ export class OnedriveforbusinessClient extends ConnectorClientBase {
      * Find files in folder
      * @remarks This operation finds files within a folder using search or name pattern match.
      */
-    public async findFilesAsync(id: string, query?: string, findMode?: string, maxFileCount?: string, abortSignal?: AbortSignalLike): Promise<Array<BlobMetadata>> {
+    public async findFiles(id: string, query?: string, findMode?: string, maxFileCount?: string, abortSignal?: AbortSignalLike): Promise<Array<BlobMetadata>> {
         const queryParams: string[] = [];
         if (query !== undefined) {
             queryParams.push(`query=${encodeURIComponent(String(query))}`);
@@ -697,12 +697,12 @@ export class OnedriveforbusinessClient extends ConnectorClientBase {
         if (maxFileCount !== undefined) {
             queryParams.push(`maxFileCount=${encodeURIComponent(String(maxFileCount))}`);
         }
-        const requestPath = `/datasets/default/folders/${id}/search` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
+        const requestPath = `/datasets/default/folders/${encodeURIComponent(encodeURIComponent(String(id)))}/search` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<Array<BlobMetadata>>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as Array<BlobMetadata>;
@@ -712,7 +712,7 @@ export class OnedriveforbusinessClient extends ConnectorClientBase {
      * Find files in folder by path
      * @remarks This operation finds files within a folder by path using search or name pattern match.
      */
-    public async findFilesByPathAsync(query?: string, path?: string, findMode?: string, maxFileCount?: string, abortSignal?: AbortSignalLike): Promise<Array<BlobMetadata>> {
+    public async findFilesByPath(query?: string, path?: string, findMode?: string, maxFileCount?: string, abortSignal?: AbortSignalLike): Promise<Array<BlobMetadata>> {
         const queryParams: string[] = [];
         if (query !== undefined) {
             queryParams.push(`query=${encodeURIComponent(String(query))}`);
@@ -731,7 +731,7 @@ export class OnedriveforbusinessClient extends ConnectorClientBase {
         const httpResponse = await this.httpClient.sendAsync<Array<BlobMetadata>>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as Array<BlobMetadata>;
@@ -741,7 +741,7 @@ export class OnedriveforbusinessClient extends ConnectorClientBase {
      * Create share link
      * @remarks This operation creates a share link for a file.
      */
-    public async createShareLinkAsync(id: string, type?: string, scope?: string, abortSignal?: AbortSignalLike): Promise<SharingLink> {
+    public async createShareLink(id: string, type?: string, scope?: string, abortSignal?: AbortSignalLike): Promise<SharingLink> {
         const queryParams: string[] = [];
         if (type !== undefined) {
             queryParams.push(`type=${encodeURIComponent(String(type))}`);
@@ -749,12 +749,12 @@ export class OnedriveforbusinessClient extends ConnectorClientBase {
         if (scope !== undefined) {
             queryParams.push(`scope=${encodeURIComponent(String(scope))}`);
         }
-        const requestPath = `/datasets/default/files/${id}/shareV2` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
+        const requestPath = `/datasets/default/files/${encodeURIComponent(encodeURIComponent(String(id)))}/shareV2` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<SharingLink>("POST", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as SharingLink;
@@ -764,7 +764,7 @@ export class OnedriveforbusinessClient extends ConnectorClientBase {
      * Create share link by path
      * @remarks This operation creates a share link for a file using the path.
      */
-    public async createShareLinkByPathAsync(path?: string, type?: string, scope?: string, abortSignal?: AbortSignalLike): Promise<SharingLink> {
+    public async createShareLinkByPath(path?: string, type?: string, scope?: string, abortSignal?: AbortSignalLike): Promise<SharingLink> {
         const queryParams: string[] = [];
         if (path !== undefined) {
             queryParams.push(`path=${encodeURIComponent(String(path))}`);
@@ -780,7 +780,7 @@ export class OnedriveforbusinessClient extends ConnectorClientBase {
         const httpResponse = await this.httpClient.sendAsync<SharingLink>("POST", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as SharingLink;
@@ -790,7 +790,7 @@ export class OnedriveforbusinessClient extends ConnectorClientBase {
      * Extract archive to folder
      * @remarks This operation extracts an archive file into a folder (example: .zip). Maximum archive size is 50 MB and 100 files inside.
      */
-    public async extractFolderAsync(source?: string, destination?: string, overwrite?: string, abortSignal?: AbortSignalLike): Promise<Array<BlobMetadata>> {
+    public async extractFolder(source?: string, destination?: string, overwrite?: string, abortSignal?: AbortSignalLike): Promise<Array<BlobMetadata>> {
         const queryParams: string[] = [];
         if (source !== undefined) {
             queryParams.push(`source=${encodeURIComponent(String(source))}`);
@@ -806,7 +806,7 @@ export class OnedriveforbusinessClient extends ConnectorClientBase {
         const httpResponse = await this.httpClient.sendAsync<Array<BlobMetadata>>("POST", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as Array<BlobMetadata>;
@@ -816,7 +816,7 @@ export class OnedriveforbusinessClient extends ConnectorClientBase {
      * List files in folder
      * @remarks This operation gets the list of files and subfolders in a folder.
      */
-    public listFolderAsync(id: string, skipToken?: string, top?: string, abortSignal?: AbortSignalLike): PagedAsyncIterableIterator<BlobMetadata> {
+    public listFolder(id: string, skipToken?: string, top?: string, abortSignal?: AbortSignalLike): PagedAsyncIterableIterator<BlobMetadata> {
         const queryParams: string[] = [];
         if (skipToken !== undefined) {
             queryParams.push(`skipToken=${encodeURIComponent(String(skipToken))}`);
@@ -824,7 +824,7 @@ export class OnedriveforbusinessClient extends ConnectorClientBase {
         if (top !== undefined) {
             queryParams.push(`top=${encodeURIComponent(String(top))}`);
         }
-        const requestPath = `/datasets/default/foldersV2/${id}` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
+        const requestPath = `/datasets/default/foldersV2/${encodeURIComponent(encodeURIComponent(String(id)))}` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         return this.createPageable<BlobMetadataPage, BlobMetadata>(
             requestPath,
             async (requestUrl) => {
@@ -832,11 +832,13 @@ export class OnedriveforbusinessClient extends ConnectorClientBase {
 
                 if (!httpResponse.isSuccessStatusCode) {
                     const operationPath = this.getOperationPath(requestUrl);
-                    throw new ConnectorException(this.connectorName, `GET ${operationPath}`, httpResponse.statusCode, httpResponse.text);
+                    throw new ConnectorError(this.connectorName, `GET ${operationPath}`, httpResponse.statusCode, httpResponse.text);
                 }
 
                 return httpResponse.value as BlobMetadataPage;
             },
+            "value",
+            "nextLink",
         );
     }
 

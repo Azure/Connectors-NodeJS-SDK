@@ -4,7 +4,7 @@
 import type { AbortSignalLike } from "@azure/abort-controller";
 import type { TokenCredential } from "@azure/core-auth";
 import { ConnectorClientBase } from "../azureConnectors/clientBase.ts";
-import { ConnectorException } from "../azureConnectors/connectorException.ts";
+import { ConnectorError } from "../azureConnectors/connectorError.ts";
 import { ConnectorClientOptions } from "../azureConnectors/options.ts";
 import { TriggerCallbackPayload } from "../azureConnectors/triggerPayload.ts";
 
@@ -154,9 +154,7 @@ export interface ListOrganizationsResponse {
 /**
  * Definition: TrigNewActivityResponse
  */
-export interface TrigNewActivityResponse {
-    [key: string]: unknown;
-}
+export type TrigNewActivityResponse = Array<ActivityResponse>;
 
 /**
  * Definition: ActivityResponse
@@ -213,9 +211,7 @@ export interface ActivityResponse {
 /**
  * Definition: TrigNewDealResponse
  */
-export interface TrigNewDealResponse {
-    [key: string]: unknown;
-}
+export type TrigNewDealResponse = Array<DealResponse>;
 
 /**
  * Definition: DealResponse
@@ -423,13 +419,13 @@ export class PipedriveClient extends ConnectorClientBase {
      * Get deal by id
      * @remarks This operation retrieves all details of an existing deal, given its id.
      */
-    public async getDealAsync(dealId: string, abortSignal?: AbortSignalLike): Promise<DealResponse> {
+    public async getDeal(dealId: string, abortSignal?: AbortSignalLike): Promise<DealResponse> {
         const requestPath = `/v1/deals/${dealId}`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<DealResponse>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as DealResponse;
@@ -439,13 +435,13 @@ export class PipedriveClient extends ConnectorClientBase {
      * Update deal status
      * @remarks This operation is used to update the status associated with a deal, given its id.
      */
-    public async updateDealStatusAsync(input: UpdateDealStatusRequest, dealId: string, abortSignal?: AbortSignalLike): Promise<DealResponse> {
+    public async updateDealStatus(input: UpdateDealStatusRequest, dealId: string, abortSignal?: AbortSignalLike): Promise<DealResponse> {
         const requestPath = `/update_status_deal/v1/deals/${dealId}`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<DealResponse>("PUT", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `PUT ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `PUT ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as DealResponse;
@@ -455,13 +451,13 @@ export class PipedriveClient extends ConnectorClientBase {
      * Add activity
      * @remarks This operation is used to create a new activity for the authorized account.
      */
-    public async addActivityAsync(input: AddActivityRequest, abortSignal?: AbortSignalLike): Promise<ActivityResponse> {
+    public async addActivity(input: AddActivityRequest, abortSignal?: AbortSignalLike): Promise<ActivityResponse> {
         const requestPath = `/v1/activities`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<ActivityResponse>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as ActivityResponse;
@@ -471,13 +467,13 @@ export class PipedriveClient extends ConnectorClientBase {
      * Get stage by id
      * @remarks This operation returns data about a specific stage.
      */
-    public async getStageAsync(stageId: string, abortSignal?: AbortSignalLike): Promise<StageResponse> {
+    public async getStage(stageId: string, abortSignal?: AbortSignalLike): Promise<StageResponse> {
         const requestPath = `/v1/stages/${stageId}`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<StageResponse>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as StageResponse;
@@ -487,13 +483,13 @@ export class PipedriveClient extends ConnectorClientBase {
      * Add deal
      * @remarks This operation creates a new deal for the authorized account.
      */
-    public async addDealAsync(input: AddDealRequest, abortSignal?: AbortSignalLike): Promise<DealResponseV2> {
+    public async addDeal(input: AddDealRequest, abortSignal?: AbortSignalLike): Promise<DealResponseV2> {
         const requestPath = `/connector-v2/v1/deals`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<DealResponseV2>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as DealResponseV2;
@@ -503,13 +499,13 @@ export class PipedriveClient extends ConnectorClientBase {
      * Update deal stage
      * @remarks This operation is used to update the stage associated with a deal, given its id.
      */
-    public async updateDealStageAsync(input: UpdateDealStageRequest, dealId: string, abortSignal?: AbortSignalLike): Promise<DealResponseV2> {
+    public async updateDealStage(input: UpdateDealStageRequest, dealId: string, abortSignal?: AbortSignalLike): Promise<DealResponseV2> {
         const requestPath = `/connector-v2/update_stage_deal/v1/deals/${dealId}`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<DealResponseV2>("PUT", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `PUT ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `PUT ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as DealResponseV2;

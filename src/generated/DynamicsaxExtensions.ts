@@ -3,8 +3,9 @@
 
 import type { AbortSignalLike } from "@azure/abort-controller";
 import type { TokenCredential } from "@azure/core-auth";
+import type { PagedAsyncIterableIterator } from "@azure/core-paging";
 import { ConnectorClientBase } from "../azureConnectors/clientBase.ts";
-import { ConnectorException } from "../azureConnectors/connectorException.ts";
+import { ConnectorError } from "../azureConnectors/connectorError.ts";
 import { ConnectorClientOptions } from "../azureConnectors/options.ts";
 
 // #region Types
@@ -59,7 +60,7 @@ export interface ProcedureMetadata {
     name?: string;
     /** Procedure title */
     title?: string;
-    schema?: ObjectEntity;
+    schema?: Record<string, unknown>;
 }
 
 /**
@@ -116,8 +117,8 @@ export interface TableMetadata {
     /** Table permission */
     "x-ms-permission"?: string;
     "x-ms-capabilities"?: TableCapabilitiesMetadata;
-    schema?: ObjectEntity;
-    referencedEntities?: ObjectEntity;
+    schema?: Record<string, unknown>;
+    referencedEntities?: Record<string, unknown>;
     /** Url link */
     webUrl?: string;
 }
@@ -310,6 +311,8 @@ export interface Item {
 export interface ItemsList {
     /** List of Items */
     value?: Array<Item>;
+    /** The URL to retrieve the next page. */
+    "@odata.nextLink"?: string;
 }
 
 /**
@@ -404,13 +407,13 @@ export class DynamicsaxClient extends ConnectorClientBase {
      * Execute action
      * @remarks Execute action
      */
-    public async executeProcedureAsync(input: ExecuteProcedureInput, dataset: string, procedure: string, abortSignal?: AbortSignalLike): Promise<AxOnlineProcedureResult> {
-        const requestPath = `/datasets/${encodeURIComponent(String(dataset))}/procedures/${procedure}`;
+    public async executeProcedure(input: ExecuteProcedureInput, dataset: string, procedure: string, abortSignal?: AbortSignalLike): Promise<AxOnlineProcedureResult> {
+        const requestPath = `/datasets/${encodeURIComponent(encodeURIComponent(String(dataset)))}/procedures/${encodeURIComponent(encodeURIComponent(String(procedure)))}`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<AxOnlineProcedureResult>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as AxOnlineProcedureResult;
@@ -420,7 +423,7 @@ export class DynamicsaxClient extends ConnectorClientBase {
      * Lists items present in table
      * @remarks Lists items present in table
      */
-    public async getItemsAsync(dataset: string, table: string, apply?: string, filter?: string, orderby?: string, top?: string, skip?: string, select?: string, crossCompany?: string, abortSignal?: AbortSignalLike): Promise<ItemsList> {
+    public getItems(dataset: string, table: string, apply?: string, filter?: string, orderby?: string, top?: string, skip?: string, select?: string, crossCompany?: string, abortSignal?: AbortSignalLike): PagedAsyncIterableIterator<Item> {
         const queryParams: string[] = [];
         if (apply !== undefined) {
             queryParams.push(`$apply=${encodeURIComponent(String(apply))}`);
@@ -443,28 +446,35 @@ export class DynamicsaxClient extends ConnectorClientBase {
         if (crossCompany !== undefined) {
             queryParams.push(`cross-company=${encodeURIComponent(String(crossCompany))}`);
         }
-        const requestPath = `/datasets/${encodeURIComponent(String(dataset))}/tables/${table}/items` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
-        const requestUrl = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<ItemsList>("GET", requestUrl, undefined, undefined, abortSignal);
+        const requestPath = `/datasets/${encodeURIComponent(encodeURIComponent(String(dataset)))}/tables/${encodeURIComponent(encodeURIComponent(String(table)))}/items` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
+        return this.createPageable<ItemsList, Item>(
+            requestPath,
+            async (requestUrl) => {
+                const httpResponse = await this.httpClient.sendAsync<ItemsList>("GET", requestUrl, undefined, undefined, abortSignal);
 
-        if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
-        }
+                if (!httpResponse.isSuccessStatusCode) {
+                    const operationPath = this.getOperationPath(requestUrl);
+                    throw new ConnectorError(this.connectorName, `GET ${operationPath}`, httpResponse.statusCode, httpResponse.text);
+                }
 
-        return httpResponse.value as ItemsList;
+                return httpResponse.value as ItemsList;
+            },
+            "value",
+            "@odata.nextLink",
+        );
     }
 
     /**
      * Create record
      * @remarks Create a new record in an entity
      */
-    public async postItemAsync(input: PostItemInput, dataset: string, table: string, abortSignal?: AbortSignalLike): Promise<PostItemResponse> {
-        const requestPath = `/datasets/${encodeURIComponent(String(dataset))}/tables/${table}/items`;
+    public async postItem(input: PostItemInput, dataset: string, table: string, abortSignal?: AbortSignalLike): Promise<PostItemResponse> {
+        const requestPath = `/datasets/${encodeURIComponent(encodeURIComponent(String(dataset)))}/tables/${encodeURIComponent(encodeURIComponent(String(table)))}/items`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<PostItemResponse>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as PostItemResponse;
@@ -474,13 +484,13 @@ export class DynamicsaxClient extends ConnectorClientBase {
      * Get a record
      * @remarks Retrieves a single record
      */
-    public async getItemAsync(dataset: string, table: string, id: string, abortSignal?: AbortSignalLike): Promise<GetItemResponse> {
-        const requestPath = `/datasets/${encodeURIComponent(String(dataset))}/tables/${table}/items/${id}`;
+    public async getItem(dataset: string, table: string, id: string, abortSignal?: AbortSignalLike): Promise<GetItemResponse> {
+        const requestPath = `/datasets/${encodeURIComponent(encodeURIComponent(String(dataset)))}/tables/${encodeURIComponent(encodeURIComponent(String(table)))}/items/${encodeURIComponent(encodeURIComponent(String(id)))}`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<GetItemResponse>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as GetItemResponse;
@@ -490,13 +500,13 @@ export class DynamicsaxClient extends ConnectorClientBase {
      * Delete record
      * @remarks Deletes a single record in an entity
      */
-    public async deleteItemAsync(dataset: string, table: string, id: string, abortSignal?: AbortSignalLike): Promise<void> {
-        const requestPath = `/datasets/${encodeURIComponent(String(dataset))}/tables/${table}/items/${id}`;
+    public async deleteItem(dataset: string, table: string, id: string, abortSignal?: AbortSignalLike): Promise<void> {
+        const requestPath = `/datasets/${encodeURIComponent(encodeURIComponent(String(dataset)))}/tables/${encodeURIComponent(encodeURIComponent(String(table)))}/items/${encodeURIComponent(encodeURIComponent(String(id)))}`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<void>("DELETE", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `DELETE ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `DELETE ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
     }
 
@@ -504,13 +514,13 @@ export class DynamicsaxClient extends ConnectorClientBase {
      * Update a record
      * @remarks Updates a single record in an entity
      */
-    public async patchItemAsync(input: PatchItemInput, dataset: string, table: string, id: string, abortSignal?: AbortSignalLike): Promise<PatchItemResponse> {
-        const requestPath = `/datasets/${encodeURIComponent(String(dataset))}/tables/${table}/items/${id}`;
+    public async patchItem(input: PatchItemInput, dataset: string, table: string, id: string, abortSignal?: AbortSignalLike): Promise<PatchItemResponse> {
+        const requestPath = `/datasets/${encodeURIComponent(encodeURIComponent(String(dataset)))}/tables/${encodeURIComponent(encodeURIComponent(String(table)))}/items/${encodeURIComponent(encodeURIComponent(String(id)))}`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<PatchItemResponse>("PATCH", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `PATCH ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `PATCH ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as PatchItemResponse;
@@ -520,13 +530,13 @@ export class DynamicsaxClient extends ConnectorClientBase {
      * Get list of entities
      * @remarks Retrieves a list of entities
      */
-    public async getTablesAsync(dataset: string, abortSignal?: AbortSignalLike): Promise<TablesList> {
-        const requestPath = `/datasets/${encodeURIComponent(String(dataset))}/tables`;
+    public async getTables(dataset: string, abortSignal?: AbortSignalLike): Promise<TablesList> {
+        const requestPath = `/datasets/${encodeURIComponent(encodeURIComponent(String(dataset)))}/tables`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<TablesList>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as TablesList;

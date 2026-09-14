@@ -4,7 +4,7 @@
  * Microsoft To Do Connector SDK Sample - CJS TypeScript
  */
 
-import { ManagedIdentityTokenProvider, ConnectorException } from "@azure/connectors";
+import { ManagedIdentityTokenProvider, ConnectorError } from "@azure/connectors";
 import { TodoClient, TodoList } from "@azure/connectors/generated/TodoExtensions";
 
 const CONNECTION_URL = process.env.TODO_CONNECTION_URL ?? "";
@@ -19,10 +19,10 @@ async function main(): Promise<void> {
     const client = new TodoClient(CONNECTION_URL, tokenProvider);
 
     try {
-        const result: Array<TodoList> = await client.getAllTodoListsAsync();
+        const result: Array<TodoList> = await client.getAllTodoLists();
         console.log(`To-do lists found: ${result.length}`);
     } catch (error) {
-        if (error instanceof ConnectorException) {
+        if (error instanceof ConnectorError) {
             console.log(`Connector error (${error.statusCode}): ${error.message}`);
             return;
         }

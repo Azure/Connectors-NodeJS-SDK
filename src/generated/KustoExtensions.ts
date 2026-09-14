@@ -4,7 +4,7 @@
 import type { AbortSignalLike } from "@azure/abort-controller";
 import type { TokenCredential } from "@azure/core-auth";
 import { ConnectorClientBase } from "../azureConnectors/clientBase.ts";
-import { ConnectorException } from "../azureConnectors/connectorException.ts";
+import { ConnectorError } from "../azureConnectors/connectorError.ts";
 import { ConnectorClientOptions } from "../azureConnectors/options.ts";
 
 // #region Types
@@ -20,7 +20,7 @@ export interface ObjectEntity {
  * Definition: Table
  */
 export interface Table {
-    value?: Array<Row>;
+    value?: Array<Record<string, unknown>>;
 }
 
 /**
@@ -169,13 +169,13 @@ export class KustoClient extends ConnectorClientBase {
      * Run KQL query
      * @remarks Runs the KQL query and returns the result as a set of rows which can be iterated over in the following connectors e.g TableName | take 10.
      */
-    public async listKustoResultsAsync(input: QueryAndListSchema, abortSignal?: AbortSignalLike): Promise<Table> {
+    public async listKustoResults(input: QueryAndListSchema, abortSignal?: AbortSignalLike): Promise<Table> {
         const requestPath = `/ListKustoResults/false`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<Table>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as Table;
@@ -185,13 +185,13 @@ export class KustoClient extends ConnectorClientBase {
      * Run show control command
      * @remarks Runs the show control command and returns the result as a set of rows which can be iterated over in the following connectors e.g .show table TableName policy caching.
      */
-    public async listKustoShowCommandResultsAsync(input: ControlCommandAndListSchema, abortSignal?: AbortSignalLike): Promise<Table> {
+    public async listKustoShowCommandResults(input: ControlCommandAndListSchema, abortSignal?: AbortSignalLike): Promise<Table> {
         const requestPath = `/ListKustoShowCommandResults`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<Table>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as Table;
@@ -201,13 +201,13 @@ export class KustoClient extends ConnectorClientBase {
      * Run KQL query and render a chart
      * @remarks Runs the KQL query and returns result as a chart of your choice e.g TableName | where Timestamp > ago(1h) | project timestamp, value.
      */
-    public async runKustoQueryAndVisualizeResultsAsync(input: QueryAndVisualizeSchema, abortSignal?: AbortSignalLike): Promise<VisualizeResults> {
+    public async runKustoQueryAndVisualizeResults(input: QueryAndVisualizeSchema, abortSignal?: AbortSignalLike): Promise<VisualizeResults> {
         const requestPath = `/RunKustoAndVisualizeResults/false`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<VisualizeResults>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as VisualizeResults;
@@ -217,13 +217,13 @@ export class KustoClient extends ConnectorClientBase {
      * Run control command and render a chart
      * @remarks Runs the control command and returns the result as a chart of your choice e.g .clear table TableName data.
      */
-    public async runKustoCommandAndVisualizeResultsAsync(input: CommandAndVisualizeSchema, abortSignal?: AbortSignalLike): Promise<VisualizeResults> {
+    public async runKustoCommandAndVisualizeResults(input: CommandAndVisualizeSchema, abortSignal?: AbortSignalLike): Promise<VisualizeResults> {
         const requestPath = `/RunKustoAndVisualizeResults/true`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<VisualizeResults>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as VisualizeResults;
@@ -233,13 +233,13 @@ export class KustoClient extends ConnectorClientBase {
      * Run async control command
      * @remarks Runs control command in async mode and returns its ID, state and status on completion. Command can run for maximum 1 hour. The 'async' keyword is mandatory e.g .set-or-append async TargetTable <| SourceTable.
      */
-    public async runAsyncControlCommandAndWaitAsync(input: ControlCommandAndListSchema, abortSignal?: AbortSignalLike): Promise<AsyncCommandResult> {
+    public async runAsyncControlCommandAndWait(input: ControlCommandAndListSchema, abortSignal?: AbortSignalLike): Promise<AsyncCommandResult> {
         const requestPath = `/RunAsyncControlCommandAndWait`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<AsyncCommandResult>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as AsyncCommandResult;
@@ -249,7 +249,7 @@ export class KustoClient extends ConnectorClientBase {
      * Kusto Query MCP Server
      * @remarks This MCP server runs Kusto queries and manages the results.
      */
-    public async mcpKustoQueryManagementAsync(input: MCPQueryRequest, sessionId?: string, abortSignal?: AbortSignalLike): Promise<MCPQueryResponse> {
+    public async mcpKustoQueryManagement(input: MCPQueryRequest, sessionId?: string, abortSignal?: AbortSignalLike): Promise<MCPQueryResponse> {
         const queryParams: string[] = [];
         if (sessionId !== undefined) {
             queryParams.push(`sessionId=${encodeURIComponent(String(sessionId))}`);
@@ -259,7 +259,7 @@ export class KustoClient extends ConnectorClientBase {
         const httpResponse = await this.httpClient.sendAsync<MCPQueryResponse>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as MCPQueryResponse;

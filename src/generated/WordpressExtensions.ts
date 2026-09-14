@@ -4,7 +4,7 @@
 import type { AbortSignalLike } from "@azure/abort-controller";
 import type { TokenCredential } from "@azure/core-auth";
 import { ConnectorClientBase } from "../azureConnectors/clientBase.ts";
-import { ConnectorException } from "../azureConnectors/connectorException.ts";
+import { ConnectorError } from "../azureConnectors/connectorError.ts";
 import { ConnectorClientOptions } from "../azureConnectors/options.ts";
 
 // #region Types
@@ -52,16 +52,12 @@ export interface Site {
 /**
  * Definition: SiteModel
  */
-export interface SiteModel {
-    [key: string]: unknown;
-}
+export type SiteModel = Array<Record<string, unknown>>;
 
 /**
  * Definition: SiteStatsChartModel
  */
-export interface SiteStatsChartModel {
-    [key: string]: unknown;
-}
+export type SiteStatsChartModel = Array<Record<string, unknown>>;
 
 /**
  * Definition: SiteInsightsModel
@@ -104,9 +100,7 @@ export interface SiteStatsModel {
 /**
  * Definition: TopPostModel
  */
-export interface TopPostModel {
-    [key: string]: unknown;
-}
+export type TopPostModel = Array<Record<string, unknown>>;
 
 /**
  * Definition: ListPostsResponse
@@ -136,9 +130,7 @@ export interface PostResponse {
 /**
  * Definition: PostsModel
  */
-export interface PostsModel {
-    [key: string]: unknown;
-}
+export type PostsModel = Array<Record<string, unknown>>;
 
 /**
  * Definition: PostModel
@@ -228,7 +220,7 @@ export class WordpressClient extends ConnectorClientBase {
      * Get site statistics
      * @remarks Get statistics for a specified site
      */
-    public async siteStatsAsync(siteId: string, fields?: string, abortSignal?: AbortSignalLike): Promise<SiteStatsModel> {
+    public async siteStats(siteId: string, fields?: string, abortSignal?: AbortSignalLike): Promise<SiteStatsModel> {
         const queryParams: string[] = [];
         if (fields !== undefined) {
             queryParams.push(`fields=${encodeURIComponent(String(fields))}`);
@@ -238,7 +230,7 @@ export class WordpressClient extends ConnectorClientBase {
         const httpResponse = await this.httpClient.sendAsync<SiteStatsModel>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as SiteStatsModel;
@@ -248,13 +240,13 @@ export class WordpressClient extends ConnectorClientBase {
      * Get post
      * @remarks Get post
      */
-    public async getAsync(siteId: string, postId: string, abortSignal?: AbortSignalLike): Promise<PostModel> {
+    public async get(siteId: string, postId: string, abortSignal?: AbortSignalLike): Promise<PostModel> {
         const requestPath = `/sites/${siteId}/posts/${postId}`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<PostModel>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as PostModel;
@@ -264,13 +256,13 @@ export class WordpressClient extends ConnectorClientBase {
      * Create post
      * @remarks Create post
      */
-    public async createAsync(input: CreatePostModel, siteId: string, abortSignal?: AbortSignalLike): Promise<PostModel> {
+    public async create(input: CreatePostModel, siteId: string, abortSignal?: AbortSignalLike): Promise<PostModel> {
         const requestPath = `/sites/${siteId}/posts/new`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<PostModel>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as PostModel;

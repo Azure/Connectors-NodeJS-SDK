@@ -17,7 +17,7 @@ import {
     MCPQueryRequest,
     MCPQueryResponse,
 } from "../src/generated/KustoExtensions.ts";
-import { ConnectorException } from "../src/azureConnectors/connectorException.ts";
+import { ConnectorError } from "../src/azureConnectors/connectorError.ts";
 import { ConnectorNames } from "../src/generated/connectorNames.ts";
 import { availableConnectors } from "../src/generated/ManagedConnectors.ts";
 
@@ -114,7 +114,7 @@ describe("KustoClient — constructor", () => {
     });
 });
 
-describe("KustoClient — listKustoResultsAsync", () => {
+describe("KustoClient — listKustoResults", () => {
     afterEach(() => {
         jest.restoreAllMocks();
     });
@@ -130,7 +130,7 @@ describe("KustoClient — listKustoResultsAsync", () => {
             cluster: "testcluster" as unknown as ClusterName,
         };
 
-        const result = await client.listKustoResultsAsync(input);
+        const result = await client.listKustoResults(input);
 
         expect(result).toEqual(mockTable);
         expect(global.fetch).toHaveBeenCalledTimes(1);
@@ -144,7 +144,7 @@ describe("KustoClient — listKustoResultsAsync", () => {
     });
 });
 
-describe("KustoClient — listKustoShowCommandResultsAsync", () => {
+describe("KustoClient — listKustoShowCommandResults", () => {
     afterEach(() => {
         jest.restoreAllMocks();
     });
@@ -160,7 +160,7 @@ describe("KustoClient — listKustoShowCommandResultsAsync", () => {
             cluster: "testcluster" as unknown as ClusterName,
         };
 
-        const result = await client.listKustoShowCommandResultsAsync(input);
+        const result = await client.listKustoShowCommandResults(input);
 
         expect(result).toEqual(mockTable);
         const [url, init] = (global.fetch as jest.Mock).mock.calls[0];
@@ -170,7 +170,7 @@ describe("KustoClient — listKustoShowCommandResultsAsync", () => {
     });
 });
 
-describe("KustoClient — runKustoQueryAndVisualizeResultsAsync", () => {
+describe("KustoClient — runKustoQueryAndVisualizeResults", () => {
     afterEach(() => {
         jest.restoreAllMocks();
     });
@@ -187,7 +187,7 @@ describe("KustoClient — runKustoQueryAndVisualizeResultsAsync", () => {
             chartType: "Bar Chart" as unknown as ChartType,
         };
 
-        const result = await client.runKustoQueryAndVisualizeResultsAsync(input);
+        const result = await client.runKustoQueryAndVisualizeResults(input);
 
         expect(result).toEqual(mockResult);
         const [url] = (global.fetch as jest.Mock).mock.calls[0];
@@ -195,7 +195,7 @@ describe("KustoClient — runKustoQueryAndVisualizeResultsAsync", () => {
     });
 });
 
-describe("KustoClient — runKustoCommandAndVisualizeResultsAsync", () => {
+describe("KustoClient — runKustoCommandAndVisualizeResults", () => {
     afterEach(() => {
         jest.restoreAllMocks();
     });
@@ -212,7 +212,7 @@ describe("KustoClient — runKustoCommandAndVisualizeResultsAsync", () => {
             chartType: "Bar Chart" as unknown as ChartType,
         };
 
-        const result = await client.runKustoCommandAndVisualizeResultsAsync(input);
+        const result = await client.runKustoCommandAndVisualizeResults(input);
 
         expect(result).toEqual(mockResult);
         const [url] = (global.fetch as jest.Mock).mock.calls[0];
@@ -220,7 +220,7 @@ describe("KustoClient — runKustoCommandAndVisualizeResultsAsync", () => {
     });
 });
 
-describe("KustoClient — runAsyncControlCommandAndWaitAsync", () => {
+describe("KustoClient — runAsyncControlCommandAndWait", () => {
     afterEach(() => {
         jest.restoreAllMocks();
     });
@@ -236,7 +236,7 @@ describe("KustoClient — runAsyncControlCommandAndWaitAsync", () => {
             cluster: "testcluster" as unknown as ClusterName,
         };
 
-        const result = await client.runAsyncControlCommandAndWaitAsync(input);
+        const result = await client.runAsyncControlCommandAndWait(input);
 
         expect(result).toEqual(mockResult);
         const [url, init] = (global.fetch as jest.Mock).mock.calls[0];
@@ -245,7 +245,7 @@ describe("KustoClient — runAsyncControlCommandAndWaitAsync", () => {
     });
 });
 
-describe("KustoClient — mcpKustoQueryManagementAsync", () => {
+describe("KustoClient — mcpKustoQueryManagement", () => {
     afterEach(() => {
         jest.restoreAllMocks();
     });
@@ -261,7 +261,7 @@ describe("KustoClient — mcpKustoQueryManagementAsync", () => {
             method: "tools/call",
         };
 
-        const result = await client.mcpKustoQueryManagementAsync(input);
+        const result = await client.mcpKustoQueryManagement(input);
 
         expect(result).toEqual(mockResponse);
         const [url] = (global.fetch as jest.Mock).mock.calls[0];
@@ -279,7 +279,7 @@ describe("KustoClient — mcpKustoQueryManagementAsync", () => {
             method: "tools/call",
         };
 
-        await client.mcpKustoQueryManagementAsync(input, "session-abc");
+        await client.mcpKustoQueryManagement(input, "session-abc");
 
         const [url] = (global.fetch as jest.Mock).mock.calls[0];
         expect(url).toContain("?sessionId=session-abc");
@@ -289,7 +289,7 @@ describe("KustoClient — mcpKustoQueryManagementAsync", () => {
         mockFetchResponse({});
 
         const client = new KustoClient(TestConnectionUrl, createMockCredential());
-        await client.mcpKustoQueryManagementAsync(
+        await client.mcpKustoQueryManagement(
             { jsonrpc: "2.0", id: "3", method: "tools/call" },
             "session with spaces",
         );
@@ -305,13 +305,13 @@ describe("KustoClient — error handling", () => {
         jest.restoreAllMocks();
     });
 
-    it("should throw ConnectorException on non-OK response", async () => {
+    it("should throw ConnectorError on non-OK response", async () => {
         mockFetchError(401, "Unauthorized");
 
         const client = new KustoClient(TestConnectionUrl, createMockCredential());
         await expect(
-            client.listKustoResultsAsync({ csl: "test" as unknown as Query, db: "testdb" as unknown as DatabaseName, cluster: "testcluster" as unknown as ClusterName }),
-        ).rejects.toThrow(ConnectorException);
+            client.listKustoResults({ csl: "test" as unknown as Query, db: "testdb" as unknown as DatabaseName, cluster: "testcluster" as unknown as ClusterName }),
+        ).rejects.toThrow(ConnectorError);
     });
 
     it("should include status code and response body in error", async () => {
@@ -321,11 +321,11 @@ describe("KustoClient — error handling", () => {
         const client = new KustoClient(TestConnectionUrl, createMockCredential());
 
         try {
-            await client.listKustoResultsAsync({ csl: "test" as unknown as Query, db: "testdb" as unknown as DatabaseName, cluster: "testcluster" as unknown as ClusterName });
-            throw new Error("Expected ConnectorException to be thrown");
+            await client.listKustoResults({ csl: "test" as unknown as Query, db: "testdb" as unknown as DatabaseName, cluster: "testcluster" as unknown as ClusterName });
+            throw new Error("Expected ConnectorError to be thrown");
         } catch (error) {
-            expect(error).toBeInstanceOf(ConnectorException);
-            const connectorError = error as ConnectorException;
+            expect(error).toBeInstanceOf(ConnectorError);
+            const connectorError = error as ConnectorError;
             expect(connectorError.statusCode).toBe(403);
             expect(connectorError.responseBody).toBe(errorBody);
             expect(connectorError.operation).toContain("POST");
@@ -333,20 +333,20 @@ describe("KustoClient — error handling", () => {
     });
 });
 
-describe("ConnectorException", () => {
+describe("ConnectorError", () => {
     it("should include status code and response body", () => {
         const errorBody = '{"code": "Forbidden"}';
-        const error = new ConnectorException("kusto", "GET /test", 403, errorBody);
+        const error = new ConnectorError("kusto", "GET /test", 403, errorBody);
 
         expect(error.statusCode).toBe(403);
         expect(error.responseBody).toBe(errorBody);
         expect(error.operation).toBe("GET /test");
-        expect(error.name).toBe("ConnectorException");
+        expect(error.name).toBe("ConnectorError");
     });
 
     it("should truncate long error response bodies in message", () => {
         const longBody = "x".repeat(3000);
-        const error = new ConnectorException("kusto", "GET /test", 500, longBody);
+        const error = new ConnectorError("kusto", "GET /test", 500, longBody);
 
         expect(error.message).toContain("...[truncated]");
         expect(error.responseBody).toBe(longBody);
@@ -354,7 +354,7 @@ describe("ConnectorException", () => {
     });
 
     it("should handle empty response body", () => {
-        const error = new ConnectorException("kusto", "POST /query", 500, "");
+        const error = new ConnectorError("kusto", "POST /query", 500, "");
 
         expect(error.message).toContain("POST /query");
         expect(error.responseBody).toBe("");

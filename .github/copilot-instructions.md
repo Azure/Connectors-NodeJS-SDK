@@ -12,7 +12,7 @@ This repository contains the lightweight TypeScript SDK for Azure Logic Apps con
 // Copyright (c) Microsoft Corporation.  All rights reserved.
 
 import { ConnectorClientBase } from "../azureConnectors/clientBase";
-import { ConnectorException } from "../azureConnectors/connectorException";
+import { ConnectorError } from "../azureConnectors/connectorError";
 
 export class YourClass {
 }
@@ -30,7 +30,7 @@ export class YourClass {
 |---------|------|---------|
 | Classes | PascalCase | `Office365Client` |
 | Interfaces | PascalCase | `TokenProvider` |
-| Methods/functions | camelCase | `getEmailsAsync()` |
+| Methods/functions | verb-noun camelCase | `getEmails()` |
 | Constants | UPPER_SNAKE_CASE or PascalCase | `DEFAULT_TIMEOUT` |
 | Private fields | camelCase with no prefix | `private readonly connectionUrl: string;` |
 | Local variables | camelCase, complete English terms | `parameter` not `p`, `method` not `m` |
@@ -121,7 +121,7 @@ const result = doSomething();
  * Processes the incoming request and returns the result.
  * @param request The request to process.
  */
-public async processAsync(request: Request): Promise<Response> {
+public async process(request: Request): Promise<Response> {
 ```
 
 **Rules:**
@@ -136,7 +136,7 @@ public async processAsync(request: Request): Promise<Response> {
 try {
     const response = await this.httpClient.sendAsync<T>("GET", url);
 } catch (error) {
-    if (error instanceof ConnectorException) {
+    if (error instanceof ConnectorError) {
         console.error(`Connector error: '${error.message}'.`);
         throw;
     }
@@ -150,13 +150,13 @@ try {
 - Wrap inserted values in single quotes in error messages
 - End error messages with period
 - **All errors must have descriptive messages** — never throw without context
-- Use `ConnectorException` for connector-specific errors
+- Use `ConnectorError` for connector-specific errors
 
 **DO:**
 
 ```typescript
 throw new Error(`Parameter '${paramName}' cannot be null or empty.`);
-throw new ConnectorException(`GET ${path}`, statusCode, responseText);
+throw new ConnectorError(connectorName, `GET ${path}`, statusCode, responseText);
 ```
 
 **DO NOT:**

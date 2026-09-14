@@ -1,7 +1,7 @@
 // Copyright (c) Microsoft Corporation.  All rights reserved.
 
 /** Tallyfy Connector SDK Sample - ESM TypeScript. */
-import { ConnectorException, ManagedIdentityTokenProvider } from "@azure/connectors";
+import { ConnectorError, ManagedIdentityTokenProvider } from "@azure/connectors";
 import { TallyfyClient } from "@azure/connectors/generated/TallyfyExtensions";
 
 const CONNECTION_URL = process.env.TALLYFY_CONNECTION_URL ?? "";
@@ -11,10 +11,10 @@ if (!CONNECTION_URL || !ORGANIZATION || !USER_ID) throw new Error("TALLYFY_CONNE
 
 async function main(): Promise<void> {
     try {
-        const tasks = await new TallyfyClient(CONNECTION_URL, new ManagedIdentityTokenProvider()).getUserTasksAsync(ORGANIZATION, USER_ID);
+        const tasks = await new TallyfyClient(CONNECTION_URL, new ManagedIdentityTokenProvider()).getUserTasks(ORGANIZATION, USER_ID);
         console.log("Tasks:", JSON.stringify(tasks, null, 2));
     } catch (error) {
-        if (error instanceof ConnectorException) console.error(`Connector error (${error.statusCode}): ${error.message}`);
+        if (error instanceof ConnectorError) console.error(`Connector error (${error.statusCode}): ${error.message}`);
         else throw error;
     }
 }

@@ -22,7 +22,7 @@
  *     node dist/msgraphgroupsanduser.js
  */
 
-import { ManagedIdentityTokenProvider, ConnectorException } from "@azure/connectors";
+import { ManagedIdentityTokenProvider, ConnectorError } from "@azure/connectors";
 import { MsgraphgroupsanduserClient, ListUsersResponse, ListGroupsByDisplayNameSearchResponse, ListSubscribedSkusResponse } from "@azure/connectors/generated/MsgraphgroupsanduserExtensions";
 
 const CONNECTION_URL = process.env.MSGRAPH_CONNECTION_URL ?? "";
@@ -42,7 +42,7 @@ async function main(): Promise<void> {
     // Example 1: List users
     console.log("\n--- List Users ---");
     try {
-        const usersResponse: ListUsersResponse = await client.listUsersAsync();
+        const usersResponse: ListUsersResponse = await client.listUsers();
         const users = usersResponse.value ?? [];
 
         if (users.length > 0) {
@@ -54,7 +54,7 @@ async function main(): Promise<void> {
             console.log("No users found.");
         }
     } catch (error) {
-        if (error instanceof ConnectorException) {
+        if (error instanceof ConnectorError) {
             console.log(`Connector error: ${error.message}`);
         } else {
             throw error;
@@ -65,7 +65,7 @@ async function main(): Promise<void> {
     const searchTerm = process.env.MSGRAPH_GROUP_SEARCH ?? "Engineering";
     console.log(`\n--- Search Groups ("${searchTerm}") ---`);
     try {
-        const groupsResponse: ListGroupsByDisplayNameSearchResponse = await client.listGroupsByDisplayNameSearchAsync(
+        const groupsResponse: ListGroupsByDisplayNameSearchResponse = await client.listGroupsByDisplayNameSearch(
             searchTerm,
         );
         const groups = groupsResponse.value ?? [];
@@ -79,7 +79,7 @@ async function main(): Promise<void> {
             console.log("No groups found.");
         }
     } catch (error) {
-        if (error instanceof ConnectorException) {
+        if (error instanceof ConnectorError) {
             console.log(`Connector error (${error.statusCode}): ${error.message}`);
         } else {
             throw error;
@@ -89,7 +89,7 @@ async function main(): Promise<void> {
     // Example 3: List subscribed SKUs (organization licenses)
     console.log("\n--- List Subscribed SKUs ---");
     try {
-        const skusResponse: ListSubscribedSkusResponse = await client.listSubscribedSkusAsync();
+        const skusResponse: ListSubscribedSkusResponse = await client.listSubscribedSkus();
         const skus = skusResponse.value ?? [];
 
         if (skus.length > 0) {
@@ -101,7 +101,7 @@ async function main(): Promise<void> {
             console.log("No SKUs found.");
         }
     } catch (error) {
-        if (error instanceof ConnectorException) {
+        if (error instanceof ConnectorError) {
             console.log(`Connector error (${error.statusCode}): ${error.message}`);
         } else {
             throw error;

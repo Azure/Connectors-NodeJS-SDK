@@ -4,7 +4,7 @@
 import type { AbortSignalLike } from "@azure/abort-controller";
 import type { TokenCredential } from "@azure/core-auth";
 import { ConnectorClientBase } from "../azureConnectors/clientBase.ts";
-import { ConnectorException } from "../azureConnectors/connectorException.ts";
+import { ConnectorError } from "../azureConnectors/connectorError.ts";
 import { ConnectorClientOptions } from "../azureConnectors/options.ts";
 
 // #region Types
@@ -34,9 +34,7 @@ export interface CreateOrgHookEnvelopeResponse {
 /**
  * Update document generation form fields from envelope
  */
-export interface UpdateDocgenFormFieldsInput {
-    [key: string]: unknown;
-}
+export type UpdateDocgenFormFieldsInput = Array<Record<string, unknown>>;
 
 /**
  * Response for Get document generation form fields from template (bulk send templates only)
@@ -48,9 +46,7 @@ export interface GetDocGenTemplateTabsResponse {
 /**
  * Update envelope prefill tabs
  */
-export interface UpdateEnvelopePrefillTabsInput {
-    [key: string]: unknown;
-}
+export type UpdateEnvelopePrefillTabsInput = Array<Record<string, unknown>>;
 
 /**
  * Response for Create envelope using composite templates
@@ -101,9 +97,7 @@ export interface AddDocumentsToEnvelopeInput {
 /**
  * Update recipient tab values on an envelope
  */
-export interface UpdateRecipientTabsValuesInput {
-    [key: string]: unknown;
-}
+export type UpdateRecipientTabsValuesInput = Array<Record<string, unknown>>;
 
 /**
  * Response for Show build Number (For reference only. Do not include in a flow for execution)
@@ -483,7 +477,7 @@ export interface EmbeddedSigningResponse {
 export interface CombinedEmailBodyAndCustomFields {
     /** Body of the email. */
     emailBlurb?: string;
-    AccountCustomFields?: AccountCustomFields;
+    AccountCustomFields?: Record<string, unknown>;
 }
 
 /**
@@ -1085,13 +1079,13 @@ export class DocusignClient extends ConnectorClientBase {
      * Get document generation form fields from envelope
      * @remarks Get document generation form fields from envelope
      */
-    public async getDocgenFormFieldsAsync(accountId: string, envelopeId: string, abortSignal?: AbortSignalLike): Promise<DocGenFormFieldsResponse> {
+    public async getDocgenFormFields(accountId: string, envelopeId: string, abortSignal?: AbortSignalLike): Promise<DocGenFormFieldsResponse> {
         const requestPath = `/accounts/${accountId}/envelopes/${envelopeId}/docGenFormFields`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<DocGenFormFieldsResponse>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as DocGenFormFieldsResponse;
@@ -1101,7 +1095,7 @@ export class DocusignClient extends ConnectorClientBase {
      * Update document generation form fields from envelope
      * @remarks Update document generation form fields from envelope
      */
-    public async updateDocgenFormFieldsAsync(input: UpdateDocgenFormFieldsInput, accountId: string, envelopeId: string, documentGuid?: string, abortSignal?: AbortSignalLike): Promise<void> {
+    public async updateDocgenFormFields(input: UpdateDocgenFormFieldsInput, accountId: string, envelopeId: string, documentGuid?: string, abortSignal?: AbortSignalLike): Promise<void> {
         const queryParams: string[] = [];
         if (documentGuid !== undefined) {
             queryParams.push(`documentGuid=${encodeURIComponent(String(documentGuid))}`);
@@ -1111,7 +1105,7 @@ export class DocusignClient extends ConnectorClientBase {
         const httpResponse = await this.httpClient.sendAsync<void>("PUT", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `PUT ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `PUT ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
     }
 
@@ -1119,13 +1113,13 @@ export class DocusignClient extends ConnectorClientBase {
      * Get document generation form fields from template (bulk send templates only)
      * @remarks Get document generation form fields from template (bulk send templates only)
      */
-    public async getDocGenTemplateTabsAsync(accountId: string, templateId: string, abortSignal?: AbortSignalLike): Promise<GetDocGenTemplateTabsResponse> {
+    public async getDocGenTemplateTabs(accountId: string, templateId: string, abortSignal?: AbortSignalLike): Promise<GetDocGenTemplateTabsResponse> {
         const requestPath = `/accounts/${accountId}/templates/${templateId}`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<GetDocGenTemplateTabsResponse>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as GetDocGenTemplateTabsResponse;
@@ -1135,7 +1129,7 @@ export class DocusignClient extends ConnectorClientBase {
      * Void the envelope
      * @remarks Void the envelope.
      */
-    public async voidEnvelopeAsync(accountId: string, envelopeId: string, voidedReason?: string, abortSignal?: AbortSignalLike): Promise<EnvelopeVoidResponse> {
+    public async voidEnvelope(accountId: string, envelopeId: string, voidedReason?: string, abortSignal?: AbortSignalLike): Promise<EnvelopeVoidResponse> {
         const queryParams: string[] = [];
         if (voidedReason !== undefined) {
             queryParams.push(`voidedReason=${encodeURIComponent(String(voidedReason))}`);
@@ -1145,7 +1139,7 @@ export class DocusignClient extends ConnectorClientBase {
         const httpResponse = await this.httpClient.sendAsync<EnvelopeVoidResponse>("PUT", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `PUT ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `PUT ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as EnvelopeVoidResponse;
@@ -1155,13 +1149,13 @@ export class DocusignClient extends ConnectorClientBase {
      * Resend the envelope
      * @remarks This action resends a Docusign envelope or sends a reminder to recipients who need to sign a Docusign agreement based on a provided EnvelopeId.
      */
-    public async resendEnvelopeAsync(envelopeId: string, abortSignal?: AbortSignalLike): Promise<EnvelopeResendResponse> {
+    public async resendEnvelope(envelopeId: string, abortSignal?: AbortSignalLike): Promise<EnvelopeResendResponse> {
         const requestPath = `/accounts/copilotAccount/envelopes/${envelopeId}/resendEnvelope`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<EnvelopeResendResponse>("PUT", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `PUT ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `PUT ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as EnvelopeResendResponse;
@@ -1171,7 +1165,7 @@ export class DocusignClient extends ConnectorClientBase {
      * Add reminders for an envelope
      * @remarks Add reminders for an envelope
      */
-    public async addRemindersAsync(accountId: string, envelopeId: string, reminderEnabled?: string, reminderDelay?: string, reminderFrequency?: string, expireAfter?: string, abortSignal?: AbortSignalLike): Promise<AddRemindersResponse> {
+    public async addReminders(accountId: string, envelopeId: string, reminderEnabled?: string, reminderDelay?: string, reminderFrequency?: string, expireAfter?: string, abortSignal?: AbortSignalLike): Promise<AddRemindersResponse> {
         const queryParams: string[] = [];
         if (reminderEnabled !== undefined) {
             queryParams.push(`reminderEnabled=${encodeURIComponent(String(reminderEnabled))}`);
@@ -1190,7 +1184,7 @@ export class DocusignClient extends ConnectorClientBase {
         const httpResponse = await this.httpClient.sendAsync<AddRemindersResponse>("PUT", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `PUT ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `PUT ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as AddRemindersResponse;
@@ -1200,13 +1194,13 @@ export class DocusignClient extends ConnectorClientBase {
      * Get document tabs from envelope
      * @remarks Get document tabs from envelope
      */
-    public async getEnvelopeDocumentTabsAsync(accountId: string, envelopeId: string, documentId: string, abortSignal?: AbortSignalLike): Promise<ListTabsResponse> {
+    public async getEnvelopeDocumentTabs(accountId: string, envelopeId: string, documentId: string, abortSignal?: AbortSignalLike): Promise<ListTabsResponse> {
         const requestPath = `/accounts/${accountId}/envelopes/${envelopeId}/documents/${documentId}/tabs`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<ListTabsResponse>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as ListTabsResponse;
@@ -1216,13 +1210,13 @@ export class DocusignClient extends ConnectorClientBase {
      * Update envelope prefill tabs
      * @remarks Update values for a list of prefill tabs
      */
-    public async updateEnvelopePrefillTabsAsync(input: UpdateEnvelopePrefillTabsInput, accountId: string, envelopeId: string, documentId: string, abortSignal?: AbortSignalLike): Promise<void> {
+    public async updateEnvelopePrefillTabs(input: UpdateEnvelopePrefillTabsInput, accountId: string, envelopeId: string, documentId: string, abortSignal?: AbortSignalLike): Promise<void> {
         const requestPath = `/accounts/${accountId}/envelopes/${envelopeId}/documents/${documentId}/tabs`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<void>("PUT", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `PUT ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `PUT ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
     }
 
@@ -1230,13 +1224,13 @@ export class DocusignClient extends ConnectorClientBase {
      * Get document tabs from template
      * @remarks Get document tabs from template
      */
-    public async getTemplateDocumentTabsAsync(accountId: string, templateId: string, documentId: string, abortSignal?: AbortSignalLike): Promise<ListTabsResponse> {
+    public async getTemplateDocumentTabs(accountId: string, templateId: string, documentId: string, abortSignal?: AbortSignalLike): Promise<ListTabsResponse> {
         const requestPath = `/accounts/${accountId}/templates/${templateId}/documents/${documentId}/tabs`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<ListTabsResponse>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as ListTabsResponse;
@@ -1246,13 +1240,13 @@ export class DocusignClient extends ConnectorClientBase {
      * Get document custom fields from envelope
      * @remarks Get document custom fields from envelope
      */
-    public async getEnvelopeDocumentFieldsAsync(accountId: string, envelopeId: string, documentId: string, abortSignal?: AbortSignalLike): Promise<ListEnvelopeDocumentFieldsResponse> {
+    public async getEnvelopeDocumentFields(accountId: string, envelopeId: string, documentId: string, abortSignal?: AbortSignalLike): Promise<ListEnvelopeDocumentFieldsResponse> {
         const requestPath = `/accounts/${accountId}/envelopes/${envelopeId}/documents/${documentId}/fields`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<ListEnvelopeDocumentFieldsResponse>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as ListEnvelopeDocumentFieldsResponse;
@@ -1262,7 +1256,7 @@ export class DocusignClient extends ConnectorClientBase {
      * Create envelope using composite templates
      * @remarks Create envelope using composite templates
      */
-    public async compositeTemplatesAsync(input: CompositeTemplateSchema, accountId: string, emailSubject?: string, emailBody?: string, status?: string, mergeRolesOnDraft?: string, abortSignal?: AbortSignalLike): Promise<CompositeTemplatesResponse> {
+    public async compositeTemplates(input: CompositeTemplateSchema, accountId: string, emailSubject?: string, emailBody?: string, status?: string, mergeRolesOnDraft?: string, abortSignal?: AbortSignalLike): Promise<CompositeTemplatesResponse> {
         const queryParams: string[] = [];
         if (emailSubject !== undefined) {
             queryParams.push(`emailSubject=${encodeURIComponent(String(emailSubject))}`);
@@ -1281,7 +1275,7 @@ export class DocusignClient extends ConnectorClientBase {
         const httpResponse = await this.httpClient.sendAsync<CompositeTemplatesResponse>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as CompositeTemplatesResponse;
@@ -1291,7 +1285,7 @@ export class DocusignClient extends ConnectorClientBase {
      * List envelopes
      * @remarks This action brings back relevant Docusign envelopes based on envelope status, date range, recipient name, recipient email address, envelope title, document name, or envelope custom field value. The output is the title, description, Envelope ID, document names, sender names, envelope status, status date, date sent, and a URL of the envelope which can be used as a link to view the envelope in Docusign.
      */
-    public async searchListEnvelopesAsync(accountId: string, recipientName?: string, recipientEmailId?: string, envelopeTitle?: string, customFieldName?: string, customFieldValue?: string, searchText?: string, envelopeStatus?: string, folderIds?: string, orderBy?: string, top?: string, skip?: string, fromDate?: string, toDate?: string, abortSignal?: AbortSignalLike): Promise<FilteredEnvelopeListResponse> {
+    public async searchListEnvelopes(accountId: string, recipientName?: string, recipientEmailId?: string, envelopeTitle?: string, customFieldName?: string, customFieldValue?: string, searchText?: string, envelopeStatus?: string, folderIds?: string, orderBy?: string, top?: string, skip?: string, fromDate?: string, toDate?: string, abortSignal?: AbortSignalLike): Promise<FilteredEnvelopeListResponse> {
         const queryParams: string[] = [];
         if (recipientName !== undefined) {
             queryParams.push(`recipientName=${encodeURIComponent(String(recipientName))}`);
@@ -1337,7 +1331,7 @@ export class DocusignClient extends ConnectorClientBase {
         const httpResponse = await this.httpClient.sendAsync<FilteredEnvelopeListResponse>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as FilteredEnvelopeListResponse;
@@ -1347,7 +1341,7 @@ export class DocusignClient extends ConnectorClientBase {
      * Create envelope using template
      * @remarks Create a new envelope using a specified template.
      */
-    public async createEnvelopeFromTemplateNoRecipientsAsync(accountId: string, templateId?: string, status?: string, abortSignal?: AbortSignalLike): Promise<CreateEnvelopeResponse> {
+    public async createEnvelopeFromTemplateNoRecipients(accountId: string, templateId?: string, status?: string, abortSignal?: AbortSignalLike): Promise<CreateEnvelopeResponse> {
         const queryParams: string[] = [];
         if (templateId !== undefined) {
             queryParams.push(`templateId=${encodeURIComponent(String(templateId))}`);
@@ -1360,7 +1354,7 @@ export class DocusignClient extends ConnectorClientBase {
         const httpResponse = await this.httpClient.sendAsync<CreateEnvelopeResponse>("POST", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as CreateEnvelopeResponse;
@@ -1370,7 +1364,7 @@ export class DocusignClient extends ConnectorClientBase {
      * Create envelope using template with recipients
      * @remarks Create a new envelope using a specified template and specify recipients.
      */
-    public async sendEnvelopeAsync(input: DynamicSigners, accountId: string, status?: string, templateId?: string, emailSubject?: string, emailBody?: string, abortSignal?: AbortSignalLike): Promise<CreateEnvelopeResponse> {
+    public async sendEnvelope(input: DynamicSigners, accountId: string, status?: string, templateId?: string, emailSubject?: string, emailBody?: string, abortSignal?: AbortSignalLike): Promise<CreateEnvelopeResponse> {
         const queryParams: string[] = [];
         if (status !== undefined) {
             queryParams.push(`status=${encodeURIComponent(String(status))}`);
@@ -1389,7 +1383,7 @@ export class DocusignClient extends ConnectorClientBase {
         const httpResponse = await this.httpClient.sendAsync<CreateEnvelopeResponse>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as CreateEnvelopeResponse;
@@ -1399,7 +1393,7 @@ export class DocusignClient extends ConnectorClientBase {
      * Create envelope using template with recipients and tabs
      * @remarks Create envelope using template with recipients and tabs
      */
-    public async sendEnvelopeWithRecipientFieldsAsync(input: DynamicRecipients, accountId: string, templateId?: string, mergeRolesOnDraft?: string, emailSubject?: string, abortSignal?: AbortSignalLike): Promise<CreateEnvelopeResponse> {
+    public async sendEnvelopeWithRecipientFields(input: DynamicRecipients, accountId: string, templateId?: string, mergeRolesOnDraft?: string, emailSubject?: string, abortSignal?: AbortSignalLike): Promise<CreateEnvelopeResponse> {
         const queryParams: string[] = [];
         if (templateId !== undefined) {
             queryParams.push(`templateId=${encodeURIComponent(String(templateId))}`);
@@ -1415,7 +1409,7 @@ export class DocusignClient extends ConnectorClientBase {
         const httpResponse = await this.httpClient.sendAsync<CreateEnvelopeResponse>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as CreateEnvelopeResponse;
@@ -1425,13 +1419,13 @@ export class DocusignClient extends ConnectorClientBase {
      * Send envelope
      * @remarks Send an existing envelope.
      */
-    public async sendDraftEnvelopeAsync(accountId: string, envelopeId: string, abortSignal?: AbortSignalLike): Promise<SendDraftEnvelopeResponse> {
+    public async sendDraftEnvelope(accountId: string, envelopeId: string, abortSignal?: AbortSignalLike): Promise<SendDraftEnvelopeResponse> {
         const requestPath = `/accounts/${accountId}/envelopes/${envelopeId}`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<SendDraftEnvelopeResponse>("PUT", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `PUT ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `PUT ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as SendDraftEnvelopeResponse;
@@ -1441,7 +1435,7 @@ export class DocusignClient extends ConnectorClientBase {
      * Get envelope custom field info
      * @remarks Get envelope custom field info.
      */
-    public async getEnvelopeCustomFieldAsync(accountId: string, envelopeId: string, fieldName?: string, abortSignal?: AbortSignalLike): Promise<EnvelopeCustomFieldResponse> {
+    public async getEnvelopeCustomField(accountId: string, envelopeId: string, fieldName?: string, abortSignal?: AbortSignalLike): Promise<EnvelopeCustomFieldResponse> {
         const queryParams: string[] = [];
         if (fieldName !== undefined) {
             queryParams.push(`fieldName=${encodeURIComponent(String(fieldName))}`);
@@ -1451,7 +1445,7 @@ export class DocusignClient extends ConnectorClientBase {
         const httpResponse = await this.httpClient.sendAsync<EnvelopeCustomFieldResponse>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as EnvelopeCustomFieldResponse;
@@ -1461,7 +1455,7 @@ export class DocusignClient extends ConnectorClientBase {
      * Update envelope custom field
      * @remarks Update value for the specified envelope custom field
      */
-    public async updateEnvelopeCustomFieldAsync(accountId: string, envelopeId: string, fieldId?: string, fieldType?: string, name?: string, value?: string, abortSignal?: AbortSignalLike): Promise<UpdateEnvelopeCustomFieldResponse> {
+    public async updateEnvelopeCustomField(accountId: string, envelopeId: string, fieldId?: string, fieldType?: string, name?: string, value?: string, abortSignal?: AbortSignalLike): Promise<UpdateEnvelopeCustomFieldResponse> {
         const queryParams: string[] = [];
         if (fieldId !== undefined) {
             queryParams.push(`fieldId=${encodeURIComponent(String(fieldId))}`);
@@ -1480,7 +1474,7 @@ export class DocusignClient extends ConnectorClientBase {
         const httpResponse = await this.httpClient.sendAsync<UpdateEnvelopeCustomFieldResponse>("PUT", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `PUT ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `PUT ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as UpdateEnvelopeCustomFieldResponse;
@@ -1490,7 +1484,7 @@ export class DocusignClient extends ConnectorClientBase {
      * Generate Embedded Sender URL
      * @remarks Generate Embedded Sender URL
      */
-    public async generateEmbeddedSenderURLAsync(input: AdditionalURLForSenderView, accountId: string, envelopeId: string, openIn?: string, returnUrl?: string, abortSignal?: AbortSignalLike): Promise<EmbeddedSenderResponse> {
+    public async generateEmbeddedSenderURL(input: AdditionalURLForSenderView, accountId: string, envelopeId: string, openIn?: string, returnUrl?: string, abortSignal?: AbortSignalLike): Promise<EmbeddedSenderResponse> {
         const queryParams: string[] = [];
         if (openIn !== undefined) {
             queryParams.push(`openIn=${encodeURIComponent(String(openIn))}`);
@@ -1503,7 +1497,7 @@ export class DocusignClient extends ConnectorClientBase {
         const httpResponse = await this.httpClient.sendAsync<EmbeddedSenderResponse>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as EmbeddedSenderResponse;
@@ -1513,13 +1507,13 @@ export class DocusignClient extends ConnectorClientBase {
      * List recipients from an envelope
      * @remarks List recipients from an envelope
      */
-    public async getRecipientStatusAsync(accountId: string, envelopeId: string, abortSignal?: AbortSignalLike): Promise<ListRecipientsResponse> {
+    public async getRecipientStatus(accountId: string, envelopeId: string, abortSignal?: AbortSignalLike): Promise<ListRecipientsResponse> {
         const requestPath = `/accounts/${accountId}/envelopes/${envelopeId}/recipients`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<ListRecipientsResponse>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as ListRecipientsResponse;
@@ -1529,7 +1523,7 @@ export class DocusignClient extends ConnectorClientBase {
      * Remove recipient from an envelope
      * @remarks Remove recipient from an envelope
      */
-    public async removeRecipientFromEnvelopeAsync(accountId: string, envelopeId: string, folderId?: string, removeRecipientFromEnvelopeRecipientId?: string, abortSignal?: AbortSignalLike): Promise<ListRecipientsResponse> {
+    public async removeRecipientFromEnvelope(accountId: string, envelopeId: string, folderId?: string, removeRecipientFromEnvelopeRecipientId?: string, abortSignal?: AbortSignalLike): Promise<ListRecipientsResponse> {
         const queryParams: string[] = [];
         if (folderId !== undefined) {
             queryParams.push(`folderId=${encodeURIComponent(String(folderId))}`);
@@ -1542,7 +1536,7 @@ export class DocusignClient extends ConnectorClientBase {
         const httpResponse = await this.httpClient.sendAsync<ListRecipientsResponse>("DELETE", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `DELETE ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `DELETE ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as ListRecipientsResponse;
@@ -1552,7 +1546,7 @@ export class DocusignClient extends ConnectorClientBase {
      * Get recipient info from envelope
      * @remarks Get recipient info from envelope
      */
-    public async getRecipientFieldsAsync(accountId: string, envelopeId: string, recipientEmail?: string, areaCode?: string, phoneNumber?: string, recipientId?: string, abortSignal?: AbortSignalLike): Promise<Signer> {
+    public async getRecipientFields(accountId: string, envelopeId: string, recipientEmail?: string, areaCode?: string, phoneNumber?: string, recipientId?: string, abortSignal?: AbortSignalLike): Promise<Signer> {
         const queryParams: string[] = [];
         if (recipientEmail !== undefined) {
             queryParams.push(`recipientEmail=${encodeURIComponent(String(recipientEmail))}`);
@@ -1571,7 +1565,7 @@ export class DocusignClient extends ConnectorClientBase {
         const httpResponse = await this.httpClient.sendAsync<Signer>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as Signer;
@@ -1581,13 +1575,13 @@ export class DocusignClient extends ConnectorClientBase {
      * Get audit event list
      * @remarks Get audit event list
      */
-    public async getAuditEventsAsync(accountId: string, envelopeId: string, abortSignal?: AbortSignalLike): Promise<AuditResponse> {
+    public async getAuditEvents(accountId: string, envelopeId: string, abortSignal?: AbortSignalLike): Promise<AuditResponse> {
         const requestPath = `/accounts/${accountId}/envelopes/${envelopeId}/audit_events`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<AuditResponse>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as AuditResponse;
@@ -1597,7 +1591,7 @@ export class DocusignClient extends ConnectorClientBase {
      * Add verification type to a recipient
      * @remarks Add verification type to a recipient.
      */
-    public async addVerificationToRecipientAsync(input: AdditionalRecipientData, accountId: string, envelopeId: string, recipientId?: string, recipientType?: string, verificationType?: string, abortSignal?: AbortSignalLike): Promise<AddVerificationToRecipientResponse> {
+    public async addVerificationToRecipient(input: AdditionalRecipientData, accountId: string, envelopeId: string, recipientId?: string, recipientType?: string, verificationType?: string, abortSignal?: AbortSignalLike): Promise<AddVerificationToRecipientResponse> {
         const queryParams: string[] = [];
         if (recipientId !== undefined) {
             queryParams.push(`recipientId=${encodeURIComponent(String(recipientId))}`);
@@ -1613,7 +1607,7 @@ export class DocusignClient extends ConnectorClientBase {
         const httpResponse = await this.httpClient.sendAsync<AddVerificationToRecipientResponse>("PUT", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `PUT ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `PUT ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as AddVerificationToRecipientResponse;
@@ -1623,7 +1617,7 @@ export class DocusignClient extends ConnectorClientBase {
      * Update recipient on an envelope
      * @remarks Update recipient on an envelope
      */
-    public async updateEnvelopeRecipientAsync(input: AdditionalRecipientParamsSchema, accountId: string, envelopeId: string, recipientId?: string, signatureType?: string, recipientType?: string, clientUserId?: string, embeddedRecipientStartURL?: string, routingOrder?: string, emailNotificationLanguage?: string, emailNotificationSubject?: string, emailNotificationBody?: string, note?: string, roleName?: string, countryCode?: string, phoneNumber?: string, signingGroupId?: string, abortSignal?: AbortSignalLike): Promise<Signer> {
+    public async updateEnvelopeRecipient(input: AdditionalRecipientParamsSchema, accountId: string, envelopeId: string, recipientId?: string, signatureType?: string, recipientType?: string, clientUserId?: string, embeddedRecipientStartURL?: string, routingOrder?: string, emailNotificationLanguage?: string, emailNotificationSubject?: string, emailNotificationBody?: string, note?: string, roleName?: string, countryCode?: string, phoneNumber?: string, signingGroupId?: string, abortSignal?: AbortSignalLike): Promise<Signer> {
         const queryParams: string[] = [];
         if (recipientId !== undefined) {
             queryParams.push(`recipientId=${encodeURIComponent(String(recipientId))}`);
@@ -1672,7 +1666,7 @@ export class DocusignClient extends ConnectorClientBase {
         const httpResponse = await this.httpClient.sendAsync<Signer>("PUT", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `PUT ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `PUT ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as Signer;
@@ -1682,7 +1676,7 @@ export class DocusignClient extends ConnectorClientBase {
      * Apply a template to documents
      * @remarks Apply a template to documents
      */
-    public async applyTemplatesToDocumentsAsync(input: ApplyTemplatesToDocumentsInput, accountId: string, envelopeId: string, templateId?: string, preserveTemplateRecipient?: string, abortSignal?: AbortSignalLike): Promise<void> {
+    public async applyTemplatesToDocuments(input: ApplyTemplatesToDocumentsInput, accountId: string, envelopeId: string, templateId?: string, preserveTemplateRecipient?: string, abortSignal?: AbortSignalLike): Promise<void> {
         const queryParams: string[] = [];
         if (templateId !== undefined) {
             queryParams.push(`templateId=${encodeURIComponent(String(templateId))}`);
@@ -1695,7 +1689,7 @@ export class DocusignClient extends ConnectorClientBase {
         const httpResponse = await this.httpClient.sendAsync<void>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
     }
 
@@ -1703,7 +1697,7 @@ export class DocusignClient extends ConnectorClientBase {
      * Create bulk send list
      * @remarks Create bulk send list
      */
-    public async createBulkSendListAsync(input: CreateBulkSendListInput, accountId: string, name?: string, abortSignal?: AbortSignalLike): Promise<BulkSendListGuid> {
+    public async createBulkSendList(input: CreateBulkSendListInput, accountId: string, name?: string, abortSignal?: AbortSignalLike): Promise<BulkSendListGuid> {
         const queryParams: string[] = [];
         if (name !== undefined) {
             queryParams.push(`name=${encodeURIComponent(String(name))}`);
@@ -1713,7 +1707,7 @@ export class DocusignClient extends ConnectorClientBase {
         const httpResponse = await this.httpClient.sendAsync<BulkSendListGuid>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as BulkSendListGuid;
@@ -1723,7 +1717,7 @@ export class DocusignClient extends ConnectorClientBase {
      * Bulk send envelope using template
      * @remarks Bulk send envelope using template
      */
-    public async bulkSendAsync(accountId: string, bulkSendListId: string, envelopeOrTemplateId?: string, abortSignal?: AbortSignalLike): Promise<BulkSendListGuid> {
+    public async sendBulk(accountId: string, bulkSendListId: string, envelopeOrTemplateId?: string, abortSignal?: AbortSignalLike): Promise<BulkSendListGuid> {
         const queryParams: string[] = [];
         if (envelopeOrTemplateId !== undefined) {
             queryParams.push(`envelopeOrTemplateId=${encodeURIComponent(String(envelopeOrTemplateId))}`);
@@ -1733,7 +1727,7 @@ export class DocusignClient extends ConnectorClientBase {
         const httpResponse = await this.httpClient.sendAsync<BulkSendListGuid>("POST", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as BulkSendListGuid;
@@ -1743,13 +1737,13 @@ export class DocusignClient extends ConnectorClientBase {
      * Login
      * @remarks Login
      */
-    public async getLoginAccountsAsync(abortSignal?: AbortSignalLike): Promise<GetLoginAccountsResponse> {
+    public async getLoginAccounts(abortSignal?: AbortSignalLike): Promise<GetLoginAccountsResponse> {
         const requestPath = `/oauth/userinfo`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<GetLoginAccountsResponse>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as GetLoginAccountsResponse;
@@ -1759,13 +1753,13 @@ export class DocusignClient extends ConnectorClientBase {
      * List templates
      * @remarks List templates for a specific account.
      */
-    public async getEnvelopeTemplatesAsync(accountId: string, abortSignal?: AbortSignalLike): Promise<ListTemplatesResponse> {
+    public async getEnvelopeTemplates(accountId: string, abortSignal?: AbortSignalLike): Promise<ListTemplatesResponse> {
         const requestPath = `/accounts/${accountId}/templates`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<ListTemplatesResponse>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as ListTemplatesResponse;
@@ -1775,13 +1769,13 @@ export class DocusignClient extends ConnectorClientBase {
      * Add documents to an envelope
      * @remarks Add documents to an envelope.
      */
-    public async addDocumentsToEnvelopeAsync(input: AddDocumentsToEnvelopeInput, accountId: string, envelopeId: string, abortSignal?: AbortSignalLike): Promise<AddDocumentsResponse> {
+    public async addDocumentsToEnvelope(input: AddDocumentsToEnvelopeInput, accountId: string, envelopeId: string, abortSignal?: AbortSignalLike): Promise<AddDocumentsResponse> {
         const requestPath = `/accounts/${accountId}/envelopes/${envelopeId}/documents`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<AddDocumentsResponse>("PUT", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `PUT ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `PUT ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as AddDocumentsResponse;
@@ -1791,13 +1785,13 @@ export class DocusignClient extends ConnectorClientBase {
      * List documents from a template
      * @remarks List documents from a template
      */
-    public async listTemplateDocumentsAsync(accountId: string, templateId: string, abortSignal?: AbortSignalLike): Promise<ListTemplateDocumentsResponse> {
+    public async listTemplateDocuments(accountId: string, templateId: string, abortSignal?: AbortSignalLike): Promise<ListTemplateDocumentsResponse> {
         const requestPath = `/accounts/${accountId}/templates/${templateId}/documents`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<ListTemplateDocumentsResponse>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as ListTemplateDocumentsResponse;
@@ -1807,13 +1801,13 @@ export class DocusignClient extends ConnectorClientBase {
      * List documents from an envelope
      * @remarks List documents from an envelope
      */
-    public async listEnvelopeDocumentsAsync(accountId: string, envelopeId: string, abortSignal?: AbortSignalLike): Promise<ListDocumentsResponse> {
+    public async listEnvelopeDocuments(accountId: string, envelopeId: string, abortSignal?: AbortSignalLike): Promise<ListDocumentsResponse> {
         const requestPath = `/accounts/${accountId}/envelopes/${envelopeId}/envelopeDocuments`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<ListDocumentsResponse>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as ListDocumentsResponse;
@@ -1823,7 +1817,7 @@ export class DocusignClient extends ConnectorClientBase {
      * Get document info from envelope
      * @remarks Get document info from envelope
      */
-    public async getEnvelopeDocumentInfoAsync(accountId: string, envelopeId: string, documentName?: string, abortSignal?: AbortSignalLike): Promise<EnvelopeDocument> {
+    public async getEnvelopeDocumentInfo(accountId: string, envelopeId: string, documentName?: string, abortSignal?: AbortSignalLike): Promise<EnvelopeDocument> {
         const queryParams: string[] = [];
         if (documentName !== undefined) {
             queryParams.push(`documentName=${encodeURIComponent(String(documentName))}`);
@@ -1833,7 +1827,7 @@ export class DocusignClient extends ConnectorClientBase {
         const httpResponse = await this.httpClient.sendAsync<EnvelopeDocument>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as EnvelopeDocument;
@@ -1843,7 +1837,7 @@ export class DocusignClient extends ConnectorClientBase {
      * Get info for recipient tab
      * @remarks Returns the value of the tab for the given recipient
      */
-    public async getTabInfoAsync(accountId: string, envelopeId: string, recipientId: string, tabLabel?: string, abortSignal?: AbortSignalLike): Promise<Tab> {
+    public async getTabInfo(accountId: string, envelopeId: string, recipientId: string, tabLabel?: string, abortSignal?: AbortSignalLike): Promise<Tab> {
         const queryParams: string[] = [];
         if (tabLabel !== undefined) {
             queryParams.push(`tabLabel=${encodeURIComponent(String(tabLabel))}`);
@@ -1853,7 +1847,7 @@ export class DocusignClient extends ConnectorClientBase {
         const httpResponse = await this.httpClient.sendAsync<Tab>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as Tab;
@@ -1863,7 +1857,7 @@ export class DocusignClient extends ConnectorClientBase {
      * Add tabs for a recipient on an envelope
      * @remarks Add tabs for a recipient on an envelope
      */
-    public async addRecipientTabsAsync(input: AnchorTabSchema, accountId: string, envelopeId: string, recipientId: string, tabType?: string, abortSignal?: AbortSignalLike): Promise<AddRecipientTabsResponse> {
+    public async addRecipientTabs(input: AnchorTabSchema, accountId: string, envelopeId: string, recipientId: string, tabType?: string, abortSignal?: AbortSignalLike): Promise<AddRecipientTabsResponse> {
         const queryParams: string[] = [];
         if (tabType !== undefined) {
             queryParams.push(`tabType=${encodeURIComponent(String(tabType))}`);
@@ -1873,7 +1867,7 @@ export class DocusignClient extends ConnectorClientBase {
         const httpResponse = await this.httpClient.sendAsync<AddRecipientTabsResponse>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as AddRecipientTabsResponse;
@@ -1883,13 +1877,13 @@ export class DocusignClient extends ConnectorClientBase {
      * Update recipient tab values on an envelope
      * @remarks Update recipient tab values on an envelope
      */
-    public async updateRecipientTabsValuesAsync(input: UpdateRecipientTabsValuesInput, accountId: string, envelopeId: string, recipientId: string, abortSignal?: AbortSignalLike): Promise<void> {
+    public async updateRecipientTabsValues(input: UpdateRecipientTabsValuesInput, accountId: string, envelopeId: string, recipientId: string, abortSignal?: AbortSignalLike): Promise<void> {
         const requestPath = `/accounts/${accountId}/envelopes/${envelopeId}/recipients/${recipientId}/tabs`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<void>("PUT", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `PUT ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `PUT ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
     }
 
@@ -1897,13 +1891,13 @@ export class DocusignClient extends ConnectorClientBase {
      * Get recipient tabs from envelope
      * @remarks Get recipient tabs from envelope
      */
-    public async getEnvelopeRecipientTabsAsync(accountId: string, envelopeId: string, recipientId: string, abortSignal?: AbortSignalLike): Promise<RecipientTabsResponse> {
+    public async getEnvelopeRecipientTabs(accountId: string, envelopeId: string, recipientId: string, abortSignal?: AbortSignalLike): Promise<RecipientTabsResponse> {
         const requestPath = `/accounts/${accountId}/envelopes/${envelopeId}/recipients/${recipientId}/recipientTabs`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<RecipientTabsResponse>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as RecipientTabsResponse;
@@ -1913,7 +1907,7 @@ export class DocusignClient extends ConnectorClientBase {
      * Start Docusign workflow
      * @remarks Start Docusign workflow
      */
-    public async triggerMaestroFlowAsync(input: MaestroInputVariables, accountId: string, workflowId: string, instanceName?: string, abortSignal?: AbortSignalLike): Promise<TriggerMaestroFlowResponse> {
+    public async triggerMaestroFlow(input: MaestroInputVariables, accountId: string, workflowId: string, instanceName?: string, abortSignal?: AbortSignalLike): Promise<TriggerMaestroFlowResponse> {
         const queryParams: string[] = [];
         if (instanceName !== undefined) {
             queryParams.push(`instanceName=${encodeURIComponent(String(instanceName))}`);
@@ -1923,7 +1917,7 @@ export class DocusignClient extends ConnectorClientBase {
         const httpResponse = await this.httpClient.sendAsync<TriggerMaestroFlowResponse>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as TriggerMaestroFlowResponse;
@@ -1933,13 +1927,13 @@ export class DocusignClient extends ConnectorClientBase {
      * Show build Number (For reference only. Do not include in a flow for execution)
      * @remarks Identifier for the currently deployed build.
      */
-    public async buildNumberAsync(input: BuildNumberSchema, abortSignal?: AbortSignalLike): Promise<BuildNumberResponse> {
+    public async buildNumber(input: BuildNumberSchema, abortSignal?: AbortSignalLike): Promise<BuildNumberResponse> {
         const requestPath = `/build_number`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<BuildNumberResponse>("PUT", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `PUT ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `PUT ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as BuildNumberResponse;
@@ -1949,7 +1943,7 @@ export class DocusignClient extends ConnectorClientBase {
      * Add recipient to an envelope
      * @remarks Add recipient to an envelope.
      */
-    public async addRecipientToEnvelopeAsync(input: AdditionalRecipientParamsSchema, accountId: string, envelopeId: string, recipientType?: string, clientUserId?: string, recipientId?: string, embeddedRecipientStartURL?: string, routingOrder?: string, emailNotificationLanguage?: string, emailNotificationSubject?: string, emailNotificationBody?: string, note?: string, roleName?: string, countryCode?: string, phoneNumber?: string, signingGroupId?: string, signatureType?: string, workflowId?: string, abortSignal?: AbortSignalLike): Promise<Signer> {
+    public async addRecipientToEnvelope(input: AdditionalRecipientParamsSchema, accountId: string, envelopeId: string, recipientType?: string, clientUserId?: string, recipientId?: string, embeddedRecipientStartURL?: string, routingOrder?: string, emailNotificationLanguage?: string, emailNotificationSubject?: string, emailNotificationBody?: string, note?: string, roleName?: string, countryCode?: string, phoneNumber?: string, signingGroupId?: string, signatureType?: string, workflowId?: string, abortSignal?: AbortSignalLike): Promise<Signer> {
         const queryParams: string[] = [];
         if (recipientType !== undefined) {
             queryParams.push(`recipientType=${encodeURIComponent(String(recipientType))}`);
@@ -2001,7 +1995,7 @@ export class DocusignClient extends ConnectorClientBase {
         const httpResponse = await this.httpClient.sendAsync<Signer>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as Signer;
@@ -2011,7 +2005,7 @@ export class DocusignClient extends ConnectorClientBase {
      * Create envelope
      * @remarks Create a new blank envelope.
      */
-    public async createBlankEnvelopeAsync(input: CombinedEmailBodyAndCustomFields, accountId: string, emailSubject?: string, abortSignal?: AbortSignalLike): Promise<CreateEnvelopeResponse> {
+    public async createBlankEnvelope(input: CombinedEmailBodyAndCustomFields, accountId: string, emailSubject?: string, abortSignal?: AbortSignalLike): Promise<CreateEnvelopeResponse> {
         const queryParams: string[] = [];
         if (emailSubject !== undefined) {
             queryParams.push(`emailSubject=${encodeURIComponent(String(emailSubject))}`);
@@ -2021,7 +2015,7 @@ export class DocusignClient extends ConnectorClientBase {
         const httpResponse = await this.httpClient.sendAsync<CreateEnvelopeResponse>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as CreateEnvelopeResponse;
@@ -2031,7 +2025,7 @@ export class DocusignClient extends ConnectorClientBase {
      * Generate Embedded Signing URL
      * @remarks Generate Embedded Signing URL
      */
-    public async generateEmbeddedSigningURLAsync(input: DynamicSigningUrlFields, accountId: string, envelopeId: string, isInPersonSigner?: string, authenticationMethod?: string, returnUrl?: string, abortSignal?: AbortSignalLike): Promise<EmbeddedSigningResponse> {
+    public async generateEmbeddedSigningURL(input: DynamicSigningUrlFields, accountId: string, envelopeId: string, isInPersonSigner?: string, authenticationMethod?: string, returnUrl?: string, abortSignal?: AbortSignalLike): Promise<EmbeddedSigningResponse> {
         const queryParams: string[] = [];
         if (isInPersonSigner !== undefined) {
             queryParams.push(`isInPersonSigner=${encodeURIComponent(String(isInPersonSigner))}`);
@@ -2047,7 +2041,7 @@ export class DocusignClient extends ConnectorClientBase {
         const httpResponse = await this.httpClient.sendAsync<EmbeddedSigningResponse>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as EmbeddedSigningResponse;
@@ -2057,7 +2051,7 @@ export class DocusignClient extends ConnectorClientBase {
      * Get documents from an envelope
      * @remarks Get documents from an envelope
      */
-    public async getDocumentsAsync(accountId: string, envelopeId: string, documentId: string, language?: string, abortSignal?: AbortSignalLike): Promise<Blob> {
+    public async getDocuments(accountId: string, envelopeId: string, documentId: string, language?: string, abortSignal?: AbortSignalLike): Promise<Blob> {
         const queryParams: string[] = [];
         if (language !== undefined) {
             queryParams.push(`language=${encodeURIComponent(String(language))}`);
@@ -2067,7 +2061,7 @@ export class DocusignClient extends ConnectorClientBase {
         const httpResponse = await this.httpClient.sendAsync<Blob>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as Blob;

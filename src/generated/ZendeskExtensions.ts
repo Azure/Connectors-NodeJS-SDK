@@ -3,8 +3,9 @@
 
 import type { AbortSignalLike } from "@azure/abort-controller";
 import type { TokenCredential } from "@azure/core-auth";
+import type { PagedAsyncIterableIterator } from "@azure/core-paging";
 import { ConnectorClientBase } from "../azureConnectors/clientBase.ts";
-import { ConnectorException } from "../azureConnectors/connectorException.ts";
+import { ConnectorError } from "../azureConnectors/connectorError.ts";
 import { ConnectorClientOptions } from "../azureConnectors/options.ts";
 import { TriggerCallbackPayload } from "../azureConnectors/triggerPayload.ts";
 
@@ -46,8 +47,8 @@ export interface TableMetadata {
     title?: string;
     "x-ms-permission"?: string;
     "x-ms-capabilities"?: TableCapabilitiesMetadata;
-    schema?: ObjectEntity;
-    referencedEntities?: ObjectEntity;
+    schema?: Record<string, unknown>;
+    referencedEntities?: Record<string, unknown>;
 }
 
 /**
@@ -150,6 +151,8 @@ export interface TablesList {
  */
 export interface ItemsList {
     value?: Array<Item>;
+    /** The URL to retrieve the next page. */
+    "@odata.nextLink"?: string;
 }
 
 /**
@@ -282,13 +285,13 @@ export class ZendeskClient extends ConnectorClientBase {
      * Get tables
      * @remarks Retrieves Zendesk tables from a site
      */
-    public async getTablesAsync(abortSignal?: AbortSignalLike): Promise<TablesList> {
+    public async getTables(abortSignal?: AbortSignalLike): Promise<TablesList> {
         const requestPath = `/datasets/default/tables`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<TablesList>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as TablesList;
@@ -298,7 +301,7 @@ export class ZendeskClient extends ConnectorClientBase {
      * Get items
      * @remarks Retrieves Zendesk items of a certain Zendesk type (example: 'Ticket')
      */
-    public async getItemsAsync(table: string, filter?: string, orderby?: string, skip?: string, top?: string, select?: string, abortSignal?: AbortSignalLike): Promise<ItemsList> {
+    public getItems(table: string, filter?: string, orderby?: string, skip?: string, top?: string, select?: string, abortSignal?: AbortSignalLike): PagedAsyncIterableIterator<Item> {
         const queryParams: string[] = [];
         if (filter !== undefined) {
             queryParams.push(`$filter=${encodeURIComponent(String(filter))}`);
@@ -315,28 +318,35 @@ export class ZendeskClient extends ConnectorClientBase {
         if (select !== undefined) {
             queryParams.push(`$select=${encodeURIComponent(String(select))}`);
         }
-        const requestPath = `/datasets/default/tables/${table}/items` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
-        const requestUrl = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<ItemsList>("GET", requestUrl, undefined, undefined, abortSignal);
+        const requestPath = `/datasets/default/tables/${encodeURIComponent(encodeURIComponent(String(table)))}/items` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
+        return this.createPageable<ItemsList, Item>(
+            requestPath,
+            async (requestUrl) => {
+                const httpResponse = await this.httpClient.sendAsync<ItemsList>("GET", requestUrl, undefined, undefined, abortSignal);
 
-        if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
-        }
+                if (!httpResponse.isSuccessStatusCode) {
+                    const operationPath = this.getOperationPath(requestUrl);
+                    throw new ConnectorError(this.connectorName, `GET ${operationPath}`, httpResponse.statusCode, httpResponse.text);
+                }
 
-        return httpResponse.value as ItemsList;
+                return httpResponse.value as ItemsList;
+            },
+            "value",
+            "@odata.nextLink",
+        );
     }
 
     /**
      * Create Item
      * @remarks Creates a Zendesk item
      */
-    public async postItemAsync(input: Item, table: string, abortSignal?: AbortSignalLike): Promise<Item> {
-        const requestPath = `/datasets/default/tables/${table}/items`;
+    public async postItem(input: Item, table: string, abortSignal?: AbortSignalLike): Promise<Item> {
+        const requestPath = `/datasets/default/tables/${encodeURIComponent(encodeURIComponent(String(table)))}/items`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<Item>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as Item;
@@ -346,13 +356,13 @@ export class ZendeskClient extends ConnectorClientBase {
      * Get item
      * @remarks Retrieves a Zendesk item
      */
-    public async getItemAsync(table: string, id: string, abortSignal?: AbortSignalLike): Promise<Item> {
-        const requestPath = `/datasets/default/tables/${table}/items/${id}`;
+    public async getItem(table: string, id: string, abortSignal?: AbortSignalLike): Promise<Item> {
+        const requestPath = `/datasets/default/tables/${encodeURIComponent(encodeURIComponent(String(table)))}/items/${encodeURIComponent(encodeURIComponent(String(id)))}`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<Item>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as Item;
@@ -362,13 +372,13 @@ export class ZendeskClient extends ConnectorClientBase {
      * Delete item
      * @remarks Deletes a Zendesk item
      */
-    public async deleteItemAsync(table: string, id: string, abortSignal?: AbortSignalLike): Promise<void> {
-        const requestPath = `/datasets/default/tables/${table}/items/${id}`;
+    public async deleteItem(table: string, id: string, abortSignal?: AbortSignalLike): Promise<void> {
+        const requestPath = `/datasets/default/tables/${encodeURIComponent(encodeURIComponent(String(table)))}/items/${encodeURIComponent(encodeURIComponent(String(id)))}`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<void>("DELETE", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `DELETE ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `DELETE ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
     }
 
@@ -376,13 +386,13 @@ export class ZendeskClient extends ConnectorClientBase {
      * Update item
      * @remarks Updates an existing Zendesk item
      */
-    public async patchItemAsync(input: Item, table: string, id: string, abortSignal?: AbortSignalLike): Promise<Item> {
-        const requestPath = `/datasets/default/tables/${table}/items/${id}`;
+    public async patchItem(input: Item, table: string, id: string, abortSignal?: AbortSignalLike): Promise<Item> {
+        const requestPath = `/datasets/default/tables/${encodeURIComponent(encodeURIComponent(String(table)))}/items/${encodeURIComponent(encodeURIComponent(String(id)))}`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<Item>("PATCH", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `PATCH ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `PATCH ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as Item;
@@ -392,7 +402,7 @@ export class ZendeskClient extends ConnectorClientBase {
      * Search Articles
      * @remarks Returns a default number of 25 articles per page, up to a maximum of 1000 results.
      */
-    public async searchArticlesAsync(query?: string, locale?: string, brandId?: string, category?: string, section?: string, labelNames?: string, multibrand?: string, abortSignal?: AbortSignalLike): Promise<SearchResult> {
+    public async searchArticles(query?: string, locale?: string, brandId?: string, category?: string, section?: string, labelNames?: string, multibrand?: string, abortSignal?: AbortSignalLike): Promise<SearchResult> {
         const queryParams: string[] = [];
         if (query !== undefined) {
             queryParams.push(`query=${encodeURIComponent(String(query))}`);
@@ -420,7 +430,7 @@ export class ZendeskClient extends ConnectorClientBase {
         const httpResponse = await this.httpClient.sendAsync<SearchResult>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as SearchResult;

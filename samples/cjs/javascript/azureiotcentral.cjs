@@ -15,7 +15,7 @@
 
 "use strict";
 
-const { ManagedIdentityTokenProvider, ConnectorException } = require("@azure/connectors");
+const { ManagedIdentityTokenProvider, ConnectorError } = require("@azure/connectors");
 const { AzureiotcentralClient } = require("@azure/connectors/generated/AzureiotcentralExtensions");
 
 const CONNECTION_URL = process.env.AZUREIOTCENTRAL_CONNECTION_URL ?? "";
@@ -31,10 +31,10 @@ async function main() {
 
     // Example 1: List the device groups in the application.
     try {
-        const deviceGroups = await client.deviceGroupsListAsync();
+        const deviceGroups = await client.listDeviceGroups();
         console.log("Device groups:", JSON.stringify(deviceGroups, null, 2));
     } catch (error) {
-        if (error instanceof ConnectorException) {
+        if (error instanceof ConnectorError) {
             console.log(`Connector error (${error.statusCode}): ${error.message}`);
         } else {
             throw error;

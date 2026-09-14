@@ -4,7 +4,7 @@
 import type { AbortSignalLike } from "@azure/abort-controller";
 import type { TokenCredential } from "@azure/core-auth";
 import { ConnectorClientBase } from "../azureConnectors/clientBase.ts";
-import { ConnectorException } from "../azureConnectors/connectorException.ts";
+import { ConnectorError } from "../azureConnectors/connectorError.ts";
 import { ConnectorClientOptions } from "../azureConnectors/options.ts";
 
 // #region Types
@@ -3928,13 +3928,13 @@ export class Starrezrestv1Client extends ConnectorClientBase {
      * Get Entry
      * @remarks Retrieves one or more records from the Entry table.
      */
-    public async selectEntryAsync(input: SelectEntryInput, abortSignal?: AbortSignalLike): Promise<Array<Record<string, unknown>>> {
+    public async selectEntry(input: SelectEntryInput, abortSignal?: AbortSignalLike): Promise<Array<Record<string, unknown>>> {
         const requestPath = `/select/entry.json`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<Array<Record<string, unknown>>>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as Array<Record<string, unknown>>;
@@ -3944,13 +3944,13 @@ export class Starrezrestv1Client extends ConnectorClientBase {
      * Create Entry
      * @remarks Creates a new record in the Entry table.
      */
-    public async createEntryAsync(input: CreateEntryInput, abortSignal?: AbortSignalLike): Promise<CreateEntryResponse> {
+    public async createEntry(input: CreateEntryInput, abortSignal?: AbortSignalLike): Promise<CreateEntryResponse> {
         const requestPath = `/create/entry.json`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<CreateEntryResponse>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as CreateEntryResponse;
@@ -3960,13 +3960,13 @@ export class Starrezrestv1Client extends ConnectorClientBase {
      * Update Entry
      * @remarks Updates an existing record in the Entry table.
      */
-    public async updateEntryAsync(input: UpdateEntryInput, entryId: string, abortSignal?: AbortSignalLike): Promise<UpdateEntryResponse> {
+    public async updateEntry(input: UpdateEntryInput, entryId: string, abortSignal?: AbortSignalLike): Promise<UpdateEntryResponse> {
         const requestPath = `/update/entry.json/${entryId}`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<UpdateEntryResponse>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as UpdateEntryResponse;
@@ -3976,13 +3976,13 @@ export class Starrezrestv1Client extends ConnectorClientBase {
      * Delete
      * @remarks Deletes a record from the specified table.
      */
-    public async deleteAsync(tableName: string, rowId: string, abortSignal?: AbortSignalLike): Promise<DeleteResponse> {
+    public async delete(tableName: string, rowId: string, abortSignal?: AbortSignalLike): Promise<DeleteResponse> {
         const requestPath = `/delete/${tableName}.json/${rowId}`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<DeleteResponse>("POST", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as DeleteResponse;
@@ -3992,13 +3992,13 @@ export class Starrezrestv1Client extends ConnectorClientBase {
      * Get Entry Custom Field
      * @remarks Retrieves one or more records from the Entry Custom Field table.
      */
-    public async selectEntryCustomFieldAsync(input: SelectEntryCustomFieldInput, abortSignal?: AbortSignalLike): Promise<Array<Record<string, unknown>>> {
+    public async selectEntryCustomField(input: SelectEntryCustomFieldInput, abortSignal?: AbortSignalLike): Promise<Array<Record<string, unknown>>> {
         const requestPath = `/select/EntryCustomField.json`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<Array<Record<string, unknown>>>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as Array<Record<string, unknown>>;
@@ -4008,13 +4008,13 @@ export class Starrezrestv1Client extends ConnectorClientBase {
      * Update Entry Custom Field
      * @remarks Updates an existing record in the Entry Custom Field table.
      */
-    public async updateEntryCustomFieldAsync(input: UpdateEntryCustomFieldInput, entryCustomFieldId: string, abortSignal?: AbortSignalLike): Promise<UpdateEntryCustomFieldResponse> {
+    public async updateEntryCustomField(input: UpdateEntryCustomFieldInput, entryCustomFieldId: string, abortSignal?: AbortSignalLike): Promise<UpdateEntryCustomFieldResponse> {
         const requestPath = `/update/entryCustomField.json/${entryCustomFieldId}`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<UpdateEntryCustomFieldResponse>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as UpdateEntryCustomFieldResponse;
@@ -4024,13 +4024,13 @@ export class Starrezrestv1Client extends ConnectorClientBase {
      * Get Term
      * @remarks Retrieves one or more records from the Term table.
      */
-    public async selectTermAsync(input: SelectTermInput, abortSignal?: AbortSignalLike): Promise<Array<Record<string, unknown>>> {
+    public async selectTerm(input: SelectTermInput, abortSignal?: AbortSignalLike): Promise<Array<Record<string, unknown>>> {
         const requestPath = `/select/Term.json`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<Array<Record<string, unknown>>>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as Array<Record<string, unknown>>;
@@ -4040,13 +4040,13 @@ export class Starrezrestv1Client extends ConnectorClientBase {
      * Get Entry Address
      * @remarks Retrieves one or more records from the Entry Address table.
      */
-    public async selectEntryAddressAsync(input: SelectEntryAddressInput, abortSignal?: AbortSignalLike): Promise<Array<Record<string, unknown>>> {
+    public async selectEntryAddress(input: SelectEntryAddressInput, abortSignal?: AbortSignalLike): Promise<Array<Record<string, unknown>>> {
         const requestPath = `/select/EntryAddress.json`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<Array<Record<string, unknown>>>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as Array<Record<string, unknown>>;
@@ -4056,13 +4056,13 @@ export class Starrezrestv1Client extends ConnectorClientBase {
      * Update Entry Address
      * @remarks Updates an existing record in the Entry Address table.
      */
-    public async updateEntryAddressAsync(input: UpdateEntryAddressInput, entryAddressId: string, abortSignal?: AbortSignalLike): Promise<UpdateEntryAddressResponse> {
+    public async updateEntryAddress(input: UpdateEntryAddressInput, entryAddressId: string, abortSignal?: AbortSignalLike): Promise<UpdateEntryAddressResponse> {
         const requestPath = `/update/entryAddress.json/${entryAddressId}`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<UpdateEntryAddressResponse>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as UpdateEntryAddressResponse;
@@ -4072,13 +4072,13 @@ export class Starrezrestv1Client extends ConnectorClientBase {
      * Get Entry Application
      * @remarks Retrieves one or more records from the Entry Application table.
      */
-    public async selectEntryApplicationAsync(input: SelectEntryApplicationInput, abortSignal?: AbortSignalLike): Promise<Array<Record<string, unknown>>> {
+    public async selectEntryApplication(input: SelectEntryApplicationInput, abortSignal?: AbortSignalLike): Promise<Array<Record<string, unknown>>> {
         const requestPath = `/select/EntryApplication.json`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<Array<Record<string, unknown>>>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as Array<Record<string, unknown>>;
@@ -4088,13 +4088,13 @@ export class Starrezrestv1Client extends ConnectorClientBase {
      * Create Entry Application
      * @remarks Creates a new record in the Entry Application table.
      */
-    public async createEntryApplicationAsync(input: CreateEntryApplicationInput, abortSignal?: AbortSignalLike): Promise<CreateEntryApplicationResponse> {
+    public async createEntryApplication(input: CreateEntryApplicationInput, abortSignal?: AbortSignalLike): Promise<CreateEntryApplicationResponse> {
         const requestPath = `/create/entryapplication.json`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<CreateEntryApplicationResponse>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as CreateEntryApplicationResponse;
@@ -4104,13 +4104,13 @@ export class Starrezrestv1Client extends ConnectorClientBase {
      * Update Entry Application
      * @remarks Updates an existing record in the Entry Application table.
      */
-    public async updateEntryApplicationAsync(input: UpdateEntryApplicationInput, entryApplicationId: string, abortSignal?: AbortSignalLike): Promise<UpdateEntryApplicationResponse> {
+    public async updateEntryApplication(input: UpdateEntryApplicationInput, entryApplicationId: string, abortSignal?: AbortSignalLike): Promise<UpdateEntryApplicationResponse> {
         const requestPath = `/update/entryapplication.json/${entryApplicationId}`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<UpdateEntryApplicationResponse>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as UpdateEntryApplicationResponse;
@@ -4120,13 +4120,13 @@ export class Starrezrestv1Client extends ConnectorClientBase {
      * Get Term Session
      * @remarks Retrieves one or more records from the Term Session table.
      */
-    public async selectTermSessionAsync(input: SelectTermSessionInput, abortSignal?: AbortSignalLike): Promise<Array<Record<string, unknown>>> {
+    public async selectTermSession(input: SelectTermSessionInput, abortSignal?: AbortSignalLike): Promise<Array<Record<string, unknown>>> {
         const requestPath = `/select/TermSession.json`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<Array<Record<string, unknown>>>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as Array<Record<string, unknown>>;
@@ -4136,13 +4136,13 @@ export class Starrezrestv1Client extends ConnectorClientBase {
      * Get Entry Detail
      * @remarks Retrieves one or more records from the Entry Detail table.
      */
-    public async selectEntryDetailAsync(input: SelectEntryDetailInput, abortSignal?: AbortSignalLike): Promise<Array<Record<string, unknown>>> {
+    public async selectEntryDetail(input: SelectEntryDetailInput, abortSignal?: AbortSignalLike): Promise<Array<Record<string, unknown>>> {
         const requestPath = `/select/EntryDetail.json`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<Array<Record<string, unknown>>>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as Array<Record<string, unknown>>;
@@ -4152,13 +4152,13 @@ export class Starrezrestv1Client extends ConnectorClientBase {
      * Update Entry Detail
      * @remarks Updates an existing record in the Entry Detail table.
      */
-    public async updateEntryDetailAsync(input: UpdateEntryDetailInput, entryDetailId: string, abortSignal?: AbortSignalLike): Promise<UpdateEntryDetailResponse> {
+    public async updateEntryDetail(input: UpdateEntryDetailInput, entryDetailId: string, abortSignal?: AbortSignalLike): Promise<UpdateEntryDetailResponse> {
         const requestPath = `/update/entrydetail.json/${entryDetailId}`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<UpdateEntryDetailResponse>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as UpdateEntryDetailResponse;
@@ -4168,13 +4168,13 @@ export class Starrezrestv1Client extends ConnectorClientBase {
      * Get Entry Enrollment
      * @remarks Retrieves one or more records from the Entry Enrollment table.
      */
-    public async selectEntryEnrollmentAsync(input: SelectEntryEnrollmentInput, abortSignal?: AbortSignalLike): Promise<Array<Record<string, unknown>>> {
+    public async selectEntryEnrollment(input: SelectEntryEnrollmentInput, abortSignal?: AbortSignalLike): Promise<Array<Record<string, unknown>>> {
         const requestPath = `/select/EntryEnrollment.json`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<Array<Record<string, unknown>>>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as Array<Record<string, unknown>>;
@@ -4184,13 +4184,13 @@ export class Starrezrestv1Client extends ConnectorClientBase {
      * Create Entry Enrollment
      * @remarks Creates a new record in the Entry Enrollment table.
      */
-    public async createEntryEnrollmentAsync(input: CreateEntryEnrollmentInput, abortSignal?: AbortSignalLike): Promise<CreateEntryEnrollmentResponse> {
+    public async createEntryEnrollment(input: CreateEntryEnrollmentInput, abortSignal?: AbortSignalLike): Promise<CreateEntryEnrollmentResponse> {
         const requestPath = `/create/entryenrollment.json`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<CreateEntryEnrollmentResponse>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as CreateEntryEnrollmentResponse;
@@ -4200,13 +4200,13 @@ export class Starrezrestv1Client extends ConnectorClientBase {
      * Update Entry Enrollment
      * @remarks Updates an existing record in the Entry Enrollment table.
      */
-    public async updateEntryEnrollmentAsync(input: UpdateEntryEnrollmentInput, entryEnrollmentId: string, abortSignal?: AbortSignalLike): Promise<UpdateEntryEnrollmentResponse> {
+    public async updateEntryEnrollment(input: UpdateEntryEnrollmentInput, entryEnrollmentId: string, abortSignal?: AbortSignalLike): Promise<UpdateEntryEnrollmentResponse> {
         const requestPath = `/update/entryenrollment.json/${entryEnrollmentId}`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<UpdateEntryEnrollmentResponse>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as UpdateEntryEnrollmentResponse;
@@ -4216,13 +4216,13 @@ export class Starrezrestv1Client extends ConnectorClientBase {
      * Get Booking
      * @remarks Retrieves one or more records from the Booking table.
      */
-    public async selectBookingAsync(input: SelectBookingInput, abortSignal?: AbortSignalLike): Promise<Array<Record<string, unknown>>> {
+    public async selectBooking(input: SelectBookingInput, abortSignal?: AbortSignalLike): Promise<Array<Record<string, unknown>>> {
         const requestPath = `/select/Booking.json`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<Array<Record<string, unknown>>>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as Array<Record<string, unknown>>;
@@ -4232,13 +4232,13 @@ export class Starrezrestv1Client extends ConnectorClientBase {
      * Create Booking
      * @remarks Creates a new record in the Booking table.
      */
-    public async createBookingAsync(input: CreateBookingInput, abortSignal?: AbortSignalLike): Promise<CreateBookingResponse> {
+    public async createBooking(input: CreateBookingInput, abortSignal?: AbortSignalLike): Promise<CreateBookingResponse> {
         const requestPath = `/create/booking.json`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<CreateBookingResponse>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as CreateBookingResponse;
@@ -4248,13 +4248,13 @@ export class Starrezrestv1Client extends ConnectorClientBase {
      * Update Booking
      * @remarks Updates an existing record in the Booking table.
      */
-    public async updateBookingAsync(input: UpdateBookingInput, bookingId: string, abortSignal?: AbortSignalLike): Promise<UpdateBookingResponse> {
+    public async updateBooking(input: UpdateBookingInput, bookingId: string, abortSignal?: AbortSignalLike): Promise<UpdateBookingResponse> {
         const requestPath = `/update/booking.json/${bookingId}`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<UpdateBookingResponse>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as UpdateBookingResponse;
@@ -4264,13 +4264,13 @@ export class Starrezrestv1Client extends ConnectorClientBase {
      * Get Room Space
      * @remarks Retrieves one or more records from the Room Space table.
      */
-    public async selectRoomSpaceAsync(input: SelectRoomSpaceInput, abortSignal?: AbortSignalLike): Promise<Array<Record<string, unknown>>> {
+    public async selectRoomSpace(input: SelectRoomSpaceInput, abortSignal?: AbortSignalLike): Promise<Array<Record<string, unknown>>> {
         const requestPath = `/select/RoomSpace.json`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<Array<Record<string, unknown>>>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as Array<Record<string, unknown>>;
@@ -4280,13 +4280,13 @@ export class Starrezrestv1Client extends ConnectorClientBase {
      * Create Room Space
      * @remarks Creates a new record in the Room Space table.
      */
-    public async createRoomSpaceAsync(input: CreateRoomSpaceInput, abortSignal?: AbortSignalLike): Promise<CreateRoomSpaceResponse> {
+    public async createRoomSpace(input: CreateRoomSpaceInput, abortSignal?: AbortSignalLike): Promise<CreateRoomSpaceResponse> {
         const requestPath = `/create/roomspace.json`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<CreateRoomSpaceResponse>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as CreateRoomSpaceResponse;
@@ -4296,13 +4296,13 @@ export class Starrezrestv1Client extends ConnectorClientBase {
      * Get Room Location
      * @remarks Retrieves one or more records from the Room Location table.
      */
-    public async selectRoomLocationAsync(input: SelectRoomLocationInput, abortSignal?: AbortSignalLike): Promise<Array<Record<string, unknown>>> {
+    public async selectRoomLocation(input: SelectRoomLocationInput, abortSignal?: AbortSignalLike): Promise<Array<Record<string, unknown>>> {
         const requestPath = `/select/RoomLocation.json`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<Array<Record<string, unknown>>>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as Array<Record<string, unknown>>;
@@ -4312,13 +4312,13 @@ export class Starrezrestv1Client extends ConnectorClientBase {
      * Get Transaction
      * @remarks Retrieves one or more records from the Transaction table.
      */
-    public async selectTransactionAsync(input: SelectTransactionInput, abortSignal?: AbortSignalLike): Promise<Array<Record<string, unknown>>> {
+    public async selectTransaction(input: SelectTransactionInput, abortSignal?: AbortSignalLike): Promise<Array<Record<string, unknown>>> {
         const requestPath = `/select/Transaction.json`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<Array<Record<string, unknown>>>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as Array<Record<string, unknown>>;
@@ -4328,13 +4328,13 @@ export class Starrezrestv1Client extends ConnectorClientBase {
      * Create Transaction
      * @remarks Creates a new record in the Transaction table.
      */
-    public async createTransactionAsync(input: CreateTransactionInput, abortSignal?: AbortSignalLike): Promise<CreateTransactionResponse> {
+    public async createTransaction(input: CreateTransactionInput, abortSignal?: AbortSignalLike): Promise<CreateTransactionResponse> {
         const requestPath = `/create/transaction.json`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<CreateTransactionResponse>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as CreateTransactionResponse;
@@ -4344,13 +4344,13 @@ export class Starrezrestv1Client extends ConnectorClientBase {
      * Get Room Space Maintenance
      * @remarks Retrieves one or more records from the Room Space Maintenance table.
      */
-    public async selectRoomSpaceMaintenanceAsync(input: SelectRoomSpaceMaintenanceInput, abortSignal?: AbortSignalLike): Promise<Array<Record<string, unknown>>> {
+    public async selectRoomSpaceMaintenance(input: SelectRoomSpaceMaintenanceInput, abortSignal?: AbortSignalLike): Promise<Array<Record<string, unknown>>> {
         const requestPath = `/select/RoomSpaceMaintenance.json`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<Array<Record<string, unknown>>>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as Array<Record<string, unknown>>;
@@ -4360,13 +4360,13 @@ export class Starrezrestv1Client extends ConnectorClientBase {
      * Create Room Space Maintenance
      * @remarks Creates a new record in the Room Space Maintenance table.
      */
-    public async createRoomSpaceMaintenanceAsync(input: CreateRoomSpaceMaintenanceInput, abortSignal?: AbortSignalLike): Promise<CreateRoomSpaceMaintenanceResponse> {
+    public async createRoomSpaceMaintenance(input: CreateRoomSpaceMaintenanceInput, abortSignal?: AbortSignalLike): Promise<CreateRoomSpaceMaintenanceResponse> {
         const requestPath = `/create/roomspacemaintenance.json`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<CreateRoomSpaceMaintenanceResponse>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as CreateRoomSpaceMaintenanceResponse;
@@ -4376,13 +4376,13 @@ export class Starrezrestv1Client extends ConnectorClientBase {
      * Update Room Space Maintenance
      * @remarks Updates an existing record in the Room Space Maintenance table.
      */
-    public async updateRoomSpaceMaintenanceAsync(input: UpdateRoomSpaceMaintenanceInput, roomSpaceMaintenanceId: string, abortSignal?: AbortSignalLike): Promise<UpdateRoomSpaceMaintenanceResponse> {
+    public async updateRoomSpaceMaintenance(input: UpdateRoomSpaceMaintenanceInput, roomSpaceMaintenanceId: string, abortSignal?: AbortSignalLike): Promise<UpdateRoomSpaceMaintenanceResponse> {
         const requestPath = `/update/roomspacemaintenance.json/${roomSpaceMaintenanceId}`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<UpdateRoomSpaceMaintenanceResponse>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as UpdateRoomSpaceMaintenanceResponse;

@@ -4,7 +4,7 @@
 import type { AbortSignalLike } from "@azure/abort-controller";
 import type { TokenCredential } from "@azure/core-auth";
 import { ConnectorClientBase } from "../azureConnectors/clientBase.ts";
-import { ConnectorException } from "../azureConnectors/connectorException.ts";
+import { ConnectorError } from "../azureConnectors/connectorError.ts";
 import { ConnectorClientOptions } from "../azureConnectors/options.ts";
 
 // #region Types
@@ -337,13 +337,13 @@ export class WaywedoClient extends ConnectorClientBase {
      * Add a comment to a checklist instance step
      * @remarks Adds a new comment to an Activated Checklist Instance step.
      */
-    public async commentAddAsync(input: CommentAddInput, abortSignal?: AbortSignalLike): Promise<ChecklistComment> {
+    public async addComment(input: CommentAddInput, abortSignal?: AbortSignalLike): Promise<ChecklistComment> {
         const requestPath = `/v1/ChecklistInstanceComments`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<ChecklistComment>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as ChecklistComment;
@@ -353,13 +353,13 @@ export class WaywedoClient extends ConnectorClientBase {
      * Create Checklist Instance
      * @remarks Creates a new activated checklist instance.
      */
-    public async checklistInstancesAsync(input: ChecklistInstancesInput, abortSignal?: AbortSignalLike): Promise<ChecklistInstance> {
+    public async checklistInstances(input: ChecklistInstancesInput, abortSignal?: AbortSignalLike): Promise<ChecklistInstance> {
         const requestPath = `/v1/ChecklistInstances`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<ChecklistInstance>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as ChecklistInstance;
@@ -369,13 +369,13 @@ export class WaywedoClient extends ConnectorClientBase {
      * Get A Checklist Instance
      * @remarks Retrieve a specific checklist instance by ID
      */
-    public async checklistInstancesGetAsync(instanceId: string, abortSignal?: AbortSignalLike): Promise<ChecklistInstance> {
+    public async getChecklistInstance(instanceId: string, abortSignal?: AbortSignalLike): Promise<ChecklistInstance> {
         const requestPath = `/v1/ChecklistInstances/${instanceId}`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<ChecklistInstance>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as ChecklistInstance;
@@ -385,13 +385,13 @@ export class WaywedoClient extends ConnectorClientBase {
      * Get Checklist Instance Activity
      * @remarks Retrieve all activity for a checklist instance
      */
-    public async checklistInstancesActivityAsync(instanceId: string, abortSignal?: AbortSignalLike): Promise<Array<Record<string, unknown>>> {
+    public async checklistInstancesActivity(instanceId: string, abortSignal?: AbortSignalLike): Promise<Array<Record<string, unknown>>> {
         const requestPath = `/v1/ChecklistInstances/${instanceId}/Activity`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<Array<Record<string, unknown>>>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as Array<Record<string, unknown>>;
@@ -401,7 +401,7 @@ export class WaywedoClient extends ConnectorClientBase {
      * Find Checklist Step
      * @remarks Find a step of a checklist instance
      */
-    public async findStepsAsync(instanceId: string, query?: string, abortSignal?: AbortSignalLike): Promise<Array<ChecklistStep>> {
+    public async findSteps(instanceId: string, query?: string, abortSignal?: AbortSignalLike): Promise<Array<ChecklistStep>> {
         const queryParams: string[] = [];
         if (query !== undefined) {
             queryParams.push(`query=${encodeURIComponent(String(query))}`);
@@ -411,7 +411,7 @@ export class WaywedoClient extends ConnectorClientBase {
         const httpResponse = await this.httpClient.sendAsync<Array<ChecklistStep>>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as Array<ChecklistStep>;
@@ -421,13 +421,13 @@ export class WaywedoClient extends ConnectorClientBase {
      * Get A Checklist Step
      * @remarks Retrieve a specific checklist step by ID
      */
-    public async checklistStepsGetAsync(instanceId: string, stepId: string, abortSignal?: AbortSignalLike): Promise<ChecklistStep> {
+    public async getChecklistStep(instanceId: string, stepId: string, abortSignal?: AbortSignalLike): Promise<ChecklistStep> {
         const requestPath = `/v1/ChecklistInstances/${instanceId}/Steps/${stepId}`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<ChecklistStep>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as ChecklistStep;
@@ -437,13 +437,13 @@ export class WaywedoClient extends ConnectorClientBase {
      * Complete a Checklist Step
      * @remarks Mark a specific step in a checklist instance as complete.
      */
-    public async checklistStepsCompleteAsync(input: ChecklistStepsCompleteInput, instanceId: string, stepId: string, abortSignal?: AbortSignalLike): Promise<ChecklistStepsCompleteResponse> {
+    public async checklistStepsComplete(input: ChecklistStepsCompleteInput, instanceId: string, stepId: string, abortSignal?: AbortSignalLike): Promise<ChecklistStepsCompleteResponse> {
         const requestPath = `/v1/ChecklistInstances/${instanceId}/Steps/${stepId}/Complete`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<ChecklistStepsCompleteResponse>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as ChecklistStepsCompleteResponse;
@@ -453,13 +453,13 @@ export class WaywedoClient extends ConnectorClientBase {
      * Add Collaborators to a Checklist Instance
      * @remarks Adds one or more collaborators to a checklist instance.
      */
-    public async collaboratorsAddAsync(input: CollaboratorsAddInput, abortSignal?: AbortSignalLike): Promise<CollaboratorsAddResponse> {
+    public async addCollaborators(input: CollaboratorsAddInput, abortSignal?: AbortSignalLike): Promise<CollaboratorsAddResponse> {
         const requestPath = `/v1/Collaborators`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<CollaboratorsAddResponse>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as CollaboratorsAddResponse;
@@ -469,7 +469,7 @@ export class WaywedoClient extends ConnectorClientBase {
      * Find Checklist
      * @remarks Search for a checklist by title
      */
-    public async findChecklistAsync(query?: string, type?: string, abortSignal?: AbortSignalLike): Promise<Array<Procedure>> {
+    public async findChecklist(query?: string, type?: string, abortSignal?: AbortSignalLike): Promise<Array<Procedure>> {
         const queryParams: string[] = [];
         if (query !== undefined) {
             queryParams.push(`query=${encodeURIComponent(String(query))}`);
@@ -482,7 +482,7 @@ export class WaywedoClient extends ConnectorClientBase {
         const httpResponse = await this.httpClient.sendAsync<Array<Procedure>>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as Array<Procedure>;
@@ -492,13 +492,13 @@ export class WaywedoClient extends ConnectorClientBase {
      * Get A Checklist Or Procedure
      * @remarks Retrieve a specific checklist or procedure by ID
      */
-    public async proceduresGetAsync(procedureId: string, abortSignal?: AbortSignalLike): Promise<Procedure> {
+    public async getProcedure(procedureId: string, abortSignal?: AbortSignalLike): Promise<Procedure> {
         const requestPath = `/v1/Procedures/${procedureId}`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<Procedure>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as Procedure;
@@ -508,7 +508,7 @@ export class WaywedoClient extends ConnectorClientBase {
      * Find Checklist Instance
      * @remarks Search for a checklist instance by title.
      */
-    public async findChecklistInstancesAsync(procedureId: string, query?: string, abortSignal?: AbortSignalLike): Promise<Array<ChecklistInstance>> {
+    public async findChecklistInstances(procedureId: string, query?: string, abortSignal?: AbortSignalLike): Promise<Array<ChecklistInstance>> {
         const queryParams: string[] = [];
         if (query !== undefined) {
             queryParams.push(`query=${encodeURIComponent(String(query))}`);
@@ -518,7 +518,7 @@ export class WaywedoClient extends ConnectorClientBase {
         const httpResponse = await this.httpClient.sendAsync<Array<ChecklistInstance>>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as Array<ChecklistInstance>;
@@ -528,7 +528,7 @@ export class WaywedoClient extends ConnectorClientBase {
      * Find User
      * @remarks Search for a user by name or email.
      */
-    public async findUserAsync(query?: string, abortSignal?: AbortSignalLike): Promise<Array<User>> {
+    public async findUser(query?: string, abortSignal?: AbortSignalLike): Promise<Array<User>> {
         const queryParams: string[] = [];
         if (query !== undefined) {
             queryParams.push(`query=${encodeURIComponent(String(query))}`);
@@ -538,7 +538,7 @@ export class WaywedoClient extends ConnectorClientBase {
         const httpResponse = await this.httpClient.sendAsync<Array<User>>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as Array<User>;
@@ -548,13 +548,13 @@ export class WaywedoClient extends ConnectorClientBase {
      * Add a New User
      * @remarks Creates and invites a new user.
      */
-    public async usersAsync(input: UsersInput, abortSignal?: AbortSignalLike): Promise<UsersPostResponse> {
+    public async users(input: UsersInput, abortSignal?: AbortSignalLike): Promise<UsersPostResponse> {
         const requestPath = `/v1/Users`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<UsersPostResponse>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as UsersPostResponse;

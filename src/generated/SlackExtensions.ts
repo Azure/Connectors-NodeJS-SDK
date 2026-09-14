@@ -5,7 +5,7 @@ import type { AbortSignalLike } from "@azure/abort-controller";
 import type { TokenCredential } from "@azure/core-auth";
 import type { PagedAsyncIterableIterator } from "@azure/core-paging";
 import { ConnectorClientBase } from "../azureConnectors/clientBase.ts";
-import { ConnectorException } from "../azureConnectors/connectorException.ts";
+import { ConnectorError } from "../azureConnectors/connectorError.ts";
 import { ConnectorClientOptions } from "../azureConnectors/options.ts";
 import { TriggerCallbackPayload } from "../azureConnectors/triggerPayload.ts";
 
@@ -149,7 +149,7 @@ export class SlackClient extends ConnectorClientBase {
      * Set do not disturb
      * @remarks Set the do not disturb status for the user.
      */
-    public async setDNDAsync(numMinutes?: string, abortSignal?: AbortSignalLike): Promise<SetDNDResponse> {
+    public async setDND(numMinutes?: string, abortSignal?: AbortSignalLike): Promise<SetDNDResponse> {
         const queryParams: string[] = [];
         if (numMinutes !== undefined) {
             queryParams.push(`num_minutes=${encodeURIComponent(String(numMinutes))}`);
@@ -159,7 +159,7 @@ export class SlackClient extends ConnectorClientBase {
         const httpResponse = await this.httpClient.sendAsync<SetDNDResponse>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as SetDNDResponse;
@@ -169,7 +169,7 @@ export class SlackClient extends ConnectorClientBase {
      * Create a channel
      * @remarks Create a channel in slack.
      */
-    public async createChannelAsync(name?: string, isPrivate?: string, abortSignal?: AbortSignalLike): Promise<CreateChannelResponse> {
+    public async createChannel(name?: string, isPrivate?: string, abortSignal?: AbortSignalLike): Promise<CreateChannelResponse> {
         const queryParams: string[] = [];
         if (name !== undefined) {
             queryParams.push(`name=${encodeURIComponent(String(name))}`);
@@ -182,7 +182,7 @@ export class SlackClient extends ConnectorClientBase {
         const httpResponse = await this.httpClient.sendAsync<CreateChannelResponse>("POST", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as CreateChannelResponse;
@@ -192,7 +192,7 @@ export class SlackClient extends ConnectorClientBase {
      * Join a public channel
      * @remarks Join a public channel in slack.
      */
-    public async joinChannelAsync(channel?: string, abortSignal?: AbortSignalLike): Promise<JoinChannelResponse> {
+    public async joinChannel(channel?: string, abortSignal?: AbortSignalLike): Promise<JoinChannelResponse> {
         const queryParams: string[] = [];
         if (channel !== undefined) {
             queryParams.push(`channel=${encodeURIComponent(String(channel))}`);
@@ -202,7 +202,7 @@ export class SlackClient extends ConnectorClientBase {
         const httpResponse = await this.httpClient.sendAsync<JoinChannelResponse>("POST", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as JoinChannelResponse;
@@ -212,7 +212,7 @@ export class SlackClient extends ConnectorClientBase {
      * List public channels (Pagination support)
      * @remarks List the public channels in slack.
      */
-    public listChannelsAsync(abortSignal?: AbortSignalLike): PagedAsyncIterableIterator<Channel> {
+    public listChannels(abortSignal?: AbortSignalLike): PagedAsyncIterableIterator<Channel> {
         const requestPath = `/v3/conversations.list`;
         return this.createPageable<ListChannelsResponse, Channel>(
             requestPath,
@@ -221,11 +221,13 @@ export class SlackClient extends ConnectorClientBase {
 
                 if (!httpResponse.isSuccessStatusCode) {
                     const operationPath = this.getOperationPath(requestUrl);
-                    throw new ConnectorException(this.connectorName, `GET ${operationPath}`, httpResponse.statusCode, httpResponse.text);
+                    throw new ConnectorError(this.connectorName, `GET ${operationPath}`, httpResponse.statusCode, httpResponse.text);
                 }
 
                 return httpResponse.value as ListChannelsResponse;
             },
+            "value",
+            "@odata.nextLink",
         );
     }
 
@@ -233,13 +235,13 @@ export class SlackClient extends ConnectorClientBase {
      * Post message
      * @remarks This operation is used to post a message to the specified channel.
      */
-    public async postMessageAsync(input: PostMessageRequest, abortSignal?: AbortSignalLike): Promise<PostMessageResponse> {
+    public async postMessage(input: PostMessageRequest, abortSignal?: AbortSignalLike): Promise<PostMessageResponse> {
         const requestPath = `/v2/chat.postMessage`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<PostMessageResponse>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as PostMessageResponse;

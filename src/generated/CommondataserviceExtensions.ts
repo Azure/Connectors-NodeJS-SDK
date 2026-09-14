@@ -5,7 +5,7 @@ import type { AbortSignalLike } from "@azure/abort-controller";
 import type { TokenCredential } from "@azure/core-auth";
 import type { PagedAsyncIterableIterator } from "@azure/core-paging";
 import { ConnectorClientBase } from "../azureConnectors/clientBase.ts";
-import { ConnectorException } from "../azureConnectors/connectorException.ts";
+import { ConnectorError } from "../azureConnectors/connectorError.ts";
 import { ConnectorClientOptions } from "../azureConnectors/options.ts";
 import { TriggerCallbackPayload } from "../azureConnectors/triggerPayload.ts";
 
@@ -451,13 +451,13 @@ export class CommondataserviceClient extends ConnectorClientBase {
      * Get row (legacy)
      * @remarks This operation retrieves the specified row for a table
      */
-    public async getItemAsync(dataset: string, table: string, id: string, abortSignal?: AbortSignalLike): Promise<GetItemResponse> {
+    public async getItem(dataset: string, table: string, id: string, abortSignal?: AbortSignalLike): Promise<GetItemResponse> {
         const requestPath = `/v2/datasets/${encodeURIComponent(encodeURIComponent(String(dataset)))}/tables/${encodeURIComponent(encodeURIComponent(String(table)))}/items/${encodeURIComponent(encodeURIComponent(String(id)))}`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<GetItemResponse>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as GetItemResponse;
@@ -467,7 +467,7 @@ export class CommondataserviceClient extends ConnectorClientBase {
      * List rows (legacy)
      * @remarks This operation gets rows for a table
      */
-    public getItemsAsync(dataset: string, table: string, apply?: string, filter?: string, orderby?: string, top?: number, skip?: number, expand?: string, abortSignal?: AbortSignalLike): PagedAsyncIterableIterator<Item> {
+    public getItems(dataset: string, table: string, apply?: string, filter?: string, orderby?: string, top?: string, skip?: string, expand?: string, abortSignal?: AbortSignalLike): PagedAsyncIterableIterator<Item> {
         const queryParams: string[] = [];
         if (apply !== undefined) {
             queryParams.push(`$apply=${encodeURIComponent(String(apply))}`);
@@ -495,7 +495,7 @@ export class CommondataserviceClient extends ConnectorClientBase {
 
                 if (!httpResponse.isSuccessStatusCode) {
                     const operationPath = this.getOperationPath(requestUrl);
-                    throw new ConnectorException(this.connectorName, `GET ${operationPath}`, httpResponse.statusCode, httpResponse.text);
+                    throw new ConnectorError(this.connectorName, `GET ${operationPath}`, httpResponse.statusCode, httpResponse.text);
                 }
 
                 return httpResponse.value as ItemsList;
@@ -509,13 +509,13 @@ export class CommondataserviceClient extends ConnectorClientBase {
      * Update a row (legacy)
      * @remarks This operation updates an existing row for a table
      */
-    public async patchItemAsync(input: PatchItemInput, dataset: string, table: string, id: string, abortSignal?: AbortSignalLike): Promise<PatchItemResponse> {
+    public async patchItem(input: PatchItemInput, dataset: string, table: string, id: string, abortSignal?: AbortSignalLike): Promise<PatchItemResponse> {
         const requestPath = `/v2/datasets/${encodeURIComponent(encodeURIComponent(String(dataset)))}/tables/${encodeURIComponent(encodeURIComponent(String(table)))}/items/${encodeURIComponent(encodeURIComponent(String(id)))}`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<PatchItemResponse>("PATCH", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `PATCH ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `PATCH ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as PatchItemResponse;
@@ -525,13 +525,13 @@ export class CommondataserviceClient extends ConnectorClientBase {
      * Add a new row (legacy)
      * @remarks This operation adds a new row of a table
      */
-    public async postItemAsync(input: PostItemInput, dataset: string, table: string, abortSignal?: AbortSignalLike): Promise<PostItemResponse> {
+    public async postItem(input: PostItemInput, dataset: string, table: string, abortSignal?: AbortSignalLike): Promise<PostItemResponse> {
         const requestPath = `/v2/datasets/${encodeURIComponent(encodeURIComponent(String(dataset)))}/tables/${encodeURIComponent(encodeURIComponent(String(table)))}/items`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<PostItemResponse>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as PostItemResponse;

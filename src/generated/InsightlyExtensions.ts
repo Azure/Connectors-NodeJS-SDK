@@ -4,7 +4,7 @@
 import type { AbortSignalLike } from "@azure/abort-controller";
 import type { TokenCredential } from "@azure/core-auth";
 import { ConnectorClientBase } from "../azureConnectors/clientBase.ts";
-import { ConnectorException } from "../azureConnectors/connectorException.ts";
+import { ConnectorError } from "../azureConnectors/connectorError.ts";
 import { ConnectorClientOptions } from "../azureConnectors/options.ts";
 
 // #region Types
@@ -651,13 +651,13 @@ export class InsightlyClient extends ConnectorClientBase {
      * List tasks
      * @remarks List tasks
      */
-    public async listTasksAsync(abortSignal?: AbortSignalLike): Promise<ListTasksResponse> {
+    public async listTasks(abortSignal?: AbortSignalLike): Promise<ListTasksResponse> {
         const requestPath = `/Tasks`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<ListTasksResponse>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as ListTasksResponse;
@@ -667,7 +667,7 @@ export class InsightlyClient extends ConnectorClientBase {
      * Update task
      * @remarks Update task
      */
-    public async updateTaskAsync(input: TaskRequest, id?: string, abortSignal?: AbortSignalLike): Promise<TaskObject> {
+    public async updateTask(input: TaskRequest, id?: string, abortSignal?: AbortSignalLike): Promise<TaskObject> {
         const queryParams: string[] = [];
         if (id !== undefined) {
             queryParams.push(`id=${encodeURIComponent(String(id))}`);
@@ -677,7 +677,7 @@ export class InsightlyClient extends ConnectorClientBase {
         const httpResponse = await this.httpClient.sendAsync<TaskObject>("PUT", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `PUT ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `PUT ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as TaskObject;
@@ -687,13 +687,13 @@ export class InsightlyClient extends ConnectorClientBase {
      * Add task
      * @remarks Add task
      */
-    public async addTaskAsync(input: TaskRequest, abortSignal?: AbortSignalLike): Promise<TaskObject> {
+    public async addTask(input: TaskRequest, abortSignal?: AbortSignalLike): Promise<TaskObject> {
         const requestPath = `/Tasks`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<TaskObject>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as TaskObject;
@@ -703,13 +703,13 @@ export class InsightlyClient extends ConnectorClientBase {
      * List projects
      * @remarks List projects
      */
-    public async listProjectsAsync(abortSignal?: AbortSignalLike): Promise<ListProjectsResponse> {
+    public async listProjects(abortSignal?: AbortSignalLike): Promise<ListProjectsResponse> {
         const requestPath = `/Projects`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<ListProjectsResponse>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as ListProjectsResponse;
@@ -719,7 +719,7 @@ export class InsightlyClient extends ConnectorClientBase {
      * Update project
      * @remarks Update project
      */
-    public async updateProjectAsync(input: ProjectRequest, id?: string, abortSignal?: AbortSignalLike): Promise<Project> {
+    public async updateProject(input: ProjectRequest, id?: string, abortSignal?: AbortSignalLike): Promise<Project> {
         const queryParams: string[] = [];
         if (id !== undefined) {
             queryParams.push(`id=${encodeURIComponent(String(id))}`);
@@ -729,7 +729,7 @@ export class InsightlyClient extends ConnectorClientBase {
         const httpResponse = await this.httpClient.sendAsync<Project>("PUT", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `PUT ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `PUT ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as Project;
@@ -739,13 +739,13 @@ export class InsightlyClient extends ConnectorClientBase {
      * Add project
      * @remarks Add project
      */
-    public async addProjectAsync(input: ProjectRequest, abortSignal?: AbortSignalLike): Promise<Project> {
+    public async addProject(input: ProjectRequest, abortSignal?: AbortSignalLike): Promise<Project> {
         const requestPath = `/Projects`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<Project>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as Project;
@@ -755,13 +755,13 @@ export class InsightlyClient extends ConnectorClientBase {
      * List leads
      * @remarks List leads
      */
-    public async listLeadsAsync(abortSignal?: AbortSignalLike): Promise<ListLeadsResponse> {
+    public async listLeads(abortSignal?: AbortSignalLike): Promise<ListLeadsResponse> {
         const requestPath = `/Leads`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<ListLeadsResponse>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as ListLeadsResponse;
@@ -771,7 +771,7 @@ export class InsightlyClient extends ConnectorClientBase {
      * Update lead
      * @remarks Update lead
      */
-    public async updateLeadAsync(input: LeadRequest, id?: string, abortSignal?: AbortSignalLike): Promise<Lead> {
+    public async updateLead(input: LeadRequest, id?: string, abortSignal?: AbortSignalLike): Promise<Lead> {
         const queryParams: string[] = [];
         if (id !== undefined) {
             queryParams.push(`id=${encodeURIComponent(String(id))}`);
@@ -781,7 +781,7 @@ export class InsightlyClient extends ConnectorClientBase {
         const httpResponse = await this.httpClient.sendAsync<Lead>("PUT", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `PUT ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `PUT ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as Lead;
@@ -791,13 +791,13 @@ export class InsightlyClient extends ConnectorClientBase {
      * Add lead
      * @remarks Add lead
      */
-    public async addLeadAsync(input: LeadRequest, abortSignal?: AbortSignalLike): Promise<Lead> {
+    public async addLead(input: LeadRequest, abortSignal?: AbortSignalLike): Promise<Lead> {
         const requestPath = `/Leads`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<Lead>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as Lead;
@@ -807,13 +807,13 @@ export class InsightlyClient extends ConnectorClientBase {
      * List contacts
      * @remarks List contacts
      */
-    public async listContactsAsync(abortSignal?: AbortSignalLike): Promise<ListContactsResponse> {
+    public async listContacts(abortSignal?: AbortSignalLike): Promise<ListContactsResponse> {
         const requestPath = `/Contacts`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<ListContactsResponse>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as ListContactsResponse;
@@ -823,7 +823,7 @@ export class InsightlyClient extends ConnectorClientBase {
      * Update contact
      * @remarks Update contact
      */
-    public async updateContactAsync(input: ContactRequest, id?: string, abortSignal?: AbortSignalLike): Promise<Contact> {
+    public async updateContact(input: ContactRequest, id?: string, abortSignal?: AbortSignalLike): Promise<Contact> {
         const queryParams: string[] = [];
         if (id !== undefined) {
             queryParams.push(`id=${encodeURIComponent(String(id))}`);
@@ -833,7 +833,7 @@ export class InsightlyClient extends ConnectorClientBase {
         const httpResponse = await this.httpClient.sendAsync<Contact>("PUT", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `PUT ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `PUT ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as Contact;
@@ -843,13 +843,13 @@ export class InsightlyClient extends ConnectorClientBase {
      * Add contact
      * @remarks Add contact
      */
-    public async addContactAsync(input: ContactRequest, abortSignal?: AbortSignalLike): Promise<Contact> {
+    public async addContact(input: ContactRequest, abortSignal?: AbortSignalLike): Promise<Contact> {
         const requestPath = `/Contacts`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<Contact>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as Contact;
@@ -859,13 +859,13 @@ export class InsightlyClient extends ConnectorClientBase {
      * List users
      * @remarks List users
      */
-    public async listUsersAsync(abortSignal?: AbortSignalLike): Promise<ListUsersResponse> {
+    public async listUsers(abortSignal?: AbortSignalLike): Promise<ListUsersResponse> {
         const requestPath = `/Users`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<ListUsersResponse>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as ListUsersResponse;
@@ -875,13 +875,13 @@ export class InsightlyClient extends ConnectorClientBase {
      * Delete task
      * @remarks Delete task
      */
-    public async deleteTaskAsync(taskId: string, abortSignal?: AbortSignalLike): Promise<ObjectEntity> {
+    public async deleteTask(taskId: string, abortSignal?: AbortSignalLike): Promise<ObjectEntity> {
         const requestPath = `/Tasks/${taskId}`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<ObjectEntity>("DELETE", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `DELETE ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `DELETE ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as ObjectEntity;
@@ -891,13 +891,13 @@ export class InsightlyClient extends ConnectorClientBase {
      * Follow a task
      * @remarks Follow a task
      */
-    public async followTaskAsync(taskId: string, abortSignal?: AbortSignalLike): Promise<ObjectEntity> {
+    public async followTask(taskId: string, abortSignal?: AbortSignalLike): Promise<ObjectEntity> {
         const requestPath = `/Tasks/${taskId}/Follow`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<ObjectEntity>("POST", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as ObjectEntity;
@@ -907,13 +907,13 @@ export class InsightlyClient extends ConnectorClientBase {
      * Delete project
      * @remarks Delete project
      */
-    public async deleteProjectAsync(projectId: string, abortSignal?: AbortSignalLike): Promise<ObjectEntity> {
+    public async deleteProject(projectId: string, abortSignal?: AbortSignalLike): Promise<ObjectEntity> {
         const requestPath = `/Projects/${projectId}`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<ObjectEntity>("DELETE", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `DELETE ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `DELETE ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as ObjectEntity;
@@ -923,13 +923,13 @@ export class InsightlyClient extends ConnectorClientBase {
      * Delete lead
      * @remarks Delete lead
      */
-    public async deleteLeadAsync(leadId: string, abortSignal?: AbortSignalLike): Promise<ObjectEntity> {
+    public async deleteLead(leadId: string, abortSignal?: AbortSignalLike): Promise<ObjectEntity> {
         const requestPath = `/Leads/${leadId}`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<ObjectEntity>("DELETE", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `DELETE ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `DELETE ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as ObjectEntity;
@@ -939,13 +939,13 @@ export class InsightlyClient extends ConnectorClientBase {
      * Delete contact
      * @remarks Delete contact
      */
-    public async deleteContactAsync(contactId: string, abortSignal?: AbortSignalLike): Promise<ObjectEntity> {
+    public async deleteContact(contactId: string, abortSignal?: AbortSignalLike): Promise<ObjectEntity> {
         const requestPath = `/Contacts/${contactId}`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<ObjectEntity>("DELETE", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `DELETE ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `DELETE ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as ObjectEntity;
@@ -955,13 +955,13 @@ export class InsightlyClient extends ConnectorClientBase {
      * Add organization
      * @remarks Add organization
      */
-    public async addOrganizationAsync(input: OrganizationRequest, abortSignal?: AbortSignalLike): Promise<Organization> {
+    public async addOrganization(input: OrganizationRequest, abortSignal?: AbortSignalLike): Promise<Organization> {
         const requestPath = `/Organisations`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<Organization>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as Organization;

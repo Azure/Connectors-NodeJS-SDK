@@ -4,7 +4,7 @@
 import type { AbortSignalLike } from "@azure/abort-controller";
 import type { TokenCredential } from "@azure/core-auth";
 import { ConnectorClientBase } from "../azureConnectors/clientBase.ts";
-import { ConnectorException } from "../azureConnectors/connectorException.ts";
+import { ConnectorError } from "../azureConnectors/connectorError.ts";
 import { ConnectorClientOptions } from "../azureConnectors/options.ts";
 
 // #region Types
@@ -179,13 +179,13 @@ export class MsgraphgroupsanduserClient extends ConnectorClientBase {
      * List Users
      * @remarks Retrieve all users in the organization (Microsoft Entra ID Tenant)
      */
-    public async listUsersAsync(abortSignal?: AbortSignalLike): Promise<ListUsersResponse> {
+    public async listUsers(abortSignal?: AbortSignalLike): Promise<ListUsersResponse> {
         const requestPath = `/v1.0/users`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<ListUsersResponse>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as ListUsersResponse;
@@ -195,7 +195,7 @@ export class MsgraphgroupsanduserClient extends ConnectorClientBase {
      * List Groups By Display Name Search
      * @remarks Retrieve groups by searching group's display name
      */
-    public async listGroupsByDisplayNameSearchAsync(search?: string, count?: string, abortSignal?: AbortSignalLike): Promise<ListGroupsByDisplayNameSearchResponse> {
+    public async listGroupsByDisplayNameSearch(search?: string, count?: string, abortSignal?: AbortSignalLike): Promise<ListGroupsByDisplayNameSearchResponse> {
         const queryParams: string[] = [];
         if (search !== undefined) {
             queryParams.push(`$search=${encodeURIComponent(String(search))}`);
@@ -208,7 +208,7 @@ export class MsgraphgroupsanduserClient extends ConnectorClientBase {
         const httpResponse = await this.httpClient.sendAsync<ListGroupsByDisplayNameSearchResponse>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as ListGroupsByDisplayNameSearchResponse;
@@ -218,13 +218,13 @@ export class MsgraphgroupsanduserClient extends ConnectorClientBase {
      * List Subscribed Skus
      * @remarks Details of organization's subscribed license plan SKUs
      */
-    public async listSubscribedSkusAsync(abortSignal?: AbortSignalLike): Promise<ListSubscribedSkusResponse> {
+    public async listSubscribedSkus(abortSignal?: AbortSignalLike): Promise<ListSubscribedSkusResponse> {
         const requestPath = `/v1.0/subscribedSkus`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<ListSubscribedSkusResponse>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as ListSubscribedSkusResponse;
@@ -234,7 +234,7 @@ export class MsgraphgroupsanduserClient extends ConnectorClientBase {
      * List Direct Group Members
      * @remarks Retrieve direct members of a group with count
      */
-    public async listDirectGroupMembersAsync(groupId: string, filter?: string, select?: string, count?: string, abortSignal?: AbortSignalLike): Promise<ListDirectGroupMembersResponse> {
+    public async listDirectGroupMembers(groupId: string, filter?: string, select?: string, count?: string, abortSignal?: AbortSignalLike): Promise<ListDirectGroupMembersResponse> {
         const queryParams: string[] = [];
         if (filter !== undefined) {
             queryParams.push(`$filter=${encodeURIComponent(String(filter))}`);
@@ -250,7 +250,7 @@ export class MsgraphgroupsanduserClient extends ConnectorClientBase {
         const httpResponse = await this.httpClient.sendAsync<ListDirectGroupMembersResponse>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as ListDirectGroupMembersResponse;
@@ -260,7 +260,7 @@ export class MsgraphgroupsanduserClient extends ConnectorClientBase {
      * Get Member License Details
      * @remarks Retrieve group member(user)'s license details
      */
-    public async getMemberLicenseDetailsAsync(id: string, select?: string, abortSignal?: AbortSignalLike): Promise<GetMemberLicenseDetailsResponse> {
+    public async getMemberLicenseDetails(id: string, select?: string, abortSignal?: AbortSignalLike): Promise<GetMemberLicenseDetailsResponse> {
         const queryParams: string[] = [];
         if (select !== undefined) {
             queryParams.push(`$select=${encodeURIComponent(String(select))}`);
@@ -270,7 +270,7 @@ export class MsgraphgroupsanduserClient extends ConnectorClientBase {
         const httpResponse = await this.httpClient.sendAsync<GetMemberLicenseDetailsResponse>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as GetMemberLicenseDetailsResponse;
@@ -280,13 +280,13 @@ export class MsgraphgroupsanduserClient extends ConnectorClientBase {
      * Get Group Properties
      * @remarks Retrieve properties and relationships of an Microsoft Entra ID group
      */
-    public async getGroupPropertiesAsync(groupId: string, abortSignal?: AbortSignalLike): Promise<GetGroupPropertiesResponse> {
+    public async getGroupProperties(groupId: string, abortSignal?: AbortSignalLike): Promise<GetGroupPropertiesResponse> {
         const requestPath = `/v1.0/groups/${groupId}`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<GetGroupPropertiesResponse>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as GetGroupPropertiesResponse;
@@ -296,13 +296,13 @@ export class MsgraphgroupsanduserClient extends ConnectorClientBase {
      * Get Member Groups
      * @remarks Group memberships for a user (member)
      */
-    public async getMemberGroupsAsync(input: GetMemberGroupsInput, memberId: string, abortSignal?: AbortSignalLike): Promise<GetMemberGroupsResponse> {
+    public async getMemberGroups(input: GetMemberGroupsInput, memberId: string, abortSignal?: AbortSignalLike): Promise<GetMemberGroupsResponse> {
         const requestPath = `/v1.0/users/${memberId}/getMemberGroups`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<GetMemberGroupsResponse>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as GetMemberGroupsResponse;

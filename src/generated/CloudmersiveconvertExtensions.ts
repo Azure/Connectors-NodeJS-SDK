@@ -4,7 +4,7 @@
 import type { AbortSignalLike } from "@azure/abort-controller";
 import type { TokenCredential } from "@azure/core-auth";
 import { ConnectorClientBase } from "../azureConnectors/clientBase.ts";
-import { ConnectorException } from "../azureConnectors/connectorException.ts";
+import { ConnectorError } from "../azureConnectors/connectorError.ts";
 import { ConnectorClientOptions } from "../azureConnectors/options.ts";
 
 // #region Types
@@ -2420,13 +2420,13 @@ export class CloudmersiveconvertClient extends ConnectorClientBase {
      * Create a blank Word DOCX document
      * @remarks Returns a blank Word DOCX Document format file.  The file is blank, with no contents.  Use additional editing commands such as Insert Paragraph or Insert Table or Insert Image to populate the document.
      */
-    public async editDocumentDocxCreateBlankDocumentAsync(input: CreateBlankDocxRequest, abortSignal?: AbortSignalLike): Promise<CreateBlankDocxResponse> {
+    public async createEditDocumentDocxBlankDocument(input: CreateBlankDocxRequest, abortSignal?: AbortSignalLike): Promise<CreateBlankDocxResponse> {
         const requestPath = `/convert/edit/docx/create/blank`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<CreateBlankDocxResponse>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as CreateBlankDocxResponse;
@@ -2436,13 +2436,13 @@ export class CloudmersiveconvertClient extends ConnectorClientBase {
      * Delete, remove pages from a Word DOCX document
      * @remarks Returns the edited Word Document in the Word Document (DOCX) format file with the specified pages removed
      */
-    public async editDocumentDocxDeletePagesAsync(input: RemoveDocxPagesRequest, abortSignal?: AbortSignalLike): Promise<Blob> {
+    public async deleteEditDocumentDocxPages(input: RemoveDocxPagesRequest, abortSignal?: AbortSignalLike): Promise<Blob> {
         const requestPath = `/convert/edit/docx/delete-pages`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<Blob>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as Blob;
@@ -2452,13 +2452,13 @@ export class CloudmersiveconvertClient extends ConnectorClientBase {
      * Deletes a table row in an existing table in a Word DOCX document
      * @remarks Deletes an existing table row in a Word DOCX Document and returns the result.
      */
-    public async editDocumentDocxDeleteTableRowAsync(input: DeleteDocxTableRowRequest, abortSignal?: AbortSignalLike): Promise<DeleteDocxTableRowResponse> {
+    public async deleteEditDocumentDocxTableRow(input: DeleteDocxTableRowRequest, abortSignal?: AbortSignalLike): Promise<DeleteDocxTableRowResponse> {
         const requestPath = `/convert/edit/docx/delete-table-row`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<DeleteDocxTableRowResponse>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as DeleteDocxTableRowResponse;
@@ -2468,13 +2468,13 @@ export class CloudmersiveconvertClient extends ConnectorClientBase {
      * Deletes a range of multiple table rows in an existing table in a Word
      * @remarks Deletes a range of 1 or more existing table rows in a Word DOCX Document and returns the result.
      */
-    public async editDocumentDocxDeleteTableRowRangeAsync(input: DeleteDocxTableRowRangeRequest, abortSignal?: AbortSignalLike): Promise<DeleteDocxTableRowRangeResponse> {
+    public async deleteEditDocumentDocxTableRowRange(input: DeleteDocxTableRowRangeRequest, abortSignal?: AbortSignalLike): Promise<DeleteDocxTableRowRangeResponse> {
         const requestPath = `/convert/edit/docx/delete-table-row/range`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<DeleteDocxTableRowRangeResponse>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as DeleteDocxTableRowRangeResponse;
@@ -2484,13 +2484,13 @@ export class CloudmersiveconvertClient extends ConnectorClientBase {
      * Get body from a Word DOCX document
      * @remarks Returns the body defined in the Word Document (DOCX) format file; this is the main content part of a DOCX document
      */
-    public async editDocumentDocxBodyAsync(input: GetDocxBodyRequest, abortSignal?: AbortSignalLike): Promise<GetDocxBodyResponse> {
+    public async editDocumentDocxBody(input: GetDocxBodyRequest, abortSignal?: AbortSignalLike): Promise<GetDocxBodyResponse> {
         const requestPath = `/convert/edit/docx/get-body`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<GetDocxBodyResponse>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as GetDocxBodyResponse;
@@ -2500,13 +2500,13 @@ export class CloudmersiveconvertClient extends ConnectorClientBase {
      * Get comments from a Word DOCX document hierarchically
      * @remarks Returns the comments and review annotations stored in the Word Document (DOCX) format file hierarchically, where reply comments are nested as children under top-level comments in the results returned.
      */
-    public async editDocumentDocxGetCommentsHierarchicalAsync(input: GetDocxGetCommentsHierarchicalRequest, abortSignal?: AbortSignalLike): Promise<GetDocxCommentsHierarchicalResponse> {
+    public async getEditDocumentDocxCommentsHierarchical(input: GetDocxGetCommentsHierarchicalRequest, abortSignal?: AbortSignalLike): Promise<GetDocxCommentsHierarchicalResponse> {
         const requestPath = `/convert/edit/docx/get-comments/hierarchical`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<GetDocxCommentsHierarchicalResponse>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as GetDocxCommentsHierarchicalResponse;
@@ -2516,13 +2516,13 @@ export class CloudmersiveconvertClient extends ConnectorClientBase {
      * Get content of a footer from a Word DOCX document
      * @remarks Returns the footer content from a Word Document (DOCX) format file
      */
-    public async editDocumentDocxGetHeadersAndFootersAsync(input: GetDocxHeadersAndFootersRequest, abortSignal?: AbortSignalLike): Promise<GetDocxHeadersAndFootersResponse> {
+    public async getEditDocumentDocxHeadersAndFooters(input: GetDocxHeadersAndFootersRequest, abortSignal?: AbortSignalLike): Promise<GetDocxHeadersAndFootersResponse> {
         const requestPath = `/convert/edit/docx/get-headers-and-footers`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<GetDocxHeadersAndFootersResponse>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as GetDocxHeadersAndFootersResponse;
@@ -2532,13 +2532,13 @@ export class CloudmersiveconvertClient extends ConnectorClientBase {
      * Get images from a Word DOCX document
      * @remarks Returns the images defined in the Word Document (DOCX) format file
      */
-    public async editDocumentDocxGetImagesAsync(input: GetDocxImagesRequest, abortSignal?: AbortSignalLike): Promise<GetDocxImagesResponse> {
+    public async getEditDocumentDocxImages(input: GetDocxImagesRequest, abortSignal?: AbortSignalLike): Promise<GetDocxImagesResponse> {
         const requestPath = `/convert/edit/docx/get-images`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<GetDocxImagesResponse>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as GetDocxImagesResponse;
@@ -2548,13 +2548,13 @@ export class CloudmersiveconvertClient extends ConnectorClientBase {
      * Get pages and content from a Word DOCX document
      * @remarks Returns the pages and contents of each page defined in the Word Document (DOCX) format file
      */
-    public async editDocumentDocxPagesAsync(input: GetDocxPagesRequest, abortSignal?: AbortSignalLike): Promise<GetDocxPagesResponse> {
+    public async editDocumentDocxPages(input: GetDocxPagesRequest, abortSignal?: AbortSignalLike): Promise<GetDocxPagesResponse> {
         const requestPath = `/convert/edit/docx/get-pages`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<GetDocxPagesResponse>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as GetDocxPagesResponse;
@@ -2564,13 +2564,13 @@ export class CloudmersiveconvertClient extends ConnectorClientBase {
      * Get sections from a Word DOCX document
      * @remarks Returns the sections defined in the Word Document (DOCX) format file
      */
-    public async editDocumentDocxGetSectionsAsync(input: GetDocxSectionsRequest, abortSignal?: AbortSignalLike): Promise<GetDocxSectionsResponse> {
+    public async getEditDocumentDocxSections(input: GetDocxSectionsRequest, abortSignal?: AbortSignalLike): Promise<GetDocxSectionsResponse> {
         const requestPath = `/convert/edit/docx/get-sections`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<GetDocxSectionsResponse>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as GetDocxSectionsResponse;
@@ -2580,13 +2580,13 @@ export class CloudmersiveconvertClient extends ConnectorClientBase {
      * Get styles from a Word DOCX document
      * @remarks Returns the styles defined in the Word Document (DOCX) format file
      */
-    public async editDocumentDocxGetStylesAsync(input: GetDocxStylesRequest, abortSignal?: AbortSignalLike): Promise<GetDocxStylesResponse> {
+    public async getEditDocumentDocxStyles(input: GetDocxStylesRequest, abortSignal?: AbortSignalLike): Promise<GetDocxStylesResponse> {
         const requestPath = `/convert/edit/docx/get-styles`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<GetDocxStylesResponse>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as GetDocxStylesResponse;
@@ -2596,13 +2596,13 @@ export class CloudmersiveconvertClient extends ConnectorClientBase {
      * Gets the contents of an existing table row in an existing table in a W
      * @remarks Gets the contents of an existing table row in a Word DOCX Document and returns the result.
      */
-    public async editDocumentDocxGetTableRowAsync(input: GetDocxTableRowRequest, abortSignal?: AbortSignalLike): Promise<GetDocxTableRowResponse> {
+    public async getEditDocumentDocxTableRow(input: GetDocxTableRowRequest, abortSignal?: AbortSignalLike): Promise<GetDocxTableRowResponse> {
         const requestPath = `/convert/edit/docx/get-table-row`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<GetDocxTableRowResponse>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as GetDocxTableRowResponse;
@@ -2612,13 +2612,13 @@ export class CloudmersiveconvertClient extends ConnectorClientBase {
      * Get a specific table by index in a Word DOCX document
      * @remarks Returns the specific table object by its 0-based index in an Office Word Document (DOCX)
      */
-    public async editDocumentDocxGetTableByIndexAsync(input: GetDocxTableByIndexRequest, abortSignal?: AbortSignalLike): Promise<GetDocxTableByIndexResponse> {
+    public async getEditDocumentDocxTableByIndex(input: GetDocxTableByIndexRequest, abortSignal?: AbortSignalLike): Promise<GetDocxTableByIndexResponse> {
         const requestPath = `/convert/edit/docx/get-table/by-index`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<GetDocxTableByIndexResponse>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as GetDocxTableByIndexResponse;
@@ -2628,13 +2628,13 @@ export class CloudmersiveconvertClient extends ConnectorClientBase {
      * Get all tables in Word DOCX document
      * @remarks Returns all the table objects in an Office Word Document (docx)
      */
-    public async editDocumentDocxGetTablesAsync(input: GetDocxTablesRequest, abortSignal?: AbortSignalLike): Promise<GetDocxTablesResponse> {
+    public async getEditDocumentDocxTables(input: GetDocxTablesRequest, abortSignal?: AbortSignalLike): Promise<GetDocxTablesResponse> {
         const requestPath = `/convert/edit/docx/get-tables`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<GetDocxTablesResponse>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as GetDocxTablesResponse;
@@ -2644,13 +2644,13 @@ export class CloudmersiveconvertClient extends ConnectorClientBase {
      * Insert a new comment into a Word DOCX document attached to a paragraph
      * @remarks Adds a new comment into a Word DOCX document attached to a paragraph and returns the result.  Call Finish Editing on the output URL to complete the operation.
      */
-    public async editDocumentDocxInsertCommentOnParagraphAsync(input: DocxInsertCommentOnParagraphRequest, abortSignal?: AbortSignalLike): Promise<InsertDocxCommentOnParagraphResponse> {
+    public async editDocumentDocxInsertCommentOnParagraph(input: DocxInsertCommentOnParagraphRequest, abortSignal?: AbortSignalLike): Promise<InsertDocxCommentOnParagraphResponse> {
         const requestPath = `/convert/edit/docx/insert-comment/on/paragraph`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<InsertDocxCommentOnParagraphResponse>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as InsertDocxCommentOnParagraphResponse;
@@ -2660,13 +2660,13 @@ export class CloudmersiveconvertClient extends ConnectorClientBase {
      * Insert image into a Word DOCX document
      * @remarks Set the footer in a Word Document (DOCX).  Call Finish Editing on the output URL to complete the operation.
      */
-    public async editDocumentDocxInsertImageAsync(input: DocxInsertImageRequest, abortSignal?: AbortSignalLike): Promise<DocxInsertImageResponse> {
+    public async editDocumentDocxInsertImage(input: DocxInsertImageRequest, abortSignal?: AbortSignalLike): Promise<DocxInsertImageResponse> {
         const requestPath = `/convert/edit/docx/insert-image`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<DocxInsertImageResponse>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as DocxInsertImageResponse;
@@ -2676,13 +2676,13 @@ export class CloudmersiveconvertClient extends ConnectorClientBase {
      * Insert a new paragraph into a Word DOCX document
      * @remarks Adds a new paragraph into a DOCX and returns the result.  You can insert at the beginning/end of a document, or before/after an existing object using its Path (location within the document).  Call Finish Editing on the output URL to complete the operation.
      */
-    public async editDocumentDocxInsertParagraphAsync(input: InsertDocxInsertParagraphRequest, abortSignal?: AbortSignalLike): Promise<InsertDocxInsertParagraphResponse> {
+    public async editDocumentDocxInsertParagraph(input: InsertDocxInsertParagraphRequest, abortSignal?: AbortSignalLike): Promise<InsertDocxInsertParagraphResponse> {
         const requestPath = `/convert/edit/docx/insert-paragraph`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<InsertDocxInsertParagraphResponse>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as InsertDocxInsertParagraphResponse;
@@ -2692,13 +2692,13 @@ export class CloudmersiveconvertClient extends ConnectorClientBase {
      * Insert a new table into a Word DOCX document
      * @remarks Adds a new table into a DOCX and returns the result.  Call Finish Editing on the output URL to complete the operation.
      */
-    public async editDocumentDocxInsertTableAsync(input: InsertDocxTablesRequest, abortSignal?: AbortSignalLike): Promise<InsertDocxTablesResponse> {
+    public async editDocumentDocxInsertTable(input: InsertDocxTablesRequest, abortSignal?: AbortSignalLike): Promise<InsertDocxTablesResponse> {
         const requestPath = `/convert/edit/docx/insert-table`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<InsertDocxTablesResponse>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as InsertDocxTablesResponse;
@@ -2708,13 +2708,13 @@ export class CloudmersiveconvertClient extends ConnectorClientBase {
      * Insert a new row into an existing table in a Word DOCX document
      * @remarks Adds a new table row into a DOCX Document and returns the result.  Call Finish Editing on the output URL to complete the operation.
      */
-    public async editDocumentDocxInsertTableRowAsync(input: InsertDocxTableRowRequest, abortSignal?: AbortSignalLike): Promise<InsertDocxTableRowResponse> {
+    public async editDocumentDocxInsertTableRow(input: InsertDocxTableRowRequest, abortSignal?: AbortSignalLike): Promise<InsertDocxTableRowResponse> {
         const requestPath = `/convert/edit/docx/insert-table-row`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<InsertDocxTableRowResponse>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as InsertDocxTableRowResponse;
@@ -2724,13 +2724,13 @@ export class CloudmersiveconvertClient extends ConnectorClientBase {
      * Remove headers and footers from Word DOCX document
      * @remarks Remove all headers, or footers, or both from a Word Document (DOCX).  Call Finish Editing on the output URL to complete the operation.
      */
-    public async editDocumentDocxRemoveHeadersAndFootersAsync(input: RemoveDocxHeadersAndFootersRequest, abortSignal?: AbortSignalLike): Promise<RemoveDocxHeadersAndFootersResponse> {
+    public async removeEditDocumentDocxHeadersAndFooters(input: RemoveDocxHeadersAndFootersRequest, abortSignal?: AbortSignalLike): Promise<RemoveDocxHeadersAndFootersResponse> {
         const requestPath = `/convert/edit/docx/remove-headers-and-footers`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<RemoveDocxHeadersAndFootersResponse>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as RemoveDocxHeadersAndFootersResponse;
@@ -2740,13 +2740,13 @@ export class CloudmersiveconvertClient extends ConnectorClientBase {
      * Delete any object in a Word DOCX document
      * @remarks Delete any object, such as a paragraph, table, image, etc. from a Word Document (DOCX).  Pass in the Path of the object you would like to delete.  You can call other functions such as Get-Tables, Get-Images, Get-Body, etc. to get the paths of the objects in the document.  Call Finish Editing on the output URL to complete the operation.
      */
-    public async editDocumentDocxRemoveObjectAsync(input: DocxRemoveObjectRequest, abortSignal?: AbortSignalLike): Promise<DocxRemoveObjectResponse> {
+    public async removeEditDocumentDocxObject(input: DocxRemoveObjectRequest, abortSignal?: AbortSignalLike): Promise<DocxRemoveObjectResponse> {
         const requestPath = `/convert/edit/docx/remove-object`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<DocxRemoveObjectResponse>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as DocxRemoveObjectResponse;
@@ -2756,13 +2756,13 @@ export class CloudmersiveconvertClient extends ConnectorClientBase {
      * Replace string in Word DOCX document
      * @remarks Replace all instances of a string in an Office Word Document (docx)
      */
-    public async editDocumentDocxReplaceAsync(input: ReplaceStringRequest, abortSignal?: AbortSignalLike): Promise<Blob> {
+    public async editDocumentDocxReplace(input: ReplaceStringRequest, abortSignal?: AbortSignalLike): Promise<Blob> {
         const requestPath = `/convert/edit/docx/replace-all`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<Blob>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as Blob;
@@ -2772,13 +2772,13 @@ export class CloudmersiveconvertClient extends ConnectorClientBase {
      * Set the footer in a Word DOCX document
      * @remarks Set the footer in a Word Document (DOCX).  Call Finish Editing on the output URL to complete the operation.
      */
-    public async editDocumentDocxSetFooterAsync(input: DocxSetFooterRequest, abortSignal?: AbortSignalLike): Promise<DocxSetFooterResponse> {
+    public async setEditDocumentDocxFooter(input: DocxSetFooterRequest, abortSignal?: AbortSignalLike): Promise<DocxSetFooterResponse> {
         const requestPath = `/convert/edit/docx/set-footer`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<DocxSetFooterResponse>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as DocxSetFooterResponse;
@@ -2788,13 +2788,13 @@ export class CloudmersiveconvertClient extends ConnectorClientBase {
      * Add page number to footer in a Word DOCX document
      * @remarks Set the footer in a Word Document (DOCX) to contain a page number.  Call Finish Editing on the output URL to complete the operation.
      */
-    public async editDocumentDocxSetFooterAddPageNumberAsync(input: DocxSetFooterAddPageNumberRequest, abortSignal?: AbortSignalLike): Promise<DocxSetFooterResponse> {
+    public async addEditDocumentDocxSetFooterPageNumber(input: DocxSetFooterAddPageNumberRequest, abortSignal?: AbortSignalLike): Promise<DocxSetFooterResponse> {
         const requestPath = `/convert/edit/docx/set-footer/add-page-number`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<DocxSetFooterResponse>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as DocxSetFooterResponse;
@@ -2804,13 +2804,13 @@ export class CloudmersiveconvertClient extends ConnectorClientBase {
      * Set the header in a Word DOCX document
      * @remarks Set the header in a Word Document (DOCX).  Call Finish Editing on the output URL to complete the operation.
      */
-    public async editDocumentDocxSetHeaderAsync(input: DocxSetHeaderRequest, abortSignal?: AbortSignalLike): Promise<DocxSetHeaderResponse> {
+    public async setEditDocumentDocxHeader(input: DocxSetHeaderRequest, abortSignal?: AbortSignalLike): Promise<DocxSetHeaderResponse> {
         const requestPath = `/convert/edit/docx/set-header`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<DocxSetHeaderResponse>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as DocxSetHeaderResponse;
@@ -2820,13 +2820,13 @@ export class CloudmersiveconvertClient extends ConnectorClientBase {
      * Update, set contents of a table cell in an existing table in a Word DO
      * @remarks Sets the contents of a table cell into a DOCX Document and returns the result.  Call Finish Editing on the output URL to complete the operation.
      */
-    public async editDocumentDocxUpdateTableCellAsync(input: UpdateDocxTableCellRequest, abortSignal?: AbortSignalLike): Promise<UpdateDocxTableCellResponse> {
+    public async updateEditDocumentDocxTableCell(input: UpdateDocxTableCellRequest, abortSignal?: AbortSignalLike): Promise<UpdateDocxTableCellResponse> {
         const requestPath = `/convert/edit/docx/update-table-cell`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<UpdateDocxTableCellResponse>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as UpdateDocxTableCellResponse;
@@ -2836,13 +2836,13 @@ export class CloudmersiveconvertClient extends ConnectorClientBase {
      * Update, set contents of a table row in an existing table in a Word DOCX document
      * @remarks Sets the contents of a table row into a DOCX Document and returns the result.  Call Finish Editing on the output URL to complete the operation.
      */
-    public async editDocumentDocxUpdateTableRowAsync(input: UpdateDocxTableRowRequest, abortSignal?: AbortSignalLike): Promise<UpdateDocxTableRowResponse> {
+    public async updateEditDocumentDocxTableRow(input: UpdateDocxTableRowRequest, abortSignal?: AbortSignalLike): Promise<UpdateDocxTableRowResponse> {
         const requestPath = `/convert/edit/docx/update-table-row`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<UpdateDocxTableRowResponse>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as UpdateDocxTableRowResponse;
@@ -2852,13 +2852,13 @@ export class CloudmersiveconvertClient extends ConnectorClientBase {
      * Finish editing document, and download result from document editing
      * @remarks Once done editing a document, download the result.  Begin editing a document by calling begin-editing, then perform operations, then call finish-editing to get the result.
      */
-    public async editDocumentFinishEditingAsync(input: FinishEditingRequest, abortSignal?: AbortSignalLike): Promise<Blob> {
+    public async editDocumentFinishEditing(input: FinishEditingRequest, abortSignal?: AbortSignalLike): Promise<Blob> {
         const requestPath = `/convert/edit/finish-editing`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<Blob>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as Blob;
@@ -2868,13 +2868,13 @@ export class CloudmersiveconvertClient extends ConnectorClientBase {
      * Delete, remove slides from a PowerPoint PPTX presentation document
      * @remarks Edits the input PowerPoint PPTX presentation document to remove the specified slides
      */
-    public async editDocumentPptxDeleteSlidesAsync(input: RemovePptxSlidesRequest, abortSignal?: AbortSignalLike): Promise<Blob> {
+    public async deleteEditDocumentPptxSlides(input: RemovePptxSlidesRequest, abortSignal?: AbortSignalLike): Promise<Blob> {
         const requestPath = `/convert/edit/pptx/delete-slides`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<Blob>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as Blob;
@@ -2884,13 +2884,13 @@ export class CloudmersiveconvertClient extends ConnectorClientBase {
      * Replace string in PowerPoint PPTX presentation
      * @remarks Replace all instances of a string in an Office PowerPoint Document (pptx)
      */
-    public async editDocumentPptxReplaceAsync(input: ReplaceStringRequest, abortSignal?: AbortSignalLike): Promise<Blob> {
+    public async editDocumentPptxReplace(input: ReplaceStringRequest, abortSignal?: AbortSignalLike): Promise<Blob> {
         const requestPath = `/convert/edit/pptx/replace-all`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<Blob>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as Blob;
@@ -2900,13 +2900,13 @@ export class CloudmersiveconvertClient extends ConnectorClientBase {
      * Clear cell contents in an Excel XLSX spreadsheet, worksheet by index
      * @remarks Clears, sets to blank, the contents of a specific cell in an Excel XLSX spreadsheet, worksheet
      */
-    public async editDocumentXlsxClearCellByIndexAsync(input: ClearXlsxCellRequest, abortSignal?: AbortSignalLike): Promise<ClearXlsxCellResponse> {
+    public async editDocumentXlsxClearCellByIndex(input: ClearXlsxCellRequest, abortSignal?: AbortSignalLike): Promise<ClearXlsxCellResponse> {
         const requestPath = `/convert/edit/xlsx/clear-cell/by-index`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<ClearXlsxCellResponse>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as ClearXlsxCellResponse;
@@ -2916,13 +2916,13 @@ export class CloudmersiveconvertClient extends ConnectorClientBase {
      * Create a blank Excel XLSX spreadsheet
      * @remarks Returns a blank Excel XLSX Spreadsheet (XLSX) format file
      */
-    public async editDocumentXlsxCreateBlankSpreadsheetAsync(input: CreateBlankSpreadsheetRequest, abortSignal?: AbortSignalLike): Promise<CreateBlankSpreadsheetResponse> {
+    public async createEditDocumentXlsxBlankSpreadsheet(input: CreateBlankSpreadsheetRequest, abortSignal?: AbortSignalLike): Promise<CreateBlankSpreadsheetResponse> {
         const requestPath = `/convert/edit/xlsx/create/blank`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<CreateBlankSpreadsheetResponse>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as CreateBlankSpreadsheetResponse;
@@ -2932,13 +2932,13 @@ export class CloudmersiveconvertClient extends ConnectorClientBase {
      * Create a new Excel XLSX spreadsheet from column and row data
      * @remarks Returns a new Excel XLSX Spreadsheet (XLSX) format file populated with column and row data specified as input
      */
-    public async editDocumentXlsxCreateSpreadsheetFromDataAsync(input: CreateSpreadsheetFromDataRequest, abortSignal?: AbortSignalLike): Promise<CreateSpreadsheetFromDataResponse> {
+    public async createEditDocumentXlsxSpreadsheetFromData(input: CreateSpreadsheetFromDataRequest, abortSignal?: AbortSignalLike): Promise<CreateSpreadsheetFromDataResponse> {
         const requestPath = `/convert/edit/xlsx/create/from/data`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<CreateSpreadsheetFromDataResponse>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as CreateSpreadsheetFromDataResponse;
@@ -2948,13 +2948,13 @@ export class CloudmersiveconvertClient extends ConnectorClientBase {
      * Delete, remove worksheet from an Excel XLSX spreadsheet document
      * @remarks Edits the input Excel XLSX spreadsheet document to remove the specified worksheet (tab).  Use the Get Worksheets API to enumerate available worksheets in a spreadsheet.
      */
-    public async editDocumentXlsxDeleteWorksheetAsync(input: RemoveXlsxWorksheetRequest, abortSignal?: AbortSignalLike): Promise<EditDocumentXlsxDeleteWorksheetResponse> {
+    public async deleteEditDocumentXlsxWorksheet(input: RemoveXlsxWorksheetRequest, abortSignal?: AbortSignalLike): Promise<EditDocumentXlsxDeleteWorksheetResponse> {
         const requestPath = `/convert/edit/xlsx/delete-worksheet`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<EditDocumentXlsxDeleteWorksheetResponse>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as EditDocumentXlsxDeleteWorksheetResponse;
@@ -2964,13 +2964,13 @@ export class CloudmersiveconvertClient extends ConnectorClientBase {
      * Get cell from an Excel XLSX spreadsheet, worksheet by cell identifier
      * @remarks Returns the value of a specific cell based on its identifier (e.g. A1, B22, C33, etc.) in the Excel Spreadsheet worksheet
      */
-    public async editDocumentXlsxGetCellByIdentifierAsync(input: GetXlsxCellByIdentifierRequest, abortSignal?: AbortSignalLike): Promise<GetXlsxCellByIdentifierResponse> {
+    public async getEditDocumentXlsxCellByIdentifier(input: GetXlsxCellByIdentifierRequest, abortSignal?: AbortSignalLike): Promise<GetXlsxCellByIdentifierResponse> {
         const requestPath = `/convert/edit/xlsx/get-cell/by-identifier`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<GetXlsxCellByIdentifierResponse>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as GetXlsxCellByIdentifierResponse;
@@ -2980,13 +2980,13 @@ export class CloudmersiveconvertClient extends ConnectorClientBase {
      * Get cell from an Excel XLSX spreadsheet, worksheet by index
      * @remarks Returns the value and definition of a specific cell in a specific row in the Excel Spreadsheet worksheet
      */
-    public async editDocumentXlsxGetCellByIndexAsync(input: GetXlsxCellRequest, abortSignal?: AbortSignalLike): Promise<GetXlsxCellResponse> {
+    public async getEditDocumentXlsxCellByIndex(input: GetXlsxCellRequest, abortSignal?: AbortSignalLike): Promise<GetXlsxCellResponse> {
         const requestPath = `/convert/edit/xlsx/get-cell/by-index`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<GetXlsxCellResponse>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as GetXlsxCellResponse;
@@ -2996,13 +2996,13 @@ export class CloudmersiveconvertClient extends ConnectorClientBase {
      * Get rows and cells from a Excel XLSX spreadsheet, worksheet
      * @remarks Returns the rows and cells defined in the Excel Spreadsheet worksheet
      */
-    public async editDocumentXlsxGetColumnsAsync(input: GetXlsxColumnsRequest, abortSignal?: AbortSignalLike): Promise<GetXlsxColumnsResponse> {
+    public async getEditDocumentXlsxColumns(input: GetXlsxColumnsRequest, abortSignal?: AbortSignalLike): Promise<GetXlsxColumnsResponse> {
         const requestPath = `/convert/edit/xlsx/get-columns`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<GetXlsxColumnsResponse>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as GetXlsxColumnsResponse;
@@ -3012,13 +3012,13 @@ export class CloudmersiveconvertClient extends ConnectorClientBase {
      * Get images from a Excel XLSX spreadsheet, worksheet
      * @remarks Returns the images defined in the Excel Spreadsheet worksheet
      */
-    public async editDocumentXlsxGetImagesAsync(input: GetXlsxImagesRequest, abortSignal?: AbortSignalLike): Promise<GetXlsxImagesResponse> {
+    public async getEditDocumentXlsxImages(input: GetXlsxImagesRequest, abortSignal?: AbortSignalLike): Promise<GetXlsxImagesResponse> {
         const requestPath = `/convert/edit/xlsx/get-images`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<GetXlsxImagesResponse>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as GetXlsxImagesResponse;
@@ -3028,13 +3028,13 @@ export class CloudmersiveconvertClient extends ConnectorClientBase {
      * Get rows and cells from a Excel XLSX spreadsheet, worksheet
      * @remarks Returns the rows and cells defined in the Excel Spreadsheet worksheet
      */
-    public async editDocumentXlsxGetRowsAndCellsAsync(input: GetXlsxRowsAndCellsRequest, abortSignal?: AbortSignalLike): Promise<GetXlsxRowsAndCellsResponse> {
+    public async getEditDocumentXlsxRowsAndCells(input: GetXlsxRowsAndCellsRequest, abortSignal?: AbortSignalLike): Promise<GetXlsxRowsAndCellsResponse> {
         const requestPath = `/convert/edit/xlsx/get-rows-and-cells`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<GetXlsxRowsAndCellsResponse>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as GetXlsxRowsAndCellsResponse;
@@ -3044,13 +3044,13 @@ export class CloudmersiveconvertClient extends ConnectorClientBase {
      * Get styles from a Excel XLSX spreadsheet, worksheet
      * @remarks Returns the style defined in the Excel Spreadsheet
      */
-    public async editDocumentXlsxGetStylesAsync(input: GetXlsxStylesRequest, abortSignal?: AbortSignalLike): Promise<GetXlsxStylesResponse> {
+    public async getEditDocumentXlsxStyles(input: GetXlsxStylesRequest, abortSignal?: AbortSignalLike): Promise<GetXlsxStylesResponse> {
         const requestPath = `/convert/edit/xlsx/get-styles`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<GetXlsxStylesResponse>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as GetXlsxStylesResponse;
@@ -3060,13 +3060,13 @@ export class CloudmersiveconvertClient extends ConnectorClientBase {
      * Get worksheets from a Excel XLSX spreadsheet
      * @remarks Returns the worksheets (tabs) defined in the Excel Spreadsheet (XLSX) format file
      */
-    public async editDocumentXlsxGetWorksheetsAsync(input: GetXlsxWorksheetsRequest, abortSignal?: AbortSignalLike): Promise<GetXlsxWorksheetsResponse> {
+    public async getEditDocumentXlsxWorksheets(input: GetXlsxWorksheetsRequest, abortSignal?: AbortSignalLike): Promise<GetXlsxWorksheetsResponse> {
         const requestPath = `/convert/edit/xlsx/get-worksheets`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<GetXlsxWorksheetsResponse>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as GetXlsxWorksheetsResponse;
@@ -3076,13 +3076,13 @@ export class CloudmersiveconvertClient extends ConnectorClientBase {
      * Insert a new worksheet into an Excel XLSX spreadsheet
      * @remarks Inserts a new worksheet into an Excel Spreadsheet
      */
-    public async editDocumentXlsxInsertWorksheetAsync(input: InsertXlsxWorksheetRequest, abortSignal?: AbortSignalLike): Promise<InsertXlsxWorksheetResponse> {
+    public async editDocumentXlsxInsertWorksheet(input: InsertXlsxWorksheetRequest, abortSignal?: AbortSignalLike): Promise<InsertXlsxWorksheetResponse> {
         const requestPath = `/convert/edit/xlsx/insert-worksheet`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<InsertXlsxWorksheetResponse>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as InsertXlsxWorksheetResponse;
@@ -3092,13 +3092,13 @@ export class CloudmersiveconvertClient extends ConnectorClientBase {
      * Set, update cell contents in an Excel XLSX spreadsheet, worksheet by c
      * @remarks Sets, updates the contents of a specific cell in an Excel XLSX spreadsheet, worksheet using its cell identifier (e.g. A1, B22, C33) in the worksheet
      */
-    public async editDocumentXlsxSetCellByIdentifierAsync(input: SetXlsxCellByIdentifierRequest, abortSignal?: AbortSignalLike): Promise<SetXlsxCellByIdentifierResponse> {
+    public async setEditDocumentXlsxCellByIdentifier(input: SetXlsxCellByIdentifierRequest, abortSignal?: AbortSignalLike): Promise<SetXlsxCellByIdentifierResponse> {
         const requestPath = `/convert/edit/xlsx/set-cell/by-identifier`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<SetXlsxCellByIdentifierResponse>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as SetXlsxCellByIdentifierResponse;
@@ -3108,13 +3108,13 @@ export class CloudmersiveconvertClient extends ConnectorClientBase {
      * Set, update cell contents in an Excel XLSX spreadsheet, worksheet by index
      * @remarks Sets, updates the contents of a specific cell in an Excel XLSX spreadsheet, worksheet
      */
-    public async editDocumentXlsxSetCellByIndexAsync(input: SetXlsxCellRequest, abortSignal?: AbortSignalLike): Promise<SetXlsxCellResponse> {
+    public async setEditDocumentXlsxCellByIndex(input: SetXlsxCellRequest, abortSignal?: AbortSignalLike): Promise<SetXlsxCellResponse> {
         const requestPath = `/convert/edit/xlsx/set-cell/by-index`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<SetXlsxCellResponse>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as SetXlsxCellResponse;
@@ -3124,13 +3124,13 @@ export class CloudmersiveconvertClient extends ConnectorClientBase {
      * Convert HTML to Word DOCX Document
      * @remarks Convert HTML to Office Word Document (DOCX) format
      */
-    public async convertWebHtmlToDocxAsync(input: HtmlToOfficeRequest, abortSignal?: AbortSignalLike): Promise<Blob> {
+    public async convertWebHtmlToDocx(input: HtmlToOfficeRequest, abortSignal?: AbortSignalLike): Promise<Blob> {
         const requestPath = `/convert/html/to/docx`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<Blob>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as Blob;
@@ -3140,13 +3140,13 @@ export class CloudmersiveconvertClient extends ConnectorClientBase {
      * Convert JSON to XML conversion
      * @remarks Convert a JSON object into XML
      */
-    public async convertDataJsonToXmlAsync(input: ConvertDataJsonToXmlInput, abortSignal?: AbortSignalLike): Promise<string> {
+    public async convertDataJsonToXml(input: ConvertDataJsonToXmlInput, abortSignal?: AbortSignalLike): Promise<string> {
         const requestPath = `/convert/json/to/xml`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<string>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as string;
@@ -3156,13 +3156,13 @@ export class CloudmersiveconvertClient extends ConnectorClientBase {
      * Apply HTML template
      * @remarks Apply operations to fill in an HTML template, generating a final HTML result
      */
-    public async convertTemplateApplyHtmlTemplateAsync(input: HtmlTemplateApplicationRequest, abortSignal?: AbortSignalLike): Promise<HtmlTemplateApplicationResponse> {
+    public async convertTemplateApplyHtmlTemplate(input: HtmlTemplateApplicationRequest, abortSignal?: AbortSignalLike): Promise<HtmlTemplateApplicationResponse> {
         const requestPath = `/convert/template/html/apply`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<HtmlTemplateApplicationResponse>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as HtmlTemplateApplicationResponse;
@@ -3172,13 +3172,13 @@ export class CloudmersiveconvertClient extends ConnectorClientBase {
      * Convert HTML string to PDF
      * @remarks Fully renders a website and returns a PDF of the HTML.  Javascript, HTML5, CSS and other advanced features are all supported.
      */
-    public async convertWebHtmlToPdfAsync(input: HtmlToPdfRequest, abortSignal?: AbortSignalLike): Promise<Blob> {
+    public async convertWebHtmlToPdf(input: HtmlToPdfRequest, abortSignal?: AbortSignalLike): Promise<Blob> {
         const requestPath = `/convert/web/html/to/pdf`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<Blob>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as Blob;
@@ -3188,13 +3188,13 @@ export class CloudmersiveconvertClient extends ConnectorClientBase {
      * Convert HTML string to PNG screenshot
      * @remarks Fully renders a website and returns a PNG (screenshot) of the HTML.  Javascript, HTML5, CSS and other advanced features are all supported.
      */
-    public async convertWebHtmlToPngAsync(input: HtmlToPngRequest, abortSignal?: AbortSignalLike): Promise<ConvertWebHtmlToPngResponse> {
+    public async convertWebHtmlToPng(input: HtmlToPngRequest, abortSignal?: AbortSignalLike): Promise<ConvertWebHtmlToPngResponse> {
         const requestPath = `/convert/web/html/to/png`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<ConvertWebHtmlToPngResponse>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as ConvertWebHtmlToPngResponse;
@@ -3204,13 +3204,13 @@ export class CloudmersiveconvertClient extends ConnectorClientBase {
      * Convert HTML string to text (txt)
      * @remarks Converts an HTML string input into text (txt); extracts text from HTML
      */
-    public async convertWebHtmlToTxtAsync(input: HtmlToTextRequest, abortSignal?: AbortSignalLike): Promise<HtmlToTextResponse> {
+    public async convertWebHtmlToTxt(input: HtmlToTextRequest, abortSignal?: AbortSignalLike): Promise<HtmlToTextResponse> {
         const requestPath = `/convert/web/html/to/txt`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<HtmlToTextResponse>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as HtmlToTextResponse;
@@ -3220,13 +3220,13 @@ export class CloudmersiveconvertClient extends ConnectorClientBase {
      * Convert a URL to PDF
      * @remarks Fully renders a website and returns a PDF of the full page.  Javascript, HTML5, CSS and other advanced features are all supported.
      */
-    public async convertWebUrlToPdfAsync(input: ScreenshotRequest, abortSignal?: AbortSignalLike): Promise<Blob> {
+    public async convertWebUrlToPdf(input: ScreenshotRequest, abortSignal?: AbortSignalLike): Promise<Blob> {
         const requestPath = `/convert/web/url/to/pdf`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<Blob>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as Blob;
@@ -3236,13 +3236,13 @@ export class CloudmersiveconvertClient extends ConnectorClientBase {
      * Take screenshot of URL
      * @remarks Fully renders a website and returns a PNG screenshot of the full page image.  Javascript, HTML5, CSS and other advanced features are all supported.
      */
-    public async convertWebUrlToScreenshotAsync(input: ScreenshotRequest, abortSignal?: AbortSignalLike): Promise<Blob> {
+    public async convertWebUrlToScreenshot(input: ScreenshotRequest, abortSignal?: AbortSignalLike): Promise<Blob> {
         const requestPath = `/convert/web/url/to/screenshot`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<Blob>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as Blob;
@@ -3252,13 +3252,13 @@ export class CloudmersiveconvertClient extends ConnectorClientBase {
      * Convert website URL page to text (txt)
      * @remarks Converts a website URL page into text (txt); extracts text from HTML
      */
-    public async convertWebUrlToTxtAsync(input: UrlToTextRequest, abortSignal?: AbortSignalLike): Promise<UrlToTextResponse> {
+    public async convertWebUrlToTxt(input: UrlToTextRequest, abortSignal?: AbortSignalLike): Promise<UrlToTextResponse> {
         const requestPath = `/convert/web/url/to/txt`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<UrlToTextResponse>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as UrlToTextResponse;

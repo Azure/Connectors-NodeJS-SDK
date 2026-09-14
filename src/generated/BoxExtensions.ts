@@ -4,7 +4,7 @@
 import type { AbortSignalLike } from "@azure/abort-controller";
 import type { TokenCredential } from "@azure/core-auth";
 import { ConnectorClientBase } from "../azureConnectors/clientBase.ts";
-import { ConnectorException } from "../azureConnectors/connectorException.ts";
+import { ConnectorError } from "../azureConnectors/connectorError.ts";
 import { ConnectorClientOptions } from "../azureConnectors/options.ts";
 import { TriggerCallbackPayload } from "../azureConnectors/triggerPayload.ts";
 
@@ -206,13 +206,13 @@ export class BoxClient extends ConnectorClientBase {
      * Get file metadata using id
      * @remarks Retrieves the file metadata from Box using file id.
      */
-    public async getFileMetadataAsync(id: string, abortSignal?: AbortSignalLike): Promise<BlobMetadata> {
-        const requestPath = `/datasets/default/files/${id}`;
+    public async getFileMetadata(id: string, abortSignal?: AbortSignalLike): Promise<BlobMetadata> {
+        const requestPath = `/datasets/default/files/${encodeURIComponent(encodeURIComponent(String(id)))}`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<BlobMetadata>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as BlobMetadata;
@@ -222,13 +222,13 @@ export class BoxClient extends ConnectorClientBase {
      * Update file
      * @remarks Updates an existing file in Box.
      */
-    public async updateFileAsync(input: UpdateFileInput, id: string, abortSignal?: AbortSignalLike): Promise<BlobMetadata> {
-        const requestPath = `/datasets/default/files/${id}`;
+    public async updateFile(input: UpdateFileInput, id: string, abortSignal?: AbortSignalLike): Promise<BlobMetadata> {
+        const requestPath = `/datasets/default/files/${encodeURIComponent(encodeURIComponent(String(id)))}`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<BlobMetadata>("PUT", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `PUT ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `PUT ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as BlobMetadata;
@@ -238,13 +238,13 @@ export class BoxClient extends ConnectorClientBase {
      * Delete file
      * @remarks Deletes an existing file from Box.
      */
-    public async deleteFileAsync(id: string, abortSignal?: AbortSignalLike): Promise<void> {
-        const requestPath = `/datasets/default/files/${id}`;
+    public async deleteFile(id: string, abortSignal?: AbortSignalLike): Promise<void> {
+        const requestPath = `/datasets/default/files/${encodeURIComponent(encodeURIComponent(String(id)))}`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<void>("DELETE", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `DELETE ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `DELETE ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
     }
 
@@ -252,7 +252,7 @@ export class BoxClient extends ConnectorClientBase {
      * Get file metadata using path
      * @remarks Retrieves the file metadata from Box using path.
      */
-    public async getFileMetadataByPathAsync(path?: string, queryParametersSingleEncoded?: string, abortSignal?: AbortSignalLike): Promise<BlobMetadata> {
+    public async getFileMetadataByPath(path?: string, queryParametersSingleEncoded?: string, abortSignal?: AbortSignalLike): Promise<BlobMetadata> {
         const queryParams: string[] = [];
         if (path !== undefined) {
             queryParams.push(`path=${encodeURIComponent(String(path))}`);
@@ -265,7 +265,7 @@ export class BoxClient extends ConnectorClientBase {
         const httpResponse = await this.httpClient.sendAsync<BlobMetadata>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as BlobMetadata;
@@ -275,7 +275,7 @@ export class BoxClient extends ConnectorClientBase {
      * Get file content using path
      * @remarks Retrieves the file contents from Box using path.
      */
-    public async getFileContentByPathAsync(path?: string, inferContentType?: string, queryParametersSingleEncoded?: string, abortSignal?: AbortSignalLike): Promise<Blob> {
+    public async getFileContentByPath(path?: string, inferContentType?: string, queryParametersSingleEncoded?: string, abortSignal?: AbortSignalLike): Promise<Blob> {
         const queryParams: string[] = [];
         if (path !== undefined) {
             queryParams.push(`path=${encodeURIComponent(String(path))}`);
@@ -291,7 +291,7 @@ export class BoxClient extends ConnectorClientBase {
         const httpResponse = await this.httpClient.sendAsync<Blob>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as Blob;
@@ -301,17 +301,17 @@ export class BoxClient extends ConnectorClientBase {
      * Get file content using id
      * @remarks Retrieves the file content from Box using id.
      */
-    public async getFileContentAsync(id: string, inferContentType?: string, abortSignal?: AbortSignalLike): Promise<Blob> {
+    public async getFileContent(id: string, inferContentType?: string, abortSignal?: AbortSignalLike): Promise<Blob> {
         const queryParams: string[] = [];
         if (inferContentType !== undefined) {
             queryParams.push(`inferContentType=${encodeURIComponent(String(inferContentType))}`);
         }
-        const requestPath = `/datasets/default/files/${id}/content` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
+        const requestPath = `/datasets/default/files/${encodeURIComponent(encodeURIComponent(String(id)))}/content` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<Blob>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as Blob;
@@ -321,7 +321,7 @@ export class BoxClient extends ConnectorClientBase {
      * Create file
      * @remarks Uploads a file to Box.
      */
-    public async createFileAsync(input: CreateFileInput, folderPath?: string, name?: string, queryParametersSingleEncoded?: string, abortSignal?: AbortSignalLike): Promise<BlobMetadata> {
+    public async createFile(input: CreateFileInput, folderPath?: string, name?: string, queryParametersSingleEncoded?: string, abortSignal?: AbortSignalLike): Promise<BlobMetadata> {
         const queryParams: string[] = [];
         if (folderPath !== undefined) {
             queryParams.push(`folderPath=${encodeURIComponent(String(folderPath))}`);
@@ -337,7 +337,7 @@ export class BoxClient extends ConnectorClientBase {
         const httpResponse = await this.httpClient.sendAsync<BlobMetadata>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as BlobMetadata;
@@ -347,7 +347,7 @@ export class BoxClient extends ConnectorClientBase {
      * Copy file
      * @remarks Copy a file to a file path in Box.
      */
-    public async copyFileAsync(source?: string, destination?: string, overwrite?: string, queryParametersSingleEncoded?: string, abortSignal?: AbortSignalLike): Promise<BlobMetadata> {
+    public async copyFile(source?: string, destination?: string, overwrite?: string, queryParametersSingleEncoded?: string, abortSignal?: AbortSignalLike): Promise<BlobMetadata> {
         const queryParams: string[] = [];
         if (source !== undefined) {
             queryParams.push(`source=${encodeURIComponent(String(source))}`);
@@ -366,7 +366,7 @@ export class BoxClient extends ConnectorClientBase {
         const httpResponse = await this.httpClient.sendAsync<BlobMetadata>("POST", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as BlobMetadata;
@@ -376,13 +376,13 @@ export class BoxClient extends ConnectorClientBase {
      * List files and folders in folder
      * @remarks Lists the files and folders in a Box folder.
      */
-    public async listFolderAsync(id: string, abortSignal?: AbortSignalLike): Promise<Array<BlobMetadata>> {
-        const requestPath = `/datasets/default/folders/${id}`;
+    public async listFolder(id: string, abortSignal?: AbortSignalLike): Promise<Array<BlobMetadata>> {
+        const requestPath = `/datasets/default/folders/${encodeURIComponent(encodeURIComponent(String(id)))}`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<Array<BlobMetadata>>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as Array<BlobMetadata>;
@@ -392,13 +392,13 @@ export class BoxClient extends ConnectorClientBase {
      * List files and folders in root folder
      * @remarks Lists the files and folders in the Box root folder.
      */
-    public async listRootFolderAsync(abortSignal?: AbortSignalLike): Promise<Array<BlobMetadata>> {
+    public async listRootFolder(abortSignal?: AbortSignalLike): Promise<Array<BlobMetadata>> {
         const requestPath = `/datasets/default/folders`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<Array<BlobMetadata>>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as Array<BlobMetadata>;
@@ -408,7 +408,7 @@ export class BoxClient extends ConnectorClientBase {
      * Extract archive to folder
      * @remarks Extracts an archive file into a folder in Box (example: .zip).
      */
-    public async extractFolderAsync(source?: string, destination?: string, overwrite?: string, queryParametersSingleEncoded?: string, abortSignal?: AbortSignalLike): Promise<Array<BlobMetadata>> {
+    public async extractFolder(source?: string, destination?: string, overwrite?: string, queryParametersSingleEncoded?: string, abortSignal?: AbortSignalLike): Promise<Array<BlobMetadata>> {
         const queryParams: string[] = [];
         if (source !== undefined) {
             queryParams.push(`source=${encodeURIComponent(String(source))}`);
@@ -427,7 +427,7 @@ export class BoxClient extends ConnectorClientBase {
         const httpResponse = await this.httpClient.sendAsync<Array<BlobMetadata>>("POST", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as Array<BlobMetadata>;

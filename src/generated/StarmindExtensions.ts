@@ -4,7 +4,7 @@
 import type { AbortSignalLike } from "@azure/abort-controller";
 import type { TokenCredential } from "@azure/core-auth";
 import { ConnectorClientBase } from "../azureConnectors/clientBase.ts";
-import { ConnectorException } from "../azureConnectors/connectorException.ts";
+import { ConnectorError } from "../azureConnectors/connectorError.ts";
 import { ConnectorClientOptions } from "../azureConnectors/options.ts";
 
 // #region Types
@@ -103,7 +103,48 @@ export interface Question {
  * Definition: QuestionComplete
  */
 export interface QuestionComplete {
-    [key: string]: unknown;
+    /** The unique knowledge space id to which the question belongs. */
+    knowledge_space_id?: number;
+    /** The total number of upvotes the question has received. */
+    upvote_count?: number;
+    /** The number of times the question has been viewed by users. */
+    view_count?: number;
+    /** Timestamp indicating when the question was published (yyyy-MM-ddTHH:mm:ss.fffZ) */
+    published?: string;
+    /** Indicates if the question is deleted. Deleted questions are not visible to users, but can still be accessed by the administrators. */
+    is_deleted?: boolean;
+    /** The question title */
+    title?: string;
+    /** Timestamp indicating the last activity with the question (yyyy-MM-ddTHH:mm:ss.fffZ) */
+    last_activity?: string;
+    /** The question is_published flag indicates whether the question is published or not. A published solution is visible to all users, while an unpublished solution is in draft state only visible to the author. */
+    is_published?: boolean;
+    /** Timestamp indicating when the question was created (yyyy-MM-ddTHH:mm:ss.fffZ) */
+    created?: string;
+    /** Question description providing detailed context and information about the question */
+    description?: string;
+    /** This is the number of solutions that have been provided for this question. */
+    solution_count?: number;
+    /** Timestamp indicating when the question's content or attachments were last updated (yyyy-MM-ddTHH:mm:ss.fffZ) */
+    content_updated?: string;
+    /** The unique question id */
+    id?: number;
+    /** Last time the resource has been updated in the DB. This date does not reflect content updates but any update to any fields of the record. Use content_updated for information about content updates. */
+    updated?: string;
+    /** The question language */
+    language?: string;
+    /** source */
+    source?: string;
+    /** The assigned question concepts */
+    concepts?: Array<ConceptLabelMatch>;
+    /** The assigned question knowledge space */
+    knowledge_space?: KnowledgeSpace;
+    /** The question solutions */
+    solutions?: Array<Solution>;
+    /** The question attachments */
+    attachments?: Array<Attachment>;
+    /** The question comments */
+    comments?: Array<Comment>;
 }
 
 /**
@@ -322,9 +363,7 @@ export type Language = "de" | "en" | "es" | "fr" | "hr" | "it" | "pt" | "ro" | "
 /**
  * Definition: ExpertConceptScores
  */
-export interface ExpertConceptScores {
-    [key: string]: unknown;
-}
+export type ExpertConceptScores = Array<Record<string, unknown>>;
 
 /**
  * Definition: GraphQLUserResponse
@@ -371,13 +410,13 @@ export class StarmindClient extends ConnectorClientBase {
      * Find experts
      * @remarks Finds experts based on the provided text_query. The search leverages the knowledge graph to identify users with relevant expertise and knowledge related to the query. Provide the optional language to specify the preferred language for concept label filtering. This does not affect the search matching itself; it only filters which expertise we show from returned users by selecting concepts based on the primary label in the chosen language. Returned concepts are deduplicated when multiple concepts share the same primary label.
      */
-    public async findExpertsAsync(input: FindExpertsInput, abortSignal?: AbortSignalLike): Promise<FindExpertsResponse> {
+    public async findExperts(input: FindExpertsInput, abortSignal?: AbortSignalLike): Promise<FindExpertsResponse> {
         const requestPath = `/api/v3/experts`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<FindExpertsResponse>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as FindExpertsResponse;
@@ -387,7 +426,7 @@ export class StarmindClient extends ConnectorClientBase {
      * Find questions
      * @remarks Searches questions using optional `query`, `limit` (default 10), `filter`, and `sort`; returns a paginated collection with question `items`. By default, all published questions are returned, ordered by their last activity (descending). A combination of filters, search queries and ordering criteria can be applied to the result.
      */
-    public async findQuestionsAsync(query?: string, limit?: string, filter?: string, sort?: string, abortSignal?: AbortSignalLike): Promise<FindQuestionsResponse> {
+    public async findQuestions(query?: string, limit?: string, filter?: string, sort?: string, abortSignal?: AbortSignalLike): Promise<FindQuestionsResponse> {
         const queryParams: string[] = [];
         if (query !== undefined) {
             queryParams.push(`query=${encodeURIComponent(String(query))}`);
@@ -406,7 +445,7 @@ export class StarmindClient extends ConnectorClientBase {
         const httpResponse = await this.httpClient.sendAsync<FindQuestionsResponse>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as FindQuestionsResponse;
@@ -416,13 +455,13 @@ export class StarmindClient extends ConnectorClientBase {
      * Get user by id
      * @remarks Retrieves user information based on the provided user id.
      */
-    public async getUserByIdAsync(id: string, abortSignal?: AbortSignalLike): Promise<GraphQLUserResponse> {
+    public async getUserById(id: string, abortSignal?: AbortSignalLike): Promise<GraphQLUserResponse> {
         const requestPath = `/api/v3/users/${id}`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<GraphQLUserResponse>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as GraphQLUserResponse;
@@ -432,13 +471,13 @@ export class StarmindClient extends ConnectorClientBase {
      * Create a question draft
      * @remarks Creates a new question draft. The draft is not yet searchable or answerable by others. After creation, publish the draft (via the publish endpoint) to trigger expert search, make the question discoverable, and allow other users to answer it. Providing the optional description helps experts understand the question better and increases the chances of getting high-quality answers.
      */
-    public async postQuestionDraftAsync(input: PostQuestionDraftInput, abortSignal?: AbortSignalLike): Promise<Question> {
+    public async postQuestionDraft(input: PostQuestionDraftInput, abortSignal?: AbortSignalLike): Promise<Question> {
         const requestPath = `/api/v3/questions`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<Question>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as Question;
@@ -448,13 +487,13 @@ export class StarmindClient extends ConnectorClientBase {
      * Publish a question
      * @remarks Publishes a question draft. Publishing the question triggers expert search, makes the question discoverable, and allows other users to answer it. Questions are always published anonymously.
      */
-    public async publishQuestionDraftAsync(questionId: string, abortSignal?: AbortSignalLike): Promise<PublishQuestionDraftResponse> {
+    public async publishQuestionDraft(questionId: string, abortSignal?: AbortSignalLike): Promise<PublishQuestionDraftResponse> {
         const requestPath = `/api/v3/questions/${questionId}/publish`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<PublishQuestionDraftResponse>("PUT", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `PUT ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `PUT ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as PublishQuestionDraftResponse;

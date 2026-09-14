@@ -4,7 +4,7 @@
 import type { AbortSignalLike } from "@azure/abort-controller";
 import type { TokenCredential } from "@azure/core-auth";
 import { ConnectorClientBase } from "../azureConnectors/clientBase.ts";
-import { ConnectorException } from "../azureConnectors/connectorException.ts";
+import { ConnectorError } from "../azureConnectors/connectorError.ts";
 import { ConnectorClientOptions } from "../azureConnectors/options.ts";
 
 // #region Types
@@ -725,13 +725,13 @@ export class MailchimpClient extends ConnectorClientBase {
      * List campaigns
      * @remarks This operation retrieves a list of campaigns in an account
      */
-    public async getCampaignsAsync(abortSignal?: AbortSignalLike): Promise<GetCampaignsResponse> {
+    public async getCampaigns(abortSignal?: AbortSignalLike): Promise<GetCampaignsResponse> {
         const requestPath = `/campaigns`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<GetCampaignsResponse>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as GetCampaignsResponse;
@@ -741,13 +741,13 @@ export class MailchimpClient extends ConnectorClientBase {
      * Send Campaign
      * @remarks Send an existing campaign
      */
-    public async sendcampaignAsync(campaignId: string, abortSignal?: AbortSignalLike): Promise<void> {
+    public async sendcampaign(campaignId: string, abortSignal?: AbortSignalLike): Promise<void> {
         const requestPath = `/campaigns/${campaignId}/actions/send`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<void>("POST", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
     }
 
@@ -755,7 +755,7 @@ export class MailchimpClient extends ConnectorClientBase {
      * Get all the lists
      * @remarks Find all the lists for the current user
      */
-    public async getListsAsync(count?: string, offset?: string, abortSignal?: AbortSignalLike): Promise<GetListsResponseModel> {
+    public async getLists(count?: string, offset?: string, abortSignal?: AbortSignalLike): Promise<GetListsResponseModel> {
         const queryParams: string[] = [];
         if (count !== undefined) {
             queryParams.push(`count=${encodeURIComponent(String(count))}`);
@@ -768,7 +768,7 @@ export class MailchimpClient extends ConnectorClientBase {
         const httpResponse = await this.httpClient.sendAsync<GetListsResponseModel>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as GetListsResponseModel;
@@ -778,13 +778,13 @@ export class MailchimpClient extends ConnectorClientBase {
      * New List
      * @remarks Create a new list in your MailChimp account
      */
-    public async newlistAsync(input: NewListRequest, abortSignal?: AbortSignalLike): Promise<CreateNewListResponseModel> {
+    public async newlist(input: NewListRequest, abortSignal?: AbortSignalLike): Promise<CreateNewListResponseModel> {
         const requestPath = `/lists`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<CreateNewListResponseModel>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as CreateNewListResponseModel;
@@ -794,7 +794,7 @@ export class MailchimpClient extends ConnectorClientBase {
      * Subscribe or unsubscribe list members
      * @remarks Batch subscribe or unsubscribe list members.
      */
-    public async addMembersAsync(input: NewMembersInListRequest, listId: string, skipMergeValidation?: string, skipDuplicateCheck?: string, abortSignal?: AbortSignalLike): Promise<GetAddMembersBatchResponseModel> {
+    public async addMembers(input: NewMembersInListRequest, listId: string, skipMergeValidation?: string, skipDuplicateCheck?: string, abortSignal?: AbortSignalLike): Promise<GetAddMembersBatchResponseModel> {
         const queryParams: string[] = [];
         if (skipMergeValidation !== undefined) {
             queryParams.push(`skip_merge_validation=${encodeURIComponent(String(skipMergeValidation))}`);
@@ -807,7 +807,7 @@ export class MailchimpClient extends ConnectorClientBase {
         const httpResponse = await this.httpClient.sendAsync<GetAddMembersBatchResponseModel>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as GetAddMembersBatchResponseModel;
@@ -817,7 +817,7 @@ export class MailchimpClient extends ConnectorClientBase {
      * Show list members
      * @remarks Show all the members of a list
      */
-    public async getListMembersAsync(listId: string, count?: string, offset?: string, abortSignal?: AbortSignalLike): Promise<GetAllMembersResponseModel> {
+    public async getListMembers(listId: string, count?: string, offset?: string, abortSignal?: AbortSignalLike): Promise<GetAllMembersResponseModel> {
         const queryParams: string[] = [];
         if (count !== undefined) {
             queryParams.push(`count=${encodeURIComponent(String(count))}`);
@@ -830,7 +830,7 @@ export class MailchimpClient extends ConnectorClientBase {
         const httpResponse = await this.httpClient.sendAsync<GetAllMembersResponseModel>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as GetAllMembersResponseModel;
@@ -840,13 +840,13 @@ export class MailchimpClient extends ConnectorClientBase {
      * Add member to list
      * @remarks Add or update a list member
      */
-    public async addmemberAsync(input: NewMemberInListRequest, listId: string, abortSignal?: AbortSignalLike): Promise<MemberResponseModel> {
+    public async addmember(input: NewMemberInListRequest, listId: string, abortSignal?: AbortSignalLike): Promise<MemberResponseModel> {
         const requestPath = `/lists/${listId}/members`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<MemberResponseModel>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as MemberResponseModel;
@@ -856,13 +856,13 @@ export class MailchimpClient extends ConnectorClientBase {
      * New Campaign
      * @remarks Create a new campaign based on a Campaign Type, Recipients list and Campaign Settings (subject line, title, from_name and reply_to).
      */
-    public async newcampaignAsync(input: NewCampaignRequest, abortSignal?: AbortSignalLike): Promise<CampaignResponseModel> {
+    public async newcampaign(input: NewCampaignRequest, abortSignal?: AbortSignalLike): Promise<CampaignResponseModel> {
         const requestPath = `/v2/campaigns`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<CampaignResponseModel>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as CampaignResponseModel;
@@ -872,13 +872,13 @@ export class MailchimpClient extends ConnectorClientBase {
      * Remove Member from list
      * @remarks Delete a member from a list.
      */
-    public async removememberAsync(listId: string, abortSignal?: AbortSignalLike): Promise<void> {
+    public async removemember(listId: string, abortSignal?: AbortSignalLike): Promise<void> {
         const requestPath = `/lists/replacemailwithhash/${listId}/members`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<void>("DELETE", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `DELETE ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `DELETE ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
     }
 
@@ -886,13 +886,13 @@ export class MailchimpClient extends ConnectorClientBase {
      * Update member information
      * @remarks Update information for a specific list member.
      */
-    public async updatememberAsync(input: UpdateMemberInListRequest, listId: string, abortSignal?: AbortSignalLike): Promise<MemberResponseModel> {
+    public async updatemember(input: UpdateMemberInListRequest, listId: string, abortSignal?: AbortSignalLike): Promise<MemberResponseModel> {
         const requestPath = `/lists/replacemailwithhash/${listId}/members`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<MemberResponseModel>("PATCH", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `PATCH ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `PATCH ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as MemberResponseModel;

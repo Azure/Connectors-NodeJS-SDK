@@ -3,7 +3,7 @@
 
 import type { TokenCredential } from "@azure/core-auth";
 import { ConnectorClientBase } from "../azureConnectors/clientBase.ts";
-import { ConnectorException } from "../azureConnectors/connectorException.ts";
+import { ConnectorError } from "../azureConnectors/connectorError.ts";
 import { ConnectorClientOptions } from "../azureConnectors/options.ts";
 
 // #region Types
@@ -18,9 +18,7 @@ export interface EventRequest {
 /**
  * Definition: EventSchema
  */
-export interface EventSchema {
-    [key: string]: unknown;
-}
+export type EventSchema = Array<Record<string, unknown>>;
 
 /**
  * Definition: TopicTypesResponse

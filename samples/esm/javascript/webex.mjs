@@ -14,7 +14,7 @@
  *     npm start
  */
 
-import { ManagedIdentityTokenProvider, ConnectorException } from "@azure/connectors";
+import { ManagedIdentityTokenProvider, ConnectorError } from "@azure/connectors";
 import { WebexClient } from "@azure/connectors/generated/WebexExtensions";
 
 const CONNECTION_URL = process.env.WEBEX_CONNECTION_URL ?? "";
@@ -31,10 +31,10 @@ async function main() {
     // Example 1: List messages in a Webex space (a room ID is required).
     const roomId = process.env.WEBEX_ROOM_ID ?? "sample-room-id";
     try {
-        const messages = await client.getMessagesAsync(roomId);
+        const messages = await client.getMessages(roomId);
         console.log("Messages:", JSON.stringify(messages, null, 2));
     } catch (error) {
-        if (error instanceof ConnectorException) {
+        if (error instanceof ConnectorError) {
             console.log(`Connector error (${error.statusCode}): ${error.message}`);
         } else {
             throw error;

@@ -4,7 +4,7 @@
 import type { AbortSignalLike } from "@azure/abort-controller";
 import type { TokenCredential } from "@azure/core-auth";
 import { ConnectorClientBase } from "../azureConnectors/clientBase.ts";
-import { ConnectorException } from "../azureConnectors/connectorException.ts";
+import { ConnectorError } from "../azureConnectors/connectorError.ts";
 import { ConnectorClientOptions } from "../azureConnectors/options.ts";
 
 // #region Types
@@ -124,9 +124,7 @@ export interface Cell {
 /**
  * Definition: CellArray
  */
-export interface CellArray {
-    [key: string]: unknown;
-}
+export type CellArray = Array<Record<string, unknown>>;
 
 /**
  * Definition: Cube
@@ -141,9 +139,7 @@ export interface Cube {
 /**
  * Definition: CubeArray
  */
-export interface CubeArray {
-    [key: string]: unknown;
-}
+export type CubeArray = Array<Cube>;
 
 /**
  * Definition: Database
@@ -159,9 +155,7 @@ export interface Database {
 /**
  * Definition: DatabaseArray
  */
-export interface DatabaseArray {
-    [key: string]: unknown;
-}
+export type DatabaseArray = Array<Database>;
 
 /**
  * Definition: Dimension
@@ -176,9 +170,7 @@ export interface Dimension {
 /**
  * Definition: DimensionArray
  */
-export interface DimensionArray {
-    [key: string]: unknown;
-}
+export type DimensionArray = Array<Dimension>;
 
 /**
  * Definition: Element
@@ -194,9 +186,7 @@ export interface Element {
 /**
  * Definition: ElementArray
  */
-export interface ElementArray {
-    [key: string]: unknown;
-}
+export type ElementArray = Array<Element>;
 
 /**
  * Definition: Error
@@ -218,9 +208,7 @@ export interface IntegratorComponent {
 /**
  * Definition: IntegratorComponentArray
  */
-export interface IntegratorComponentArray {
-    [key: string]: unknown;
-}
+export type IntegratorComponentArray = Array<IntegratorComponent>;
 
 /**
  * Definition: IntegratorExtractComponentRow
@@ -232,9 +220,7 @@ export interface IntegratorExtractComponentRow {
 /**
  * Definition: IntegratorExtractComponentRowArray
  */
-export interface IntegratorExtractComponentRowArray {
-    [key: string]: unknown;
-}
+export type IntegratorExtractComponentRowArray = Array<Record<string, unknown>>;
 
 /**
  * Definition: IntegratorProject
@@ -249,9 +235,7 @@ export interface IntegratorProject {
 /**
  * Definition: IntegratorProjectArray
  */
-export interface IntegratorProjectArray {
-    [key: string]: unknown;
-}
+export type IntegratorProjectArray = Array<IntegratorProject>;
 
 /**
  * Definition: IntegratorProjectGroup
@@ -269,9 +253,7 @@ export interface IntegratorProjectGroup {
 /**
  * Definition: IntegratorProjectGroupArray
  */
-export interface IntegratorProjectGroupArray {
-    [key: string]: unknown;
-}
+export type IntegratorProjectGroupArray = Array<IntegratorProjectGroup>;
 
 /**
  * Definition: IntegratorRunResult
@@ -296,9 +278,7 @@ export interface IntegratorTransformComponentRow {
 /**
  * Definition: IntegratorTransformComponentRowArray
  */
-export interface IntegratorTransformComponentRowArray {
-    [key: string]: unknown;
-}
+export type IntegratorTransformComponentRowArray = Array<Record<string, unknown>>;
 
 /**
  * Definition: View
@@ -317,9 +297,7 @@ export interface View {
 /**
  * Definition: ViewArray
  */
-export interface ViewArray {
-    [key: string]: unknown;
-}
+export type ViewArray = Array<View>;
 
 /**
  * Definition: ViewCell
@@ -331,9 +309,7 @@ export interface ViewCell {
 /**
  * Definition: ViewCellArray
  */
-export interface ViewCellArray {
-    [key: string]: unknown;
-}
+export type ViewCellArray = Array<Record<string, unknown>>;
 // #endregion Types
 
 // #region Client
@@ -361,7 +337,7 @@ export class JedoxodatahubClient extends ConnectorClientBase {
      * Get databases
      * @remarks Get a list of databases found in the server. System and config databases are excluded from the list, but can be requested by providing the ID.
      */
-    public async databasesAsync(top?: string, skip?: string, filter?: string, abortSignal?: AbortSignalLike): Promise<DatabasesResponse> {
+    public async databases(top?: string, skip?: string, filter?: string, abortSignal?: AbortSignalLike): Promise<DatabasesResponse> {
         const queryParams: string[] = [];
         if (top !== undefined) {
             queryParams.push(`$top=${encodeURIComponent(String(top))}`);
@@ -377,7 +353,7 @@ export class JedoxodatahubClient extends ConnectorClientBase {
         const httpResponse = await this.httpClient.sendAsync<DatabasesResponse>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as DatabasesResponse;
@@ -387,13 +363,13 @@ export class JedoxodatahubClient extends ConnectorClientBase {
      * Get database by id
      * @remarks Get the database with the given ID.
      */
-    public async databaseByIdAsync(databaseId: string, abortSignal?: AbortSignalLike): Promise<Database> {
+    public async databaseById(databaseId: string, abortSignal?: AbortSignalLike): Promise<Database> {
         const requestPath = `/Databases(${databaseId})`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<Database>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as Database;
@@ -403,7 +379,7 @@ export class JedoxodatahubClient extends ConnectorClientBase {
      * Get cubes
      * @remarks Get a list of cubes in the given database. To prevent issues with the URL encodings, Attribute cubes will be renamed, e.g. \#_Years to ATT_Years.
      */
-    public async cubesAsync(databaseId: string, top?: string, skip?: string, filter?: string, abortSignal?: AbortSignalLike): Promise<CubesResponse> {
+    public async cubes(databaseId: string, top?: string, skip?: string, filter?: string, abortSignal?: AbortSignalLike): Promise<CubesResponse> {
         const queryParams: string[] = [];
         if (top !== undefined) {
             queryParams.push(`$top=${encodeURIComponent(String(top))}`);
@@ -419,7 +395,7 @@ export class JedoxodatahubClient extends ConnectorClientBase {
         const httpResponse = await this.httpClient.sendAsync<CubesResponse>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as CubesResponse;
@@ -429,13 +405,13 @@ export class JedoxodatahubClient extends ConnectorClientBase {
      * Get cube by ID
      * @remarks Get the cube with the given ID in the given database. To prevent issues with the URL encodings, Attribute cubes will be renamed, e.g. \#_Years to ATT_Years.
      */
-    public async cubeByIdAsync(databaseId: string, cubeId: string, abortSignal?: AbortSignalLike): Promise<Cube> {
+    public async cubeById(databaseId: string, cubeId: string, abortSignal?: AbortSignalLike): Promise<Cube> {
         const requestPath = `/Databases(${databaseId})/Cubes(${cubeId})`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<Cube>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as Cube;
@@ -445,7 +421,7 @@ export class JedoxodatahubClient extends ConnectorClientBase {
      * Get cube cells
      * @remarks Get the cells from a cube. This returns the cells' values and element names. If the cell has a string value, the value is instead stored in the stringValue field. Element names are stored in dynamic properties.
      */
-    public async cubeCellsAsync(databaseId: string, cubeId: string, top?: string, skip?: string, filter?: string, baseonly?: string, userules?: string, zerosupression?: string, disablepaging?: string, abortSignal?: AbortSignalLike): Promise<CubeCellsResponse> {
+    public async cubeCells(databaseId: string, cubeId: string, top?: string, skip?: string, filter?: string, baseonly?: string, userules?: string, zerosupression?: string, disablepaging?: string, abortSignal?: AbortSignalLike): Promise<CubeCellsResponse> {
         const queryParams: string[] = [];
         if (top !== undefined) {
             queryParams.push(`$top=${encodeURIComponent(String(top))}`);
@@ -473,7 +449,7 @@ export class JedoxodatahubClient extends ConnectorClientBase {
         const httpResponse = await this.httpClient.sendAsync<CubeCellsResponse>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as CubeCellsResponse;
@@ -483,7 +459,7 @@ export class JedoxodatahubClient extends ConnectorClientBase {
      * Get dimensions
      * @remarks Get a list of dimensions in the given database.
      */
-    public async dimensionsAsync(databaseId: string, top?: string, skip?: string, filter?: string, abortSignal?: AbortSignalLike): Promise<DimensionsResponse> {
+    public async dimensions(databaseId: string, top?: string, skip?: string, filter?: string, abortSignal?: AbortSignalLike): Promise<DimensionsResponse> {
         const queryParams: string[] = [];
         if (top !== undefined) {
             queryParams.push(`$top=${encodeURIComponent(String(top))}`);
@@ -499,7 +475,7 @@ export class JedoxodatahubClient extends ConnectorClientBase {
         const httpResponse = await this.httpClient.sendAsync<DimensionsResponse>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as DimensionsResponse;
@@ -509,13 +485,13 @@ export class JedoxodatahubClient extends ConnectorClientBase {
      * Get dimension by ID
      * @remarks Get the dimension with the given ID in the given database.
      */
-    public async dimensionByIdAsync(databaseId: string, dimensionId: string, abortSignal?: AbortSignalLike): Promise<Dimension> {
+    public async dimensionById(databaseId: string, dimensionId: string, abortSignal?: AbortSignalLike): Promise<Dimension> {
         const requestPath = `/Databases(${databaseId})/Dimensions(${dimensionId})`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<Dimension>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as Dimension;
@@ -525,7 +501,7 @@ export class JedoxodatahubClient extends ConnectorClientBase {
      * Get elements
      * @remarks Get a list of elements in the given dimension.
      */
-    public async elementsAsync(databaseId: string, dimensionId: string, top?: string, skip?: string, filter?: string, abortSignal?: AbortSignalLike): Promise<ElementsResponse> {
+    public async elements(databaseId: string, dimensionId: string, top?: string, skip?: string, filter?: string, abortSignal?: AbortSignalLike): Promise<ElementsResponse> {
         const queryParams: string[] = [];
         if (top !== undefined) {
             queryParams.push(`$top=${encodeURIComponent(String(top))}`);
@@ -541,7 +517,7 @@ export class JedoxodatahubClient extends ConnectorClientBase {
         const httpResponse = await this.httpClient.sendAsync<ElementsResponse>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as ElementsResponse;
@@ -551,13 +527,13 @@ export class JedoxodatahubClient extends ConnectorClientBase {
      * Get element by ID
      * @remarks Returns the element with the given ID in the given dimension.
      */
-    public async elementByIdAsync(databaseId: string, dimensionId: string, elementId: string, abortSignal?: AbortSignalLike): Promise<Element> {
+    public async elementById(databaseId: string, dimensionId: string, elementId: string, abortSignal?: AbortSignalLike): Promise<Element> {
         const requestPath = `/Databases(${databaseId})/Dimensions(${dimensionId})/Elements(${elementId})`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<Element>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as Element;
@@ -567,7 +543,7 @@ export class JedoxodatahubClient extends ConnectorClientBase {
      * Get stored views
      * @remarks Get a list of stored views in the given database.
      */
-    public async viewsAsync(databaseId: string, top?: string, skip?: string, filter?: string, abortSignal?: AbortSignalLike): Promise<ViewsResponse> {
+    public async views(databaseId: string, top?: string, skip?: string, filter?: string, abortSignal?: AbortSignalLike): Promise<ViewsResponse> {
         const queryParams: string[] = [];
         if (top !== undefined) {
             queryParams.push(`$top=${encodeURIComponent(String(top))}`);
@@ -583,7 +559,7 @@ export class JedoxodatahubClient extends ConnectorClientBase {
         const httpResponse = await this.httpClient.sendAsync<ViewsResponse>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as ViewsResponse;
@@ -593,13 +569,13 @@ export class JedoxodatahubClient extends ConnectorClientBase {
      * Get stored view by ID
      * @remarks Get the view with the given ID in the given database.
      */
-    public async viewByIdAsync(databaseId: string, viewId: string, abortSignal?: AbortSignalLike): Promise<View> {
+    public async viewById(databaseId: string, viewId: string, abortSignal?: AbortSignalLike): Promise<View> {
         const requestPath = `/Databases(${databaseId})/Views(${viewId})`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<View>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as View;
@@ -609,7 +585,7 @@ export class JedoxodatahubClient extends ConnectorClientBase {
      * Get stored view cells
      * @remarks Get all cells from a view. This returns the cells' values and element names. If the cell has a string value, the value is instead stored in the stringValue field. Element names are stored in dynamic properties.
      */
-    public async viewCellsAsync(databaseId: string, viewId: string, top?: string, skip?: string, filter?: string, baseonly?: string, userules?: string, zerosupression?: string, disablepaging?: string, abortSignal?: AbortSignalLike): Promise<ViewCellsResponse> {
+    public async viewCells(databaseId: string, viewId: string, top?: string, skip?: string, filter?: string, baseonly?: string, userules?: string, zerosupression?: string, disablepaging?: string, abortSignal?: AbortSignalLike): Promise<ViewCellsResponse> {
         const queryParams: string[] = [];
         if (top !== undefined) {
             queryParams.push(`$top=${encodeURIComponent(String(top))}`);
@@ -637,7 +613,7 @@ export class JedoxodatahubClient extends ConnectorClientBase {
         const httpResponse = await this.httpClient.sendAsync<ViewCellsResponse>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as ViewCellsResponse;
@@ -647,7 +623,7 @@ export class JedoxodatahubClient extends ConnectorClientBase {
      * Get Integrator project groups
      * @remarks Get a list of integrator project groups found in the server.
      */
-    public async integratorProjectGroupsAsync(top?: string, skip?: string, filter?: string, abortSignal?: AbortSignalLike): Promise<IntegratorProjectGroupsResponse> {
+    public async integratorProjectGroups(top?: string, skip?: string, filter?: string, abortSignal?: AbortSignalLike): Promise<IntegratorProjectGroupsResponse> {
         const queryParams: string[] = [];
         if (top !== undefined) {
             queryParams.push(`$top=${encodeURIComponent(String(top))}`);
@@ -663,7 +639,7 @@ export class JedoxodatahubClient extends ConnectorClientBase {
         const httpResponse = await this.httpClient.sendAsync<IntegratorProjectGroupsResponse>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as IntegratorProjectGroupsResponse;
@@ -673,13 +649,13 @@ export class JedoxodatahubClient extends ConnectorClientBase {
      * Get Integrator project group by identifier
      * @remarks Get the project group with the given ID.
      */
-    public async integratorProjectsByIdAsync(groupIdentifier: string, abortSignal?: AbortSignalLike): Promise<IntegratorProjectGroup> {
+    public async integratorProjectsById(groupIdentifier: string, abortSignal?: AbortSignalLike): Promise<IntegratorProjectGroup> {
         const requestPath = `/Integrator('${groupIdentifier}')`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<IntegratorProjectGroup>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as IntegratorProjectGroup;
@@ -689,7 +665,7 @@ export class JedoxodatahubClient extends ConnectorClientBase {
      * Get Integrator projects
      * @remarks Get a list of integrator projects found in the server.
      */
-    public async integratorProjectsAsync(groupIdentifier: string, top?: string, skip?: string, filter?: string, abortSignal?: AbortSignalLike): Promise<IntegratorProjectsResponse> {
+    public async integratorProjects(groupIdentifier: string, top?: string, skip?: string, filter?: string, abortSignal?: AbortSignalLike): Promise<IntegratorProjectsResponse> {
         const queryParams: string[] = [];
         if (top !== undefined) {
             queryParams.push(`$top=${encodeURIComponent(String(top))}`);
@@ -705,7 +681,7 @@ export class JedoxodatahubClient extends ConnectorClientBase {
         const httpResponse = await this.httpClient.sendAsync<IntegratorProjectsResponse>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as IntegratorProjectsResponse;
@@ -715,13 +691,13 @@ export class JedoxodatahubClient extends ConnectorClientBase {
      * Get Integrator project by name
      * @remarks Get the integrator project with the given name.
      */
-    public async integratorProjectsByNameAsync(groupIdentifier: string, projectName: string, abortSignal?: AbortSignalLike): Promise<IntegratorProject> {
+    public async integratorProjectsByName(groupIdentifier: string, projectName: string, abortSignal?: AbortSignalLike): Promise<IntegratorProject> {
         const requestPath = `/Integrator('${groupIdentifier}')/Projects('${projectName}')`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<IntegratorProject>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as IntegratorProject;
@@ -731,7 +707,7 @@ export class JedoxodatahubClient extends ConnectorClientBase {
      * Get extracts
      * @remarks Get a list of extracts in the given integrator project.
      */
-    public async extractsAsync(groupIdentifier: string, projectName: string, top?: string, skip?: string, filter?: string, abortSignal?: AbortSignalLike): Promise<ExtractsResponse> {
+    public async extracts(groupIdentifier: string, projectName: string, top?: string, skip?: string, filter?: string, abortSignal?: AbortSignalLike): Promise<ExtractsResponse> {
         const queryParams: string[] = [];
         if (top !== undefined) {
             queryParams.push(`$top=${encodeURIComponent(String(top))}`);
@@ -747,7 +723,7 @@ export class JedoxodatahubClient extends ConnectorClientBase {
         const httpResponse = await this.httpClient.sendAsync<ExtractsResponse>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as ExtractsResponse;
@@ -757,13 +733,13 @@ export class JedoxodatahubClient extends ConnectorClientBase {
      * Get extract by Name
      * @remarks Get the extract with the given name in the given integrator project.
      */
-    public async extractByNameAsync(groupIdentifier: string, projectName: string, extractName: string, abortSignal?: AbortSignalLike): Promise<IntegratorComponent> {
+    public async extractByName(groupIdentifier: string, projectName: string, extractName: string, abortSignal?: AbortSignalLike): Promise<IntegratorComponent> {
         const requestPath = `/Integrator('${groupIdentifier}')/Projects('${projectName}')/Extracts('${extractName}')`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<IntegratorComponent>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as IntegratorComponent;
@@ -773,7 +749,7 @@ export class JedoxodatahubClient extends ConnectorClientBase {
      * Get extract rows
      * @remarks Stream the rows of the extract with the given name in the given integrator project.
      */
-    public async extractRowsAsync(groupIdentifier: string, projectName: string, extractName: string, top?: string, skip?: string, filter?: string, abortSignal?: AbortSignalLike): Promise<ExtractRowsResponse> {
+    public async extractRows(groupIdentifier: string, projectName: string, extractName: string, top?: string, skip?: string, filter?: string, abortSignal?: AbortSignalLike): Promise<ExtractRowsResponse> {
         const queryParams: string[] = [];
         if (top !== undefined) {
             queryParams.push(`$top=${encodeURIComponent(String(top))}`);
@@ -789,7 +765,7 @@ export class JedoxodatahubClient extends ConnectorClientBase {
         const httpResponse = await this.httpClient.sendAsync<ExtractRowsResponse>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as ExtractRowsResponse;
@@ -799,7 +775,7 @@ export class JedoxodatahubClient extends ConnectorClientBase {
      * Get jobs
      * @remarks Get a list of jobs in the given integrator project.
      */
-    public async jobsAsync(groupIdentifier: string, projectName: string, top?: string, skip?: string, filter?: string, abortSignal?: AbortSignalLike): Promise<JobsResponse> {
+    public async jobs(groupIdentifier: string, projectName: string, top?: string, skip?: string, filter?: string, abortSignal?: AbortSignalLike): Promise<JobsResponse> {
         const queryParams: string[] = [];
         if (top !== undefined) {
             queryParams.push(`$top=${encodeURIComponent(String(top))}`);
@@ -815,7 +791,7 @@ export class JedoxodatahubClient extends ConnectorClientBase {
         const httpResponse = await this.httpClient.sendAsync<JobsResponse>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as JobsResponse;
@@ -825,13 +801,13 @@ export class JedoxodatahubClient extends ConnectorClientBase {
      * Get job by name
      * @remarks Get the jobs with the given name in the given integrator project.
      */
-    public async jobByNameAsync(groupIdentifier: string, projectName: string, jobName: string, abortSignal?: AbortSignalLike): Promise<IntegratorComponent> {
+    public async jobByName(groupIdentifier: string, projectName: string, jobName: string, abortSignal?: AbortSignalLike): Promise<IntegratorComponent> {
         const requestPath = `/Integrator('${groupIdentifier}')/Projects('${projectName}')/Jobs('${jobName}')`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<IntegratorComponent>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as IntegratorComponent;
@@ -841,13 +817,13 @@ export class JedoxodatahubClient extends ConnectorClientBase {
      * Run job
      * @remarks Run the job with the given name in the given integrator project. The execution will be added to the queue.
      */
-    public async runJobAsync(groupIdentifier: string, projectName: string, jobName: string, abortSignal?: AbortSignalLike): Promise<IntegratorRunResult> {
+    public async runJob(groupIdentifier: string, projectName: string, jobName: string, abortSignal?: AbortSignalLike): Promise<IntegratorRunResult> {
         const requestPath = `/Integrator('${groupIdentifier}')/Projects('${projectName}')/Jobs('${jobName}')/Run`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<IntegratorRunResult>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as IntegratorRunResult;
@@ -857,13 +833,13 @@ export class JedoxodatahubClient extends ConnectorClientBase {
      * Run job with variables
      * @remarks Run the job with the given name in the given integrator project. The execution will be added to the queue.
      */
-    public async runJobWithVariablesAsync(groupIdentifier: string, projectName: string, jobName: string, variables: string, abortSignal?: AbortSignalLike): Promise<IntegratorRunResult> {
-        const requestPath = `/Integrator('${groupIdentifier}')/Projects('${projectName}')/Jobs('${jobName}')/Run(Variables='${variables}')`;
+    public async runJobWithVariables(groupIdentifier: string, projectName: string, jobName: string, variables: string, abortSignal?: AbortSignalLike): Promise<IntegratorRunResult> {
+        const requestPath = `/Integrator('${groupIdentifier}')/Projects('${projectName}')/Jobs('${jobName}')/Run(Variables='${encodeURIComponent(encodeURIComponent(String(variables)))}')`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<IntegratorRunResult>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as IntegratorRunResult;
@@ -873,7 +849,7 @@ export class JedoxodatahubClient extends ConnectorClientBase {
      * Get loads
      * @remarks Get a list of loads in the given integrator project.
      */
-    public async loadsAsync(groupIdentifier: string, projectName: string, top?: string, skip?: string, filter?: string, abortSignal?: AbortSignalLike): Promise<LoadsResponse> {
+    public async loads(groupIdentifier: string, projectName: string, top?: string, skip?: string, filter?: string, abortSignal?: AbortSignalLike): Promise<LoadsResponse> {
         const queryParams: string[] = [];
         if (top !== undefined) {
             queryParams.push(`$top=${encodeURIComponent(String(top))}`);
@@ -889,7 +865,7 @@ export class JedoxodatahubClient extends ConnectorClientBase {
         const httpResponse = await this.httpClient.sendAsync<LoadsResponse>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as LoadsResponse;
@@ -899,13 +875,13 @@ export class JedoxodatahubClient extends ConnectorClientBase {
      * Get load by name
      * @remarks Get the transform with the given name in the given integrator project.
      */
-    public async loadByNameAsync(groupIdentifier: string, projectName: string, loadName: string, abortSignal?: AbortSignalLike): Promise<IntegratorComponent> {
+    public async loadByName(groupIdentifier: string, projectName: string, loadName: string, abortSignal?: AbortSignalLike): Promise<IntegratorComponent> {
         const requestPath = `/Integrator('${groupIdentifier}')/Projects('${projectName}')/Loads('${loadName}')`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<IntegratorComponent>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as IntegratorComponent;
@@ -915,13 +891,13 @@ export class JedoxodatahubClient extends ConnectorClientBase {
      * Run load
      * @remarks Run the load with the given name in the given integrator project. The execution will be added to the queue.
      */
-    public async runLoadAsync(groupIdentifier: string, projectName: string, loadName: string, abortSignal?: AbortSignalLike): Promise<IntegratorRunResult> {
+    public async runLoad(groupIdentifier: string, projectName: string, loadName: string, abortSignal?: AbortSignalLike): Promise<IntegratorRunResult> {
         const requestPath = `/Integrator('${groupIdentifier}')/Projects('${projectName}')/Loads('${loadName}')/Run()`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<IntegratorRunResult>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as IntegratorRunResult;
@@ -931,13 +907,13 @@ export class JedoxodatahubClient extends ConnectorClientBase {
      * Run load with variables
      * @remarks Run the load with the given name in the given integrator project. The execution will be added to the queue.
      */
-    public async runLoadWithVariablesAsync(groupIdentifier: string, projectName: string, loadName: string, variables: string, abortSignal?: AbortSignalLike): Promise<IntegratorRunResult> {
-        const requestPath = `/Integrator('${groupIdentifier}')/Projects('${projectName}')/Loads('${loadName}')/Run(Variables='${variables}')`;
+    public async runLoadWithVariables(groupIdentifier: string, projectName: string, loadName: string, variables: string, abortSignal?: AbortSignalLike): Promise<IntegratorRunResult> {
+        const requestPath = `/Integrator('${groupIdentifier}')/Projects('${projectName}')/Loads('${loadName}')/Run(Variables='${encodeURIComponent(encodeURIComponent(String(variables)))}')`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<IntegratorRunResult>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as IntegratorRunResult;
@@ -947,7 +923,7 @@ export class JedoxodatahubClient extends ConnectorClientBase {
      * Get transforms
      * @remarks Get a list of transforms in the given integrator project.
      */
-    public async transformsAsync(groupIdentifier: string, projectName: string, top?: string, skip?: string, filter?: string, abortSignal?: AbortSignalLike): Promise<TransformsResponse> {
+    public async transforms(groupIdentifier: string, projectName: string, top?: string, skip?: string, filter?: string, abortSignal?: AbortSignalLike): Promise<TransformsResponse> {
         const queryParams: string[] = [];
         if (top !== undefined) {
             queryParams.push(`$top=${encodeURIComponent(String(top))}`);
@@ -963,7 +939,7 @@ export class JedoxodatahubClient extends ConnectorClientBase {
         const httpResponse = await this.httpClient.sendAsync<TransformsResponse>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as TransformsResponse;
@@ -973,13 +949,13 @@ export class JedoxodatahubClient extends ConnectorClientBase {
      * Get transform by name
      * @remarks Get the transform with the given name in the given integrator project.
      */
-    public async transformByNameAsync(groupIdentifier: string, projectName: string, transformName: string, abortSignal?: AbortSignalLike): Promise<IntegratorComponent> {
+    public async transformByName(groupIdentifier: string, projectName: string, transformName: string, abortSignal?: AbortSignalLike): Promise<IntegratorComponent> {
         const requestPath = `/Integrator('${groupIdentifier}')/Projects('${projectName}')/Transforms('${transformName}')`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<IntegratorComponent>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as IntegratorComponent;
@@ -989,7 +965,7 @@ export class JedoxodatahubClient extends ConnectorClientBase {
      * Get transform Rows
      * @remarks Stream the rows of the transform with the given name in the given integrator project.
      */
-    public async transformRowsAsync(groupIdentifier: string, projectName: string, transformName: string, top?: string, skip?: string, filter?: string, abortSignal?: AbortSignalLike): Promise<TransformRowsResponse> {
+    public async transformRows(groupIdentifier: string, projectName: string, transformName: string, top?: string, skip?: string, filter?: string, abortSignal?: AbortSignalLike): Promise<TransformRowsResponse> {
         const queryParams: string[] = [];
         if (top !== undefined) {
             queryParams.push(`$top=${encodeURIComponent(String(top))}`);
@@ -1005,7 +981,7 @@ export class JedoxodatahubClient extends ConnectorClientBase {
         const httpResponse = await this.httpClient.sendAsync<TransformRowsResponse>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as TransformRowsResponse;

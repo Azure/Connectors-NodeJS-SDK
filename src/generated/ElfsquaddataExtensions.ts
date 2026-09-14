@@ -5,7 +5,7 @@ import type { AbortSignalLike } from "@azure/abort-controller";
 import type { TokenCredential } from "@azure/core-auth";
 import type { PagedAsyncIterableIterator } from "@azure/core-paging";
 import { ConnectorClientBase } from "../azureConnectors/clientBase.ts";
-import { ConnectorException } from "../azureConnectors/connectorException.ts";
+import { ConnectorError } from "../azureConnectors/connectorError.ts";
 import { ConnectorClientOptions } from "../azureConnectors/options.ts";
 
 // #region Types
@@ -113,7 +113,7 @@ export class ElfsquaddataClient extends ConnectorClientBase {
      * Get entities
      * @remarks Get entities
      */
-    public getEntitiesAsync(entityName: string, top?: string, skip?: string, orderby?: string, filter?: string, select?: string, expand?: string, count?: string, abortSignal?: AbortSignalLike): PagedAsyncIterableIterator<unknown> {
+    public getEntities(entityName: string, top?: string, skip?: string, orderby?: string, filter?: string, select?: string, expand?: string, count?: string, abortSignal?: AbortSignalLike): PagedAsyncIterableIterator<unknown> {
         const queryParams: string[] = [];
         if (top !== undefined) {
             queryParams.push(`$top=${encodeURIComponent(String(top))}`);
@@ -144,11 +144,13 @@ export class ElfsquaddataClient extends ConnectorClientBase {
 
                 if (!httpResponse.isSuccessStatusCode) {
                     const operationPath = this.getOperationPath(requestUrl);
-                    throw new ConnectorException(this.connectorName, `GET ${operationPath}`, httpResponse.statusCode, httpResponse.text);
+                    throw new ConnectorError(this.connectorName, `GET ${operationPath}`, httpResponse.statusCode, httpResponse.text);
                 }
 
                 return httpResponse.value as GetEntitiesResponse;
             },
+            "value",
+            "@odata.nextLink",
         );
     }
 
@@ -156,13 +158,13 @@ export class ElfsquaddataClient extends ConnectorClientBase {
      * Create entity
      * @remarks Create entity
      */
-    public async postEntityByIdAsync(input: PostEntityByIdInput, entityName: string, abortSignal?: AbortSignalLike): Promise<PostEntityByIdResponse> {
+    public async postEntityById(input: PostEntityByIdInput, entityName: string, abortSignal?: AbortSignalLike): Promise<PostEntityByIdResponse> {
         const requestPath = `/data/1/${entityName}`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<PostEntityByIdResponse>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as PostEntityByIdResponse;
@@ -172,13 +174,13 @@ export class ElfsquaddataClient extends ConnectorClientBase {
      * Get entity by id
      * @remarks Get entity by id
      */
-    public async getEntityByIdAsync(entityName: string, id: string, abortSignal?: AbortSignalLike): Promise<GetEntityByIdResponse> {
+    public async getEntityById(entityName: string, id: string, abortSignal?: AbortSignalLike): Promise<GetEntityByIdResponse> {
         const requestPath = `/data/1/${entityName}(${id})`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<GetEntityByIdResponse>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as GetEntityByIdResponse;
@@ -188,13 +190,13 @@ export class ElfsquaddataClient extends ConnectorClientBase {
      * Delete entity
      * @remarks Delete entity
      */
-    public async deleteEntityByIdAsync(entityName: string, id: string, abortSignal?: AbortSignalLike): Promise<void> {
+    public async deleteEntityById(entityName: string, id: string, abortSignal?: AbortSignalLike): Promise<void> {
         const requestPath = `/data/1/${entityName}(${id})`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<void>("DELETE", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `DELETE ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `DELETE ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
     }
 
@@ -202,13 +204,13 @@ export class ElfsquaddataClient extends ConnectorClientBase {
      * Update entity
      * @remarks Update entity
      */
-    public async putEntityByIdAsync(input: PutEntityByIdInput, entityName: string, id: string, abortSignal?: AbortSignalLike): Promise<void> {
+    public async putEntityById(input: PutEntityByIdInput, entityName: string, id: string, abortSignal?: AbortSignalLike): Promise<void> {
         const requestPath = `/data/1/${entityName}(${id})`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<void>("PUT", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `PUT ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `PUT ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
     }
 
@@ -216,13 +218,13 @@ export class ElfsquaddataClient extends ConnectorClientBase {
      * Invoke function
      * @remarks Invoke function
      */
-    public async invokeFunctionAsync(input: InvokeFunctionInput, functionPath: string, abortSignal?: AbortSignalLike): Promise<InvokeFunctionResponse> {
+    public async invokeFunction(input: InvokeFunctionInput, functionPath: string, abortSignal?: AbortSignalLike): Promise<InvokeFunctionResponse> {
         const requestPath = `/${functionPath}`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<InvokeFunctionResponse>("PUT", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `PUT ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `PUT ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as InvokeFunctionResponse;

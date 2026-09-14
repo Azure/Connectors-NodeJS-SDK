@@ -9,6 +9,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- Added opt-in structured request, response, retry, and error diagnostics under
+  the `azure:connectors` namespace using `@azure/logger`.
 - Added the generated Microsoft Dataverse client with automatic async iteration
   over `@odata.nextLink` pages ([Azure/Connectors-NET-SDK#208](https://github.com/Azure/Connectors-NET-SDK/issues/208),
   [BPM PR 17086991](https://msazure.visualstudio.com/One/_git/AzureUX-BPM/pullrequest/17086991)).
@@ -94,6 +96,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+- Preserved typed array aliases, numeric integer-enum values, and inherited plus
+  inline properties from `allOf` definitions in generated TypeScript models.
+- Aligned TypeScript compiler settings with Azure SDK guidance by using `tslib`
+  helpers, explicitly allowing synthetic default imports, and relying on the
+  target-derived standard library.
 - Changed `AbortSignalLike` imports in generated clients and
   `ConnectorHttpClient` to type-only imports so `verbatimModuleSyntax` does not
   preserve a runtime import for the interface.
@@ -109,6 +116,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed (BREAKING)
 
+- Renamed `ConnectorException` to `ConnectorError`; the new type extends Azure
+  Core `RestError` while retaining connector, operation, status, and response details.
+- Renamed generated TypeScript action methods to verb-noun camelCase without an
+  `Async` suffix, such as `listSubscriptions`, `getSubscription`, and `sendMail`.
 - Paginated list operations now return
   `PagedAsyncIterableIterator<TItem>` instead of `Promise<TPage>` and
   automatically follow SSRF-protected `nextLink` and `@odata.nextLink` values.

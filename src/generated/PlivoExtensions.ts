@@ -4,7 +4,7 @@
 import type { AbortSignalLike } from "@azure/abort-controller";
 import type { TokenCredential } from "@azure/core-auth";
 import { ConnectorClientBase } from "../azureConnectors/clientBase.ts";
-import { ConnectorException } from "../azureConnectors/connectorException.ts";
+import { ConnectorError } from "../azureConnectors/connectorError.ts";
 import { ConnectorClientOptions } from "../azureConnectors/options.ts";
 
 // #region Types
@@ -129,13 +129,13 @@ export class PlivoClient extends ConnectorClientBase {
      * Make a call
      * @remarks This operation is used to make a call.
      */
-    public async makeCallAsync(input: Call, authId: string, abortSignal?: AbortSignalLike): Promise<MakeCallResponse> {
+    public async makeCall(input: Call, authId: string, abortSignal?: AbortSignalLike): Promise<MakeCallResponse> {
         const requestPath = `/v1/Account/${authId}/Call/`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<MakeCallResponse>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as MakeCallResponse;
@@ -145,13 +145,13 @@ export class PlivoClient extends ConnectorClientBase {
      * List all messages
      * @remarks This operation returns a list of all messages associated with your Plivo account.
      */
-    public async listMessagesAsync(authId: string, abortSignal?: AbortSignalLike): Promise<ListMessagesResponse> {
+    public async listMessages(authId: string, abortSignal?: AbortSignalLike): Promise<ListMessagesResponse> {
         const requestPath = `/v1/Account/${authId}/Message/`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<ListMessagesResponse>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as ListMessagesResponse;
@@ -161,13 +161,13 @@ export class PlivoClient extends ConnectorClientBase {
      * Send SMS
      * @remarks This operation is used to send a text message.
      */
-    public async sendSMSAsync(input: SMS, authId: string, abortSignal?: AbortSignalLike): Promise<SendSMSResponse> {
+    public async sendSMS(input: SMS, authId: string, abortSignal?: AbortSignalLike): Promise<SendSMSResponse> {
         const requestPath = `/v1/Account/${authId}/Message/`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<SendSMSResponse>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as SendSMSResponse;
@@ -177,13 +177,13 @@ export class PlivoClient extends ConnectorClientBase {
      * Get message
      * @remarks This operation is used to fetch the details of a message, given the message ID.
      */
-    public async getMessageAsync(authId: string, messageUuid: string, abortSignal?: AbortSignalLike): Promise<GetMessageResponse> {
+    public async getMessage(authId: string, messageUuid: string, abortSignal?: AbortSignalLike): Promise<GetMessageResponse> {
         const requestPath = `/v1/Account/${authId}/Message/${messageUuid}/`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<GetMessageResponse>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as GetMessageResponse;

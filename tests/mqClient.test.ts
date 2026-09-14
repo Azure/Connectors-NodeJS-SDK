@@ -10,7 +10,7 @@ import {
     Item,
     ItemsList,
 } from "../src/generated/MqExtensions.ts";
-import { ConnectorException } from "../src/azureConnectors/connectorException.ts";
+import { ConnectorError } from "../src/azureConnectors/connectorError.ts";
 import { ConnectorNames } from "../src/generated/connectorNames.ts";
 import { availableConnectors } from "../src/generated/ManagedConnectors.ts";
 
@@ -101,7 +101,7 @@ describe("MqClient — constructor", () => {
     });
 });
 
-describe("MqClient — sendAsync", () => {
+describe("MqClient — send", () => {
     afterEach(() => {
         jest.restoreAllMocks();
     });
@@ -117,7 +117,7 @@ describe("MqClient — sendAsync", () => {
             MessageType: "TEXT",
         };
 
-        const result = await client.sendAsync(input);
+        const result = await client.send(input);
 
         expect(result).toEqual(mockResponse);
         expect(global.fetch).toHaveBeenCalledTimes(1);
@@ -131,7 +131,7 @@ describe("MqClient — sendAsync", () => {
     });
 });
 
-describe("MqClient — receiveAsync", () => {
+describe("MqClient — receive", () => {
     afterEach(() => {
         jest.restoreAllMocks();
     });
@@ -143,7 +143,7 @@ describe("MqClient — receiveAsync", () => {
         const client = new MqClient(TestConnectionUrl, createMockCredential());
         const input: SingleGetValidOptions = { Queue: "MY.QUEUE" };
 
-        const result = await client.receiveAsync(input);
+        const result = await client.receive(input);
 
         expect(result).toEqual(mockItem);
         const [url, init] = (global.fetch as jest.Mock).mock.calls[0];
@@ -152,7 +152,7 @@ describe("MqClient — receiveAsync", () => {
     });
 });
 
-describe("MqClient — receiveAllAsync", () => {
+describe("MqClient — receiveAll", () => {
     afterEach(() => {
         jest.restoreAllMocks();
     });
@@ -164,7 +164,7 @@ describe("MqClient — receiveAllAsync", () => {
         const client = new MqClient(TestConnectionUrl, createMockCredential());
         const input: MultipleGetValidOptions = { Queue: "MY.QUEUE" };
 
-        const result = await client.receiveAllAsync(input);
+        const result = await client.receiveAll(input);
 
         expect(result).toEqual(mockItems);
         const [url] = (global.fetch as jest.Mock).mock.calls[0];
@@ -172,7 +172,7 @@ describe("MqClient — receiveAllAsync", () => {
     });
 });
 
-describe("MqClient — readAsync", () => {
+describe("MqClient — read", () => {
     afterEach(() => {
         jest.restoreAllMocks();
     });
@@ -182,7 +182,7 @@ describe("MqClient — readAsync", () => {
         mockFetchResponse(mockItem);
 
         const client = new MqClient(TestConnectionUrl, createMockCredential());
-        const result = await client.readAsync({ Queue: "MY.QUEUE" });
+        const result = await client.read({ Queue: "MY.QUEUE" });
 
         expect(result).toEqual(mockItem);
         const [url] = (global.fetch as jest.Mock).mock.calls[0];
@@ -190,7 +190,7 @@ describe("MqClient — readAsync", () => {
     });
 });
 
-describe("MqClient — readAllAsync", () => {
+describe("MqClient — readAll", () => {
     afterEach(() => {
         jest.restoreAllMocks();
     });
@@ -200,7 +200,7 @@ describe("MqClient — readAllAsync", () => {
         mockFetchResponse(mockItems);
 
         const client = new MqClient(TestConnectionUrl, createMockCredential());
-        const result = await client.readAllAsync({ Queue: "MY.QUEUE" });
+        const result = await client.readAll({ Queue: "MY.QUEUE" });
 
         expect(result).toEqual(mockItems);
         const [url] = (global.fetch as jest.Mock).mock.calls[0];
@@ -208,7 +208,7 @@ describe("MqClient — readAllAsync", () => {
     });
 });
 
-describe("MqClient — deleteAsync", () => {
+describe("MqClient — delete", () => {
     afterEach(() => {
         jest.restoreAllMocks();
     });
@@ -218,7 +218,7 @@ describe("MqClient — deleteAsync", () => {
         mockFetchResponse(mockItem);
 
         const client = new MqClient(TestConnectionUrl, createMockCredential());
-        const result = await client.deleteAsync({ Queue: "MY.QUEUE", MessageId: "msg-1" });
+        const result = await client.delete({ Queue: "MY.QUEUE", MessageId: "msg-1" });
 
         expect(result).toEqual(mockItem);
         const [url, init] = (global.fetch as jest.Mock).mock.calls[0];
@@ -227,7 +227,7 @@ describe("MqClient — deleteAsync", () => {
     });
 });
 
-describe("MqClient — deleteAllAsync", () => {
+describe("MqClient — deleteAll", () => {
     afterEach(() => {
         jest.restoreAllMocks();
     });
@@ -237,7 +237,7 @@ describe("MqClient — deleteAllAsync", () => {
         mockFetchResponse(mockItems);
 
         const client = new MqClient(TestConnectionUrl, createMockCredential());
-        const result = await client.deleteAllAsync({ Queue: "MY.QUEUE" });
+        const result = await client.deleteAll({ Queue: "MY.QUEUE" });
 
         expect(result).toEqual(mockItems);
         const [url] = (global.fetch as jest.Mock).mock.calls[0];
@@ -250,7 +250,7 @@ describe("MqClient — error handling", () => {
         jest.restoreAllMocks();
     });
 
-    it("should throw ConnectorException on non-OK response", async () => {
+    it("should throw ConnectorError on non-OK response", async () => {
         mockFetchError(500, '{"error": "QueueNotFound"}');
 
         const client = new MqClient(
@@ -260,8 +260,8 @@ describe("MqClient — error handling", () => {
         );
 
         await expect(
-            client.sendAsync({ Queue: "BAD.QUEUE", Message: "test" }),
-        ).rejects.toThrow(ConnectorException);
+            client.send({ Queue: "BAD.QUEUE", Message: "test" }),
+        ).rejects.toThrow(ConnectorError);
     });
 
     it("should include status code and response body in error", async () => {
@@ -271,11 +271,11 @@ describe("MqClient — error handling", () => {
         const client = new MqClient(TestConnectionUrl, createMockCredential());
 
         try {
-            await client.receiveAsync({ Queue: "MY.QUEUE" });
-            throw new Error("Expected ConnectorException to be thrown.");
+            await client.receive({ Queue: "MY.QUEUE" });
+            throw new Error("Expected ConnectorError to be thrown.");
         } catch (error) {
-            expect(error).toBeInstanceOf(ConnectorException);
-            const connectorError = error as ConnectorException;
+            expect(error).toBeInstanceOf(ConnectorError);
+            const connectorError = error as ConnectorError;
             expect(connectorError.statusCode).toBe(401);
             expect(connectorError.responseBody).toBe(errorBody);
             expect(connectorError.operation).toContain("POST");

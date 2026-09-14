@@ -15,7 +15,7 @@
 
 "use strict";
 
-const { ManagedIdentityTokenProvider, ConnectorException } = require("@azure/connectors");
+const { ManagedIdentityTokenProvider, ConnectorError } = require("@azure/connectors");
 const { CloudmersiveconvertClient } = require("@azure/connectors/generated/CloudmersiveconvertExtensions");
 
 const CONNECTION_URL = process.env.CLOUDMERSIVECONVERT_CONNECTION_URL ?? "";
@@ -31,10 +31,10 @@ async function main() {
 
     // Example 1: Create a blank DOCX document with some initial text.
     try {
-        const document = await client.editDocumentDocxCreateBlankDocumentAsync({ InitialText: "Hello world" });
+        const document = await client.createEditDocumentDocxBlankDocument({ InitialText: "Hello world" });
         console.log("Blank document:", JSON.stringify(document, null, 2));
     } catch (error) {
-        if (error instanceof ConnectorException) {
+        if (error instanceof ConnectorError) {
             console.log(`Connector error (${error.statusCode}): ${error.message}`);
         } else {
             throw error;

@@ -4,7 +4,7 @@
  * GitHub Connector SDK Sample - CJS TypeScript
  */
 
-import { ManagedIdentityTokenProvider, ConnectorException } from "@azure/connectors";
+import { ManagedIdentityTokenProvider, ConnectorError } from "@azure/connectors";
 import { GithubClient, RepositoryDetails } from "@azure/connectors/generated/GithubExtensions";
 
 const CONNECTION_URL = process.env.GITHUB_CONNECTION_URL ?? "";
@@ -20,10 +20,10 @@ async function main(): Promise<void> {
     const client = new GithubClient(CONNECTION_URL, tokenProvider);
 
     try {
-        const result: RepositoryDetails = await client.getRepositoryByIdAsync(GITHUB_REPOSITORY_ID);
+        const result: RepositoryDetails = await client.getRepositoryById(GITHUB_REPOSITORY_ID);
         console.log(`Repository id: ${String(result.id ?? "unknown")}`);
     } catch (error) {
-        if (error instanceof ConnectorException) {
+        if (error instanceof ConnectorError) {
             console.log(`Connector error (${error.statusCode}): ${error.message}`);
             return;
         }

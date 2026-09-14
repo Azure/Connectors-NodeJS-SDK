@@ -6,7 +6,7 @@
 
 "use strict";
 
-const { ManagedIdentityTokenProvider, ConnectorException } = require("@azure/connectors");
+const { ManagedIdentityTokenProvider, ConnectorError } = require("@azure/connectors");
 const { TodoClient } = require("@azure/connectors/generated/TodoExtensions");
 
 const CONNECTION_URL = process.env.TODO_CONNECTION_URL ?? "";
@@ -21,10 +21,10 @@ async function main() {
     const client = new TodoClient(CONNECTION_URL, tokenProvider);
 
     try {
-        const result = await client.getAllTodoListsAsync();
+        const result = await client.getAllTodoLists();
         console.log(`To-do lists found: ${result.length}`);
     } catch (error) {
-        if (error instanceof ConnectorException) {
+        if (error instanceof ConnectorError) {
             console.log(`Connector error (${error.statusCode}): ${error.message}`);
             return;
         }

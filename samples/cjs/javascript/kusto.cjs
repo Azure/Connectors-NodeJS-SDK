@@ -23,7 +23,7 @@
 
 "use strict";
 
-const { ManagedIdentityTokenProvider, ConnectorException } = require("@azure/connectors");
+const { ManagedIdentityTokenProvider, ConnectorError } = require("@azure/connectors");
 const { KustoClient } = require("@azure/connectors/generated/KustoExtensions");
 
 const CONNECTION_URL = process.env.KUSTO_CONNECTION_URL ?? "";
@@ -57,7 +57,7 @@ async function main() {
             csl: kqlQuery,
             db: DATABASE,
         };
-        const result = await client.listKustoResultsAsync(input);
+        const result = await client.listKustoResults(input);
 
         const rows = result.value ?? [];
         if (rows.length > 0) {
@@ -69,7 +69,7 @@ async function main() {
             console.log("Result:", JSON.stringify(result, null, 2));
         }
     } catch (error) {
-        if (error instanceof ConnectorException) {
+        if (error instanceof ConnectorError) {
             console.log(`Connector error (${error.statusCode}): ${error.message}`);
         } else {
             throw error;
@@ -84,7 +84,7 @@ async function main() {
             csl: ".show databases",
             db: DATABASE,
         };
-        const controlResult = await client.listKustoShowCommandResultsAsync(controlInput);
+        const controlResult = await client.listKustoShowCommandResults(controlInput);
 
         const controlRows = controlResult.value ?? [];
         if (controlRows.length > 0) {
@@ -97,7 +97,7 @@ async function main() {
             console.log("Result:", JSON.stringify(controlResult, null, 2));
         }
     } catch (error) {
-        if (error instanceof ConnectorException) {
+        if (error instanceof ConnectorError) {
             console.log(`Connector error (${error.statusCode}): ${error.message}`);
         } else {
             throw error;
@@ -112,10 +112,10 @@ async function main() {
             csl: "INVALID_QUERY_!!!",
             db: DATABASE,
         };
-        await client.listKustoResultsAsync(badInput);
+        await client.listKustoResults(badInput);
         console.log("Unexpected success.");
     } catch (error) {
-        if (error instanceof ConnectorException) {
+        if (error instanceof ConnectorError) {
             console.log("Expected error caught:");
             console.log(`  Message: ${error.message}`);
             console.log(`  Status: ${error.statusCode}`);

@@ -25,7 +25,7 @@
  *     node dist/kusto.js
  */
 
-import { ManagedIdentityTokenProvider, ConnectorException } from "@azure/connectors";
+import { ManagedIdentityTokenProvider, ConnectorError } from "@azure/connectors";
 import { KustoClient, Table, QueryAndListSchema, ControlCommandAndListSchema, ClusterName, Query, DatabaseName } from "@azure/connectors/generated/KustoExtensions";
 
 const CONNECTION_URL = process.env.KUSTO_CONNECTION_URL ?? "";
@@ -59,7 +59,7 @@ async function main(): Promise<void> {
             csl: kqlQuery as unknown as Query,
             db: DATABASE as unknown as DatabaseName,
         };
-        const result: Table = await client.listKustoResultsAsync(input);
+        const result: Table = await client.listKustoResults(input);
 
         const rows = result.value ?? [];
         if (rows.length > 0) {
@@ -71,7 +71,7 @@ async function main(): Promise<void> {
             console.log("Result:", JSON.stringify(result, null, 2));
         }
     } catch (error) {
-        if (error instanceof ConnectorException) {
+        if (error instanceof ConnectorError) {
             console.log(`Connector error (${error.statusCode}): ${error.message}`);
         } else {
             throw error;
@@ -86,7 +86,7 @@ async function main(): Promise<void> {
             csl: ".show databases",
             db: DATABASE as unknown as DatabaseName,
         };
-        const controlResult: Table = await client.listKustoShowCommandResultsAsync(controlInput);
+        const controlResult: Table = await client.listKustoShowCommandResults(controlInput);
 
         const controlRows = controlResult.value ?? [];
         if (controlRows.length > 0) {
@@ -99,7 +99,7 @@ async function main(): Promise<void> {
             console.log("Result:", JSON.stringify(controlResult, null, 2));
         }
     } catch (error) {
-        if (error instanceof ConnectorException) {
+        if (error instanceof ConnectorError) {
             console.log(`Connector error (${error.statusCode}): ${error.message}`);
         } else {
             throw error;
@@ -114,10 +114,10 @@ async function main(): Promise<void> {
             csl: "INVALID_QUERY_!!!" as unknown as Query,
             db: DATABASE as unknown as DatabaseName,
         };
-        await client.listKustoResultsAsync(badInput);
+        await client.listKustoResults(badInput);
         console.log("Unexpected success.");
     } catch (error) {
-        if (error instanceof ConnectorException) {
+        if (error instanceof ConnectorError) {
             console.log("Expected error caught:");
             console.log(`  Message: ${error.message}`);
             console.log(`  Status: ${error.statusCode}`);

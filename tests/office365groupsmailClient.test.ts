@@ -5,7 +5,7 @@ import {
     ForwardPostBody,
     Office365groupsmailClient,
 } from "../src/generated/Office365groupsmailExtensions.ts";
-import { ConnectorException } from "../src/azureConnectors/connectorException.ts";
+import { ConnectorError } from "../src/azureConnectors/connectorError.ts";
 import { ConnectorNames } from "../src/generated/connectorNames.ts";
 import { availableConnectors } from "../src/generated/ManagedConnectors.ts";
 
@@ -53,7 +53,7 @@ describe("Office365groupsmailClient — constructor", () => {
     it("should strip trailing slashes from connection URL", async () => {
         mockFetchResponse([]);
         const client = new Office365groupsmailClient(TestConnectionUrl + "///", createMockCredential());
-        await client.listConversationsAsync("group1").byPage().next();
+        await client.listConversations("group1").byPage().next();
         const [url] = (global.fetch as jest.Mock).mock.calls[0];
         // NOTE: Confirms the trailing slashes were stripped by inspecting the
         //       outbound URL: after the scheme, no `//` should remain.
@@ -72,7 +72,7 @@ describe("Office365groupsmailClient — constructor", () => {
     });
 });
 
-describe("Office365groupsmailClient — listConversationsAsync", () => {
+describe("Office365groupsmailClient — listConversations", () => {
     afterEach(() => {
         jest.restoreAllMocks();
     });
@@ -82,7 +82,7 @@ describe("Office365groupsmailClient — listConversationsAsync", () => {
         mockFetchResponse(conversations);
 
         const client = new Office365groupsmailClient(TestConnectionUrl, createMockCredential());
-        const result = await client.listConversationsAsync("group1").byPage().next();
+        const result = await client.listConversations("group1").byPage().next();
 
         expect(result.value).toEqual(conversations.value);
         expect(global.fetch).toHaveBeenCalledTimes(1);
@@ -92,16 +92,16 @@ describe("Office365groupsmailClient — listConversationsAsync", () => {
         expect(url).toContain("/groups/group1/conversations");
     });
 
-    it("should throw ConnectorException on non-OK response", async () => {
+    it("should throw ConnectorError on non-OK response", async () => {
         mockFetchError(403, "Forbidden");
 
         const client = new Office365groupsmailClient(TestConnectionUrl, createMockCredential());
         try {
-            await client.listConversationsAsync("group1").byPage().next();
-            throw new Error("Expected ConnectorException to be thrown.");
+            await client.listConversations("group1").byPage().next();
+            throw new Error("Expected ConnectorError to be thrown.");
         } catch (error) {
-            expect(error).toBeInstanceOf(ConnectorException);
-            const connectorError = error as ConnectorException;
+            expect(error).toBeInstanceOf(ConnectorError);
+            const connectorError = error as ConnectorError;
             expect(connectorError.statusCode).toBe(403);
             expect(connectorError.responseBody).toBe("Forbidden");
             expect(connectorError.operation).toBe("GET /v1.0/groups/group1/conversations");
@@ -115,7 +115,7 @@ describe("Office365groupsmailClient — listConversationsAsync", () => {
                 status: 200,
                 text: async () => JSON.stringify({
                     value: [{ id: "conv1", topic: "Welcome" }],
-                    nextLink: "/v1.0/groups/group1/conversations?page=2",
+                    "@odata.nextLink": "/v1.0/groups/group1/conversations?page=2",
                 }),
                 headers: new Headers(),
             } as Response)
@@ -128,14 +128,14 @@ describe("Office365groupsmailClient — listConversationsAsync", () => {
 
         const client = new Office365groupsmailClient(TestConnectionUrl, createMockCredential());
         try {
-            for await (const page of client.listConversationsAsync("group1").byPage()) {
+            for await (const page of client.listConversations("group1").byPage()) {
                 expect(page).toEqual([{ id: "conv1", topic: "Welcome" }]);
             }
 
-            throw new Error("Expected ConnectorException to be thrown.");
+            throw new Error("Expected ConnectorError to be thrown.");
         } catch (error) {
-            expect(error).toBeInstanceOf(ConnectorException);
-            const connectorError = error as ConnectorException;
+            expect(error).toBeInstanceOf(ConnectorError);
+            const connectorError = error as ConnectorError;
             expect(connectorError.statusCode).toBe(403);
             expect(connectorError.responseBody).toBe("Forbidden");
             expect(connectorError.operation).toBe(
@@ -145,7 +145,7 @@ describe("Office365groupsmailClient — listConversationsAsync", () => {
     });
 });
 
-describe("Office365groupsmailClient — forwardAsync", () => {
+describe("Office365groupsmailClient — forward", () => {
     afterEach(() => {
         jest.restoreAllMocks();
     });
@@ -158,7 +158,7 @@ describe("Office365groupsmailClient — forwardAsync", () => {
         };
 
         const client = new Office365groupsmailClient(TestConnectionUrl, createMockCredential());
-        await client.forwardAsync(input, "group1", "conversation1", "thread1", "post1");
+        await client.forward(input, "group1", "conversation1", "thread1", "post1");
 
         expect(global.fetch).toHaveBeenCalledTimes(1);
         const [url, init] = (global.fetch as jest.Mock).mock.calls[0];

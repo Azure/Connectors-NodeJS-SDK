@@ -1,7 +1,7 @@
 // Copyright (c) Microsoft Corporation.  All rights reserved.
 
 /** WordPress Connector SDK Sample - ESM TypeScript. */
-import { ConnectorException, ManagedIdentityTokenProvider } from "@azure/connectors";
+import { ConnectorError, ManagedIdentityTokenProvider } from "@azure/connectors";
 import { WordpressClient } from "@azure/connectors/generated/WordpressExtensions";
 
 const CONNECTION_URL = process.env.WORDPRESS_CONNECTION_URL ?? "";
@@ -10,10 +10,10 @@ if (!CONNECTION_URL || !SITE_ID) throw new Error("WORDPRESS_CONNECTION_URL and W
 
 async function main(): Promise<void> {
     try {
-        const statistics = await new WordpressClient(CONNECTION_URL, new ManagedIdentityTokenProvider()).siteStatsAsync(SITE_ID);
+        const statistics = await new WordpressClient(CONNECTION_URL, new ManagedIdentityTokenProvider()).siteStats(SITE_ID);
         console.log("Site statistics:", JSON.stringify(statistics, null, 2));
     } catch (error) {
-        if (error instanceof ConnectorException) console.error(`Connector error (${error.statusCode}): ${error.message}`);
+        if (error instanceof ConnectorError) console.error(`Connector error (${error.statusCode}): ${error.message}`);
         else throw error;
     }
 }

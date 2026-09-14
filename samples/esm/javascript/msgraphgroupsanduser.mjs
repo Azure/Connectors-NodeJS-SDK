@@ -18,7 +18,7 @@
  *     npm start
  */
 
-import { ManagedIdentityTokenProvider, ConnectorException } from "@azure/connectors";
+import { ManagedIdentityTokenProvider, ConnectorError } from "@azure/connectors";
 import { MsgraphgroupsanduserClient } from "@azure/connectors/generated/MsgraphgroupsanduserExtensions";
 
 const CONNECTION_URL = process.env.MSGRAPH_CONNECTION_URL ?? "";
@@ -38,7 +38,7 @@ async function main() {
     // Example 1: List users
     console.log("\n--- List Users ---");
     try {
-        const usersResponse = await client.listUsersAsync();
+        const usersResponse = await client.listUsers();
         const users = usersResponse.value ?? [];
 
         if (users.length > 0) {
@@ -50,7 +50,7 @@ async function main() {
             console.log("No users found.");
         }
     } catch (error) {
-        if (error instanceof ConnectorException) {
+        if (error instanceof ConnectorError) {
             console.log(`Connector error: ${error.message}`);
         } else {
             throw error;
@@ -61,7 +61,7 @@ async function main() {
     const searchTerm = process.env.MSGRAPH_GROUP_SEARCH ?? "Engineering";
     console.log(`\n--- Search Groups ("${searchTerm}") ---`);
     try {
-        const groupsResponse = await client.listGroupsByDisplayNameSearchAsync(
+        const groupsResponse = await client.listGroupsByDisplayNameSearch(
             searchTerm,
         );
         const groups = groupsResponse.value ?? [];
@@ -75,7 +75,7 @@ async function main() {
             console.log("No groups found.");
         }
     } catch (error) {
-        if (error instanceof ConnectorException) {
+        if (error instanceof ConnectorError) {
             console.log(`Connector error (${error.statusCode}): ${error.message}`);
         } else {
             throw error;
@@ -85,7 +85,7 @@ async function main() {
     // Example 3: List subscribed SKUs (organization licenses)
     console.log("\n--- List Subscribed SKUs ---");
     try {
-        const skusResponse = await client.listSubscribedSkusAsync();
+        const skusResponse = await client.listSubscribedSkus();
         const skus = skusResponse.value ?? [];
 
         if (skus.length > 0) {
@@ -97,7 +97,7 @@ async function main() {
             console.log("No SKUs found.");
         }
     } catch (error) {
-        if (error instanceof ConnectorException) {
+        if (error instanceof ConnectorError) {
             console.log(`Connector error (${error.statusCode}): ${error.message}`);
         } else {
             throw error;

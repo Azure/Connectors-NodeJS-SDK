@@ -8,7 +8,7 @@ describe("azureConnectors index exports", () => {
         expect(sdk.DefaultConnectorClientOptions).toBeDefined();
         expect(sdk.ManagedIdentityTokenProvider).toBeDefined();
         expect(sdk.ConnectionStringTokenProvider).toBeDefined();
-        expect(sdk.ConnectorException).toBeDefined();
+        expect(sdk.ConnectorError).toBeDefined();
         expect(sdk.ConnectorHttpClient).toBeDefined();
     });
 
@@ -19,7 +19,7 @@ describe("azureConnectors index exports", () => {
                 "DefaultConnectorClientOptions",
                 "ManagedIdentityTokenProvider",
                 "ConnectionStringTokenProvider",
-                "ConnectorException",
+                "ConnectorError",
                 "ConnectorHttpClient",
             ]),
         );

@@ -22,7 +22,7 @@
 
 "use strict";
 
-const { ManagedIdentityTokenProvider, ConnectorException } = require("@azure/connectors");
+const { ManagedIdentityTokenProvider, ConnectorError } = require("@azure/connectors");
 const { AzureblobClient } = require("@azure/connectors/generated/AzureblobExtensions");
 
 const CONNECTION_URL = process.env.AZUREBLOB_CONNECTION_URL ?? "";
@@ -45,19 +45,24 @@ async function main() {
     if (CONTAINER) {
         console.log(`\n--- List Blobs (${CONTAINER}) ---`);
         try {
-            const blobs = await client.listFolderAsync(CONTAINER, "/");
-            const blobValues = blobs.value ?? [];
+            const blobValues = [];
+            for await (const blob of client.listFolder(CONTAINER, "/")) {
+                blobValues.push(blob);
+                if (blobValues.length >= 10) {
+                    break;
+                }
+            }
 
             if (blobValues.length > 0) {
                 console.log(`Found ${blobValues.length} blobs:`);
-                for (const blob of blobValues.slice(0, 10)) {
+                for (const blob of blobValues) {
                     console.log(`  - ${blob.DisplayName ?? blob.Name ?? "Unknown"} (${blob.Size ?? "?"} bytes)`);
                 }
             } else {
                 console.log("No blobs found.");
             }
         } catch (error) {
-            if (error instanceof ConnectorException) {
+            if (error instanceof ConnectorError) {
                 console.log(`Connector error (${error.statusCode}): ${error.message}`);
             } else {
                 throw error;
@@ -70,14 +75,14 @@ async function main() {
     if (blobPath) {
         console.log(`\n--- Get Blob Metadata (${blobPath}) ---`);
         try {
-            const metadata = await client.getFileMetadataAsync(CONTAINER, blobPath);
+            const metadata = await client.getFileMetadata(CONTAINER, blobPath);
 
             console.log(`  Name: ${metadata.DisplayName ?? metadata.Name}`);
             console.log(`  Size: ${metadata.Size ?? "unknown"} bytes`);
             console.log(`  Last Modified: ${metadata.LastModified ?? "unknown"}`);
             console.log(`  Content Type: ${metadata.MediaType ?? "unknown"}`);
         } catch (error) {
-            if (error instanceof ConnectorException) {
+            if (error instanceof ConnectorError) {
                 console.log(`Connector error (${error.statusCode}): ${error.message}`);
             } else {
                 throw error;
@@ -90,7 +95,7 @@ async function main() {
         console.log("\n--- Create Share Link ---");
         try {
             const policy = {};
-            const sas = await client.createShareLinkByPathAsync(
+            const sas = await client.createShareLinkByPath(
                 policy,
                 STORAGE_ACCOUNT,
                 blobPath,
@@ -98,7 +103,7 @@ async function main() {
             const webUrl = String(sas.WebUrl ?? "");
             console.log(`  Share Link: ${webUrl.substring(0, 80)}...`);
         } catch (error) {
-            if (error instanceof ConnectorException) {
+            if (error instanceof ConnectorError) {
                 console.log(`Connector error (${error.statusCode}): ${error.message}`);
             } else {
                 throw error;

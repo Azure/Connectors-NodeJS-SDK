@@ -13,7 +13,7 @@
  *     npx tsx freshservice.ts
  */
 
-import { ManagedIdentityTokenProvider, ConnectorException } from "@azure/connectors";
+import { ManagedIdentityTokenProvider, ConnectorError } from "@azure/connectors";
 import { FreshserviceClient } from "@azure/connectors/generated/FreshserviceExtensions";
 
 const CONNECTION_URL = process.env.FRESHSERVICE_CONNECTION_URL ?? "";
@@ -29,7 +29,7 @@ async function main(): Promise<void> {
 
     // Example 1: Create a support ticket.
     try {
-        const ticket = await client.createTicketAsync({
+        const ticket = await client.createTicket({
             email: "requester@example.com",
             subject: "Cannot access email",
             status: "Open",
@@ -38,7 +38,7 @@ async function main(): Promise<void> {
         });
         console.log("Ticket:", JSON.stringify(ticket, null, 2));
     } catch (error) {
-        if (error instanceof ConnectorException) {
+        if (error instanceof ConnectorError) {
             console.log(`Connector error (${error.statusCode}): ${error.message}`);
         } else {
             throw error;

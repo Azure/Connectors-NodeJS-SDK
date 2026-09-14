@@ -1,15 +1,15 @@
 // Copyright (c) Microsoft Corporation.  All rights reserved.
 
 /**
- * Exception types for connector operations.
- *
- * Mirrors the Python SDK's exceptions.py.
+ * Error types for connector operations.
  */
 
+import { RestError } from "@azure/core-rest-pipeline";
+
 /**
- * Exception thrown when connector operations fail.
+ * Error thrown when connector operations fail.
  */
-export class ConnectorException extends Error {
+export class ConnectorError extends RestError {
     public static readonly MaxResponseBodyLength = 2000;
 
     public readonly connectorName: string;
@@ -18,16 +18,20 @@ export class ConnectorException extends Error {
     public readonly responseBody: string;
 
     /**
-     * Initializes a ConnectorException.
+     * Initializes a ConnectorError.
      * @param connectorName The connector name (e.g., "office365").
      * @param operation The operation that failed (e.g., "GET /v2/Mail").
      * @param statusCode The HTTP status code.
      * @param responseBody The response body from the failed request.
      */
     constructor(connectorName: string, operation: string, statusCode: number, responseBody: string) {
-        const truncated = ConnectorException.truncateBody(responseBody);
-        super(`[${connectorName}] ${operation} failed with status ${statusCode}: ${truncated}`);
-        this.name = "ConnectorException";
+        const truncated = ConnectorError.truncateBody(responseBody);
+        super(
+            `[${connectorName}] ${operation} failed with status ${statusCode}: ${truncated}`,
+            { statusCode },
+        );
+        Object.setPrototypeOf(this, ConnectorError.prototype);
+        this.name = "ConnectorError";
         this.connectorName = connectorName;
         this.operation = operation;
         this.statusCode = statusCode;
@@ -35,10 +39,10 @@ export class ConnectorException extends Error {
     }
 
     private static truncateBody(body: string): string {
-        if (!body || body.length <= ConnectorException.MaxResponseBodyLength) {
+        if (!body || body.length <= ConnectorError.MaxResponseBodyLength) {
             return body;
         }
 
-        return body.substring(0, ConnectorException.MaxResponseBodyLength) + "...[truncated]";
+        return body.substring(0, ConnectorError.MaxResponseBodyLength) + "...[truncated]";
     }
 }

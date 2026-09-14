@@ -4,7 +4,7 @@
 import type { AbortSignalLike } from "@azure/abort-controller";
 import type { TokenCredential } from "@azure/core-auth";
 import { ConnectorClientBase } from "../azureConnectors/clientBase.ts";
-import { ConnectorException } from "../azureConnectors/connectorException.ts";
+import { ConnectorError } from "../azureConnectors/connectorError.ts";
 import { ConnectorClientOptions } from "../azureConnectors/options.ts";
 
 // #region Types
@@ -337,9 +337,7 @@ export interface GoalValueCheckinUpdateRequest {
 /**
  * Definition: GoalNotes
  */
-export interface GoalNotes {
-    [key: string]: unknown;
-}
+export type GoalNotes = Array<Record<string, unknown>>;
 
 /**
  * Definition: EvaluatedAlert
@@ -842,7 +840,7 @@ export class PowerbiClient extends ConnectorClientBase {
      * Get scorecards
      * @remarks Gets a list of Power BI scorecards in the specified workspace.
      */
-    public async getScorecardsAsync(groupid: string, pbiSource?: string, abortSignal?: AbortSignalLike): Promise<ListedScorecards> {
+    public async getScorecards(groupid: string, pbiSource?: string, abortSignal?: AbortSignalLike): Promise<ListedScorecards> {
         const queryParams: string[] = [];
         if (pbiSource !== undefined) {
             queryParams.push(`pbi_source=${encodeURIComponent(String(pbiSource))}`);
@@ -852,7 +850,7 @@ export class PowerbiClient extends ConnectorClientBase {
         const httpResponse = await this.httpClient.sendAsync<ListedScorecards>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as ListedScorecards;
@@ -862,7 +860,7 @@ export class PowerbiClient extends ConnectorClientBase {
      * Create a scorecard
      * @remarks Creates a scorecard for Power BI goals.
      */
-    public async createScorecardAsync(input: CreateScorecardRequest, groupid: string, pbiSource?: string, abortSignal?: AbortSignalLike): Promise<CreatedScorecard> {
+    public async createScorecard(input: CreateScorecardRequest, groupid: string, pbiSource?: string, abortSignal?: AbortSignalLike): Promise<CreatedScorecard> {
         const queryParams: string[] = [];
         if (pbiSource !== undefined) {
             queryParams.push(`pbi_source=${encodeURIComponent(String(pbiSource))}`);
@@ -872,7 +870,7 @@ export class PowerbiClient extends ConnectorClientBase {
         const httpResponse = await this.httpClient.sendAsync<CreatedScorecard>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as CreatedScorecard;
@@ -882,7 +880,7 @@ export class PowerbiClient extends ConnectorClientBase {
      * Get multiple goals
      * @remarks Get a list of Power BI goals in the specified scorecard.
      */
-    public async getMultipleGoalsAsync(groupid: string, scorecardId: string, expand?: string, pbiSource?: string, abortSignal?: AbortSignalLike): Promise<FetchedGoals> {
+    public async getMultipleGoals(groupid: string, scorecardId: string, expand?: string, pbiSource?: string, abortSignal?: AbortSignalLike): Promise<FetchedGoals> {
         const queryParams: string[] = [];
         if (expand !== undefined) {
             queryParams.push(`$expand=${encodeURIComponent(String(expand))}`);
@@ -895,7 +893,7 @@ export class PowerbiClient extends ConnectorClientBase {
         const httpResponse = await this.httpClient.sendAsync<FetchedGoals>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as FetchedGoals;
@@ -905,7 +903,7 @@ export class PowerbiClient extends ConnectorClientBase {
      * Create a goal
      * @remarks Creates a Power BI goal on the specified scorecard.
      */
-    public async createGoalAsync(input: CreateGoalRequest, groupid: string, scorecardId: string, pbiSource?: string, abortSignal?: AbortSignalLike): Promise<CreateGoalResponse> {
+    public async createGoal(input: CreateGoalRequest, groupid: string, scorecardId: string, pbiSource?: string, abortSignal?: AbortSignalLike): Promise<CreateGoalResponse> {
         const queryParams: string[] = [];
         if (pbiSource !== undefined) {
             queryParams.push(`pbi_source=${encodeURIComponent(String(pbiSource))}`);
@@ -915,7 +913,7 @@ export class PowerbiClient extends ConnectorClientBase {
         const httpResponse = await this.httpClient.sendAsync<CreateGoalResponse>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as CreateGoalResponse;
@@ -925,7 +923,7 @@ export class PowerbiClient extends ConnectorClientBase {
      * Get a goal
      * @remarks Gets the specified Power BI goal on a scorecard.
      */
-    public async getGoalAsync(groupid: string, scorecardId: string, goalId: string, pbiSource?: string, expand?: string, abortSignal?: AbortSignalLike): Promise<FetchedGoal> {
+    public async getGoal(groupid: string, scorecardId: string, goalId: string, pbiSource?: string, expand?: string, abortSignal?: AbortSignalLike): Promise<FetchedGoal> {
         const queryParams: string[] = [];
         if (pbiSource !== undefined) {
             queryParams.push(`pbi_source=${encodeURIComponent(String(pbiSource))}`);
@@ -938,7 +936,7 @@ export class PowerbiClient extends ConnectorClientBase {
         const httpResponse = await this.httpClient.sendAsync<FetchedGoal>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as FetchedGoal;
@@ -948,7 +946,7 @@ export class PowerbiClient extends ConnectorClientBase {
      * Update a goal
      * @remarks Updates the Power BI goal's state.
      */
-    public async updateGoalAsync(input: UpdateGoalRequest, groupid: string, scorecardId: string, goalId: string, pbiSource?: string, abortSignal?: AbortSignalLike): Promise<void> {
+    public async updateGoal(input: UpdateGoalRequest, groupid: string, scorecardId: string, goalId: string, pbiSource?: string, abortSignal?: AbortSignalLike): Promise<void> {
         const queryParams: string[] = [];
         if (pbiSource !== undefined) {
             queryParams.push(`pbi_source=${encodeURIComponent(String(pbiSource))}`);
@@ -958,7 +956,7 @@ export class PowerbiClient extends ConnectorClientBase {
         const httpResponse = await this.httpClient.sendAsync<void>("PATCH", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `PATCH ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `PATCH ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
     }
 
@@ -966,7 +964,7 @@ export class PowerbiClient extends ConnectorClientBase {
      * Run a query against a dataset
      * @remarks Use the Power BI REST API to run a query.
      */
-    public async executeDatasetQueryAsync(input: QuerySpecification, groupid: string, datasetid: string, pbiSource?: string, abortSignal?: AbortSignalLike): Promise<QueryExecutionResults> {
+    public async executeDatasetQuery(input: QuerySpecification, groupid: string, datasetid: string, pbiSource?: string, abortSignal?: AbortSignalLike): Promise<QueryExecutionResults> {
         const queryParams: string[] = [];
         if (pbiSource !== undefined) {
             queryParams.push(`pbi_source=${encodeURIComponent(String(pbiSource))}`);
@@ -976,7 +974,7 @@ export class PowerbiClient extends ConnectorClientBase {
         const httpResponse = await this.httpClient.sendAsync<QueryExecutionResults>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as QueryExecutionResults;
@@ -986,7 +984,7 @@ export class PowerbiClient extends ConnectorClientBase {
      * Run a json query against a dataset
      * @remarks Use the Power BI REST API to run a query in json format.
      */
-    public async executeDatasetQueriesJsonAsync(input: ExecuteDatasetQueriesJsonInput, groupid: string, datasetid: string, pbiSource?: string, abortSignal?: AbortSignalLike): Promise<ExecuteDatasetQueriesJsonResponse> {
+    public async executeDatasetQueriesJson(input: ExecuteDatasetQueriesJsonInput, groupid: string, datasetid: string, pbiSource?: string, abortSignal?: AbortSignalLike): Promise<ExecuteDatasetQueriesJsonResponse> {
         const queryParams: string[] = [];
         if (pbiSource !== undefined) {
             queryParams.push(`pbi_source=${encodeURIComponent(String(pbiSource))}`);
@@ -996,7 +994,7 @@ export class PowerbiClient extends ConnectorClientBase {
         const httpResponse = await this.httpClient.sendAsync<ExecuteDatasetQueriesJsonResponse>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as ExecuteDatasetQueriesJsonResponse;
@@ -1006,7 +1004,7 @@ export class PowerbiClient extends ConnectorClientBase {
      * Add rows to a dataset
      * @remarks Use Power BI REST API to add rows to a dataset.
      */
-    public async addRowsAsync(input: Payload, groupid: string, datasetid: string, tablename: string, pbiSource?: string, abortSignal?: AbortSignalLike): Promise<void> {
+    public async addRows(input: Payload, groupid: string, datasetid: string, tablename: string, pbiSource?: string, abortSignal?: AbortSignalLike): Promise<void> {
         const queryParams: string[] = [];
         if (pbiSource !== undefined) {
             queryParams.push(`pbi_source=${encodeURIComponent(String(pbiSource))}`);
@@ -1016,7 +1014,7 @@ export class PowerbiClient extends ConnectorClientBase {
         const httpResponse = await this.httpClient.sendAsync<void>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
     }
 
@@ -1024,7 +1022,7 @@ export class PowerbiClient extends ConnectorClientBase {
      * Add a note to a check-in
      * @remarks Appends a new note to a check-in of a Power BI goal.
      */
-    public async goalValueCheckinNoteAsync(input: GoalValueCheckinNoteInput, groupid: string, scorecardId: string, goalId: string, goalCheckin: string, pbiSource?: string, abortSignal?: AbortSignalLike): Promise<void> {
+    public async goalValueCheckinNote(input: GoalValueCheckinNoteInput, groupid: string, scorecardId: string, goalId: string, goalCheckin: string, pbiSource?: string, abortSignal?: AbortSignalLike): Promise<void> {
         const queryParams: string[] = [];
         if (pbiSource !== undefined) {
             queryParams.push(`pbi_source=${encodeURIComponent(String(pbiSource))}`);
@@ -1034,7 +1032,7 @@ export class PowerbiClient extends ConnectorClientBase {
         const httpResponse = await this.httpClient.sendAsync<void>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
     }
 
@@ -1042,7 +1040,7 @@ export class PowerbiClient extends ConnectorClientBase {
      * Create a check-in
      * @remarks Creates a Power BI goal check-in.
      */
-    public async goalValueCheckinAsync(input: GoalValueCheckinRequest, groupid: string, scorecardId: string, goalId: string, pbiSource?: string, abortSignal?: AbortSignalLike): Promise<void> {
+    public async goalValueCheckin(input: GoalValueCheckinRequest, groupid: string, scorecardId: string, goalId: string, pbiSource?: string, abortSignal?: AbortSignalLike): Promise<void> {
         const queryParams: string[] = [];
         if (pbiSource !== undefined) {
             queryParams.push(`pbi_source=${encodeURIComponent(String(pbiSource))}`);
@@ -1052,7 +1050,7 @@ export class PowerbiClient extends ConnectorClientBase {
         const httpResponse = await this.httpClient.sendAsync<void>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
     }
 
@@ -1060,7 +1058,7 @@ export class PowerbiClient extends ConnectorClientBase {
      * Get goal check-ins
      * @remarks Get all check-ins on a Power BI goal.
      */
-    public async getGoalCheckinsAsync(groupid: string, scorecardId: string, goalId: string, pbiSource?: string, expand?: string, abortSignal?: AbortSignalLike): Promise<GetGoalCheckinsResponse> {
+    public async getGoalCheckins(groupid: string, scorecardId: string, goalId: string, pbiSource?: string, expand?: string, abortSignal?: AbortSignalLike): Promise<GetGoalCheckinsResponse> {
         const queryParams: string[] = [];
         if (pbiSource !== undefined) {
             queryParams.push(`pbi_source=${encodeURIComponent(String(pbiSource))}`);
@@ -1073,7 +1071,7 @@ export class PowerbiClient extends ConnectorClientBase {
         const httpResponse = await this.httpClient.sendAsync<GetGoalCheckinsResponse>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as GetGoalCheckinsResponse;
@@ -1083,7 +1081,7 @@ export class PowerbiClient extends ConnectorClientBase {
      * Update a check-in
      * @remarks Updates a Power BI goal check-in.
      */
-    public async updateGoalCheckinAsync(input: GoalValueCheckinUpdateRequest, groupid: string, scorecardId: string, goalId: string, goalCheckin: string, pbiSource?: string, abortSignal?: AbortSignalLike): Promise<void> {
+    public async updateGoalCheckin(input: GoalValueCheckinUpdateRequest, groupid: string, scorecardId: string, goalId: string, goalCheckin: string, pbiSource?: string, abortSignal?: AbortSignalLike): Promise<void> {
         const queryParams: string[] = [];
         if (pbiSource !== undefined) {
             queryParams.push(`pbi_source=${encodeURIComponent(String(pbiSource))}`);
@@ -1093,7 +1091,7 @@ export class PowerbiClient extends ConnectorClientBase {
         const httpResponse = await this.httpClient.sendAsync<void>("PATCH", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `PATCH ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `PATCH ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
     }
 
@@ -1101,7 +1099,7 @@ export class PowerbiClient extends ConnectorClientBase {
      * Get a goal check-in
      * @remarks Get a check-in on a Power BI goal.
      */
-    public async getGoalCheckinAsync(groupid: string, scorecardId: string, goalId: string, goalCheckin: string, pbiSource?: string, expand?: string, abortSignal?: AbortSignalLike): Promise<GetGoalCheckinResponse> {
+    public async getGoalCheckin(groupid: string, scorecardId: string, goalId: string, goalCheckin: string, pbiSource?: string, expand?: string, abortSignal?: AbortSignalLike): Promise<GetGoalCheckinResponse> {
         const queryParams: string[] = [];
         if (pbiSource !== undefined) {
             queryParams.push(`pbi_source=${encodeURIComponent(String(pbiSource))}`);
@@ -1114,7 +1112,7 @@ export class PowerbiClient extends ConnectorClientBase {
         const httpResponse = await this.httpClient.sendAsync<GetGoalCheckinResponse>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as GetGoalCheckinResponse;
@@ -1124,7 +1122,7 @@ export class PowerbiClient extends ConnectorClientBase {
      * Refresh a dataset
      * @remarks Use Power BI REST API to refresh a powerbi dataset.
      */
-    public async refreshDatasetAsync(groupid: string, datasetid: string, pbiSource?: string, abortSignal?: AbortSignalLike): Promise<void> {
+    public async refreshDataset(groupid: string, datasetid: string, pbiSource?: string, abortSignal?: AbortSignalLike): Promise<void> {
         const queryParams: string[] = [];
         if (pbiSource !== undefined) {
             queryParams.push(`pbi_source=${encodeURIComponent(String(pbiSource))}`);
@@ -1134,7 +1132,7 @@ export class PowerbiClient extends ConnectorClientBase {
         const httpResponse = await this.httpClient.sendAsync<void>("POST", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
     }
 
@@ -1142,13 +1140,13 @@ export class PowerbiClient extends ConnectorClientBase {
      * Export To File for Power BI Reports
      * @remarks Use Power BI Rest API to inititate export for Power BI reports
      */
-    public async initiateExportToFileForPbiReportsAsync(input: ExportPayloadPowerBIReport, groupid: string, reportid: string, abortSignal?: AbortSignalLike): Promise<Blob> {
+    public async initiateExportToFileForPbiReports(input: ExportPayloadPowerBIReport, groupid: string, reportid: string, abortSignal?: AbortSignalLike): Promise<Blob> {
         const requestPath = `/v1.0/myorg/groups/${groupid}/reports/${reportid}/ExportTo`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<Blob>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as Blob;
@@ -1158,13 +1156,13 @@ export class PowerbiClient extends ConnectorClientBase {
      * Export To File for Paginated Reports
      * @remarks Use Power BI Rest API to inititate export for paginated reports
      */
-    public async initiateExportToFileForPaginatedReportsAsync(input: ExportPayloadPaginatedReport, groupid: string, reportid: string, abortSignal?: AbortSignalLike): Promise<Blob> {
+    public async initiateExportToFileForPaginatedReports(input: ExportPayloadPaginatedReport, groupid: string, reportid: string, abortSignal?: AbortSignalLike): Promise<Blob> {
         const requestPath = `/v1.0/myorg/groups/${groupid}/reports/${reportid}/ExportToPaginatedReports`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<Blob>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as Blob;

@@ -5,7 +5,7 @@ import {
     Item,
     ItemsList,
 } from "../src/generated/CommondataserviceExtensions.ts";
-import { ConnectorException } from "../src/azureConnectors/connectorException.ts";
+import { ConnectorError } from "../src/azureConnectors/connectorError.ts";
 import type { TokenCredential } from "../src/azureConnectors/index.ts";
 
 const TestConnectionUrl = "https://connection-runtime.azure.com/apim/commondataservice/abc123";
@@ -37,7 +37,7 @@ function createErrorResponse(status: number, body: string): Response {
     } as Response;
 }
 
-describe("CommondataserviceClient — getItemsAsync", () => {
+describe("CommondataserviceClient — getItems", () => {
     afterEach(() => {
         jest.restoreAllMocks();
     });
@@ -55,7 +55,7 @@ describe("CommondataserviceClient — getItemsAsync", () => {
 
         const client = new CommondataserviceClient(TestConnectionUrl, createMockCredential());
         const items: Item[] = [];
-        for await (const item of client.getItemsAsync("default", "accounts")) {
+        for await (const item of client.getItems("default", "accounts")) {
             items.push(item);
         }
 
@@ -79,7 +79,7 @@ describe("CommondataserviceClient — getItemsAsync", () => {
 
         const client = new CommondataserviceClient(TestConnectionUrl, createMockCredential());
         const items: Item[] = [];
-        for await (const item of client.getItemsAsync("default", "accounts")) {
+        for await (const item of client.getItems("default", "accounts")) {
             items.push(item);
         }
 
@@ -92,7 +92,7 @@ describe("CommondataserviceClient — getItemsAsync", () => {
         const client = new CommondataserviceClient(TestConnectionUrl, createMockCredential());
         const items: Item[] = [];
 
-        for await (const item of client.getItemsAsync("https://contoso.crm.dynamics.com", "account/details")) {
+        for await (const item of client.getItems("https://contoso.crm.dynamics.com", "account/details")) {
             items.push(item);
         }
 
@@ -103,7 +103,7 @@ describe("CommondataserviceClient — getItemsAsync", () => {
         );
     });
 
-    it("should reject with ConnectorException when a continuation page fails", async () => {
+    it("should reject with ConnectorError when a continuation page fails", async () => {
         const firstItem: Item = { dynamicProperties: { accountid: "account-1" } };
         const nextLink = `${TestConnectionUrl}/v2/datasets/default/tables/accounts/items?$skiptoken=page-2`;
         global.fetch = jest.fn()
@@ -116,11 +116,11 @@ describe("CommondataserviceClient — getItemsAsync", () => {
         const client = new CommondataserviceClient(TestConnectionUrl, createMockCredential(), {
             retryOptions: { maxRetries: 0 },
         });
-        const iterator = client.getItemsAsync("default", "accounts")[Symbol.asyncIterator]();
+        const iterator = client.getItems("default", "accounts")[Symbol.asyncIterator]();
 
         await expect(iterator.next()).resolves.toEqual({ done: false, value: firstItem });
-        await expect(iterator.next()).rejects.toMatchObject<Partial<ConnectorException>>({
-            name: "ConnectorException",
+        await expect(iterator.next()).rejects.toMatchObject<Partial<ConnectorError>>({
+            name: "ConnectorError",
             connectorName: "commondataservice",
             operation: "GET /v2/datasets/default/tables/accounts/items?$skiptoken=page-2",
             statusCode: 503,

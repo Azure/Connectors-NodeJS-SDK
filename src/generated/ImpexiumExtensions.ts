@@ -4,7 +4,7 @@
 import type { AbortSignalLike } from "@azure/abort-controller";
 import type { TokenCredential } from "@azure/core-auth";
 import { ConnectorClientBase } from "../azureConnectors/clientBase.ts";
-import { ConnectorException } from "../azureConnectors/connectorException.ts";
+import { ConnectorError } from "../azureConnectors/connectorError.ts";
 import { ConnectorClientOptions } from "../azureConnectors/options.ts";
 
 // #region Types
@@ -62,9 +62,7 @@ export interface GetCourseAttendeesResponse {
 /**
  * Add Exam Scores
  */
-export interface AddExamScoresInput {
-    [key: string]: unknown;
-}
+export type AddExamScoresInput = Array<ExamScoreData>;
 
 /**
  * Response for Find Members by Name
@@ -89,9 +87,7 @@ export interface GetPurchasesForAnIndividualResponse {
 /**
  * Add or Update a List of Custom Fields Per Organization
  */
-export interface AddOrUpdateAListOfCustomFieldsPerOrganizationInput {
-    [key: string]: unknown;
-}
+export type AddOrUpdateAListOfCustomFieldsPerOrganizationInput = Array<CustomFieldValueData>;
 
 /**
  * Response for List All Event Cancellations by Event
@@ -166,9 +162,7 @@ export interface ListAllExhibitsResponse {
 /**
  * Add Categories for an Organization
  */
-export interface AddCategoriesForAnOrganizationInput {
-    [key: string]: unknown;
-}
+export type AddCategoriesForAnOrganizationInput = Array<SaveCategoryBasicData>;
 
 /**
  * Response for List of Customer Relationships
@@ -193,9 +187,7 @@ export interface ListAllOpenCustomerRequestResponse {
 /**
  * Add Categories for an Individual
  */
-export interface AddCategoriesForAnIndividualInput {
-    [key: string]: unknown;
-}
+export type AddCategoriesForAnIndividualInput = Array<SaveCategoryBasicData>;
 
 /**
  * Response for List of All Organization Members
@@ -240,9 +232,7 @@ export interface GetListOfActiveCertificationsForAnIndividualResponse {
 /**
  * Register an Individual for a Free Session
  */
-export interface RegisterAnIndividualForAFreeSessionInput {
-    [key: string]: unknown;
-}
+export type RegisterAnIndividualForAFreeSessionInput = Array<SessionRegistrationData>;
 
 /**
  * Response for Get a List of Licenses
@@ -357,9 +347,7 @@ export interface GetOrganizationsRelationshipsResponse {
 /**
  * Add or Update a List of Custom Fields Per Individual
  */
-export interface AddOrUpdateAListOfCustomFieldsPerIndividualInput {
-    [key: string]: unknown;
-}
+export type AddOrUpdateAListOfCustomFieldsPerIndividualInput = Array<Record<string, unknown>>;
 
 /**
  * Response for Get Upcoming Events
@@ -674,9 +662,7 @@ export interface FindCustomerPhoneResponse {
 /**
  * Mark Registrant as Attended
  */
-export interface MarkRegistrantAttendedInput {
-    [key: string]: unknown;
-}
+export type MarkRegistrantAttendedInput = Array<Record<string, unknown>>;
 
 /**
  * Response for List Award Individual Recipients
@@ -2667,7 +2653,7 @@ export class ImpexiumClient extends ConnectorClientBase {
      * Get Abandoned Checkouts
      * @remarks Get Abandoned Checkouts
      */
-    public async getAbandonedCheckoutsAsync(pageNumber: string, abandonedFrom?: string, productCode?: string, customerRecordNumber?: string, abortSignal?: AbortSignalLike): Promise<GetAbandonedCheckoutsResponse> {
+    public async getAbandonedCheckouts(pageNumber: string, abandonedFrom?: string, productCode?: string, customerRecordNumber?: string, abortSignal?: AbortSignalLike): Promise<GetAbandonedCheckoutsResponse> {
         const queryParams: string[] = [];
         if (abandonedFrom !== undefined) {
             queryParams.push(`abandonedFrom=${encodeURIComponent(String(abandonedFrom))}`);
@@ -2683,7 +2669,7 @@ export class ImpexiumClient extends ConnectorClientBase {
         const httpResponse = await this.httpClient.sendAsync<GetAbandonedCheckoutsResponse>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as GetAbandonedCheckoutsResponse;
@@ -2693,13 +2679,13 @@ export class ImpexiumClient extends ConnectorClientBase {
      * List All Exhibitors
      * @remarks List All Exhibitors
      */
-    public async listAllExhibitorsAsync(exhibitCode: string, pageNumber: string, abortSignal?: AbortSignalLike): Promise<ListAllExhibitorsResponse> {
+    public async listAllExhibitors(exhibitCode: string, pageNumber: string, abortSignal?: AbortSignalLike): Promise<ListAllExhibitorsResponse> {
         const requestPath = `/api/v1/Exhibits/${exhibitCode}/Exhibitors/${pageNumber}`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<ListAllExhibitorsResponse>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as ListAllExhibitorsResponse;
@@ -2709,7 +2695,7 @@ export class ImpexiumClient extends ConnectorClientBase {
      * List of Exams
      * @remarks List of Exams
      */
-    public async listOfExamsAsync(pageNumber: string, code?: string, categoryName?: string, isPublic?: string, changedSince?: string, tag?: string, includePrices?: string, abortSignal?: AbortSignalLike): Promise<ListOfExamsResponse> {
+    public async listOfExams(pageNumber: string, code?: string, categoryName?: string, isPublic?: string, changedSince?: string, tag?: string, includePrices?: string, abortSignal?: AbortSignalLike): Promise<ListOfExamsResponse> {
         const queryParams: string[] = [];
         if (code !== undefined) {
             queryParams.push(`Code=${encodeURIComponent(String(code))}`);
@@ -2734,7 +2720,7 @@ export class ImpexiumClient extends ConnectorClientBase {
         const httpResponse = await this.httpClient.sendAsync<ListOfExamsResponse>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as ListOfExamsResponse;
@@ -2744,7 +2730,7 @@ export class ImpexiumClient extends ConnectorClientBase {
      * List Registrants
      * @remarks List Registrants
      */
-    public async listRegistrantsAsync(eventCode: string, pageNumber: string, sessionCode?: string, includeDetails?: string, registeredSince?: string, abortSignal?: AbortSignalLike): Promise<ListRegistrantsResponse> {
+    public async listRegistrants(eventCode: string, pageNumber: string, sessionCode?: string, includeDetails?: string, registeredSince?: string, abortSignal?: AbortSignalLike): Promise<ListRegistrantsResponse> {
         const queryParams: string[] = [];
         if (sessionCode !== undefined) {
             queryParams.push(`sessionCode=${encodeURIComponent(String(sessionCode))}`);
@@ -2760,7 +2746,7 @@ export class ImpexiumClient extends ConnectorClientBase {
         const httpResponse = await this.httpClient.sendAsync<ListRegistrantsResponse>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as ListRegistrantsResponse;
@@ -2770,13 +2756,13 @@ export class ImpexiumClient extends ConnectorClientBase {
      * Get Course Attendees
      * @remarks Get Course Attendees
      */
-    public async getCourseAttendeesAsync(code: string, pageNumber: string, abortSignal?: AbortSignalLike): Promise<GetCourseAttendeesResponse> {
+    public async getCourseAttendees(code: string, pageNumber: string, abortSignal?: AbortSignalLike): Promise<GetCourseAttendeesResponse> {
         const requestPath = `/api/v1/Courses/${code}/Attendees/${pageNumber}`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<GetCourseAttendeesResponse>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as GetCourseAttendeesResponse;
@@ -2786,13 +2772,13 @@ export class ImpexiumClient extends ConnectorClientBase {
      * Add Exam Scores
      * @remarks Add Exam Scores
      */
-    public async addExamScoresAsync(input: AddExamScoresInput, examCode: string, abortSignal?: AbortSignalLike): Promise<Array<ExamScoreResultData>> {
+    public async addExamScores(input: AddExamScoresInput, examCode: string, abortSignal?: AbortSignalLike): Promise<Array<ExamScoreResultData>> {
         const requestPath = `/api/v1/Exams/${examCode}/Scores`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<Array<ExamScoreResultData>>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as Array<ExamScoreResultData>;
@@ -2802,13 +2788,13 @@ export class ImpexiumClient extends ConnectorClientBase {
      * Find Members by Name
      * @remarks Find Members by Name
      */
-    public async findMembersByNameAsync(name: string, pageNumber: string, abortSignal?: AbortSignalLike): Promise<FindMembersByNameResponse> {
+    public async findMembersByName(name: string, pageNumber: string, abortSignal?: AbortSignalLike): Promise<FindMembersByNameResponse> {
         const requestPath = `/api/v1/Customers/Members/FindByName/${name}/${pageNumber}`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<FindMembersByNameResponse>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as FindMembersByNameResponse;
@@ -2818,7 +2804,7 @@ export class ImpexiumClient extends ConnectorClientBase {
      * Get Purchases for an Individual
      * @remarks Get Purchases for an Individual
      */
-    public async getPurchasesForAnIndividualAsync(idOrRecordNumber: string, pageNumber: string, productCode?: string, purchasedSince?: string, productCategoryCode?: string, abortSignal?: AbortSignalLike): Promise<GetPurchasesForAnIndividualResponse> {
+    public async getPurchasesForAnIndividual(idOrRecordNumber: string, pageNumber: string, productCode?: string, purchasedSince?: string, productCategoryCode?: string, abortSignal?: AbortSignalLike): Promise<GetPurchasesForAnIndividualResponse> {
         const queryParams: string[] = [];
         if (productCode !== undefined) {
             queryParams.push(`productCode=${encodeURIComponent(String(productCode))}`);
@@ -2834,7 +2820,7 @@ export class ImpexiumClient extends ConnectorClientBase {
         const httpResponse = await this.httpClient.sendAsync<GetPurchasesForAnIndividualResponse>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as GetPurchasesForAnIndividualResponse;
@@ -2844,13 +2830,13 @@ export class ImpexiumClient extends ConnectorClientBase {
      * Add or Update a List of Custom Fields Per Organization
      * @remarks Add or Update a List of Custom Fields Per Organization
      */
-    public async addOrUpdateAListOfCustomFieldsPerOrganizationAsync(input: AddOrUpdateAListOfCustomFieldsPerOrganizationInput, idOrRecordNumber: string, abortSignal?: AbortSignalLike): Promise<Array<CustomFieldResultData>> {
+    public async addOrUpdateAListOfCustomFieldsPerOrganization(input: AddOrUpdateAListOfCustomFieldsPerOrganizationInput, idOrRecordNumber: string, abortSignal?: AbortSignalLike): Promise<Array<CustomFieldResultData>> {
         const requestPath = `/api/v1/Organizations/${idOrRecordNumber}/CustomFieldsList`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<Array<CustomFieldResultData>>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as Array<CustomFieldResultData>;
@@ -2860,13 +2846,13 @@ export class ImpexiumClient extends ConnectorClientBase {
      * Add Nominee
      * @remarks Add Nominee
      */
-    public async addNomineeAsync(input: CommitteeNomineeSaveData, code: string, abortSignal?: AbortSignalLike): Promise<void> {
+    public async addNominee(input: CommitteeNomineeSaveData, code: string, abortSignal?: AbortSignalLike): Promise<void> {
         const requestPath = `/api/v1/Committees/${code}/Nominations`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<void>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
     }
 
@@ -2874,13 +2860,13 @@ export class ImpexiumClient extends ConnectorClientBase {
      * Get Individual Custom Field Values
      * @remarks Get Individual Custom Field Values
      */
-    public async getIndividualCustomFieldValuesAsync(id: string, abortSignal?: AbortSignalLike): Promise<Array<CustomFieldData>> {
+    public async getIndividualCustomFieldValues(id: string, abortSignal?: AbortSignalLike): Promise<Array<CustomFieldData>> {
         const requestPath = `/api/v1/Individuals/${id}/CustomFields`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<Array<CustomFieldData>>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as Array<CustomFieldData>;
@@ -2890,13 +2876,13 @@ export class ImpexiumClient extends ConnectorClientBase {
      * Update Individual Custom Field Values
      * @remarks Update Individual Custom Field Values.
      */
-    public async updateCustomFieldValueAsync(input: CustomFieldData, id: string, abortSignal?: AbortSignalLike): Promise<void> {
+    public async updateCustomFieldValue(input: CustomFieldData, id: string, abortSignal?: AbortSignalLike): Promise<void> {
         const requestPath = `/api/v1/Individuals/${id}/CustomFields`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<void>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
     }
 
@@ -2904,7 +2890,7 @@ export class ImpexiumClient extends ConnectorClientBase {
      * List All Event Cancellations by Event
      * @remarks List All Event Cancellations by Event
      */
-    public async listAllEventCancellationsByEventAsync(eventCode: string, pageNumber: string, includeDetails?: string, cancelledSince?: string, abortSignal?: AbortSignalLike): Promise<ListAllEventCancellationsByEventResponse> {
+    public async listAllEventCancellationsByEvent(eventCode: string, pageNumber: string, includeDetails?: string, cancelledSince?: string, abortSignal?: AbortSignalLike): Promise<ListAllEventCancellationsByEventResponse> {
         const queryParams: string[] = [];
         if (includeDetails !== undefined) {
             queryParams.push(`includeDetails=${encodeURIComponent(String(includeDetails))}`);
@@ -2917,7 +2903,7 @@ export class ImpexiumClient extends ConnectorClientBase {
         const httpResponse = await this.httpClient.sendAsync<ListAllEventCancellationsByEventResponse>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as ListAllEventCancellationsByEventResponse;
@@ -2927,7 +2913,7 @@ export class ImpexiumClient extends ConnectorClientBase {
      * Get All Open Orders for an Individual
      * @remarks Get All Open Orders for an Individual
      */
-    public async getAllOpenOrdersForAnIndividualAsync(idOrRecordNumber: string, pageNumber: string, includeLineItems?: string, fromDate?: string, toDate?: string, abortSignal?: AbortSignalLike): Promise<GetAllOpenOrdersForAnIndividualResponse> {
+    public async getAllOpenOrdersForAnIndividual(idOrRecordNumber: string, pageNumber: string, includeLineItems?: string, fromDate?: string, toDate?: string, abortSignal?: AbortSignalLike): Promise<GetAllOpenOrdersForAnIndividualResponse> {
         const queryParams: string[] = [];
         if (includeLineItems !== undefined) {
             queryParams.push(`includeLineItems=${encodeURIComponent(String(includeLineItems))}`);
@@ -2943,7 +2929,7 @@ export class ImpexiumClient extends ConnectorClientBase {
         const httpResponse = await this.httpClient.sendAsync<GetAllOpenOrdersForAnIndividualResponse>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as GetAllOpenOrdersForAnIndividualResponse;
@@ -2953,13 +2939,13 @@ export class ImpexiumClient extends ConnectorClientBase {
      * List Completed User Tasks by User ID or Email
      * @remarks List Completed User Tasks by User ID or Email
      */
-    public async listCompletedUserTasksByUserIdOrEmailAsync(userIdOrEmail: string, pageNumber: string, abortSignal?: AbortSignalLike): Promise<ListCompletedUserTasksByUserIdOrEmailResponse> {
+    public async listCompletedUserTasksByUserIdOrEmail(userIdOrEmail: string, pageNumber: string, abortSignal?: AbortSignalLike): Promise<ListCompletedUserTasksByUserIdOrEmailResponse> {
         const requestPath = `/api/v1/tasks/Users/${userIdOrEmail}/Completed/${pageNumber}`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<ListCompletedUserTasksByUserIdOrEmailResponse>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as ListCompletedUserTasksByUserIdOrEmailResponse;
@@ -2969,13 +2955,13 @@ export class ImpexiumClient extends ConnectorClientBase {
      * List Pending User Tasks by User ID or Email
      * @remarks List Pending User Tasks by User ID or Email
      */
-    public async listPendingUserTasksByUserIdOrEmailAsync(userIdOrEmail: string, pageNumber: string, abortSignal?: AbortSignalLike): Promise<ListPendingUserTasksByUserIdOrEmailResponse> {
+    public async listPendingUserTasksByUserIdOrEmail(userIdOrEmail: string, pageNumber: string, abortSignal?: AbortSignalLike): Promise<ListPendingUserTasksByUserIdOrEmailResponse> {
         const requestPath = `/api/v1/tasks/Users/${userIdOrEmail}/Pending/${pageNumber}`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<ListPendingUserTasksByUserIdOrEmailResponse>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as ListPendingUserTasksByUserIdOrEmailResponse;
@@ -2985,13 +2971,13 @@ export class ImpexiumClient extends ConnectorClientBase {
      * Add Note to Sales Opportunity
      * @remarks Add Note to Sales Opportunity
      */
-    public async addNoteToSalesOpportunityAsync(input: BaseNoteData, id: string, abortSignal?: AbortSignalLike): Promise<void> {
+    public async addNoteToSalesOpportunity(input: BaseNoteData, id: string, abortSignal?: AbortSignalLike): Promise<void> {
         const requestPath = `/api/v1/Sales/Opportunities/${id}/Notes`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<void>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
     }
 
@@ -2999,13 +2985,13 @@ export class ImpexiumClient extends ConnectorClientBase {
      * Add Activity to Sales Opportunity
      * @remarks Add Activity to Sales Opportunity
      */
-    public async addActivityToSalesOpportunityAsync(input: ActivityData, id: string, abortSignal?: AbortSignalLike): Promise<void> {
+    public async addActivityToSalesOpportunity(input: ActivityData, id: string, abortSignal?: AbortSignalLike): Promise<void> {
         const requestPath = `/api/v1/Sales/Opportunities/${id}/Activities`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<void>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
     }
 
@@ -3013,13 +2999,13 @@ export class ImpexiumClient extends ConnectorClientBase {
      * Update Task by Task Number
      * @remarks Update Task by Task Number
      */
-    public async updateTaskByTaskNumberAsync(input: TaskSaveData, taskNumber: string, abortSignal?: AbortSignalLike): Promise<TaskData> {
+    public async updateTaskByTaskNumber(input: TaskSaveData, taskNumber: string, abortSignal?: AbortSignalLike): Promise<TaskData> {
         const requestPath = `/api/v1/tasks/${taskNumber}`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<TaskData>("PUT", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `PUT ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `PUT ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as TaskData;
@@ -3029,13 +3015,13 @@ export class ImpexiumClient extends ConnectorClientBase {
      * List All Countries
      * @remarks List All Countries
      */
-    public async listAllCountriesAsync(pageNumber: string, abortSignal?: AbortSignalLike): Promise<ListAllCountriesResponse> {
+    public async listAllCountries(pageNumber: string, abortSignal?: AbortSignalLike): Promise<ListAllCountriesResponse> {
         const requestPath = `/api/v1/Countries/All/${pageNumber}`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<ListAllCountriesResponse>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as ListAllCountriesResponse;
@@ -3045,13 +3031,13 @@ export class ImpexiumClient extends ConnectorClientBase {
      * Get All States by Country
      * @remarks Get All States by Country
      */
-    public async getAllStatesByCountryAsync(countryId: string, pageNumber: string, abortSignal?: AbortSignalLike): Promise<GetAllStatesByCountryResponse> {
+    public async getAllStatesByCountry(countryId: string, pageNumber: string, abortSignal?: AbortSignalLike): Promise<GetAllStatesByCountryResponse> {
         const requestPath = `/api/v1/Countries/${countryId}/States/All/${pageNumber}`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<GetAllStatesByCountryResponse>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as GetAllStatesByCountryResponse;
@@ -3061,13 +3047,13 @@ export class ImpexiumClient extends ConnectorClientBase {
      * List All Exhibits
      * @remarks List All Exhibits
      */
-    public async listAllExhibitsAsync(pageNumber: string, abortSignal?: AbortSignalLike): Promise<ListAllExhibitsResponse> {
+    public async listAllExhibits(pageNumber: string, abortSignal?: AbortSignalLike): Promise<ListAllExhibitsResponse> {
         const requestPath = `/api/v1/Exhibits/${pageNumber}`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<ListAllExhibitsResponse>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as ListAllExhibitsResponse;
@@ -3077,13 +3063,13 @@ export class ImpexiumClient extends ConnectorClientBase {
      * Delete a Category for an Organization
      * @remarks Delete a Category for an Organization
      */
-    public async deleteACategoryForAnOrganizationAsync(recordNumber: string, categoryCode: string, abortSignal?: AbortSignalLike): Promise<void> {
+    public async deleteACategoryForAnOrganization(recordNumber: string, categoryCode: string, abortSignal?: AbortSignalLike): Promise<void> {
         const requestPath = `/api/v1/Organizations/${recordNumber}/Categories/${categoryCode}`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<void>("DELETE", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `DELETE ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `DELETE ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
     }
 
@@ -3091,13 +3077,13 @@ export class ImpexiumClient extends ConnectorClientBase {
      * Add Customer Request
      * @remarks Add Customer Request
      */
-    public async addCustomerRequestAsync(input: RequestSaveData, abortSignal?: AbortSignalLike): Promise<void> {
+    public async addCustomerRequest(input: RequestSaveData, abortSignal?: AbortSignalLike): Promise<void> {
         const requestPath = `/api/v1/Requests`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<void>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
     }
 
@@ -3105,13 +3091,13 @@ export class ImpexiumClient extends ConnectorClientBase {
      * Update Customer Request
      * @remarks Update Customer Request
      */
-    public async updateCustomerRequestAsync(input: RequestUpdateData, abortSignal?: AbortSignalLike): Promise<RequestUpdateData> {
+    public async updateCustomerRequest(input: RequestUpdateData, abortSignal?: AbortSignalLike): Promise<RequestUpdateData> {
         const requestPath = `/api/v1/Requests`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<RequestUpdateData>("PUT", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `PUT ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `PUT ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as RequestUpdateData;
@@ -3121,13 +3107,13 @@ export class ImpexiumClient extends ConnectorClientBase {
      * Add Categories for an Organization
      * @remarks Add Categories for an Organization
      */
-    public async addCategoriesForAnOrganizationAsync(input: AddCategoriesForAnOrganizationInput, recordNumber: string, abortSignal?: AbortSignalLike): Promise<void> {
+    public async addCategoriesForAnOrganization(input: AddCategoriesForAnOrganizationInput, recordNumber: string, abortSignal?: AbortSignalLike): Promise<void> {
         const requestPath = `/api/v1/Organizations/${recordNumber}/Categories`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<void>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
     }
 
@@ -3135,13 +3121,13 @@ export class ImpexiumClient extends ConnectorClientBase {
      * List of Customer Relationships
      * @remarks List of Customer Relationships
      */
-    public async listOfCustomerRelationshipsAsync(pageNumber: string, abortSignal?: AbortSignalLike): Promise<ListOfCustomerRelationshipsResponse> {
+    public async listOfCustomerRelationships(pageNumber: string, abortSignal?: AbortSignalLike): Promise<ListOfCustomerRelationshipsResponse> {
         const requestPath = `/api/v1/Customers/RelationshipTypes/${pageNumber}`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<ListOfCustomerRelationshipsResponse>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as ListOfCustomerRelationshipsResponse;
@@ -3151,13 +3137,13 @@ export class ImpexiumClient extends ConnectorClientBase {
      * List All Open Customer Request
      * @remarks List All Open Customer Request
      */
-    public async listAllOpenCustomerRequestAsync(pageNumber: string, abortSignal?: AbortSignalLike): Promise<ListAllOpenCustomerRequestResponse> {
+    public async listAllOpenCustomerRequest(pageNumber: string, abortSignal?: AbortSignalLike): Promise<ListAllOpenCustomerRequestResponse> {
         const requestPath = `/api/v1/Requests/Open/${pageNumber}`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<ListAllOpenCustomerRequestResponse>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as ListAllOpenCustomerRequestResponse;
@@ -3167,13 +3153,13 @@ export class ImpexiumClient extends ConnectorClientBase {
      * Get Organization Inactive Memberships
      * @remarks Get Organization Inactive Memberships
      */
-    public async getOrganizationInactiveMembershipsAsync(id: string, abortSignal?: AbortSignalLike): Promise<MembershipData> {
+    public async getOrganizationInactiveMemberships(id: string, abortSignal?: AbortSignalLike): Promise<MembershipData> {
         const requestPath = `/api/v1/Organizations/${id}/Memberships/Inactive`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<MembershipData>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as MembershipData;
@@ -3183,13 +3169,13 @@ export class ImpexiumClient extends ConnectorClientBase {
      * Delete Record From Custom Data Table
      * @remarks Delete Record From Custom Data Table
      */
-    public async deleteRecordFromCustomDataTableAsync(tableName: string, id: string, abortSignal?: AbortSignalLike): Promise<void> {
+    public async deleteRecordFromCustomDataTable(tableName: string, id: string, abortSignal?: AbortSignalLike): Promise<void> {
         const requestPath = `/api/v1/CustomData/${tableName}/${id}`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<void>("DELETE", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `DELETE ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `DELETE ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
     }
 
@@ -3197,13 +3183,13 @@ export class ImpexiumClient extends ConnectorClientBase {
      * Update User Task Progress or Mark as Completed
      * @remarks Update User Task Progress or Mark as Completed
      */
-    public async updateUserTaskProgressOrMarkAsCompletedAsync(input: UserTaskData, userIdOrEmail: string, abortSignal?: AbortSignalLike): Promise<UserTaskData> {
+    public async updateUserTaskProgressOrMarkAsCompleted(input: UserTaskData, userIdOrEmail: string, abortSignal?: AbortSignalLike): Promise<UserTaskData> {
         const requestPath = `/api/v1/tasks/Users/${userIdOrEmail}`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<UserTaskData>("PUT", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `PUT ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `PUT ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as UserTaskData;
@@ -3213,7 +3199,7 @@ export class ImpexiumClient extends ConnectorClientBase {
      * Find Members (Individuals) by First Name
      * @remarks Find Members (Individuals) by First Name
      */
-    public async findMembersOrIndividualsByFirstNameAsync(firstName: string, pageNumber: string, includeEmail?: string, abortSignal?: AbortSignalLike): Promise<IndividualData> {
+    public async findMembersOrIndividualsByFirstName(firstName: string, pageNumber: string, includeEmail?: string, abortSignal?: AbortSignalLike): Promise<IndividualData> {
         const queryParams: string[] = [];
         if (includeEmail !== undefined) {
             queryParams.push(`includeEmail=${encodeURIComponent(String(includeEmail))}`);
@@ -3223,7 +3209,7 @@ export class ImpexiumClient extends ConnectorClientBase {
         const httpResponse = await this.httpClient.sendAsync<IndividualData>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as IndividualData;
@@ -3233,7 +3219,7 @@ export class ImpexiumClient extends ConnectorClientBase {
      * Find Members (Individuals) by Last Name
      * @remarks Find Members (Individuals) by Last Name
      */
-    public async findMembersOrIndividualsByLastNameAsync(lastName: string, pageNumber: string, includeEmail?: string, abortSignal?: AbortSignalLike): Promise<IndividualData> {
+    public async findMembersOrIndividualsByLastName(lastName: string, pageNumber: string, includeEmail?: string, abortSignal?: AbortSignalLike): Promise<IndividualData> {
         const queryParams: string[] = [];
         if (includeEmail !== undefined) {
             queryParams.push(`includeEmail=${encodeURIComponent(String(includeEmail))}`);
@@ -3243,7 +3229,7 @@ export class ImpexiumClient extends ConnectorClientBase {
         const httpResponse = await this.httpClient.sendAsync<IndividualData>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as IndividualData;
@@ -3253,13 +3239,13 @@ export class ImpexiumClient extends ConnectorClientBase {
      * Create a new task or Assign Task to a User
      * @remarks Create a new task or Assign Task to a User
      */
-    public async assignTaskToAUserAsync(input: UserTaskData, userIdOrEmail: string, abortSignal?: AbortSignalLike): Promise<void> {
+    public async assignTaskToAUser(input: UserTaskData, userIdOrEmail: string, abortSignal?: AbortSignalLike): Promise<void> {
         const requestPath = `/api/v1/tasks/Users/${userIdOrEmail}/Task`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<void>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
     }
 
@@ -3267,13 +3253,13 @@ export class ImpexiumClient extends ConnectorClientBase {
      * Delete a Category for an Individual
      * @remarks Delete a Category for an Individual
      */
-    public async deleteACategoryForAnIndividualAsync(recordNumber: string, categoryCode: string, abortSignal?: AbortSignalLike): Promise<void> {
+    public async deleteACategoryForAnIndividual(recordNumber: string, categoryCode: string, abortSignal?: AbortSignalLike): Promise<void> {
         const requestPath = `/api/v1/Individuals/${recordNumber}/Categories/${categoryCode}`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<void>("DELETE", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `DELETE ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `DELETE ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
     }
 
@@ -3281,13 +3267,13 @@ export class ImpexiumClient extends ConnectorClientBase {
      * Add Notification to Individual
      * @remarks Add Notification to Individual
      */
-    public async addNotificationToIndividualAsync(input: NotificationData, id: string, abortSignal?: AbortSignalLike): Promise<void> {
+    public async addNotificationToIndividual(input: NotificationData, id: string, abortSignal?: AbortSignalLike): Promise<void> {
         const requestPath = `/api/v1/Individuals/${id}/Notifications`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<void>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
     }
 
@@ -3295,13 +3281,13 @@ export class ImpexiumClient extends ConnectorClientBase {
      * Add Categories for an Individual
      * @remarks Add Categories for an Individual
      */
-    public async addCategoriesForAnIndividualAsync(input: AddCategoriesForAnIndividualInput, recordNumber: string, abortSignal?: AbortSignalLike): Promise<void> {
+    public async addCategoriesForAnIndividual(input: AddCategoriesForAnIndividualInput, recordNumber: string, abortSignal?: AbortSignalLike): Promise<void> {
         const requestPath = `/api/v1/Individuals/${recordNumber}/Categories`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<void>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
     }
 
@@ -3309,13 +3295,13 @@ export class ImpexiumClient extends ConnectorClientBase {
      * Add a New Task
      * @remarks Add a New Task
      */
-    public async addANewTaskAsync(input: TaskSaveData, abortSignal?: AbortSignalLike): Promise<TaskData> {
+    public async addANewTask(input: TaskSaveData, abortSignal?: AbortSignalLike): Promise<TaskData> {
         const requestPath = `/api/v1/tasks`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<TaskData>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as TaskData;
@@ -3325,7 +3311,7 @@ export class ImpexiumClient extends ConnectorClientBase {
      * List of All Organization Members
      * @remarks List of All Organization Members
      */
-    public async listOfAllOrganizationMembersAsync(pageNumber: string, zipCode?: string, radius?: string, stateAbbreviation?: string, congressionalDistrict?: string, membershipTypeCode?: string, membershipTypeCategory?: string, city?: string, name?: string, tag?: string, latitude?: string, longitude?: string, domain?: string, includeMembership?: string, includeAddress?: string, includePhone?: string, includeEmail?: string, includeCustomFields?: string, expiringFrom?: string, expiringTo?: string, abortSignal?: AbortSignalLike): Promise<ListOfAllOrganizationMembersResponse> {
+    public async listOfAllOrganizationMembers(pageNumber: string, zipCode?: string, radius?: string, stateAbbreviation?: string, congressionalDistrict?: string, membershipTypeCode?: string, membershipTypeCategory?: string, city?: string, name?: string, tag?: string, latitude?: string, longitude?: string, domain?: string, includeMembership?: string, includeAddress?: string, includePhone?: string, includeEmail?: string, includeCustomFields?: string, expiringFrom?: string, expiringTo?: string, abortSignal?: AbortSignalLike): Promise<ListOfAllOrganizationMembersResponse> {
         const queryParams: string[] = [];
         if (zipCode !== undefined) {
             queryParams.push(`zipCode=${encodeURIComponent(String(zipCode))}`);
@@ -3389,7 +3375,7 @@ export class ImpexiumClient extends ConnectorClientBase {
         const httpResponse = await this.httpClient.sendAsync<ListOfAllOrganizationMembersResponse>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as ListOfAllOrganizationMembersResponse;
@@ -3399,7 +3385,7 @@ export class ImpexiumClient extends ConnectorClientBase {
      * List of All Individual Members
      * @remarks List of All Individual Members
      */
-    public async listOfAllIndividualMembersAsync(pageNumber: string, zipCode?: string, radius?: string, membershipTypeCode?: string, membershipTypeCategory?: string, tag?: string, includeMembership?: string, includeAddress?: string, includePhone?: string, includeEmail?: string, includeLink?: string, includeCustomFields?: string, includeCategories?: string, includeMembershipRenewalUrl?: string, expiringFrom?: string, expiringTo?: string, abortSignal?: AbortSignalLike): Promise<ListOfAllIndividualMembersResponse> {
+    public async listOfAllIndividualMembers(pageNumber: string, zipCode?: string, radius?: string, membershipTypeCode?: string, membershipTypeCategory?: string, tag?: string, includeMembership?: string, includeAddress?: string, includePhone?: string, includeEmail?: string, includeLink?: string, includeCustomFields?: string, includeCategories?: string, includeMembershipRenewalUrl?: string, expiringFrom?: string, expiringTo?: string, abortSignal?: AbortSignalLike): Promise<ListOfAllIndividualMembersResponse> {
         const queryParams: string[] = [];
         if (zipCode !== undefined) {
             queryParams.push(`zipCode=${encodeURIComponent(String(zipCode))}`);
@@ -3451,7 +3437,7 @@ export class ImpexiumClient extends ConnectorClientBase {
         const httpResponse = await this.httpClient.sendAsync<ListOfAllIndividualMembersResponse>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as ListOfAllIndividualMembersResponse;
@@ -3461,13 +3447,13 @@ export class ImpexiumClient extends ConnectorClientBase {
      * Get List of Active Certifications for an Organization
      * @remarks Get List of Active Certifications for an Organization
      */
-    public async getListOfActiveCertificationsForAnOrganizationAsync(idOrRecordNumber: string, pageNumber: string, abortSignal?: AbortSignalLike): Promise<GetListOfActiveCertificationsForAnOrganizationResponse> {
+    public async getListOfActiveCertificationsForAnOrganization(idOrRecordNumber: string, pageNumber: string, abortSignal?: AbortSignalLike): Promise<GetListOfActiveCertificationsForAnOrganizationResponse> {
         const requestPath = `/api/v1/Organizations/${idOrRecordNumber}/Certifications/${pageNumber}`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<GetListOfActiveCertificationsForAnOrganizationResponse>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as GetListOfActiveCertificationsForAnOrganizationResponse;
@@ -3477,13 +3463,13 @@ export class ImpexiumClient extends ConnectorClientBase {
      * Get List of Active Certifications for an Individual
      * @remarks Get List of Active Certifications for an Individual
      */
-    public async getListOfActiveCertificationsForAnIndividualAsync(idOrRecordNumber: string, pageNumber: string, abortSignal?: AbortSignalLike): Promise<GetListOfActiveCertificationsForAnIndividualResponse> {
+    public async getListOfActiveCertificationsForAnIndividual(idOrRecordNumber: string, pageNumber: string, abortSignal?: AbortSignalLike): Promise<GetListOfActiveCertificationsForAnIndividualResponse> {
         const requestPath = `/api/v1/Individuals/${idOrRecordNumber}/Certifications/${pageNumber}`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<GetListOfActiveCertificationsForAnIndividualResponse>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as GetListOfActiveCertificationsForAnIndividualResponse;
@@ -3493,13 +3479,13 @@ export class ImpexiumClient extends ConnectorClientBase {
      * Get Individual Inactive Memberships
      * @remarks Get Individual Inactive Memberships
      */
-    public async getIndividualInactiveMembershipsAsync(id: string, abortSignal?: AbortSignalLike): Promise<MembershipData> {
+    public async getIndividualInactiveMemberships(id: string, abortSignal?: AbortSignalLike): Promise<MembershipData> {
         const requestPath = `/api/v1/Individuals/${id}/Memberships/Inactive`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<MembershipData>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as MembershipData;
@@ -3509,13 +3495,13 @@ export class ImpexiumClient extends ConnectorClientBase {
      * Add Activity to Organization
      * @remarks Add Activity to Organization
      */
-    public async addActivityToOrganizationAsync(input: ActivityData, id: string, abortSignal?: AbortSignalLike): Promise<void> {
+    public async addActivityToOrganization(input: ActivityData, id: string, abortSignal?: AbortSignalLike): Promise<void> {
         const requestPath = `/api/v1/Organizations/${id}/Activities`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<void>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
     }
 
@@ -3523,7 +3509,7 @@ export class ImpexiumClient extends ConnectorClientBase {
      * Register an Individual for a Free Session
      * @remarks Register an Individual for a Free Session
      */
-    public async registerAnIndividualForAFreeSessionAsync(input: RegisterAnIndividualForAFreeSessionInput, eventCode: string, customerIdOrRecordNumber: string, registrationNumber?: string, abortSignal?: AbortSignalLike): Promise<void> {
+    public async registerAnIndividualForAFreeSession(input: RegisterAnIndividualForAFreeSessionInput, eventCode: string, customerIdOrRecordNumber: string, registrationNumber?: string, abortSignal?: AbortSignalLike): Promise<void> {
         const queryParams: string[] = [];
         if (registrationNumber !== undefined) {
             queryParams.push(`registrationNumber=${encodeURIComponent(String(registrationNumber))}`);
@@ -3533,7 +3519,7 @@ export class ImpexiumClient extends ConnectorClientBase {
         const httpResponse = await this.httpClient.sendAsync<void>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
     }
 
@@ -3541,13 +3527,13 @@ export class ImpexiumClient extends ConnectorClientBase {
      * Get a List of Licenses
      * @remarks Get a List of Licenses
      */
-    public async getAListOfLicensesAsync(id: string, pageNumber: string, abortSignal?: AbortSignalLike): Promise<GetAListOfLicensesResponse> {
+    public async getAListOfLicenses(id: string, pageNumber: string, abortSignal?: AbortSignalLike): Promise<GetAListOfLicensesResponse> {
         const requestPath = `/api/v1/Individuals/${id}/Licenses/${pageNumber}`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<GetAListOfLicensesResponse>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as GetAListOfLicensesResponse;
@@ -3557,7 +3543,7 @@ export class ImpexiumClient extends ConnectorClientBase {
      * List All Awards
      * @remarks List All Awards
      */
-    public async listAllAwardsAsync(pageNumber: string, year?: string, abortSignal?: AbortSignalLike): Promise<ListAllAwardsResponse> {
+    public async listAllAwards(pageNumber: string, year?: string, abortSignal?: AbortSignalLike): Promise<ListAllAwardsResponse> {
         const queryParams: string[] = [];
         if (year !== undefined) {
             queryParams.push(`Year=${encodeURIComponent(String(year))}`);
@@ -3567,7 +3553,7 @@ export class ImpexiumClient extends ConnectorClientBase {
         const httpResponse = await this.httpClient.sendAsync<ListAllAwardsResponse>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as ListAllAwardsResponse;
@@ -3577,7 +3563,7 @@ export class ImpexiumClient extends ConnectorClientBase {
      * Find Members (Individuals) by Name
      * @remarks Find Members (Individuals) by Name
      */
-    public async findMembersOrIndividualsByNameAsync(name: string, pageNumber: string, includeEmail?: string, abortSignal?: AbortSignalLike): Promise<FindMembersOrIndividualsByNameResponse> {
+    public async findMembersOrIndividualsByName(name: string, pageNumber: string, includeEmail?: string, abortSignal?: AbortSignalLike): Promise<FindMembersOrIndividualsByNameResponse> {
         const queryParams: string[] = [];
         if (includeEmail !== undefined) {
             queryParams.push(`includeEmail=${encodeURIComponent(String(includeEmail))}`);
@@ -3587,7 +3573,7 @@ export class ImpexiumClient extends ConnectorClientBase {
         const httpResponse = await this.httpClient.sendAsync<FindMembersOrIndividualsByNameResponse>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as FindMembersOrIndividualsByNameResponse;
@@ -3597,13 +3583,13 @@ export class ImpexiumClient extends ConnectorClientBase {
      * Get a List of All Services of an Organization
      * @remarks Get a List of All Services of an Organization
      */
-    public async getAListOfAllServicesOfAnOrganizationAsync(id: string, abortSignal?: AbortSignalLike): Promise<GetAListOfAllServicesOfAnOrganizationResponse> {
+    public async getAListOfAllServicesOfAnOrganization(id: string, abortSignal?: AbortSignalLike): Promise<GetAListOfAllServicesOfAnOrganizationResponse> {
         const requestPath = `/api/v1/Organizations/${id}/Services`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<GetAListOfAllServicesOfAnOrganizationResponse>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as GetAListOfAllServicesOfAnOrganizationResponse;
@@ -3613,13 +3599,13 @@ export class ImpexiumClient extends ConnectorClientBase {
      * Add a Service to an Organization
      * @remarks Add a Service to an Organization
      */
-    public async addAServiceToAnOrganizationAsync(input: ServiceData, id: string, abortSignal?: AbortSignalLike): Promise<ServiceData> {
+    public async addAServiceToAnOrganization(input: ServiceData, id: string, abortSignal?: AbortSignalLike): Promise<ServiceData> {
         const requestPath = `/api/v1/Organizations/${id}/Services`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<ServiceData>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as ServiceData;
@@ -3629,13 +3615,13 @@ export class ImpexiumClient extends ConnectorClientBase {
      * Update Phone for an Individual
      * @remarks Update Phone for an Individual
      */
-    public async updatePhoneForAnIndividualAsync(input: PhoneSaveData, idOrRecordNumber: string, id: string, abortSignal?: AbortSignalLike): Promise<PhoneDataSet> {
+    public async updatePhoneForAnIndividual(input: PhoneSaveData, idOrRecordNumber: string, id: string, abortSignal?: AbortSignalLike): Promise<PhoneDataSet> {
         const requestPath = `/api/v1/Individuals/${idOrRecordNumber}/Phones/${id}`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<PhoneDataSet>("PUT", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `PUT ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `PUT ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as PhoneDataSet;
@@ -3645,13 +3631,13 @@ export class ImpexiumClient extends ConnectorClientBase {
      * Update Phone for an Organization
      * @remarks Update Phone for an Organization
      */
-    public async updatePhoneForAnOrganizationAsync(input: PhoneSaveData, idOrRecordNumber: string, id: string, abortSignal?: AbortSignalLike): Promise<PhoneDataSet> {
+    public async updatePhoneForAnOrganization(input: PhoneSaveData, idOrRecordNumber: string, id: string, abortSignal?: AbortSignalLike): Promise<PhoneDataSet> {
         const requestPath = `/api/v1/Organizations/${idOrRecordNumber}/Phones/${id}`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<PhoneDataSet>("PUT", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `PUT ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `PUT ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as PhoneDataSet;
@@ -3661,13 +3647,13 @@ export class ImpexiumClient extends ConnectorClientBase {
      * Delete an Individual Web Link
      * @remarks Delete an Individual Web Link
      */
-    public async deleteAnIndividualWebLinkAsync(input: DeleteAnIndividualWebLinkInput, idOrRecordNumber: string, abortSignal?: AbortSignalLike): Promise<void> {
+    public async deleteAnIndividualWebLink(input: DeleteAnIndividualWebLinkInput, idOrRecordNumber: string, abortSignal?: AbortSignalLike): Promise<void> {
         const requestPath = `/api/v1/Individuals/${idOrRecordNumber}/Links`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<void>("DELETE", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `DELETE ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `DELETE ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
     }
 
@@ -3675,13 +3661,13 @@ export class ImpexiumClient extends ConnectorClientBase {
      * Add Web Link for Individual
      * @remarks Add Web Link for Individual
      */
-    public async addWebLinkForIndividualAsync(input: AddWebLinkForIndividualInput, idOrRecordNumber: string, abortSignal?: AbortSignalLike): Promise<void> {
+    public async addWebLinkForIndividual(input: AddWebLinkForIndividualInput, idOrRecordNumber: string, abortSignal?: AbortSignalLike): Promise<void> {
         const requestPath = `/api/v1/Individuals/${idOrRecordNumber}/Links`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<void>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
     }
 
@@ -3689,13 +3675,13 @@ export class ImpexiumClient extends ConnectorClientBase {
      * Add Phone to Organization
      * @remarks Add Phone to Organization
      */
-    public async addPhoneToOrganizationAsync(input: PhoneSaveData, idOrRecordNumber: string, abortSignal?: AbortSignalLike): Promise<PhoneDataSet> {
+    public async addPhoneToOrganization(input: PhoneSaveData, idOrRecordNumber: string, abortSignal?: AbortSignalLike): Promise<PhoneDataSet> {
         const requestPath = `/api/v1/Organizations/${idOrRecordNumber}/Phones`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<PhoneDataSet>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as PhoneDataSet;
@@ -3705,7 +3691,7 @@ export class ImpexiumClient extends ConnectorClientBase {
      * Get Nominees by Committee
      * @remarks Get Nominees by Committee
      */
-    public async getNomineesByCommitteeAsync(code: string, pageNumber: string, term?: string, abortSignal?: AbortSignalLike): Promise<GetNomineesByCommitteeResponse> {
+    public async getNomineesByCommittee(code: string, pageNumber: string, term?: string, abortSignal?: AbortSignalLike): Promise<GetNomineesByCommitteeResponse> {
         const queryParams: string[] = [];
         if (term !== undefined) {
             queryParams.push(`Term=${encodeURIComponent(String(term))}`);
@@ -3715,7 +3701,7 @@ export class ImpexiumClient extends ConnectorClientBase {
         const httpResponse = await this.httpClient.sendAsync<GetNomineesByCommitteeResponse>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as GetNomineesByCommitteeResponse;
@@ -3725,13 +3711,13 @@ export class ImpexiumClient extends ConnectorClientBase {
      * Get Organization's Active Subscriptions
      * @remarks Get Organization's Active Subscriptions
      */
-    public async getOrganizationsActiveSubscriptionsAsync(id: string, pageNumber: string, abortSignal?: AbortSignalLike): Promise<GetOrganizationsActiveSubscriptionsResponse> {
+    public async getOrganizationsActiveSubscriptions(id: string, pageNumber: string, abortSignal?: AbortSignalLike): Promise<GetOrganizationsActiveSubscriptionsResponse> {
         const requestPath = `/api/v1/Organizations/${id}/Subscriptions/${pageNumber}`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<GetOrganizationsActiveSubscriptionsResponse>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as GetOrganizationsActiveSubscriptionsResponse;
@@ -3741,13 +3727,13 @@ export class ImpexiumClient extends ConnectorClientBase {
      * Delete an Organization Web Link
      * @remarks Delete an Organization Web Link
      */
-    public async deleteAnOrganizationWebLinkAsync(input: DeleteAnOrganizationWebLinkInput, idOrRecordNumber: string, abortSignal?: AbortSignalLike): Promise<void> {
+    public async deleteAnOrganizationWebLink(input: DeleteAnOrganizationWebLinkInput, idOrRecordNumber: string, abortSignal?: AbortSignalLike): Promise<void> {
         const requestPath = `/api/v1/Organizations/${idOrRecordNumber}/Links`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<void>("DELETE", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `DELETE ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `DELETE ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
     }
 
@@ -3755,13 +3741,13 @@ export class ImpexiumClient extends ConnectorClientBase {
      * Add Web Link for Organization
      * @remarks Add Web Link for Organization
      */
-    public async addWebLinkForOrganizationAsync(input: AddWebLinkForOrganizationInput, idOrRecordNumber: string, abortSignal?: AbortSignalLike): Promise<void> {
+    public async addWebLinkForOrganization(input: AddWebLinkForOrganizationInput, idOrRecordNumber: string, abortSignal?: AbortSignalLike): Promise<void> {
         const requestPath = `/api/v1/Organizations/${idOrRecordNumber}/Links`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<void>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
     }
 
@@ -3769,13 +3755,13 @@ export class ImpexiumClient extends ConnectorClientBase {
      * Add Email to Organization
      * @remarks Add Email to Organization
      */
-    public async addEmailToOrganizationAsync(input: EmailData, id: string, abortSignal?: AbortSignalLike): Promise<void> {
+    public async addEmailToOrganization(input: EmailData, id: string, abortSignal?: AbortSignalLike): Promise<void> {
         const requestPath = `/api/v1/Organizations/${id}/Emails`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<void>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
     }
 
@@ -3783,7 +3769,7 @@ export class ImpexiumClient extends ConnectorClientBase {
      * Get Organization's Relationships
      * @remarks Get Organization's Relationships
      */
-    public async getOrganizationsRelationshipsAsync(id: string, pageNumber: string, relationshipName?: string, includesDetails?: string, abortSignal?: AbortSignalLike): Promise<GetOrganizationsRelationshipsResponse> {
+    public async getOrganizationsRelationships(id: string, pageNumber: string, relationshipName?: string, includesDetails?: string, abortSignal?: AbortSignalLike): Promise<GetOrganizationsRelationshipsResponse> {
         const queryParams: string[] = [];
         if (relationshipName !== undefined) {
             queryParams.push(`relationshipName.=${encodeURIComponent(String(relationshipName))}`);
@@ -3796,7 +3782,7 @@ export class ImpexiumClient extends ConnectorClientBase {
         const httpResponse = await this.httpClient.sendAsync<GetOrganizationsRelationshipsResponse>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as GetOrganizationsRelationshipsResponse;
@@ -3806,13 +3792,13 @@ export class ImpexiumClient extends ConnectorClientBase {
      * Add or Update Address to Organization
      * @remarks Add or Update Address to Organization
      */
-    public async addOrUpdateAddressToOrganizationAsync(input: AddressSaveData, idOrRecordNumber: string, abortSignal?: AbortSignalLike): Promise<AddressSaveData> {
+    public async addOrUpdateAddressToOrganization(input: AddressSaveData, idOrRecordNumber: string, abortSignal?: AbortSignalLike): Promise<AddressSaveData> {
         const requestPath = `/api/v1/Organizations/${idOrRecordNumber}/Addresses`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<AddressSaveData>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as AddressSaveData;
@@ -3822,13 +3808,13 @@ export class ImpexiumClient extends ConnectorClientBase {
      * Add or Update a List of Custom Fields Per Individual
      * @remarks Add or Update a List of Custom Fields Per Individual
      */
-    public async addOrUpdateAListOfCustomFieldsPerIndividualAsync(input: AddOrUpdateAListOfCustomFieldsPerIndividualInput, idOrRecordNumber: string, abortSignal?: AbortSignalLike): Promise<Array<CustomFieldResultData>> {
+    public async addOrUpdateAListOfCustomFieldsPerIndividual(input: AddOrUpdateAListOfCustomFieldsPerIndividualInput, idOrRecordNumber: string, abortSignal?: AbortSignalLike): Promise<Array<CustomFieldResultData>> {
         const requestPath = `/api/v1/Individuals/${idOrRecordNumber}/CustomFieldsList`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<Array<CustomFieldResultData>>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as Array<CustomFieldResultData>;
@@ -3838,13 +3824,13 @@ export class ImpexiumClient extends ConnectorClientBase {
      * Get Upcoming Events
      * @remarks Get Upcoming Events
      */
-    public async getUpcomingEventsAsync(pageNumber: string, abortSignal?: AbortSignalLike): Promise<GetUpcomingEventsResponse> {
+    public async getUpcomingEvents(pageNumber: string, abortSignal?: AbortSignalLike): Promise<GetUpcomingEventsResponse> {
         const requestPath = `/api/v1/Events/Upcoming/${pageNumber}`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<GetUpcomingEventsResponse>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as GetUpcomingEventsResponse;
@@ -3854,13 +3840,13 @@ export class ImpexiumClient extends ConnectorClientBase {
      * Add Phone to Individual
      * @remarks Add Phone to Individual
      */
-    public async addPhoneToIndividualAsync(input: PhoneSaveData, idOrRecordNumber: string, abortSignal?: AbortSignalLike): Promise<PhoneDataSet> {
+    public async addPhoneToIndividual(input: PhoneSaveData, idOrRecordNumber: string, abortSignal?: AbortSignalLike): Promise<PhoneDataSet> {
         const requestPath = `/api/v1/Individuals/${idOrRecordNumber}/Phones`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<PhoneDataSet>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as PhoneDataSet;
@@ -3870,7 +3856,7 @@ export class ImpexiumClient extends ConnectorClientBase {
      * Get Committee Information for an Individual
      * @remarks Get Committee Information for an Individual
      */
-    public async getCommitteeInformationForAnIndividualAsync(id: string, pageNumber: string, includeInactive?: string, abortSignal?: AbortSignalLike): Promise<GetCommitteeInformationForAnIndividualResponse> {
+    public async getCommitteeInformationForAnIndividual(id: string, pageNumber: string, includeInactive?: string, abortSignal?: AbortSignalLike): Promise<GetCommitteeInformationForAnIndividualResponse> {
         const queryParams: string[] = [];
         if (includeInactive !== undefined) {
             queryParams.push(`includeInactive=${encodeURIComponent(String(includeInactive))}`);
@@ -3880,7 +3866,7 @@ export class ImpexiumClient extends ConnectorClientBase {
         const httpResponse = await this.httpClient.sendAsync<GetCommitteeInformationForAnIndividualResponse>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as GetCommitteeInformationForAnIndividualResponse;
@@ -3890,13 +3876,13 @@ export class ImpexiumClient extends ConnectorClientBase {
      * Get Organization Custom Field Values
      * @remarks Get Organization Custom Field Values
      */
-    public async getOrganizationCustomFieldValuesAsync(id: string, abortSignal?: AbortSignalLike): Promise<Array<CustomFieldData>> {
+    public async getOrganizationCustomFieldValues(id: string, abortSignal?: AbortSignalLike): Promise<Array<CustomFieldData>> {
         const requestPath = `/api/v1/Organizations/${id}/CustomFields`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<Array<CustomFieldData>>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as Array<CustomFieldData>;
@@ -3906,13 +3892,13 @@ export class ImpexiumClient extends ConnectorClientBase {
      * Get Organization Active Memberships
      * @remarks Get Organization Active Memberships
      */
-    public async getOrganizationActiveMembershipsAsync(id: string, abortSignal?: AbortSignalLike): Promise<Array<MembershipData>> {
+    public async getOrganizationActiveMemberships(id: string, abortSignal?: AbortSignalLike): Promise<Array<MembershipData>> {
         const requestPath = `/api/v1/Organizations/${id}/Memberships/Active`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<Array<MembershipData>>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as Array<MembershipData>;
@@ -3922,7 +3908,7 @@ export class ImpexiumClient extends ConnectorClientBase {
      * Get All Events
      * @remarks Get All Events
      */
-    public async getAllEventsAsync(pageNumber: string, code?: string, name?: string, tag?: string, abortSignal?: AbortSignalLike): Promise<GetAllEventsResponse> {
+    public async getAllEvents(pageNumber: string, code?: string, name?: string, tag?: string, abortSignal?: AbortSignalLike): Promise<GetAllEventsResponse> {
         const queryParams: string[] = [];
         if (code !== undefined) {
             queryParams.push(`Code=${encodeURIComponent(String(code))}`);
@@ -3938,7 +3924,7 @@ export class ImpexiumClient extends ConnectorClientBase {
         const httpResponse = await this.httpClient.sendAsync<GetAllEventsResponse>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as GetAllEventsResponse;
@@ -3948,13 +3934,13 @@ export class ImpexiumClient extends ConnectorClientBase {
      * Get Individual Active Memberships
      * @remarks Get Individual Active Memberships
      */
-    public async getIndividualActiveMembershipsAsync(id: string, abortSignal?: AbortSignalLike): Promise<Array<MembershipData>> {
+    public async getIndividualActiveMemberships(id: string, abortSignal?: AbortSignalLike): Promise<Array<MembershipData>> {
         const requestPath = `/api/v1/Individuals/${id}/Memberships/Active`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<Array<MembershipData>>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as Array<MembershipData>;
@@ -3964,7 +3950,7 @@ export class ImpexiumClient extends ConnectorClientBase {
      * Get All Event Registrations Information for an Individual
      * @remarks Get All Event Registrations Information for an Individual
      */
-    public async getAllEventRegistrationsInformationForAnIndividualAsync(idOrRecordNumber: string, pageNumber: string, eventCode?: string, abortSignal?: AbortSignalLike): Promise<GetAllEventRegistrationsInformationForAnIndividualResponse> {
+    public async getAllEventRegistrationsInformationForAnIndividual(idOrRecordNumber: string, pageNumber: string, eventCode?: string, abortSignal?: AbortSignalLike): Promise<GetAllEventRegistrationsInformationForAnIndividualResponse> {
         const queryParams: string[] = [];
         if (eventCode !== undefined) {
             queryParams.push(`eventCode=${encodeURIComponent(String(eventCode))}`);
@@ -3974,7 +3960,7 @@ export class ImpexiumClient extends ConnectorClientBase {
         const httpResponse = await this.httpClient.sendAsync<GetAllEventRegistrationsInformationForAnIndividualResponse>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as GetAllEventRegistrationsInformationForAnIndividualResponse;
@@ -3984,7 +3970,7 @@ export class ImpexiumClient extends ConnectorClientBase {
      * Get Individual's Relationships
      * @remarks Get Individual's Relationships
      */
-    public async getIndividualsRelationshipsAsync(id: string, pageNumber: string, relationshipName?: string, includeDetails?: string, abortSignal?: AbortSignalLike): Promise<GetIndividualsRelationshipsResponse> {
+    public async getIndividualsRelationships(id: string, pageNumber: string, relationshipName?: string, includeDetails?: string, abortSignal?: AbortSignalLike): Promise<GetIndividualsRelationshipsResponse> {
         const queryParams: string[] = [];
         if (relationshipName !== undefined) {
             queryParams.push(`relationshipName=${encodeURIComponent(String(relationshipName))}`);
@@ -3997,7 +3983,7 @@ export class ImpexiumClient extends ConnectorClientBase {
         const httpResponse = await this.httpClient.sendAsync<GetIndividualsRelationshipsResponse>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as GetIndividualsRelationshipsResponse;
@@ -4007,13 +3993,13 @@ export class ImpexiumClient extends ConnectorClientBase {
      * Update an Individual Email
      * @remarks Update an Individual Email
      */
-    public async updateAnIndividualEmailAsync(input: UpdateAnIndividualEmailInput, idOrRecordNumber: string, currentEmailAddress: string, abortSignal?: AbortSignalLike): Promise<void> {
+    public async updateAnIndividualEmail(input: UpdateAnIndividualEmailInput, idOrRecordNumber: string, currentEmailAddress: string, abortSignal?: AbortSignalLike): Promise<void> {
         const requestPath = `/api/v1/Individuals/${idOrRecordNumber}/Emails/${currentEmailAddress}`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<void>("PUT", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `PUT ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `PUT ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
     }
 
@@ -4021,13 +4007,13 @@ export class ImpexiumClient extends ConnectorClientBase {
      * Save Relationship for Organization
      * @remarks Save Relationship for Organization
      */
-    public async saveRelationshipForOrganizationAsync(input: SaveRelationshipForOrganizationInput, id: string, abortSignal?: AbortSignalLike): Promise<void> {
+    public async saveRelationshipForOrganization(input: SaveRelationshipForOrganizationInput, id: string, abortSignal?: AbortSignalLike): Promise<void> {
         const requestPath = `/api/v1/Organizations/${id}/Relationships`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<void>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
     }
 
@@ -4035,7 +4021,7 @@ export class ImpexiumClient extends ConnectorClientBase {
      * Add Individual
      * @remarks Adds an Individual.
      */
-    public async addIndividualAsync(input: AddIndividualInput, createUser?: string, abortSignal?: AbortSignalLike): Promise<IndividualData> {
+    public async addIndividual(input: AddIndividualInput, createUser?: string, abortSignal?: AbortSignalLike): Promise<IndividualData> {
         const queryParams: string[] = [];
         if (createUser !== undefined) {
             queryParams.push(`createUser=${encodeURIComponent(String(createUser))}`);
@@ -4045,7 +4031,7 @@ export class ImpexiumClient extends ConnectorClientBase {
         const httpResponse = await this.httpClient.sendAsync<IndividualData>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as IndividualData;
@@ -4055,13 +4041,13 @@ export class ImpexiumClient extends ConnectorClientBase {
      * Add Email to Individual
      * @remarks Add Email to Individual
      */
-    public async addEmailToIndividualAsync(input: AddEmailToIndividualInput, idOrRecordNumber: string, abortSignal?: AbortSignalLike): Promise<EmailData> {
+    public async addEmailToIndividual(input: AddEmailToIndividualInput, idOrRecordNumber: string, abortSignal?: AbortSignalLike): Promise<EmailData> {
         const requestPath = `/api/v1/Individuals/${idOrRecordNumber}/Emails`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<EmailData>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as EmailData;
@@ -4071,13 +4057,13 @@ export class ImpexiumClient extends ConnectorClientBase {
      * Add or Update Address to Individual
      * @remarks Add or Update Address to Individual
      */
-    public async addOrUpdateAddressToIndividualAsync(input: AddressSaveData, idOrRecordNumber: string, abortSignal?: AbortSignalLike): Promise<AddressSaveData> {
+    public async addOrUpdateAddressToIndividual(input: AddressSaveData, idOrRecordNumber: string, abortSignal?: AbortSignalLike): Promise<AddressSaveData> {
         const requestPath = `/api/v1/Individuals/${idOrRecordNumber}/Addresses`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<AddressSaveData>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as AddressSaveData;
@@ -4087,7 +4073,7 @@ export class ImpexiumClient extends ConnectorClientBase {
      * Find Members (Individuals) by First Name and Last Name
      * @remarks Find Members (Individuals) by First Name and Last Name
      */
-    public async findMembersOrIndividualsByFirstAndLastNameAsync(firstName: string, lastName: string, pageNumber: string, includeEmail?: string, abortSignal?: AbortSignalLike): Promise<FindMembersOrIndividualsByFirstAndLastNameResponse> {
+    public async findMembersOrIndividualsByFirstAndLastName(firstName: string, lastName: string, pageNumber: string, includeEmail?: string, abortSignal?: AbortSignalLike): Promise<FindMembersOrIndividualsByFirstAndLastNameResponse> {
         const queryParams: string[] = [];
         if (includeEmail !== undefined) {
             queryParams.push(`includeEmail=${encodeURIComponent(String(includeEmail))}`);
@@ -4097,7 +4083,7 @@ export class ImpexiumClient extends ConnectorClientBase {
         const httpResponse = await this.httpClient.sendAsync<FindMembersOrIndividualsByFirstAndLastNameResponse>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as FindMembersOrIndividualsByFirstAndLastNameResponse;
@@ -4107,7 +4093,7 @@ export class ImpexiumClient extends ConnectorClientBase {
      * Get Committee Members by committee ID or code
      * @remarks Get Committee Members by Committee ID or Code
      */
-    public async getCommitteeMembersByCommitteeIdOrCodeAsync(idOrCode: string, pageNumber: string, term?: string, positionCodes?: string, abortSignal?: AbortSignalLike): Promise<void> {
+    public async getCommitteeMembersByCommitteeIdOrCode(idOrCode: string, pageNumber: string, term?: string, positionCodes?: string, abortSignal?: AbortSignalLike): Promise<void> {
         const queryParams: string[] = [];
         if (term !== undefined) {
             queryParams.push(`Term=${encodeURIComponent(String(term))}`);
@@ -4120,7 +4106,7 @@ export class ImpexiumClient extends ConnectorClientBase {
         const httpResponse = await this.httpClient.sendAsync<void>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
     }
 
@@ -4128,13 +4114,13 @@ export class ImpexiumClient extends ConnectorClientBase {
      * Add Activity
      * @remarks Add Activity.
      */
-    public async addActivityAsync(input: AddActivityInput, id: string, abortSignal?: AbortSignalLike): Promise<void> {
+    public async addActivity(input: AddActivityInput, id: string, abortSignal?: AbortSignalLike): Promise<void> {
         const requestPath = `/api/v1/Individuals/${id}/Activities`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<void>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
     }
 
@@ -4142,7 +4128,7 @@ export class ImpexiumClient extends ConnectorClientBase {
      * Find Individual by Id or Email or Record Number
      * @remarks Find Individual by Id or Email.
      */
-    public async findIndividualIdOrEmailAsync(idOrRecordNumberOrEmail: string, pageNumber: string, includeDetails?: string, abortSignal?: AbortSignalLike): Promise<FindIndividualIdOrEmailResponse> {
+    public async findIndividualIdOrEmail(idOrRecordNumberOrEmail: string, pageNumber: string, includeDetails?: string, abortSignal?: AbortSignalLike): Promise<FindIndividualIdOrEmailResponse> {
         const queryParams: string[] = [];
         if (includeDetails !== undefined) {
             queryParams.push(`IncludeDetails=${encodeURIComponent(String(includeDetails))}`);
@@ -4152,7 +4138,7 @@ export class ImpexiumClient extends ConnectorClientBase {
         const httpResponse = await this.httpClient.sendAsync<FindIndividualIdOrEmailResponse>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as FindIndividualIdOrEmailResponse;
@@ -4162,13 +4148,13 @@ export class ImpexiumClient extends ConnectorClientBase {
      * Add Relationship to Individual
      * @remarks Add Relationship to Individual.
      */
-    public async addRelationshipToIndividualAsync(input: AddRelationshipToIndividualInput, id: string, abortSignal?: AbortSignalLike): Promise<void> {
+    public async addRelationshipToIndividual(input: AddRelationshipToIndividualInput, id: string, abortSignal?: AbortSignalLike): Promise<void> {
         const requestPath = `/api/v1/Individuals/${id}/Relationships`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<void>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
     }
 
@@ -4176,13 +4162,13 @@ export class ImpexiumClient extends ConnectorClientBase {
      * Add Education Credits to Individual
      * @remarks Add a new Education Credit to an Individual.
      */
-    public async individualAddEducationCreditAsync(input: EducationCreditData, idOrRecordNumber: string, abortSignal?: AbortSignalLike): Promise<void> {
+    public async addIndividualEducationCredit(input: EducationCreditData, idOrRecordNumber: string, abortSignal?: AbortSignalLike): Promise<void> {
         const requestPath = `/api/v1/Individuals/${idOrRecordNumber}/EducationCredits`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<void>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
     }
 
@@ -4190,13 +4176,13 @@ export class ImpexiumClient extends ConnectorClientBase {
      * Add Note to Individual
      * @remarks Add a Note to an Individual.
      */
-    public async individualAddNoteAsync(input: NoteData, id: string, abortSignal?: AbortSignalLike): Promise<void> {
+    public async addIndividualNote(input: NoteData, id: string, abortSignal?: AbortSignalLike): Promise<void> {
         const requestPath = `/api/v1/Individuals/${id}/Notes`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<void>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
     }
 
@@ -4204,7 +4190,7 @@ export class ImpexiumClient extends ConnectorClientBase {
      * Lookup Individuals
      * @remarks Lookup Individuals by Name
      */
-    public async individualsLookupByNameAsync(pageNumber: string, name?: string, includeOrgAddresses?: string, abortSignal?: AbortSignalLike): Promise<IndividualsLookupByNameResponse> {
+    public async individualsLookupByName(pageNumber: string, name?: string, includeOrgAddresses?: string, abortSignal?: AbortSignalLike): Promise<IndividualsLookupByNameResponse> {
         const queryParams: string[] = [];
         if (name !== undefined) {
             queryParams.push(`name=${encodeURIComponent(String(name))}`);
@@ -4217,7 +4203,7 @@ export class ImpexiumClient extends ConnectorClientBase {
         const httpResponse = await this.httpClient.sendAsync<IndividualsLookupByNameResponse>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as IndividualsLookupByNameResponse;
@@ -4227,13 +4213,13 @@ export class ImpexiumClient extends ConnectorClientBase {
      * Add Individual to Committee
      * @remarks Add Individual to Committee.
      */
-    public async addToCommitteeAsync(input: CommitteeMemberCreateData, code: string, abortSignal?: AbortSignalLike): Promise<AddToCommitteeResponse> {
+    public async addToCommittee(input: CommitteeMemberCreateData, code: string, abortSignal?: AbortSignalLike): Promise<AddToCommitteeResponse> {
         const requestPath = `/api/v1/Committees/${code}/Members`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<AddToCommitteeResponse>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as AddToCommitteeResponse;
@@ -4243,13 +4229,13 @@ export class ImpexiumClient extends ConnectorClientBase {
      * Update Committee Member
      * @remarks Update Committee Member.
      */
-    public async updateCommitteeMemberAsync(input: CommitteeMemberUpdateData, code: string, memberRecordNumber: string, currentPositionCode: string, abortSignal?: AbortSignalLike): Promise<void> {
+    public async updateCommitteeMember(input: CommitteeMemberUpdateData, code: string, memberRecordNumber: string, currentPositionCode: string, abortSignal?: AbortSignalLike): Promise<void> {
         const requestPath = `/api/v1/Committees/${code}/Members/${memberRecordNumber}/${currentPositionCode}`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<void>("PUT", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `PUT ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `PUT ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
     }
 
@@ -4257,13 +4243,13 @@ export class ImpexiumClient extends ConnectorClientBase {
      * Add Organization
      * @remarks Add Organization.
      */
-    public async addOrganizationAsync(input: AddOrganizationInput, abortSignal?: AbortSignalLike): Promise<OrganizationData> {
+    public async addOrganization(input: AddOrganizationInput, abortSignal?: AbortSignalLike): Promise<OrganizationData> {
         const requestPath = `/api/v1/Organizations`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<OrganizationData>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as OrganizationData;
@@ -4273,13 +4259,13 @@ export class ImpexiumClient extends ConnectorClientBase {
      * Update Organization
      * @remarks Update Organization.
      */
-    public async updateOrganizationAsync(input: UpdateOrganizationInput, id: string, abortSignal?: AbortSignalLike): Promise<OrganizationData> {
+    public async updateOrganization(input: UpdateOrganizationInput, id: string, abortSignal?: AbortSignalLike): Promise<OrganizationData> {
         const requestPath = `/api/v1/Organizations/${id}`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<OrganizationData>("PUT", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `PUT ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `PUT ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as OrganizationData;
@@ -4289,7 +4275,7 @@ export class ImpexiumClient extends ConnectorClientBase {
      * Find Organization by Id or Record Number
      * @remarks Get organization's profile information by ID or Record Number
      */
-    public async organizationGetProfileAsync(idOrRecordnumber: string, pageNumber: string, includeDescription?: string, abortSignal?: AbortSignalLike): Promise<OrganizationData> {
+    public async getOrganizationProfile(idOrRecordnumber: string, pageNumber: string, includeDescription?: string, abortSignal?: AbortSignalLike): Promise<OrganizationData> {
         const queryParams: string[] = [];
         if (includeDescription !== undefined) {
             queryParams.push(`includeDescription=${encodeURIComponent(String(includeDescription))}`);
@@ -4299,7 +4285,7 @@ export class ImpexiumClient extends ConnectorClientBase {
         const httpResponse = await this.httpClient.sendAsync<OrganizationData>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as OrganizationData;
@@ -4309,13 +4295,13 @@ export class ImpexiumClient extends ConnectorClientBase {
      * Add Note to Organization
      * @remarks Add a Note to an Organization.
      */
-    public async organizationAddNoteAsync(input: NoteData, id: string, abortSignal?: AbortSignalLike): Promise<void> {
+    public async addOrganizationNote(input: NoteData, id: string, abortSignal?: AbortSignalLike): Promise<void> {
         const requestPath = `/api/v1/Organizations/${id}/Notes`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<void>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
     }
 
@@ -4323,7 +4309,7 @@ export class ImpexiumClient extends ConnectorClientBase {
      * Lookup Organizations
      * @remarks Lookup Organizations by Name or Acronym
      */
-    public async organizationLookupByNameAsync(pageNumber: string, name?: string, includeAddresses?: string, abortSignal?: AbortSignalLike): Promise<OrganizationLookupByNameResponse> {
+    public async organizationLookupByName(pageNumber: string, name?: string, includeAddresses?: string, abortSignal?: AbortSignalLike): Promise<OrganizationLookupByNameResponse> {
         const queryParams: string[] = [];
         if (name !== undefined) {
             queryParams.push(`name=${encodeURIComponent(String(name))}`);
@@ -4336,7 +4322,7 @@ export class ImpexiumClient extends ConnectorClientBase {
         const httpResponse = await this.httpClient.sendAsync<OrganizationLookupByNameResponse>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as OrganizationLookupByNameResponse;
@@ -4346,7 +4332,7 @@ export class ImpexiumClient extends ConnectorClientBase {
      * Get All Committees
      * @remarks Get All Committees
      */
-    public async getAllCommitteesAsync(pageNumber: string, code?: string, name?: string, term?: string, activeOnly?: string, abortSignal?: AbortSignalLike): Promise<GetAllCommitteesResponse> {
+    public async getAllCommittees(pageNumber: string, code?: string, name?: string, term?: string, activeOnly?: string, abortSignal?: AbortSignalLike): Promise<GetAllCommitteesResponse> {
         const queryParams: string[] = [];
         if (code !== undefined) {
             queryParams.push(`Code=${encodeURIComponent(String(code))}`);
@@ -4365,7 +4351,7 @@ export class ImpexiumClient extends ConnectorClientBase {
         const httpResponse = await this.httpClient.sendAsync<GetAllCommitteesResponse>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as GetAllCommitteesResponse;
@@ -4375,13 +4361,13 @@ export class ImpexiumClient extends ConnectorClientBase {
      * Get Positions by Committee
      * @remarks Get Positions by Committee
      */
-    public async getPositionsByCommitteeAsync(code: string, abortSignal?: AbortSignalLike): Promise<GetPositionsByCommitteeResponse> {
+    public async getPositionsByCommittee(code: string, abortSignal?: AbortSignalLike): Promise<GetPositionsByCommitteeResponse> {
         const requestPath = `/api/v1/Committees/${code}/Positions`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<GetPositionsByCommitteeResponse>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as GetPositionsByCommitteeResponse;
@@ -4391,13 +4377,13 @@ export class ImpexiumClient extends ConnectorClientBase {
      * Get Sub-Committees
      * @remarks Get Sub-Committees
      */
-    public async getSubCommitteesAsync(code: string, pageNumber: string, abortSignal?: AbortSignalLike): Promise<GetSubCommitteesResponse> {
+    public async getSubCommittees(code: string, pageNumber: string, abortSignal?: AbortSignalLike): Promise<GetSubCommitteesResponse> {
         const requestPath = `/api/v1/Committees/${code}/subcommittees/${pageNumber}`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<GetSubCommitteesResponse>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as GetSubCommitteesResponse;
@@ -4407,13 +4393,13 @@ export class ImpexiumClient extends ConnectorClientBase {
      * Get Individual's Active Subscriptions
      * @remarks Get Individual's Active Subscriptions
      */
-    public async getIndividualsActiveSubscriptionsAsync(id: string, pageNumber: string, abortSignal?: AbortSignalLike): Promise<GetIndividualsActiveSubscriptionsResponse> {
+    public async getIndividualsActiveSubscriptions(id: string, pageNumber: string, abortSignal?: AbortSignalLike): Promise<GetIndividualsActiveSubscriptionsResponse> {
         const requestPath = `/api/v1/Individuals/${id}/Subscriptions/All/${pageNumber}`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<GetIndividualsActiveSubscriptionsResponse>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as GetIndividualsActiveSubscriptionsResponse;
@@ -4423,7 +4409,7 @@ export class ImpexiumClient extends ConnectorClientBase {
      * List all Individuals
      * @remarks List all Individuals
      */
-    public async listAllIndividualsAsync(pageNumber: string, name?: string, includeDetails?: string, oldId?: string, abortSignal?: AbortSignalLike): Promise<ListAllIndividualsResponse> {
+    public async listAllIndividuals(pageNumber: string, name?: string, includeDetails?: string, oldId?: string, abortSignal?: AbortSignalLike): Promise<ListAllIndividualsResponse> {
         const queryParams: string[] = [];
         if (name !== undefined) {
             queryParams.push(`Name=${encodeURIComponent(String(name))}`);
@@ -4439,7 +4425,7 @@ export class ImpexiumClient extends ConnectorClientBase {
         const httpResponse = await this.httpClient.sendAsync<ListAllIndividualsResponse>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as ListAllIndividualsResponse;
@@ -4449,7 +4435,7 @@ export class ImpexiumClient extends ConnectorClientBase {
      * Find Customer by Phone Number
      * @remarks Find Customer by Phone Number.
      */
-    public async findCustomerPhoneAsync(pageNumber: string, phoneNumber?: string, includeAddress?: string, includePhone?: string, includeEmail?: string, abortSignal?: AbortSignalLike): Promise<FindCustomerPhoneResponse> {
+    public async findCustomerPhone(pageNumber: string, phoneNumber?: string, includeAddress?: string, includePhone?: string, includeEmail?: string, abortSignal?: AbortSignalLike): Promise<FindCustomerPhoneResponse> {
         const queryParams: string[] = [];
         if (phoneNumber !== undefined) {
             queryParams.push(`phoneNumber=${encodeURIComponent(String(phoneNumber))}`);
@@ -4468,7 +4454,7 @@ export class ImpexiumClient extends ConnectorClientBase {
         const httpResponse = await this.httpClient.sendAsync<FindCustomerPhoneResponse>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as FindCustomerPhoneResponse;
@@ -4478,13 +4464,13 @@ export class ImpexiumClient extends ConnectorClientBase {
      * Mark Registrant as Attended
      * @remarks Mark the Registrant as Attended for the specified Events.
      */
-    public async markRegistrantAttendedAsync(input: MarkRegistrantAttendedInput, recordNumber: string, abortSignal?: AbortSignalLike): Promise<void> {
+    public async markRegistrantAttended(input: MarkRegistrantAttendedInput, recordNumber: string, abortSignal?: AbortSignalLike): Promise<void> {
         const requestPath = `/api/v1/Events/Registrants/${recordNumber}/Attended`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<void>("PUT", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `PUT ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `PUT ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
     }
 
@@ -4492,13 +4478,13 @@ export class ImpexiumClient extends ConnectorClientBase {
      * Add Award Nomination
      * @remarks Add a new Award Nomination.
      */
-    public async awardsAddAwardNominationAsync(input: AwardNominationData, id: string, abortSignal?: AbortSignalLike): Promise<void> {
+    public async addAwardsAwardNomination(input: AwardNominationData, id: string, abortSignal?: AbortSignalLike): Promise<void> {
         const requestPath = `/api/v1/Awards/${id}/Nominations`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<void>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
     }
 
@@ -4506,13 +4492,13 @@ export class ImpexiumClient extends ConnectorClientBase {
      * Update Award Nomination
      * @remarks Update an existing Award Nomination.
      */
-    public async awardsUpdateAwardNominationAsync(input: UpdateAwardNominationData, id: string, nomineeRecordNumber: string, abortSignal?: AbortSignalLike): Promise<void> {
+    public async updateAwardAwardNomination(input: UpdateAwardNominationData, id: string, nomineeRecordNumber: string, abortSignal?: AbortSignalLike): Promise<void> {
         const requestPath = `/api/v1/Awards/${id}/Nominations/${nomineeRecordNumber}`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<void>("PUT", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `PUT ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `PUT ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
     }
 
@@ -4520,7 +4506,7 @@ export class ImpexiumClient extends ConnectorClientBase {
      * List Award Individual Recipients
      * @remarks List all Individuals that are Award Recipients.
      */
-    public async awardsGetIndividualAwardRecipientsAsync(pageNumber: string, id: string, includeDetails?: string, abortSignal?: AbortSignalLike): Promise<AwardsGetIndividualAwardRecipientsResponse> {
+    public async getAwardIndividualAwardRecipients(pageNumber: string, id: string, includeDetails?: string, abortSignal?: AbortSignalLike): Promise<AwardsGetIndividualAwardRecipientsResponse> {
         const queryParams: string[] = [];
         if (includeDetails !== undefined) {
             queryParams.push(`includeDetails=${encodeURIComponent(String(includeDetails))}`);
@@ -4530,7 +4516,7 @@ export class ImpexiumClient extends ConnectorClientBase {
         const httpResponse = await this.httpClient.sendAsync<AwardsGetIndividualAwardRecipientsResponse>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as AwardsGetIndividualAwardRecipientsResponse;
@@ -4540,7 +4526,7 @@ export class ImpexiumClient extends ConnectorClientBase {
      * List Award Organization Recipients
      * @remarks List all Organizations that are Award Recipients.
      */
-    public async awardsGetOrganizationAwardRecipientsAsync(pageNumber: string, id: string, includeDetails?: string, abortSignal?: AbortSignalLike): Promise<AwardsGetOrganizationAwardRecipientsResponse> {
+    public async getAwardOrganizationAwardRecipients(pageNumber: string, id: string, includeDetails?: string, abortSignal?: AbortSignalLike): Promise<AwardsGetOrganizationAwardRecipientsResponse> {
         const queryParams: string[] = [];
         if (includeDetails !== undefined) {
             queryParams.push(`includeDetails=${encodeURIComponent(String(includeDetails))}`);
@@ -4550,7 +4536,7 @@ export class ImpexiumClient extends ConnectorClientBase {
         const httpResponse = await this.httpClient.sendAsync<AwardsGetOrganizationAwardRecipientsResponse>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as AwardsGetOrganizationAwardRecipientsResponse;

@@ -4,7 +4,7 @@
 import type { AbortSignalLike } from "@azure/abort-controller";
 import type { TokenCredential } from "@azure/core-auth";
 import { ConnectorClientBase } from "../azureConnectors/clientBase.ts";
-import { ConnectorException } from "../azureConnectors/connectorException.ts";
+import { ConnectorError } from "../azureConnectors/connectorError.ts";
 import { ConnectorClientOptions } from "../azureConnectors/options.ts";
 
 // #region Types
@@ -142,9 +142,7 @@ export interface ScopeList {
 /**
  * Definition: Bounces
  */
-export interface Bounces {
-    [key: string]: unknown;
-}
+export type Bounces = Array<Bounce>;
 
 /**
  * Definition: EmailIsUnsubscribedResponse
@@ -194,13 +192,13 @@ export class SendgridClient extends ConnectorClientBase {
      * Add a global suppression
      * @remarks Add a global suppression
      */
-    public async addGlobalSuppressionAsync(input: AddGlobalSuppressRequestAndResponse, abortSignal?: AbortSignalLike): Promise<AddGlobalSuppressRequestAndResponse> {
+    public async addGlobalSuppression(input: AddGlobalSuppressRequestAndResponse, abortSignal?: AbortSignalLike): Promise<AddGlobalSuppressRequestAndResponse> {
         const requestPath = `/suppressions/global`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<AddGlobalSuppressRequestAndResponse>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as AddGlobalSuppressRequestAndResponse;
@@ -210,13 +208,13 @@ export class SendgridClient extends ConnectorClientBase {
      * Get the global suppression
      * @remarks Get the global suppression
      */
-    public async getGlobalSuppressionAsync(email: string, abortSignal?: AbortSignalLike): Promise<GetGlobalSuppressResponse> {
+    public async getGlobalSuppression(email: string, abortSignal?: AbortSignalLike): Promise<GetGlobalSuppressResponse> {
         const requestPath = `/suppressions/global/${email}`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<GetGlobalSuppressResponse>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as GetGlobalSuppressResponse;
@@ -226,13 +224,13 @@ export class SendgridClient extends ConnectorClientBase {
      * Delete the global suppression
      * @remarks Delete the global suppression
      */
-    public async deleteGlobalSuppressionAsync(email: string, abortSignal?: AbortSignalLike): Promise<void> {
+    public async deleteGlobalSuppression(email: string, abortSignal?: AbortSignalLike): Promise<void> {
         const requestPath = `/suppressions/global/${email}`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<void>("DELETE", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `DELETE ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `DELETE ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
     }
 
@@ -240,13 +238,13 @@ export class SendgridClient extends ConnectorClientBase {
      * Add recipient to list
      * @remarks Add an individual recipient to a recipient list.
      */
-    public async addRecipientToListAsync(listId: string, recipientId: string, abortSignal?: AbortSignalLike): Promise<ObjectEntity> {
+    public async addRecipientToList(listId: string, recipientId: string, abortSignal?: AbortSignalLike): Promise<ObjectEntity> {
         const requestPath = `/v3/contactdb/lists/${listId}/recipients/${recipientId}`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<ObjectEntity>("POST", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as ObjectEntity;
@@ -256,13 +254,13 @@ export class SendgridClient extends ConnectorClientBase {
      * Get bounce for an email
      * @remarks Get a specific bounce for a given email address.
      */
-    public async getBounceAsync(email: string, abortSignal?: AbortSignalLike): Promise<Array<Bounce>> {
+    public async getBounce(email: string, abortSignal?: AbortSignalLike): Promise<Array<Bounce>> {
         const requestPath = `/suppression/bounces/${email}`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<Array<Bounce>>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as Array<Bounce>;
@@ -272,13 +270,13 @@ export class SendgridClient extends ConnectorClientBase {
      * Delete an email from bounce list
      * @remarks Delete an email address from your bounce list.
      */
-    public async deleteBounceAsync(email: string, abortSignal?: AbortSignalLike): Promise<void> {
+    public async deleteBounce(email: string, abortSignal?: AbortSignalLike): Promise<void> {
         const requestPath = `/suppression/bounces/${email}`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<void>("DELETE", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `DELETE ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `DELETE ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
     }
 
@@ -286,13 +284,13 @@ export class SendgridClient extends ConnectorClientBase {
      * Check if email is in unsubscribed email list
      * @remarks Check if email is in unsubscribed email list.
      */
-    public async checkEmailIsInUnsubscribesListAsync(email: string, abortSignal?: AbortSignalLike): Promise<EmailIsUnsubscribedResponse> {
+    public async listCheckEmailIsInUnsubscribes(email: string, abortSignal?: AbortSignalLike): Promise<EmailIsUnsubscribedResponse> {
         const requestPath = `/unsubscribes/${email}`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<EmailIsUnsubscribedResponse>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as EmailIsUnsubscribedResponse;
@@ -302,13 +300,13 @@ export class SendgridClient extends ConnectorClientBase {
      * Send email
      * @remarks Sends an email (V4). Limited to 1000 recipients.
      */
-    public async sendEmailAsync(input: EmailRequest, abortSignal?: AbortSignalLike): Promise<ObjectEntity> {
+    public async sendEmail(input: EmailRequest, abortSignal?: AbortSignalLike): Promise<ObjectEntity> {
         const requestPath = `/v4/mail/send`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<ObjectEntity>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as ObjectEntity;

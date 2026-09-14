@@ -13,7 +13,7 @@
  *     npm start
  */
 
-import { ManagedIdentityTokenProvider, ConnectorException } from "@azure/connectors";
+import { ManagedIdentityTokenProvider, ConnectorError } from "@azure/connectors";
 import { InsightlyClient } from "@azure/connectors/generated/InsightlyExtensions";
 
 const CONNECTION_URL = process.env.INSIGHTLY_CONNECTION_URL ?? "";
@@ -29,10 +29,10 @@ async function main() {
 
     // Example 1: List the tasks.
     try {
-        const tasks = await client.listTasksAsync();
+        const tasks = await client.listTasks();
         console.log("Tasks:", JSON.stringify(tasks, null, 2));
     } catch (error) {
-        if (error instanceof ConnectorException) {
+        if (error instanceof ConnectorError) {
             console.log(`Connector error (${error.statusCode}): ${error.message}`);
         } else {
             throw error;

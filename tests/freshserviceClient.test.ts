@@ -2,7 +2,7 @@
 
 import type { TokenCredential } from "@azure/core-auth";
 import { FreshserviceClient } from "../src/generated/FreshserviceExtensions.ts";
-import { ConnectorException } from "../src/azureConnectors/connectorException.ts";
+import { ConnectorError } from "../src/azureConnectors/connectorError.ts";
 import { ConnectorNames } from "../src/generated/connectorNames.ts";
 import { availableConnectors } from "../src/generated/ManagedConnectors.ts";
 
@@ -58,7 +58,7 @@ describe("FreshserviceClient — constructor", () => {
     });
 });
 
-describe("FreshserviceClient — createTicketAsync", () => {
+describe("FreshserviceClient — createTicket", () => {
     afterEach(() => {
         jest.restoreAllMocks();
     });
@@ -68,7 +68,7 @@ describe("FreshserviceClient — createTicketAsync", () => {
         mockFetchResponse(response);
 
         const client = new FreshserviceClient(TestConnectionUrl, createMockCredential());
-        const result = await client.createTicketAsync({
+        const result = await client.createTicket({
             email: "requester@example.com",
             subject: "Cannot access email",
             status: "Open",
@@ -83,22 +83,22 @@ describe("FreshserviceClient — createTicketAsync", () => {
         expect(init.headers["Authorization"]).toBe("Bearer mock-bearer-token");
     });
 
-    it("should throw ConnectorException on non-OK response", async () => {
+    it("should throw ConnectorError on non-OK response", async () => {
         mockFetchError(400, "Bad Request");
 
         const client = new FreshserviceClient(TestConnectionUrl, createMockCredential());
         try {
-            await client.createTicketAsync({
+            await client.createTicket({
                 email: "requester@example.com",
                 subject: "Cannot access email",
                 status: "Open",
                 priority: "High",
                 description: "The user cannot access their email account.",
             });
-            throw new Error("Expected ConnectorException to be thrown.");
+            throw new Error("Expected ConnectorError to be thrown.");
         } catch (error) {
-            expect(error).toBeInstanceOf(ConnectorException);
-            const connectorError = error as ConnectorException;
+            expect(error).toBeInstanceOf(ConnectorError);
+            const connectorError = error as ConnectorError;
             expect(connectorError.statusCode).toBe(400);
             expect(connectorError.responseBody).toBe("Bad Request");
         }

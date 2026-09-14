@@ -15,7 +15,7 @@
 
 "use strict";
 
-const { ManagedIdentityTokenProvider, ConnectorException } = require("@azure/connectors");
+const { ManagedIdentityTokenProvider, ConnectorError } = require("@azure/connectors");
 const { MailchimpClient } = require("@azure/connectors/generated/MailchimpExtensions");
 
 const CONNECTION_URL = process.env.MAILCHIMP_CONNECTION_URL ?? "";
@@ -31,10 +31,10 @@ async function main() {
 
     // Example 1: List the campaigns.
     try {
-        const campaigns = await client.getCampaignsAsync();
+        const campaigns = await client.getCampaigns();
         console.log("Campaigns:", JSON.stringify(campaigns, null, 2));
     } catch (error) {
-        if (error instanceof ConnectorException) {
+        if (error instanceof ConnectorError) {
             console.log(`Connector error (${error.statusCode}): ${error.message}`);
         } else {
             throw error;

@@ -4,7 +4,7 @@
 import type { AbortSignalLike } from "@azure/abort-controller";
 import type { TokenCredential } from "@azure/core-auth";
 import { ConnectorClientBase } from "../azureConnectors/clientBase.ts";
-import { ConnectorException } from "../azureConnectors/connectorException.ts";
+import { ConnectorError } from "../azureConnectors/connectorError.ts";
 import { ConnectorClientOptions } from "../azureConnectors/options.ts";
 import { TriggerCallbackPayload } from "../azureConnectors/triggerPayload.ts";
 
@@ -301,13 +301,13 @@ export class TodoClient extends ConnectorClientBase {
      * Update a to-do list
      * @remarks This operation is used to update a specific to-do list.
      */
-    public async updateToDoListAsync(input: CreateToDoList, folderId: string, abortSignal?: AbortSignalLike): Promise<TodoList> {
+    public async updateToDoList(input: CreateToDoList, folderId: string, abortSignal?: AbortSignalLike): Promise<TodoList> {
         const requestPath = `/lists/${folderId}`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<TodoList>("PATCH", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `PATCH ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `PATCH ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as TodoList;
@@ -317,13 +317,13 @@ export class TodoClient extends ConnectorClientBase {
      * Delete a to-do list
      * @remarks This operation is used to delete a specific to-do list.
      */
-    public async deleteToDoListAsync(folderId: string, abortSignal?: AbortSignalLike): Promise<void> {
+    public async deleteToDoList(folderId: string, abortSignal?: AbortSignalLike): Promise<void> {
         const requestPath = `/lists/${folderId}`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<void>("DELETE", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `DELETE ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `DELETE ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
     }
 
@@ -331,13 +331,13 @@ export class TodoClient extends ConnectorClientBase {
      * Add a to-do
      * @remarks This operation is used to create a to-do in the specified to-do list.
      */
-    public async createToDoAsync(input: CreateToDo, folderId: string, abortSignal?: AbortSignalLike): Promise<ToDo> {
+    public async createToDo(input: CreateToDo, folderId: string, abortSignal?: AbortSignalLike): Promise<ToDo> {
         const requestPath = `/lists/${folderId}/tasks`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<ToDo>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as ToDo;
@@ -347,13 +347,13 @@ export class TodoClient extends ConnectorClientBase {
      * Create a to-do list
      * @remarks This operation is used to create a new to-do list.
      */
-    public async createToDoListAsync(input: CreateToDoList, abortSignal?: AbortSignalLike): Promise<TodoList> {
+    public async createToDoList(input: CreateToDoList, abortSignal?: AbortSignalLike): Promise<TodoList> {
         const requestPath = `/lists`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<TodoList>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as TodoList;
@@ -363,13 +363,13 @@ export class TodoClient extends ConnectorClientBase {
      * Delete to-do
      * @remarks This operation is used to delete a task.
      */
-    public async deleteToDoAsync(folderId: string, id: string, abortSignal?: AbortSignalLike): Promise<void> {
+    public async deleteToDo(folderId: string, id: string, abortSignal?: AbortSignalLike): Promise<void> {
         const requestPath = `/lists/${folderId}/tasks/${id}`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<void>("DELETE", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `DELETE ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `DELETE ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
     }
 
@@ -377,13 +377,13 @@ export class TodoClient extends ConnectorClientBase {
      * List all to-do lists
      * @remarks Returns a list of all the to-do lists.
      */
-    public async getAllTodoListsAsync(abortSignal?: AbortSignalLike): Promise<Array<TodoList>> {
+    public async getAllTodoLists(abortSignal?: AbortSignalLike): Promise<Array<TodoList>> {
         const requestPath = `/lists`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<Array<TodoList>>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as Array<TodoList>;
@@ -393,13 +393,13 @@ export class TodoClient extends ConnectorClientBase {
      * Get a to-do
      * @remarks This operation is used to get the to-do with the given Id.
      */
-    public async getToDoAsync(folderId: string, id: string, abortSignal?: AbortSignalLike): Promise<ToDo> {
+    public async getToDo(folderId: string, id: string, abortSignal?: AbortSignalLike): Promise<ToDo> {
         const requestPath = `/lists/${folderId}/tasks/${id}`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<ToDo>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as ToDo;
@@ -409,13 +409,13 @@ export class TodoClient extends ConnectorClientBase {
      * Get a to-do list
      * @remarks This operation is used to get a specific to-do list.
      */
-    public async getToDoListAsync(folderId: string, abortSignal?: AbortSignalLike): Promise<TodoList> {
+    public async getToDoList(folderId: string, abortSignal?: AbortSignalLike): Promise<TodoList> {
         const requestPath = `/lists/${folderId}`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<TodoList>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as TodoList;
@@ -425,7 +425,7 @@ export class TodoClient extends ConnectorClientBase {
      * List to-do's by folder
      * @remarks This operation is used to retrieve all to-do's from a specific list.
      */
-    public async listToDosByFolderAsync(folderId: string, top?: string, abortSignal?: AbortSignalLike): Promise<Array<ToDo>> {
+    public async listToDosByFolder(folderId: string, top?: string, abortSignal?: AbortSignalLike): Promise<Array<ToDo>> {
         const queryParams: string[] = [];
         if (top !== undefined) {
             queryParams.push(`$top=${encodeURIComponent(String(top))}`);
@@ -435,7 +435,7 @@ export class TodoClient extends ConnectorClientBase {
         const httpResponse = await this.httpClient.sendAsync<Array<ToDo>>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as Array<ToDo>;
@@ -445,13 +445,13 @@ export class TodoClient extends ConnectorClientBase {
      * Update to-do
      * @remarks This operation is used to update a specific to-do.
      */
-    public async updateToDoAsync(input: UpdateToDo, folderId: string, id: string, abortSignal?: AbortSignalLike): Promise<ToDo> {
+    public async updateToDo(input: UpdateToDo, folderId: string, id: string, abortSignal?: AbortSignalLike): Promise<ToDo> {
         const requestPath = `/lists/${folderId}/tasks/${id}`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<ToDo>("PATCH", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `PATCH ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `PATCH ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as ToDo;

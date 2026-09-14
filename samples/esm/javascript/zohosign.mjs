@@ -1,7 +1,7 @@
 // Copyright (c) Microsoft Corporation.  All rights reserved.
 
 /** Zoho Sign Connector SDK Sample - ESM JavaScript. */
-import { ConnectorException, ManagedIdentityTokenProvider } from "@azure/connectors";
+import { ConnectorError, ManagedIdentityTokenProvider } from "@azure/connectors";
 import { ZohosignClient } from "@azure/connectors/generated/ZohosignExtensions";
 
 const CONNECTION_URL = process.env.ZOHOSIGN_CONNECTION_URL ?? "";
@@ -10,10 +10,10 @@ if (!CONNECTION_URL || !REQUEST_ID) throw new Error("ZOHOSIGN_CONNECTION_URL and
 
 async function main() {
     try {
-        const certificate = await new ZohosignClient(CONNECTION_URL, new ManagedIdentityTokenProvider()).downloadCompletionCertificateAsync(REQUEST_ID);
+        const certificate = await new ZohosignClient(CONNECTION_URL, new ManagedIdentityTokenProvider()).downloadCompletionCertificate(REQUEST_ID);
         console.log("Certificate size:", certificate.size);
     } catch (error) {
-        if (error instanceof ConnectorException) console.error(`Connector error (${error.statusCode}): ${error.message}`);
+        if (error instanceof ConnectorError) console.error(`Connector error (${error.statusCode}): ${error.message}`);
         else throw error;
     }
 }

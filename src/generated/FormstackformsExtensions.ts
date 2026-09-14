@@ -4,7 +4,7 @@
 import type { AbortSignalLike } from "@azure/abort-controller";
 import type { TokenCredential } from "@azure/core-auth";
 import { ConnectorClientBase } from "../azureConnectors/clientBase.ts";
-import { ConnectorException } from "../azureConnectors/connectorException.ts";
+import { ConnectorError } from "../azureConnectors/connectorError.ts";
 import { ConnectorClientOptions } from "../azureConnectors/options.ts";
 
 // #region Types
@@ -85,13 +85,13 @@ export class FormstackformsClient extends ConnectorClientBase {
      * Get Available Forms
      * @remarks Returns all available forms
      */
-    public async getAvailableFormsAsync(abortSignal?: AbortSignalLike): Promise<GetAvailableFormsResponse> {
+    public async getAvailableForms(abortSignal?: AbortSignalLike): Promise<GetAvailableFormsResponse> {
         const requestPath = `/api/v2/form/`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<GetAvailableFormsResponse>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as GetAvailableFormsResponse;

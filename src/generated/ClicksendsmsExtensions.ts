@@ -4,7 +4,7 @@
 import type { AbortSignalLike } from "@azure/abort-controller";
 import type { TokenCredential } from "@azure/core-auth";
 import { ConnectorClientBase } from "../azureConnectors/clientBase.ts";
-import { ConnectorException } from "../azureConnectors/connectorException.ts";
+import { ConnectorError } from "../azureConnectors/connectorError.ts";
 import { ConnectorClientOptions } from "../azureConnectors/options.ts";
 
 // #region Types
@@ -374,13 +374,13 @@ export class ClicksendsmsClient extends ConnectorClientBase {
      * Send SMS
      * @remarks Each 160 characters = 1 SMS. Can send up to 1,224 standard characters.
      */
-    public async smsSendAsync(input: SmsSendInput, abortSignal?: AbortSignalLike): Promise<SmsSendResponse> {
+    public async sendSms(input: SmsSendInput, abortSignal?: AbortSignalLike): Promise<SmsSendResponse> {
         const requestPath = `/sms/send`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<SmsSendResponse>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as SmsSendResponse;
@@ -390,13 +390,13 @@ export class ClicksendsmsClient extends ConnectorClientBase {
      * Create New Contact List
      * @remarks Create New Contact List
      */
-    public async createListAsync(input: CreateListInput, abortSignal?: AbortSignalLike): Promise<CreateListResponse> {
+    public async listCreate(input: CreateListInput, abortSignal?: AbortSignalLike): Promise<CreateListResponse> {
         const requestPath = `/lists`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<CreateListResponse>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as CreateListResponse;
@@ -406,7 +406,7 @@ export class ClicksendsmsClient extends ConnectorClientBase {
      * Get Contact Lists
      * @remarks Get all contact lists unless specified in the advance options
      */
-    public async getContactListsAsync(page?: string, limit?: string, abortSignal?: AbortSignalLike): Promise<GetContactListsResponse> {
+    public async getContactLists(page?: string, limit?: string, abortSignal?: AbortSignalLike): Promise<GetContactListsResponse> {
         const queryParams: string[] = [];
         if (page !== undefined) {
             queryParams.push(`page=${encodeURIComponent(String(page))}`);
@@ -419,7 +419,7 @@ export class ClicksendsmsClient extends ConnectorClientBase {
         const httpResponse = await this.httpClient.sendAsync<GetContactListsResponse>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as GetContactListsResponse;
@@ -429,13 +429,13 @@ export class ClicksendsmsClient extends ConnectorClientBase {
      * Send Voice Message
      * @remarks Each 300 characters = 1 voice message. Can send up to 1,200 standard characters
      */
-    public async sendVoiceAsync(input: SendVoiceInput, abortSignal?: AbortSignalLike): Promise<SendVoiceResponse> {
+    public async sendVoice(input: SendVoiceInput, abortSignal?: AbortSignalLike): Promise<SendVoiceResponse> {
         const requestPath = `/voice/send`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<SendVoiceResponse>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as SendVoiceResponse;
@@ -445,13 +445,13 @@ export class ClicksendsmsClient extends ConnectorClientBase {
      * Delete List
      * @remarks Delete a specific contact list
      */
-    public async deleteListAsync(listId: string, abortSignal?: AbortSignalLike): Promise<DeleteListResponse> {
+    public async listDelete(listId: string, abortSignal?: AbortSignalLike): Promise<DeleteListResponse> {
         const requestPath = `/lists/${listId}`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<DeleteListResponse>("DELETE", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `DELETE ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `DELETE ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as DeleteListResponse;
@@ -461,13 +461,13 @@ export class ClicksendsmsClient extends ConnectorClientBase {
      * Create New Contact
      * @remarks Create New Contact
      */
-    public async createListContactAsync(input: CreateListContactInput, listId: string, abortSignal?: AbortSignalLike): Promise<CreateListContactResponse> {
+    public async listCreateContact(input: CreateListContactInput, listId: string, abortSignal?: AbortSignalLike): Promise<CreateListContactResponse> {
         const requestPath = `/lists/${listId}/contacts`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<CreateListContactResponse>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as CreateListContactResponse;
@@ -477,13 +477,13 @@ export class ClicksendsmsClient extends ConnectorClientBase {
      * Get Contacts in a List
      * @remarks Get all Contacts in a List
      */
-    public async viewListContactsAsync(listId: string, abortSignal?: AbortSignalLike): Promise<ViewListContactsResponse> {
+    public async listViewContacts(listId: string, abortSignal?: AbortSignalLike): Promise<ViewListContactsResponse> {
         const requestPath = `/lists/${listId}/contacts`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<ViewListContactsResponse>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as ViewListContactsResponse;
@@ -493,13 +493,13 @@ export class ClicksendsmsClient extends ConnectorClientBase {
      * Delete a Contact
      * @remarks Delete a Contact
      */
-    public async deleteListContactAsync(listId: string, contactId: string, abortSignal?: AbortSignalLike): Promise<DeleteListContactResponse> {
+    public async listDeleteContact(listId: string, contactId: string, abortSignal?: AbortSignalLike): Promise<DeleteListContactResponse> {
         const requestPath = `/lists/${listId}/contacts/${contactId}`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<DeleteListContactResponse>("DELETE", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `DELETE ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `DELETE ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as DeleteListContactResponse;
@@ -509,13 +509,13 @@ export class ClicksendsmsClient extends ConnectorClientBase {
      * Send MMS
      * @remarks Send MMS
      */
-    public async sendMmsAsync(input: SendMmsInput, abortSignal?: AbortSignalLike): Promise<SendMmsResponse> {
+    public async sendMms(input: SendMmsInput, abortSignal?: AbortSignalLike): Promise<SendMmsResponse> {
         const requestPath = `/mms/send`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<SendMmsResponse>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as SendMmsResponse;
@@ -525,13 +525,13 @@ export class ClicksendsmsClient extends ConnectorClientBase {
      * Send Fax
      * @remarks Send Fax
      */
-    public async sendFaxAsync(input: SendFaxInput, abortSignal?: AbortSignalLike): Promise<SendFaxResponse> {
+    public async sendFax(input: SendFaxInput, abortSignal?: AbortSignalLike): Promise<SendFaxResponse> {
         const requestPath = `/fax/send`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<SendFaxResponse>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as SendFaxResponse;
@@ -541,7 +541,7 @@ export class ClicksendsmsClient extends ConnectorClientBase {
      * Convert Media File Format
      * @remarks Convert Media File Format
      */
-    public async uploadMediaAsync(input: UploadMediaInput, convert?: string, abortSignal?: AbortSignalLike): Promise<UploadMediaResponse> {
+    public async uploadMedia(input: UploadMediaInput, convert?: string, abortSignal?: AbortSignalLike): Promise<UploadMediaResponse> {
         const queryParams: string[] = [];
         if (convert !== undefined) {
             queryParams.push(`convert=${encodeURIComponent(String(convert))}`);
@@ -551,7 +551,7 @@ export class ClicksendsmsClient extends ConnectorClientBase {
         const httpResponse = await this.httpClient.sendAsync<UploadMediaResponse>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as UploadMediaResponse;
@@ -561,7 +561,7 @@ export class ClicksendsmsClient extends ConnectorClientBase {
      * Search Contact Lists
      * @remarks Get list of searched contact list
      */
-    public async searchContactListAsync(q?: string, abortSignal?: AbortSignalLike): Promise<SearchContactListResponse> {
+    public async listSearchContact(q?: string, abortSignal?: AbortSignalLike): Promise<SearchContactListResponse> {
         const queryParams: string[] = [];
         if (q !== undefined) {
             queryParams.push(`q=${encodeURIComponent(String(q))}`);
@@ -571,7 +571,7 @@ export class ClicksendsmsClient extends ConnectorClientBase {
         const httpResponse = await this.httpClient.sendAsync<SearchContactListResponse>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as SearchContactListResponse;
@@ -581,13 +581,13 @@ export class ClicksendsmsClient extends ConnectorClientBase {
      * Send Letter
      * @remarks Send Letter
      */
-    public async sendLetterAsync(input: SendLetterInput, abortSignal?: AbortSignalLike): Promise<SendLetterResponse> {
+    public async sendLetter(input: SendLetterInput, abortSignal?: AbortSignalLike): Promise<SendLetterResponse> {
         const requestPath = `/post/letters/send`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<SendLetterResponse>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as SendLetterResponse;
@@ -597,13 +597,13 @@ export class ClicksendsmsClient extends ConnectorClientBase {
      * Send Postcard
      * @remarks Send one or more postcards
      */
-    public async sendPostcardAsync(input: SendPostcardInput, abortSignal?: AbortSignalLike): Promise<SendPostcardResponse> {
+    public async sendPostcard(input: SendPostcardInput, abortSignal?: AbortSignalLike): Promise<SendPostcardResponse> {
         const requestPath = `/post/postcards/send`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<SendPostcardResponse>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as SendPostcardResponse;

@@ -4,7 +4,7 @@
 import type { AbortSignalLike } from "@azure/abort-controller";
 import type { TokenCredential } from "@azure/core-auth";
 import { ConnectorClientBase } from "../azureConnectors/clientBase.ts";
-import { ConnectorException } from "../azureConnectors/connectorException.ts";
+import { ConnectorError } from "../azureConnectors/connectorError.ts";
 import { ConnectorClientOptions } from "../azureConnectors/options.ts";
 
 // #region Types
@@ -36,9 +36,7 @@ export type DocumentsUploadStreamInput = string;
 /**
  * Assign Document Field
  */
-export interface FieldsAutoAssignFieldInput {
-    [key: string]: unknown;
-}
+export type FieldsAutoAssignFieldInput = Array<AssignFieldRequest>;
 
 /**
  * Response for Download Package
@@ -57,23 +55,17 @@ export interface WorkflowEvidenceReportDownloadBytesResponse {
 /**
  * Add Groups to Workflow
  */
-export interface WorkflowWorkflowAddGroupInput {
-    [key: string]: unknown;
-}
+export type WorkflowWorkflowAddGroupInput = Array<WorflowGroupRequest>;
 
 /**
  * Add Placeholder to Workflow
  */
-export interface WorkflowWorkflowAddPlaceholderInput {
-    [key: string]: unknown;
-}
+export type WorkflowWorkflowAddPlaceholderInput = Array<PlaceholderRequest>;
 
 /**
  * Add Users to Workflow
  */
-export interface WorkflowWorkflowAddUserInput {
-    [key: string]: unknown;
-}
+export type WorkflowWorkflowAddUserInput = Array<WorflowUserRequest>;
 
 /**
  * Definition: ErrorWithDescriptionResponse
@@ -1806,7 +1798,7 @@ export interface RenameDocumentRequest {
 /**
  * Definition: HandSignature
  */
-export type HandSignature = "0" | "1" | "2" | "3" | "4";
+export type HandSignature = 0 | 1 | 2 | 3 | 4;
 
 /**
  * Definition: VerificationResponse
@@ -3356,13 +3348,13 @@ export class SigninghubClient extends ConnectorClientBase {
      * Delete Attachment
      * @remarks Business applications can use this service API to delete the attachment of a document.
      */
-    public async attachmentDeleteAttachmentAsync(packageId: string, documentId: string, attachmentId: string, abortSignal?: AbortSignalLike): Promise<EmptyResponse> {
+    public async deleteAttachmentAttachment(packageId: string, documentId: string, attachmentId: string, abortSignal?: AbortSignalLike): Promise<EmptyResponse> {
         const requestPath = `/v4/packages/${packageId}/documents/${documentId}/attachments/${attachmentId}`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<EmptyResponse>("DELETE", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `DELETE ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `DELETE ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as EmptyResponse;
@@ -3372,13 +3364,13 @@ export class SigninghubClient extends ConnectorClientBase {
      * Download Attachment
      * @remarks Business applications can use this service API to download the attachment of a document.
      */
-    public async attachmentDownloadAttachmentAsync(packageId: string, documentId: string, attachmentId: string, abortSignal?: AbortSignalLike): Promise<AttachmentDownloadAttachmentResponse> {
+    public async downloadAttachmentAttachment(packageId: string, documentId: string, attachmentId: string, abortSignal?: AbortSignalLike): Promise<AttachmentDownloadAttachmentResponse> {
         const requestPath = `/v4/packages/${packageId}/documents/${documentId}/attachments/${attachmentId}`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<AttachmentDownloadAttachmentResponse>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as AttachmentDownloadAttachmentResponse;
@@ -3388,13 +3380,13 @@ export class SigninghubClient extends ConnectorClientBase {
      * Get Attachments
      * @remarks Business applications can use this service API to get the attachments of a document.
      */
-    public async attachmentGetAttachmentsAsync(packageId: string, documentId: string, abortSignal?: AbortSignalLike): Promise<Array<GetAttachmentResponse>> {
+    public async getAttachmentAttachments(packageId: string, documentId: string, abortSignal?: AbortSignalLike): Promise<Array<GetAttachmentResponse>> {
         const requestPath = `/v4/packages/${packageId}/documents/${documentId}/attachments`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<Array<GetAttachmentResponse>>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as Array<GetAttachmentResponse>;
@@ -3404,13 +3396,13 @@ export class SigninghubClient extends ConnectorClientBase {
      * Upload Attachment
      * @remarks Business applications can use this service API to upload a attachment in a document.
      */
-    public async attachmentUploadAttachmentAsync(input: AttachmentUploadAttachmentInput, packageId: string, documentId: string, abortSignal?: AbortSignalLike): Promise<AddAttachmentResponse> {
+    public async uploadAttachmentAttachment(input: AttachmentUploadAttachmentInput, packageId: string, documentId: string, abortSignal?: AbortSignalLike): Promise<AddAttachmentResponse> {
         const requestPath = `/v4/packages/${packageId}/documents/${documentId}/attachments`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<AddAttachmentResponse>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as AddAttachmentResponse;
@@ -3420,13 +3412,13 @@ export class SigninghubClient extends ConnectorClientBase {
      * Add CheckBox Field
      * @remarks Business applications can use this service API to add a checkbox to a document in a package.               At least one user must exist in a workflow before fields(input and signature) can be added to the document in this way.The order number corresponds to the recipient in the workflow.Therefore, this number must be equal or less than the total number of users in the workflow.  The below example assigns this new signature field to the first person in the workflow.               See [Add Users to Workflow](#operation/Workflow_WorkflowAddUser) for more information.  Note if you have a document with a template applied, or have applied one using the APIs, then the workflow will already contain users.               If width and height parameters are not provided, a default size of 10x10 will be assigned. If either width or height (or both) is provided, the system will compare these provided values with each other. The larger value between width and height will be assigned to both dimensions.
      */
-    public async checkboxAddCheckBoxAsync(input: CheckBoxFieldRequest, packageId: string, documentId: string, abortSignal?: AbortSignalLike): Promise<AddFieldResponse> {
+    public async addCheckboxCheckBox(input: CheckBoxFieldRequest, packageId: string, documentId: string, abortSignal?: AbortSignalLike): Promise<AddFieldResponse> {
         const requestPath = `/v4/packages/${packageId}/documents/${documentId}/fields/checkbox`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<AddFieldResponse>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as AddFieldResponse;
@@ -3436,13 +3428,13 @@ export class SigninghubClient extends ConnectorClientBase {
      * Update CheckBox Field
      * @remarks Business applications can use this service API to update a checkbox field of a document in a package.               Note all of the input parameters can be changed.Where you wish to retain the current setting submit it in the call unchanged.You can therefore use the same parameters as when you added the input field, or the information as returned by [Get Document Fields](#operation/Documents_GetDocumentFields).The latter can be used when a template was applied or the document was created using the GUI interface.               It's width and height cannot be updated. They will remain the same as when they were added.
      */
-    public async checkboxUpdateCheckBoxAsync(input: UpdateCheckBoxFieldRequest, packageId: string, documentId: string, abortSignal?: AbortSignalLike): Promise<EmptyResponse> {
+    public async updateCheckboxCheckBox(input: UpdateCheckBoxFieldRequest, packageId: string, documentId: string, abortSignal?: AbortSignalLike): Promise<EmptyResponse> {
         const requestPath = `/v4/packages/${packageId}/documents/${documentId}/fields/checkbox`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<EmptyResponse>("PUT", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `PUT ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `PUT ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as EmptyResponse;
@@ -3452,7 +3444,7 @@ export class SigninghubClient extends ConnectorClientBase {
      * Get Contacts
      * @remarks Business applications can use this service API to retieve contacts from both personal and enterprise contacts for the current user.               It is possible to search based upon the criterion supplied under the "x-search-text" header.Furthermore, it is possible to search a user's specific contacts or that of the enterprise to which the user belongs.               The search response information contains the user email address and respective user name.
      */
-    public async contactsGetAsync(recordPerPage: string, pageNo: string, sortBy?: string, asc?: string, abortSignal?: AbortSignalLike): Promise<Array<ContactResponse>> {
+    public async getContact(recordPerPage: string, pageNo: string, sortBy?: string, asc?: string, abortSignal?: AbortSignalLike): Promise<Array<ContactResponse>> {
         const queryParams: string[] = [];
         if (sortBy !== undefined) {
             queryParams.push(`sort-by=${encodeURIComponent(String(sortBy))}`);
@@ -3465,7 +3457,7 @@ export class SigninghubClient extends ConnectorClientBase {
         const httpResponse = await this.httpClient.sendAsync<Array<ContactResponse>>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as Array<ContactResponse>;
@@ -3475,13 +3467,13 @@ export class SigninghubClient extends ConnectorClientBase {
      * Delete Document
      * @remarks Business applications can use this service API to delete a document in a package.
      */
-    public async documentsDeleteDocumentAsync(packageId: string, documentId: string, abortSignal?: AbortSignalLike): Promise<DocumentResponse> {
+    public async deleteDocumentDocument(packageId: string, documentId: string, abortSignal?: AbortSignalLike): Promise<DocumentResponse> {
         const requestPath = `/v4/packages/${packageId}/documents/${documentId}`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<DocumentResponse>("DELETE", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `DELETE ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `DELETE ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as DocumentResponse;
@@ -3491,13 +3483,13 @@ export class SigninghubClient extends ConnectorClientBase {
      * Download Document
      * @remarks Business applications can use this service API to download the document bytes. The package ID and document ID is provided in the resource URL.
      */
-    public async documentsDownloadDocumentBytesAsync(packageId: string, documentId: string, abortSignal?: AbortSignalLike): Promise<DocumentsDownloadDocumentBytesResponse> {
+    public async downloadDocumentsDocumentBytes(packageId: string, documentId: string, abortSignal?: AbortSignalLike): Promise<DocumentsDownloadDocumentBytesResponse> {
         const requestPath = `/v4/packages/${packageId}/documents/${documentId}`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<DocumentsDownloadDocumentBytesResponse>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as DocumentsDownloadDocumentBytesResponse;
@@ -3507,13 +3499,13 @@ export class SigninghubClient extends ConnectorClientBase {
      * Get Certify Policy for a document
      * @remarks Business applications can use this service API to get certify signature settings of a document in a package.
      */
-    public async documentsGetCertifyPolicyAsync(packageId: string, documentId: string, abortSignal?: AbortSignalLike): Promise<CertifyPolicyResponse> {
+    public async getDocumentsCertifyPolicy(packageId: string, documentId: string, abortSignal?: AbortSignalLike): Promise<CertifyPolicyResponse> {
         const requestPath = `/v4/packages/${packageId}/documents/${documentId}/certify`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<CertifyPolicyResponse>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as CertifyPolicyResponse;
@@ -3523,13 +3515,13 @@ export class SigninghubClient extends ConnectorClientBase {
      * Get Document Details
      * @remarks Business applications can use this service API to get the document details. The document ID is provided in the URL as “{document_id}”.
      */
-    public async documentsGetDocumentDetailsAsync(packageId: string, documentId: string, abortSignal?: AbortSignalLike): Promise<DocumentDetailsResponse> {
+    public async getDocumentsDocumentDetails(packageId: string, documentId: string, abortSignal?: AbortSignalLike): Promise<DocumentDetailsResponse> {
         const requestPath = `/v4/packages/${packageId}/documents/${documentId}/details`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<DocumentDetailsResponse>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as DocumentDetailsResponse;
@@ -3539,13 +3531,13 @@ export class SigninghubClient extends ConnectorClientBase {
      * Rename Document
      * @remarks Business applications can use this service API to rename a document in a package.
      */
-    public async documentsRenameDocumentAsync(input: RenameDocumentRequest, packageId: string, documentId: string, abortSignal?: AbortSignalLike): Promise<DocumentResponse> {
+    public async documentsRenameDocument(input: RenameDocumentRequest, packageId: string, documentId: string, abortSignal?: AbortSignalLike): Promise<DocumentResponse> {
         const requestPath = `/v4/packages/${packageId}/documents/${documentId}`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<DocumentResponse>("PUT", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `PUT ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `PUT ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as DocumentResponse;
@@ -3555,13 +3547,13 @@ export class SigninghubClient extends ConnectorClientBase {
      * Update Certify Policy for a document
      * @remarks Business applications can use this service API to update certify signature settings for a document in a package.
      */
-    public async documentsUpdateCertifyPolicyAsync(input: UpdateCertifyPolicyRequest, packageId: string, documentId: string, abortSignal?: AbortSignalLike): Promise<EmptyResponse> {
+    public async updateDocumentsCertifyPolicy(input: UpdateCertifyPolicyRequest, packageId: string, documentId: string, abortSignal?: AbortSignalLike): Promise<EmptyResponse> {
         const requestPath = `/v4/packages/${packageId}/documents/${documentId}/certify`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<EmptyResponse>("PUT", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `PUT ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `PUT ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as EmptyResponse;
@@ -3571,13 +3563,13 @@ export class SigninghubClient extends ConnectorClientBase {
      * Add or Update Document from Library
      * @remarks Business applications can use this service API to add a document from the user’s library to a package. Package ID is provided in the URL, the ID of the document should also be provided as “document_id” in the resource URL to identify the library document to be copied.               Note a package must already exist before you can add a document using this call.
      */
-    public async documentsUploadFromLibraryAsync(packageId: string, documentId: string, abortSignal?: AbortSignalLike): Promise<UploadDocumentLibraryResponse> {
+    public async uploadDocumentsFromLibrary(packageId: string, documentId: string, abortSignal?: AbortSignalLike): Promise<UploadDocumentLibraryResponse> {
         const requestPath = `/v4/packages/${packageId}/documents/library/${documentId}`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<UploadDocumentLibraryResponse>("POST", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as UploadDocumentLibraryResponse;
@@ -3587,13 +3579,13 @@ export class SigninghubClient extends ConnectorClientBase {
      * Upload Document
      * @remarks Business applications can use this service API to add a document to a document package linked to an enterprise user’s account. The document information is sent in the HTTP request header and document bytes are sent in the HTTP request body.  Note SigningHub will convert supported document formats to PDF if the header "x-convert-document" is set to a value of "true".  The only case supported where this value is set to "false" is to retain Word format and XML documents.                SigningHub supports a wide variety of document formats, each of which can be converted to PDF format upon upload.Click here for the full list.                Note PDF documents are not altered upon upload to the system.                Note a package must already exist before you can add a document using this call.
      */
-    public async documentsUploadStreamAsync(input: DocumentsUploadStreamInput, packageId: string, abortSignal?: AbortSignalLike): Promise<UploadDocument> {
+    public async uploadDocumentsStream(input: DocumentsUploadStreamInput, packageId: string, abortSignal?: AbortSignalLike): Promise<UploadDocument> {
         const requestPath = `/v4/packages/${packageId}/documents`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<UploadDocument>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as UploadDocument;
@@ -3603,13 +3595,13 @@ export class SigninghubClient extends ConnectorClientBase {
      * Get Workflow User Authentication (Document Opening)  of Enterprise Package
      * @remarks Business applications can use this service API to get the access security settings enabled for the package. Recipients for whom the security is configured are identified by the order in the URL. Package ID is also identified in the request URL. Recipients will not be able to access document package outside the scope of this duration if the access security is enabled. Document owner can also configure authentication based security of the package for a recipient.
      */
-    public async enterpriseDocumentsGetEnterpriseWorkflowAccessAsync(packageId: string, order: string, abortSignal?: AbortSignalLike): Promise<EnterpriseAccessResponse> {
+    public async getEnterpriseDocumentsEnterpriseWorkflowAccess(packageId: string, order: string, abortSignal?: AbortSignalLike): Promise<EnterpriseAccessResponse> {
         const requestPath = `/v4/enterprise/packages/${packageId}/workflow/${order}/authentication`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<EnterpriseAccessResponse>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as EnterpriseAccessResponse;
@@ -3619,13 +3611,13 @@ export class SigninghubClient extends ConnectorClientBase {
      * Update Workflow User Authentication (Document Opening) of Enterprise Package
      * @remarks Business applications can use this service API to update the package authentications and access duration for the recipients. This API can also be used by the enterprise administrator or the enterprise user if the "scope" variable was used in the authentication request
      */
-    public async enterpriseDocumentsUpdateEnterpriseWorkflowAccessAsync(input: AccessUpdateRequest, packageId: string, order: string, abortSignal?: AbortSignalLike): Promise<EmptyResponse> {
+    public async updateEnterpriseDocumentsEnterpriseWorkflowAccess(input: AccessUpdateRequest, packageId: string, order: string, abortSignal?: AbortSignalLike): Promise<EmptyResponse> {
         const requestPath = `/v4/enterprise/packages/${packageId}/workflow/${order}/authentication`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<EmptyResponse>("PUT", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `PUT ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `PUT ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as EmptyResponse;
@@ -3635,13 +3627,13 @@ export class SigninghubClient extends ConnectorClientBase {
      * Assign Document Field
      * @remarks Business applications can use this service API to assign users to input fields, e.g. signature fields, and hence define the signing order.  The fields must already be present in the document and the users must be present in the workflow. The ID of the workflow document is provided in the resource URL, along with the package identifier.               When recipients are in a workflow they are numbered, beginning at one and counting up for each extra one.Therefore, if there are three users in a workflow they are numbered "1", "2", and "3" respectfully.This API call allows you to assign a user by their workflow order number, to an input field on the document.
      */
-    public async fieldsAutoAssignFieldAsync(input: FieldsAutoAssignFieldInput, packageId: string, documentId: string, abortSignal?: AbortSignalLike): Promise<EmptyResponse> {
+    public async fieldsAutoAssignField(input: FieldsAutoAssignFieldInput, packageId: string, documentId: string, abortSignal?: AbortSignalLike): Promise<EmptyResponse> {
         const requestPath = `/v4/packages/${packageId}/documents/${documentId}/fields/assign`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<EmptyResponse>("PUT", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `PUT ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `PUT ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as EmptyResponse;
@@ -3651,13 +3643,13 @@ export class SigninghubClient extends ConnectorClientBase {
      * AutoPlace Fields
      * @remarks Business applications can call this API to add signature or user defined form fields to a document based upon the search criterion supplied. The placement options are: to the left, to the right, top and bottom.  The document is search and all instances of the search criteria met are processed.  This allows you to add multiple fields with one call.  For example, upload a document and automatically place a signature field to the right of all instances of the word "Sign here:".  This saves time and ensures no signatures are missed from the workflow.               The API call supports all types of fields; namely electronic, digital, in-person, initials, and text field etc.               In addition, the API call supports the "order" variable.This means you can assign a set of signature fields automatically to a single user.Hence, the call can be repeated to place and assign signature fields to more than one user in the workflow.               At least one user must exist in a workflow before signature fields can be added to the document in this way.The order number corresponds to the recipient in the workflow.  Therefore, this number must be equal or less than the total number of users in the workflow.  The below example assigns this new signature field to the first person in the workflow.               This API call can be used multiple times on the same document.The reason for doing so is to cater for multiple signatories on a document.The recipient or signatory is identified by the "order" variable passed in the call.               See [Add Users to Workflow](#operation/Workflow_WorkflowAddUser) for more information.  Note if you have a document with a template applied, or have applied one using the APIs, then the workflow will already contain users.
      */
-    public async fieldsAutoPlaceAsync(input: AutoPlaceFieldRequest, packageId: string, documentId: string, abortSignal?: AbortSignalLike): Promise<Array<AutoPlaceFieldsResponse>> {
+    public async fieldsAutoPlace(input: AutoPlaceFieldRequest, packageId: string, documentId: string, abortSignal?: AbortSignalLike): Promise<Array<AutoPlaceFieldsResponse>> {
         const requestPath = `/v4/packages/${packageId}/documents/${documentId}/fields/autoplace`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<Array<AutoPlaceFieldsResponse>>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as Array<AutoPlaceFieldsResponse>;
@@ -3667,13 +3659,13 @@ export class SigninghubClient extends ConnectorClientBase {
      * Delete Document Field
      * @remarks Business applications can use this service API to delete a field of document in a package.
      */
-    public async fieldsDeleteDocumentFieldAsync(input: DeleteDocumentFieldRequest, packageId: string, documentId: string, abortSignal?: AbortSignalLike): Promise<EmptyResponse> {
+    public async deleteFieldsDocumentField(input: DeleteDocumentFieldRequest, packageId: string, documentId: string, abortSignal?: AbortSignalLike): Promise<EmptyResponse> {
         const requestPath = `/v4/packages/${packageId}/documents/${documentId}/fields`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<EmptyResponse>("DELETE", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `DELETE ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `DELETE ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as EmptyResponse;
@@ -3683,13 +3675,13 @@ export class SigninghubClient extends ConnectorClientBase {
      * Fill Form Fields
      * @remarks Business applications can use this service API to fill one or more form fields in a document by a specified user in the order.
      */
-    public async fieldsFillFormFieldsAsync(input: FormFillingRequest, packageId: string, documentId: string, abortSignal?: AbortSignalLike): Promise<EmptyResponse> {
+    public async fieldsFillFormFields(input: FormFillingRequest, packageId: string, documentId: string, abortSignal?: AbortSignalLike): Promise<EmptyResponse> {
         const requestPath = `/v4/packages/${packageId}/documents/${documentId}/fields`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<EmptyResponse>("PUT", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `PUT ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `PUT ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as EmptyResponse;
@@ -3699,13 +3691,13 @@ export class SigninghubClient extends ConnectorClientBase {
      * Get Document Fields
      * @remarks Business applications can use this service API to get document fields i.e., initials, in-persons, signature fields or form fields.
      */
-    public async fieldsGetAllDocumentFieldsAsync(packageId: string, documentId: string, pageNo: string, abortSignal?: AbortSignalLike): Promise<FieldsResponse> {
+    public async getFieldAllDocumentFields(packageId: string, documentId: string, pageNo: string, abortSignal?: AbortSignalLike): Promise<FieldsResponse> {
         const requestPath = `/v4/packages/${packageId}/documents/${documentId}/fields/${pageNo}`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<FieldsResponse>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as FieldsResponse;
@@ -3715,13 +3707,13 @@ export class SigninghubClient extends ConnectorClientBase {
      * Move Package to Custom or Shared Space folder
      * @remarks Business applications can use this service API to move the document package to a shared space or user's custom folder.
      */
-    public async folderMovePackageAsync(input: MoveToRequest, packageId: string, abortSignal?: AbortSignalLike): Promise<EmptyResponse> {
+    public async moveFolderPackage(input: MoveToRequest, packageId: string, abortSignal?: AbortSignalLike): Promise<EmptyResponse> {
         const requestPath = `/v4/packages/${packageId}/move_to`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<EmptyResponse>("PUT", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `PUT ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `PUT ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as EmptyResponse;
@@ -3731,13 +3723,13 @@ export class SigninghubClient extends ConnectorClientBase {
      * Add Initial Field
      * @remarks Business applications can use this service API to add an initials field to a document in a package.               At least one user must exist in a workflow before fields(input and signature) can be added to the document in this way.The order number corresponds to the recipient in the workflow.Therefore, this number must be equal or less than the total number of users in the workflow.  The below example assigns this new signature field to the first person in the workflow.               See [Add Users to Workflow](#operation/Workflow_WorkflowAddUser) for more information.  Note if you have a document with a template applied, or have applied one using the APIs, then the workflow will already contain users.
      */
-    public async initialsAddInitialAsync(input: InitialFieldRequest, packageId: string, documentId: string, abortSignal?: AbortSignalLike): Promise<AddFieldResponse> {
+    public async addInitialsInitial(input: InitialFieldRequest, packageId: string, documentId: string, abortSignal?: AbortSignalLike): Promise<AddFieldResponse> {
         const requestPath = `/v4/packages/${packageId}/documents/${documentId}/fields/initials`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<AddFieldResponse>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as AddFieldResponse;
@@ -3747,13 +3739,13 @@ export class SigninghubClient extends ConnectorClientBase {
      * Fill Initials
      * @remarks Business applications can use this service API to fill an initials field in a document by a specified user in the order.
      */
-    public async initialsFillAsync(input: InitialFillingRequest, packageId: string, documentId: string, abortSignal?: AbortSignalLike): Promise<EmptyResponse> {
+    public async initialsFill(input: InitialFillingRequest, packageId: string, documentId: string, abortSignal?: AbortSignalLike): Promise<EmptyResponse> {
         const requestPath = `/v4/packages/${packageId}/documents/${documentId}/initial`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<EmptyResponse>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as EmptyResponse;
@@ -3763,13 +3755,13 @@ export class SigninghubClient extends ConnectorClientBase {
      * Update Initial Field
      * @remarks Business applications can use this service API to update an initials field of a document in a package.               Note all of the input parameters can be changed.Where you wish to retain the current setting submit it in the call unchanged.               You can therefore use the same parameters as when you added the input field, or the information as returned by [Get Document Fields](#operation/Documents_GetDocumentFields).The latter can be used when a template was applied or the document was created using the GUI interface.
      */
-    public async initialsUpdateInitialAsync(input: UpdateInitialFieldRequest, packageId: string, documentId: string, abortSignal?: AbortSignalLike): Promise<EmptyResponse> {
+    public async updateInitialsInitial(input: UpdateInitialFieldRequest, packageId: string, documentId: string, abortSignal?: AbortSignalLike): Promise<EmptyResponse> {
         const requestPath = `/v4/packages/${packageId}/documents/${documentId}/fields/initials`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<EmptyResponse>("PUT", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `PUT ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `PUT ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as EmptyResponse;
@@ -3779,13 +3771,13 @@ export class SigninghubClient extends ConnectorClientBase {
      * Add In-person Field
      * @remarks Business applications can use this service API to an add in-person signature field to a document in a package.               At least one user must exist in a workflow before fields(input and signature) can be added to the document in this way.The order number corresponds to the recipient in the workflow.Therefore, this number must be equal or less than the total number of users in the workflow.  The below example assigns this new signature field to the first person in the workflow.               See [Add Users to Workflow](#operation/Workflow_WorkflowAddUser) for more information.  Note if you have a document with a template applied, or have applied one using the APIs, then the workflow will already contain users.               In order to host an in-person meeting a SigningHub user must be part of the workflow.They must either be added with Role "INPERSON_HOST" or "SIGNER".  For the host option they do not require a signature or input field on the document, and the in-person signature field can be signed by the non-SigningHub registered user.               Note this is a special workflow scenario whereby it is expected that the SigningHub user and recipient would be in the same location.This type of signature is not intended for use whereby a document is shared with recipients over email link in the normal loose integration method.
      */
-    public async inPersonAddInPersonAsync(input: InPersonFieldRequest, packageId: string, documentId: string, abortSignal?: AbortSignalLike): Promise<AddFieldResponse> {
+    public async addInPersonInPerson(input: InPersonFieldRequest, packageId: string, documentId: string, abortSignal?: AbortSignalLike): Promise<AddFieldResponse> {
         const requestPath = `/v4/packages/${packageId}/documents/${documentId}/fields/in_person_signature`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<AddFieldResponse>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as AddFieldResponse;
@@ -3795,13 +3787,13 @@ export class SigninghubClient extends ConnectorClientBase {
      * Update In-person Field
      * @remarks Business applications can use this service API to update an in-person signature field of a document in a package.               Note all of the input parameters can be changed.Where you wish to retain the current setting submit it in the call unchanged.You can therefore use the same parameters as when you added the input field, or the information as returned by [Get Document Fields](#operation/Documents_GetDocumentFields).The latter can be used when a template was applied or the document was created using the GUI interface.
      */
-    public async inPersonUpdateInPersonAsync(input: UpdateInPersonFieldRequest, packageId: string, documentId: string, abortSignal?: AbortSignalLike): Promise<EmptyResponse> {
+    public async updateInPersonInPerson(input: UpdateInPersonFieldRequest, packageId: string, documentId: string, abortSignal?: AbortSignalLike): Promise<EmptyResponse> {
         const requestPath = `/v4/packages/${packageId}/documents/${documentId}/fields/in_person_signature`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<EmptyResponse>("PUT", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `PUT ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `PUT ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as EmptyResponse;
@@ -3811,13 +3803,13 @@ export class SigninghubClient extends ConnectorClientBase {
      * Add Package
      * @remarks This service API is used to add/create a document package to hold one or more documents. This package can then be used to add documents and recipients in order to start a new workflow.               As previously stated, this call is mandatory if you wish to work with documents. A package must exist before you can upload or add documents to SigningHub..               Even a single document is a part of a package: a package containing one document.               Note: A package can be renamed if required once created.
      */
-    public async packageAddPackageAsync(input: AddDocumentPackageRequest, abortSignal?: AbortSignalLike): Promise<AddPackageResponse> {
+    public async addPackagePackage(input: AddDocumentPackageRequest, abortSignal?: AbortSignalLike): Promise<AddPackageResponse> {
         const requestPath = `/v4/packages`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<AddPackageResponse>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as AddPackageResponse;
@@ -3827,13 +3819,13 @@ export class SigninghubClient extends ConnectorClientBase {
      * Approve Document
      * @remarks Business applications can use this service API to approve a document by a specified user in the order.
      */
-    public async packageApproveAsync(input: ApproveRequest, packageId: string, abortSignal?: AbortSignalLike): Promise<EmptyResponse> {
+    public async approvePackage(input: ApproveRequest, packageId: string, abortSignal?: AbortSignalLike): Promise<EmptyResponse> {
         const requestPath = `/v4/packages/${packageId}/approve`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<EmptyResponse>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as EmptyResponse;
@@ -3843,13 +3835,13 @@ export class SigninghubClient extends ConnectorClientBase {
      * Decline Document
      * @remarks Business applications can use this service API to decline a document by a specified user in the order.
      */
-    public async packageDeclineAsync(input: DeclineRequest, packageId: string, abortSignal?: AbortSignalLike): Promise<EmptyResponse> {
+    public async packageDecline(input: DeclineRequest, packageId: string, abortSignal?: AbortSignalLike): Promise<EmptyResponse> {
         const requestPath = `/v4/packages/${packageId}/decline`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<EmptyResponse>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as EmptyResponse;
@@ -3859,13 +3851,13 @@ export class SigninghubClient extends ConnectorClientBase {
      * Delete Package
      * @remarks Business applications can use this service API to delete a document from the user inbox. The package ID is provided in the resource URL as "{package_id}". If the document status is PENDING, then it is automatically declined as result of delete operation. If the document status is SHARED, then the document is automatically recalled and workflow is stopped before the document is deleted.
      */
-    public async packageDeletePackageAsync(packageIdBulkAction: string, abortSignal?: AbortSignalLike): Promise<EmptyResponse> {
+    public async deletePackagePackage(packageIdBulkAction: string, abortSignal?: AbortSignalLike): Promise<EmptyResponse> {
         const requestPath = `/v4/packages/${packageIdBulkAction}`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<EmptyResponse>("DELETE", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `DELETE ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `DELETE ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as EmptyResponse;
@@ -3875,7 +3867,7 @@ export class SigninghubClient extends ConnectorClientBase {
      * Download Package
      * @remarks Business applications can use this service API to download the document package in binary format.               The package ID is provided in the resource URL.               If the package contains only one document, the download is the binary PDF document.               Alternatively, if the package has more than one document, the download is the binary zip file of all documents.               The x-password and x-otp headers are optional.  They are required if the document owner set them during the workflow creation phase.
      */
-    public async packageDownloadPackageBytesAsync(packageIdBulkAction: string, documentIds?: string, abortSignal?: AbortSignalLike): Promise<PackageDownloadPackageBytesResponse> {
+    public async downloadPackagePackageBytes(packageIdBulkAction: string, documentIds?: string, abortSignal?: AbortSignalLike): Promise<PackageDownloadPackageBytesResponse> {
         const queryParams: string[] = [];
         if (documentIds !== undefined) {
             queryParams.push(`document-ids=${encodeURIComponent(String(documentIds))}`);
@@ -3885,7 +3877,7 @@ export class SigninghubClient extends ConnectorClientBase {
         const httpResponse = await this.httpClient.sendAsync<PackageDownloadPackageBytesResponse>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as PackageDownloadPackageBytesResponse;
@@ -3895,13 +3887,13 @@ export class SigninghubClient extends ConnectorClientBase {
      * Finish Processing
      * @remarks Business applications can use this service API to finish the document processing after signing all the signature fields.  This method is primarily used by native SigningHub mobile apps for iOS and Android, and mobile web use cases.  General business applications employing tight integration into their respective portal do not need to call this method.  However, when using the Sign Document API (and hence the user is not presented with a visual representation of the document they are requested to sign) calling this API is required in order to ensure the respective workflow continues or completes.  For example, once all signatures have been applied using the "blind" Sign Document API call the document will not show as status "Completed" to the owner until this API is invoked.  The document owner will see a status of "In Progress" until this API is called.               Within native SigningHub mobile apps and mobile web use cases, this call is necessary to ensure that each user completes their respective actions with respect to SigningHub.For example, after a signatory has signed a document in SigningHub App, this method is invoked by the application to ensure the workflow continues to process and the next signatory is notified, and the document status is available via the configured call-back URL.
      */
-    public async packageFinishAsync(packageId: string, abortSignal?: AbortSignalLike): Promise<EmptyResponse> {
+    public async packageFinish(packageId: string, abortSignal?: AbortSignalLike): Promise<EmptyResponse> {
         const requestPath = `/v4/packages/${packageId}/finish`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<EmptyResponse>("POST", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as EmptyResponse;
@@ -3911,13 +3903,13 @@ export class SigninghubClient extends ConnectorClientBase {
      * Gatekeeper Approve Document
      * @remarks Business applications can use this service API to gatekeeper approve a document by a specified user in the order.
      */
-    public async packageGatekeeperApproveAsync(input: ApproveRequest, packageId: string, abortSignal?: AbortSignalLike): Promise<EmptyResponse> {
+    public async approvePackageGatekeeper(input: ApproveRequest, packageId: string, abortSignal?: AbortSignalLike): Promise<EmptyResponse> {
         const requestPath = `/v4/packages/${packageId}/gatekeeper/approve`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<EmptyResponse>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as EmptyResponse;
@@ -3927,13 +3919,13 @@ export class SigninghubClient extends ConnectorClientBase {
      * Gatekeeper Decline Document
      * @remarks Business applications can use this service API to gatekeeper decline a document by a specified user in the order.
      */
-    public async packageGatekeeperDeclineAsync(input: DeclineRequest, packageId: string, abortSignal?: AbortSignalLike): Promise<EmptyResponse> {
+    public async packageGatekeeperDecline(input: DeclineRequest, packageId: string, abortSignal?: AbortSignalLike): Promise<EmptyResponse> {
         const requestPath = `/v4/packages/${packageId}/gatekeeper/decline`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<EmptyResponse>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as EmptyResponse;
@@ -3943,7 +3935,7 @@ export class SigninghubClient extends ConnectorClientBase {
      * Get Packages
      * @remarks Business applications can use this service API to get a list of documents filtered by different statuses. Users can divide the records into pages by providing a number of records per page.
      */
-    public async packageGetAllPackagesAsync(documentStatus: string, pageNo: string, recordPerPage: string, packageName?: string, packageId?: string, recipientFrom?: string, recipientTo?: string, documentId?: string, expiry?: string, modifiedFrom?: string, modifiedTo?: string, sizeFrom?: string, sizeTo?: string, certifiedDocuments?: string, formFields?: string, attachments?: string, documentType?: string, sortBy?: string, asc?: string, documentStatuses?: string, ownedBy?: string, smartForm?: string, abortSignal?: AbortSignalLike): Promise<Array<GetPackagesResponse>> {
+    public async getPackageAllPackages(documentStatus: string, pageNo: string, recordPerPage: string, packageName?: string, packageId?: string, recipientFrom?: string, recipientTo?: string, documentId?: string, expiry?: string, modifiedFrom?: string, modifiedTo?: string, sizeFrom?: string, sizeTo?: string, certifiedDocuments?: string, formFields?: string, attachments?: string, documentType?: string, sortBy?: string, asc?: string, documentStatuses?: string, ownedBy?: string, smartForm?: string, abortSignal?: AbortSignalLike): Promise<Array<GetPackagesResponse>> {
         const queryParams: string[] = [];
         if (packageName !== undefined) {
             queryParams.push(`package-name=${encodeURIComponent(String(packageName))}`);
@@ -4007,7 +3999,7 @@ export class SigninghubClient extends ConnectorClientBase {
         const httpResponse = await this.httpClient.sendAsync<Array<GetPackagesResponse>>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as Array<GetPackagesResponse>;
@@ -4017,13 +4009,13 @@ export class SigninghubClient extends ConnectorClientBase {
      * Get Package Details
      * @remarks Business applications can use this service API to get the details of an package. This API can also be used by the business application to perform action on behalf of the enterprise user via "Scope Authentication".
      */
-    public async packageGetPackageDetailsAsync(packageId: string, abortSignal?: AbortSignalLike): Promise<GetPackageDetailsResponse> {
+    public async getPackagePackageDetails(packageId: string, abortSignal?: AbortSignalLike): Promise<GetPackageDetailsResponse> {
         const requestPath = `/v4/packages/${packageId}/details`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<GetPackageDetailsResponse>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as GetPackageDetailsResponse;
@@ -4033,13 +4025,13 @@ export class SigninghubClient extends ConnectorClientBase {
      * Rename Package
      * @remarks This service API is used to rename a document package.               The document package is identified by its unique identifier in the URL of the call.
      */
-    public async packageRenamePackageAsync(input: RenameDocumentPackageRequest, packageIdBulkAction: string, abortSignal?: AbortSignalLike): Promise<EmptyResponse> {
+    public async packageRenamePackage(input: RenameDocumentPackageRequest, packageIdBulkAction: string, abortSignal?: AbortSignalLike): Promise<EmptyResponse> {
         const requestPath = `/v4/packages/${packageIdBulkAction}`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<EmptyResponse>("PUT", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `PUT ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `PUT ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as EmptyResponse;
@@ -4049,13 +4041,13 @@ export class SigninghubClient extends ConnectorClientBase {
      * Submit Document
      * @remarks One of the SigningHub roles is called "Editor".  This allows a recipient to edit input fields on a document, but does not require a signature.  Once completed the recipient submits their changes.  The button used in the GUI is called "Submit".               This is the equivalent operation for an editor to submit their changes via an API call.               Click [SigningHub Roles](http://manuals.ascertia.com/SigningHubv7/default.aspx#pageid=1056) for a description of all available workflow recipient roles.
      */
-    public async packageSubmitAsync(packageId: string, abortSignal?: AbortSignalLike): Promise<EmptyResponse> {
+    public async submitPackage(packageId: string, abortSignal?: AbortSignalLike): Promise<EmptyResponse> {
         const requestPath = `/v4/packages/${packageId}/submit`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<EmptyResponse>("POST", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as EmptyResponse;
@@ -4065,13 +4057,13 @@ export class SigninghubClient extends ConnectorClientBase {
      * Add QR Code
      * @remarks Business applications can use this service API to add a QR Code to a document in a package.
      */
-    public async qraddQRCodeAsync(input: QrCodeRequest, packageId: string, documentId: string, abortSignal?: AbortSignalLike): Promise<AddQrCodeResponse> {
+    public async addQRQRCode(input: QrCodeRequest, packageId: string, documentId: string, abortSignal?: AbortSignalLike): Promise<AddQrCodeResponse> {
         const requestPath = `/v4/packages/${packageId}/documents/${documentId}/fields/qrcode`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<AddQrCodeResponse>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as AddQrCodeResponse;
@@ -4081,13 +4073,13 @@ export class SigninghubClient extends ConnectorClientBase {
      * Update QR Code
      * @remarks Business applications can use this service API to update a QR Code of a document in a package.
      */
-    public async qrupdateQRCodeAsync(input: UpdateQrCodeRequest, packageId: string, documentId: string, abortSignal?: AbortSignalLike): Promise<UpdateQrCodeResponse> {
+    public async updateQRQRCode(input: UpdateQrCodeRequest, packageId: string, documentId: string, abortSignal?: AbortSignalLike): Promise<UpdateQrCodeResponse> {
         const requestPath = `/v4/packages/${packageId}/documents/${documentId}/fields/qrcode`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<UpdateQrCodeResponse>("PUT", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `PUT ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `PUT ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as UpdateQrCodeResponse;
@@ -4097,13 +4089,13 @@ export class SigninghubClient extends ConnectorClientBase {
      * Add RadioBox Field
      * @remarks Business applications can use this service API to add a checkbox to a document in a package.               At least one user must exist in a workflow before fields(input and signature) can be added to the document in this way.The order number corresponds to the recipient in the workflow.Therefore, this number must be equal or less than the total number of users in the workflow.  The below example assigns this new signature field to the first person in the workflow.               See [Add Users to Workflow](#operation/Workflow_WorkflowAddUser) for more information.  Note if you have a document with a template applied, or have applied one using the APIs, then the workflow will already contain users.               If width and height parameters are not provided, a default size of 10x10 will be assigned. If either width or height (or both) is provided, the system will compare these provided values with each other. The larger value between width and height will be assigned to both dimensions.
      */
-    public async radioAddRadioBoxAsync(input: RadioBoxFieldRequest, packageId: string, documentId: string, abortSignal?: AbortSignalLike): Promise<AddFieldResponse> {
+    public async addRadioRadioBox(input: RadioBoxFieldRequest, packageId: string, documentId: string, abortSignal?: AbortSignalLike): Promise<AddFieldResponse> {
         const requestPath = `/v4/packages/${packageId}/documents/${documentId}/fields/radio`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<AddFieldResponse>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as AddFieldResponse;
@@ -4113,13 +4105,13 @@ export class SigninghubClient extends ConnectorClientBase {
      * Update RadioBox Field
      * @remarks Business applications can use this service API to update a radio button of a document in a package.               Note all of the input parameters can be changed.Where you wish to retain the current setting submit it in the call unchanged.You can therefore use the same parameters as when you added the input field, or the information as returned by [Get Document Fields](#operation/Documents_GetDocumentFields).The latter can be used when a template was applied or the document was created using the GUI interface.               It's width and height cannot be updated. They will remain the same as when they were added.
      */
-    public async radioUpdateRadioBoxAsync(input: UpdateRadioBoxFieldRequest, packageId: string, documentId: string, abortSignal?: AbortSignalLike): Promise<EmptyResponse> {
+    public async updateRadioRadioBox(input: UpdateRadioBoxFieldRequest, packageId: string, documentId: string, abortSignal?: AbortSignalLike): Promise<EmptyResponse> {
         const requestPath = `/v4/packages/${packageId}/documents/${documentId}/fields/radio`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<EmptyResponse>("PUT", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `PUT ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `PUT ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as EmptyResponse;
@@ -4129,7 +4121,7 @@ export class SigninghubClient extends ConnectorClientBase {
      * Get Templates
      * @remarks Business applications can use this service API to get list of templates for the current user.               It is possible to search based upon the criterion supplied under the "x-search-text" header.Furthermore, it is possible to search a user's personal templates or the enterprise templates as allowed against their user role by their enterprise admin.
      */
-    public async settingsGetTemplatesAsync(recordPerPage: string, pageNo: string, sortBy?: string, asc?: string, abortSignal?: AbortSignalLike): Promise<Array<TemplateResponse>> {
+    public async getSettingTemplates(recordPerPage: string, pageNo: string, sortBy?: string, asc?: string, abortSignal?: AbortSignalLike): Promise<Array<TemplateResponse>> {
         const queryParams: string[] = [];
         if (sortBy !== undefined) {
             queryParams.push(`sort-by=${encodeURIComponent(String(sortBy))}`);
@@ -4142,7 +4134,7 @@ export class SigninghubClient extends ConnectorClientBase {
         const httpResponse = await this.httpClient.sendAsync<Array<TemplateResponse>>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as Array<TemplateResponse>;
@@ -4152,13 +4144,13 @@ export class SigninghubClient extends ConnectorClientBase {
      * Add Digital Signature Field
      * @remarks Business applications can use this service API to add a digital signature field to a document in a package.               At least one user must exist in a workflow before fields(input and signature) can be added to the document in this way.The order number corresponds to the recipient in the workflow.Therefore, this number must be equal or less than the total number of users in the workflow.  The below example assigns this new signature field to the first person in the workflow.               See [Add Users to Workflow](#operation/Workflow_WorkflowAddUser) for more information.Note if you have a document with a template applied, or have applied one using the APIs, then the workflow will already contain users.
      */
-    public async signatureAddSignatureAsync(input: DigitalSignatureFieldRequest, packageId: string, documentId: string, abortSignal?: AbortSignalLike): Promise<SignatureFieldResponse> {
+    public async addSignatureSignature(input: DigitalSignatureFieldRequest, packageId: string, documentId: string, abortSignal?: AbortSignalLike): Promise<SignatureFieldResponse> {
         const requestPath = `/v4/packages/${packageId}/documents/${documentId}/fields/signature`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<SignatureFieldResponse>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as SignatureFieldResponse;
@@ -4168,13 +4160,13 @@ export class SigninghubClient extends ConnectorClientBase {
      * Update Digital Signature Field
      * @remarks Business applications can use this service API to update a digital signature field of a document in a package.               Note all of the input parameters can be changed.Where you wish to retain the current setting submit it in the call unchanged.You can therefore use the same parameters as when you added the input field, or the information as returned by [Get Document Fields](#operation/Documents_GetDocumentFields).The latter can be used when a template was applied or the document was created using the GUI interface.
      */
-    public async signatureUpdateSignatureAsync(input: UpdateDigitalSignatureFieldRequest, packageId: string, documentId: string, abortSignal?: AbortSignalLike): Promise<EmptyResponse> {
+    public async updateSignatureSignature(input: UpdateDigitalSignatureFieldRequest, packageId: string, documentId: string, abortSignal?: AbortSignalLike): Promise<EmptyResponse> {
         const requestPath = `/v4/packages/${packageId}/documents/${documentId}/fields/signature`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<EmptyResponse>("PUT", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `PUT ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `PUT ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as EmptyResponse;
@@ -4184,13 +4176,13 @@ export class SigninghubClient extends ConnectorClientBase {
      * Bulk Sign Packages
      * @remarks Business applications can use this API to sign/share/sign and share multiple documents (both electronic and digital) without displaying the documents to the end user. This API needs information from the business application about document packages and the details of signatures, in-person and initials fields. On the successful completion of bulk signing transaction, the API will return the statuses and transaction ids of the document packages.               Unlike the Sign Document API, this API not only signs a document package but also marks it as approved and reviewed based on whether the recipient is a Signer, Editor or Reviewer. Any document package for which the status returns as COMPLETED has been signed, approved or reviewed by this API.               Bulk Signing works with all the signing-time authentication methods.               If SIGN is passed as bulk_action and package is in Draft state, Sign and Share will be performed automatically.               You must call this API after the [Pre Bulk Sign Documents](#operation/V4_Documents_ValidateBulkSignPackages) API.               In case you need to make changes in any of the document before signing, the [Fill Form Fields](#operation/V4_Documents_FillFormFields) API should be called before calling the Pre Bulk Sign Document API.  Remember, any mandatory input fields on a document require completing before this API will successfully complete; whereas, the auto-populated fields (like Name, Email, Date, Job Title, etc.) will be automatically filled.               The signatory is identified by the access token presented in the call.  Therefore, [authentication](#tag/Authentication) of the signatory is required prior to making this call.  You cannot authenticate as an Enterprise Admin with the scope variable, and sign a document on behalf of a user.  The access token must be issued to the signatory as a result of direct authentication.               Once document is signed, the verification response can be seen from the [Bulk Signing Status](#operation/V4_Documents_BulkSignStatus) API.               First or Second Factor OTP Usage for Authentication               In case OTP authentication is turned on for the server side signing operation, the client applications will need to generate an OTP for the mobile number using the [Bulk Sign Authentication via OTP](#operation/V4_Documents_SendsOTP) API call.  Respective business applications must retrieve the OTP from the use and submit it when making the API call.  This is done using the "x-otp" header in the request.
      */
-    public async signingBulkSignDocumentsAsync(input: BulkSignRequest, packageIdBulkAction: string, abortSignal?: AbortSignalLike): Promise<BulkSignResponse> {
+    public async signingBulkSignDocuments(input: BulkSignRequest, packageIdBulkAction: string, abortSignal?: AbortSignalLike): Promise<BulkSignResponse> {
         const requestPath = `/v4/packages/${packageIdBulkAction}`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<BulkSignResponse>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as BulkSignResponse;
@@ -4200,13 +4192,13 @@ export class SigninghubClient extends ConnectorClientBase {
      * Bulk Signing Status
      * @remarks Business applications can use this API to get the status of a specific bulk signing transaction along with the details of document packages that were processed by the [Bulk Signing Packages](#operation/V4_Documents_BulkSignDocuments) API.               You must call this API after the Bulk Signing Packages API.               The signatory is identified by the access token presented in the call.  Therefore, [authentication](#tag/Authentication) of the signatory is required prior to making this call.  You cannot authenticate as an Enterprise Admin with the scope variable, and sign a document on behalf of a user.  The access token must be issued to the signatory as a result of direct authentication.               For RAS signing, the ACTION property will be REMOTE_AUTHORIZATION_REQURIED and the STATUS property will be PENDING, indicating that the request needs to be authorized using the mobile device. If the signing process fails in some document due to different levels of assurance configured and the user wants to re-initiate the signing process to complete the signing process on failed documents, the ACTION property will be REINITIATE_SIGNING_PROCESS, and the STATUS property will be PENDING.
      */
-    public async signingBulkSignStatusAsync(input: BulkSignStatusRequest, bulkAction: string, abortSignal?: AbortSignalLike): Promise<BulkSignStatusResponse> {
+    public async signingBulkSignStatus(input: BulkSignStatusRequest, bulkAction: string, abortSignal?: AbortSignalLike): Promise<BulkSignStatusResponse> {
         const requestPath = `/v4/packages/${bulkAction}/status`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<BulkSignStatusResponse>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as BulkSignStatusResponse;
@@ -4216,13 +4208,13 @@ export class SigninghubClient extends ConnectorClientBase {
      * Sign Document
      * @remarks Business applications can use this service API to sign a document (both electronic and digital) without displaying the document to the end user using SigningHub.  For example, a business application may have another method to display the document to the user, and only the signing functionality of SigningHub is required, or for bulk operations it may be justified to sign without requiring the user to view and approve every document individually.  If there are changes to be saved in the document before signing, [Fill Form Fields](#operation/Documents_FillFormFields) API should be called before calling the Sign Document API.  Note any mandatory input fields on a document require completing before this API will successfully complete.               The signatory is identified by the access token presented in the call.Therefore, [authentication](#tag/Authentication) of the signatory is required prior to making this call.You cannot authenticate as an Enterprise Admin with the scope variable, and sign a document on behalf of a user.The access token must be issued to the signatory as a result of direct authentication.               When this call completes it is important that if the signatory was the last signer for a document that the [Finish Document](#operation/Documents_Finish) API call is invoked.The reason is because without calling that API the document will remain in a status of "In Progress" to the document owner.  Once the API has been called, the status will change to "Completed" for the document owner.               Once document is signed, the verification response can be seen from [Get Document Verification](#operation/Documents_GetDocumentPackageVerification) API.               First or Second Factor OTP Usage for Authentication               If OTP authentication is turned on for the server side signing operation, client applications will need to generate a OTP for the mobile number using [Signer Authentication via OTP](#operation/Documents_SendOtpForField) API call.  Respective business applications must retrieve the OTP from the use and submit it when making the API call.  This is done using the "x-otp" header in the request.
      */
-    public async signingSignDocumentAsync(input: SignDocumentRequest, packageId: string, documentId: string, abortSignal?: AbortSignalLike): Promise<SignDocumentResponse> {
+    public async signingSignDocument(input: SignDocumentRequest, packageId: string, documentId: string, abortSignal?: AbortSignalLike): Promise<SignDocumentResponse> {
         const requestPath = `/v4/packages/${packageId}/documents/${documentId}/sign`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<SignDocumentResponse>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as SignDocumentResponse;
@@ -4232,7 +4224,7 @@ export class SigninghubClient extends ConnectorClientBase {
      * Get Enterprise Templates
      * @remarks Business applications can use this service API to get list of enterprise templates of the current user. This means the enterprise administrator or the enterprise user if the "scope" variable was used in the authentication request.               It is possible to search based upon the criterion supplied under the "x-search-text" header.
      */
-    public async templateGetEnterpriseTemplatesAsync(recordPerPage: string, pageNo: string, sortBy?: string, asc?: string, id?: string, abortSignal?: AbortSignalLike): Promise<Array<EnterpriseTemplateResponse>> {
+    public async getTemplateEnterpriseTemplates(recordPerPage: string, pageNo: string, sortBy?: string, asc?: string, id?: string, abortSignal?: AbortSignalLike): Promise<Array<EnterpriseTemplateResponse>> {
         const queryParams: string[] = [];
         if (sortBy !== undefined) {
             queryParams.push(`sort-by=${encodeURIComponent(String(sortBy))}`);
@@ -4248,7 +4240,7 @@ export class SigninghubClient extends ConnectorClientBase {
         const httpResponse = await this.httpClient.sendAsync<Array<EnterpriseTemplateResponse>>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as Array<EnterpriseTemplateResponse>;
@@ -4258,13 +4250,13 @@ export class SigninghubClient extends ConnectorClientBase {
      * Add TextBox Field
      * @remarks Business applications can use this service API to add a text input field to a document in a package.               At least one user must exist in a workflow before fields(input and signature) can be added to the document in this way.The order number corresponds to the recipient in the workflow.Therefore, this number must be equal or less than the total number of users in the workflow.  The below example assigns this new signature field to the first person in the workflow.               See [Add Users to Workflow](#operation/Workflow_WorkflowAddUser) for more information.  Note if you have a document with a template applied, or have applied one using the APIs, then the workflow will already contain users.
      */
-    public async textBoxAddTextBoxAsync(input: TextBoxFieldRequest, packageId: string, documentId: string, abortSignal?: AbortSignalLike): Promise<AddFieldResponse> {
+    public async addTextBoxTextBox(input: TextBoxFieldRequest, packageId: string, documentId: string, abortSignal?: AbortSignalLike): Promise<AddFieldResponse> {
         const requestPath = `/v4/packages/${packageId}/documents/${documentId}/fields/text`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<AddFieldResponse>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as AddFieldResponse;
@@ -4274,13 +4266,13 @@ export class SigninghubClient extends ConnectorClientBase {
      * Update TextBox Field
      * @remarks Business applications can use this service API to update a text box of a document in a package.               Note all of the input parameters can be changed.Where you wish to retain the current setting submit it in the call unchanged.             You can therefore use the same parameters as when you added the input field, or the information as returned by [Get Document Fields](#operation/Documents_GetDocumentFields).             The latter can be used when a template was applied or the document was created using the GUI interface.
      */
-    public async textBoxUpdateTextBoxAsync(input: UpdateTextBoxFieldRequest, packageId: string, documentId: string, abortSignal?: AbortSignalLike): Promise<EmptyResponse> {
+    public async updateTextBoxTextBox(input: UpdateTextBoxFieldRequest, packageId: string, documentId: string, abortSignal?: AbortSignalLike): Promise<EmptyResponse> {
         const requestPath = `/v4/packages/${packageId}/documents/${documentId}/fields/text`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<EmptyResponse>("PUT", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `PUT ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `PUT ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as EmptyResponse;
@@ -4290,13 +4282,13 @@ export class SigninghubClient extends ConnectorClientBase {
      * Apply Workflow Template
      * @remarks Business applications can use this service API to apply a workflow template to a document. The document ID on which template has to be applied is provided in the resource URL. When document ID is set to 0 then template will be applied to to all of the doucments in a pacakge.               While applying the template it is important to remember these two important points:               Point 1 - If the template being applied is created using a PDF which already contained form fields then ensure that the document on which this template is now being applied must contain these form fields in advance and SigningHub will NOT create those form fields via the template rather only apply the form data and assign to the respective users.               Point 2 - If the template being applied is created where form fields are manually added (hence not present in the PDF originally) via SigningHub e.g. signature field, initial, in-person signature, check boxes, radio buttons, text fields etc. then on applying such a template, these form fields will be created on the target document even if these form fields were already present in the document.
      */
-    public async workflowApplyTemplateAsync(input: ApplyTemplateRequest, packageId: string, documentId: string, abortSignal?: AbortSignalLike): Promise<DocumentDetailsResponse> {
+    public async workflowApplyTemplate(input: ApplyTemplateRequest, packageId: string, documentId: string, abortSignal?: AbortSignalLike): Promise<DocumentDetailsResponse> {
         const requestPath = `/v4/packages/${packageId}/documents/${documentId}/template`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<DocumentDetailsResponse>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as DocumentDetailsResponse;
@@ -4306,13 +4298,13 @@ export class SigninghubClient extends ConnectorClientBase {
      * Get Process Evidence Report
      * @remarks Business applications can use this service API to download the workflow process evidence report of a document.
      */
-    public async workflowEvidenceReportDownloadBytesAsync(packageId: string, abortSignal?: AbortSignalLike): Promise<WorkflowEvidenceReportDownloadBytesResponse> {
+    public async downloadWorkflowEvidenceReportBytes(packageId: string, abortSignal?: AbortSignalLike): Promise<WorkflowEvidenceReportDownloadBytesResponse> {
         const requestPath = `/v4/packages/${packageId}/report`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<WorkflowEvidenceReportDownloadBytesResponse>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as WorkflowEvidenceReportDownloadBytesResponse;
@@ -4322,13 +4314,13 @@ export class SigninghubClient extends ConnectorClientBase {
      * Get Workflow Details
      * @remarks Business applications can use this service API to get workflow details for the package.
      */
-    public async workflowGetWorkflowDetailAsync(packageId: string, abortSignal?: AbortSignalLike): Promise<WorkflowDetailsResponse> {
+    public async getWorkflowWorkflowDetail(packageId: string, abortSignal?: AbortSignalLike): Promise<WorkflowDetailsResponse> {
         const requestPath = `/v4/packages/${packageId}/workflow`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<WorkflowDetailsResponse>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as WorkflowDetailsResponse;
@@ -4338,13 +4330,13 @@ export class SigninghubClient extends ConnectorClientBase {
      * Get Workflow History
      * @remarks Business applications can utilize this service API to retrieve the list of actions performed on a document. The package ID is provided in the resource URL. The search field (x-search-text header) is intended for email, document name, action, infokey, and infovalue.
      */
-    public async workflowGetWorkflowHistoryAsync(packageId: string, pageNo: string, recordsPerPage: string, abortSignal?: AbortSignalLike): Promise<WorkflowHistoryResponse> {
+    public async getWorkflowWorkflowHistory(packageId: string, pageNo: string, recordsPerPage: string, abortSignal?: AbortSignalLike): Promise<WorkflowHistoryResponse> {
         const requestPath = `/v4/packages/${packageId}/log/${pageNo}/${recordsPerPage}`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<WorkflowHistoryResponse>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as WorkflowHistoryResponse;
@@ -4354,13 +4346,13 @@ export class SigninghubClient extends ConnectorClientBase {
      * Get Workflow Reminder
      * @remarks Business applications can use this service API to update the reminders for the recipients that has already been added to a workflow. Normally this call is useful after a template has been applied to a document and business applications want to override the reminders settings within the workflow. The ID of the workflow document is provided in the resource URL, and the workflow recipient is identified by the order at which it is added to the workflow.
      */
-    public async workflowGetWorkflowReminderAsync(packageId: string, order: string, abortSignal?: AbortSignalLike): Promise<ReminderResponse> {
+    public async getWorkflowWorkflowReminder(packageId: string, order: string, abortSignal?: AbortSignalLike): Promise<ReminderResponse> {
         const requestPath = `/v4/packages/${packageId}/workflow/${order}/reminders`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<ReminderResponse>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as ReminderResponse;
@@ -4370,13 +4362,13 @@ export class SigninghubClient extends ConnectorClientBase {
      * Get Workflow Users
      * @remarks Business applications can use this service API to get workflow details for the package.
      */
-    public async workflowGetWorkflowUsersAsync(packageId: string, abortSignal?: AbortSignalLike): Promise<Array<WorkflowRecipient>> {
+    public async getWorkflowWorkflowUsers(packageId: string, abortSignal?: AbortSignalLike): Promise<Array<WorkflowRecipient>> {
         const requestPath = `/v4/packages/${packageId}/workflow/users`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<Array<WorkflowRecipient>>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as Array<WorkflowRecipient>;
@@ -4386,13 +4378,13 @@ export class SigninghubClient extends ConnectorClientBase {
      * Complete Workflow in the Middle (Terminate Workflow)
      * @remarks Business applications can mark the workflow completed even in the middle of the workflow. Use this service API to change the status of the workflow to completed. If there are recipients who have not signed the document yet. Their signature will not be required any more and they will not be able to see the document in their inbox any further.             Bearer token should belong to document owner or enterprise admin can use scope variable to get the access token on behalf of document owner to perform this action.
      */
-    public async workflowMarkWorkflowCompletedAsync(packageId: string, abortSignal?: AbortSignalLike): Promise<EmptyResponse> {
+    public async workflowMarkWorkflowCompleted(packageId: string, abortSignal?: AbortSignalLike): Promise<EmptyResponse> {
         const requestPath = `/v4/packages/${packageId}/complete`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<EmptyResponse>("POST", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as EmptyResponse;
@@ -4402,13 +4394,13 @@ export class SigninghubClient extends ConnectorClientBase {
      * Get Workflow User Permissions
      * @remarks Business applications can use this service API to get document permissions for a recipient. Recipient is identified by the order in the workflow. The ID of the package is provided in the resource URL.
      */
-    public async workflowPermissionGetWorkflowPermissionsAsync(packageId: string, order: string, abortSignal?: AbortSignalLike): Promise<WorkflowPermissionResponse> {
+    public async getWorkflowPermissionWorkflowPermissions(packageId: string, order: string, abortSignal?: AbortSignalLike): Promise<WorkflowPermissionResponse> {
         const requestPath = `/v4/packages/${packageId}/workflow/${order}/permissions`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<WorkflowPermissionResponse>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as WorkflowPermissionResponse;
@@ -4418,13 +4410,13 @@ export class SigninghubClient extends ConnectorClientBase {
      * Update Workflow User Permissions
      * @remarks Business applications can use this service API to update the workflow permissions for a user that has already been added to a workflow. Normally this call is useful after a template has been applied to a document and business applications want to override the permissions within the workflow. The ID of the document package is provided in the resource URL, and the workflow user is identified by the order at which it is added to the workflow.
      */
-    public async workflowPermissionUpdateWorkflowPermissionsAsync(input: WorkflowPermissionsUpdateRequest, packageId: string, order: string, abortSignal?: AbortSignalLike): Promise<EmptyResponse> {
+    public async updateWorkflowPermissionWorkflowPermissions(input: WorkflowPermissionsUpdateRequest, packageId: string, order: string, abortSignal?: AbortSignalLike): Promise<EmptyResponse> {
         const requestPath = `/v4/packages/${packageId}/workflow/${order}/permissions`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<EmptyResponse>("PUT", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `PUT ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `PUT ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as EmptyResponse;
@@ -4434,13 +4426,13 @@ export class SigninghubClient extends ConnectorClientBase {
      * Recall Document
      * @remarks Business applications can use this service API to stop a workflow in progress. The document ID is provided in the resource URL. After recall the document status automatically changes to “DRAFT”.
      */
-    public async workflowRecallWorkflowAsync(packageId: string, abortSignal?: AbortSignalLike): Promise<EmptyResponse> {
+    public async workflowRecallWorkflow(packageId: string, abortSignal?: AbortSignalLike): Promise<EmptyResponse> {
         const requestPath = `/v4/packages/${packageId}/workflow`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<EmptyResponse>("DELETE", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `DELETE ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `DELETE ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as EmptyResponse;
@@ -4450,13 +4442,13 @@ export class SigninghubClient extends ConnectorClientBase {
      * Share Document Package
      * @remarks Business applications can use this service API to share a document package with the signers and start a new workflow. The document should already have been prepared by applying a template and optionally updating the users and actions defined in template. The package ID to be shared is provided in the resource URL.
      */
-    public async workflowStartWorkflowAsync(packageId: string, abortSignal?: AbortSignalLike): Promise<Array<StartWorkflowResponse>> {
+    public async startWorkflowWorkflow(packageId: string, abortSignal?: AbortSignalLike): Promise<Array<StartWorkflowResponse>> {
         const requestPath = `/v4/packages/${packageId}/workflow`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<Array<StartWorkflowResponse>>("POST", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as Array<StartWorkflowResponse>;
@@ -4466,13 +4458,13 @@ export class SigninghubClient extends ConnectorClientBase {
      * Update Workflow Details
      * @remarks Business applications can use this service API to update the workflow details. Normally this call is useful after a template has been applied to a document, but business applications wants to override the certify permission or post processing details. The package ID is provided in the resource URL.
      */
-    public async workflowUpdateWorkflowAsync(input: WorkflowDetailUpdateRequest, packageId: string, abortSignal?: AbortSignalLike): Promise<EmptyResponse> {
+    public async updateWorkflowWorkflow(input: WorkflowDetailUpdateRequest, packageId: string, abortSignal?: AbortSignalLike): Promise<EmptyResponse> {
         const requestPath = `/v4/packages/${packageId}/workflow`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<EmptyResponse>("PUT", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `PUT ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `PUT ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as EmptyResponse;
@@ -4482,13 +4474,13 @@ export class SigninghubClient extends ConnectorClientBase {
      * Update Post Processing
      * @remarks Business applications can use this service API to add placeholder to a workflow a document in a package.
      */
-    public async workflowUpdateWorkflowPostProcessAsync(input: PostProcessUpdateRequest, packageId: string, abortSignal?: AbortSignalLike): Promise<EmptyResponse> {
+    public async updateWorkflowWorkflowPostProcess(input: PostProcessUpdateRequest, packageId: string, abortSignal?: AbortSignalLike): Promise<EmptyResponse> {
         const requestPath = `/v4/packages/${packageId}/workflow/post_process`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<EmptyResponse>("PUT", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `PUT ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `PUT ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as EmptyResponse;
@@ -4498,13 +4490,13 @@ export class SigninghubClient extends ConnectorClientBase {
      * Update Workflow Reminders
      * @remarks Business applications can use this service API to update the workflow reminders for a recipient that has already been added to a workflow. Normally this call is useful after a template has been applied to a document and business applications want to override the reminders settings within the workflow. The ID of the workflow document is provided in the resource URL, and the workflow recipient is identified by the order at which it is added to the workflow.
      */
-    public async workflowUpdateWorkflowReminderAsync(input: UpdateReminderRequest, packageId: string, order: string, abortSignal?: AbortSignalLike): Promise<EmptyResponse> {
+    public async updateWorkflowWorkflowReminder(input: UpdateReminderRequest, packageId: string, order: string, abortSignal?: AbortSignalLike): Promise<EmptyResponse> {
         const requestPath = `/v4/packages/${packageId}/workflow/${order}/reminders`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<EmptyResponse>("PUT", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `PUT ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `PUT ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as EmptyResponse;
@@ -4514,13 +4506,13 @@ export class SigninghubClient extends ConnectorClientBase {
      * Add Groups to Workflow
      * @remarks Business applications can use this service API to add groups as a recipient to a workflow.  A SigningHub group means any member of the group can perform the action, i.e. sign, on behalf of all members of the group.               Note the group will be added as the last user/group in the workflow.Hence further work may be required to remove a current user/group, already present in the workflow. While XML type document preparation, only supported role types are "SIGNER", "REVIEWER" and "CARBON_COPY"
      */
-    public async workflowWorkflowAddGroupAsync(input: WorkflowWorkflowAddGroupInput, packageId: string, abortSignal?: AbortSignalLike): Promise<Array<CollaboratorGroupResponse>> {
+    public async addWorkflowWorkflowGroup(input: WorkflowWorkflowAddGroupInput, packageId: string, abortSignal?: AbortSignalLike): Promise<Array<CollaboratorGroupResponse>> {
         const requestPath = `/v4/packages/${packageId}/workflow/groups`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<Array<CollaboratorGroupResponse>>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as Array<CollaboratorGroupResponse>;
@@ -4530,13 +4522,13 @@ export class SigninghubClient extends ConnectorClientBase {
      * Add Placeholder to Workflow
      * @remarks Business applications can use this service API to add placeholder to a workflow in a package.  A place holder is required when you do not know the identity of the intended recipient in a workflow.               Note the placeholder will be added as the last user in the workflow.Hence further work may be required to remove a current user/group, already present in the workflow.               Adding a place holder allows you to proceed and add signature and/or input fields to the document, which can then be assigned to individual users at a later stage. While XML type document preparation, only supported role types are "SIGNER", "REVIEWER" and "CARBON_COPY"
      */
-    public async workflowWorkflowAddPlaceholderAsync(input: WorkflowWorkflowAddPlaceholderInput, packageId: string, abortSignal?: AbortSignalLike): Promise<Array<CollaboratorPlaceholderResponse>> {
+    public async addWorkflowWorkflowPlaceholder(input: WorkflowWorkflowAddPlaceholderInput, packageId: string, abortSignal?: AbortSignalLike): Promise<Array<CollaboratorPlaceholderResponse>> {
         const requestPath = `/v4/packages/${packageId}/workflow/placeholder`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<Array<CollaboratorPlaceholderResponse>>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as Array<CollaboratorPlaceholderResponse>;
@@ -4546,13 +4538,13 @@ export class SigninghubClient extends ConnectorClientBase {
      * Add Users to Workflow
      * @remarks Business applications can use this service API to add recipients to a workflow. This call will only add a recipient to the workflow.  That is, no fields currently on the document will be automatically assigned to the new recipient(s), nor will this create any new fields.               Note the recipient(s) will be added as the last person in the workflow.Hence further work may be required to remove a current recipient(s) already present in the workflow.               At least one user must exist in a workflow before fields (input and signature) can be added to the document.               Note the input accepts one or more users in a single call.               In this specific call the user is a known natural person.  However, the same rules apply to Groups and Placeholders.  In either of these cases the  recipient becomes a Group of users whereby any member of the group can sign the document, or a Placeholder.The latter case is used when you do not know the identity of the intended signatory.               Note SigningHub workflow signing order starts at "1".  Hence, adding a user to workflow with no current recipient(s) begins a new signing order count.The "signing_order" parameter is mandatory if the workflow type is "custom".               Important, using this API call may affect the workflow type.If there are current recipients in a sequential workflow and a new one is added with the same signing order as a current recipient, then that part of the workflow changes automatically from sequential to parallel.Hence, the workflow overall is now of type custom as opposed to purely sequential.  Adding a recipient with the same signing order as two or parallel recipients does not change the workflow.There are merely, three or more recipients at that particular point of the workflow; all in parallel order.               Note, while XML type document preparation, only supported role types are "SIGNER", "REVIEWER" and "CARBON_COPY"
      */
-    public async workflowWorkflowAddUserAsync(input: WorkflowWorkflowAddUserInput, packageId: string, abortSignal?: AbortSignalLike): Promise<Array<CollaboratorResponse>> {
+    public async addWorkflowWorkflowUser(input: WorkflowWorkflowAddUserInput, packageId: string, abortSignal?: AbortSignalLike): Promise<Array<CollaboratorResponse>> {
         const requestPath = `/v4/packages/${packageId}/workflow/users`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<Array<CollaboratorResponse>>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as Array<CollaboratorResponse>;
@@ -4562,13 +4554,13 @@ export class SigninghubClient extends ConnectorClientBase {
      * Delete Workflow User
      * @remarks Business applications can use this service API to delete workflow recipient.
      */
-    public async workflowWorkflowDeleteUserAsync(packageId: string, order: string, abortSignal?: AbortSignalLike): Promise<EmptyResponse> {
+    public async deleteWorkflowWorkflowUser(packageId: string, order: string, abortSignal?: AbortSignalLike): Promise<EmptyResponse> {
         const requestPath = `/v4/packages/${packageId}/workflow/${order}`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<EmptyResponse>("DELETE", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `DELETE ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `DELETE ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as EmptyResponse;
@@ -4578,13 +4570,13 @@ export class SigninghubClient extends ConnectorClientBase {
      * Update Placeholder
      * @remarks Business applications can use this service API to update a placeholder in the workflow.  Normally this call is useful after a template has been applied to a document and business applications wants to override the details of a specific place holder within the workflow. The ID of the workflow document is provided in the resource URL, and the workflow place holder is identified by the order at which it is added to the workflow. While XML type document preparation, only supported role types are "SIGNER", "REVIEWER" and "CARBON_COPY"
      */
-    public async workflowWorkflowUpdatePlaceholderAsync(input: WorkflowPlaceholderUpdateRequest, packageId: string, order: string, abortSignal?: AbortSignalLike): Promise<EmptyResponse> {
+    public async updateWorkflowWorkflowPlaceholder(input: WorkflowPlaceholderUpdateRequest, packageId: string, order: string, abortSignal?: AbortSignalLike): Promise<EmptyResponse> {
         const requestPath = `/v4/packages/${packageId}/workflow/${order}/placeholder`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<EmptyResponse>("PUT", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `PUT ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `PUT ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as EmptyResponse;
@@ -4594,13 +4586,13 @@ export class SigninghubClient extends ConnectorClientBase {
      * Update Workflow User
      * @remarks Business applications can use this service API to update the details of a recipient, group or place holder who has already been added to a workflow. Normally this call is useful after a template has been applied to a document and business applications wants to override the details of a specific user within the workflow. The ID of the workflow document is provided in the resource URL, and the workflow recipient is identified by the order at which it is added to the workflow. Note, while XML type document preparation, only supports role types "SIGNER", "REVIEWER" and "CARBON_COPY".
      */
-    public async workflowWorkflowUserUpdateAsync(input: WorkflowUserUpdateRequest, packageId: string, order: string, abortSignal?: AbortSignalLike): Promise<UpdateCollaboratorResponse> {
+    public async updateWorkflowWorkflowUser(input: WorkflowUserUpdateRequest, packageId: string, order: string, abortSignal?: AbortSignalLike): Promise<UpdateCollaboratorResponse> {
         const requestPath = `/v4/packages/${packageId}/workflow/${order}/user`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<UpdateCollaboratorResponse>("PUT", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `PUT ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `PUT ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as UpdateCollaboratorResponse;
@@ -4610,13 +4602,13 @@ export class SigninghubClient extends ConnectorClientBase {
      * Update Workflow Users Order
      * @remarks Business applications can use this service API to update order of the recipient in the workflow.
      */
-    public async workflowWorkflowUserUpdateOrderAsync(input: WorkflowUserReorderRequest, packageId: string, order: string, abortSignal?: AbortSignalLike): Promise<EmptyResponse> {
+    public async updateWorkflowWorkflowUserOrder(input: WorkflowUserReorderRequest, packageId: string, order: string, abortSignal?: AbortSignalLike): Promise<EmptyResponse> {
         const requestPath = `/v4/packages/${packageId}/workflow/${order}/reorder`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<EmptyResponse>("PUT", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `PUT ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `PUT ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as EmptyResponse;
@@ -4626,13 +4618,13 @@ export class SigninghubClient extends ConnectorClientBase {
      * Delete Shared Space
      * @remarks Business applications can use this service API to delete shared space. The availability of deleting shared spaces is subject to the assigned enterprise user role. To allow this provision Enterprise Admin will enable the ‘Manage Shared Space’ option in Roles>Document Settings.
      */
-    public async workSpaceDeleteSharedSpaceAsync(id: string, abortSignal?: AbortSignalLike): Promise<EmptyResponse> {
+    public async deleteWorkSpaceSharedSpace(id: string, abortSignal?: AbortSignalLike): Promise<EmptyResponse> {
         const requestPath = `/v4/shared_spaces/${id}`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<EmptyResponse>("DELETE", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `DELETE ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `DELETE ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as EmptyResponse;
@@ -4642,13 +4634,13 @@ export class SigninghubClient extends ConnectorClientBase {
      * Get Shared Space
      * @remarks Business applications can use this service API to get a specific shared space. This API returns information about shared space, its owner and collaborator.
      */
-    public async workSpaceGetSharedSpaceAsync(id: string, abortSignal?: AbortSignalLike): Promise<WorkSpaceResponse> {
+    public async getWorkSpaceSharedSpace(id: string, abortSignal?: AbortSignalLike): Promise<WorkSpaceResponse> {
         const requestPath = `/v4/shared_spaces/${id}`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<WorkSpaceResponse>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as WorkSpaceResponse;
@@ -4658,13 +4650,13 @@ export class SigninghubClient extends ConnectorClientBase {
      * Update Shared Space
      * @remarks Business applications can use this service API to update shared space. The availability of updating shared spaces is subject to the assigned enterprise user role. To allow this provision Enterprise Admin will enable the ‘Manage Shared Space’ option in Roles>Document Settings.
      */
-    public async workSpaceUpdateSharedSpaceAsync(input: UpdateWorkSpaceRequest, id: string, abortSignal?: AbortSignalLike): Promise<EmptyResponse> {
+    public async updateWorkSpaceSharedSpace(input: UpdateWorkSpaceRequest, id: string, abortSignal?: AbortSignalLike): Promise<EmptyResponse> {
         const requestPath = `/v4/shared_spaces/${id}`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<EmptyResponse>("PUT", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `PUT ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `PUT ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as EmptyResponse;

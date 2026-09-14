@@ -16,7 +16,7 @@
 
 "use strict";
 
-const { ManagedIdentityTokenProvider, ConnectorException } = require("@azure/connectors");
+const { ManagedIdentityTokenProvider, ConnectorError } = require("@azure/connectors");
 const { PipedriveClient } = require("@azure/connectors/generated/PipedriveExtensions");
 
 const CONNECTION_URL = process.env.PIPEDRIVE_CONNECTION_URL ?? "";
@@ -38,10 +38,10 @@ async function main() {
 
     // Example 1: Retrieve a deal by id.
     try {
-        const deal = await client.getDealAsync(DEAL_ID);
+        const deal = await client.getDeal(DEAL_ID);
         console.log("Deal:", JSON.stringify(deal, null, 2));
     } catch (error) {
-        if (error instanceof ConnectorException) {
+        if (error instanceof ConnectorError) {
             console.log(`Connector error (${error.statusCode}): ${error.message}`);
         } else {
             throw error;

@@ -3,8 +3,9 @@
 
 import type { AbortSignalLike } from "@azure/abort-controller";
 import type { TokenCredential } from "@azure/core-auth";
+import type { PagedAsyncIterableIterator } from "@azure/core-paging";
 import { ConnectorClientBase } from "../azureConnectors/clientBase.ts";
-import { ConnectorException } from "../azureConnectors/connectorException.ts";
+import { ConnectorError } from "../azureConnectors/connectorError.ts";
 import { ConnectorClientOptions } from "../azureConnectors/options.ts";
 
 // #region Types
@@ -16,6 +17,8 @@ export interface ListTimesOffResponse {
     "@odata.context"?: string;
     /** List of Time Off instances */
     value?: Array<TimeOffResponse>;
+    /** The URL to retrieve the next page. */
+    "@odata.nextLink"?: string;
 }
 
 /**
@@ -25,6 +28,8 @@ export interface ListShiftsResponse {
     "@odata.context"?: string;
     /** List of Shifts */
     value?: Array<ShiftResponse>;
+    /** The URL to retrieve the next page. */
+    "@odata.nextLink"?: string;
 }
 
 /**
@@ -34,6 +39,8 @@ export interface ListOpenShiftsResponse {
     "@odata.context"?: string;
     /** List of Open Shifts */
     value?: Array<OpenShiftResponse>;
+    /** The URL to retrieve the next page. */
+    "@odata.nextLink"?: string;
 }
 
 /**
@@ -43,6 +50,8 @@ export interface ListSchedulingGroupsResponse {
     "@odata.context"?: string;
     /** List of Scheduling Groups. */
     value?: Array<SchedulingGroupResponse>;
+    /** The URL to retrieve the next page. */
+    "@odata.nextLink"?: string;
 }
 
 /**
@@ -52,6 +61,8 @@ export interface ListTimeOffRequestsResponse {
     "@odata.context"?: string;
     /** List of Time Off requests. */
     value?: Array<TimeOffRequestResponse>;
+    /** The URL to retrieve the next page. */
+    "@odata.nextLink"?: string;
 }
 
 /**
@@ -91,6 +102,8 @@ export interface ListOfferShiftRequestsResponse {
     "@odata.context"?: string;
     /** List of Offer Shift requests. */
     value?: Array<OfferShiftRequestResponse>;
+    /** The URL to retrieve the next page. */
+    "@odata.nextLink"?: string;
 }
 
 /**
@@ -130,6 +143,8 @@ export interface ListSwapShiftsChangeRequestsResponse {
     "@odata.context"?: string;
     /** List of Swap Shifts Change Requests. */
     value?: Array<SwapShiftsChangeRequestResponse>;
+    /** The URL to retrieve the next page. */
+    "@odata.nextLink"?: string;
 }
 
 /**
@@ -169,6 +184,8 @@ export interface ListOpenShiftChangeRequestsResponse {
     "@odata.context"?: string;
     /** List of Open Shift Change Requests. */
     value?: Array<OpenShiftChangeRequestResponse>;
+    /** The URL to retrieve the next page. */
+    "@odata.nextLink"?: string;
 }
 
 /**
@@ -208,6 +225,8 @@ export interface ListOpenShiftsCrossTeamResponse {
     "@odata.context"?: string;
     /** List of Open Shifts */
     value?: Array<OpenShiftResponse>;
+    /** The URL to retrieve the next page. */
+    "@odata.nextLink"?: string;
 }
 
 /**
@@ -217,6 +236,8 @@ export interface ListShiftsCrossTeamResponse {
     "@odata.context"?: string;
     /** List of Shifts */
     value?: Array<ShiftResponse>;
+    /** The URL to retrieve the next page. */
+    "@odata.nextLink"?: string;
 }
 
 /**
@@ -226,6 +247,8 @@ export interface ListTimesOffCrossTeamResponse {
     "@odata.context"?: string;
     /** List of Times off */
     value?: Array<TimeOffResponse>;
+    /** The URL to retrieve the next page. */
+    "@odata.nextLink"?: string;
 }
 
 /**
@@ -412,9 +435,7 @@ export type Theme = "white" | "blue" | "green" | "purple" | "pink" | "yellow" | 
 /**
  * Definition: Activities
  */
-export interface Activities {
-    [key: string]: unknown;
-}
+export type Activities = Array<Record<string, unknown>>;
 
 /**
  * Definition: SchedulingGroupResponse
@@ -532,6 +553,8 @@ export interface GetTimeOffReasonsResponse {
     "@odata.context"?: string;
     /** The list of Time Off Reasons. */
     value?: Array<Record<string, unknown>>;
+    /** The URL to retrieve the next page. */
+    "@odata.nextLink"?: string;
 }
 
 /**
@@ -783,13 +806,13 @@ export class ShiftsClient extends ConnectorClientBase {
      * Get a Schedule's details
      * @remarks This operation returns details of a Schedule using the Schedule's unique ID.
      */
-    public async getScheduleAsync(teamId: string, abortSignal?: AbortSignalLike): Promise<ScheduleResponse> {
+    public async getSchedule(teamId: string, abortSignal?: AbortSignalLike): Promise<ScheduleResponse> {
         const requestPath = `/v1.0/teams/${teamId}/schedule`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<ScheduleResponse>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as ScheduleResponse;
@@ -799,7 +822,7 @@ export class ShiftsClient extends ConnectorClientBase {
      * List all Time Off instances in a team
      * @remarks This operation returns all Time Off instances in a Schedule
      */
-    public async listTimesOffAsync(teamId: string, startTime?: string, endTime?: string, top?: string, abortSignal?: AbortSignalLike): Promise<ListTimesOffResponse> {
+    public listTimesOff(teamId: string, startTime?: string, endTime?: string, top?: string, abortSignal?: AbortSignalLike): PagedAsyncIterableIterator<TimeOffResponse> {
         const queryParams: string[] = [];
         if (startTime !== undefined) {
             queryParams.push(`startTime=${encodeURIComponent(String(startTime))}`);
@@ -811,27 +834,34 @@ export class ShiftsClient extends ConnectorClientBase {
             queryParams.push(`$top=${encodeURIComponent(String(top))}`);
         }
         const requestPath = `/v1.0/teams/${teamId}/schedule/timesoff` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
-        const requestUrl = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<ListTimesOffResponse>("GET", requestUrl, undefined, undefined, abortSignal);
+        return this.createPageable<ListTimesOffResponse, TimeOffResponse>(
+            requestPath,
+            async (requestUrl) => {
+                const httpResponse = await this.httpClient.sendAsync<ListTimesOffResponse>("GET", requestUrl, undefined, undefined, abortSignal);
 
-        if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
-        }
+                if (!httpResponse.isSuccessStatusCode) {
+                    const operationPath = this.getOperationPath(requestUrl);
+                    throw new ConnectorError(this.connectorName, `GET ${operationPath}`, httpResponse.statusCode, httpResponse.text);
+                }
 
-        return httpResponse.value as ListTimesOffResponse;
+                return httpResponse.value as ListTimesOffResponse;
+            },
+            "value",
+            "@odata.nextLink",
+        );
     }
 
     /**
      * Create a new Time Off instance
      * @remarks This operation creates a new Time Off instance and assigns it to a member of the team
      */
-    public async createTimeOffAsync(input: CreateTimeOffRequest, teamId: string, abortSignal?: AbortSignalLike): Promise<TimeOffResponse> {
+    public async createTimeOff(input: CreateTimeOffRequest, teamId: string, abortSignal?: AbortSignalLike): Promise<TimeOffResponse> {
         const requestPath = `/v1.0/teams/${teamId}/schedule/timesoff`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<TimeOffResponse>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as TimeOffResponse;
@@ -841,13 +871,13 @@ export class ShiftsClient extends ConnectorClientBase {
      * Get a Time Off instance
      * @remarks This operation returns details for a Time Off using its unique ID.
      */
-    public async getTimeOffAsync(teamId: string, timeOffId: string, abortSignal?: AbortSignalLike): Promise<TimeOffResponse> {
+    public async getTimeOff(teamId: string, timeOffId: string, abortSignal?: AbortSignalLike): Promise<TimeOffResponse> {
         const requestPath = `/v1.0/teams/${teamId}/schedule/timesoff/${timeOffId}`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<TimeOffResponse>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as TimeOffResponse;
@@ -857,13 +887,13 @@ export class ShiftsClient extends ConnectorClientBase {
      * Delete a Time Off instance
      * @remarks This operation deletes a Time Off using its unique ID.
      */
-    public async deleteTimeOffAsync(teamId: string, timeOffId: string, abortSignal?: AbortSignalLike): Promise<void> {
+    public async deleteTimeOff(teamId: string, timeOffId: string, abortSignal?: AbortSignalLike): Promise<void> {
         const requestPath = `/v1.0/teams/${teamId}/schedule/timesoff/${timeOffId}`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<void>("DELETE", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `DELETE ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `DELETE ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
     }
 
@@ -871,7 +901,7 @@ export class ShiftsClient extends ConnectorClientBase {
      * List all Shifts in a team
      * @remarks This operation returns all Shifts assigned to members of a team
      */
-    public async listShiftsAsync(teamId: string, startTime?: string, endTime?: string, top?: string, abortSignal?: AbortSignalLike): Promise<ListShiftsResponse> {
+    public listShifts(teamId: string, startTime?: string, endTime?: string, top?: string, abortSignal?: AbortSignalLike): PagedAsyncIterableIterator<ShiftResponse> {
         const queryParams: string[] = [];
         if (startTime !== undefined) {
             queryParams.push(`startTime=${encodeURIComponent(String(startTime))}`);
@@ -883,27 +913,34 @@ export class ShiftsClient extends ConnectorClientBase {
             queryParams.push(`$top=${encodeURIComponent(String(top))}`);
         }
         const requestPath = `/v1.0/teams/${teamId}/schedule/shifts` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
-        const requestUrl = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<ListShiftsResponse>("GET", requestUrl, undefined, undefined, abortSignal);
+        return this.createPageable<ListShiftsResponse, ShiftResponse>(
+            requestPath,
+            async (requestUrl) => {
+                const httpResponse = await this.httpClient.sendAsync<ListShiftsResponse>("GET", requestUrl, undefined, undefined, abortSignal);
 
-        if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
-        }
+                if (!httpResponse.isSuccessStatusCode) {
+                    const operationPath = this.getOperationPath(requestUrl);
+                    throw new ConnectorError(this.connectorName, `GET ${operationPath}`, httpResponse.statusCode, httpResponse.text);
+                }
 
-        return httpResponse.value as ListShiftsResponse;
+                return httpResponse.value as ListShiftsResponse;
+            },
+            "value",
+            "@odata.nextLink",
+        );
     }
 
     /**
      * Create a new Shift
      * @remarks This operation creates a new Shift and assigns it to a member of the team
      */
-    public async createShiftAsync(input: CreateShiftRequest, teamId: string, abortSignal?: AbortSignalLike): Promise<ShiftResponse> {
+    public async createShift(input: CreateShiftRequest, teamId: string, abortSignal?: AbortSignalLike): Promise<ShiftResponse> {
         const requestPath = `/v1.0/teams/${teamId}/schedule/shifts`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<ShiftResponse>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as ShiftResponse;
@@ -913,13 +950,13 @@ export class ShiftsClient extends ConnectorClientBase {
      * Get a Shift
      * @remarks This operation returns details for a Shift using the Shift's unique ID.
      */
-    public async getShiftAsync(teamId: string, shiftId: string, abortSignal?: AbortSignalLike): Promise<ShiftResponse> {
+    public async getShift(teamId: string, shiftId: string, abortSignal?: AbortSignalLike): Promise<ShiftResponse> {
         const requestPath = `/v1.0/teams/${teamId}/schedule/shifts/${shiftId}`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<ShiftResponse>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as ShiftResponse;
@@ -929,13 +966,13 @@ export class ShiftsClient extends ConnectorClientBase {
      * Delete a Shift
      * @remarks This operation deletes a Shift using the Shift's unique ID.
      */
-    public async deleteShiftAsync(teamId: string, shiftId: string, abortSignal?: AbortSignalLike): Promise<void> {
+    public async deleteShift(teamId: string, shiftId: string, abortSignal?: AbortSignalLike): Promise<void> {
         const requestPath = `/v1.0/teams/${teamId}/schedule/shifts/${shiftId}`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<void>("DELETE", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `DELETE ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `DELETE ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
     }
 
@@ -943,7 +980,7 @@ export class ShiftsClient extends ConnectorClientBase {
      * List all Open Shifts in a team
      * @remarks This operation returns all Open Shifts in a team.
      */
-    public async listOpenShiftsAsync(teamId: string, startTime?: string, endTime?: string, top?: string, abortSignal?: AbortSignalLike): Promise<ListOpenShiftsResponse> {
+    public listOpenShifts(teamId: string, startTime?: string, endTime?: string, top?: string, abortSignal?: AbortSignalLike): PagedAsyncIterableIterator<OpenShiftResponse> {
         const queryParams: string[] = [];
         if (startTime !== undefined) {
             queryParams.push(`startTime=${encodeURIComponent(String(startTime))}`);
@@ -955,27 +992,34 @@ export class ShiftsClient extends ConnectorClientBase {
             queryParams.push(`$top=${encodeURIComponent(String(top))}`);
         }
         const requestPath = `/v1.0/teams/${teamId}/schedule/openShifts` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
-        const requestUrl = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<ListOpenShiftsResponse>("GET", requestUrl, undefined, undefined, abortSignal);
+        return this.createPageable<ListOpenShiftsResponse, OpenShiftResponse>(
+            requestPath,
+            async (requestUrl) => {
+                const httpResponse = await this.httpClient.sendAsync<ListOpenShiftsResponse>("GET", requestUrl, undefined, undefined, abortSignal);
 
-        if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
-        }
+                if (!httpResponse.isSuccessStatusCode) {
+                    const operationPath = this.getOperationPath(requestUrl);
+                    throw new ConnectorError(this.connectorName, `GET ${operationPath}`, httpResponse.statusCode, httpResponse.text);
+                }
 
-        return httpResponse.value as ListOpenShiftsResponse;
+                return httpResponse.value as ListOpenShiftsResponse;
+            },
+            "value",
+            "@odata.nextLink",
+        );
     }
 
     /**
      * Create a new Open Shift
      * @remarks Create a new Open Shift in a Schedule.
      */
-    public async createOpenShiftAsync(input: EditOpenShiftRequest, teamId: string, abortSignal?: AbortSignalLike): Promise<OpenShiftResponse> {
+    public async createOpenShift(input: EditOpenShiftRequest, teamId: string, abortSignal?: AbortSignalLike): Promise<OpenShiftResponse> {
         const requestPath = `/v1.0/teams/${teamId}/schedule/openShifts`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<OpenShiftResponse>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as OpenShiftResponse;
@@ -985,13 +1029,13 @@ export class ShiftsClient extends ConnectorClientBase {
      * Get an Open Shift
      * @remarks This operation returns details for an Open Shift.
      */
-    public async getOpenShiftAsync(teamId: string, openShiftId: string, abortSignal?: AbortSignalLike): Promise<OpenShiftResponse> {
+    public async getOpenShift(teamId: string, openShiftId: string, abortSignal?: AbortSignalLike): Promise<OpenShiftResponse> {
         const requestPath = `/v1.0/teams/${teamId}/schedule/openShifts/${openShiftId}`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<OpenShiftResponse>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as OpenShiftResponse;
@@ -1001,13 +1045,13 @@ export class ShiftsClient extends ConnectorClientBase {
      * Update an Open Shift
      * @remarks Update an Open Shift in a Schedule.
      */
-    public async updateOpenShiftAsync(input: EditOpenShiftRequest, teamId: string, openShiftId: string, abortSignal?: AbortSignalLike): Promise<OpenShiftResponse> {
+    public async updateOpenShift(input: EditOpenShiftRequest, teamId: string, openShiftId: string, abortSignal?: AbortSignalLike): Promise<OpenShiftResponse> {
         const requestPath = `/v1.0/teams/${teamId}/schedule/openShifts/${openShiftId}`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<OpenShiftResponse>("PUT", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `PUT ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `PUT ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as OpenShiftResponse;
@@ -1017,13 +1061,13 @@ export class ShiftsClient extends ConnectorClientBase {
      * Delete an Open Shift
      * @remarks This operation deletes an Open Shift.
      */
-    public async deleteOpenShiftAsync(teamId: string, openShiftId: string, abortSignal?: AbortSignalLike): Promise<void> {
+    public async deleteOpenShift(teamId: string, openShiftId: string, abortSignal?: AbortSignalLike): Promise<void> {
         const requestPath = `/v1.0/teams/${teamId}/schedule/openShifts/${openShiftId}`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<void>("DELETE", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `DELETE ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `DELETE ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
     }
 
@@ -1031,53 +1075,67 @@ export class ShiftsClient extends ConnectorClientBase {
      * List all Time Off Reasons in a team
      * @remarks This operation returns the list of Time Off Reasons associated with a team.
      */
-    public async listTimeOffReasonsAsync(teamId: string, top?: string, abortSignal?: AbortSignalLike): Promise<GetTimeOffReasonsResponse> {
+    public listTimeOffReasons(teamId: string, top?: string, abortSignal?: AbortSignalLike): PagedAsyncIterableIterator<unknown> {
         const queryParams: string[] = [];
         if (top !== undefined) {
             queryParams.push(`$top=${encodeURIComponent(String(top))}`);
         }
         const requestPath = `/v1.0/teams/${teamId}/schedule/timeOffReasons` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
-        const requestUrl = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<GetTimeOffReasonsResponse>("GET", requestUrl, undefined, undefined, abortSignal);
+        return this.createPageable<GetTimeOffReasonsResponse, unknown>(
+            requestPath,
+            async (requestUrl) => {
+                const httpResponse = await this.httpClient.sendAsync<GetTimeOffReasonsResponse>("GET", requestUrl, undefined, undefined, abortSignal);
 
-        if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
-        }
+                if (!httpResponse.isSuccessStatusCode) {
+                    const operationPath = this.getOperationPath(requestUrl);
+                    throw new ConnectorError(this.connectorName, `GET ${operationPath}`, httpResponse.statusCode, httpResponse.text);
+                }
 
-        return httpResponse.value as GetTimeOffReasonsResponse;
+                return httpResponse.value as GetTimeOffReasonsResponse;
+            },
+            "value",
+            "@odata.nextLink",
+        );
     }
 
     /**
      * List all Scheduling Groups in a team
      * @remarks This operation returns all Scheduling Groups in a Schedule.
      */
-    public async listSchedulingGroupsAsync(teamId: string, top?: string, abortSignal?: AbortSignalLike): Promise<ListSchedulingGroupsResponse> {
+    public listSchedulingGroups(teamId: string, top?: string, abortSignal?: AbortSignalLike): PagedAsyncIterableIterator<SchedulingGroupResponse> {
         const queryParams: string[] = [];
         if (top !== undefined) {
             queryParams.push(`$top=${encodeURIComponent(String(top))}`);
         }
         const requestPath = `/v1.0/teams/${teamId}/schedule/schedulinggroups` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
-        const requestUrl = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<ListSchedulingGroupsResponse>("GET", requestUrl, undefined, undefined, abortSignal);
+        return this.createPageable<ListSchedulingGroupsResponse, SchedulingGroupResponse>(
+            requestPath,
+            async (requestUrl) => {
+                const httpResponse = await this.httpClient.sendAsync<ListSchedulingGroupsResponse>("GET", requestUrl, undefined, undefined, abortSignal);
 
-        if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
-        }
+                if (!httpResponse.isSuccessStatusCode) {
+                    const operationPath = this.getOperationPath(requestUrl);
+                    throw new ConnectorError(this.connectorName, `GET ${operationPath}`, httpResponse.statusCode, httpResponse.text);
+                }
 
-        return httpResponse.value as ListSchedulingGroupsResponse;
+                return httpResponse.value as ListSchedulingGroupsResponse;
+            },
+            "value",
+            "@odata.nextLink",
+        );
     }
 
     /**
      * Get a Scheduling Group
      * @remarks This operation returns details for a Scheduling Group using its unique ID.
      */
-    public async getSchedulingGroupAsync(teamId: string, schedulingGroupId: string, abortSignal?: AbortSignalLike): Promise<SchedulingGroupResponse> {
+    public async getSchedulingGroup(teamId: string, schedulingGroupId: string, abortSignal?: AbortSignalLike): Promise<SchedulingGroupResponse> {
         const requestPath = `/v1.0/teams/${teamId}/schedule/schedulinggroups/${schedulingGroupId}`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<SchedulingGroupResponse>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as SchedulingGroupResponse;
@@ -1087,7 +1145,7 @@ export class ShiftsClient extends ConnectorClientBase {
      * List all Time Off requests in a team
      * @remarks This operation returns all Time Off requests in a Schedule.
      */
-    public async listTimeOffRequestsAsync(teamId: string, top?: string, state?: string, abortSignal?: AbortSignalLike): Promise<ListTimeOffRequestsResponse> {
+    public listTimeOffRequests(teamId: string, top?: string, state?: string, abortSignal?: AbortSignalLike): PagedAsyncIterableIterator<TimeOffRequestResponse> {
         const queryParams: string[] = [];
         if (top !== undefined) {
             queryParams.push(`$top=${encodeURIComponent(String(top))}`);
@@ -1096,27 +1154,34 @@ export class ShiftsClient extends ConnectorClientBase {
             queryParams.push(`state=${encodeURIComponent(String(state))}`);
         }
         const requestPath = `/v1.0/teams/${teamId}/schedule/timeOffRequests` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
-        const requestUrl = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<ListTimeOffRequestsResponse>("GET", requestUrl, undefined, undefined, abortSignal);
+        return this.createPageable<ListTimeOffRequestsResponse, TimeOffRequestResponse>(
+            requestPath,
+            async (requestUrl) => {
+                const httpResponse = await this.httpClient.sendAsync<ListTimeOffRequestsResponse>("GET", requestUrl, undefined, undefined, abortSignal);
 
-        if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
-        }
+                if (!httpResponse.isSuccessStatusCode) {
+                    const operationPath = this.getOperationPath(requestUrl);
+                    throw new ConnectorError(this.connectorName, `GET ${operationPath}`, httpResponse.statusCode, httpResponse.text);
+                }
 
-        return httpResponse.value as ListTimeOffRequestsResponse;
+                return httpResponse.value as ListTimeOffRequestsResponse;
+            },
+            "value",
+            "@odata.nextLink",
+        );
     }
 
     /**
      * Get a Time Off request
      * @remarks This operation returns a Time Off request by ID.
      */
-    public async getTimeOffShiftRequestAsync(teamId: string, timeOffRequestId: string, abortSignal?: AbortSignalLike): Promise<TimeOffRequestResponse> {
+    public async getTimeOffShiftRequest(teamId: string, timeOffRequestId: string, abortSignal?: AbortSignalLike): Promise<TimeOffRequestResponse> {
         const requestPath = `/v1.0/teams/${teamId}/schedule/timeOffRequests/${timeOffRequestId}`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<TimeOffRequestResponse>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as TimeOffRequestResponse;
@@ -1126,13 +1191,13 @@ export class ShiftsClient extends ConnectorClientBase {
      * Approve a Time Off request
      * @remarks This operation allows managers to approve a Time Off request.
      */
-    public async timeOffRequestApproveAsync(input: TimeOffRequestApproveInput, teamId: string, timeOffRequestId: string, abortSignal?: AbortSignalLike): Promise<TimeOffRequestApproveResponse> {
+    public async approveTimeOffRequest(input: TimeOffRequestApproveInput, teamId: string, timeOffRequestId: string, abortSignal?: AbortSignalLike): Promise<TimeOffRequestApproveResponse> {
         const requestPath = `/v1.0/teams/${teamId}/schedule/timeOffRequests/${timeOffRequestId}/approve`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<TimeOffRequestApproveResponse>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as TimeOffRequestApproveResponse;
@@ -1142,13 +1207,13 @@ export class ShiftsClient extends ConnectorClientBase {
      * Decline a Time Off request
      * @remarks This operation allows managers to decline a Time Off request.
      */
-    public async timeOffRequestDeclineAsync(input: TimeOffRequestDeclineInput, teamId: string, timeOffRequestId: string, abortSignal?: AbortSignalLike): Promise<TimeOffRequestDeclineResponse> {
+    public async timeOffRequestDecline(input: TimeOffRequestDeclineInput, teamId: string, timeOffRequestId: string, abortSignal?: AbortSignalLike): Promise<TimeOffRequestDeclineResponse> {
         const requestPath = `/v1.0/teams/${teamId}/schedule/timeOffRequests/${timeOffRequestId}/decline`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<TimeOffRequestDeclineResponse>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as TimeOffRequestDeclineResponse;
@@ -1158,7 +1223,7 @@ export class ShiftsClient extends ConnectorClientBase {
      * List all Offer Shift requests in a team
      * @remarks This operation returns all Offer Shift requests in a Schedule.
      */
-    public async listOfferShiftRequestsAsync(teamId: string, top?: string, state?: string, abortSignal?: AbortSignalLike): Promise<ListOfferShiftRequestsResponse> {
+    public listOfferShiftRequests(teamId: string, top?: string, state?: string, abortSignal?: AbortSignalLike): PagedAsyncIterableIterator<OfferShiftRequestResponse> {
         const queryParams: string[] = [];
         if (top !== undefined) {
             queryParams.push(`$top=${encodeURIComponent(String(top))}`);
@@ -1167,27 +1232,34 @@ export class ShiftsClient extends ConnectorClientBase {
             queryParams.push(`state=${encodeURIComponent(String(state))}`);
         }
         const requestPath = `/v1.0/teams/${teamId}/schedule/offerShiftRequests` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
-        const requestUrl = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<ListOfferShiftRequestsResponse>("GET", requestUrl, undefined, undefined, abortSignal);
+        return this.createPageable<ListOfferShiftRequestsResponse, OfferShiftRequestResponse>(
+            requestPath,
+            async (requestUrl) => {
+                const httpResponse = await this.httpClient.sendAsync<ListOfferShiftRequestsResponse>("GET", requestUrl, undefined, undefined, abortSignal);
 
-        if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
-        }
+                if (!httpResponse.isSuccessStatusCode) {
+                    const operationPath = this.getOperationPath(requestUrl);
+                    throw new ConnectorError(this.connectorName, `GET ${operationPath}`, httpResponse.statusCode, httpResponse.text);
+                }
 
-        return httpResponse.value as ListOfferShiftRequestsResponse;
+                return httpResponse.value as ListOfferShiftRequestsResponse;
+            },
+            "value",
+            "@odata.nextLink",
+        );
     }
 
     /**
      * Get an Offer Shift request
      * @remarks This operation returns an Offer Shift request by ID.
      */
-    public async getOfferShiftRequestAsync(teamId: string, offerShiftRequestId: string, abortSignal?: AbortSignalLike): Promise<OfferShiftRequestResponse> {
+    public async getOfferShiftRequest(teamId: string, offerShiftRequestId: string, abortSignal?: AbortSignalLike): Promise<OfferShiftRequestResponse> {
         const requestPath = `/v1.0/teams/${teamId}/schedule/offerShiftRequests/${offerShiftRequestId}`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<OfferShiftRequestResponse>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as OfferShiftRequestResponse;
@@ -1197,13 +1269,13 @@ export class ShiftsClient extends ConnectorClientBase {
      * Approve an Offer Shift request
      * @remarks This operation allows recipients/managers to approve an Offer Shift request.
      */
-    public async offerShiftRequestApproveAsync(input: OfferShiftRequestApproveInput, teamId: string, offerShiftRequestId: string, abortSignal?: AbortSignalLike): Promise<OfferShiftRequestApproveResponse> {
+    public async approveOfferShiftRequest(input: OfferShiftRequestApproveInput, teamId: string, offerShiftRequestId: string, abortSignal?: AbortSignalLike): Promise<OfferShiftRequestApproveResponse> {
         const requestPath = `/v1.0/teams/${teamId}/schedule/offerShiftRequests/${offerShiftRequestId}/approve`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<OfferShiftRequestApproveResponse>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as OfferShiftRequestApproveResponse;
@@ -1213,13 +1285,13 @@ export class ShiftsClient extends ConnectorClientBase {
      * Decline an Offer Shift request
      * @remarks This operation allows users to decline an Offer Shift request.
      */
-    public async offerShiftRequestDeclineAsync(input: OfferShiftRequestDeclineInput, teamId: string, offerShiftRequestId: string, abortSignal?: AbortSignalLike): Promise<OfferShiftRequestDeclineResponse> {
+    public async offerShiftRequestDecline(input: OfferShiftRequestDeclineInput, teamId: string, offerShiftRequestId: string, abortSignal?: AbortSignalLike): Promise<OfferShiftRequestDeclineResponse> {
         const requestPath = `/v1.0/teams/${teamId}/schedule/offerShiftRequests/${offerShiftRequestId}/decline`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<OfferShiftRequestDeclineResponse>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as OfferShiftRequestDeclineResponse;
@@ -1229,7 +1301,7 @@ export class ShiftsClient extends ConnectorClientBase {
      * List all Swap Shifts requests in a team
      * @remarks This operation returns all Swap Shifts requests in a Schedule.
      */
-    public async listSwapShiftsChangeRequestsAsync(teamId: string, top?: string, state?: string, abortSignal?: AbortSignalLike): Promise<ListSwapShiftsChangeRequestsResponse> {
+    public listSwapShiftsChangeRequests(teamId: string, top?: string, state?: string, abortSignal?: AbortSignalLike): PagedAsyncIterableIterator<SwapShiftsChangeRequestResponse> {
         const queryParams: string[] = [];
         if (top !== undefined) {
             queryParams.push(`$top=${encodeURIComponent(String(top))}`);
@@ -1238,27 +1310,34 @@ export class ShiftsClient extends ConnectorClientBase {
             queryParams.push(`state=${encodeURIComponent(String(state))}`);
         }
         const requestPath = `/v1.0/teams/${teamId}/schedule/swapShiftsChangeRequests` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
-        const requestUrl = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<ListSwapShiftsChangeRequestsResponse>("GET", requestUrl, undefined, undefined, abortSignal);
+        return this.createPageable<ListSwapShiftsChangeRequestsResponse, SwapShiftsChangeRequestResponse>(
+            requestPath,
+            async (requestUrl) => {
+                const httpResponse = await this.httpClient.sendAsync<ListSwapShiftsChangeRequestsResponse>("GET", requestUrl, undefined, undefined, abortSignal);
 
-        if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
-        }
+                if (!httpResponse.isSuccessStatusCode) {
+                    const operationPath = this.getOperationPath(requestUrl);
+                    throw new ConnectorError(this.connectorName, `GET ${operationPath}`, httpResponse.statusCode, httpResponse.text);
+                }
 
-        return httpResponse.value as ListSwapShiftsChangeRequestsResponse;
+                return httpResponse.value as ListSwapShiftsChangeRequestsResponse;
+            },
+            "value",
+            "@odata.nextLink",
+        );
     }
 
     /**
      * Get a Swap Shifts request
      * @remarks This operation returns a Swap Shifts request by ID.
      */
-    public async getSwapShiftsChangeRequestAsync(teamId: string, swapShiftsChangeRequestId: string, abortSignal?: AbortSignalLike): Promise<SwapShiftsChangeRequestResponse> {
+    public async getSwapShiftsChangeRequest(teamId: string, swapShiftsChangeRequestId: string, abortSignal?: AbortSignalLike): Promise<SwapShiftsChangeRequestResponse> {
         const requestPath = `/v1.0/teams/${teamId}/schedule/swapShiftsChangeRequests/${swapShiftsChangeRequestId}`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<SwapShiftsChangeRequestResponse>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as SwapShiftsChangeRequestResponse;
@@ -1268,13 +1347,13 @@ export class ShiftsClient extends ConnectorClientBase {
      * Approve a Swap Shifts request
      * @remarks This operation allows a user to approve a Swap Shifts request.
      */
-    public async swapShiftsChangeRequestApproveAsync(input: SwapShiftsChangeRequestApproveInput, teamId: string, swapShiftsChangeRequestId: string, abortSignal?: AbortSignalLike): Promise<SwapShiftsChangeRequestApproveResponse> {
+    public async approveSwapShiftsChangeRequest(input: SwapShiftsChangeRequestApproveInput, teamId: string, swapShiftsChangeRequestId: string, abortSignal?: AbortSignalLike): Promise<SwapShiftsChangeRequestApproveResponse> {
         const requestPath = `/v1.0/teams/${teamId}/schedule/swapShiftsChangeRequests/${swapShiftsChangeRequestId}/approve`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<SwapShiftsChangeRequestApproveResponse>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as SwapShiftsChangeRequestApproveResponse;
@@ -1284,13 +1363,13 @@ export class ShiftsClient extends ConnectorClientBase {
      * Decline a Swap Shifts request
      * @remarks This operation allows users to decline a Swap Shifts request.
      */
-    public async swapShiftsChangeRequestDeclineAsync(input: SwapShiftsChangeRequestDeclineInput, teamId: string, swapShiftsChangeRequestId: string, abortSignal?: AbortSignalLike): Promise<SwapShiftsChangeRequestDeclineResponse> {
+    public async swapShiftsChangeRequestDecline(input: SwapShiftsChangeRequestDeclineInput, teamId: string, swapShiftsChangeRequestId: string, abortSignal?: AbortSignalLike): Promise<SwapShiftsChangeRequestDeclineResponse> {
         const requestPath = `/v1.0/teams/${teamId}/schedule/swapShiftsChangeRequests/${swapShiftsChangeRequestId}/decline`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<SwapShiftsChangeRequestDeclineResponse>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as SwapShiftsChangeRequestDeclineResponse;
@@ -1300,7 +1379,7 @@ export class ShiftsClient extends ConnectorClientBase {
      * List all Open Shift requests in a team
      * @remarks This operation returns all Open Shift change requests in a Schedule.
      */
-    public async listOpenShiftChangeRequestsAsync(teamId: string, top?: string, state?: string, abortSignal?: AbortSignalLike): Promise<ListOpenShiftChangeRequestsResponse> {
+    public listOpenShiftChangeRequests(teamId: string, top?: string, state?: string, abortSignal?: AbortSignalLike): PagedAsyncIterableIterator<OpenShiftChangeRequestResponse> {
         const queryParams: string[] = [];
         if (top !== undefined) {
             queryParams.push(`$top=${encodeURIComponent(String(top))}`);
@@ -1309,27 +1388,34 @@ export class ShiftsClient extends ConnectorClientBase {
             queryParams.push(`state=${encodeURIComponent(String(state))}`);
         }
         const requestPath = `/v1.0/teams/${teamId}/schedule/openShiftChangeRequests` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
-        const requestUrl = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<ListOpenShiftChangeRequestsResponse>("GET", requestUrl, undefined, undefined, abortSignal);
+        return this.createPageable<ListOpenShiftChangeRequestsResponse, OpenShiftChangeRequestResponse>(
+            requestPath,
+            async (requestUrl) => {
+                const httpResponse = await this.httpClient.sendAsync<ListOpenShiftChangeRequestsResponse>("GET", requestUrl, undefined, undefined, abortSignal);
 
-        if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
-        }
+                if (!httpResponse.isSuccessStatusCode) {
+                    const operationPath = this.getOperationPath(requestUrl);
+                    throw new ConnectorError(this.connectorName, `GET ${operationPath}`, httpResponse.statusCode, httpResponse.text);
+                }
 
-        return httpResponse.value as ListOpenShiftChangeRequestsResponse;
+                return httpResponse.value as ListOpenShiftChangeRequestsResponse;
+            },
+            "value",
+            "@odata.nextLink",
+        );
     }
 
     /**
      * Get an Open Shift request
      * @remarks This operation returns an Open Shift change request by ID.
      */
-    public async getOpenShiftChangeRequestAsync(teamId: string, openShiftChangeRequestId: string, abortSignal?: AbortSignalLike): Promise<OpenShiftChangeRequestResponse> {
+    public async getOpenShiftChangeRequest(teamId: string, openShiftChangeRequestId: string, abortSignal?: AbortSignalLike): Promise<OpenShiftChangeRequestResponse> {
         const requestPath = `/v1.0/teams/${teamId}/schedule/openShiftChangeRequests/${openShiftChangeRequestId}`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<OpenShiftChangeRequestResponse>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as OpenShiftChangeRequestResponse;
@@ -1339,13 +1425,13 @@ export class ShiftsClient extends ConnectorClientBase {
      * Approve an Open Shift request
      * @remarks This operation allows managers to approve an Open Shift request.
      */
-    public async openShiftChangeRequestApproveAsync(input: OpenShiftChangeRequestApproveInput, teamId: string, openShiftChangeRequestId: string, abortSignal?: AbortSignalLike): Promise<OpenShiftChangeRequestApproveResponse> {
+    public async approveOpenShiftChangeRequest(input: OpenShiftChangeRequestApproveInput, teamId: string, openShiftChangeRequestId: string, abortSignal?: AbortSignalLike): Promise<OpenShiftChangeRequestApproveResponse> {
         const requestPath = `/v1.0/teams/${teamId}/schedule/openShiftChangeRequests/${openShiftChangeRequestId}/approve`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<OpenShiftChangeRequestApproveResponse>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as OpenShiftChangeRequestApproveResponse;
@@ -1355,13 +1441,13 @@ export class ShiftsClient extends ConnectorClientBase {
      * Decline an Open Shift request
      * @remarks This operation allows managers to decline an Open Shift request.
      */
-    public async openShiftChangeRequestDeclineAsync(input: OpenShiftChangeRequestDeclineInput, teamId: string, openShiftChangeRequestId: string, abortSignal?: AbortSignalLike): Promise<OpenShiftChangeRequestDeclineResponse> {
+    public async openShiftChangeRequestDecline(input: OpenShiftChangeRequestDeclineInput, teamId: string, openShiftChangeRequestId: string, abortSignal?: AbortSignalLike): Promise<OpenShiftChangeRequestDeclineResponse> {
         const requestPath = `/v1.0/teams/${teamId}/schedule/openShiftChangeRequests/${openShiftChangeRequestId}/decline`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<OpenShiftChangeRequestDeclineResponse>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as OpenShiftChangeRequestDeclineResponse;
@@ -1371,7 +1457,7 @@ export class ShiftsClient extends ConnectorClientBase {
      * List all Open Shifts from my teams
      * @remarks This operation returns Open Shifts that need to be filled from all your teams.
      */
-    public async listOpenShiftsCrossTeamAsync(startTime?: string, endTime?: string, top?: string, abortSignal?: AbortSignalLike): Promise<ListOpenShiftsCrossTeamResponse> {
+    public listOpenShiftsCrossTeam(startTime?: string, endTime?: string, top?: string, abortSignal?: AbortSignalLike): PagedAsyncIterableIterator<OpenShiftResponse> {
         const queryParams: string[] = [];
         if (startTime !== undefined) {
             queryParams.push(`startTime=${encodeURIComponent(String(startTime))}`);
@@ -1383,21 +1469,28 @@ export class ShiftsClient extends ConnectorClientBase {
             queryParams.push(`$top=${encodeURIComponent(String(top))}`);
         }
         const requestPath = `/beta/me/joinedTeams/getOpenShifts` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
-        const requestUrl = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<ListOpenShiftsCrossTeamResponse>("GET", requestUrl, undefined, undefined, abortSignal);
+        return this.createPageable<ListOpenShiftsCrossTeamResponse, OpenShiftResponse>(
+            requestPath,
+            async (requestUrl) => {
+                const httpResponse = await this.httpClient.sendAsync<ListOpenShiftsCrossTeamResponse>("GET", requestUrl, undefined, undefined, abortSignal);
 
-        if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
-        }
+                if (!httpResponse.isSuccessStatusCode) {
+                    const operationPath = this.getOperationPath(requestUrl);
+                    throw new ConnectorError(this.connectorName, `GET ${operationPath}`, httpResponse.statusCode, httpResponse.text);
+                }
 
-        return httpResponse.value as ListOpenShiftsCrossTeamResponse;
+                return httpResponse.value as ListOpenShiftsCrossTeamResponse;
+            },
+            "value",
+            "@odata.nextLink",
+        );
     }
 
     /**
      * List all Shifts from my teams
      * @remarks This operation returns assigned Shifts from all your teams.
      */
-    public async listShiftsCrossTeamAsync(startTime?: string, endTime?: string, assignedToUserName?: string, top?: string, abortSignal?: AbortSignalLike): Promise<ListShiftsCrossTeamResponse> {
+    public listShiftsCrossTeam(startTime?: string, endTime?: string, assignedToUserName?: string, top?: string, abortSignal?: AbortSignalLike): PagedAsyncIterableIterator<ShiftResponse> {
         const queryParams: string[] = [];
         if (startTime !== undefined) {
             queryParams.push(`startTime=${encodeURIComponent(String(startTime))}`);
@@ -1412,21 +1505,28 @@ export class ShiftsClient extends ConnectorClientBase {
             queryParams.push(`$top=${encodeURIComponent(String(top))}`);
         }
         const requestPath = `/beta/me/joinedTeams/getShifts` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
-        const requestUrl = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<ListShiftsCrossTeamResponse>("GET", requestUrl, undefined, undefined, abortSignal);
+        return this.createPageable<ListShiftsCrossTeamResponse, ShiftResponse>(
+            requestPath,
+            async (requestUrl) => {
+                const httpResponse = await this.httpClient.sendAsync<ListShiftsCrossTeamResponse>("GET", requestUrl, undefined, undefined, abortSignal);
 
-        if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
-        }
+                if (!httpResponse.isSuccessStatusCode) {
+                    const operationPath = this.getOperationPath(requestUrl);
+                    throw new ConnectorError(this.connectorName, `GET ${operationPath}`, httpResponse.statusCode, httpResponse.text);
+                }
 
-        return httpResponse.value as ListShiftsCrossTeamResponse;
+                return httpResponse.value as ListShiftsCrossTeamResponse;
+            },
+            "value",
+            "@odata.nextLink",
+        );
     }
 
     /**
      * List all Times Off from my teams
      * @remarks This operation returns times when people are off from all your teams.
      */
-    public async listTimesOffCrossTeamAsync(startTime?: string, endTime?: string, assignedToUserName?: string, top?: string, abortSignal?: AbortSignalLike): Promise<ListTimesOffCrossTeamResponse> {
+    public listTimesOffCrossTeam(startTime?: string, endTime?: string, assignedToUserName?: string, top?: string, abortSignal?: AbortSignalLike): PagedAsyncIterableIterator<TimeOffResponse> {
         const queryParams: string[] = [];
         if (startTime !== undefined) {
             queryParams.push(`startTime=${encodeURIComponent(String(startTime))}`);
@@ -1441,14 +1541,21 @@ export class ShiftsClient extends ConnectorClientBase {
             queryParams.push(`$top=${encodeURIComponent(String(top))}`);
         }
         const requestPath = `/beta/me/joinedTeams/getTimesOff` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
-        const requestUrl = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<ListTimesOffCrossTeamResponse>("GET", requestUrl, undefined, undefined, abortSignal);
+        return this.createPageable<ListTimesOffCrossTeamResponse, TimeOffResponse>(
+            requestPath,
+            async (requestUrl) => {
+                const httpResponse = await this.httpClient.sendAsync<ListTimesOffCrossTeamResponse>("GET", requestUrl, undefined, undefined, abortSignal);
 
-        if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
-        }
+                if (!httpResponse.isSuccessStatusCode) {
+                    const operationPath = this.getOperationPath(requestUrl);
+                    throw new ConnectorError(this.connectorName, `GET ${operationPath}`, httpResponse.statusCode, httpResponse.text);
+                }
 
-        return httpResponse.value as ListTimesOffCrossTeamResponse;
+                return httpResponse.value as ListTimesOffCrossTeamResponse;
+            },
+            "value",
+            "@odata.nextLink",
+        );
     }
 
 }

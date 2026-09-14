@@ -6,7 +6,7 @@ import {
     TodoList,
     ToDo,
 } from "../src/generated/TodoExtensions.ts";
-import { ConnectorException } from "../src/azureConnectors/connectorException.ts";
+import { ConnectorError } from "../src/azureConnectors/connectorError.ts";
 import { ConnectorNames } from "../src/generated/connectorNames.ts";
 import { availableConnectors } from "../src/generated/ManagedConnectors.ts";
 
@@ -48,7 +48,7 @@ describe("TodoClient — constructor", () => {
     });
 });
 
-describe("TodoClient — getAllTodoListsAsync", () => {
+describe("TodoClient — getAllTodoLists", () => {
     afterEach(() => {
         jest.restoreAllMocks();
     });
@@ -61,7 +61,7 @@ describe("TodoClient — getAllTodoListsAsync", () => {
         mockFetchResponse(mockResponse);
 
         const client = new TodoClient(TestConnectionUrl, createMockCredential());
-        const result = await client.getAllTodoListsAsync();
+        const result = await client.getAllTodoLists();
 
         expect(result).toEqual(mockResponse);
         expect(result[0].displayName).toBe("Tasks");
@@ -71,7 +71,7 @@ describe("TodoClient — getAllTodoListsAsync", () => {
         expect(init.method).toBe("GET");
     });
 
-    it("should throw ConnectorException on non-OK response", async () => {
+    it("should throw ConnectorError on non-OK response", async () => {
         mockFetchError(500, '{"error":"InternalServerError"}');
 
         const client = new TodoClient(
@@ -79,11 +79,11 @@ describe("TodoClient — getAllTodoListsAsync", () => {
             createMockCredential(),
             { retryOptions: { maxRetries: 0 } },
         );
-        await expect(client.getAllTodoListsAsync()).rejects.toThrow(ConnectorException);
+        await expect(client.getAllTodoLists()).rejects.toThrow(ConnectorError);
     });
 });
 
-describe("TodoClient — getToDoAsync", () => {
+describe("TodoClient — getToDo", () => {
     afterEach(() => {
         jest.restoreAllMocks();
     });
@@ -96,7 +96,7 @@ describe("TodoClient — getToDoAsync", () => {
         mockFetchResponse(mockResponse);
 
         const client = new TodoClient(TestConnectionUrl, createMockCredential());
-        const result = await client.getToDoAsync("list-1", "task-1");
+        const result = await client.getToDo("list-1", "task-1");
 
         expect(result).toEqual(mockResponse);
         expect(result.bodyLastModifiedDateTime).toBe("2026-08-14T18:00:00Z");

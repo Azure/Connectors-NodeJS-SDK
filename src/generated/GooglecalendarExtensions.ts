@@ -4,7 +4,7 @@
 import type { AbortSignalLike } from "@azure/abort-controller";
 import type { TokenCredential } from "@azure/core-auth";
 import { ConnectorClientBase } from "../azureConnectors/clientBase.ts";
-import { ConnectorException } from "../azureConnectors/connectorException.ts";
+import { ConnectorError } from "../azureConnectors/connectorError.ts";
 import { ConnectorClientOptions } from "../azureConnectors/options.ts";
 
 // #region Types
@@ -266,7 +266,7 @@ export class GooglecalendarClient extends ConnectorClientBase {
      * List calendars
      * @remarks This operation is used to list all calendars in your Google account.
      */
-    public async listCalendarsAsync(minAccessRole?: string, abortSignal?: AbortSignalLike): Promise<CalendarList> {
+    public async listCalendars(minAccessRole?: string, abortSignal?: AbortSignalLike): Promise<CalendarList> {
         const queryParams: string[] = [];
         if (minAccessRole !== undefined) {
             queryParams.push(`minAccessRole=${encodeURIComponent(String(minAccessRole))}`);
@@ -276,7 +276,7 @@ export class GooglecalendarClient extends ConnectorClientBase {
         const httpResponse = await this.httpClient.sendAsync<CalendarList>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as CalendarList;
@@ -286,7 +286,7 @@ export class GooglecalendarClient extends ConnectorClientBase {
      * List the events on a calendar
      * @remarks This operation is used to return the first page of arbitrarily ordered events on the selected calendar.
      */
-    public async listEventsAsync(calendarId: string, timeMin?: string, timeMax?: string, q?: string, abortSignal?: AbortSignalLike): Promise<CalendarEventList> {
+    public async listEvents(calendarId: string, timeMin?: string, timeMax?: string, q?: string, abortSignal?: AbortSignalLike): Promise<CalendarEventList> {
         const queryParams: string[] = [];
         if (timeMin !== undefined) {
             queryParams.push(`timeMin=${encodeURIComponent(String(timeMin))}`);
@@ -302,7 +302,7 @@ export class GooglecalendarClient extends ConnectorClientBase {
         const httpResponse = await this.httpClient.sendAsync<CalendarEventList>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as CalendarEventList;
@@ -312,13 +312,13 @@ export class GooglecalendarClient extends ConnectorClientBase {
      * Create an event
      * @remarks This operation is used to create an event on a specific calendar.
      */
-    public async createEventAsync(input: RequestEvent, calendarId: string, abortSignal?: AbortSignalLike): Promise<ResponseEvent> {
+    public async createEvent(input: RequestEvent, calendarId: string, abortSignal?: AbortSignalLike): Promise<ResponseEvent> {
         const requestPath = `/calendars/${calendarId}/events`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<ResponseEvent>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as ResponseEvent;
@@ -328,13 +328,13 @@ export class GooglecalendarClient extends ConnectorClientBase {
      * Get an event
      * @remarks This operation is used to get the details of a specific event from a calendar.
      */
-    public async getEventAsync(calendarId: string, eventId: string, abortSignal?: AbortSignalLike): Promise<ResponseEvent> {
+    public async getEvent(calendarId: string, eventId: string, abortSignal?: AbortSignalLike): Promise<ResponseEvent> {
         const requestPath = `/calendars/${calendarId}/events/${eventId}`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<ResponseEvent>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as ResponseEvent;
@@ -344,13 +344,13 @@ export class GooglecalendarClient extends ConnectorClientBase {
      * Delete an event
      * @remarks This operation is used to delete an event from a calendar.
      */
-    public async deleteEventAsync(calendarId: string, eventId: string, abortSignal?: AbortSignalLike): Promise<ObjectEntity> {
+    public async deleteEvent(calendarId: string, eventId: string, abortSignal?: AbortSignalLike): Promise<ObjectEntity> {
         const requestPath = `/calendars/${calendarId}/events/${eventId}`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<ObjectEntity>("DELETE", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `DELETE ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `DELETE ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as ObjectEntity;
@@ -360,13 +360,13 @@ export class GooglecalendarClient extends ConnectorClientBase {
      * Update an event
      * @remarks This operation is used to update an existing event on a calendar.
      */
-    public async updateEventAsync(input: PatchEvent, calendarId: string, eventId: string, abortSignal?: AbortSignalLike): Promise<ResponseEvent> {
+    public async updateEvent(input: PatchEvent, calendarId: string, eventId: string, abortSignal?: AbortSignalLike): Promise<ResponseEvent> {
         const requestPath = `/calendars/${calendarId}/events/${eventId}`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<ResponseEvent>("PATCH", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `PATCH ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `PATCH ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as ResponseEvent;

@@ -19,7 +19,7 @@
  *     npm start
  */
 
-import { ManagedIdentityTokenProvider, ConnectorException } from "@azure/connectors";
+import { ManagedIdentityTokenProvider, ConnectorError } from "@azure/connectors";
 import { ArmClient } from "@azure/connectors/generated/ArmExtensions";
 
 const CONNECTION_URL = process.env.ARM_CONNECTION_URL ?? "";
@@ -41,7 +41,7 @@ async function main() {
     console.log("\n--- List Subscriptions ---");
     try {
         const subscriptions = [];
-        for await (const subscription of client.subscriptionsListAsync()) {
+        for await (const subscription of client.listSubscriptions()) {
             subscriptions.push(subscription);
         }
 
@@ -54,7 +54,7 @@ async function main() {
             console.log("No subscriptions found.");
         }
     } catch (error) {
-        if (error instanceof ConnectorException) {
+        if (error instanceof ConnectorError) {
             console.log(`Connector error: ${error.message}`);
         } else {
             throw error;
@@ -65,7 +65,7 @@ async function main() {
     if (SUBSCRIPTION_ID) {
         console.log("\n--- List Locations ---");
         try {
-            const locations = await client.subscriptionsListLocationsAsync(SUBSCRIPTION_ID);
+            const locations = await client.listSubscriptionsLocations(SUBSCRIPTION_ID);
             const locs = locations.value ?? [];
 
             if (locs.length > 0) {
@@ -77,7 +77,7 @@ async function main() {
                 console.log("No locations found.");
             }
         } catch (error) {
-            if (error instanceof ConnectorException) {
+            if (error instanceof ConnectorError) {
                 console.log(`Connector error (${error.statusCode}): ${error.message}`);
             } else {
                 throw error;
@@ -88,7 +88,7 @@ async function main() {
         console.log("\n--- List Resource Groups ---");
         try {
             const groups = [];
-            for await (const group of client.resourceGroupsListAsync(SUBSCRIPTION_ID)) {
+            for await (const group of client.listResourceGroups(SUBSCRIPTION_ID)) {
                 groups.push(group);
             }
 
@@ -101,7 +101,7 @@ async function main() {
                 console.log("No resource groups found.");
             }
         } catch (error) {
-            if (error instanceof ConnectorException) {
+            if (error instanceof ConnectorError) {
                 console.log(`Connector error (${error.statusCode}): ${error.message}`);
             } else {
                 throw error;

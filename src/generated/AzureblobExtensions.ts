@@ -5,7 +5,7 @@ import type { AbortSignalLike } from "@azure/abort-controller";
 import type { TokenCredential } from "@azure/core-auth";
 import type { PagedAsyncIterableIterator } from "@azure/core-paging";
 import { ConnectorClientBase } from "../azureConnectors/clientBase.ts";
-import { ConnectorException } from "../azureConnectors/connectorException.ts";
+import { ConnectorError } from "../azureConnectors/connectorError.ts";
 import { ConnectorClientOptions } from "../azureConnectors/options.ts";
 import { TriggerCallbackPayload } from "../azureConnectors/triggerPayload.ts";
 
@@ -91,6 +91,8 @@ export interface BlobMetadataResponse {
 export interface ListOfBlobsWithSensitivityLabels {
     /** List of Blobs */
     value?: Array<DataWithSensitivityLabelInfo>;
+    /** The URL to retrieve the next page. */
+    nextLink?: string;
 }
 
 /**
@@ -313,7 +315,7 @@ export class AzureblobClient extends ConnectorClientBase {
      * Copy blob
      * @remarks This operation copies a blob. If blob is being deleted/renamed on server right after it was copied, connector may return HTTP 404 error by it's design. Please use a delay for 1 minute before deleting or renaming newly created blob. Chunk transfer is not supported in this action. If source and destination are present in same storage account, please use relative path. Otherwise, maximum size of a source for copy blob operation is 50 MB.
      */
-    public async copyFileAsync(dataset: string, source?: string, destination?: string, overwrite?: string, queryParametersSingleEncoded?: string, abortSignal?: AbortSignalLike): Promise<BlobMetadata> {
+    public async copyFile(dataset: string, source?: string, destination?: string, overwrite?: string, queryParametersSingleEncoded?: string, abortSignal?: AbortSignalLike): Promise<BlobMetadata> {
         const queryParams: string[] = [];
         if (source !== undefined) {
             queryParams.push(`source=${encodeURIComponent(String(source))}`);
@@ -327,12 +329,12 @@ export class AzureblobClient extends ConnectorClientBase {
         if (queryParametersSingleEncoded !== undefined) {
             queryParams.push(`queryParametersSingleEncoded=${encodeURIComponent(String(queryParametersSingleEncoded))}`);
         }
-        const requestPath = `/v2/datasets/${encodeURIComponent(String(dataset))}/copyFile` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
+        const requestPath = `/v2/datasets/${encodeURIComponent(encodeURIComponent(String(dataset)))}/copyFile` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<BlobMetadata>("POST", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as BlobMetadata;
@@ -342,7 +344,7 @@ export class AzureblobClient extends ConnectorClientBase {
      * Create block blob
      * @remarks This operation uploads a block blob to Azure Blob Storage.
      */
-    public async createBlockBlobAsync(input: CreateBlockBlobInput, storageAccountName: string, folderPath?: string, name?: string, abortSignal?: AbortSignalLike): Promise<void> {
+    public async createBlockBlob(input: CreateBlockBlobInput, storageAccountName: string, folderPath?: string, name?: string, abortSignal?: AbortSignalLike): Promise<void> {
         const queryParams: string[] = [];
         if (folderPath !== undefined) {
             queryParams.push(`folderPath=${encodeURIComponent(String(folderPath))}`);
@@ -355,7 +357,7 @@ export class AzureblobClient extends ConnectorClientBase {
         const httpResponse = await this.httpClient.sendAsync<void>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
     }
 
@@ -363,7 +365,7 @@ export class AzureblobClient extends ConnectorClientBase {
      * Create blob
      * @remarks This operation uploads a blob to Azure Blob Storage.
      */
-    public async createFileAsync(input: CreateFileInput, dataset: string, folderPath?: string, name?: string, queryParametersSingleEncoded?: string, abortSignal?: AbortSignalLike): Promise<BlobMetadata> {
+    public async createFile(input: CreateFileInput, dataset: string, folderPath?: string, name?: string, queryParametersSingleEncoded?: string, abortSignal?: AbortSignalLike): Promise<BlobMetadata> {
         const queryParams: string[] = [];
         if (folderPath !== undefined) {
             queryParams.push(`folderPath=${encodeURIComponent(String(folderPath))}`);
@@ -374,12 +376,12 @@ export class AzureblobClient extends ConnectorClientBase {
         if (queryParametersSingleEncoded !== undefined) {
             queryParams.push(`queryParametersSingleEncoded=${encodeURIComponent(String(queryParametersSingleEncoded))}`);
         }
-        const requestPath = `/v2/datasets/${encodeURIComponent(String(dataset))}/files` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
+        const requestPath = `/v2/datasets/${encodeURIComponent(encodeURIComponent(String(dataset)))}/files` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<BlobMetadata>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as BlobMetadata;
@@ -389,7 +391,7 @@ export class AzureblobClient extends ConnectorClientBase {
      * Create SAS URI by path
      * @remarks This operation creates a SAS link for a blob using the path.
      */
-    public async createShareLinkByPathAsync(input: SharedAccessSignatureBlobPolicy, storageAccountName: string, path?: string, abortSignal?: AbortSignalLike): Promise<SharedAccessSignature> {
+    public async createShareLinkByPath(input: SharedAccessSignatureBlobPolicy, storageAccountName: string, path?: string, abortSignal?: AbortSignalLike): Promise<SharedAccessSignature> {
         const queryParams: string[] = [];
         if (path !== undefined) {
             queryParams.push(`path=${encodeURIComponent(String(path))}`);
@@ -399,7 +401,7 @@ export class AzureblobClient extends ConnectorClientBase {
         const httpResponse = await this.httpClient.sendAsync<SharedAccessSignature>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as SharedAccessSignature;
@@ -409,13 +411,13 @@ export class AzureblobClient extends ConnectorClientBase {
      * Delete blob
      * @remarks This operation deletes a blob.
      */
-    public async deleteFileAsync(dataset: string, id: string, abortSignal?: AbortSignalLike): Promise<void> {
-        const requestPath = `/v2/datasets/${encodeURIComponent(String(dataset))}/files/${id}`;
+    public async deleteFile(dataset: string, id: string, abortSignal?: AbortSignalLike): Promise<void> {
+        const requestPath = `/v2/datasets/${encodeURIComponent(encodeURIComponent(String(dataset)))}/files/${encodeURIComponent(encodeURIComponent(String(id)))}`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<void>("DELETE", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `DELETE ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `DELETE ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
     }
 
@@ -423,7 +425,7 @@ export class AzureblobClient extends ConnectorClientBase {
      * Extract archive to folder
      * @remarks This operation extracts an archive blob into a folder (example: .zip).
      */
-    public async extractFolderAsync(dataset: string, source?: string, destination?: string, overwrite?: string, queryParametersSingleEncoded?: string, abortSignal?: AbortSignalLike): Promise<Array<BlobMetadata>> {
+    public async extractFolder(dataset: string, source?: string, destination?: string, overwrite?: string, queryParametersSingleEncoded?: string, abortSignal?: AbortSignalLike): Promise<Array<BlobMetadata>> {
         const queryParams: string[] = [];
         if (source !== undefined) {
             queryParams.push(`source=${encodeURIComponent(String(source))}`);
@@ -437,12 +439,12 @@ export class AzureblobClient extends ConnectorClientBase {
         if (queryParametersSingleEncoded !== undefined) {
             queryParams.push(`queryParametersSingleEncoded=${encodeURIComponent(String(queryParametersSingleEncoded))}`);
         }
-        const requestPath = `/v2/datasets/${encodeURIComponent(String(dataset))}/extractFolderV2` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
+        const requestPath = `/v2/datasets/${encodeURIComponent(encodeURIComponent(String(dataset)))}/extractFolderV2` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<Array<BlobMetadata>>("POST", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as Array<BlobMetadata>;
@@ -452,7 +454,7 @@ export class AzureblobClient extends ConnectorClientBase {
      * Get available access policies
      * @remarks This operation gets available shared access policies for a blob.
      */
-    public async getAccessPoliciesAsync(storageAccountName: string, path?: string, abortSignal?: AbortSignalLike): Promise<Array<SharedAccessSignatureBlobPolicy>> {
+    public async getAccessPolicies(storageAccountName: string, path?: string, abortSignal?: AbortSignalLike): Promise<Array<SharedAccessSignatureBlobPolicy>> {
         const queryParams: string[] = [];
         if (path !== undefined) {
             queryParams.push(`path=${encodeURIComponent(String(path))}`);
@@ -462,7 +464,7 @@ export class AzureblobClient extends ConnectorClientBase {
         const httpResponse = await this.httpClient.sendAsync<Array<SharedAccessSignatureBlobPolicy>>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as Array<SharedAccessSignatureBlobPolicy>;
@@ -472,7 +474,7 @@ export class AzureblobClient extends ConnectorClientBase {
      * Get blob content
      * @remarks This operation retrieves blob contents using id.
      */
-    public async getFileContentAsync(dataset: string, id: string, inferContentType?: string, extractSensitivityLabel?: string, purviewAccountName?: string, abortSignal?: AbortSignalLike): Promise<Blob> {
+    public async getFileContent(dataset: string, id: string, inferContentType?: string, extractSensitivityLabel?: string, purviewAccountName?: string, abortSignal?: AbortSignalLike): Promise<Blob> {
         const queryParams: string[] = [];
         if (inferContentType !== undefined) {
             queryParams.push(`inferContentType=${encodeURIComponent(String(inferContentType))}`);
@@ -483,12 +485,12 @@ export class AzureblobClient extends ConnectorClientBase {
         if (purviewAccountName !== undefined) {
             queryParams.push(`purviewAccountName=${encodeURIComponent(String(purviewAccountName))}`);
         }
-        const requestPath = `/v2/datasets/${encodeURIComponent(String(dataset))}/files/${id}/content` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
+        const requestPath = `/v2/datasets/${encodeURIComponent(encodeURIComponent(String(dataset)))}/files/${encodeURIComponent(encodeURIComponent(String(id)))}/content` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<Blob>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as Blob;
@@ -498,7 +500,7 @@ export class AzureblobClient extends ConnectorClientBase {
      * Get blob content using path
      * @remarks This operation retrieves blob contents using path.
      */
-    public async getFileContentByPathAsync(dataset: string, path?: string, inferContentType?: string, queryParametersSingleEncoded?: string, extractSensitivityLabel?: string, purviewAccountName?: string, abortSignal?: AbortSignalLike): Promise<Blob> {
+    public async getFileContentByPath(dataset: string, path?: string, inferContentType?: string, queryParametersSingleEncoded?: string, extractSensitivityLabel?: string, purviewAccountName?: string, abortSignal?: AbortSignalLike): Promise<Blob> {
         const queryParams: string[] = [];
         if (path !== undefined) {
             queryParams.push(`path=${encodeURIComponent(String(path))}`);
@@ -515,12 +517,12 @@ export class AzureblobClient extends ConnectorClientBase {
         if (purviewAccountName !== undefined) {
             queryParams.push(`purviewAccountName=${encodeURIComponent(String(purviewAccountName))}`);
         }
-        const requestPath = `/v2/datasets/${encodeURIComponent(String(dataset))}/GetFileContentByPath` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
+        const requestPath = `/v2/datasets/${encodeURIComponent(encodeURIComponent(String(dataset)))}/GetFileContentByPath` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<Blob>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as Blob;
@@ -530,7 +532,7 @@ export class AzureblobClient extends ConnectorClientBase {
      * Get Blob Metadata
      * @remarks This operation retrieves blob metadata using blob id.
      */
-    public async getFileMetadataAsync(dataset: string, id: string, extractSensitivityLabel?: string, purviewAccountName?: string, abortSignal?: AbortSignalLike): Promise<DataWithSensitivityLabelInfo> {
+    public async getFileMetadata(dataset: string, id: string, extractSensitivityLabel?: string, purviewAccountName?: string, abortSignal?: AbortSignalLike): Promise<DataWithSensitivityLabelInfo> {
         const queryParams: string[] = [];
         if (extractSensitivityLabel !== undefined) {
             queryParams.push(`extractSensitivityLabel=${encodeURIComponent(String(extractSensitivityLabel))}`);
@@ -538,12 +540,12 @@ export class AzureblobClient extends ConnectorClientBase {
         if (purviewAccountName !== undefined) {
             queryParams.push(`purviewAccountName=${encodeURIComponent(String(purviewAccountName))}`);
         }
-        const requestPath = `/v2/datasets/${encodeURIComponent(String(dataset))}/files/${id}` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
+        const requestPath = `/v2/datasets/${encodeURIComponent(encodeURIComponent(String(dataset)))}/files/${encodeURIComponent(encodeURIComponent(String(id)))}` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<DataWithSensitivityLabelInfo>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as DataWithSensitivityLabelInfo;
@@ -553,7 +555,7 @@ export class AzureblobClient extends ConnectorClientBase {
      * Get Blob Metadata using path
      * @remarks This operation retrieves blob metadata using path.
      */
-    public async getFileMetadataByPathAsync(dataset: string, path?: string, queryParametersSingleEncoded?: string, extractSensitivityLabel?: string, purviewAccountName?: string, abortSignal?: AbortSignalLike): Promise<DataWithSensitivityLabelInfo> {
+    public async getFileMetadataByPath(dataset: string, path?: string, queryParametersSingleEncoded?: string, extractSensitivityLabel?: string, purviewAccountName?: string, abortSignal?: AbortSignalLike): Promise<DataWithSensitivityLabelInfo> {
         const queryParams: string[] = [];
         if (path !== undefined) {
             queryParams.push(`path=${encodeURIComponent(String(path))}`);
@@ -567,12 +569,12 @@ export class AzureblobClient extends ConnectorClientBase {
         if (purviewAccountName !== undefined) {
             queryParams.push(`purviewAccountName=${encodeURIComponent(String(purviewAccountName))}`);
         }
-        const requestPath = `/v2/datasets/${encodeURIComponent(String(dataset))}/GetFileByPath` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
+        const requestPath = `/v2/datasets/${encodeURIComponent(encodeURIComponent(String(dataset)))}/GetFileByPath` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<DataWithSensitivityLabelInfo>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as DataWithSensitivityLabelInfo;
@@ -582,7 +584,7 @@ export class AzureblobClient extends ConnectorClientBase {
      * Lists blobs
      * @remarks This operation lists blobs in a container.
      */
-    public async listFolderAsync(dataset: string, id: string, nextPageMarker?: string, useFlatListing?: string, extractSensitivityLabel?: string, purviewAccountName?: string, abortSignal?: AbortSignalLike): Promise<ListOfBlobsWithSensitivityLabels> {
+    public listFolder(dataset: string, id: string, nextPageMarker?: string, useFlatListing?: string, extractSensitivityLabel?: string, purviewAccountName?: string, abortSignal?: AbortSignalLike): PagedAsyncIterableIterator<DataWithSensitivityLabelInfo> {
         const queryParams: string[] = [];
         if (nextPageMarker !== undefined) {
             queryParams.push(`nextPageMarker=${encodeURIComponent(String(nextPageMarker))}`);
@@ -596,22 +598,29 @@ export class AzureblobClient extends ConnectorClientBase {
         if (purviewAccountName !== undefined) {
             queryParams.push(`purviewAccountName=${encodeURIComponent(String(purviewAccountName))}`);
         }
-        const requestPath = `/v2/datasets/${encodeURIComponent(String(dataset))}/foldersV2/${id}` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
-        const requestUrl = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<ListOfBlobsWithSensitivityLabels>("GET", requestUrl, undefined, undefined, abortSignal);
+        const requestPath = `/v2/datasets/${encodeURIComponent(encodeURIComponent(String(dataset)))}/foldersV2/${encodeURIComponent(encodeURIComponent(String(id)))}` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
+        return this.createPageable<ListOfBlobsWithSensitivityLabels, DataWithSensitivityLabelInfo>(
+            requestPath,
+            async (requestUrl) => {
+                const httpResponse = await this.httpClient.sendAsync<ListOfBlobsWithSensitivityLabels>("GET", requestUrl, undefined, undefined, abortSignal);
 
-        if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
-        }
+                if (!httpResponse.isSuccessStatusCode) {
+                    const operationPath = this.getOperationPath(requestUrl);
+                    throw new ConnectorError(this.connectorName, `GET ${operationPath}`, httpResponse.statusCode, httpResponse.text);
+                }
 
-        return httpResponse.value as ListOfBlobsWithSensitivityLabels;
+                return httpResponse.value as ListOfBlobsWithSensitivityLabels;
+            },
+            "value",
+            "nextLink",
+        );
     }
 
     /**
      * Lists blobs in the root folder
      * @remarks This operation lists blobs in the Azure Blob Storage root folder.
      */
-    public listRootFolderAsync(dataset: string, nextPageMarker?: string, useFlatListing?: string, abortSignal?: AbortSignalLike): PagedAsyncIterableIterator<BlobMetadata> {
+    public listRootFolder(dataset: string, nextPageMarker?: string, useFlatListing?: string, abortSignal?: AbortSignalLike): PagedAsyncIterableIterator<BlobMetadata> {
         const queryParams: string[] = [];
         if (nextPageMarker !== undefined) {
             queryParams.push(`nextPageMarker=${encodeURIComponent(String(nextPageMarker))}`);
@@ -619,7 +628,7 @@ export class AzureblobClient extends ConnectorClientBase {
         if (useFlatListing !== undefined) {
             queryParams.push(`useFlatListing=${encodeURIComponent(String(useFlatListing))}`);
         }
-        const requestPath = `/v2/datasets/${encodeURIComponent(String(dataset))}/foldersV2` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
+        const requestPath = `/v2/datasets/${encodeURIComponent(encodeURIComponent(String(dataset)))}/foldersV2` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         return this.createPageable<BlobMetadataPage, BlobMetadata>(
             requestPath,
             async (requestUrl) => {
@@ -627,11 +636,13 @@ export class AzureblobClient extends ConnectorClientBase {
 
                 if (!httpResponse.isSuccessStatusCode) {
                     const operationPath = this.getOperationPath(requestUrl);
-                    throw new ConnectorException(this.connectorName, `GET ${operationPath}`, httpResponse.statusCode, httpResponse.text);
+                    throw new ConnectorError(this.connectorName, `GET ${operationPath}`, httpResponse.statusCode, httpResponse.text);
                 }
 
                 return httpResponse.value as BlobMetadataPage;
             },
+            "value",
+            "nextLink",
         );
     }
 
@@ -639,7 +650,7 @@ export class AzureblobClient extends ConnectorClientBase {
      * Set blob tier by path
      * @remarks This operation sets a tier for a block blob on a standard storage account using the path.
      */
-    public async setBlobTierByPathAsync(storageAccountName: string, path?: string, newTier?: string, abortSignal?: AbortSignalLike): Promise<void> {
+    public async setBlobTierByPath(storageAccountName: string, path?: string, newTier?: string, abortSignal?: AbortSignalLike): Promise<void> {
         const queryParams: string[] = [];
         if (path !== undefined) {
             queryParams.push(`path=${encodeURIComponent(String(path))}`);
@@ -652,7 +663,7 @@ export class AzureblobClient extends ConnectorClientBase {
         const httpResponse = await this.httpClient.sendAsync<void>("POST", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
     }
 
@@ -660,13 +671,13 @@ export class AzureblobClient extends ConnectorClientBase {
      * Update blob
      * @remarks This operation updates a blob in Azure Blob Storage.
      */
-    public async updateFileAsync(input: UpdateFileInput, dataset: string, id: string, abortSignal?: AbortSignalLike): Promise<BlobMetadata> {
-        const requestPath = `/v2/datasets/${encodeURIComponent(String(dataset))}/files/${id}`;
+    public async updateFile(input: UpdateFileInput, dataset: string, id: string, abortSignal?: AbortSignalLike): Promise<BlobMetadata> {
+        const requestPath = `/v2/datasets/${encodeURIComponent(encodeURIComponent(String(dataset)))}/files/${encodeURIComponent(encodeURIComponent(String(id)))}`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<BlobMetadata>("PUT", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `PUT ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `PUT ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as BlobMetadata;

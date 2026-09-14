@@ -4,7 +4,7 @@
 import type { AbortSignalLike } from "@azure/abort-controller";
 import type { TokenCredential } from "@azure/core-auth";
 import { ConnectorClientBase } from "../azureConnectors/clientBase.ts";
-import { ConnectorException } from "../azureConnectors/connectorException.ts";
+import { ConnectorError } from "../azureConnectors/connectorError.ts";
 import { ConnectorClientOptions } from "../azureConnectors/options.ts";
 
 // #region Types
@@ -210,7 +210,7 @@ export class TicketmasterClient extends ConnectorClientBase {
      * Event search
      * @remarks Find events and filter your search by location, date, availability, and much more.
      */
-    public async eventsGetAsync(size?: string, id?: string, keyword?: string, attractionId?: string, venueId?: string, postalCode?: string, latlong?: string, radius?: string, unit?: string, source?: string, locale?: string, marketId?: string, startDateTime?: string, endDateTime?: string, includeTBA?: string, includeTBD?: string, includeTest?: string, page?: string, sort?: string, onsaleStartDateTime?: string, onsaleEndDateTime?: string, city?: string, countryCode?: string, stateCode?: string, classificationName?: string, classificationId?: string, dmaId?: string, localStartDateTime?: string, localStartEndDateTime?: string, startEndDateTime?: string, publicVisibilityStartDateTime?: string, preSaleDateTime?: string, onsaleOnStartDate?: string, onsaleOnAfterStartDate?: string, collectionId?: string, segmentId?: string, segmentName?: string, includeFamily?: string, promoterId?: string, genreId?: string, subGenreId?: string, typeId?: string, subTypeId?: string, geoPoint?: string, preferredCountry?: string, includeSpellcheck?: string, domain?: string, abortSignal?: AbortSignalLike): Promise<EventsGetResponse> {
+    public async getEvents(size?: string, id?: string, keyword?: string, attractionId?: string, venueId?: string, postalCode?: string, latlong?: string, radius?: string, unit?: string, source?: string, locale?: string, marketId?: string, startDateTime?: string, endDateTime?: string, includeTBA?: string, includeTBD?: string, includeTest?: string, page?: string, sort?: string, onsaleStartDateTime?: string, onsaleEndDateTime?: string, city?: string, countryCode?: string, stateCode?: string, classificationName?: string, classificationId?: string, dmaId?: string, localStartDateTime?: string, localStartEndDateTime?: string, startEndDateTime?: string, publicVisibilityStartDateTime?: string, preSaleDateTime?: string, onsaleOnStartDate?: string, onsaleOnAfterStartDate?: string, collectionId?: string, segmentId?: string, segmentName?: string, includeFamily?: string, promoterId?: string, genreId?: string, subGenreId?: string, typeId?: string, subTypeId?: string, geoPoint?: string, preferredCountry?: string, includeSpellcheck?: string, domain?: string, abortSignal?: AbortSignalLike): Promise<EventsGetResponse> {
         const queryParams: string[] = [];
         if (size !== undefined) {
             queryParams.push(`size=${encodeURIComponent(String(size))}`);
@@ -358,7 +358,7 @@ export class TicketmasterClient extends ConnectorClientBase {
         const httpResponse = await this.httpClient.sendAsync<EventsGetResponse>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as EventsGetResponse;
@@ -368,7 +368,7 @@ export class TicketmasterClient extends ConnectorClientBase {
      * Get event details
      * @remarks Get details for a specific event using the unique identifier for the event. This includes the venue and location, the attraction(s), and the Ticketmaster Website URL for purchasing tickets for the event
      */
-    public async eventGetAsync(id: string, locale?: string, domain?: string, abortSignal?: AbortSignalLike): Promise<EventGetResponse> {
+    public async getEvent(id: string, locale?: string, domain?: string, abortSignal?: AbortSignalLike): Promise<EventGetResponse> {
         const queryParams: string[] = [];
         if (locale !== undefined) {
             queryParams.push(`locale=${encodeURIComponent(String(locale))}`);
@@ -381,7 +381,7 @@ export class TicketmasterClient extends ConnectorClientBase {
         const httpResponse = await this.httpClient.sendAsync<EventGetResponse>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as EventGetResponse;
@@ -391,7 +391,7 @@ export class TicketmasterClient extends ConnectorClientBase {
      * Get event images
      * @remarks Get images for a specific event using the unique identifier for the event.
      */
-    public async eventImagesGetAsync(id: string, locale?: string, domain?: string, abortSignal?: AbortSignalLike): Promise<EventImagesGetResponse> {
+    public async getEventImages(id: string, locale?: string, domain?: string, abortSignal?: AbortSignalLike): Promise<EventImagesGetResponse> {
         const queryParams: string[] = [];
         if (locale !== undefined) {
             queryParams.push(`locale=${encodeURIComponent(String(locale))}`);
@@ -404,7 +404,7 @@ export class TicketmasterClient extends ConnectorClientBase {
         const httpResponse = await this.httpClient.sendAsync<EventImagesGetResponse>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as EventImagesGetResponse;
@@ -414,7 +414,7 @@ export class TicketmasterClient extends ConnectorClientBase {
      * Attraction search
      * @remarks Find attractions (artists, sports, packages, plays and so on) and filter your search by name, and much more.
      */
-    public async attractionsGetAsync(id?: string, keyword?: string, source?: string, locale?: string, includeTest?: string, size?: string, page?: string, sort?: string, classificationName?: string, classificationId?: string, includeFamily?: string, segmentId?: string, genreId?: string, subGenreId?: string, typeId?: string, subTypeId?: string, countryCode?: string, preferredCountry?: string, includeSpellcheck?: string, domain?: string, abortSignal?: AbortSignalLike): Promise<AttractionsGetResponse> {
+    public async getAttractions(id?: string, keyword?: string, source?: string, locale?: string, includeTest?: string, size?: string, page?: string, sort?: string, classificationName?: string, classificationId?: string, includeFamily?: string, segmentId?: string, genreId?: string, subGenreId?: string, typeId?: string, subTypeId?: string, countryCode?: string, preferredCountry?: string, includeSpellcheck?: string, domain?: string, abortSignal?: AbortSignalLike): Promise<AttractionsGetResponse> {
         const queryParams: string[] = [];
         if (id !== undefined) {
             queryParams.push(`id=${encodeURIComponent(String(id))}`);
@@ -481,7 +481,7 @@ export class TicketmasterClient extends ConnectorClientBase {
         const httpResponse = await this.httpClient.sendAsync<AttractionsGetResponse>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as AttractionsGetResponse;
@@ -491,7 +491,7 @@ export class TicketmasterClient extends ConnectorClientBase {
      * Get attraction details
      * @remarks Get details for a specific attraction using the unique identifier for the attraction.
      */
-    public async attractionGetAsync(id: string, locale?: string, domain?: string, abortSignal?: AbortSignalLike): Promise<AttractionGetResponse> {
+    public async getAttraction(id: string, locale?: string, domain?: string, abortSignal?: AbortSignalLike): Promise<AttractionGetResponse> {
         const queryParams: string[] = [];
         if (locale !== undefined) {
             queryParams.push(`locale=${encodeURIComponent(String(locale))}`);
@@ -504,7 +504,7 @@ export class TicketmasterClient extends ConnectorClientBase {
         const httpResponse = await this.httpClient.sendAsync<AttractionGetResponse>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as AttractionGetResponse;
@@ -514,7 +514,7 @@ export class TicketmasterClient extends ConnectorClientBase {
      * Classification search
      * @remarks Find classifications and filter your search by name, and much more. Classifications help define the nature of attractions and events.
      */
-    public async classificationsGetAsync(id?: string, keyword?: string, source?: string, locale?: string, includeTest?: string, size?: string, page?: string, sort?: string, countryCode?: string, preferredCountry?: string, includeSpellcheck?: string, domain?: string, abortSignal?: AbortSignalLike): Promise<ClassificationsGetResponse> {
+    public async getClassifications(id?: string, keyword?: string, source?: string, locale?: string, includeTest?: string, size?: string, page?: string, sort?: string, countryCode?: string, preferredCountry?: string, includeSpellcheck?: string, domain?: string, abortSignal?: AbortSignalLike): Promise<ClassificationsGetResponse> {
         const queryParams: string[] = [];
         if (id !== undefined) {
             queryParams.push(`id=${encodeURIComponent(String(id))}`);
@@ -557,7 +557,7 @@ export class TicketmasterClient extends ConnectorClientBase {
         const httpResponse = await this.httpClient.sendAsync<ClassificationsGetResponse>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as ClassificationsGetResponse;
@@ -567,7 +567,7 @@ export class TicketmasterClient extends ConnectorClientBase {
      * Get classification details
      * @remarks Get details for a specific segment, genre, or sub-genre using its unique identifier.
      */
-    public async classificationGetAsync(id: string, locale?: string, domain?: string, abortSignal?: AbortSignalLike): Promise<ClassificationGetResponse> {
+    public async getClassification(id: string, locale?: string, domain?: string, abortSignal?: AbortSignalLike): Promise<ClassificationGetResponse> {
         const queryParams: string[] = [];
         if (locale !== undefined) {
             queryParams.push(`locale=${encodeURIComponent(String(locale))}`);
@@ -580,7 +580,7 @@ export class TicketmasterClient extends ConnectorClientBase {
         const httpResponse = await this.httpClient.sendAsync<ClassificationGetResponse>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as ClassificationGetResponse;
@@ -590,7 +590,7 @@ export class TicketmasterClient extends ConnectorClientBase {
      * Get genre details
      * @remarks Get details for a specific genre using its unique identifier.
      */
-    public async genreGetAsync(id: string, locale?: string, domain?: string, abortSignal?: AbortSignalLike): Promise<GenreGetResponse> {
+    public async getGenre(id: string, locale?: string, domain?: string, abortSignal?: AbortSignalLike): Promise<GenreGetResponse> {
         const queryParams: string[] = [];
         if (locale !== undefined) {
             queryParams.push(`locale=${encodeURIComponent(String(locale))}`);
@@ -603,7 +603,7 @@ export class TicketmasterClient extends ConnectorClientBase {
         const httpResponse = await this.httpClient.sendAsync<GenreGetResponse>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as GenreGetResponse;
@@ -613,7 +613,7 @@ export class TicketmasterClient extends ConnectorClientBase {
      * Get segment details
      * @remarks Get details for a specific segment using its unique identifier.
      */
-    public async segmentGetAsync(id: string, locale?: string, domain?: string, abortSignal?: AbortSignalLike): Promise<SegmentGetResponse> {
+    public async getSegment(id: string, locale?: string, domain?: string, abortSignal?: AbortSignalLike): Promise<SegmentGetResponse> {
         const queryParams: string[] = [];
         if (locale !== undefined) {
             queryParams.push(`locale=${encodeURIComponent(String(locale))}`);
@@ -626,7 +626,7 @@ export class TicketmasterClient extends ConnectorClientBase {
         const httpResponse = await this.httpClient.sendAsync<SegmentGetResponse>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as SegmentGetResponse;
@@ -636,7 +636,7 @@ export class TicketmasterClient extends ConnectorClientBase {
      * Get sub-genre details
      * @remarks Get details for a specific sub-genre using its unique identifier.
      */
-    public async subGenreGetAsync(id: string, locale?: string, domain?: string, abortSignal?: AbortSignalLike): Promise<SubGenreGetResponse> {
+    public async getSubGenre(id: string, locale?: string, domain?: string, abortSignal?: AbortSignalLike): Promise<SubGenreGetResponse> {
         const queryParams: string[] = [];
         if (locale !== undefined) {
             queryParams.push(`locale=${encodeURIComponent(String(locale))}`);
@@ -649,7 +649,7 @@ export class TicketmasterClient extends ConnectorClientBase {
         const httpResponse = await this.httpClient.sendAsync<SubGenreGetResponse>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as SubGenreGetResponse;
@@ -659,7 +659,7 @@ export class TicketmasterClient extends ConnectorClientBase {
      * Venue search
      * @remarks Find venues and filter your search by name, and much more.
      */
-    public async venuesGetAsync(id?: string, keyword?: string, latlong?: string, radius?: string, unit?: string, source?: string, locale?: string, includeTest?: string, size?: string, page?: string, sort?: string, countryCode?: string, stateCode?: string, geoPoint?: string, preferredCountry?: string, includeSpellcheck?: string, domain?: string, abortSignal?: AbortSignalLike): Promise<VenuesGetResponse> {
+    public async getVenues(id?: string, keyword?: string, latlong?: string, radius?: string, unit?: string, source?: string, locale?: string, includeTest?: string, size?: string, page?: string, sort?: string, countryCode?: string, stateCode?: string, geoPoint?: string, preferredCountry?: string, includeSpellcheck?: string, domain?: string, abortSignal?: AbortSignalLike): Promise<VenuesGetResponse> {
         const queryParams: string[] = [];
         if (id !== undefined) {
             queryParams.push(`id=${encodeURIComponent(String(id))}`);
@@ -717,7 +717,7 @@ export class TicketmasterClient extends ConnectorClientBase {
         const httpResponse = await this.httpClient.sendAsync<VenuesGetResponse>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as VenuesGetResponse;
@@ -727,7 +727,7 @@ export class TicketmasterClient extends ConnectorClientBase {
      * Get venue details
      * @remarks Get details for a specific venue using the unique identifier for the venue.
      */
-    public async venueGetAsync(id: string, locale?: string, domain?: string, abortSignal?: AbortSignalLike): Promise<VenueGetResponse> {
+    public async getVenue(id: string, locale?: string, domain?: string, abortSignal?: AbortSignalLike): Promise<VenueGetResponse> {
         const queryParams: string[] = [];
         if (locale !== undefined) {
             queryParams.push(`locale=${encodeURIComponent(String(locale))}`);
@@ -740,7 +740,7 @@ export class TicketmasterClient extends ConnectorClientBase {
         const httpResponse = await this.httpClient.sendAsync<VenueGetResponse>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as VenueGetResponse;
@@ -750,7 +750,7 @@ export class TicketmasterClient extends ConnectorClientBase {
      * Find suggestions
      * @remarks Find search suggestions and filter your suggestions by location, source, etc.
      */
-    public async suggestionsGetAsync(keyword?: string, latlong?: string, radius?: string, unit?: string, source?: string, locale?: string, includeTBA?: string, includeTBD?: string, includeTest?: string, size?: string, countryCode?: string, segmentId?: string, geoPoint?: string, resource?: string, preferredCountry?: string, startEndDateTime?: string, localStartEndDateTime?: string, includeSpellcheck?: string, domain?: string, abortSignal?: AbortSignalLike): Promise<SuggestionsGetResponse> {
+    public async getSuggestions(keyword?: string, latlong?: string, radius?: string, unit?: string, source?: string, locale?: string, includeTBA?: string, includeTBD?: string, includeTest?: string, size?: string, countryCode?: string, segmentId?: string, geoPoint?: string, resource?: string, preferredCountry?: string, startEndDateTime?: string, localStartEndDateTime?: string, includeSpellcheck?: string, domain?: string, abortSignal?: AbortSignalLike): Promise<SuggestionsGetResponse> {
         const queryParams: string[] = [];
         if (keyword !== undefined) {
             queryParams.push(`keyword=${encodeURIComponent(String(keyword))}`);
@@ -814,7 +814,7 @@ export class TicketmasterClient extends ConnectorClientBase {
         const httpResponse = await this.httpClient.sendAsync<SuggestionsGetResponse>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as SuggestionsGetResponse;

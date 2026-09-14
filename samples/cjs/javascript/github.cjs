@@ -6,7 +6,7 @@
 
 "use strict";
 
-const { ManagedIdentityTokenProvider, ConnectorException } = require("@azure/connectors");
+const { ManagedIdentityTokenProvider, ConnectorError } = require("@azure/connectors");
 const { GithubClient } = require("@azure/connectors/generated/GithubExtensions");
 
 const CONNECTION_URL = process.env.GITHUB_CONNECTION_URL ?? "";
@@ -22,10 +22,10 @@ async function main() {
     const client = new GithubClient(CONNECTION_URL, tokenProvider);
 
     try {
-        const result = await client.getRepositoryByIdAsync(GITHUB_REPOSITORY_ID);
+        const result = await client.getRepositoryById(GITHUB_REPOSITORY_ID);
         console.log(`Repository id: ${String(result.id ?? "unknown")}`);
     } catch (error) {
-        if (error instanceof ConnectorException) {
+        if (error instanceof ConnectorError) {
             console.log(`Connector error (${error.statusCode}): ${error.message}`);
             return;
         }

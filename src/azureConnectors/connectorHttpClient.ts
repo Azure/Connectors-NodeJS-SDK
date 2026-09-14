@@ -20,8 +20,11 @@ import type {
     HttpMethods,
     Pipeline,
     PipelineOptions,
+    PipelinePolicy,
+    PipelineRequest,
     PipelineResponse,
 } from "@azure/core-rest-pipeline";
+import { logger } from "./logger.ts";
 import type { ConnectorClientOptions } from "./options.ts";
 
 /**
@@ -49,7 +52,9 @@ export interface ConnectorResponse<TValue = unknown> {
  */
 export class ConnectorHttpClient {
     private static readonly ApiHubScopes = ["https://apihub.azure.com/.default"];
+    private static readonly DefaultMaxRetries = 3;
     private static readonly DefaultRetryPolicyName = "defaultRetryPolicy";
+    private static readonly RetryLoggingPolicyName = "connectorRetryLoggingPolicy";
     private static readonly SafeHttpMethods = new Set<HttpMethods>(["GET", "HEAD", "OPTIONS", "TRACE"]);
 
     private readonly credential: TokenCredential;
@@ -94,6 +99,9 @@ export class ConnectorHttpClient {
         abortSignal?: AbortSignalLike,
     ): Promise<ConnectorResponse<TValue>> {
         const effectiveScopes = scopes ?? ConnectorHttpClient.ApiHubScopes;
+        const logUrl = ConnectorHttpClient.sanitizeUrlForLogging(url);
+        const startTime = Date.now();
+        logger.info(`Request ${method} ${logUrl}`);
         const request = createPipelineRequest({
             url,
             method: method as HttpMethods,
@@ -106,8 +114,15 @@ export class ConnectorHttpClient {
             request.headers.set("Content-Type", "application/json");
         }
 
-        const response = await this.getPipeline(effectiveScopes).sendRequest(this.httpClient, request);
-        return ConnectorHttpClient.createConnectorResponse<TValue>(response);
+        try {
+            const response = await this.getPipeline(effectiveScopes).sendRequest(this.httpClient, request);
+            logger.info(`Response ${response.status} ${method} ${logUrl} (${Date.now() - startTime}ms)`);
+            return ConnectorHttpClient.createConnectorResponse<TValue>(response);
+        } catch (error) {
+            const errorMessage = error instanceof Error ? error.message : String(error);
+            logger.error(`${method} ${logUrl} failed: ${errorMessage}`);
+            throw error;
+        }
     }
 
     private getPipeline(scopes: string[]): Pipeline {
@@ -129,6 +144,12 @@ export class ConnectorHttpClient {
                 { phase: "Retry" },
             );
             pipeline.addPolicy(
+                ConnectorHttpClient.createRetryLoggingPolicy(
+                    this.pipelineOptions.retryOptions?.maxRetries ?? ConnectorHttpClient.DefaultMaxRetries,
+                ),
+                { afterPhase: "Retry" },
+            );
+            pipeline.addPolicy(
                 bearerTokenAuthenticationPolicy({ credential: this.credential, scopes: pipelineScopes }),
                 { phase: "Sign" },
             );
@@ -136,6 +157,39 @@ export class ConnectorHttpClient {
         }
 
         return pipeline;
+    }
+
+    private static createRetryLoggingPolicy(maxRetries: number): PipelinePolicy {
+        const attempts = new WeakMap<PipelineRequest, { count: number; completedAt: number }>();
+        return {
+            name: ConnectorHttpClient.RetryLoggingPolicyName,
+            sendRequest: async (request, next): Promise<PipelineResponse> => {
+                const state = attempts.get(request) ?? { count: 0, completedAt: Date.now() };
+                if (state.count > 0) {
+                    logger.warning(
+                        `Retry ${state.count}/${maxRetries} for ${request.method} ` +
+                        `${ConnectorHttpClient.sanitizeUrlForLogging(request.url)} after ${Date.now() - state.completedAt}ms`,
+                    );
+                }
+
+                state.count++;
+                attempts.set(request, state);
+                try {
+                    return await next(request);
+                } finally {
+                    state.completedAt = Date.now();
+                }
+            },
+        };
+    }
+
+    private static sanitizeUrlForLogging(url: string): string {
+        try {
+            const parsedUrl = new URL(url);
+            return `${parsedUrl.origin}${parsedUrl.pathname}`;
+        } catch {
+            return "<invalid URL>";
+        }
     }
 
     private static createConnectorResponse<TValue>(response: PipelineResponse): ConnectorResponse<TValue> {

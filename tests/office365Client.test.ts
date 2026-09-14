@@ -13,7 +13,7 @@ import {
     GraphCalendarEventClientReceive,
     GraphCalendarEventListClientReceive,
 } from "../src/generated/Office365Extensions.ts";
-import { ConnectorException } from "../src/azureConnectors/connectorException.ts";
+import { ConnectorError } from "../src/azureConnectors/connectorError.ts";
 import { ConnectorNames } from "../src/generated/connectorNames.ts";
 import { availableConnectors } from "../src/generated/ManagedConnectors.ts";
 
@@ -130,7 +130,7 @@ describe("Office365Client — constructor", () => {
     });
 });
 
-describe("Office365Client — sendEmailAsync", () => {
+describe("Office365Client — sendEmail", () => {
     afterEach(() => {
         jest.restoreAllMocks();
     });
@@ -145,7 +145,7 @@ describe("Office365Client — sendEmailAsync", () => {
             Body: "Hello",
         };
 
-        await client.sendEmailAsync(input);
+        await client.sendEmail(input);
 
         expect(global.fetch).toHaveBeenCalledTimes(1);
 
@@ -157,17 +157,17 @@ describe("Office365Client — sendEmailAsync", () => {
         expect(JSON.parse(init.body)).toEqual(input);
     });
 
-    it("should throw ConnectorException on non-OK response", async () => {
+    it("should throw ConnectorError on non-OK response", async () => {
         mockFetchError(401, "Unauthorized");
 
         const client = new Office365Client(TestConnectionUrl, createMockCredential());
         await expect(
-            client.sendEmailAsync({ To: "x", Subject: "x", Body: "x" }),
-        ).rejects.toThrow(ConnectorException);
+            client.sendEmail({ To: "x", Subject: "x", Body: "x" }),
+        ).rejects.toThrow(ConnectorError);
     });
 });
 
-describe("Office365Client — getOutlookCategoryNamesAsync", () => {
+describe("Office365Client — getOutlookCategoryNames", () => {
     afterEach(() => {
         jest.restoreAllMocks();
     });
@@ -180,7 +180,7 @@ describe("Office365Client — getOutlookCategoryNamesAsync", () => {
         mockFetchResponse(categories);
 
         const client = new Office365Client(TestConnectionUrl, createMockCredential());
-        const result = await client.getOutlookCategoryNamesAsync();
+        const result = await client.getOutlookCategoryNames();
 
         expect(result).toEqual(categories);
         const [url, init] = (global.fetch as jest.Mock).mock.calls[0];
@@ -190,7 +190,7 @@ describe("Office365Client — getOutlookCategoryNamesAsync", () => {
     });
 });
 
-describe("Office365Client — draftEmailAsync", () => {
+describe("Office365Client — draftEmail", () => {
     afterEach(() => {
         jest.restoreAllMocks();
     });
@@ -202,7 +202,7 @@ describe("Office365Client — draftEmailAsync", () => {
         const client = new Office365Client(TestConnectionUrl, createMockCredential());
         const input: DraftEmailInput = { To: "user@example.com", Subject: "Draft", Body: "<p>Hello</p>" };
 
-        const result = await client.draftEmailAsync(input, "parent-msg-id", "reply");
+        const result = await client.draftEmail(input, "parent-msg-id", "reply");
 
         expect(result).toEqual(draftedMessage);
         const [url] = (global.fetch as jest.Mock).mock.calls[0];
@@ -212,7 +212,7 @@ describe("Office365Client — draftEmailAsync", () => {
     });
 });
 
-describe("Office365Client — getEmailAsync", () => {
+describe("Office365Client — getEmail", () => {
     afterEach(() => {
         jest.restoreAllMocks();
     });
@@ -226,7 +226,7 @@ describe("Office365Client — getEmailAsync", () => {
         mockFetchResponse(mockMessage);
 
         const client = new Office365Client(TestConnectionUrl, createMockCredential());
-        const result = await client.getEmailAsync("abc-123");
+        const result = await client.getEmail("abc-123");
 
         expect(result.id).toBe("abc-123");
         expect(result.subject).toBe("Hello");
@@ -237,14 +237,14 @@ describe("Office365Client — getEmailAsync", () => {
         mockFetchResponse({});
 
         const client = new Office365Client(TestConnectionUrl, createMockCredential());
-        await client.getEmailAsync("msg-123");
+        await client.getEmail("msg-123");
 
         const [url] = (global.fetch as jest.Mock).mock.calls[0];
         expect(url).toContain("/msg-123");
     });
 });
 
-describe("Office365Client — calendarGetItemsAsync", () => {
+describe("Office365Client — getCalendarItems", () => {
     afterEach(() => {
         jest.restoreAllMocks();
     });
@@ -256,7 +256,7 @@ describe("Office365Client — calendarGetItemsAsync", () => {
         mockFetchResponse(mockResponse);
 
         const client = new Office365Client(TestConnectionUrl, createMockCredential());
-        const result = await client.calendarGetItemsAsync(
+        const result = await client.getCalendarItems(
             "calendar-1",
             undefined,
             "start desc",
@@ -271,7 +271,7 @@ describe("Office365Client — calendarGetItemsAsync", () => {
     });
 });
 
-describe("Office365Client — deleteEmailAsync", () => {
+describe("Office365Client — deleteEmail", () => {
     afterEach(() => {
         jest.restoreAllMocks();
     });
@@ -280,27 +280,27 @@ describe("Office365Client — deleteEmailAsync", () => {
         mockFetchResponse(null);
 
         const client = new Office365Client(TestConnectionUrl, createMockCredential());
-        await client.deleteEmailAsync("msg-to-delete");
+        await client.deleteEmail("msg-to-delete");
 
         const [, init] = (global.fetch as jest.Mock).mock.calls[0];
         expect(init.method).toBe("DELETE");
     });
 });
 
-describe("ConnectorException", () => {
+describe("ConnectorError", () => {
     it("should include status code and response body", () => {
         const errorBody = '{"code": "Forbidden"}';
-        const error = new ConnectorException("office365", "GET /test", 403, errorBody);
+        const error = new ConnectorError("office365", "GET /test", 403, errorBody);
 
         expect(error.statusCode).toBe(403);
         expect(error.responseBody).toBe(errorBody);
         expect(error.operation).toBe("GET /test");
-        expect(error.name).toBe("ConnectorException");
+        expect(error.name).toBe("ConnectorError");
     });
 
     it("should truncate long error response bodies in message", () => {
         const longBody = "x".repeat(3000);
-        const error = new ConnectorException("office365", "GET /test", 500, longBody);
+        const error = new ConnectorError("office365", "GET /test", 500, longBody);
 
         expect(error.message).toContain("...[truncated]");
         expect(error.responseBody).toBe(longBody);

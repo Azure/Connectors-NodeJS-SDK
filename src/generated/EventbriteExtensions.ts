@@ -4,7 +4,7 @@
 import type { AbortSignalLike } from "@azure/abort-controller";
 import type { TokenCredential } from "@azure/core-auth";
 import { ConnectorClientBase } from "../azureConnectors/clientBase.ts";
-import { ConnectorException } from "../azureConnectors/connectorException.ts";
+import { ConnectorError } from "../azureConnectors/connectorError.ts";
 import { ConnectorClientOptions } from "../azureConnectors/options.ts";
 import { TriggerCallbackPayload } from "../azureConnectors/triggerPayload.ts";
 
@@ -27,16 +27,12 @@ export interface GetMyVenuesResponse {
 /**
  * Definition: GetEventsForOrganizer_Response
  */
-export interface GetEventsForOrganizerResponse {
-    [key: string]: unknown;
-}
+export type GetEventsForOrganizerResponse = Array<Record<string, unknown>>;
 
 /**
  * Definition: GetOrders_Response
  */
-export interface GetOrdersResponse {
-    [key: string]: unknown;
-}
+export type GetOrdersResponse = Array<Record<string, unknown>>;
 
 /**
  * Definition: GetMyEvents_Response
@@ -83,16 +79,12 @@ export interface CreateEventResponse {
 /**
  * Definition: GetOrganizations_Response
  */
-export interface GetOrganizationsResponse {
-    [key: string]: unknown;
-}
+export type GetOrganizationsResponse = Array<Record<string, unknown>>;
 
 /**
  * Definition: GetEventsForOrganization_Response
  */
-export interface GetEventsForOrganizationResponse {
-    [key: string]: unknown;
-}
+export type GetEventsForOrganizationResponse = Array<Record<string, unknown>>;
 
 /**
  * Typed callback payload for trigger operation 'OnNewEventV2'.
@@ -185,7 +177,7 @@ export class EventbriteClient extends ConnectorClientBase {
      * Create event
      * @remarks Create a new Eventbrite event.
      */
-    public async createEventAsync(organizationId: string, eventNameHtml?: string, eventDescriptionHtml?: string, eventStartUtc?: string, eventEndUtc?: string, eventStartTimezone?: string, eventEndTimezone?: string, eventCurrency?: string, eventOrganizerId?: string, eventVenueId?: string, eventCategoryId?: string, eventPassword?: string, eventCapacity?: string, eventShareable?: string, eventInviteOnly?: string, eventOnlineEvent?: string, eventListed?: string, eventHideStartDate?: string, eventHideEndDate?: string, eventShowRemaining?: string, abortSignal?: AbortSignalLike): Promise<CreateEventResponse> {
+    public async createEvent(organizationId: string, eventNameHtml?: string, eventDescriptionHtml?: string, eventStartUtc?: string, eventEndUtc?: string, eventStartTimezone?: string, eventEndTimezone?: string, eventCurrency?: string, eventOrganizerId?: string, eventVenueId?: string, eventCategoryId?: string, eventPassword?: string, eventCapacity?: string, eventShareable?: string, eventInviteOnly?: string, eventOnlineEvent?: string, eventListed?: string, eventHideStartDate?: string, eventHideEndDate?: string, eventShowRemaining?: string, abortSignal?: AbortSignalLike): Promise<CreateEventResponse> {
         const queryParams: string[] = [];
         if (eventNameHtml !== undefined) {
             queryParams.push(`event.name.html=${encodeURIComponent(String(eventNameHtml))}`);
@@ -249,7 +241,7 @@ export class EventbriteClient extends ConnectorClientBase {
         const httpResponse = await this.httpClient.sendAsync<CreateEventResponse>("POST", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as CreateEventResponse;
@@ -259,7 +251,7 @@ export class EventbriteClient extends ConnectorClientBase {
      * Update event
      * @remarks Update an existing event.
      */
-    public async updateEventAsync(id: string, organizationId?: string, eventNameHtml?: string, eventDescriptionHtml?: string, eventStartUtc?: string, eventEndUtc?: string, eventStartTimezone?: string, eventEndTimezone?: string, eventCurrency?: string, eventOrganizerId?: string, eventVenueId?: string, eventCategoryId?: string, eventPassword?: string, eventCapacity?: string, eventShareable?: string, eventInviteOnly?: string, eventOnlineEvent?: string, eventListed?: string, eventHideStartDate?: string, eventHideEndDate?: string, eventShowRemaining?: string, abortSignal?: AbortSignalLike): Promise<CreateEventResponse> {
+    public async updateEvent(id: string, organizationId?: string, eventNameHtml?: string, eventDescriptionHtml?: string, eventStartUtc?: string, eventEndUtc?: string, eventStartTimezone?: string, eventEndTimezone?: string, eventCurrency?: string, eventOrganizerId?: string, eventVenueId?: string, eventCategoryId?: string, eventPassword?: string, eventCapacity?: string, eventShareable?: string, eventInviteOnly?: string, eventOnlineEvent?: string, eventListed?: string, eventHideStartDate?: string, eventHideEndDate?: string, eventShowRemaining?: string, abortSignal?: AbortSignalLike): Promise<CreateEventResponse> {
         const queryParams: string[] = [];
         if (organizationId !== undefined) {
             queryParams.push(`organization_id=${encodeURIComponent(String(organizationId))}`);
@@ -326,7 +318,7 @@ export class EventbriteClient extends ConnectorClientBase {
         const httpResponse = await this.httpClient.sendAsync<CreateEventResponse>("POST", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as CreateEventResponse;

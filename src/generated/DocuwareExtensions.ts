@@ -4,7 +4,7 @@
 import type { AbortSignalLike } from "@azure/abort-controller";
 import type { TokenCredential } from "@azure/core-auth";
 import { ConnectorClientBase } from "../azureConnectors/clientBase.ts";
-import { ConnectorException } from "../azureConnectors/connectorException.ts";
+import { ConnectorError } from "../azureConnectors/connectorError.ts";
 import { ConnectorClientOptions } from "../azureConnectors/options.ts";
 
 // #region Types
@@ -71,9 +71,7 @@ export interface GetDocumentInformationResponse {
 /**
  * Update index fields
  */
-export interface UpdateIndexFieldsInput {
-    [key: string]: unknown;
-}
+export type UpdateIndexFieldsInput = Array<Record<string, unknown>>;
 
 /**
  * Response for Update index fields
@@ -240,7 +238,7 @@ export class DocuwareClient extends ConnectorClientBase {
      * Search in file cabinet
      * @remarks Search a file cabinet for documents matching the specified criteria.
      */
-    public async searchForDocumentsInFileCabinetAsync(input: SearchForDocumentsInFileCabinetInput, fileCabinet: string, searchDialogId?: string, abortSignal?: AbortSignalLike): Promise<SearchForDocumentsInFileCabinetResponse> {
+    public async searchForDocumentsInFileCabinet(input: SearchForDocumentsInFileCabinetInput, fileCabinet: string, searchDialogId?: string, abortSignal?: AbortSignalLike): Promise<SearchForDocumentsInFileCabinetResponse> {
         const queryParams: string[] = [];
         if (searchDialogId !== undefined) {
             queryParams.push(`SearchDialogId=${encodeURIComponent(String(searchDialogId))}`);
@@ -250,7 +248,7 @@ export class DocuwareClient extends ConnectorClientBase {
         const httpResponse = await this.httpClient.sendAsync<SearchForDocumentsInFileCabinetResponse>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as SearchForDocumentsInFileCabinetResponse;
@@ -260,13 +258,13 @@ export class DocuwareClient extends ConnectorClientBase {
      * Get organization
      * @remarks Get the organization name.
      */
-    public async getOrganizationAsync(abortSignal?: AbortSignalLike): Promise<GetOrganizationResponse> {
+    public async getOrganization(abortSignal?: AbortSignalLike): Promise<GetOrganizationResponse> {
         const requestPath = `/Organization`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<GetOrganizationResponse>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as GetOrganizationResponse;
@@ -276,7 +274,7 @@ export class DocuwareClient extends ConnectorClientBase {
      * Get file cabinets and document trays
      * @remarks Gets a list of file cabinets and/or document trays.
      */
-    public async getFileCabinetsAsync(fileCabinetType?: string, abortSignal?: AbortSignalLike): Promise<GetFileCabinetsResponse> {
+    public async getFileCabinets(fileCabinetType?: string, abortSignal?: AbortSignalLike): Promise<GetFileCabinetsResponse> {
         const queryParams: string[] = [];
         if (fileCabinetType !== undefined) {
             queryParams.push(`FileCabinetType=${encodeURIComponent(String(fileCabinetType))}`);
@@ -286,7 +284,7 @@ export class DocuwareClient extends ConnectorClientBase {
         const httpResponse = await this.httpClient.sendAsync<GetFileCabinetsResponse>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as GetFileCabinetsResponse;
@@ -296,13 +294,13 @@ export class DocuwareClient extends ConnectorClientBase {
      * Get document information
      * @remarks Gets information about a document.
      */
-    public async getDocumentInformationAsync(fileCabinetId: string, documentId: string, abortSignal?: AbortSignalLike): Promise<GetDocumentInformationResponse> {
+    public async getDocumentInformation(fileCabinetId: string, documentId: string, abortSignal?: AbortSignalLike): Promise<GetDocumentInformationResponse> {
         const requestPath = `/FileCabinets/${fileCabinetId}/Documents/${documentId}`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<GetDocumentInformationResponse>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as GetDocumentInformationResponse;
@@ -312,13 +310,13 @@ export class DocuwareClient extends ConnectorClientBase {
      * Delete a document
      * @remarks Deletes a document from a file cabinet or document tray.
      */
-    public async deleteDocumentAsync(fileCabinetId: string, documentId: string, abortSignal?: AbortSignalLike): Promise<void> {
+    public async deleteDocument(fileCabinetId: string, documentId: string, abortSignal?: AbortSignalLike): Promise<void> {
         const requestPath = `/FileCabinets/${fileCabinetId}/Documents/${documentId}`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<void>("DELETE", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `DELETE ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `DELETE ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
     }
 
@@ -326,7 +324,7 @@ export class DocuwareClient extends ConnectorClientBase {
      * Download a file
      * @remarks Downloads a file/section of a document stored in a file cabinet or document tray.
      */
-    public async downloadFileAsync(fileCabinetId: string, documentId: string, fileNumber: string, documentFormat?: string, abortSignal?: AbortSignalLike): Promise<Blob> {
+    public async downloadFile(fileCabinetId: string, documentId: string, fileNumber: string, documentFormat?: string, abortSignal?: AbortSignalLike): Promise<Blob> {
         const queryParams: string[] = [];
         if (documentFormat !== undefined) {
             queryParams.push(`DocumentFormat=${encodeURIComponent(String(documentFormat))}`);
@@ -336,7 +334,7 @@ export class DocuwareClient extends ConnectorClientBase {
         const httpResponse = await this.httpClient.sendAsync<Blob>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as Blob;
@@ -346,7 +344,7 @@ export class DocuwareClient extends ConnectorClientBase {
      * Download a document
      * @remarks Downloads a document from a file cabinet or document tray.
      */
-    public async downloadDocumentAsync(fileCabinetId: string, documentId: string, documentFormat?: string, abortSignal?: AbortSignalLike): Promise<Blob> {
+    public async downloadDocument(fileCabinetId: string, documentId: string, documentFormat?: string, abortSignal?: AbortSignalLike): Promise<Blob> {
         const queryParams: string[] = [];
         if (documentFormat !== undefined) {
             queryParams.push(`DocumentFormat=${encodeURIComponent(String(documentFormat))}`);
@@ -356,7 +354,7 @@ export class DocuwareClient extends ConnectorClientBase {
         const httpResponse = await this.httpClient.sendAsync<Blob>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as Blob;
@@ -366,13 +364,13 @@ export class DocuwareClient extends ConnectorClientBase {
      * Update index fields
      * @remarks Updates the index fields of a document.
      */
-    public async updateIndexFieldsAsync(input: UpdateIndexFieldsInput, fileCabinetId: string, documentId: string, abortSignal?: AbortSignalLike): Promise<UpdateIndexFieldsResponse> {
+    public async updateIndexFields(input: UpdateIndexFieldsInput, fileCabinetId: string, documentId: string, abortSignal?: AbortSignalLike): Promise<UpdateIndexFieldsResponse> {
         const requestPath = `/FileCabinets/${fileCabinetId}/Documents/${documentId}/Fields`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<UpdateIndexFieldsResponse>("PUT", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `PUT ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `PUT ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as UpdateIndexFieldsResponse;
@@ -382,7 +380,7 @@ export class DocuwareClient extends ConnectorClientBase {
      * Transfer documents
      * @remarks Moves one or more documents from one file cabinet/document tray to another.
      */
-    public async transferDocumentAsync(input: TransferDocumentInput, destinationFileCabinetId: string, storeDialogId?: string, abortSignal?: AbortSignalLike): Promise<TransferDocumentResponse> {
+    public async transferDocument(input: TransferDocumentInput, destinationFileCabinetId: string, storeDialogId?: string, abortSignal?: AbortSignalLike): Promise<TransferDocumentResponse> {
         const queryParams: string[] = [];
         if (storeDialogId !== undefined) {
             queryParams.push(`StoreDialogID=${encodeURIComponent(String(storeDialogId))}`);
@@ -392,7 +390,7 @@ export class DocuwareClient extends ConnectorClientBase {
         const httpResponse = await this.httpClient.sendAsync<TransferDocumentResponse>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as TransferDocumentResponse;
@@ -402,13 +400,13 @@ export class DocuwareClient extends ConnectorClientBase {
      * Place a stamp
      * @remarks Places a stamp on a document.
      */
-    public async placeAStampAsync(input: PlaceAStampInput, fileCabinetId: string, documentId: string, abortSignal?: AbortSignalLike): Promise<PlaceAStampResponse> {
+    public async placeAStamp(input: PlaceAStampInput, fileCabinetId: string, documentId: string, abortSignal?: AbortSignalLike): Promise<PlaceAStampResponse> {
         const requestPath = `/FileCabinets/${fileCabinetId}/Documents/${documentId}/Annotation`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<PlaceAStampResponse>("PUT", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `PUT ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `PUT ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as PlaceAStampResponse;
@@ -418,7 +416,7 @@ export class DocuwareClient extends ConnectorClientBase {
      * Get dialogs
      * @remarks Gets a list of dialogs for a file cabinet or document tray.
      */
-    public async getDialogsAsync(fileCabinet: string, dialogType?: string, abortSignal?: AbortSignalLike): Promise<GetDialogsResponse> {
+    public async getDialogs(fileCabinet: string, dialogType?: string, abortSignal?: AbortSignalLike): Promise<GetDialogsResponse> {
         const queryParams: string[] = [];
         if (dialogType !== undefined) {
             queryParams.push(`DialogType=${encodeURIComponent(String(dialogType))}`);
@@ -428,7 +426,7 @@ export class DocuwareClient extends ConnectorClientBase {
         const httpResponse = await this.httpClient.sendAsync<GetDialogsResponse>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as GetDialogsResponse;
@@ -438,13 +436,13 @@ export class DocuwareClient extends ConnectorClientBase {
      * Get stamps
      * @remarks Gets a list of stamps for a file cabinet or document tray.
      */
-    public async getStampsAsync(fileCabinet: string, abortSignal?: AbortSignalLike): Promise<GetStampsResponse> {
+    public async getStamps(fileCabinet: string, abortSignal?: AbortSignalLike): Promise<GetStampsResponse> {
         const requestPath = `/FileCabinets/${fileCabinet}/Stamps`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<GetStampsResponse>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as GetStampsResponse;
@@ -454,13 +452,13 @@ export class DocuwareClient extends ConnectorClientBase {
      * Get stamp fields
      * @remarks Gets a list of fields for a stamp.
      */
-    public async getStampFieldsAsync(fileCabinet: string, stamp: string, abortSignal?: AbortSignalLike): Promise<GetStampFieldsResponse> {
+    public async getStampFields(fileCabinet: string, stamp: string, abortSignal?: AbortSignalLike): Promise<GetStampFieldsResponse> {
         const requestPath = `/FileCabinets/${fileCabinet}/Stamps/${stamp}/Fields`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<GetStampFieldsResponse>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as GetStampFieldsResponse;
@@ -470,7 +468,7 @@ export class DocuwareClient extends ConnectorClientBase {
      * Get file cabinet fields
      * @remarks Gets a list of fields for a file cabinet.
      */
-    public async getFileCabinetFieldsAsync(fileCabinet: string, fieldType?: string, abortSignal?: AbortSignalLike): Promise<GetFileCabinetFieldsResponse> {
+    public async getFileCabinetFields(fileCabinet: string, fieldType?: string, abortSignal?: AbortSignalLike): Promise<GetFileCabinetFieldsResponse> {
         const queryParams: string[] = [];
         if (fieldType !== undefined) {
             queryParams.push(`FieldType=${encodeURIComponent(String(fieldType))}`);
@@ -480,7 +478,7 @@ export class DocuwareClient extends ConnectorClientBase {
         const httpResponse = await this.httpClient.sendAsync<GetFileCabinetFieldsResponse>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as GetFileCabinetFieldsResponse;
@@ -490,13 +488,13 @@ export class DocuwareClient extends ConnectorClientBase {
      * Get dialog fields
      * @remarks Gets the fields for a dialog
      */
-    public async getDialogFieldsAsync(fileCabinet: string, dialogId: string, abortSignal?: AbortSignalLike): Promise<GetDialogFieldsResponse> {
+    public async getDialogFields(fileCabinet: string, dialogId: string, abortSignal?: AbortSignalLike): Promise<GetDialogFieldsResponse> {
         const requestPath = `/FileCabinets/${fileCabinet}/Dialogs/${dialogId}/Fields`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<GetDialogFieldsResponse>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as GetDialogFieldsResponse;
@@ -506,13 +504,13 @@ export class DocuwareClient extends ConnectorClientBase {
      * List documents in document tray
      * @remarks List documents from the specified document tray.
      */
-    public async listDocumentsInDocumentTrayAsync(documentTray: string, abortSignal?: AbortSignalLike): Promise<ListDocumentsInDocumentTrayResponse> {
+    public async listDocumentsInDocumentTray(documentTray: string, abortSignal?: AbortSignalLike): Promise<ListDocumentsInDocumentTrayResponse> {
         const requestPath = `/DocumentTrays/${documentTray}/Search`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<ListDocumentsInDocumentTrayResponse>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as ListDocumentsInDocumentTrayResponse;

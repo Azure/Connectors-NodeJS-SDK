@@ -4,7 +4,7 @@
 import type { AbortSignalLike } from "@azure/abort-controller";
 import type { TokenCredential } from "@azure/core-auth";
 import { ConnectorClientBase } from "../azureConnectors/clientBase.ts";
-import { ConnectorException } from "../azureConnectors/connectorException.ts";
+import { ConnectorError } from "../azureConnectors/connectorError.ts";
 import { ConnectorClientOptions } from "../azureConnectors/options.ts";
 
 // #region Types
@@ -44,7 +44,7 @@ export interface ObjectEntity {
  * Definition: Table
  */
 export interface Table {
-    value?: Array<Row>;
+    value?: Array<Record<string, unknown>>;
     error?: PartialQueryError;
 }
 
@@ -190,7 +190,7 @@ export class AzuremonitorlogsClient extends ConnectorClientBase {
      * Run query and list results
      * @remarks Returns each row as its own object. Use this action when you want to work with each row separately in the rest of the workflow. 
      */
-    public async queryDataAsync(input: QueryDataInput, subscriptions?: string, resourcegroups?: string, resourcetype?: string, resourcename?: string, abortSignal?: AbortSignalLike): Promise<Table> {
+    public async queryData(input: QueryDataInput, subscriptions?: string, resourcegroups?: string, resourcetype?: string, resourcename?: string, abortSignal?: AbortSignalLike): Promise<Table> {
         const queryParams: string[] = [];
         if (subscriptions !== undefined) {
             queryParams.push(`subscriptions=${encodeURIComponent(String(subscriptions))}`);
@@ -209,7 +209,7 @@ export class AzuremonitorlogsClient extends ConnectorClientBase {
         const httpResponse = await this.httpClient.sendAsync<Table>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as Table;
@@ -219,7 +219,7 @@ export class AzuremonitorlogsClient extends ConnectorClientBase {
      * Run query and visualize results
      * @remarks Returns all rows in the result set as a single formatted object. Use this action when you want to use the result set together in the rest of the workflow. 
      */
-    public async visualizeQueryAsync(input: VisualizeQueryInput, subscriptions?: string, resourcegroups?: string, resourcetype?: string, resourcename?: string, visType?: string, abortSignal?: AbortSignalLike): Promise<VisualizeResults> {
+    public async visualizeQuery(input: VisualizeQueryInput, subscriptions?: string, resourcegroups?: string, resourcetype?: string, resourcename?: string, visType?: string, abortSignal?: AbortSignalLike): Promise<VisualizeResults> {
         const queryParams: string[] = [];
         if (subscriptions !== undefined) {
             queryParams.push(`subscriptions=${encodeURIComponent(String(subscriptions))}`);
@@ -241,7 +241,7 @@ export class AzuremonitorlogsClient extends ConnectorClientBase {
         const httpResponse = await this.httpClient.sendAsync<VisualizeResults>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as VisualizeResults;

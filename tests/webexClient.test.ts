@@ -2,7 +2,7 @@
 
 import type { TokenCredential } from "@azure/core-auth";
 import { WebexClient } from "../src/generated/WebexExtensions.ts";
-import { ConnectorException } from "../src/azureConnectors/connectorException.ts";
+import { ConnectorError } from "../src/azureConnectors/connectorError.ts";
 import { ConnectorNames } from "../src/generated/connectorNames.ts";
 import { availableConnectors } from "../src/generated/ManagedConnectors.ts";
 
@@ -58,7 +58,7 @@ describe("WebexClient — constructor", () => {
     });
 });
 
-describe("WebexClient — getMessagesAsync", () => {
+describe("WebexClient — getMessages", () => {
     afterEach(() => {
         jest.restoreAllMocks();
     });
@@ -68,7 +68,7 @@ describe("WebexClient — getMessagesAsync", () => {
         mockFetchResponse(messages);
 
         const client = new WebexClient(TestConnectionUrl, createMockCredential());
-        const result = await client.getMessagesAsync("room1");
+        const result = await client.getMessages("room1");
 
         expect(result).toEqual(messages);
         expect(global.fetch).toHaveBeenCalledTimes(1);
@@ -77,16 +77,16 @@ describe("WebexClient — getMessagesAsync", () => {
         expect(init.headers["Authorization"]).toBe("Bearer mock-bearer-token");
     });
 
-    it("should throw ConnectorException on non-OK response", async () => {
+    it("should throw ConnectorError on non-OK response", async () => {
         mockFetchError(404, "Not Found");
 
         const client = new WebexClient(TestConnectionUrl, createMockCredential());
         try {
-            await client.getMessagesAsync("room1");
-            throw new Error("Expected ConnectorException to be thrown.");
+            await client.getMessages("room1");
+            throw new Error("Expected ConnectorError to be thrown.");
         } catch (error) {
-            expect(error).toBeInstanceOf(ConnectorException);
-            const connectorError = error as ConnectorException;
+            expect(error).toBeInstanceOf(ConnectorError);
+            const connectorError = error as ConnectorError;
             expect(connectorError.statusCode).toBe(404);
             expect(connectorError.responseBody).toBe("Not Found");
         }

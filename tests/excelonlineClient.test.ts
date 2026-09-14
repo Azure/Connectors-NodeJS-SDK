@@ -2,7 +2,7 @@
 
 import type { TokenCredential } from "@azure/core-auth";
 import { ExcelonlineClient } from "../src/generated/ExcelonlineExtensions.ts";
-import { ConnectorException } from "../src/azureConnectors/connectorException.ts";
+import { ConnectorError } from "../src/azureConnectors/connectorError.ts";
 import { ConnectorNames } from "../src/generated/connectorNames.ts";
 import { availableConnectors } from "../src/generated/ManagedConnectors.ts";
 
@@ -50,7 +50,7 @@ describe("ExcelonlineClient — constructor", () => {
     it("should strip trailing slashes from connection URL", async () => {
         mockFetchResponse([]);
         const client = new ExcelonlineClient(TestConnectionUrl + "///", createMockCredential());
-        await client.getTablesAsync("drive1", "file1");
+        await client.getTables("drive1", "file1");
         const [url] = (global.fetch as jest.Mock).mock.calls[0];
         // NOTE: Confirms the trailing slashes were stripped by inspecting the
         //       outbound URL: after the scheme, no `//` should remain.
@@ -69,7 +69,7 @@ describe("ExcelonlineClient — constructor", () => {
     });
 });
 
-describe("ExcelonlineClient — getTablesAsync", () => {
+describe("ExcelonlineClient — getTables", () => {
     afterEach(() => {
         jest.restoreAllMocks();
     });
@@ -79,7 +79,7 @@ describe("ExcelonlineClient — getTablesAsync", () => {
         mockFetchResponse(tables);
 
         const client = new ExcelonlineClient(TestConnectionUrl, createMockCredential());
-        const result = await client.getTablesAsync("drive1", "file1");
+        const result = await client.getTables("drive1", "file1");
 
         expect(result).toEqual(tables);
         expect(global.fetch).toHaveBeenCalledTimes(1);
@@ -95,22 +95,22 @@ describe("ExcelonlineClient — getTablesAsync", () => {
         mockFetchResponse({ value: [] });
 
         const client = new ExcelonlineClient(TestConnectionUrl, createMockCredential());
-        await client.getTablesAsync("drive1", "file1", undefined, "id");
+        await client.getTables("drive1", "file1", undefined, "id");
 
         const [url] = (global.fetch as jest.Mock).mock.calls[0];
         expect(url).toContain("$select=id");
     });
 
-    it("should throw ConnectorException on non-OK response", async () => {
+    it("should throw ConnectorError on non-OK response", async () => {
         mockFetchError(403, "Forbidden");
 
         const client = new ExcelonlineClient(TestConnectionUrl, createMockCredential());
         try {
-            await client.getTablesAsync("drive1", "file1");
-            throw new Error("Expected ConnectorException to be thrown.");
+            await client.getTables("drive1", "file1");
+            throw new Error("Expected ConnectorError to be thrown.");
         } catch (error) {
-            expect(error).toBeInstanceOf(ConnectorException);
-            const connectorError = error as ConnectorException;
+            expect(error).toBeInstanceOf(ConnectorError);
+            const connectorError = error as ConnectorError;
             expect(connectorError.statusCode).toBe(403);
             expect(connectorError.responseBody).toBe("Forbidden");
             expect(connectorError.operation).toBe("GET /codeless/v1.0/drives/drive1/items/file1/workbook/tables");

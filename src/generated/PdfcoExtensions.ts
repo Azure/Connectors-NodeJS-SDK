@@ -4,7 +4,7 @@
 import type { AbortSignalLike } from "@azure/abort-controller";
 import type { TokenCredential } from "@azure/core-auth";
 import { ConnectorClientBase } from "../azureConnectors/clientBase.ts";
-import { ConnectorException } from "../azureConnectors/connectorException.ts";
+import { ConnectorError } from "../azureConnectors/connectorError.ts";
 import { ConnectorClientOptions } from "../azureConnectors/options.ts";
 
 // #region Types
@@ -2415,13 +2415,13 @@ export class PdfcoClient extends ConnectorClientBase {
      * HTML to PDF
      * @remarks Convert HTML code snippet into full featured PDF. Please see api documentation at https://developer.pdf.co/api/pdf-to-html/index.html for comprehensive guidelines.
      */
-    public async htmlToPdfAsync(input: HtmlToPdfInput, abortSignal?: AbortSignalLike): Promise<HtmlToPdfResponse> {
+    public async htmlToPdf(input: HtmlToPdfInput, abortSignal?: AbortSignalLike): Promise<HtmlToPdfResponse> {
         const requestPath = `/v1/pdf/convert/from/html`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<HtmlToPdfResponse>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as HtmlToPdfResponse;
@@ -2431,13 +2431,13 @@ export class PdfcoClient extends ConnectorClientBase {
      * URL to PDF
      * @remarks Create PDF from URL. Please see api documentation at https://developer.pdf.co/api/pdf-from-url/index.html for comprehensive guidelines.
      */
-    public async urlToPdfAsync(input: UrlToPdfInput, abortSignal?: AbortSignalLike): Promise<UrlToPdfResponse> {
+    public async urlToPdf(input: UrlToPdfInput, abortSignal?: AbortSignalLike): Promise<UrlToPdfResponse> {
         const requestPath = `/v1/pdf/convert/from/url`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<UrlToPdfResponse>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as UrlToPdfResponse;
@@ -2447,13 +2447,13 @@ export class PdfcoClient extends ConnectorClientBase {
      * Add Text, Images, Form Fields to PDF
      * @remarks Add text, images, signatures to pdf. Fill PDF form fields and create new pdf from templates. Please see api documentation at https://developer.pdf.co/api/pdf-add/index.html for comprehensive guidelines.
      */
-    public async pdfFillerAsync(input: PdfFillerInput, abortSignal?: AbortSignalLike): Promise<PdfFillerResponse> {
+    public async pdfFiller(input: PdfFillerInput, abortSignal?: AbortSignalLike): Promise<PdfFillerResponse> {
         const requestPath = `/v1/pdf/edit/add`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<PdfFillerResponse>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as PdfFillerResponse;
@@ -2463,13 +2463,13 @@ export class PdfcoClient extends ConnectorClientBase {
      * Merge PDF
      * @remarks Merge PDF from two or more PDF files into a new one. Please see api documentation at https://developer.pdf.co/api/pdf-merge/index.html for comprehensive guidelines.
      */
-    public async mergePdfSimplifiedAsync(input: MergePdfSimplifiedInput, abortSignal?: AbortSignalLike): Promise<MergePdfSimplifiedResponse> {
+    public async mergePdfSimplified(input: MergePdfSimplifiedInput, abortSignal?: AbortSignalLike): Promise<MergePdfSimplifiedResponse> {
         const requestPath = `/v1/pdf/merge`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<MergePdfSimplifiedResponse>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as MergePdfSimplifiedResponse;
@@ -2479,13 +2479,13 @@ export class PdfcoClient extends ConnectorClientBase {
      * Merge PDF (Advanced)
      * @remarks Merge PDF from two or more pdf, doc, xls, images, even zip with documents and images into a new PDF. Supports zip, doc, docx, xls, xlsx, rtf, txt, png, jpg. Please see api documentation at https://developer.pdf.co/api/pdf-merge/index.html#post-tag-pdf-merge2 for comprehensive guidelines.
      */
-    public async mergePdfAsync(input: MergePdfInput, abortSignal?: AbortSignalLike): Promise<MergePdfResponse> {
+    public async mergePdf(input: MergePdfInput, abortSignal?: AbortSignalLike): Promise<MergePdfResponse> {
         const requestPath = `/v1/pdf/merge2`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<MergePdfResponse>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as MergePdfResponse;
@@ -2495,13 +2495,13 @@ export class PdfcoClient extends ConnectorClientBase {
      * Split PDF
      * @remarks Splits pages from PDF document into multiple new PDF files using page numbers and page ranges. Please see api documentation at https://developer.pdf.co/api/pdf-split/index.html for comprehensive guidelines.
      */
-    public async splitPdfAsync(input: SplitPdfInput, abortSignal?: AbortSignalLike): Promise<SplitPdfResponse> {
+    public async splitPdf(input: SplitPdfInput, abortSignal?: AbortSignalLike): Promise<SplitPdfResponse> {
         const requestPath = `/v1/pdf/split`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<SplitPdfResponse>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as SplitPdfResponse;
@@ -2511,13 +2511,13 @@ export class PdfcoClient extends ConnectorClientBase {
      * Split PDF (Advanced)
      * @remarks Split PDF into multiple PDF files by text search (support regular expressions) or barcode. Please see api documentation at https://developer.pdf.co/api/pdf-split/index.html#post-tag-pdf-split2 for comprehensive guidelines.
      */
-    public async splitPdf2Async(input: SplitPdf2Input, abortSignal?: AbortSignalLike): Promise<SplitPdf2Response> {
+    public async splitPdf2(input: SplitPdf2Input, abortSignal?: AbortSignalLike): Promise<SplitPdf2Response> {
         const requestPath = `/v1/pdf/split2`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<SplitPdf2Response>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as SplitPdf2Response;
@@ -2527,13 +2527,13 @@ export class PdfcoClient extends ConnectorClientBase {
      * PDF Search Text
      * @remarks Search text in PDF and get coordinates. Supports regular expressions. Please see api documentation at https://developer.pdf.co/api/pdf-find/index.html for comprehensive guidelines.
      */
-    public async pdfsearchTextAsync(input: PDFSearchTextInput, abortSignal?: AbortSignalLike): Promise<PDFSearchTextResponse> {
+    public async searchPDFText(input: PDFSearchTextInput, abortSignal?: AbortSignalLike): Promise<PDFSearchTextResponse> {
         const requestPath = `/v1/pdf/find`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<PDFSearchTextResponse>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as PDFSearchTextResponse;
@@ -2543,13 +2543,13 @@ export class PdfcoClient extends ConnectorClientBase {
      * Document Parser
      * @remarks Document Parser can automatically parse PDF, JPG, and PNG documents to extract fields, tables, values, and barcodes from invoices, statements, orders, and other PDF and scanned documents. Please see api documentation at https://developer.pdf.co/api/document-parser/index.html for comprehensive guidelines.
      */
-    public async documentParserAsync(input: DocumentParserInput, abortSignal?: AbortSignalLike): Promise<DocumentParserResponse> {
+    public async documentParser(input: DocumentParserInput, abortSignal?: AbortSignalLike): Promise<DocumentParserResponse> {
         const requestPath = `/v1/pdf/documentparser`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<DocumentParserResponse>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as DocumentParserResponse;
@@ -2559,13 +2559,13 @@ export class PdfcoClient extends ConnectorClientBase {
      * Background Jobs Check
      * @remarks Checks status of background job that was previously created with PDF.co API. Please see api documentation at https://developer.pdf.co/api/background-job-check/index.html for comprehensive guidelines.
      */
-    public async jobCheckAsync(input: JobCheckInput, abortSignal?: AbortSignalLike): Promise<JobCheckResponse> {
+    public async jobCheck(input: JobCheckInput, abortSignal?: AbortSignalLike): Promise<JobCheckResponse> {
         const requestPath = `/v1/job/check`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<JobCheckResponse>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as JobCheckResponse;
@@ -2575,13 +2575,13 @@ export class PdfcoClient extends ConnectorClientBase {
      * Barcode Generator
      * @remarks Generate high quality barcode images. Supports QR Code, Datamatrix, Code 39, Code 128, PDF417 and many other barcode types. Please see api documentation at https://developer.pdf.co/api/barcode-generator/index.html for comprehensive guidelines.
      */
-    public async barcodeGeneratorAsync(input: BarcodeGeneratorInput, abortSignal?: AbortSignalLike): Promise<BarcodeGeneratorResponse> {
+    public async barcodeGenerator(input: BarcodeGeneratorInput, abortSignal?: AbortSignalLike): Promise<BarcodeGeneratorResponse> {
         const requestPath = `/v1/barcode/generate`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<BarcodeGeneratorResponse>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as BarcodeGeneratorResponse;
@@ -2591,13 +2591,13 @@ export class PdfcoClient extends ConnectorClientBase {
      * Barcode Reader
      * @remarks Read barcodes from images and PDF. Can read all popular barcode types from QR Code and Code 128, EAN to Datamatrix, PDF417, GS1 and many other barcodes. Please see api documentation at https://developer.pdf.co/api/barcode-reader/index.html for comprehensive guidelines.
      */
-    public async barcodeReaderAsync(input: BarcodeReaderInput, abortSignal?: AbortSignalLike): Promise<BarcodeReaderResponse> {
+    public async barcodeReader(input: BarcodeReaderInput, abortSignal?: AbortSignalLike): Promise<BarcodeReaderResponse> {
         const requestPath = `/v1/barcode/read/from/url`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<BarcodeReaderResponse>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as BarcodeReaderResponse;
@@ -2607,13 +2607,13 @@ export class PdfcoClient extends ConnectorClientBase {
      * PDF Info Reader
      * @remarks Get detailed information about the PDF document, it's properties and security permissions. Please see api documentation at https://developer.pdf.co/api/pdf-info-reader/index.html for comprehensive guidelines.
      */
-    public async pdfinfoReaderAsync(input: PDFInfoReaderInput, abortSignal?: AbortSignalLike): Promise<PDFInfoReaderResponse> {
+    public async pdfinfoReader(input: PDFInfoReaderInput, abortSignal?: AbortSignalLike): Promise<PDFInfoReaderResponse> {
         const requestPath = `/v1/pdf/info`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<PDFInfoReaderResponse>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as PDFInfoReaderResponse;
@@ -2623,13 +2623,13 @@ export class PdfcoClient extends ConnectorClientBase {
      * PDF Forms Info Reader
      * @remarks Get information about fillable fields inside PDF form file. Please see api documentation at https://developer.pdf.co/api/pdf-forms-info-reader/index.html for comprehensive guidelines.
      */
-    public async pdfformsInfoReaderAsync(input: PDFFormsInfoReaderInput, abortSignal?: AbortSignalLike): Promise<PDFFormsInfoReaderResponse> {
+    public async pdfformsInfoReader(input: PDFFormsInfoReaderInput, abortSignal?: AbortSignalLike): Promise<PDFFormsInfoReaderResponse> {
         const requestPath = `/v1/pdf/info/fields`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<PDFFormsInfoReaderResponse>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as PDFFormsInfoReaderResponse;
@@ -2639,13 +2639,13 @@ export class PdfcoClient extends ConnectorClientBase {
      * PDF Find Table
      * @remarks AI powered document analysis can scan your document for tables and return the array of tables on pages with coordinates and information about columns detected in these tables. Please see api documentation at https://developer.pdf.co/api/pdf-find/index.html#post-tag-pdf-find-table for comprehensive guidelines.
      */
-    public async pdffindTableAsync(input: PDFFindTableInput, abortSignal?: AbortSignalLike): Promise<PDFFindTableResponse> {
+    public async pdffindTable(input: PDFFindTableInput, abortSignal?: AbortSignalLike): Promise<PDFFindTableResponse> {
         const requestPath = `/v1/pdf/find/table`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<PDFFindTableResponse>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as PDFFindTableResponse;
@@ -2655,13 +2655,13 @@ export class PdfcoClient extends ConnectorClientBase {
      * PDF Search and Replace Text
      * @remarks Modify a PDF file by searching for specific text and replacing it with new text. Please see api documentation at https://developer.pdf.co/api/pdf-search-and-replace-text/index.html#post-tag-pdf-edit-replace-text for comprehensive guidelines.
      */
-    public async searchAndReplaceAsync(input: SearchAndReplaceInput, abortSignal?: AbortSignalLike): Promise<SearchAndReplaceResponse> {
+    public async searchAndReplace(input: SearchAndReplaceInput, abortSignal?: AbortSignalLike): Promise<SearchAndReplaceResponse> {
         const requestPath = `/v1/pdf/edit/replace-text`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<SearchAndReplaceResponse>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as SearchAndReplaceResponse;
@@ -2671,13 +2671,13 @@ export class PdfcoClient extends ConnectorClientBase {
      * PDF Search and Replace Text with Image
      * @remarks Replace specific text in a PDF document with an image. Please see api documentation at https://developer.pdf.co/api/pdf-search-and-replace-text/index.html#post-tag-pdf-edit-replace-text-with-image for comprehensive guidelines.
      */
-    public async searchAndReplaceWithImageAsync(input: SearchAndReplaceWithImageInput, abortSignal?: AbortSignalLike): Promise<SearchAndReplaceWithImageResponse> {
+    public async searchAndReplaceWithImage(input: SearchAndReplaceWithImageInput, abortSignal?: AbortSignalLike): Promise<SearchAndReplaceWithImageResponse> {
         const requestPath = `/v1/pdf/edit/replace-text-with-image`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<SearchAndReplaceWithImageResponse>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as SearchAndReplaceWithImageResponse;
@@ -2687,13 +2687,13 @@ export class PdfcoClient extends ConnectorClientBase {
      * PDF Search and Delete Text from PDF
      * @remarks Search text in PDF and remove found text from PDF. Please see api documentation at https://developer.pdf.co/api/pdf-search-and-delete-text/index.html for comprehensive guidelines.
      */
-    public async searchAndDeleteTextAsync(input: SearchAndDeleteTextInput, abortSignal?: AbortSignalLike): Promise<SearchAndDeleteTextResponse> {
+    public async searchAndDeleteText(input: SearchAndDeleteTextInput, abortSignal?: AbortSignalLike): Promise<SearchAndDeleteTextResponse> {
         const requestPath = `/v1/pdf/edit/delete-text`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<SearchAndDeleteTextResponse>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as SearchAndDeleteTextResponse;
@@ -2703,13 +2703,13 @@ export class PdfcoClient extends ConnectorClientBase {
      * Make Scanned PDF to Text Searchable
      * @remarks Turn PDF and scanned JPG, PNG images into text-searchable PDF. Please see api documentation at https://developer.pdf.co/api/pdf-make-text-searchable-or-unsearchable/index.html#post-tag-pdf-makesearchable for comprehensive guidelines.
      */
-    public async pdfsearchableAsync(input: PDFSearchableInput, abortSignal?: AbortSignalLike): Promise<PDFSearchableResponse> {
+    public async pdfsearchable(input: PDFSearchableInput, abortSignal?: AbortSignalLike): Promise<PDFSearchableResponse> {
         const requestPath = `/v1/pdf/makesearchable`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<PDFSearchableResponse>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as PDFSearchableResponse;
@@ -2719,13 +2719,13 @@ export class PdfcoClient extends ConnectorClientBase {
      * PDF to Scanned PDF
      * @remarks Convert PDF to Scanned PDF. Result PDF is same as if you printed and then scanned your PDF. Please see api documentation at https://developer.pdf.co/api/pdf-make-text-searchable-or-unsearchable/index.html#post-tag-pdf-makeunsearchable for comprehensive guidelines.
      */
-    public async pdfunSearchableAsync(input: PDFUnSearchableInput, abortSignal?: AbortSignalLike): Promise<PDFUnSearchableResponse> {
+    public async pdfunSearchable(input: PDFUnSearchableInput, abortSignal?: AbortSignalLike): Promise<PDFUnSearchableResponse> {
         const requestPath = `/v1/pdf/makeunsearchable`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<PDFUnSearchableResponse>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as PDFUnSearchableResponse;
@@ -2735,13 +2735,13 @@ export class PdfcoClient extends ConnectorClientBase {
      * PDF To CSV
      * @remarks Convert PDF and scanned images into CSV representation with layout, columns, rows, and tables. Please see api documentation at https://developer.pdf.co/api/pdf-to-csv/index.html for comprehensive guidelines.
      */
-    public async pdftoCSVAsync(input: PDFToCSVInput, abortSignal?: AbortSignalLike): Promise<PDFToCSVResponse> {
+    public async pdftoCSV(input: PDFToCSVInput, abortSignal?: AbortSignalLike): Promise<PDFToCSVResponse> {
         const requestPath = `/v1/pdf/convert/to/csv`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<PDFToCSVResponse>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as PDFToCSVResponse;
@@ -2751,13 +2751,13 @@ export class PdfcoClient extends ConnectorClientBase {
      * PDF To JSON
      * @remarks Convert PDF and scanned images into JSON representation with text, fonts, images, vectors, and formatting preserved. Please see api documentation at https://developer.pdf.co/api/pdf-to-json/index.html for comprehensive guidelines.
      */
-    public async pdftoJSONAsync(input: PDFToJSONInput, abortSignal?: AbortSignalLike): Promise<PDFToJSONResponse> {
+    public async pdftoJSON(input: PDFToJSONInput, abortSignal?: AbortSignalLike): Promise<PDFToJSONResponse> {
         const requestPath = `/v1/pdf/convert/to/json2`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<PDFToJSONResponse>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as PDFToJSONResponse;
@@ -2767,13 +2767,13 @@ export class PdfcoClient extends ConnectorClientBase {
      * PDF To JSON (AI Powered)
      * @remarks Convert PDF and scanned images into JSON representation with text, fonts, images, vectors, and formatting preserved. Please see api documentation at https://developer.pdf.co/api/pdf-to-json/index.html#post-tag-pdf-convert-to-json-meta for comprehensive guidelines.
      */
-    public async pdftoJSONMetaAsync(input: PDFToJSONMetaInput, abortSignal?: AbortSignalLike): Promise<PDFToJSONMetaResponse> {
+    public async pdftoJSONMeta(input: PDFToJSONMetaInput, abortSignal?: AbortSignalLike): Promise<PDFToJSONMetaResponse> {
         const requestPath = `/v1/pdf/convert/to/json-meta`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<PDFToJSONMetaResponse>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as PDFToJSONMetaResponse;
@@ -2783,13 +2783,13 @@ export class PdfcoClient extends ConnectorClientBase {
      * PDF To Text (with layout and ocr)
      * @remarks Convert PDF and scanned images to Text with layout preserved. Please see api documentation at https://developer.pdf.co/api/pdf-to-text/index.html for comprehensive guidelines.
      */
-    public async pdftoTextAsync(input: PDFToTextInput, abortSignal?: AbortSignalLike): Promise<PDFToTextResponse> {
+    public async pdftoText(input: PDFToTextInput, abortSignal?: AbortSignalLike): Promise<PDFToTextResponse> {
         const requestPath = `/v1/pdf/convert/to/text`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<PDFToTextResponse>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as PDFToTextResponse;
@@ -2799,13 +2799,13 @@ export class PdfcoClient extends ConnectorClientBase {
      * PDF To Text (without layout and ocr)
      * @remarks Convert PDF to plain text without layout preserved and OCR support. Please see api documentation at https://developer.pdf.co/api/pdf-to-text/index.html#post-tag-pdf-convert-to-text-simple for comprehensive guidelines.
      */
-    public async pdftoTextSimpleAsync(input: PDFToTextSimpleInput, abortSignal?: AbortSignalLike): Promise<PDFToTextSimpleResponse> {
+    public async pdftoTextSimple(input: PDFToTextSimpleInput, abortSignal?: AbortSignalLike): Promise<PDFToTextSimpleResponse> {
         const requestPath = `/v1/pdf/convert/to/text-simple`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<PDFToTextSimpleResponse>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as PDFToTextSimpleResponse;
@@ -2815,13 +2815,13 @@ export class PdfcoClient extends ConnectorClientBase {
      * PDF To XLS
      * @remarks Convert PDF and scanned images to spreadsheet with layout and fonts preserved. Please see api documentation at https://developer.pdf.co/api/pdf-to-excel/index.html#post-tag-pdf-convert-to-xls for comprehensive guidelines.
      */
-    public async pdftoXLSAsync(input: PDFToXLSInput, abortSignal?: AbortSignalLike): Promise<PDFToXLSResponse> {
+    public async pdftoXLS(input: PDFToXLSInput, abortSignal?: AbortSignalLike): Promise<PDFToXLSResponse> {
         const requestPath = `/v1/pdf/convert/to/xls`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<PDFToXLSResponse>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as PDFToXLSResponse;
@@ -2831,13 +2831,13 @@ export class PdfcoClient extends ConnectorClientBase {
      * PDF To XLSX
      * @remarks Convert PDF and scanned images to spreadsheet with layout and fonts preserved. Please see api documentation at https://developer.pdf.co/api/pdf-to-excel/index.html#post-tag-pdf-convert-to-xlsx for comprehensive guidelines.
      */
-    public async pdftoXLSXAsync(input: PDFToXLSXInput, abortSignal?: AbortSignalLike): Promise<PDFToXLSXResponse> {
+    public async pdftoXLSX(input: PDFToXLSXInput, abortSignal?: AbortSignalLike): Promise<PDFToXLSXResponse> {
         const requestPath = `/v1/pdf/convert/to/xlsx`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<PDFToXLSXResponse>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as PDFToXLSXResponse;
@@ -2847,13 +2847,13 @@ export class PdfcoClient extends ConnectorClientBase {
      * PDF To XML
      * @remarks Convert PDF to XML with information about text value, tables, fonts, images, objects positions. Please see api documentation at https://developer.pdf.co/api/pdf-to-xml/index.html for comprehensive guidelines.
      */
-    public async pdftoXMLAsync(input: PDFToXMLInput, abortSignal?: AbortSignalLike): Promise<PDFToXMLResponse> {
+    public async pdftoXML(input: PDFToXMLInput, abortSignal?: AbortSignalLike): Promise<PDFToXMLResponse> {
         const requestPath = `/v1/pdf/convert/to/xml`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<PDFToXMLResponse>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as PDFToXMLResponse;
@@ -2863,13 +2863,13 @@ export class PdfcoClient extends ConnectorClientBase {
      * PDF to JPG
      * @remarks PDF to JPG conversion. High-quality rendering. Also works great for thumbnail generation and previews. Please see api documentation at https://developer.pdf.co/api/pdf-to-image/index.html#post-tag-pdf-convert-to-jpg for comprehensive guidelines.
      */
-    public async pdftoJPGAsync(input: PDFToJPGInput, abortSignal?: AbortSignalLike): Promise<PDFToJPGResponse> {
+    public async pdftoJPG(input: PDFToJPGInput, abortSignal?: AbortSignalLike): Promise<PDFToJPGResponse> {
         const requestPath = `/v1/pdf/convert/to/jpg`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<PDFToJPGResponse>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as PDFToJPGResponse;
@@ -2879,13 +2879,13 @@ export class PdfcoClient extends ConnectorClientBase {
      * PDF to PNG
      * @remarks PDF to PNG conversion. High-quality rendering. Also works great for thumbnail generation and previews. Please see api documentation at https://developer.pdf.co/api/pdf-to-image/index.html#post-tag-pdf-convert-to-png for comprehensive guidelines.
      */
-    public async pdftoPNGAsync(input: PDFToPNGInput, abortSignal?: AbortSignalLike): Promise<PDFToPNGResponse> {
+    public async pdftoPNG(input: PDFToPNGInput, abortSignal?: AbortSignalLike): Promise<PDFToPNGResponse> {
         const requestPath = `/v1/pdf/convert/to/png`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<PDFToPNGResponse>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as PDFToPNGResponse;
@@ -2895,13 +2895,13 @@ export class PdfcoClient extends ConnectorClientBase {
      * PDF to WEBP
      * @remarks PDF to WEBP conversion. High-quality rendering. Also works great for thumbnail generation and previews. Please see api documentation at https://developer.pdf.co/api/pdf-to-image/index.html#post-tag-pdf-convert-to-webp for comprehensive guidelines.
      */
-    public async pdftoWEBPAsync(input: PDFToWEBPInput, abortSignal?: AbortSignalLike): Promise<PDFToWEBPResponse> {
+    public async pdftoWEBP(input: PDFToWEBPInput, abortSignal?: AbortSignalLike): Promise<PDFToWEBPResponse> {
         const requestPath = `/v1/pdf/convert/to/webp`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<PDFToWEBPResponse>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as PDFToWEBPResponse;
@@ -2911,13 +2911,13 @@ export class PdfcoClient extends ConnectorClientBase {
      * PDF to TIFF
      * @remarks PDF to high quality TIFF images conversion. High quality rendering. Also works great for thumbnail generation and previews. Please see api documentation at https://developer.pdf.co/api/pdf-to-image/index.html#post-tag-pdf-convert-to-tiff for comprehensive guidelines.
      */
-    public async pdftoTIFFAsync(input: PDFToTIFFInput, abortSignal?: AbortSignalLike): Promise<PDFToTIFFResponse> {
+    public async pdftoTIFF(input: PDFToTIFFInput, abortSignal?: AbortSignalLike): Promise<PDFToTIFFResponse> {
         const requestPath = `/v1/pdf/convert/to/tiff`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<PDFToTIFFResponse>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as PDFToTIFFResponse;
@@ -2927,13 +2927,13 @@ export class PdfcoClient extends ConnectorClientBase {
      * PDF from CSV
      * @remarks Convert CSV document to PDF. Works also with XLS or XLSX input. Please see api documentation at https://developer.pdf.co/api/pdf-from-document/index.html#post-tag-pdf-convert-from-csv for comprehensive guidelines.
      */
-    public async pdffromCSVAsync(input: PDFFromCSVInput, abortSignal?: AbortSignalLike): Promise<PDFFromCSVResponse> {
+    public async pdffromCSV(input: PDFFromCSVInput, abortSignal?: AbortSignalLike): Promise<PDFFromCSVResponse> {
         const requestPath = `/v1/pdf/convert/from/csv`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<PDFFromCSVResponse>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as PDFFromCSVResponse;
@@ -2943,13 +2943,13 @@ export class PdfcoClient extends ConnectorClientBase {
      * PDF from Document (Doc, DocX, RTF, TXT, XPS)
      * @remarks Convert DOC, DOCX, RTF, TXT, XPS files into PDF. Please see api documentation at https://developer.pdf.co/api/pdf-from-document/index.html#post-tag-pdf-convert-from-doc for comprehensive guidelines.
      */
-    public async pdffromDocAsync(input: PDFFromDocInput, abortSignal?: AbortSignalLike): Promise<PDFFromDocResponse> {
+    public async pdffromDoc(input: PDFFromDocInput, abortSignal?: AbortSignalLike): Promise<PDFFromDocResponse> {
         const requestPath = `/v1/pdf/convert/from/doc`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<PDFFromDocResponse>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as PDFFromDocResponse;
@@ -2959,13 +2959,13 @@ export class PdfcoClient extends ConnectorClientBase {
      * PDF from Image
      * @remarks Create a PDF file from one or more JPG, PNG, TIFF images. Please see api documentation at https://developer.pdf.co/api/pdf-from-image/index.html for comprehensive guidelines.
      */
-    public async pdffromImagesAsync(input: PDFFromImagesInput, abortSignal?: AbortSignalLike): Promise<PDFFromImagesResponse> {
+    public async pdffromImages(input: PDFFromImagesInput, abortSignal?: AbortSignalLike): Promise<PDFFromImagesResponse> {
         const requestPath = `/v1/pdf/convert/from/image`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<PDFFromImagesResponse>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as PDFFromImagesResponse;
@@ -2975,13 +2975,13 @@ export class PdfcoClient extends ConnectorClientBase {
      * PDF from Email
      * @remarks Convert email files (MSG or EML) code into PDF. Extracts attachments (if any) from input email and embeds into PDF as pdf attachments. Please see api documentation at https://developer.pdf.co/api/pdf-from-email/index.html for comprehensive guidelines.
      */
-    public async pdffromEmailAsync(input: PDFFromEmailInput, abortSignal?: AbortSignalLike): Promise<PDFFromEmailResponse> {
+    public async pdffromEmail(input: PDFFromEmailInput, abortSignal?: AbortSignalLike): Promise<PDFFromEmailResponse> {
         const requestPath = `/v1/pdf/convert/from/email`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<PDFFromEmailResponse>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as PDFFromEmailResponse;
@@ -2991,13 +2991,13 @@ export class PdfcoClient extends ConnectorClientBase {
      * PDF Add Security
      * @remarks Add password and security limitations to existing PDF. Please see api documentation at https://developer.pdf.co/api/password-and-security/index.html#post-tag-pdf-security-add for comprehensive guidelines.
      */
-    public async pdfaddSecurityAsync(input: PDFAddSecurityInput, abortSignal?: AbortSignalLike): Promise<PDFAddSecurityResponse> {
+    public async addPDFSecurity(input: PDFAddSecurityInput, abortSignal?: AbortSignalLike): Promise<PDFAddSecurityResponse> {
         const requestPath = `/v1/pdf/security/add`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<PDFAddSecurityResponse>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as PDFAddSecurityResponse;
@@ -3007,13 +3007,13 @@ export class PdfcoClient extends ConnectorClientBase {
      * PDF Remove Security
      * @remarks Remove password and security from existing PDF files. Please see api documentation at https://developer.pdf.co/api/password-and-security/index.html#post-tag-pdf-security-remove for comprehensive guidelines.
      */
-    public async pdfsecurityRemoveAsync(input: PDFSecurityRemoveInput, abortSignal?: AbortSignalLike): Promise<PDFSecurityRemoveResponse> {
+    public async removePDFSecurity(input: PDFSecurityRemoveInput, abortSignal?: AbortSignalLike): Promise<PDFSecurityRemoveResponse> {
         const requestPath = `/v1/pdf/security/remove`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<PDFSecurityRemoveResponse>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as PDFSecurityRemoveResponse;
@@ -3023,13 +3023,13 @@ export class PdfcoClient extends ConnectorClientBase {
      * PDF From Spreadsheet
      * @remarks Create PDF from XLS, XLSX spreadsheet. Please see api documentation at https://developer.pdf.co/api/convert-excel/index.html#post-tag-xls-convert-to-pdf for comprehensive guidelines.
      */
-    public async pdffromXLSXLSXAsync(input: PDFFromXLSXLSXInput, abortSignal?: AbortSignalLike): Promise<PDFFromXLSXLSXResponse> {
+    public async pdffromXLSXLSX(input: PDFFromXLSXLSXInput, abortSignal?: AbortSignalLike): Promise<PDFFromXLSXLSXResponse> {
         const requestPath = `/v1/xls/convert/to/pdf`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<PDFFromXLSXLSXResponse>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as PDFFromXLSXLSXResponse;
@@ -3039,13 +3039,13 @@ export class PdfcoClient extends ConnectorClientBase {
      * Spreadsheet to CSV
      * @remarks Convert XLS/XLSX into CSV comma separated values file. Please see api documentation at https://developer.pdf.co/api/convert-excel/index.html#post-tag-xls-convert-to-csv for comprehensive guidelines.
      */
-    public async xlstoCSVAsync(input: XLStoCSVInput, abortSignal?: AbortSignalLike): Promise<XLStoCSVResponse> {
+    public async xlstoCSV(input: XLStoCSVInput, abortSignal?: AbortSignalLike): Promise<XLStoCSVResponse> {
         const requestPath = `/v1/xls/convert/to/csv`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<XLStoCSVResponse>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as XLStoCSVResponse;
@@ -3055,13 +3055,13 @@ export class PdfcoClient extends ConnectorClientBase {
      * Spreadsheet to JSON
      * @remarks Convert XLS/XLSX into JSON file. Please see api documentation at https://developer.pdf.co/api/convert-excel/index.html#post-tag-xls-convert-to-json for comprehensive guidelines.
      */
-    public async xlstoJSONAsync(input: XLStoJSONInput, abortSignal?: AbortSignalLike): Promise<XLStoJSONResponse> {
+    public async xlstoJSON(input: XLStoJSONInput, abortSignal?: AbortSignalLike): Promise<XLStoJSONResponse> {
         const requestPath = `/v1/xls/convert/to/json`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<XLStoJSONResponse>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as XLStoJSONResponse;
@@ -3071,13 +3071,13 @@ export class PdfcoClient extends ConnectorClientBase {
      * Spreadsheet to HTML
      * @remarks Convert XLS/XLSX into HTML file. Please see api documentation at https://developer.pdf.co/api/convert-excel/index.html#post-tag-xls-convert-to-html for comprehensive guidelines.
      */
-    public async xlstoHTMLAsync(input: XLStoHTMLInput, abortSignal?: AbortSignalLike): Promise<XLStoHTMLResponse> {
+    public async xlstoHTML(input: XLStoHTMLInput, abortSignal?: AbortSignalLike): Promise<XLStoHTMLResponse> {
         const requestPath = `/v1/xls/convert/to/html`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<XLStoHTMLResponse>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as XLStoHTMLResponse;
@@ -3087,13 +3087,13 @@ export class PdfcoClient extends ConnectorClientBase {
      * Spreadsheet to TXT
      * @remarks Convert XLS/XLSX or CSV into Text file. Please see api documentation at https://developer.pdf.co/api/convert-excel/index.html#post-tag-xls-convert-to-txt for comprehensive guidelines.
      */
-    public async xlstoTXTAsync(input: XLStoTXTInput, abortSignal?: AbortSignalLike): Promise<XLStoTXTResponse> {
+    public async xlstoTXT(input: XLStoTXTInput, abortSignal?: AbortSignalLike): Promise<XLStoTXTResponse> {
         const requestPath = `/v1/xls/convert/to/txt`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<XLStoTXTResponse>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as XLStoTXTResponse;
@@ -3103,13 +3103,13 @@ export class PdfcoClient extends ConnectorClientBase {
      * Spreadsheet to XML
      * @remarks Convert XLS/XLSX or CSV into XML file. Please see api documentation at https://developer.pdf.co/api/convert-excel/index.html#post-tag-xls-convert-to-xml for comprehensive guidelines.
      */
-    public async xlstoXMLAsync(input: XLStoXMLInput, abortSignal?: AbortSignalLike): Promise<XLStoXMLResponse> {
+    public async xlstoXML(input: XLStoXMLInput, abortSignal?: AbortSignalLike): Promise<XLStoXMLResponse> {
         const requestPath = `/v1/xls/convert/to/xml`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<XLStoXMLResponse>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as XLStoXMLResponse;
@@ -3119,13 +3119,13 @@ export class PdfcoClient extends ConnectorClientBase {
      * Rotate PDF Pages
      * @remarks Rotate PDF Pages. Please see api documentation at https://developer.pdf.co/api/pdf-rotate-pages/index.html for comprehensive guidelines.
      */
-    public async pdfrotatePagesAsync(input: PDFRotatePagesInput, abortSignal?: AbortSignalLike): Promise<PDFRotatePagesResponse> {
+    public async pdfrotatePages(input: PDFRotatePagesInput, abortSignal?: AbortSignalLike): Promise<PDFRotatePagesResponse> {
         const requestPath = `/v1/pdf/edit/rotate`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<PDFRotatePagesResponse>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as PDFRotatePagesResponse;
@@ -3135,13 +3135,13 @@ export class PdfcoClient extends ConnectorClientBase {
      * Rotate PDF Pages (Auto)
      * @remarks Uses AI to automatically fix the rotation of pages inside scanned PDF based on text analysis. Please see api documentation at https://developer.pdf.co/api/pdf-rotate-pages/index.html#post-tag-pdf-edit-rotate-auto for comprehensive guidelines.
      */
-    public async pdfautoRotatePagesAsync(input: PDFAutoRotatePagesInput, abortSignal?: AbortSignalLike): Promise<PDFAutoRotatePagesResponse> {
+    public async pdfautoRotatePages(input: PDFAutoRotatePagesInput, abortSignal?: AbortSignalLike): Promise<PDFAutoRotatePagesResponse> {
         const requestPath = `/v1/pdf/edit/rotate/auto`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<PDFAutoRotatePagesResponse>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as PDFAutoRotatePagesResponse;
@@ -3151,13 +3151,13 @@ export class PdfcoClient extends ConnectorClientBase {
      * PDF Delete Pages
      * @remarks Delete pages in PDF. Please see api documentation at https://developer.pdf.co/api/pdf-delete-pages/index.html for comprehensive guidelines.
      */
-    public async pdfdeletePagesAsync(input: PDFDeletePagesInput, abortSignal?: AbortSignalLike): Promise<PDFDeletePagesResponse> {
+    public async deletePDFPages(input: PDFDeletePagesInput, abortSignal?: AbortSignalLike): Promise<PDFDeletePagesResponse> {
         const requestPath = `/v1/pdf/edit/delete-pages`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<PDFDeletePagesResponse>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as PDFDeletePagesResponse;
@@ -3167,13 +3167,13 @@ export class PdfcoClient extends ConnectorClientBase {
      * PDF Compress and Optimize
      * @remarks Optimize PDF document to reduce its size. Please see api documentation at https://developer.pdf.co/api/pdf-optimize/index.html for comprehensive guidelines.
      */
-    public async pdfcompressAsync(input: PDFCompressInput, abortSignal?: AbortSignalLike): Promise<PDFCompressResponse> {
+    public async pdfcompress(input: PDFCompressInput, abortSignal?: AbortSignalLike): Promise<PDFCompressResponse> {
         const requestPath = `/v1/pdf/optimize`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<PDFCompressResponse>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as PDFCompressResponse;
@@ -3183,13 +3183,13 @@ export class PdfcoClient extends ConnectorClientBase {
      * Document Classifier
      * @remarks Auto classification Of Incoming Documents based on keywords-based rules. For example, you can define rules to find which vendor provided the document to find which template to apply accordingly. Please see api documentation at https://developer.pdf.co/api/document-classifier/index.html for comprehensive guidelines.
      */
-    public async pdfclassifierAsync(input: PDFClassifierInput, abortSignal?: AbortSignalLike): Promise<PDFClassifierResponse> {
+    public async pdfclassifier(input: PDFClassifierInput, abortSignal?: AbortSignalLike): Promise<PDFClassifierResponse> {
         const requestPath = `/v1/pdf/classifier`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<PDFClassifierResponse>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as PDFClassifierResponse;
@@ -3199,13 +3199,13 @@ export class PdfcoClient extends ConnectorClientBase {
      * Send Email with Attachments
      * @remarks Send Email with Attachments. Please see api documentation at https://developer.pdf.co/api/email-send-and-decode/index.html for comprehensive guidelines.
      */
-    public async emailSendAsync(input: EmailSendInput, abortSignal?: AbortSignalLike): Promise<EmailSendResponse> {
+    public async sendEmail(input: EmailSendInput, abortSignal?: AbortSignalLike): Promise<EmailSendResponse> {
         const requestPath = `/v1/email/send`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<EmailSendResponse>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as EmailSendResponse;
@@ -3215,13 +3215,13 @@ export class PdfcoClient extends ConnectorClientBase {
      * Email Information
      * @remarks Get Email Information such as sender/recipient, subject, body, etc. Please see api documentation at https://developer.pdf.co/api/email-send-and-decode/index.html#post-tag-email-decode for comprehensive guidelines.
      */
-    public async emailDecodeAsync(input: EmailDecodeInput, abortSignal?: AbortSignalLike): Promise<EmailDecodeResponse> {
+    public async emailDecode(input: EmailDecodeInput, abortSignal?: AbortSignalLike): Promise<EmailDecodeResponse> {
         const requestPath = `/v1/email/decode`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<EmailDecodeResponse>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as EmailDecodeResponse;
@@ -3231,13 +3231,13 @@ export class PdfcoClient extends ConnectorClientBase {
      * Email Attachment Extraction
      * @remarks Extract Email attachments with basic email information. Please see api documentation at https://developer.pdf.co/api/email-send-and-decode/index.html#post-tag-email-extract-attachments for comprehensive guidelines.
      */
-    public async emailAttachmentExtractionAsync(input: EmailAttachmentExtractionInput, abortSignal?: AbortSignalLike): Promise<EmailAttachmentExtractionResponse> {
+    public async emailAttachmentExtraction(input: EmailAttachmentExtractionInput, abortSignal?: AbortSignalLike): Promise<EmailAttachmentExtractionResponse> {
         const requestPath = `/v1/email/extract-attachments`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<EmailAttachmentExtractionResponse>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as EmailAttachmentExtractionResponse;
@@ -3247,13 +3247,13 @@ export class PdfcoClient extends ConnectorClientBase {
      * PDF Attachment Extraction
      * @remarks Extract attachments from input PDF document. Please see api documentation at https://developer.pdf.co/api/extract-attachments/index.html for comprehensive guidelines.
      */
-    public async pdfattachmentExtractionAsync(input: PDFAttachmentExtractionInput, abortSignal?: AbortSignalLike): Promise<PDFAttachmentExtractionResponse> {
+    public async pdfattachmentExtraction(input: PDFAttachmentExtractionInput, abortSignal?: AbortSignalLike): Promise<PDFAttachmentExtractionResponse> {
         const requestPath = `/v1/pdf/attachments/extract`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<PDFAttachmentExtractionResponse>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as PDFAttachmentExtractionResponse;

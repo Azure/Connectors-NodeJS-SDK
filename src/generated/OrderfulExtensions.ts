@@ -4,7 +4,7 @@
 import type { AbortSignalLike } from "@azure/abort-controller";
 import type { TokenCredential } from "@azure/core-auth";
 import { ConnectorClientBase } from "../azureConnectors/clientBase.ts";
-import { ConnectorException } from "../azureConnectors/connectorException.ts";
+import { ConnectorError } from "../azureConnectors/connectorError.ts";
 import { ConnectorClientOptions } from "../azureConnectors/options.ts";
 
 // #region Types
@@ -89,13 +89,13 @@ export class OrderfulClient extends ConnectorClientBase {
      * List Transactions
      * @remarks Fetches a list of transactions as specified by the filter/sort parameters supplied.
      */
-    public async listTransactionsAsync(abortSignal?: AbortSignalLike): Promise<void> {
+    public async listTransactions(abortSignal?: AbortSignalLike): Promise<void> {
         const requestPath = `/v2/transactions`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<void>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
     }
 
@@ -103,13 +103,13 @@ export class OrderfulClient extends ConnectorClientBase {
      * Create Transaction
      * @remarks Create Transaction.
      */
-    public async createTransactionAsync(input: CreateTransactionInput, abortSignal?: AbortSignalLike): Promise<void> {
+    public async createTransaction(input: CreateTransactionInput, abortSignal?: AbortSignalLike): Promise<void> {
         const requestPath = `/v2/transactions`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<void>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
     }
 
@@ -117,13 +117,13 @@ export class OrderfulClient extends ConnectorClientBase {
      * Get Transaction by ID
      * @remarks Get transaction by ID.
      */
-    public async getTransactionByIdAsync(transactionId: string, abortSignal?: AbortSignalLike): Promise<void> {
+    public async getTransactionById(transactionId: string, abortSignal?: AbortSignalLike): Promise<void> {
         const requestPath = `/v2/transactions/${transactionId}`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<void>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
     }
 

@@ -4,7 +4,7 @@
 import type { AbortSignalLike } from "@azure/abort-controller";
 import type { TokenCredential } from "@azure/core-auth";
 import { ConnectorClientBase } from "../azureConnectors/clientBase.ts";
-import { ConnectorException } from "../azureConnectors/connectorException.ts";
+import { ConnectorError } from "../azureConnectors/connectorError.ts";
 import { ConnectorClientOptions } from "../azureConnectors/options.ts";
 
 // #region Types
@@ -1716,7 +1716,7 @@ export type SortOrder = "asc" | "ascending" | "desc" | "descending" | "up" | "do
 /**
  * Definition: State
  */
-export type State = "0" | "1" | "2" | "3" | "4" | "5";
+export type State = 0 | 1 | 2 | 3 | 4 | 5;
 
 /**
  * Definition: state2
@@ -1726,7 +1726,7 @@ export type State2 = "active" | "inactive";
 /**
  * Definition: Type
  */
-export type Type = "0" | "1";
+export type Type = 0 | 1;
 
 /**
  * Definition: type1
@@ -1810,13 +1810,13 @@ export class EtsyClient extends ConnectorClientBase {
      * Ping
      * @remarks Check to confirm connectivity to the Etsy API with an application.
      */
-    public async pingAsync(abortSignal?: AbortSignalLike): Promise<Pong> {
+    public async ping(abortSignal?: AbortSignalLike): Promise<Pong> {
         const requestPath = `/openapi-ping`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<Pong>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as Pong;
@@ -1826,7 +1826,7 @@ export class EtsyClient extends ConnectorClientBase {
      * Get a shop payment account ledger's entries
      * @remarks Retrieve the entries of a shop's payment account ledger.
      */
-    public async paymentLedgerEntriesAsync(shopId: string, minCreated?: string, maxCreated?: string, limit?: string, offset?: string, abortSignal?: AbortSignalLike): Promise<PaymentAccountLedgerEntries> {
+    public async paymentLedgerEntries(shopId: string, minCreated?: string, maxCreated?: string, limit?: string, offset?: string, abortSignal?: AbortSignalLike): Promise<PaymentAccountLedgerEntries> {
         const queryParams: string[] = [];
         if (minCreated !== undefined) {
             queryParams.push(`min_created=${encodeURIComponent(String(minCreated))}`);
@@ -1845,7 +1845,7 @@ export class EtsyClient extends ConnectorClientBase {
         const httpResponse = await this.httpClient.sendAsync<PaymentAccountLedgerEntries>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as PaymentAccountLedgerEntries;
@@ -1855,7 +1855,7 @@ export class EtsyClient extends ConnectorClientBase {
      * Get a payment from a payment account ledger entry ID
      * @remarks Get a Payment from a Payment Account Ledger Entry ID, if applicable.
      */
-    public async paymentGetEntryIdAsync(shopId: string, ledgerEntryIds?: string, abortSignal?: AbortSignalLike): Promise<Payments> {
+    public async getPaymentEntryId(shopId: string, ledgerEntryIds?: string, abortSignal?: AbortSignalLike): Promise<Payments> {
         const queryParams: string[] = [];
         if (ledgerEntryIds !== undefined) {
             queryParams.push(`ledger_entry_ids=${encodeURIComponent(String(ledgerEntryIds))}`);
@@ -1865,7 +1865,7 @@ export class EtsyClient extends ConnectorClientBase {
         const httpResponse = await this.httpClient.sendAsync<Payments>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as Payments;
@@ -1875,13 +1875,13 @@ export class EtsyClient extends ConnectorClientBase {
      * Get a payment from a specific receipt
      * @remarks Retrieves a payment from a specific receipt, identified by receipt ID, from a specific shop, identified by shop ID.
      */
-    public async paymentGetReceiptAsync(shopId: string, receiptId: string, abortSignal?: AbortSignalLike): Promise<Payments> {
+    public async getPaymentReceipt(shopId: string, receiptId: string, abortSignal?: AbortSignalLike): Promise<Payments> {
         const requestPath = `/shops/${shopId}/receipts/${receiptId}/payments`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<Payments>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as Payments;
@@ -1891,7 +1891,7 @@ export class EtsyClient extends ConnectorClientBase {
      * Get a list of payments
      * @remarks Retrieves a list of payments from a shop identified by shop ID. You can also filter results using a list of payment IDs.
      */
-    public async paymentsGetAsync(shopId: string, paymentIds?: string, abortSignal?: AbortSignalLike): Promise<Payments> {
+    public async getPayments(shopId: string, paymentIds?: string, abortSignal?: AbortSignalLike): Promise<Payments> {
         const queryParams: string[] = [];
         if (paymentIds !== undefined) {
             queryParams.push(`payment-ids=${encodeURIComponent(String(paymentIds))}`);
@@ -1901,7 +1901,7 @@ export class EtsyClient extends ConnectorClientBase {
         const httpResponse = await this.httpClient.sendAsync<Payments>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as Payments;
@@ -1911,13 +1911,13 @@ export class EtsyClient extends ConnectorClientBase {
      * Get a receipt
      * @remarks Retrieves a receipt, identified by a receipt ID, from an Etsy shop.
      */
-    public async receiptGetAsync(shopId: string, receiptId: string, abortSignal?: AbortSignalLike): Promise<ShopReceipt> {
+    public async getReceipt(shopId: string, receiptId: string, abortSignal?: AbortSignalLike): Promise<ShopReceipt> {
         const requestPath = `/shops/${shopId}/receipts/${receiptId}`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<ShopReceipt>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as ShopReceipt;
@@ -1927,7 +1927,7 @@ export class EtsyClient extends ConnectorClientBase {
      * Get receipts
      * @remarks Requests the shop receipts from a specific shop, unfiltered or filtered by receipt ID range or offset, date, paid, and/or shipped purchases.
      */
-    public async receiptsGetAsync(shopId: string, minCreated?: string, maxCreated?: string, minLastModified?: string, maxLastModified?: string, limit?: string, offset?: string, wasPaid?: string, wasShipped?: string, abortSignal?: AbortSignalLike): Promise<ShopReceipts> {
+    public async getReceipts(shopId: string, minCreated?: string, maxCreated?: string, minLastModified?: string, maxLastModified?: string, limit?: string, offset?: string, wasPaid?: string, wasShipped?: string, abortSignal?: AbortSignalLike): Promise<ShopReceipts> {
         const queryParams: string[] = [];
         if (minCreated !== undefined) {
             queryParams.push(`min_created=${encodeURIComponent(String(minCreated))}`);
@@ -1958,7 +1958,7 @@ export class EtsyClient extends ConnectorClientBase {
         const httpResponse = await this.httpClient.sendAsync<ShopReceipts>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as ShopReceipts;
@@ -1968,13 +1968,13 @@ export class EtsyClient extends ConnectorClientBase {
      * Create a Shipment Receipt
      * @remarks Submits tracking information for a shop receipt, which creates a shop receipt Shipment entry for the given receipt ID. Each time you successfully submit tracking info, Etsy sends a notification email to the buyer User. When send BCC is true, Etsy sends shipping notifications to the seller as well. When tracking code and carrier name aren't sent, the receipt is marked as shipped only.
      */
-    public async receiptCreateShipmentAsync(input: ReceiptCreateShipmentInput, shopId: string, receiptId: string, abortSignal?: AbortSignalLike): Promise<ShopReceipt> {
+    public async createReceiptShipment(input: ReceiptCreateShipmentInput, shopId: string, receiptId: string, abortSignal?: AbortSignalLike): Promise<ShopReceipt> {
         const requestPath = `/shops/${shopId}/receipts/${receiptId}/tracking`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<ShopReceipt>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as ShopReceipt;
@@ -1984,7 +1984,7 @@ export class EtsyClient extends ConnectorClientBase {
      * Retrieve a listing's transactions
      * @remarks Retrieves the list of transactions associated with a listing.
      */
-    public async transactionsListingAsync(shopId: string, listingId: string, limit?: string, offset?: string, abortSignal?: AbortSignalLike): Promise<ShopReceiptTransactions> {
+    public async transactionsListing(shopId: string, listingId: string, limit?: string, offset?: string, abortSignal?: AbortSignalLike): Promise<ShopReceiptTransactions> {
         const queryParams: string[] = [];
         if (limit !== undefined) {
             queryParams.push(`limit=${encodeURIComponent(String(limit))}`);
@@ -1997,7 +1997,7 @@ export class EtsyClient extends ConnectorClientBase {
         const httpResponse = await this.httpClient.sendAsync<ShopReceiptTransactions>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as ShopReceiptTransactions;
@@ -2007,13 +2007,13 @@ export class EtsyClient extends ConnectorClientBase {
      * Get a receipt's transaction
      * @remarks Retrieves the list of transactions associated with a specific receipt.
      */
-    public async transactionReceiptAsync(shopId: string, receiptId: string, abortSignal?: AbortSignalLike): Promise<ShopReceiptTransactions> {
+    public async transactionReceipt(shopId: string, receiptId: string, abortSignal?: AbortSignalLike): Promise<ShopReceiptTransactions> {
         const requestPath = `/shops/${shopId}/receipts/${receiptId}/transactions`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<ShopReceiptTransactions>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as ShopReceiptTransactions;
@@ -2023,13 +2023,13 @@ export class EtsyClient extends ConnectorClientBase {
      * Get a transaction
      * @remarks Retrieves a transaction by transaction ID.
      */
-    public async transactionGetAsync(shopId: string, transactionId: string, abortSignal?: AbortSignalLike): Promise<ShopReceiptTransaction> {
+    public async getTransaction(shopId: string, transactionId: string, abortSignal?: AbortSignalLike): Promise<ShopReceiptTransaction> {
         const requestPath = `/shops/${shopId}/transactions/${transactionId}`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<ShopReceiptTransaction>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as ShopReceiptTransaction;
@@ -2039,7 +2039,7 @@ export class EtsyClient extends ConnectorClientBase {
      * Get a shop's transaction
      * @remarks Retrieves the list of transactions associated with a shop.
      */
-    public async transactionGetShopAsync(shopId: string, limit?: string, offset?: string, abortSignal?: AbortSignalLike): Promise<ShopReceiptTransactions> {
+    public async getTransactionShop(shopId: string, limit?: string, offset?: string, abortSignal?: AbortSignalLike): Promise<ShopReceiptTransactions> {
         const queryParams: string[] = [];
         if (limit !== undefined) {
             queryParams.push(`limit=${encodeURIComponent(String(limit))}`);
@@ -2052,7 +2052,7 @@ export class EtsyClient extends ConnectorClientBase {
         const httpResponse = await this.httpClient.sendAsync<ShopReceiptTransactions>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as ShopReceiptTransactions;
@@ -2062,7 +2062,7 @@ export class EtsyClient extends ConnectorClientBase {
      * Get reviews
      * @remarks Retrieves the reviews from a shop given its ID.
      */
-    public async reviewsGetAsync(shopId: string, limit?: string, offset?: string, abortSignal?: AbortSignalLike): Promise<TransactionReviews> {
+    public async getReviews(shopId: string, limit?: string, offset?: string, abortSignal?: AbortSignalLike): Promise<TransactionReviews> {
         const queryParams: string[] = [];
         if (limit !== undefined) {
             queryParams.push(`limit=${encodeURIComponent(String(limit))}`);
@@ -2075,7 +2075,7 @@ export class EtsyClient extends ConnectorClientBase {
         const httpResponse = await this.httpClient.sendAsync<TransactionReviews>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as TransactionReviews;
@@ -2085,7 +2085,7 @@ export class EtsyClient extends ConnectorClientBase {
      * Get shipping carriers
      * @remarks Retrieves a list of available shipping carriers and the mail classes associated with them for a given country.
      */
-    public async shippingCarriersAsync(originCountryIso?: string, abortSignal?: AbortSignalLike): Promise<ShippingCarriers> {
+    public async shippingCarriers(originCountryIso?: string, abortSignal?: AbortSignalLike): Promise<ShippingCarriers> {
         const queryParams: string[] = [];
         if (originCountryIso !== undefined) {
             queryParams.push(`origin_country_iso=${encodeURIComponent(String(originCountryIso))}`);
@@ -2095,7 +2095,7 @@ export class EtsyClient extends ConnectorClientBase {
         const httpResponse = await this.httpClient.sendAsync<ShippingCarriers>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as ShippingCarriers;
@@ -2105,13 +2105,13 @@ export class EtsyClient extends ConnectorClientBase {
      * Get shipping profiles
      * @remarks Retrieves a list of shipping profiles available in the specific Etsy shop identified by its shop ID.
      */
-    public async shippingProfilesAsync(shopId: string, abortSignal?: AbortSignalLike): Promise<ShopShippingProfile> {
+    public async shippingProfiles(shopId: string, abortSignal?: AbortSignalLike): Promise<ShopShippingProfile> {
         const requestPath = `/shops/${shopId}/shipping-profiles`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<ShopShippingProfile>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as ShopShippingProfile;
@@ -2121,13 +2121,13 @@ export class EtsyClient extends ConnectorClientBase {
      * Create a shipping profile
      * @remarks Creates a new shipping profile. You can pass a country ISO code or a region when creating a shipping profile, but not both. Only one is required. You must pass either a shipping carrier ID and mail class, or both min and max delivery days.
      */
-    public async shippingCreateProfileAsync(input: ShippingCreateProfileInput, shopId: string, abortSignal?: AbortSignalLike): Promise<ShopShippingProfile> {
+    public async createShippingProfile(input: ShippingCreateProfileInput, shopId: string, abortSignal?: AbortSignalLike): Promise<ShopShippingProfile> {
         const requestPath = `/shops/${shopId}/shipping-profiles`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<ShopShippingProfile>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as ShopShippingProfile;
@@ -2137,13 +2137,13 @@ export class EtsyClient extends ConnectorClientBase {
      * Get a shipping profile
      * @remarks Retrieves a shipping profile referenced by shipping profile ID.
      */
-    public async shippingGetProfileAsync(shopId: string, shippingProfileId: string, abortSignal?: AbortSignalLike): Promise<void> {
+    public async getShippingProfile(shopId: string, shippingProfileId: string, abortSignal?: AbortSignalLike): Promise<void> {
         const requestPath = `/shops/${shopId}/shipping-profiles/${shippingProfileId}`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<void>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
     }
 
@@ -2151,13 +2151,13 @@ export class EtsyClient extends ConnectorClientBase {
      * Delete a shipping profile
      * @remarks Deletes a shipping profile by given ID.
      */
-    public async shippingDeleteProfileAsync(shopId: string, shippingProfileId: string, abortSignal?: AbortSignalLike): Promise<ShopShippingProfile> {
+    public async deleteShippingProfile(shopId: string, shippingProfileId: string, abortSignal?: AbortSignalLike): Promise<ShopShippingProfile> {
         const requestPath = `/shops/${shopId}/shipping-profiles/${shippingProfileId}`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<ShopShippingProfile>("DELETE", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `DELETE ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `DELETE ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as ShopShippingProfile;
@@ -2167,13 +2167,13 @@ export class EtsyClient extends ConnectorClientBase {
      * Update a shipping profile
      * @remarks Changes the settings in a shipping profile.
      */
-    public async shippingUpdateProfileAsync(input: ShippingUpdateProfileInput, shopId: string, shippingProfileId: string, abortSignal?: AbortSignalLike): Promise<ShopShippingProfile> {
+    public async updateShippingProfile(input: ShippingUpdateProfileInput, shopId: string, shippingProfileId: string, abortSignal?: AbortSignalLike): Promise<ShopShippingProfile> {
         const requestPath = `/shops/${shopId}/shipping-profiles/${shippingProfileId}`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<ShopShippingProfile>("PUT", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `PUT ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `PUT ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as ShopShippingProfile;
@@ -2183,7 +2183,7 @@ export class EtsyClient extends ConnectorClientBase {
      * Get profile destinations by shipping profile
      * @remarks Retrieves a list of shipping destination objects associated with a shipping profile.
      */
-    public async shippingGetDestinationsAsync(shopId: string, shippingProfileId: string, limit?: string, offset?: string, abortSignal?: AbortSignalLike): Promise<ShopShippingProfileDestinations> {
+    public async getShippingDestinations(shopId: string, shippingProfileId: string, limit?: string, offset?: string, abortSignal?: AbortSignalLike): Promise<ShopShippingProfileDestinations> {
         const queryParams: string[] = [];
         if (limit !== undefined) {
             queryParams.push(`limit=${encodeURIComponent(String(limit))}`);
@@ -2196,7 +2196,7 @@ export class EtsyClient extends ConnectorClientBase {
         const httpResponse = await this.httpClient.sendAsync<ShopShippingProfileDestinations>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as ShopShippingProfileDestinations;
@@ -2206,13 +2206,13 @@ export class EtsyClient extends ConnectorClientBase {
      * Create a shipping profile destination
      * @remarks Creates a new shipping destination, which sets the shipping cost, carrier, and class for a destination in a shipping profile. This assigns costs using the currency of the associated shop. Set the destination using either destination country ISO or destination region; destination country ISO and destination region are mutually exclusive — set one or the other. Setting both triggers error 400. If the request sets neither destination country ISO nor destination region, the default destination is everywhere. You must also either assign both a shipping carrier ID and mail class or both min delivery days and max delivery days.
      */
-    public async shippingCreateDestinationAsync(input: ShippingCreateDestinationInput, shopId: string, shippingProfileId: string, abortSignal?: AbortSignalLike): Promise<ShopShippingProfileDestination> {
+    public async createShippingDestination(input: ShippingCreateDestinationInput, shopId: string, shippingProfileId: string, abortSignal?: AbortSignalLike): Promise<ShopShippingProfileDestination> {
         const requestPath = `/shops/${shopId}/shipping-profiles/${shippingProfileId}/destinations`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<ShopShippingProfileDestination>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as ShopShippingProfileDestination;
@@ -2222,13 +2222,13 @@ export class EtsyClient extends ConnectorClientBase {
      * Delete a shipping profile destination
      * @remarks Deletes a shipping destination and removes the destination option from every listing that uses the associated shipping profile. A shipping profile requires at least one shipping destination, so this endpoint cannot delete the final shipping destination for any shipping profile. To delete the final shipping destination from a shipping profile, you must delete the entire shipping profile.
      */
-    public async shippingDeleteProfileDestinationAsync(shopId: string, shippingProfileId: string, shippingProfileDestinationId: string, abortSignal?: AbortSignalLike): Promise<void> {
+    public async deleteShippingProfileDestination(shopId: string, shippingProfileId: string, shippingProfileDestinationId: string, abortSignal?: AbortSignalLike): Promise<void> {
         const requestPath = `/shops/${shopId}/shipping-profiles/${shippingProfileId}/destinations/${shippingProfileDestinationId}`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<void>("DELETE", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `DELETE ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `DELETE ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
     }
 
@@ -2236,13 +2236,13 @@ export class EtsyClient extends ConnectorClientBase {
      * Update a shipping profile destination
      * @remarks Updates an existing shipping destination, which can set or reassign the shipping cost, carrier, and class for a destination.
      */
-    public async shippingUpdateProfileDestinationAsync(input: ShippingUpdateProfileDestinationInput, shopId: string, shippingProfileId: string, shippingProfileDestinationId: string, abortSignal?: AbortSignalLike): Promise<ShopShippingProfileDestination> {
+    public async updateShippingProfileDestination(input: ShippingUpdateProfileDestinationInput, shopId: string, shippingProfileId: string, shippingProfileDestinationId: string, abortSignal?: AbortSignalLike): Promise<ShopShippingProfileDestination> {
         const requestPath = `/shops/${shopId}/shipping-profiles/${shippingProfileId}/destinations/${shippingProfileDestinationId}`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<ShopShippingProfileDestination>("PUT", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `PUT ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `PUT ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as ShopShippingProfileDestination;
@@ -2252,13 +2252,13 @@ export class EtsyClient extends ConnectorClientBase {
      * Get shipping profile upgrades
      * @remarks Retrieves the list of shipping profile upgrades assigned to a specific shipping profile.
      */
-    public async shippingGetProfileUpgradesAsync(shopId: string, shippingProfileId: string, abortSignal?: AbortSignalLike): Promise<ShopShippingProfileUpgrades> {
+    public async getShippingProfileUpgrades(shopId: string, shippingProfileId: string, abortSignal?: AbortSignalLike): Promise<ShopShippingProfileUpgrades> {
         const requestPath = `/shops/${shopId}/shipping-profiles/${shippingProfileId}/upgrades`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<ShopShippingProfileUpgrades>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as ShopShippingProfileUpgrades;
@@ -2268,13 +2268,13 @@ export class EtsyClient extends ConnectorClientBase {
      * Create a shipping profile upgrade
      * @remarks Creates a new shipping profile upgrade, which can establish a price for a shipping option, such as an alternate carrier or faster delivery.
      */
-    public async shippingCreateUpgradeAsync(input: ShippingCreateUpgradeInput, shopId: string, shippingProfileId: string, abortSignal?: AbortSignalLike): Promise<ShopShippingProfileUpgrade> {
+    public async createShippingUpgrade(input: ShippingCreateUpgradeInput, shopId: string, shippingProfileId: string, abortSignal?: AbortSignalLike): Promise<ShopShippingProfileUpgrade> {
         const requestPath = `/shops/${shopId}/shipping-profiles/${shippingProfileId}/upgrades`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<ShopShippingProfileUpgrade>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as ShopShippingProfileUpgrade;
@@ -2284,13 +2284,13 @@ export class EtsyClient extends ConnectorClientBase {
      * Delete a shipping profile upgrade
      * @remarks Deletes a shipping profile upgrade and removes the upgrade option from every listing that uses the associated shipping profile.
      */
-    public async shippingDeleteProfileUpgradeAsync(shopId: string, shippingProfileId: string, upgradeId: string, abortSignal?: AbortSignalLike): Promise<void> {
+    public async deleteShippingProfileUpgrade(shopId: string, shippingProfileId: string, upgradeId: string, abortSignal?: AbortSignalLike): Promise<void> {
         const requestPath = `/shops/${shopId}/shipping-profiles/${shippingProfileId}/upgrades/${upgradeId}`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<void>("DELETE", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `DELETE ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `DELETE ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
     }
 
@@ -2298,13 +2298,13 @@ export class EtsyClient extends ConnectorClientBase {
      * Update a shipping profile upgrade
      * @remarks Updates a shipping profile upgrade and updates any listings that use the shipping profile.
      */
-    public async shippingUpdateProfileUpgradeAsync(input: ShippingUpdateProfileUpgradeInput, shopId: string, shippingProfileId: string, upgradeId: string, abortSignal?: AbortSignalLike): Promise<ShopShippingProfileUpgrade> {
+    public async updateShippingProfileUpgrade(input: ShippingUpdateProfileUpgradeInput, shopId: string, shippingProfileId: string, upgradeId: string, abortSignal?: AbortSignalLike): Promise<ShopShippingProfileUpgrade> {
         const requestPath = `/shops/${shopId}/shipping-profiles/${shippingProfileId}/upgrades/${upgradeId}`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<ShopShippingProfileUpgrade>("PUT", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `PUT ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `PUT ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as ShopShippingProfileUpgrade;
@@ -2314,13 +2314,13 @@ export class EtsyClient extends ConnectorClientBase {
      * Update a shop
      * @remarks Update a shop. Assumes that all string parameters are provided in the shop's primary language.
      */
-    public async shopUpdateAsync(input: ShopUpdateInput, shopId: string, abortSignal?: AbortSignalLike): Promise<Shop> {
+    public async updateShop(input: ShopUpdateInput, shopId: string, abortSignal?: AbortSignalLike): Promise<Shop> {
         const requestPath = `/shops/${shopId}`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<Shop>("PUT", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `PUT ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `PUT ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as Shop;
@@ -2330,13 +2330,13 @@ export class EtsyClient extends ConnectorClientBase {
      * Get shop by owner ID
      * @remarks Retrieves the shop identified by the shop owner's user ID.
      */
-    public async shopGetByOwnerIdAsync(userId: string, abortSignal?: AbortSignalLike): Promise<Shop> {
+    public async getShopByOwnerId(userId: string, abortSignal?: AbortSignalLike): Promise<Shop> {
         const requestPath = `/users/${userId}/shops`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<Shop>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as Shop;
@@ -2346,7 +2346,7 @@ export class EtsyClient extends ConnectorClientBase {
      * Search shops
      * @remarks Returns a list of shops with the matching name.
      */
-    public async shopSearchAsync(shopName?: string, limit?: string, offset?: string, abortSignal?: AbortSignalLike): Promise<Shops> {
+    public async searchShop(shopName?: string, limit?: string, offset?: string, abortSignal?: AbortSignalLike): Promise<Shops> {
         const queryParams: string[] = [];
         if (shopName !== undefined) {
             queryParams.push(`shop_name=${encodeURIComponent(String(shopName))}`);
@@ -2362,7 +2362,7 @@ export class EtsyClient extends ConnectorClientBase {
         const httpResponse = await this.httpClient.sendAsync<Shops>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as Shops;
@@ -2372,13 +2372,13 @@ export class EtsyClient extends ConnectorClientBase {
      * Get shop sections
      * @remarks Retrieves the list of shop sections in a specific shop identified by shop ID.
      */
-    public async shopGetSectionsAsync(shopId: string, abortSignal?: AbortSignalLike): Promise<ShopSections> {
+    public async getShopSections(shopId: string, abortSignal?: AbortSignalLike): Promise<ShopSections> {
         const requestPath = `/shops/${shopId}/sections`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<ShopSections>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as ShopSections;
@@ -2388,13 +2388,13 @@ export class EtsyClient extends ConnectorClientBase {
      * Create a shop section
      * @remarks Creates a new section in a specific shop.
      */
-    public async shopCreateSectionAsync(input: ShopCreateSectionInput, shopId: string, abortSignal?: AbortSignalLike): Promise<ShopSection> {
+    public async createShopSection(input: ShopCreateSectionInput, shopId: string, abortSignal?: AbortSignalLike): Promise<ShopSection> {
         const requestPath = `/shops/${shopId}/sections`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<ShopSection>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as ShopSection;
@@ -2404,13 +2404,13 @@ export class EtsyClient extends ConnectorClientBase {
      * Get user
      * @remarks Returns user profile for the user identified by a user ID.
      */
-    public async userGetAsync(userId: string, abortSignal?: AbortSignalLike): Promise<User> {
+    public async getUser(userId: string, abortSignal?: AbortSignalLike): Promise<User> {
         const requestPath = `/users/${userId}`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<User>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as User;
@@ -2420,13 +2420,13 @@ export class EtsyClient extends ConnectorClientBase {
      * Get shop section
      * @remarks Retrieves a shop section, referenced by section ID and shop ID.
      */
-    public async shopGetSectionAsync(shopId: string, shopSectionId: string, abortSignal?: AbortSignalLike): Promise<ShopSection> {
+    public async getShopSection(shopId: string, shopSectionId: string, abortSignal?: AbortSignalLike): Promise<ShopSection> {
         const requestPath = `/shops/${shopId}/sections/${shopSectionId}`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<ShopSection>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as ShopSection;
@@ -2436,13 +2436,13 @@ export class EtsyClient extends ConnectorClientBase {
      * Get user's address
      * @remarks Retrieves the user's address.  Development for this endpoint is in progress. It will only return a 501 response.
      */
-    public async userGetAddressAsync(userAddressId: string, abortSignal?: AbortSignalLike): Promise<UserAddress> {
+    public async getUserAddress(userAddressId: string, abortSignal?: AbortSignalLike): Promise<UserAddress> {
         const requestPath = `/user/addresses/${userAddressId}`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<UserAddress>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as UserAddress;
@@ -2452,7 +2452,7 @@ export class EtsyClient extends ConnectorClientBase {
      * Get user addresses
      * @remarks Retrieve a list of user addresses.
      */
-    public async userGetAddressesAsync(limit?: string, offset?: string, abortSignal?: AbortSignalLike): Promise<UserAddresses> {
+    public async getUserAddresses(limit?: string, offset?: string, abortSignal?: AbortSignalLike): Promise<UserAddresses> {
         const queryParams: string[] = [];
         if (limit !== undefined) {
             queryParams.push(`limit=${encodeURIComponent(String(limit))}`);
@@ -2465,7 +2465,7 @@ export class EtsyClient extends ConnectorClientBase {
         const httpResponse = await this.httpClient.sendAsync<UserAddresses>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as UserAddresses;
@@ -2475,13 +2475,13 @@ export class EtsyClient extends ConnectorClientBase {
      * Get seller taxonomy nodes
      * @remarks Retrieves the full hierarchy tree of seller taxonomy nodes.
      */
-    public async listingGetTaxonomyNodesAsync(abortSignal?: AbortSignalLike): Promise<SellerTaxonomyNodes> {
+    public async getListingTaxonomyNodes(abortSignal?: AbortSignalLike): Promise<SellerTaxonomyNodes> {
         const requestPath = `/seller-taxonomy/nodes`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<SellerTaxonomyNodes>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as SellerTaxonomyNodes;
@@ -2491,13 +2491,13 @@ export class EtsyClient extends ConnectorClientBase {
      * Get product properties by taxonomy ID
      * @remarks Retrieves a list of product properties, with applicable scales and values, supported for a specific seller taxonomy ID.
      */
-    public async listingGetPropertiesByTaxonomyAsync(taxonomyId: string, abortSignal?: AbortSignalLike): Promise<TaxonomyNodeProperties> {
+    public async getListingPropertiesByTaxonomy(taxonomyId: string, abortSignal?: AbortSignalLike): Promise<TaxonomyNodeProperties> {
         const requestPath = `/seller-taxonomy/nodes/${taxonomyId}/properties`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<TaxonomyNodeProperties>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as TaxonomyNodeProperties;
@@ -2507,7 +2507,7 @@ export class EtsyClient extends ConnectorClientBase {
      * Get listings by shop
      * @remarks Returns listings that belong to a Shop. Listings can be filtered using the state parameter.
      */
-    public async listingGetShopAsync(shopId: string, state?: string, limit?: string, offset?: string, sortOn?: string, sortOrder?: string, abortSignal?: AbortSignalLike): Promise<ShopListings> {
+    public async getListingShop(shopId: string, state?: string, limit?: string, offset?: string, sortOn?: string, sortOrder?: string, abortSignal?: AbortSignalLike): Promise<ShopListings> {
         const queryParams: string[] = [];
         if (state !== undefined) {
             queryParams.push(`State=${encodeURIComponent(String(state))}`);
@@ -2529,7 +2529,7 @@ export class EtsyClient extends ConnectorClientBase {
         const httpResponse = await this.httpClient.sendAsync<ShopListings>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as ShopListings;
@@ -2539,13 +2539,13 @@ export class EtsyClient extends ConnectorClientBase {
      * Create a draft listing
      * @remarks Creates a physical draft listing product in a shop on the Etsy channel.
      */
-    public async listingCreateAsync(input: ListingCreateInput, shopId: string, abortSignal?: AbortSignalLike): Promise<ShopListing> {
+    public async createListing(input: ListingCreateInput, shopId: string, abortSignal?: AbortSignalLike): Promise<ShopListing> {
         const requestPath = `/shops/${shopId}/listings`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<ShopListing>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as ShopListing;
@@ -2555,7 +2555,7 @@ export class EtsyClient extends ConnectorClientBase {
      * Get a listing
      * @remarks Retrieves a listing record by listing ID.
      */
-    public async listingGetAsync(listingId: string, includes?: string, abortSignal?: AbortSignalLike): Promise<void> {
+    public async getListing(listingId: string, includes?: string, abortSignal?: AbortSignalLike): Promise<void> {
         const queryParams: string[] = [];
         if (includes !== undefined) {
             queryParams.push(`includes=${encodeURIComponent(String(includes))}`);
@@ -2565,7 +2565,7 @@ export class EtsyClient extends ConnectorClientBase {
         const httpResponse = await this.httpClient.sendAsync<void>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
     }
 
@@ -2573,13 +2573,13 @@ export class EtsyClient extends ConnectorClientBase {
      * Delete a listing
      * @remarks This action deletes a shop listing. A listing can be deleted only if the state is one of the following: SOLD_OUT, DRAFT, EXPIRED, INACTIVE, ACTIVE and is_available or ACTIVE and has seller flags: SUPRESSED (frozen), VACATION, CUSTOM_SHOPS (pattern), SELL_ON_FACEBOOK
      */
-    public async listingDeleteAsync(listingId: string, abortSignal?: AbortSignalLike): Promise<void> {
+    public async deleteListing(listingId: string, abortSignal?: AbortSignalLike): Promise<void> {
         const requestPath = `/listings/${listingId}`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<void>("DELETE", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `DELETE ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `DELETE ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
     }
 
@@ -2587,7 +2587,7 @@ export class EtsyClient extends ConnectorClientBase {
      * Get active listings
      * @remarks A list of all active listings on Etsy paginated by their creation date. Without sort order listings will be returned newest-first by default.
      */
-    public async listingGetActiveAsync(limit?: string, offset?: string, keywords?: string, sortOn?: string, sortOrder?: string, minPrice?: string, maxPrice?: string, taxonomyId?: string, shopLocation?: string, abortSignal?: AbortSignalLike): Promise<ShopListings> {
+    public async getListingActive(limit?: string, offset?: string, keywords?: string, sortOn?: string, sortOrder?: string, minPrice?: string, maxPrice?: string, taxonomyId?: string, shopLocation?: string, abortSignal?: AbortSignalLike): Promise<ShopListings> {
         const queryParams: string[] = [];
         if (limit !== undefined) {
             queryParams.push(`limit=${encodeURIComponent(String(limit))}`);
@@ -2621,7 +2621,7 @@ export class EtsyClient extends ConnectorClientBase {
         const httpResponse = await this.httpClient.sendAsync<ShopListings>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as ShopListings;
@@ -2631,7 +2631,7 @@ export class EtsyClient extends ConnectorClientBase {
      * Get active listings by shop
      * @remarks Retrieves a list of all active listings on Etsy in a specific shop, paginated by listing creation date.
      */
-    public async listingGetActiveByShopAsync(shopId: string, limit?: string, offset?: string, keywords?: string, abortSignal?: AbortSignalLike): Promise<ShopListings> {
+    public async getListingActiveByShop(shopId: string, limit?: string, offset?: string, keywords?: string, abortSignal?: AbortSignalLike): Promise<ShopListings> {
         const queryParams: string[] = [];
         if (limit !== undefined) {
             queryParams.push(`limit=${encodeURIComponent(String(limit))}`);
@@ -2647,7 +2647,7 @@ export class EtsyClient extends ConnectorClientBase {
         const httpResponse = await this.httpClient.sendAsync<ShopListings>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as ShopListings;
@@ -2657,7 +2657,7 @@ export class EtsyClient extends ConnectorClientBase {
      * Get listings by ID
      * @remarks Allows to query multiple listing IDs at once. Limit 100 IDs maximum per query.
      */
-    public async listingGetByIdAsync(listingIds?: string, includes?: string, abortSignal?: AbortSignalLike): Promise<ShopListingsWithAssociations> {
+    public async getListingById(listingIds?: string, includes?: string, abortSignal?: AbortSignalLike): Promise<ShopListingsWithAssociations> {
         const queryParams: string[] = [];
         if (listingIds !== undefined) {
             queryParams.push(`listing_ids=${encodeURIComponent(String(listingIds))}`);
@@ -2670,7 +2670,7 @@ export class EtsyClient extends ConnectorClientBase {
         const httpResponse = await this.httpClient.sendAsync<ShopListingsWithAssociations>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as ShopListingsWithAssociations;
@@ -2680,7 +2680,7 @@ export class EtsyClient extends ConnectorClientBase {
      * Get featured listings by shop
      * @remarks Retrieves listings associated to a shop that are featured.
      */
-    public async listingGetFeaturedAsync(shopId: string, limit?: string, offset?: string, abortSignal?: AbortSignalLike): Promise<ShopListings> {
+    public async getListingFeatured(shopId: string, limit?: string, offset?: string, abortSignal?: AbortSignalLike): Promise<ShopListings> {
         const queryParams: string[] = [];
         if (limit !== undefined) {
             queryParams.push(`limit=${encodeURIComponent(String(limit))}`);
@@ -2693,7 +2693,7 @@ export class EtsyClient extends ConnectorClientBase {
         const httpResponse = await this.httpClient.sendAsync<ShopListings>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as ShopListings;
@@ -2703,13 +2703,13 @@ export class EtsyClient extends ConnectorClientBase {
      * Delete a listing property
      * @remarks Deletes a property from a listing.
      */
-    public async listingDeletePropertyAsync(shopId: string, listingId: string, propertyId: string, abortSignal?: AbortSignalLike): Promise<void> {
+    public async deleteListingProperty(shopId: string, listingId: string, propertyId: string, abortSignal?: AbortSignalLike): Promise<void> {
         const requestPath = `/shops/${shopId}/listings/${listingId}/properties/${propertyId}`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<void>("DELETE", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `DELETE ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `DELETE ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
     }
 
@@ -2717,13 +2717,13 @@ export class EtsyClient extends ConnectorClientBase {
      * Update a listing property
      * @remarks Updates or populates the properties list defining product offerings for a listing. Each offering requires both a value and a value ID that are valid for a scale ID assigned to the listing or that you assign to the listing with this request.
      */
-    public async listingUpdatePropertyAsync(input: ListingUpdatePropertyInput, shopId: string, listingId: string, propertyId: string, abortSignal?: AbortSignalLike): Promise<ListingPropertyValue> {
+    public async updateListingProperty(input: ListingUpdatePropertyInput, shopId: string, listingId: string, propertyId: string, abortSignal?: AbortSignalLike): Promise<ListingPropertyValue> {
         const requestPath = `/shops/${shopId}/listings/${listingId}/properties/${propertyId}`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<ListingPropertyValue>("PUT", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `PUT ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `PUT ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as ListingPropertyValue;
@@ -2733,13 +2733,13 @@ export class EtsyClient extends ConnectorClientBase {
      * Get a listing's property (Beta)
      * @remarks Retrieves a listing's property. Development for this endpoint is in progress. It will only return a 501 response.
      */
-    public async listingGetPropertyAsync(listingId: string, propertyId: string, abortSignal?: AbortSignalLike): Promise<ListingPropertyValue> {
+    public async getListingProperty(listingId: string, propertyId: string, abortSignal?: AbortSignalLike): Promise<ListingPropertyValue> {
         const requestPath = `/listings/${listingId}/properties/${propertyId}`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<ListingPropertyValue>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as ListingPropertyValue;
@@ -2749,13 +2749,13 @@ export class EtsyClient extends ConnectorClientBase {
      * Get a listing's properties
      * @remarks Returns a list of a listing's properties.
      */
-    public async listingGetPropertiesAsync(shopId: string, listingId: string, abortSignal?: AbortSignalLike): Promise<ListingPropertyValues> {
+    public async getListingProperties(shopId: string, listingId: string, abortSignal?: AbortSignalLike): Promise<ListingPropertyValues> {
         const requestPath = `/shops/${shopId}/listings/${listingId}/properties`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<ListingPropertyValues>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as ListingPropertyValues;
@@ -2765,13 +2765,13 @@ export class EtsyClient extends ConnectorClientBase {
      * Update a listing
      * @remarks Updates a listing, identified by a listing ID, for a specific shop identified by a shop ID.
      */
-    public async listingUpdateAsync(input: ListingUpdateInput, shopId: string, listingId: string, abortSignal?: AbortSignalLike): Promise<ShopListing> {
+    public async updateListing(input: ListingUpdateInput, shopId: string, listingId: string, abortSignal?: AbortSignalLike): Promise<ShopListing> {
         const requestPath = `/shops/${shopId}/listings/${listingId}`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<ShopListing>("PUT", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `PUT ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `PUT ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as ShopListing;
@@ -2781,7 +2781,7 @@ export class EtsyClient extends ConnectorClientBase {
      * Get listings by shop receipt
      * @remarks Gets all listings associated with a receipt.
      */
-    public async listingGetByReceiptAsync(shopId: string, receiptId: string, limit?: string, offset?: string, abortSignal?: AbortSignalLike): Promise<ShopListings> {
+    public async getListingByReceipt(shopId: string, receiptId: string, limit?: string, offset?: string, abortSignal?: AbortSignalLike): Promise<ShopListings> {
         const queryParams: string[] = [];
         if (limit !== undefined) {
             queryParams.push(`limit=${encodeURIComponent(String(limit))}`);
@@ -2794,7 +2794,7 @@ export class EtsyClient extends ConnectorClientBase {
         const httpResponse = await this.httpClient.sendAsync<ShopListings>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as ShopListings;
@@ -2804,7 +2804,7 @@ export class EtsyClient extends ConnectorClientBase {
      * Get listings by shop section ID
      * @remarks Retrieves all the listings from the section of a specific shop.
      */
-    public async listingGetBySectionIdAsync(shopId: string, shopSectionIds?: string, limit?: string, offset?: string, sortOn?: string, sortOrder?: string, abortSignal?: AbortSignalLike): Promise<ShopListings> {
+    public async getListingBySectionId(shopId: string, shopSectionIds?: string, limit?: string, offset?: string, sortOn?: string, sortOrder?: string, abortSignal?: AbortSignalLike): Promise<ShopListings> {
         const queryParams: string[] = [];
         if (shopSectionIds !== undefined) {
             queryParams.push(`shop_section_ids=${encodeURIComponent(String(shopSectionIds))}`);
@@ -2826,7 +2826,7 @@ export class EtsyClient extends ConnectorClientBase {
         const httpResponse = await this.httpClient.sendAsync<ShopListings>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as ShopListings;
@@ -2836,13 +2836,13 @@ export class EtsyClient extends ConnectorClientBase {
      * Get a file from a listing
      * @remarks Retrieves a single file associated with the given digital listing. Requesting a file from a physical listing returns an empty result.
      */
-    public async listingGetFileAsync(shopId: string, listingId: string, listingFileId: string, abortSignal?: AbortSignalLike): Promise<ShopListingFile> {
+    public async getListingFile(shopId: string, listingId: string, listingFileId: string, abortSignal?: AbortSignalLike): Promise<ShopListingFile> {
         const requestPath = `/shops/${shopId}/listings/${listingId}/files/${listingFileId}`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<ShopListingFile>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as ShopListingFile;
@@ -2852,13 +2852,13 @@ export class EtsyClient extends ConnectorClientBase {
      * Delete a file from listing
      * @remarks When you delete the final file for a digital listing, the listing converts into a physical listing. The response to a delete request returns a list of the remaining file records associated with the given listing.
      */
-    public async listingDeleteFileAsync(shopId: string, listingId: string, listingFileId: string, abortSignal?: AbortSignalLike): Promise<void> {
+    public async deleteListingFile(shopId: string, listingId: string, listingFileId: string, abortSignal?: AbortSignalLike): Promise<void> {
         const requestPath = `/shops/${shopId}/listings/${listingId}/files/${listingFileId}`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<void>("DELETE", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `DELETE ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `DELETE ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
     }
 
@@ -2866,13 +2866,13 @@ export class EtsyClient extends ConnectorClientBase {
      * Get all listing files
      * @remarks Retrieves all the files associated with the given digital listing. Requesting files from a physical listing returns an empty result.
      */
-    public async listingGetFilesAsync(shopId: string, listingId: string, abortSignal?: AbortSignalLike): Promise<ShopListingFiles> {
+    public async getListingFiles(shopId: string, listingId: string, abortSignal?: AbortSignalLike): Promise<ShopListingFiles> {
         const requestPath = `/shops/${shopId}/listings/${listingId}/files`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<ShopListingFiles>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as ShopListingFiles;
@@ -2882,13 +2882,13 @@ export class EtsyClient extends ConnectorClientBase {
      * Upload a listing file
      * @remarks Uploads a new file for a digital listing, or associates an existing file with a specific listing. You must either provide the listing file ID of an existing file, or the name and binary file data for a file to upload. Associating an existing file to a physical listing converts the physical listing into a digital listing, which removes all shipping costs and any product and inventory variations.
      */
-    public async listingUploadAsync(input: ListingUploadInput, shopId: string, listingId: string, abortSignal?: AbortSignalLike): Promise<ShopListingFile> {
+    public async uploadListing(input: ListingUploadInput, shopId: string, listingId: string, abortSignal?: AbortSignalLike): Promise<ShopListingFile> {
         const requestPath = `/shops/${shopId}/listings/${listingId}/files`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<ShopListingFile>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as ShopListingFile;
@@ -2898,13 +2898,13 @@ export class EtsyClient extends ConnectorClientBase {
      * Get a listing image
      * @remarks Retrieves the references and metadata for a listing image with a specific image ID.
      */
-    public async listingGetImageAsync(shopId: string, listingId: string, listingImageId: string, abortSignal?: AbortSignalLike): Promise<ListingImage> {
+    public async getListingImage(shopId: string, listingId: string, listingImageId: string, abortSignal?: AbortSignalLike): Promise<ListingImage> {
         const requestPath = `/shops/${shopId}/listings/${listingId}/images/${listingImageId}`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<ListingImage>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as ListingImage;
@@ -2914,13 +2914,13 @@ export class EtsyClient extends ConnectorClientBase {
      * Delete a listing image
      * @remarks Deletes a listing image. A copy of the file remains on our servers, and so a deleted image may be re-associated with the listing without re-uploading the original image.
      */
-    public async listingDeleteImageAsync(shopId: string, listingId: string, listingImageId: string, abortSignal?: AbortSignalLike): Promise<void> {
+    public async deleteListingImage(shopId: string, listingId: string, listingImageId: string, abortSignal?: AbortSignalLike): Promise<void> {
         const requestPath = `/shops/${shopId}/listings/${listingId}/images/${listingImageId}`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<void>("DELETE", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `DELETE ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `DELETE ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
     }
 
@@ -2928,13 +2928,13 @@ export class EtsyClient extends ConnectorClientBase {
      * Get a listing's images
      * @remarks Retrieves all listing image resources for a listing with a specific listing ID.
      */
-    public async listingGetImagesAsync(shopId: string, listingId: string, abortSignal?: AbortSignalLike): Promise<ListingImages> {
+    public async getListingImages(shopId: string, listingId: string, abortSignal?: AbortSignalLike): Promise<ListingImages> {
         const requestPath = `/shops/${shopId}/listings/${listingId}/images`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<ListingImages>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as ListingImages;
@@ -2944,13 +2944,13 @@ export class EtsyClient extends ConnectorClientBase {
      * Upload a listing image
      * @remarks Uploads or assigns an image to a listing identified by a shop ID with a listing ID. To upload a new image, set the image file as the value for the image parameter. You can assign a previously deleted image to a listing using the deleted image's image ID in the listing image ID parameter. When a request contains both image and listing image ID parameter values, the endpoint uploads the image in the image parameter only.
      */
-    public async listingUploadImageAsync(input: ListingUploadImageInput, shopId: string, listingId: string, abortSignal?: AbortSignalLike): Promise<ListingImage> {
+    public async uploadListingImage(input: ListingUploadImageInput, shopId: string, listingId: string, abortSignal?: AbortSignalLike): Promise<ListingImage> {
         const requestPath = `/shops/${shopId}/listings/${listingId}/images`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<ListingImage>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as ListingImage;
@@ -2960,7 +2960,7 @@ export class EtsyClient extends ConnectorClientBase {
      * Get a listing's inventory
      * @remarks Retrieves the inventory record for a listing. Listings you did not edit using the Etsy.com inventory tools have no inventory records. This endpoint returns SKU data if you are the owner of the inventory records being fetched.
      */
-    public async listingGetInventoryAsync(listingId: string, includes?: string, abortSignal?: AbortSignalLike): Promise<ListingInventoryWithAssociations> {
+    public async getListingInventory(listingId: string, includes?: string, abortSignal?: AbortSignalLike): Promise<ListingInventoryWithAssociations> {
         const queryParams: string[] = [];
         if (includes !== undefined) {
             queryParams.push(`includes=${encodeURIComponent(String(includes))}`);
@@ -2970,7 +2970,7 @@ export class EtsyClient extends ConnectorClientBase {
         const httpResponse = await this.httpClient.sendAsync<ListingInventoryWithAssociations>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as ListingInventoryWithAssociations;
@@ -2980,13 +2980,13 @@ export class EtsyClient extends ConnectorClientBase {
      * Update a listing's inventory
      * @remarks Updates the inventory for a listing identified by a listing ID. The update fails if the supplied values for product SKU, offering quantity, and/or price are incompatible with values in on property fields. When setting a price, assign a float equal to amount divided by divisor as specified in the money resource.
      */
-    public async listingUpdateInventoryAsync(input: ListingUpdateInventoryInput, listingId: string, abortSignal?: AbortSignalLike): Promise<ListingInventory> {
+    public async updateListingInventory(input: ListingUpdateInventoryInput, listingId: string, abortSignal?: AbortSignalLike): Promise<ListingInventory> {
         const requestPath = `/listings/${listingId}/inventory`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<ListingInventory>("PUT", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `PUT ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `PUT ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as ListingInventory;
@@ -2996,13 +2996,13 @@ export class EtsyClient extends ConnectorClientBase {
      * Get a listing's offering
      * @remarks Get an offering for a listing.
      */
-    public async listingGetOfferingAsync(listingId: string, productId: string, productOfferingId: string, abortSignal?: AbortSignalLike): Promise<ListingInventoryProductOffering> {
+    public async getListingOffering(listingId: string, productId: string, productOfferingId: string, abortSignal?: AbortSignalLike): Promise<ListingInventoryProductOffering> {
         const requestPath = `/listings/${listingId}/products/${productId}/offerings/${productOfferingId}`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<ListingInventoryProductOffering>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as ListingInventoryProductOffering;
@@ -3012,13 +3012,13 @@ export class EtsyClient extends ConnectorClientBase {
      * Get a listing's product
      * @remarks Retrieve a listing product by ID.
      */
-    public async listingGetProductAsync(listingId: string, productId: string, abortSignal?: AbortSignalLike): Promise<ListingInventoryProduct> {
+    public async getListingProduct(listingId: string, productId: string, abortSignal?: AbortSignalLike): Promise<ListingInventoryProduct> {
         const requestPath = `/listings/${listingId}/inventory/products/${productId}`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<ListingInventoryProduct>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as ListingInventoryProduct;
@@ -3028,13 +3028,13 @@ export class EtsyClient extends ConnectorClientBase {
      * Get a listing's translation
      * @remarks Returns the translation for a listing in the given language.
      */
-    public async listingGetTranslationAsync(shopId: string, listingId: string, language: string, abortSignal?: AbortSignalLike): Promise<ListingTranslation> {
+    public async getListingTranslation(shopId: string, listingId: string, language: string, abortSignal?: AbortSignalLike): Promise<ListingTranslation> {
         const requestPath = `/shops/${shopId}/listings/${listingId}/translations/${language}`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<ListingTranslation>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as ListingTranslation;
@@ -3044,13 +3044,13 @@ export class EtsyClient extends ConnectorClientBase {
      * Create a listing translation
      * @remarks Creates a listing translation by listing ID and language.
      */
-    public async listingCreateTranslationAsync(input: ListingCreateTranslationInput, shopId: string, listingId: string, language: string, abortSignal?: AbortSignalLike): Promise<ListingTranslation> {
+    public async createListingTranslation(input: ListingCreateTranslationInput, shopId: string, listingId: string, language: string, abortSignal?: AbortSignalLike): Promise<ListingTranslation> {
         const requestPath = `/shops/${shopId}/listings/${listingId}/translations/${language}`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<ListingTranslation>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as ListingTranslation;
@@ -3060,13 +3060,13 @@ export class EtsyClient extends ConnectorClientBase {
      * Update a listing translation
      * @remarks Updates a listing translation by listing ID and language.
      */
-    public async listingUpdateTranslationAsync(input: ListingUpdateTranslationInput, shopId: string, listingId: string, language: string, abortSignal?: AbortSignalLike): Promise<ListingTranslation> {
+    public async updateListingTranslation(input: ListingUpdateTranslationInput, shopId: string, listingId: string, language: string, abortSignal?: AbortSignalLike): Promise<ListingTranslation> {
         const requestPath = `/shops/${shopId}/listings/${listingId}/translations/${language}`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<ListingTranslation>("PUT", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `PUT ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `PUT ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as ListingTranslation;
@@ -3076,13 +3076,13 @@ export class EtsyClient extends ConnectorClientBase {
      * Get listing's variation images
      * @remarks Gets all variation images on a listing.
      */
-    public async listingGetVariationAsync(shopId: string, listingId: string, abortSignal?: AbortSignalLike): Promise<ListingVariationImages> {
+    public async getListingVariation(shopId: string, listingId: string, abortSignal?: AbortSignalLike): Promise<ListingVariationImages> {
         const requestPath = `/shops/${shopId}/listings/${listingId}/variation-images`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<ListingVariationImages>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as ListingVariationImages;
@@ -3092,13 +3092,13 @@ export class EtsyClient extends ConnectorClientBase {
      * Update a listing's variation images
      * @remarks Creates variation images on a listing.
      */
-    public async listingUpdateVariationAsync(input: ListingUpdateVariationInput, shopId: string, listingId: string, abortSignal?: AbortSignalLike): Promise<ListingVariationImages> {
+    public async updateListingVariation(input: ListingUpdateVariationInput, shopId: string, listingId: string, abortSignal?: AbortSignalLike): Promise<ListingVariationImages> {
         const requestPath = `/shops/${shopId}/listings/${listingId}/variation-images`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<ListingVariationImages>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as ListingVariationImages;

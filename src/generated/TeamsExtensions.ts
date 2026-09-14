@@ -5,7 +5,7 @@ import type { AbortSignalLike } from "@azure/abort-controller";
 import type { TokenCredential } from "@azure/core-auth";
 import type { PagedAsyncIterableIterator } from "@azure/core-paging";
 import { ConnectorClientBase } from "../azureConnectors/clientBase.ts";
-import { ConnectorException } from "../azureConnectors/connectorException.ts";
+import { ConnectorError } from "../azureConnectors/connectorError.ts";
 import { ConnectorClientOptions } from "../azureConnectors/options.ts";
 import { TriggerCallbackPayload } from "../azureConnectors/triggerPayload.ts";
 
@@ -233,56 +233,56 @@ export interface ObjectEntity {
 export interface ConnectorMetadata {
     metadatatype?: string;
     activitytype?: string;
-    schema?: ObjectEntity;
+    schema?: Record<string, unknown>;
 }
 
 /**
  * Definition: PostFeedSchema
  */
 export interface PostFeedSchema {
-    schema?: ObjectEntity;
+    schema?: Record<string, unknown>;
 }
 
 /**
  * Definition: PostMessageSchema
  */
 export interface PostMessageSchema {
-    schema?: ObjectEntity;
+    schema?: Record<string, unknown>;
 }
 
 /**
  * Definition: PostCardSchema
  */
 export interface PostCardSchema {
-    schema?: ObjectEntity;
+    schema?: Record<string, unknown>;
 }
 
 /**
  * Definition: PostCardAndWaitSchema
  */
 export interface PostCardAndWaitSchema {
-    schema?: ObjectEntity;
+    schema?: Record<string, unknown>;
 }
 
 /**
  * Definition: UnifiedActionSchema
  */
 export interface UnifiedActionSchema {
-    schema?: ObjectEntity;
+    schema?: Record<string, unknown>;
 }
 
 /**
  * Definition: GetMessageDetailsSchema
  */
 export interface GetMessageDetailsSchema {
-    schema?: ObjectEntity;
+    schema?: Record<string, unknown>;
 }
 
 /**
  * Definition: ListMembersSchema
  */
 export interface ListMembersSchema {
-    schema?: ObjectEntity;
+    schema?: Record<string, unknown>;
 }
 
 /**
@@ -483,7 +483,7 @@ export interface DynamicCardResponseTriggerResult {
  * Definition: WebhookTriggerSchema
  */
 export interface WebhookTriggerSchema {
-    schema?: ObjectEntity;
+    schema?: Record<string, unknown>;
 }
 
 /**
@@ -651,7 +651,7 @@ export interface DynamicPostGatherInputToConversationResponse {
  * Definition: DynamicResponseSchema
  */
 export interface DynamicResponseSchema {
-    schema?: ObjectEntity;
+    schema?: Record<string, unknown>;
 }
 
 /**
@@ -699,9 +699,7 @@ export interface GetMessagesFromConversationResponse {
 /**
  * Definition: OnGroupMemberChange_Response
  */
-export interface OnGroupMemberChangeResponse {
-    [key: string]: unknown;
-}
+export type OnGroupMemberChangeResponse = Array<Record<string, unknown>>;
 
 /**
  * Definition: ChatMessage
@@ -744,9 +742,7 @@ export interface ChatMessage {
 /**
  * Definition: ChatMessageList
  */
-export interface ChatMessageList {
-    [key: string]: unknown;
-}
+export type ChatMessageList = Array<ChatMessage>;
 
 /**
  * Definition: GetTeamResponse
@@ -811,7 +807,26 @@ export interface GetChannelResponse {
  * Definition: ChannelWithOwnerTeamId
  */
 export interface ChannelWithOwnerTeamId {
-    [key: string]: unknown;
+    /** The unique identifier of the channel */
+    id?: string;
+    /** The name of the channel */
+    displayName?: string;
+    /** The description of the channel, optional */
+    description?: string;
+    /** The email address for sending messages to the channel */
+    email?: string;
+    /** The ID of the Microsoft Entra tenant. */
+    tenantId?: string;
+    /** A hyperlink for the channel in Microsoft Teams */
+    webUrl?: string;
+    /** The SharePoint folder URL of the channel */
+    filesFolderWebUrl?: string;
+    /** Timestamp at which the channel was created. Read only */
+    createdDateTime?: string;
+    /** The channel membership type */
+    membershipType?: string;
+    /** The ID of the team that owns the channel */
+    ownerTeamId?: string;
 }
 
 /**
@@ -1157,9 +1172,7 @@ export type ThemeEditor = "white" | "blue" | "green" | "purple" | "pink" | "yell
 /**
  * Definition: Activities
  */
-export interface Activities {
-    [key: string]: unknown;
-}
+export type Activities = Array<Record<string, unknown>>;
 
 /**
  * Definition: SchedulingGroupResponse
@@ -1437,24 +1450,24 @@ export interface DiscoverySettings {
  * Definition: SelectedMessageTriggerMetadata
  */
 export interface SelectedMessageTriggerMetadata {
-    TeamsFlowRunContext?: ObjectEntity;
-    CardOutputs?: ObjectEntity;
+    TeamsFlowRunContext?: Record<string, unknown>;
+    CardOutputs?: Record<string, unknown>;
 }
 
 /**
  * Definition: ComposeMessageTriggerMetadata
  */
 export interface ComposeMessageTriggerMetadata {
-    TeamsFlowRunContext?: ObjectEntity;
-    CardOutputs?: ObjectEntity;
+    TeamsFlowRunContext?: Record<string, unknown>;
+    CardOutputs?: Record<string, unknown>;
 }
 
 /**
  * Definition: CardResponseTriggerMetadata
  */
 export interface CardResponseTriggerMetadata {
-    TeamsFlowRunContext?: ObjectEntity;
-    CardOutputs?: ObjectEntity;
+    TeamsFlowRunContext?: Record<string, unknown>;
+    CardOutputs?: Record<string, unknown>;
 }
 
 /**
@@ -1922,13 +1935,13 @@ export class TeamsClient extends ConnectorClientBase {
      * Create a Teams meeting
      * @remarks Create a meeting with a link at the bottom of the invite to join the meeting online on Microsoft Teams.
      */
-    public async createTeamsMeetingAsync(input: NewMeeting, calendarid: string, abortSignal?: AbortSignalLike): Promise<NewMeetingResponse> {
+    public async createTeamsMeeting(input: NewMeeting, calendarid: string, abortSignal?: AbortSignalLike): Promise<NewMeetingResponse> {
         const requestPath = `/v1.0/me/calendars/${calendarid}/events`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<NewMeetingResponse>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as NewMeetingResponse;
@@ -1938,13 +1951,13 @@ export class TeamsClient extends ConnectorClientBase {
      * List joined teams
      * @remarks Lists all the teams in Microsoft Teams that you are a member of
      */
-    public async getAllTeamsAsync(abortSignal?: AbortSignalLike): Promise<GetAllTeamsResponse> {
+    public async getAllTeams(abortSignal?: AbortSignalLike): Promise<GetAllTeamsResponse> {
         const requestPath = `/beta/me/joinedTeams`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<GetAllTeamsResponse>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as GetAllTeamsResponse;
@@ -1954,13 +1967,13 @@ export class TeamsClient extends ConnectorClientBase {
      * List associated teams
      * @remarks Lists all the teams you are a direct member of, or are a member of a shared channel that is hosted inside the team.
      */
-    public async getAllAssociatedTeamsAsync(abortSignal?: AbortSignalLike): Promise<GetAllAssociatedTeamsResponse> {
+    public async getAllAssociatedTeams(abortSignal?: AbortSignalLike): Promise<GetAllAssociatedTeamsResponse> {
         const requestPath = `/v1.0/me/teamwork/associatedTeams`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<GetAllAssociatedTeamsResponse>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as GetAllAssociatedTeamsResponse;
@@ -1970,7 +1983,7 @@ export class TeamsClient extends ConnectorClientBase {
      * List channels
      * @remarks Lists all the channels for a specific team
      */
-    public async getChannelsForGroupAsync(groupId: string, filter?: string, orderby?: string, abortSignal?: AbortSignalLike): Promise<GetChannelsForGroupResponse> {
+    public async getChannelsForGroup(groupId: string, filter?: string, orderby?: string, abortSignal?: AbortSignalLike): Promise<GetChannelsForGroupResponse> {
         const queryParams: string[] = [];
         if (filter !== undefined) {
             queryParams.push(`$filter=${encodeURIComponent(String(filter))}`);
@@ -1983,7 +1996,7 @@ export class TeamsClient extends ConnectorClientBase {
         const httpResponse = await this.httpClient.sendAsync<GetChannelsForGroupResponse>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as GetChannelsForGroupResponse;
@@ -1993,13 +2006,13 @@ export class TeamsClient extends ConnectorClientBase {
      * Create a channel
      * @remarks Create a new channel within a specified team
      */
-    public async createChannelAsync(input: CreateChannelInput, groupId: string, abortSignal?: AbortSignalLike): Promise<CreateChannelResponse> {
+    public async createChannel(input: CreateChannelInput, groupId: string, abortSignal?: AbortSignalLike): Promise<CreateChannelResponse> {
         const requestPath = `/beta/groups/${groupId}/channels`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<CreateChannelResponse>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as CreateChannelResponse;
@@ -2009,13 +2022,13 @@ export class TeamsClient extends ConnectorClientBase {
      * Get details for a specific channel in a team
      * @remarks Get the channel details
      */
-    public async getChannelAsync(groupId: string, channelId: string, abortSignal?: AbortSignalLike): Promise<GetChannelResponse> {
+    public async getChannel(groupId: string, channelId: string, abortSignal?: AbortSignalLike): Promise<GetChannelResponse> {
         const requestPath = `/beta/teams/${groupId}/channels/${channelId}`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<GetChannelResponse>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as GetChannelResponse;
@@ -2025,13 +2038,13 @@ export class TeamsClient extends ConnectorClientBase {
      * Update channel
      * @remarks Updates the properties of a channel in a specific team. Only the properties you provide are changed; omitted properties are left unchanged. For shared channels, the team ID must refer to the host team, which is the team that owns the shared channel.
      */
-    public async updateChannelPropertiesAsync(input: UpdateChannelPropertiesInput, groupId: string, channelId: string, abortSignal?: AbortSignalLike): Promise<void> {
+    public async updateChannelProperties(input: UpdateChannelPropertiesInput, groupId: string, channelId: string, abortSignal?: AbortSignalLike): Promise<void> {
         const requestPath = `/beta/teams/${groupId}/channels/${channelId}`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<void>("PATCH", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `PATCH ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `PATCH ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
     }
 
@@ -2039,13 +2052,13 @@ export class TeamsClient extends ConnectorClientBase {
      * Archive a channel
      * @remarks Archive a channel in a team. When a channel is archived, users can't send new messages or react to existing messages in the channel, edit the channel settings, or make other changes to the channel. Archiving is an asynchronous operation.
      */
-    public async archiveChannelAsync(input: ArchiveChannelInput, groupId: string, channelId: string, abortSignal?: AbortSignalLike): Promise<AsyncOperationResponse> {
+    public async archiveChannel(input: ArchiveChannelInput, groupId: string, channelId: string, abortSignal?: AbortSignalLike): Promise<AsyncOperationResponse> {
         const requestPath = `/v1.0/teams/${groupId}/channels/${channelId}/archive`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<AsyncOperationResponse>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as AsyncOperationResponse;
@@ -2055,7 +2068,7 @@ export class TeamsClient extends ConnectorClientBase {
      * List all channels
      * @remarks Lists all the channels for a specific team, including channels that are shared with the team
      */
-    public async getAllChannelsForTeamAsync(groupId: string, filter?: string, orderby?: string, abortSignal?: AbortSignalLike): Promise<GetAllChannelsForTeamResponse> {
+    public async getAllChannelsForTeam(groupId: string, filter?: string, orderby?: string, abortSignal?: AbortSignalLike): Promise<GetAllChannelsForTeamResponse> {
         const queryParams: string[] = [];
         if (filter !== undefined) {
             queryParams.push(`$filter=${encodeURIComponent(String(filter))}`);
@@ -2068,7 +2081,7 @@ export class TeamsClient extends ConnectorClientBase {
         const httpResponse = await this.httpClient.sendAsync<GetAllChannelsForTeamResponse>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as GetAllChannelsForTeamResponse;
@@ -2078,13 +2091,13 @@ export class TeamsClient extends ConnectorClientBase {
      * List chats
      * @remarks Lists recent chats you are a part of
      */
-    public async getChatsAsync(chatType: string, topic: string, abortSignal?: AbortSignalLike): Promise<GetChatsResponse> {
+    public async getChats(chatType: string, topic: string, abortSignal?: AbortSignalLike): Promise<GetChatsResponse> {
         const requestPath = `/flowbot/actions/listchats/chattypes/${chatType}/topic/${topic}/expandmembers/false`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<GetChatsResponse>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as GetChatsResponse;
@@ -2094,13 +2107,13 @@ export class TeamsClient extends ConnectorClientBase {
      * Post a feed notification
      * @remarks Posts a notification to a user's activity feed linking to a chat or team.
      */
-    public async postFeedNotificationAsync(input: DynamicPostFeedNotificationRequest, poster: string, notificationType: string, abortSignal?: AbortSignalLike): Promise<void> {
+    public async postFeedNotification(input: DynamicPostFeedNotificationRequest, poster: string, notificationType: string, abortSignal?: AbortSignalLike): Promise<void> {
         const requestPath = `/flowbot/feednotification/poster/${poster}/notificationType/${notificationType}`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<void>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
     }
 
@@ -2108,13 +2121,13 @@ export class TeamsClient extends ConnectorClientBase {
      * Get an @mention token for a team tag
      * @remarks Creates a token that can be inserted into a message or adaptive card sent as a user in a channel to @mention a team tag.
      */
-    public async atMentionTagAsync(groupId: string, tagId: string, abortSignal?: AbortSignalLike): Promise<AtMentionTagResponse> {
+    public async atMentionTag(groupId: string, tagId: string, abortSignal?: AbortSignalLike): Promise<AtMentionTagResponse> {
         const requestPath = `/beta/teams/${groupId}/tags/${tagId}`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<AtMentionTagResponse>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as AtMentionTagResponse;
@@ -2124,7 +2137,7 @@ export class TeamsClient extends ConnectorClientBase {
      * Get messages in a channel
      * @remarks Gets messages from a channel in a specific team. For shared channels, the team ID must refer to the host team, which is the team that owns the shared channel.
      */
-    public getMessagesFromChannelAsync(groupId: string, channelId: string, abortSignal?: AbortSignalLike): PagedAsyncIterableIterator<ChatMessage> {
+    public getMessagesFromChannel(groupId: string, channelId: string, abortSignal?: AbortSignalLike): PagedAsyncIterableIterator<ChatMessage> {
         const requestPath = `/beta/teams/${groupId}/channels/${channelId}/messages`;
         return this.createPageable<GetMessagesFromConversationResponse, ChatMessage>(
             requestPath,
@@ -2133,11 +2146,13 @@ export class TeamsClient extends ConnectorClientBase {
 
                 if (!httpResponse.isSuccessStatusCode) {
                     const operationPath = this.getOperationPath(requestUrl);
-                    throw new ConnectorException(this.connectorName, `GET ${operationPath}`, httpResponse.statusCode, httpResponse.text);
+                    throw new ConnectorError(this.connectorName, `GET ${operationPath}`, httpResponse.statusCode, httpResponse.text);
                 }
 
                 return httpResponse.value as GetMessagesFromConversationResponse;
             },
+            "value",
+            "@odata.nextLink",
         );
     }
 
@@ -2145,13 +2160,13 @@ export class TeamsClient extends ConnectorClientBase {
      * Get message details
      * @remarks Gets the details of a message in a chat or a channel.
      */
-    public async getMessageDetailsAsync(input: DynamicGetMessageDetailsSchema, messageId: string, threadType: string, abortSignal?: AbortSignalLike): Promise<DynamicGetMessageDetailsResponseSchema> {
+    public async getMessageDetails(input: DynamicGetMessageDetailsSchema, messageId: string, threadType: string, abortSignal?: AbortSignalLike): Promise<DynamicGetMessageDetailsResponseSchema> {
         const requestPath = `/beta/teams/messages/${messageId}/messageType/${threadType}`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<DynamicGetMessageDetailsResponseSchema>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as DynamicGetMessageDetailsResponseSchema;
@@ -2161,7 +2176,7 @@ export class TeamsClient extends ConnectorClientBase {
      * List replies of a channel message
      * @remarks List replies to a message in a channel in a specific team. For shared channels, the team ID must refer to the host team, which is the team that owns the shared channel.
      */
-    public async listRepliesToMessageAsync(groupId: string, channelId: string, messageId: string, top?: string, abortSignal?: AbortSignalLike): Promise<ListRepliesResponseSchema> {
+    public async listRepliesToMessage(groupId: string, channelId: string, messageId: string, top?: string, abortSignal?: AbortSignalLike): Promise<ListRepliesResponseSchema> {
         const queryParams: string[] = [];
         if (top !== undefined) {
             queryParams.push(`$top=${encodeURIComponent(String(top))}`);
@@ -2171,7 +2186,7 @@ export class TeamsClient extends ConnectorClientBase {
         const httpResponse = await this.httpClient.sendAsync<ListRepliesResponseSchema>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as ListRepliesResponseSchema;
@@ -2181,7 +2196,7 @@ export class TeamsClient extends ConnectorClientBase {
      * List chat or channel members
      * @remarks List direct members of a group chat or a channel
      */
-    public async listMembersAsync(input: DynamicListMembersSchema, threadType: string, filter?: string, abortSignal?: AbortSignalLike): Promise<ListMembersResponseSchema> {
+    public async listMembers(input: DynamicListMembersSchema, threadType: string, filter?: string, abortSignal?: AbortSignalLike): Promise<ListMembersResponseSchema> {
         const queryParams: string[] = [];
         if (filter !== undefined) {
             queryParams.push(`$filter=${encodeURIComponent(String(filter))}`);
@@ -2191,7 +2206,7 @@ export class TeamsClient extends ConnectorClientBase {
         const httpResponse = await this.httpClient.sendAsync<ListMembersResponseSchema>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as ListMembersResponseSchema;
@@ -2201,13 +2216,13 @@ export class TeamsClient extends ConnectorClientBase {
      * Post a choice of options as the Flow bot to a user
      * @remarks Send a set of options to a Microsoft Teams user, that they must respond to before the flow will continue. This action will pause the flow until the user response to the options
      */
-    public async subscribeUserMessageWithOptionsAsync(input: DynamicUserMessageWithOptionsSubscriptionRequest, abortSignal?: AbortSignalLike): Promise<void> {
+    public async subscribeUserMessageWithOptions(input: DynamicUserMessageWithOptionsSubscriptionRequest, abortSignal?: AbortSignalLike): Promise<void> {
         const requestPath = `/flowbot/actions/messagewithoptions/recipienttypes/user/$subscriptions`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<void>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
     }
 
@@ -2215,13 +2230,13 @@ export class TeamsClient extends ConnectorClientBase {
      * Get a team
      * @remarks Gets the details for a team in Microsoft Teams.
      */
-    public async getTeamAsync(teamId: string, abortSignal?: AbortSignalLike): Promise<GetTeamResponse> {
+    public async getTeam(teamId: string, abortSignal?: AbortSignalLike): Promise<GetTeamResponse> {
         const requestPath = `/beta/teams/${teamId}`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<GetTeamResponse>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as GetTeamResponse;
@@ -2231,13 +2246,13 @@ export class TeamsClient extends ConnectorClientBase {
      * Get an @mention token for a user
      * @remarks Creates a token that can be inserted into a message or adaptive card to @mention a user.
      */
-    public async atMentionUserAsync(userId: string, abortSignal?: AbortSignalLike): Promise<AtMentionUser> {
+    public async atMentionUser(userId: string, abortSignal?: AbortSignalLike): Promise<AtMentionUser> {
         const requestPath = `/v1.0/users/${userId}`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<AtMentionUser>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as AtMentionUser;
@@ -2247,13 +2262,13 @@ export class TeamsClient extends ConnectorClientBase {
      * Create a chat
      * @remarks Creates a one on one or group chat
      */
-    public async createChatAsync(input: NewChat, abortSignal?: AbortSignalLike): Promise<NewChatResponse> {
+    public async createChat(input: NewChat, abortSignal?: AbortSignalLike): Promise<NewChatResponse> {
         const requestPath = `/beta/chats`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<NewChatResponse>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as NewChatResponse;
@@ -2263,7 +2278,7 @@ export class TeamsClient extends ConnectorClientBase {
      * Get messages in a chat
      * @remarks Retrieves messages from a one on one or group chat
      */
-    public getMessagesFromChatAsync(chatId: string, filter?: string, orderby?: string, top?: string, abortSignal?: AbortSignalLike): PagedAsyncIterableIterator<ChatMessage> {
+    public getMessagesFromChat(chatId: string, filter?: string, orderby?: string, top?: string, abortSignal?: AbortSignalLike): PagedAsyncIterableIterator<ChatMessage> {
         const queryParams: string[] = [];
         if (filter !== undefined) {
             queryParams.push(`$filter=${encodeURIComponent(String(filter))}`);
@@ -2282,11 +2297,13 @@ export class TeamsClient extends ConnectorClientBase {
 
                 if (!httpResponse.isSuccessStatusCode) {
                     const operationPath = this.getOperationPath(requestUrl);
-                    throw new ConnectorException(this.connectorName, `GET ${operationPath}`, httpResponse.statusCode, httpResponse.text);
+                    throw new ConnectorError(this.connectorName, `GET ${operationPath}`, httpResponse.statusCode, httpResponse.text);
                 }
 
                 return httpResponse.value as GetMessagesFromConversationResponse;
             },
+            "value",
+            "@odata.nextLink",
         );
     }
 
@@ -2294,13 +2311,13 @@ export class TeamsClient extends ConnectorClientBase {
      * Post a message to myself
      * @remarks Sends a message to the signed-in user's own Notes chat in Microsoft Teams.
      */
-    public async postMessageToSelfAsync(input: PostMessageToSelfRequest, abortSignal?: AbortSignalLike): Promise<ChatMessage> {
+    public async postMessageToSelf(input: PostMessageToSelfRequest, abortSignal?: AbortSignalLike): Promise<ChatMessage> {
         const requestPath = `/v1.0/chats/48:notes/messages`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<ChatMessage>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as ChatMessage;
@@ -2310,13 +2327,13 @@ export class TeamsClient extends ConnectorClientBase {
      * Create a team
      * @remarks Creates a new team in Microsoft Teams
      */
-    public async createATeamAsync(input: CreateATeamInput, abortSignal?: AbortSignalLike): Promise<CreateATeamResponse> {
+    public async createATeam(input: CreateATeamInput, abortSignal?: AbortSignalLike): Promise<CreateATeamResponse> {
         const requestPath = `/beta/teams`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<CreateATeamResponse>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as CreateATeamResponse;
@@ -2326,7 +2343,7 @@ export class TeamsClient extends ConnectorClientBase {
      * List team members
      * @remarks Lists the members of a team in Microsoft Teams
      */
-    public async listTeamMembersAsync(teamId: string, filter?: string, top?: string, abortSignal?: AbortSignalLike): Promise<ListMembersResponseSchema> {
+    public async listTeamMembers(teamId: string, filter?: string, top?: string, abortSignal?: AbortSignalLike): Promise<ListMembersResponseSchema> {
         const queryParams: string[] = [];
         if (filter !== undefined) {
             queryParams.push(`$filter=${encodeURIComponent(String(filter))}`);
@@ -2339,7 +2356,7 @@ export class TeamsClient extends ConnectorClientBase {
         const httpResponse = await this.httpClient.sendAsync<ListMembersResponseSchema>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as ListMembersResponseSchema;
@@ -2349,13 +2366,13 @@ export class TeamsClient extends ConnectorClientBase {
      * Add a member to a team
      * @remarks Adds a member to a team in Microsoft Teams
      */
-    public async addMemberToTeamAsync(input: AddMemberToTeamInput, teamId: string, abortSignal?: AbortSignalLike): Promise<void> {
+    public async addMemberToTeam(input: AddMemberToTeamInput, teamId: string, abortSignal?: AbortSignalLike): Promise<void> {
         const requestPath = `/v1.0/teams/${teamId}/members`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<void>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
     }
 
@@ -2363,13 +2380,13 @@ export class TeamsClient extends ConnectorClientBase {
      * Remove a member from a team
      * @remarks Removes a member from a team in Microsoft Teams
      */
-    public async removeMemberFromTeamAsync(teamId: string, membershipId: string, abortSignal?: AbortSignalLike): Promise<void> {
+    public async removeMemberFromTeam(teamId: string, membershipId: string, abortSignal?: AbortSignalLike): Promise<void> {
         const requestPath = `/v1.0/teams/${teamId}/members/${membershipId}`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<void>("DELETE", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `DELETE ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `DELETE ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
     }
 
@@ -2377,13 +2394,13 @@ export class TeamsClient extends ConnectorClientBase {
      * Add a member to a channel
      * @remarks Adds a member to a channel in Microsoft Teams. The channel must be a private or shared channel.
      */
-    public async addMemberToChannelAsync(input: AddMemberToChannelInput, groupId: string, channelId: string, abortSignal?: AbortSignalLike): Promise<void> {
+    public async addMemberToChannel(input: AddMemberToChannelInput, groupId: string, channelId: string, abortSignal?: AbortSignalLike): Promise<void> {
         const requestPath = `/v1.0/teams/${groupId}/channels/${channelId}/members`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<void>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
     }
 
@@ -2391,13 +2408,13 @@ export class TeamsClient extends ConnectorClientBase {
      * Remove a direct member from a channel
      * @remarks Removes a direct member from a channel in Microsoft Teams. The channel must be a private or shared channel.
      */
-    public async removeMemberFromChannelAsync(groupId: string, channelId: string, membershipId: string, abortSignal?: AbortSignalLike): Promise<void> {
+    public async removeMemberFromChannel(groupId: string, channelId: string, membershipId: string, abortSignal?: AbortSignalLike): Promise<void> {
         const requestPath = `/v1.0/teams/${groupId}/channels/${channelId}/members/${membershipId}`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<void>("DELETE", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `DELETE ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `DELETE ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
     }
 
@@ -2405,7 +2422,7 @@ export class TeamsClient extends ConnectorClientBase {
      * Post message in a chat or channel
      * @remarks Posts a message to a chat or a channel
      */
-    public async postMessageToConversationAsync(input: DynamicPostMessageRequest, poster: string, location: string, customizationModifiedTime?: string, abortSignal?: AbortSignalLike): Promise<PostToConversationResponse> {
+    public async postMessageToConversation(input: DynamicPostMessageRequest, poster: string, location: string, customizationModifiedTime?: string, abortSignal?: AbortSignalLike): Promise<PostToConversationResponse> {
         const queryParams: string[] = [];
         if (customizationModifiedTime !== undefined) {
             queryParams.push(`customizationModifiedTime=${encodeURIComponent(String(customizationModifiedTime))}`);
@@ -2415,7 +2432,7 @@ export class TeamsClient extends ConnectorClientBase {
         const httpResponse = await this.httpClient.sendAsync<PostToConversationResponse>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as PostToConversationResponse;
@@ -2425,7 +2442,7 @@ export class TeamsClient extends ConnectorClientBase {
      * Reply with a message in a channel
      * @remarks Replies with a message to a channel's message
      */
-    public async replyWithMessageToConversationAsync(input: DynamicReplyMessageRequest, poster: string, location: string, customizationModifiedTime?: string, abortSignal?: AbortSignalLike): Promise<PostToConversationResponse> {
+    public async replyWithMessageToConversation(input: DynamicReplyMessageRequest, poster: string, location: string, customizationModifiedTime?: string, abortSignal?: AbortSignalLike): Promise<PostToConversationResponse> {
         const queryParams: string[] = [];
         if (customizationModifiedTime !== undefined) {
             queryParams.push(`customizationModifiedTime=${encodeURIComponent(String(customizationModifiedTime))}`);
@@ -2435,7 +2452,7 @@ export class TeamsClient extends ConnectorClientBase {
         const httpResponse = await this.httpClient.sendAsync<PostToConversationResponse>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as PostToConversationResponse;
@@ -2445,7 +2462,7 @@ export class TeamsClient extends ConnectorClientBase {
      * Post card in a chat or channel
      * @remarks Posts a card to a chat or a channel
      */
-    public async postCardToConversationAsync(input: DynamicPostCardRequest, poster: string, location: string, customizationModifiedTime?: string, abortSignal?: AbortSignalLike): Promise<PostToConversationResponse> {
+    public async postCardToConversation(input: DynamicPostCardRequest, poster: string, location: string, customizationModifiedTime?: string, abortSignal?: AbortSignalLike): Promise<PostToConversationResponse> {
         const queryParams: string[] = [];
         if (customizationModifiedTime !== undefined) {
             queryParams.push(`customizationModifiedTime=${encodeURIComponent(String(customizationModifiedTime))}`);
@@ -2455,7 +2472,7 @@ export class TeamsClient extends ConnectorClientBase {
         const httpResponse = await this.httpClient.sendAsync<PostToConversationResponse>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as PostToConversationResponse;
@@ -2465,7 +2482,7 @@ export class TeamsClient extends ConnectorClientBase {
      * Post adaptive card and wait for a response
      * @remarks Posts an adaptive card to a chat or a channel and waits for a response from any user. This will pause the flow until any user responds.
      */
-    public async postCardAndWaitForResponseAsync(input: PostCardAndWaitForResponseInput, poster: string, location: string, customizationModifiedTime?: string, abortSignal?: AbortSignalLike): Promise<DynamicPostGatherInputToConversationResponse> {
+    public async postCardAndWaitForResponse(input: PostCardAndWaitForResponseInput, poster: string, location: string, customizationModifiedTime?: string, abortSignal?: AbortSignalLike): Promise<DynamicPostGatherInputToConversationResponse> {
         const queryParams: string[] = [];
         if (customizationModifiedTime !== undefined) {
             queryParams.push(`customizationModifiedTime=${encodeURIComponent(String(customizationModifiedTime))}`);
@@ -2475,7 +2492,7 @@ export class TeamsClient extends ConnectorClientBase {
         const httpResponse = await this.httpClient.sendAsync<DynamicPostGatherInputToConversationResponse>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as DynamicPostGatherInputToConversationResponse;
@@ -2485,7 +2502,7 @@ export class TeamsClient extends ConnectorClientBase {
      * Reply with an adaptive card in a channel
      * @remarks Replies with an adaptive card to a channel's message
      */
-    public async replyWithCardToConversationAsync(input: DynamicReplyCardRequest, poster: string, location: string, customizationModifiedTime?: string, abortSignal?: AbortSignalLike): Promise<PostToConversationResponse> {
+    public async replyWithCardToConversation(input: DynamicReplyCardRequest, poster: string, location: string, customizationModifiedTime?: string, abortSignal?: AbortSignalLike): Promise<PostToConversationResponse> {
         const queryParams: string[] = [];
         if (customizationModifiedTime !== undefined) {
             queryParams.push(`customizationModifiedTime=${encodeURIComponent(String(customizationModifiedTime))}`);
@@ -2495,7 +2512,7 @@ export class TeamsClient extends ConnectorClientBase {
         const httpResponse = await this.httpClient.sendAsync<PostToConversationResponse>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as PostToConversationResponse;
@@ -2505,7 +2522,7 @@ export class TeamsClient extends ConnectorClientBase {
      * Update an adaptive card in a chat or channel
      * @remarks Updates an existing adaptive card
      */
-    public async updateCardInConversationAsync(input: DynamicUpdateCardRequest, poster: string, location: string, customizationModifiedTime?: string, abortSignal?: AbortSignalLike): Promise<PostToConversationResponse> {
+    public async updateCardInConversation(input: DynamicUpdateCardRequest, poster: string, location: string, customizationModifiedTime?: string, abortSignal?: AbortSignalLike): Promise<PostToConversationResponse> {
         const queryParams: string[] = [];
         if (customizationModifiedTime !== undefined) {
             queryParams.push(`customizationModifiedTime=${encodeURIComponent(String(customizationModifiedTime))}`);
@@ -2515,7 +2532,7 @@ export class TeamsClient extends ConnectorClientBase {
         const httpResponse = await this.httpClient.sendAsync<PostToConversationResponse>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as PostToConversationResponse;
@@ -2525,13 +2542,13 @@ export class TeamsClient extends ConnectorClientBase {
      * Send a Microsoft Graph HTTP request
      * @remarks Construct a Microsoft Graph REST API request to invoke against the Microsoft Teams endpoints. These segments are supported: 1st segment: /teams, /me, /users 2nd segment: channels, chats, installedApps, messages, pinnedMessages, onlineMeetings. Learn more: https://docs.microsoft.com/en-us/graph/use-the-api
      */
-    public async httpRequestAsync(input: HttpRequestInput, abortSignal?: AbortSignalLike): Promise<ObjectWithoutType> {
+    public async httpRequest(input: HttpRequestInput, abortSignal?: AbortSignalLike): Promise<ObjectWithoutType> {
         const requestPath = `/httprequest`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<ObjectWithoutType>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as ObjectWithoutType;
@@ -2541,13 +2558,13 @@ export class TeamsClient extends ConnectorClientBase {
      * Add a user to a chat
      * @remarks Adds a user to a chat in Microsoft Teams.
      */
-    public async addMemberToChatAsync(input: AddMemberToChatInput, chatId: string, abortSignal?: AbortSignalLike): Promise<void> {
+    public async addMemberToChat(input: AddMemberToChatInput, chatId: string, abortSignal?: AbortSignalLike): Promise<void> {
         const requestPath = `/v1.0/chats/${chatId}/members`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<void>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
     }
 
@@ -2555,13 +2572,13 @@ export class TeamsClient extends ConnectorClientBase {
      * Remove a member from a chat
      * @remarks Removes a member from a chat in Microsoft Teams. Only group chats support member removal.
      */
-    public async removeMemberFromChatAsync(chatId: string, membershipId: string, abortSignal?: AbortSignalLike): Promise<void> {
+    public async removeMemberFromChat(chatId: string, membershipId: string, abortSignal?: AbortSignalLike): Promise<void> {
         const requestPath = `/v1.0/chats/${chatId}/members/${membershipId}`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<void>("DELETE", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `DELETE ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `DELETE ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
     }
 
@@ -2569,7 +2586,7 @@ export class TeamsClient extends ConnectorClientBase {
      * Get an online meeting
      * @remarks Retrieves the properties and relationships of an online meeting. You can look up a meeting by meeting ID, join web URL, or join meeting ID.
      */
-    public async getOnlineMeetingAsync(lookupType?: string, lookupValue?: string, abortSignal?: AbortSignalLike): Promise<GetOnlineMeetingResponse> {
+    public async getOnlineMeeting(lookupType?: string, lookupValue?: string, abortSignal?: AbortSignalLike): Promise<GetOnlineMeetingResponse> {
         const queryParams: string[] = [];
         if (lookupType !== undefined) {
             queryParams.push(`lookupType=${encodeURIComponent(String(lookupType))}`);
@@ -2582,7 +2599,7 @@ export class TeamsClient extends ConnectorClientBase {
         const httpResponse = await this.httpClient.sendAsync<GetOnlineMeetingResponse>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as GetOnlineMeetingResponse;
@@ -2592,13 +2609,13 @@ export class TeamsClient extends ConnectorClientBase {
      * List meeting transcripts
      * @remarks Lists all transcripts for an online meeting
      */
-    public async listMeetingTranscriptsAsync(meetingId: string, abortSignal?: AbortSignalLike): Promise<CallTranscriptCollectionResponse> {
+    public async listMeetingTranscripts(meetingId: string, abortSignal?: AbortSignalLike): Promise<CallTranscriptCollectionResponse> {
         const requestPath = `/v1.0/me/onlineMeetings/${meetingId}/transcripts`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<CallTranscriptCollectionResponse>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as CallTranscriptCollectionResponse;
@@ -2608,13 +2625,13 @@ export class TeamsClient extends ConnectorClientBase {
      * Get meeting transcript
      * @remarks Gets a specific transcript for an online meeting
      */
-    public async getMeetingTranscriptAsync(meetingId: string, transcriptId: string, abortSignal?: AbortSignalLike): Promise<CallTranscriptResponse> {
+    public async getMeetingTranscript(meetingId: string, transcriptId: string, abortSignal?: AbortSignalLike): Promise<CallTranscriptResponse> {
         const requestPath = `/v1.0/me/onlineMeetings/${meetingId}/transcripts/${transcriptId}`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<CallTranscriptResponse>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as CallTranscriptResponse;
@@ -2624,13 +2641,13 @@ export class TeamsClient extends ConnectorClientBase {
      * Get meeting transcript content
      * @remarks Gets the content of a meeting transcript
      */
-    public async getMeetingTranscriptContentAsync(meetingId: string, transcriptId: string, abortSignal?: AbortSignalLike): Promise<string> {
+    public async getMeetingTranscriptContent(meetingId: string, transcriptId: string, abortSignal?: AbortSignalLike): Promise<string> {
         const requestPath = `/v1.0/me/onlineMeetings/${meetingId}/transcripts/${transcriptId}/content`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<string>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as string;
@@ -2640,13 +2657,13 @@ export class TeamsClient extends ConnectorClientBase {
      * List meeting recordings
      * @remarks Lists all recordings for an online meeting
      */
-    public async listMeetingRecordingsAsync(meetingId: string, abortSignal?: AbortSignalLike): Promise<CallRecordingCollectionResponse> {
+    public async listMeetingRecordings(meetingId: string, abortSignal?: AbortSignalLike): Promise<CallRecordingCollectionResponse> {
         const requestPath = `/v1.0/me/onlineMeetings/${meetingId}/recordings`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<CallRecordingCollectionResponse>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as CallRecordingCollectionResponse;
@@ -2656,13 +2673,13 @@ export class TeamsClient extends ConnectorClientBase {
      * Get meeting recording
      * @remarks Gets a specific recording for an online meeting
      */
-    public async getMeetingRecordingAsync(meetingId: string, recordingId: string, abortSignal?: AbortSignalLike): Promise<CallRecordingResponse> {
+    public async getMeetingRecording(meetingId: string, recordingId: string, abortSignal?: AbortSignalLike): Promise<CallRecordingResponse> {
         const requestPath = `/v1.0/me/onlineMeetings/${meetingId}/recordings/${recordingId}`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<CallRecordingResponse>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as CallRecordingResponse;
@@ -2672,13 +2689,13 @@ export class TeamsClient extends ConnectorClientBase {
      * Get meeting recording content
      * @remarks Gets the content stream of a meeting recording
      */
-    public async getMeetingRecordingContentAsync(meetingId: string, recordingId: string, abortSignal?: AbortSignalLike): Promise<Blob> {
+    public async getMeetingRecordingContent(meetingId: string, recordingId: string, abortSignal?: AbortSignalLike): Promise<Blob> {
         const requestPath = `/v1.0/me/onlineMeetings/${meetingId}/recordings/${recordingId}/content`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<Blob>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as Blob;
@@ -2688,13 +2705,13 @@ export class TeamsClient extends ConnectorClientBase {
      * List sections
      * @remarks Lists the current user's teamwork sections
      */
-    public async listSectionsAsync(abortSignal?: AbortSignalLike): Promise<ListSectionsResponse> {
+    public async listSections(abortSignal?: AbortSignalLike): Promise<ListSectionsResponse> {
         const requestPath = `/beta/me/teamwork/sections`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<ListSectionsResponse>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as ListSectionsResponse;
@@ -2704,13 +2721,13 @@ export class TeamsClient extends ConnectorClientBase {
      * Create a section
      * @remarks Creates a new teamwork section for the current user
      */
-    public async createSectionAsync(input: CreateSectionInput, abortSignal?: AbortSignalLike): Promise<SectionResponse> {
+    public async createSection(input: CreateSectionInput, abortSignal?: AbortSignalLike): Promise<SectionResponse> {
         const requestPath = `/beta/me/teamwork/sections`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<SectionResponse>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as SectionResponse;
@@ -2720,13 +2737,13 @@ export class TeamsClient extends ConnectorClientBase {
      * Get a section
      * @remarks Gets a specific teamwork section by ID
      */
-    public async getSectionAsync(sectionId: string, abortSignal?: AbortSignalLike): Promise<SectionResponse> {
+    public async getSection(sectionId: string, abortSignal?: AbortSignalLike): Promise<SectionResponse> {
         const requestPath = `/beta/me/teamwork/sections/${sectionId}`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<SectionResponse>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as SectionResponse;
@@ -2736,13 +2753,13 @@ export class TeamsClient extends ConnectorClientBase {
      * Update a section
      * @remarks Updates a teamwork section for the current user
      */
-    public async updateSectionAsync(input: UpdateSectionInput, sectionId: string, abortSignal?: AbortSignalLike): Promise<SectionResponse> {
+    public async updateSection(input: UpdateSectionInput, sectionId: string, abortSignal?: AbortSignalLike): Promise<SectionResponse> {
         const requestPath = `/beta/me/teamwork/sections/${sectionId}`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<SectionResponse>("PATCH", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `PATCH ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `PATCH ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as SectionResponse;
@@ -2752,13 +2769,13 @@ export class TeamsClient extends ConnectorClientBase {
      * Delete a section
      * @remarks Deletes a teamwork section for the current user
      */
-    public async deleteSectionAsync(sectionId: string, abortSignal?: AbortSignalLike): Promise<void> {
+    public async deleteSection(sectionId: string, abortSignal?: AbortSignalLike): Promise<void> {
         const requestPath = `/beta/me/teamwork/sections/${sectionId}`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<void>("DELETE", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `DELETE ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `DELETE ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
     }
 
@@ -2766,13 +2783,13 @@ export class TeamsClient extends ConnectorClientBase {
      * List section items
      * @remarks Lists the items (chats, channels, meetings, communities) in a teamwork section. Each item belongs to exactly one section at a time.
      */
-    public async listSectionItemsAsync(sectionId: string, abortSignal?: AbortSignalLike): Promise<ListSectionItemsResponse> {
+    public async listSectionItems(sectionId: string, abortSignal?: AbortSignalLike): Promise<ListSectionItemsResponse> {
         const requestPath = `/beta/me/teamwork/sections/${sectionId}/items`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<ListSectionItemsResponse>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as ListSectionItemsResponse;
@@ -2782,13 +2799,13 @@ export class TeamsClient extends ConnectorClientBase {
      * Add an item to a section
      * @remarks Adds an item (chat, channel, meeting, or community) currently in a system-defined section to a user-defined teamwork section. Use Move Section Item to relocate items already in another user-defined section.
      */
-    public async addSectionItemAsync(input: AddSectionItemInput, sectionId: string, abortSignal?: AbortSignalLike): Promise<SectionItemResponse> {
+    public async addSectionItem(input: AddSectionItemInput, sectionId: string, abortSignal?: AbortSignalLike): Promise<SectionItemResponse> {
         const requestPath = `/beta/me/teamwork/sections/${sectionId}/items`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<SectionItemResponse>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as SectionItemResponse;
@@ -2798,13 +2815,13 @@ export class TeamsClient extends ConnectorClientBase {
      * Remove an item from a section
      * @remarks Removes an item from a user-defined teamwork section. The underlying chat, channel, meeting, or community is not deleted; the item returns to its default system-defined section.
      */
-    public async removeSectionItemAsync(sectionId: string, sectionItemId: string, abortSignal?: AbortSignalLike): Promise<void> {
+    public async removeSectionItem(sectionId: string, sectionItemId: string, abortSignal?: AbortSignalLike): Promise<void> {
         const requestPath = `/beta/me/teamwork/sections/${sectionId}/items/${sectionItemId}`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<void>("DELETE", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `DELETE ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `DELETE ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
     }
 
@@ -2812,13 +2829,13 @@ export class TeamsClient extends ConnectorClientBase {
      * Move a section item
      * @remarks Atomically moves an item from one user-defined teamwork section to another user-defined section. Each item can belong to only one section at a time. This action removes the item from its current section and adds it to the target section.
      */
-    public async moveSectionItemAsync(input: MoveSectionItemInput, sectionId: string, sectionItemId: string, abortSignal?: AbortSignalLike): Promise<SectionItemResponse> {
+    public async moveSectionItem(input: MoveSectionItemInput, sectionId: string, sectionItemId: string, abortSignal?: AbortSignalLike): Promise<SectionItemResponse> {
         const requestPath = `/beta/me/teamwork/sections/${sectionId}/items/${sectionItemId}/move`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<SectionItemResponse>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as SectionItemResponse;
@@ -2828,13 +2845,13 @@ export class TeamsClient extends ConnectorClientBase {
      * List all tags for a team
      * @remarks Lists the team's tags
      */
-    public async getTagsAsync(groupId: string, abortSignal?: AbortSignalLike): Promise<GetTagsResponseSchema> {
+    public async getTags(groupId: string, abortSignal?: AbortSignalLike): Promise<GetTagsResponseSchema> {
         const requestPath = `/v1.0/teams/${groupId}/tags`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<GetTagsResponseSchema>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as GetTagsResponseSchema;
@@ -2844,13 +2861,13 @@ export class TeamsClient extends ConnectorClientBase {
      * Create a tag for a team
      * @remarks Creates a tag in a team
      */
-    public async createTagAsync(input: CreateTagInput, groupId: string, abortSignal?: AbortSignalLike): Promise<CreateTagResponseSchema> {
+    public async createTag(input: CreateTagInput, groupId: string, abortSignal?: AbortSignalLike): Promise<CreateTagResponseSchema> {
         const requestPath = `/v1.0/teams/${groupId}/tags`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<CreateTagResponseSchema>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as CreateTagResponseSchema;
@@ -2860,13 +2877,13 @@ export class TeamsClient extends ConnectorClientBase {
      * Get a team tag
      * @remarks Gets a specific tag by ID from a team
      */
-    public async getTagAsync(groupId: string, tagId: string, abortSignal?: AbortSignalLike): Promise<CreateTagResponseSchema> {
+    public async getTag(groupId: string, tagId: string, abortSignal?: AbortSignalLike): Promise<CreateTagResponseSchema> {
         const requestPath = `/v1.0/teams/${groupId}/tags/${tagId}`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<CreateTagResponseSchema>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as CreateTagResponseSchema;
@@ -2876,13 +2893,13 @@ export class TeamsClient extends ConnectorClientBase {
      * Update a team tag
      * @remarks Updates the display name of a tag in a team
      */
-    public async updateTagAsync(input: UpdateTagInput, groupId: string, tagId: string, abortSignal?: AbortSignalLike): Promise<CreateTagResponseSchema> {
+    public async updateTag(input: UpdateTagInput, groupId: string, tagId: string, abortSignal?: AbortSignalLike): Promise<CreateTagResponseSchema> {
         const requestPath = `/v1.0/teams/${groupId}/tags/${tagId}`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<CreateTagResponseSchema>("PATCH", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `PATCH ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `PATCH ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as CreateTagResponseSchema;
@@ -2892,13 +2909,13 @@ export class TeamsClient extends ConnectorClientBase {
      * Delete a team tag
      * @remarks Deletes a tag from a team
      */
-    public async deleteTagAsync(groupId: string, tagId: string, abortSignal?: AbortSignalLike): Promise<void> {
+    public async deleteTag(groupId: string, tagId: string, abortSignal?: AbortSignalLike): Promise<void> {
         const requestPath = `/v1.0/teams/${groupId}/tags/${tagId}`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<void>("DELETE", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `DELETE ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `DELETE ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
     }
 
@@ -2906,13 +2923,13 @@ export class TeamsClient extends ConnectorClientBase {
      * Add a member to a team tag
      * @remarks Adds a user to a team tag
      */
-    public async addMemberToTagAsync(input: AddMemberToTagInput, groupId: string, tagId: string, abortSignal?: AbortSignalLike): Promise<AddMemberToTagResponseSchema> {
+    public async addMemberToTag(input: AddMemberToTagInput, groupId: string, tagId: string, abortSignal?: AbortSignalLike): Promise<AddMemberToTagResponseSchema> {
         const requestPath = `/v1.0/teams/${groupId}/tags/${tagId}/members`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<AddMemberToTagResponseSchema>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as AddMemberToTagResponseSchema;
@@ -2922,13 +2939,13 @@ export class TeamsClient extends ConnectorClientBase {
      * List the members of a team tag
      * @remarks Lists the members of a team tag
      */
-    public async getTagMembersAsync(groupId: string, tagId: string, abortSignal?: AbortSignalLike): Promise<GetTagMembersResponseSchema> {
+    public async getTagMembers(groupId: string, tagId: string, abortSignal?: AbortSignalLike): Promise<GetTagMembersResponseSchema> {
         const requestPath = `/v1.0/teams/${groupId}/tags/${tagId}/members`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<GetTagMembersResponseSchema>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as GetTagMembersResponseSchema;
@@ -2938,13 +2955,13 @@ export class TeamsClient extends ConnectorClientBase {
      * Delete a member from a team tag
      * @remarks Deletes a member from a team tag
      */
-    public async deleteTagMemberAsync(groupId: string, tagId: string, tagMemberId: string, abortSignal?: AbortSignalLike): Promise<void> {
+    public async deleteTagMember(groupId: string, tagId: string, tagMemberId: string, abortSignal?: AbortSignalLike): Promise<void> {
         const requestPath = `/v1.0/teams/${groupId}/tags/${tagId}/members/${tagMemberId}`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<void>("DELETE", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `DELETE ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `DELETE ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
     }
 
@@ -2952,13 +2969,13 @@ export class TeamsClient extends ConnectorClientBase {
      * List call recordings
      * @remarks Lists all recordings for an ad-hoc call
      */
-    public async listCallRecordingsAsync(callId: string, abortSignal?: AbortSignalLike): Promise<CallRecordingCollectionResponse> {
+    public async listCallRecordings(callId: string, abortSignal?: AbortSignalLike): Promise<CallRecordingCollectionResponse> {
         const requestPath = `/v1.0/me/adhocCalls/${callId}/recordings`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<CallRecordingCollectionResponse>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as CallRecordingCollectionResponse;
@@ -2968,13 +2985,13 @@ export class TeamsClient extends ConnectorClientBase {
      * Get call recording
      * @remarks Gets a specific recording for an ad-hoc call
      */
-    public async getCallRecordingAsync(callId: string, recordingId: string, abortSignal?: AbortSignalLike): Promise<CallRecordingResponse> {
+    public async getCallRecording(callId: string, recordingId: string, abortSignal?: AbortSignalLike): Promise<CallRecordingResponse> {
         const requestPath = `/v1.0/me/adhocCalls/${callId}/recordings/${recordingId}`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<CallRecordingResponse>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as CallRecordingResponse;
@@ -2984,13 +3001,13 @@ export class TeamsClient extends ConnectorClientBase {
      * Get call recording content
      * @remarks Gets the content of a call recording
      */
-    public async getCallRecordingContentAsync(callId: string, recordingId: string, abortSignal?: AbortSignalLike): Promise<Blob> {
+    public async getCallRecordingContent(callId: string, recordingId: string, abortSignal?: AbortSignalLike): Promise<Blob> {
         const requestPath = `/v1.0/me/adhocCalls/${callId}/recordings/${recordingId}/content`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<Blob>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as Blob;
@@ -3000,13 +3017,13 @@ export class TeamsClient extends ConnectorClientBase {
      * List call transcripts
      * @remarks Lists all transcripts for an ad-hoc call
      */
-    public async listCallTranscriptsAsync(callId: string, abortSignal?: AbortSignalLike): Promise<CallTranscriptCollectionResponse> {
+    public async listCallTranscripts(callId: string, abortSignal?: AbortSignalLike): Promise<CallTranscriptCollectionResponse> {
         const requestPath = `/v1.0/me/adhocCalls/${callId}/transcripts`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<CallTranscriptCollectionResponse>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as CallTranscriptCollectionResponse;
@@ -3016,13 +3033,13 @@ export class TeamsClient extends ConnectorClientBase {
      * Get call transcript
      * @remarks Gets a specific transcript for an ad-hoc call
      */
-    public async getCallTranscriptAsync(callId: string, transcriptId: string, abortSignal?: AbortSignalLike): Promise<CallTranscriptResponse> {
+    public async getCallTranscript(callId: string, transcriptId: string, abortSignal?: AbortSignalLike): Promise<CallTranscriptResponse> {
         const requestPath = `/v1.0/me/adhocCalls/${callId}/transcripts/${transcriptId}`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<CallTranscriptResponse>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as CallTranscriptResponse;
@@ -3032,13 +3049,13 @@ export class TeamsClient extends ConnectorClientBase {
      * Get call transcript content
      * @remarks Gets the content of a call transcript
      */
-    public async getCallTranscriptContentAsync(callId: string, transcriptId: string, abortSignal?: AbortSignalLike): Promise<string> {
+    public async getCallTranscriptContent(callId: string, transcriptId: string, abortSignal?: AbortSignalLike): Promise<string> {
         const requestPath = `/v1.0/me/adhocCalls/${callId}/transcripts/${transcriptId}/content`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<string>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as string;
@@ -3048,7 +3065,7 @@ export class TeamsClient extends ConnectorClientBase {
      * Get all ad-hoc call recordings
      * @remarks Gets all recordings from ad-hoc calls for the signed-in user
      */
-    public async getAllAdhocCallRecordingsAsync(startDateTime?: string, endDateTime?: string, top?: string, skiptoken?: string, deltatoken?: string, abortSignal?: AbortSignalLike): Promise<CallRecordingCollectionResponse> {
+    public async getAllAdhocCallRecordings(startDateTime?: string, endDateTime?: string, top?: string, skiptoken?: string, deltatoken?: string, abortSignal?: AbortSignalLike): Promise<CallRecordingCollectionResponse> {
         const queryParams: string[] = [];
         if (startDateTime !== undefined) {
             queryParams.push(`startDateTime=${encodeURIComponent(String(startDateTime))}`);
@@ -3070,7 +3087,7 @@ export class TeamsClient extends ConnectorClientBase {
         const httpResponse = await this.httpClient.sendAsync<CallRecordingCollectionResponse>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as CallRecordingCollectionResponse;
@@ -3080,7 +3097,7 @@ export class TeamsClient extends ConnectorClientBase {
      * Get all ad-hoc call transcripts
      * @remarks Gets all transcripts from ad-hoc calls for the signed-in user
      */
-    public async getAllAdhocCallTranscriptsAsync(startDateTime?: string, endDateTime?: string, top?: string, skiptoken?: string, deltatoken?: string, abortSignal?: AbortSignalLike): Promise<CallTranscriptCollectionResponse> {
+    public async getAllAdhocCallTranscripts(startDateTime?: string, endDateTime?: string, top?: string, skiptoken?: string, deltatoken?: string, abortSignal?: AbortSignalLike): Promise<CallTranscriptCollectionResponse> {
         const queryParams: string[] = [];
         if (startDateTime !== undefined) {
             queryParams.push(`startDateTime=${encodeURIComponent(String(startDateTime))}`);
@@ -3102,7 +3119,7 @@ export class TeamsClient extends ConnectorClientBase {
         const httpResponse = await this.httpClient.sendAsync<CallTranscriptCollectionResponse>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as CallTranscriptCollectionResponse;
@@ -3112,13 +3129,13 @@ export class TeamsClient extends ConnectorClientBase {
      * List AI insights
      * @remarks Lists AI-generated insights for an online meeting. Requires Microsoft 365 Copilot license.
      */
-    public async listAiInsightsAsync(meetingId: string, abortSignal?: AbortSignalLike): Promise<AiInsightCollectionResponse> {
+    public async listAiInsights(meetingId: string, abortSignal?: AbortSignalLike): Promise<AiInsightCollectionResponse> {
         const requestPath = `/v1.0/copilot/me/onlineMeetings/${meetingId}/aiInsights`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<AiInsightCollectionResponse>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as AiInsightCollectionResponse;
@@ -3128,13 +3145,13 @@ export class TeamsClient extends ConnectorClientBase {
      * Get AI insight
      * @remarks Gets a specific AI-generated insight for an online meeting. Requires Microsoft 365 Copilot license.
      */
-    public async getAiInsightAsync(meetingId: string, aiInsightId: string, abortSignal?: AbortSignalLike): Promise<AiInsightResponse> {
+    public async getAiInsight(meetingId: string, aiInsightId: string, abortSignal?: AbortSignalLike): Promise<AiInsightResponse> {
         const requestPath = `/v1.0/copilot/me/onlineMeetings/${meetingId}/aiInsights/${aiInsightId}`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<AiInsightResponse>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as AiInsightResponse;

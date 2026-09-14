@@ -5,7 +5,7 @@ import {
     DocusignClient,
     EnvelopeResendResponse,
 } from "../src/generated/DocusignExtensions.ts";
-import { ConnectorException } from "../src/azureConnectors/connectorException.ts";
+import { ConnectorError } from "../src/azureConnectors/connectorError.ts";
 import { ConnectorNames } from "../src/generated/connectorNames.ts";
 import { availableConnectors } from "../src/generated/ManagedConnectors.ts";
 
@@ -48,7 +48,7 @@ describe("DocusignClient — constructor", () => {
     });
 });
 
-describe("DocusignClient — resendEnvelopeAsync", () => {
+describe("DocusignClient — resendEnvelope", () => {
     afterEach(() => {
         jest.restoreAllMocks();
     });
@@ -58,7 +58,7 @@ describe("DocusignClient — resendEnvelopeAsync", () => {
         mockFetchResponse(mockResponse);
 
         const client = new DocusignClient(TestConnectionUrl, createMockCredential());
-        const result = await client.resendEnvelopeAsync("env-123");
+        const result = await client.resendEnvelope("env-123");
 
         expect(result).toEqual(mockResponse);
         const [url, init] = (global.fetch as jest.Mock).mock.calls[0];
@@ -67,11 +67,11 @@ describe("DocusignClient — resendEnvelopeAsync", () => {
         expect(init.headers["Authorization"]).toBe("Bearer mock-bearer-token");
     });
 
-    it("should throw ConnectorException on non-OK response", async () => {
+    it("should throw ConnectorError on non-OK response", async () => {
         mockFetchError(400, '{"error":"BadRequest"}');
 
         const client = new DocusignClient(TestConnectionUrl, createMockCredential());
-        await expect(client.resendEnvelopeAsync("env-123")).rejects.toThrow(ConnectorException);
+        await expect(client.resendEnvelope("env-123")).rejects.toThrow(ConnectorError);
     });
 });
 

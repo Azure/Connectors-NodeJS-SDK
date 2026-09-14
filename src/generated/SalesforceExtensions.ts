@@ -3,8 +3,9 @@
 
 import type { AbortSignalLike } from "@azure/abort-controller";
 import type { TokenCredential } from "@azure/core-auth";
+import type { PagedAsyncIterableIterator } from "@azure/core-paging";
 import { ConnectorClientBase } from "../azureConnectors/clientBase.ts";
-import { ConnectorException } from "../azureConnectors/connectorException.ts";
+import { ConnectorError } from "../azureConnectors/connectorError.ts";
 import { ConnectorClientOptions } from "../azureConnectors/options.ts";
 import { TriggerCallbackPayload } from "../azureConnectors/triggerPayload.ts";
 
@@ -211,6 +212,8 @@ export interface Item {
 export interface ItemsList {
     /** List of Items */
     value?: Array<Item>;
+    /** The URL to retrieve the next page. */
+    "@odata.nextLink"?: string;
 }
 
 /**
@@ -288,8 +291,8 @@ export interface TableMetadata {
     /** Table permission */
     "x-ms-permission"?: string;
     "x-ms-capabilities"?: TableCapabilitiesMetadata;
-    schema?: ObjectEntity;
-    referencedEntities?: ObjectEntity;
+    schema?: Record<string, unknown>;
+    referencedEntities?: Record<string, unknown>;
     /** URL link */
     webUrl?: string;
 }
@@ -308,6 +311,8 @@ export interface TableSelectRestrictionsMetadata {
 export interface TablesList {
     /** List of Tables */
     value?: Array<Table>;
+    /** The URL to retrieve the next page. */
+    "@odata.nextLink"?: string;
 }
 
 /**
@@ -628,29 +633,36 @@ export class SalesforceClient extends ConnectorClientBase {
      * Get object types
      * @remarks This operation lists the available Salesforce object types.
      */
-    public async getTablesAsync(abortSignal?: AbortSignalLike): Promise<TablesList> {
+    public getTables(abortSignal?: AbortSignalLike): PagedAsyncIterableIterator<Table> {
         const requestPath = `/datasets/default/tables`;
-        const requestUrl = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<TablesList>("GET", requestUrl, undefined, undefined, abortSignal);
+        return this.createPageable<TablesList, Table>(
+            requestPath,
+            async (requestUrl) => {
+                const httpResponse = await this.httpClient.sendAsync<TablesList>("GET", requestUrl, undefined, undefined, abortSignal);
 
-        if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
-        }
+                if (!httpResponse.isSuccessStatusCode) {
+                    const operationPath = this.getOperationPath(requestUrl);
+                    throw new ConnectorError(this.connectorName, `GET ${operationPath}`, httpResponse.statusCode, httpResponse.text);
+                }
 
-        return httpResponse.value as TablesList;
+                return httpResponse.value as TablesList;
+            },
+            "value",
+            "@odata.nextLink",
+        );
     }
 
     /**
      * Get a Record by External ID
      * @remarks This operation retrieves a record using an external ID.
      */
-    public async getItemByExternalIdAsync(table: string, externalIdField: string, externalId: string, abortSignal?: AbortSignalLike): Promise<GetItemByExternalIdResponse> {
-        const requestPath = `/datasets/default/tables/${table}/externalIdFields/${externalIdField}/${externalId}`;
+    public async getItemByExternalId(table: string, externalIdField: string, externalId: string, abortSignal?: AbortSignalLike): Promise<GetItemByExternalIdResponse> {
+        const requestPath = `/datasets/default/tables/${encodeURIComponent(encodeURIComponent(String(table)))}/externalIdFields/${encodeURIComponent(encodeURIComponent(String(externalIdField)))}/${encodeURIComponent(encodeURIComponent(String(externalId)))}`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<GetItemByExternalIdResponse>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as GetItemByExternalIdResponse;
@@ -660,7 +672,7 @@ export class SalesforceClient extends ConnectorClientBase {
      * Get records
      * @remarks This operation gets records of a certain Salesforce object type like 'Leads'.
      */
-    public async getItemsAsync(table: string, filter?: string, orderby?: string, top?: string, skip?: string, select?: string, abortSignal?: AbortSignalLike): Promise<ItemsList> {
+    public getItems(table: string, filter?: string, orderby?: string, top?: string, skip?: string, select?: string, abortSignal?: AbortSignalLike): PagedAsyncIterableIterator<Item> {
         const queryParams: string[] = [];
         if (filter !== undefined) {
             queryParams.push(`$filter=${encodeURIComponent(String(filter))}`);
@@ -677,22 +689,29 @@ export class SalesforceClient extends ConnectorClientBase {
         if (select !== undefined) {
             queryParams.push(`$select=${encodeURIComponent(String(select))}`);
         }
-        const requestPath = `/datasets/default/tables/${table}/items` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
-        const requestUrl = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<ItemsList>("GET", requestUrl, undefined, undefined, abortSignal);
+        const requestPath = `/datasets/default/tables/${encodeURIComponent(encodeURIComponent(String(table)))}/items` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
+        return this.createPageable<ItemsList, Item>(
+            requestPath,
+            async (requestUrl) => {
+                const httpResponse = await this.httpClient.sendAsync<ItemsList>("GET", requestUrl, undefined, undefined, abortSignal);
 
-        if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
-        }
+                if (!httpResponse.isSuccessStatusCode) {
+                    const operationPath = this.getOperationPath(requestUrl);
+                    throw new ConnectorError(this.connectorName, `GET ${operationPath}`, httpResponse.statusCode, httpResponse.text);
+                }
 
-        return httpResponse.value as ItemsList;
+                return httpResponse.value as ItemsList;
+            },
+            "value",
+            "@odata.nextLink",
+        );
     }
 
     /**
      * Get Account records from Salesforce
      * @remarks This operation gets Account records from Salesforce.
      */
-    public async getItemsTableAccountAsync(filter?: string, orderby?: string, top?: string, skip?: string, select?: string, abortSignal?: AbortSignalLike): Promise<ItemsList> {
+    public getItemsTableAccount(filter?: string, orderby?: string, top?: string, skip?: string, select?: string, abortSignal?: AbortSignalLike): PagedAsyncIterableIterator<Item> {
         const queryParams: string[] = [];
         if (filter !== undefined) {
             queryParams.push(`$filter=${encodeURIComponent(String(filter))}`);
@@ -710,21 +729,28 @@ export class SalesforceClient extends ConnectorClientBase {
             queryParams.push(`$select=${encodeURIComponent(String(select))}`);
         }
         const requestPath = `/datasets/default/tables/account/items` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
-        const requestUrl = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<ItemsList>("GET", requestUrl, undefined, undefined, abortSignal);
+        return this.createPageable<ItemsList, Item>(
+            requestPath,
+            async (requestUrl) => {
+                const httpResponse = await this.httpClient.sendAsync<ItemsList>("GET", requestUrl, undefined, undefined, abortSignal);
 
-        if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
-        }
+                if (!httpResponse.isSuccessStatusCode) {
+                    const operationPath = this.getOperationPath(requestUrl);
+                    throw new ConnectorError(this.connectorName, `GET ${operationPath}`, httpResponse.statusCode, httpResponse.text);
+                }
 
-        return httpResponse.value as ItemsList;
+                return httpResponse.value as ItemsList;
+            },
+            "value",
+            "@odata.nextLink",
+        );
     }
 
     /**
      * Get User records from Salesforce
      * @remarks This operation gets User records from Salesforce.
      */
-    public async getItemsTableUserAsync(filter?: string, orderby?: string, top?: string, skip?: string, select?: string, abortSignal?: AbortSignalLike): Promise<ItemsList> {
+    public getItemsTableUser(filter?: string, orderby?: string, top?: string, skip?: string, select?: string, abortSignal?: AbortSignalLike): PagedAsyncIterableIterator<Item> {
         const queryParams: string[] = [];
         if (filter !== undefined) {
             queryParams.push(`$filter=${encodeURIComponent(String(filter))}`);
@@ -742,21 +768,28 @@ export class SalesforceClient extends ConnectorClientBase {
             queryParams.push(`$select=${encodeURIComponent(String(select))}`);
         }
         const requestPath = `/datasets/default/tables/user/items` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
-        const requestUrl = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<ItemsList>("GET", requestUrl, undefined, undefined, abortSignal);
+        return this.createPageable<ItemsList, Item>(
+            requestPath,
+            async (requestUrl) => {
+                const httpResponse = await this.httpClient.sendAsync<ItemsList>("GET", requestUrl, undefined, undefined, abortSignal);
 
-        if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
-        }
+                if (!httpResponse.isSuccessStatusCode) {
+                    const operationPath = this.getOperationPath(requestUrl);
+                    throw new ConnectorError(this.connectorName, `GET ${operationPath}`, httpResponse.statusCode, httpResponse.text);
+                }
 
-        return httpResponse.value as ItemsList;
+                return httpResponse.value as ItemsList;
+            },
+            "value",
+            "@odata.nextLink",
+        );
     }
 
     /**
      * Get Case records from Salesforce
      * @remarks This operation gets Case records from Salesforce.
      */
-    public async getItemsTableCaseAsync(filter?: string, orderby?: string, top?: string, skip?: string, select?: string, abortSignal?: AbortSignalLike): Promise<ItemsList> {
+    public getItemsTableCase(filter?: string, orderby?: string, top?: string, skip?: string, select?: string, abortSignal?: AbortSignalLike): PagedAsyncIterableIterator<Item> {
         const queryParams: string[] = [];
         if (filter !== undefined) {
             queryParams.push(`$filter=${encodeURIComponent(String(filter))}`);
@@ -774,21 +807,28 @@ export class SalesforceClient extends ConnectorClientBase {
             queryParams.push(`$select=${encodeURIComponent(String(select))}`);
         }
         const requestPath = `/datasets/default/tables/case/items` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
-        const requestUrl = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<ItemsList>("GET", requestUrl, undefined, undefined, abortSignal);
+        return this.createPageable<ItemsList, Item>(
+            requestPath,
+            async (requestUrl) => {
+                const httpResponse = await this.httpClient.sendAsync<ItemsList>("GET", requestUrl, undefined, undefined, abortSignal);
 
-        if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
-        }
+                if (!httpResponse.isSuccessStatusCode) {
+                    const operationPath = this.getOperationPath(requestUrl);
+                    throw new ConnectorError(this.connectorName, `GET ${operationPath}`, httpResponse.statusCode, httpResponse.text);
+                }
 
-        return httpResponse.value as ItemsList;
+                return httpResponse.value as ItemsList;
+            },
+            "value",
+            "@odata.nextLink",
+        );
     }
 
     /**
      * Get Opportunity records from Salesforce
      * @remarks This operation gets Opportunity records from Salesforce.
      */
-    public async getItemsTableOpportunityAsync(filter?: string, orderby?: string, top?: string, skip?: string, select?: string, abortSignal?: AbortSignalLike): Promise<ItemsList> {
+    public getItemsTableOpportunity(filter?: string, orderby?: string, top?: string, skip?: string, select?: string, abortSignal?: AbortSignalLike): PagedAsyncIterableIterator<Item> {
         const queryParams: string[] = [];
         if (filter !== undefined) {
             queryParams.push(`$filter=${encodeURIComponent(String(filter))}`);
@@ -806,21 +846,28 @@ export class SalesforceClient extends ConnectorClientBase {
             queryParams.push(`$select=${encodeURIComponent(String(select))}`);
         }
         const requestPath = `/datasets/default/tables/opportunity/items` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
-        const requestUrl = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<ItemsList>("GET", requestUrl, undefined, undefined, abortSignal);
+        return this.createPageable<ItemsList, Item>(
+            requestPath,
+            async (requestUrl) => {
+                const httpResponse = await this.httpClient.sendAsync<ItemsList>("GET", requestUrl, undefined, undefined, abortSignal);
 
-        if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
-        }
+                if (!httpResponse.isSuccessStatusCode) {
+                    const operationPath = this.getOperationPath(requestUrl);
+                    throw new ConnectorError(this.connectorName, `GET ${operationPath}`, httpResponse.statusCode, httpResponse.text);
+                }
 
-        return httpResponse.value as ItemsList;
+                return httpResponse.value as ItemsList;
+            },
+            "value",
+            "@odata.nextLink",
+        );
     }
 
     /**
      * Get Product records from Salesforce
      * @remarks This operation gets Product records from Salesforce.
      */
-    public async getItemsTableProduct2Async(filter?: string, orderby?: string, top?: string, skip?: string, select?: string, abortSignal?: AbortSignalLike): Promise<ItemsList> {
+    public getItemsTableProduct2(filter?: string, orderby?: string, top?: string, skip?: string, select?: string, abortSignal?: AbortSignalLike): PagedAsyncIterableIterator<Item> {
         const queryParams: string[] = [];
         if (filter !== undefined) {
             queryParams.push(`$filter=${encodeURIComponent(String(filter))}`);
@@ -838,21 +885,28 @@ export class SalesforceClient extends ConnectorClientBase {
             queryParams.push(`$select=${encodeURIComponent(String(select))}`);
         }
         const requestPath = `/datasets/default/tables/product2/items` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
-        const requestUrl = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<ItemsList>("GET", requestUrl, undefined, undefined, abortSignal);
+        return this.createPageable<ItemsList, Item>(
+            requestPath,
+            async (requestUrl) => {
+                const httpResponse = await this.httpClient.sendAsync<ItemsList>("GET", requestUrl, undefined, undefined, abortSignal);
 
-        if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
-        }
+                if (!httpResponse.isSuccessStatusCode) {
+                    const operationPath = this.getOperationPath(requestUrl);
+                    throw new ConnectorError(this.connectorName, `GET ${operationPath}`, httpResponse.statusCode, httpResponse.text);
+                }
 
-        return httpResponse.value as ItemsList;
+                return httpResponse.value as ItemsList;
+            },
+            "value",
+            "@odata.nextLink",
+        );
     }
 
     /**
      * Get Contact records from Salesforce
      * @remarks This operation gets Contact records from Salesforce.
      */
-    public async getItemsTableContactAsync(filter?: string, orderby?: string, top?: string, skip?: string, select?: string, abortSignal?: AbortSignalLike): Promise<ItemsList> {
+    public getItemsTableContact(filter?: string, orderby?: string, top?: string, skip?: string, select?: string, abortSignal?: AbortSignalLike): PagedAsyncIterableIterator<Item> {
         const queryParams: string[] = [];
         if (filter !== undefined) {
             queryParams.push(`$filter=${encodeURIComponent(String(filter))}`);
@@ -870,27 +924,34 @@ export class SalesforceClient extends ConnectorClientBase {
             queryParams.push(`$select=${encodeURIComponent(String(select))}`);
         }
         const requestPath = `/datasets/default/tables/contact/items` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
-        const requestUrl = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<ItemsList>("GET", requestUrl, undefined, undefined, abortSignal);
+        return this.createPageable<ItemsList, Item>(
+            requestPath,
+            async (requestUrl) => {
+                const httpResponse = await this.httpClient.sendAsync<ItemsList>("GET", requestUrl, undefined, undefined, abortSignal);
 
-        if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
-        }
+                if (!httpResponse.isSuccessStatusCode) {
+                    const operationPath = this.getOperationPath(requestUrl);
+                    throw new ConnectorError(this.connectorName, `GET ${operationPath}`, httpResponse.statusCode, httpResponse.text);
+                }
 
-        return httpResponse.value as ItemsList;
+                return httpResponse.value as ItemsList;
+            },
+            "value",
+            "@odata.nextLink",
+        );
     }
 
     /**
      * Delete record
      * @remarks This operation deletes a record.
      */
-    public async deleteItemAsync(table: string, id: string, abortSignal?: AbortSignalLike): Promise<void> {
-        const requestPath = `/datasets/default/tables/${table}/items/${id}`;
+    public async deleteItem(table: string, id: string, abortSignal?: AbortSignalLike): Promise<void> {
+        const requestPath = `/datasets/default/tables/${encodeURIComponent(encodeURIComponent(String(table)))}/items/${encodeURIComponent(encodeURIComponent(String(id)))}`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<void>("DELETE", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `DELETE ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `DELETE ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
     }
 
@@ -898,13 +959,13 @@ export class SalesforceClient extends ConnectorClientBase {
      * Execute a SOQL query
      * @remarks Execute a SOQL query.
      */
-    public async executeSoqlQueryAsync(input: ExecuteSoqlQueryParameters, abortSignal?: AbortSignalLike): Promise<ObjectEntity> {
+    public async executeSoqlQuery(input: ExecuteSoqlQueryParameters, abortSignal?: AbortSignalLike): Promise<ObjectEntity> {
         const requestPath = `/soql/executesoqlquery`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<ObjectEntity>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as ObjectEntity;
@@ -914,7 +975,7 @@ export class SalesforceClient extends ConnectorClientBase {
      * Get all jobs
      * @remarks Get a list of all jobs
      */
-    public async getAllJobsAsync(concurrenyMode?: string, isPkChunkingEnabled?: string, jobType?: string, queryLocator?: string, abortSignal?: AbortSignalLike): Promise<GetAllJobsResponse> {
+    public async getAllJobs(concurrenyMode?: string, isPkChunkingEnabled?: string, jobType?: string, queryLocator?: string, abortSignal?: AbortSignalLike): Promise<GetAllJobsResponse> {
         const queryParams: string[] = [];
         if (concurrenyMode !== undefined) {
             queryParams.push(`concurrenyMode=${encodeURIComponent(String(concurrenyMode))}`);
@@ -933,7 +994,7 @@ export class SalesforceClient extends ConnectorClientBase {
         const httpResponse = await this.httpClient.sendAsync<GetAllJobsResponse>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as GetAllJobsResponse;
@@ -943,13 +1004,13 @@ export class SalesforceClient extends ConnectorClientBase {
      * Upload job data
      * @remarks Uploads data for a job using CSV data.
      */
-    public async uploadJobDataAsync(input: UploadJobDataInput, jobId: string, abortSignal?: AbortSignalLike): Promise<void> {
+    public async uploadJobData(input: UploadJobDataInput, jobId: string, abortSignal?: AbortSignalLike): Promise<void> {
         const requestPath = `/codeless/jobs/ingest/${jobId}/batches`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<void>("PUT", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `PUT ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `PUT ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
     }
 
@@ -957,13 +1018,13 @@ export class SalesforceClient extends ConnectorClientBase {
      * Get job info
      * @remarks Retrieves detailed information about a job.
      */
-    public async getJobInfoAsync(jobId: string, abortSignal?: AbortSignalLike): Promise<CheckJobResponse> {
+    public async getJobInfo(jobId: string, abortSignal?: AbortSignalLike): Promise<CheckJobResponse> {
         const requestPath = `/codeless/jobs/ingest/${jobId}`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<CheckJobResponse>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as CheckJobResponse;
@@ -973,13 +1034,13 @@ export class SalesforceClient extends ConnectorClientBase {
      * Close or abort a job
      * @remarks Closes or aborts a job. Use UploadComplete to close a job, or Aborted to abort a job. If you close a job, Salesforce queues the job and uploaded data for processing, and you can’t add any additional job data. If you abort a job, the job does not get queued or processed.
      */
-    public async closeJobAsync(input: CloseJobRequest, jobId: string, abortSignal?: AbortSignalLike): Promise<JobInfo> {
+    public async closeJob(input: CloseJobRequest, jobId: string, abortSignal?: AbortSignalLike): Promise<JobInfo> {
         const requestPath = `/codeless/jobs/ingest/${jobId}`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<JobInfo>("PATCH", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `PATCH ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `PATCH ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as JobInfo;
@@ -989,13 +1050,13 @@ export class SalesforceClient extends ConnectorClientBase {
      * Delete a job
      * @remarks Deletes a job. To be deleted, a job must have a state of UploadComplete, JobComplete, Aborted, or Failed.
      */
-    public async deleteJobAsync(jobId: string, abortSignal?: AbortSignalLike): Promise<void> {
+    public async deleteJob(jobId: string, abortSignal?: AbortSignalLike): Promise<void> {
         const requestPath = `/codeless/jobs/ingest/${jobId}`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<void>("DELETE", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `DELETE ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `DELETE ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
     }
 
@@ -1003,7 +1064,7 @@ export class SalesforceClient extends ConnectorClientBase {
      * Get job results
      * @remarks Retrieves a list of records based on the result type for a completed job.
      */
-    public async getJobRecordResultsAsync(jobId: string, resultType?: string, abortSignal?: AbortSignalLike): Promise<string> {
+    public async getJobRecordResults(jobId: string, resultType?: string, abortSignal?: AbortSignalLike): Promise<string> {
         const queryParams: string[] = [];
         if (resultType !== undefined) {
             queryParams.push(`resultType=${encodeURIComponent(String(resultType))}`);
@@ -1013,7 +1074,7 @@ export class SalesforceClient extends ConnectorClientBase {
         const httpResponse = await this.httpClient.sendAsync<string>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as string;
@@ -1023,7 +1084,7 @@ export class SalesforceClient extends ConnectorClientBase {
      * Execute SOSL search query
      * @remarks Execute the specified SOSL search qyery
      */
-    public async executeSOSLQueryAsync(q?: string, abortSignal?: AbortSignalLike): Promise<SOSLSearchQueryResponse> {
+    public async executeSOSLQuery(q?: string, abortSignal?: AbortSignalLike): Promise<SOSLSearchQueryResponse> {
         const queryParams: string[] = [];
         if (q !== undefined) {
             queryParams.push(`q=${encodeURIComponent(String(q))}`);
@@ -1033,7 +1094,7 @@ export class SalesforceClient extends ConnectorClientBase {
         const httpResponse = await this.httpClient.sendAsync<SOSLSearchQueryResponse>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as SOSLSearchQueryResponse;
@@ -1043,13 +1104,13 @@ export class SalesforceClient extends ConnectorClientBase {
      * Send an HTTP request
      * @remarks Construct a Salesforce REST API request to invoke
      */
-    public async httpRequestAsync(input: HttpRequestInput, abortSignal?: AbortSignalLike): Promise<ObjectWithoutType> {
+    public async httpRequest(input: HttpRequestInput, abortSignal?: AbortSignalLike): Promise<ObjectWithoutType> {
         const requestPath = `/codeless/httprequest`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<ObjectWithoutType>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as ObjectWithoutType;
@@ -1059,7 +1120,7 @@ export class SalesforceClient extends ConnectorClientBase {
      * MCP server for Salesforce
      * @remarks MCP server for Salesforce
      */
-    public async mcpSalesforceManagementAsync(input: MCPQueryRequest, sessionId?: string, abortSignal?: AbortSignalLike): Promise<MCPQueryResponse> {
+    public async mcpSalesforceManagement(input: MCPQueryRequest, sessionId?: string, abortSignal?: AbortSignalLike): Promise<MCPQueryResponse> {
         const queryParams: string[] = [];
         if (sessionId !== undefined) {
             queryParams.push(`sessionId=${encodeURIComponent(String(sessionId))}`);
@@ -1069,7 +1130,7 @@ export class SalesforceClient extends ConnectorClientBase {
         const httpResponse = await this.httpClient.sendAsync<MCPQueryResponse>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as MCPQueryResponse;
@@ -1079,13 +1140,13 @@ export class SalesforceClient extends ConnectorClientBase {
      * Create a job
      * @remarks Creates a job, which represents a bulk operation (and associated data) that is sent to Salesforce for asynchronous processing. Provide job data via an Upload Job Data request.
      */
-    public async createJobAsync(input: CreateJobParameters, abortSignal?: AbortSignalLike): Promise<CreateJobResponse> {
+    public async createJob(input: CreateJobParameters, abortSignal?: AbortSignalLike): Promise<CreateJobResponse> {
         const requestPath = `/bulk/createjob`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<CreateJobResponse>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as CreateJobResponse;
@@ -1095,17 +1156,17 @@ export class SalesforceClient extends ConnectorClientBase {
      * Get record
      * @remarks This operation gets a record.
      */
-    public async getItemAsync(table: string, id: string, select?: string, abortSignal?: AbortSignalLike): Promise<GetItemResponse> {
+    public async getItem(table: string, id: string, select?: string, abortSignal?: AbortSignalLike): Promise<GetItemResponse> {
         const queryParams: string[] = [];
         if (select !== undefined) {
             queryParams.push(`$select=${encodeURIComponent(String(select))}`);
         }
-        const requestPath = `/v2/datasets/default/tables/${table}/items/${id}` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
+        const requestPath = `/v2/datasets/default/tables/${encodeURIComponent(encodeURIComponent(String(table)))}/items/${encodeURIComponent(encodeURIComponent(String(id)))}` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<GetItemResponse>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as GetItemResponse;
@@ -1115,17 +1176,17 @@ export class SalesforceClient extends ConnectorClientBase {
      * Update record
      * @remarks This operation updates a record and allows null values.
      */
-    public async patchItemAsync(input: PatchItemInput, table: string, id: string, select?: string, abortSignal?: AbortSignalLike): Promise<PatchItemResponse> {
+    public async patchItem(input: PatchItemInput, table: string, id: string, select?: string, abortSignal?: AbortSignalLike): Promise<PatchItemResponse> {
         const queryParams: string[] = [];
         if (select !== undefined) {
             queryParams.push(`$select=${encodeURIComponent(String(select))}`);
         }
-        const requestPath = `/v3/datasets/default/tables/${table}/items/${id}` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
+        const requestPath = `/v3/datasets/default/tables/${encodeURIComponent(encodeURIComponent(String(table)))}/items/${encodeURIComponent(encodeURIComponent(String(id)))}` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<PatchItemResponse>("PATCH", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `PATCH ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `PATCH ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as PatchItemResponse;
@@ -1135,13 +1196,13 @@ export class SalesforceClient extends ConnectorClientBase {
      * Insert or Update (Upsert) a Record by External ID
      * @remarks This operation inserts or updates (upserts) a record using an external ID.
      */
-    public async patchItemByExternalIdAsync(input: PatchItemByExternalIdInput, table: string, externalIdField: string, externalId: string, abortSignal?: AbortSignalLike): Promise<PatchItemByExternalIdResponse> {
-        const requestPath = `/v2/datasets/default/tables/${table}/externalIdFields/${externalIdField}/${externalId}`;
+    public async patchItemByExternalId(input: PatchItemByExternalIdInput, table: string, externalIdField: string, externalId: string, abortSignal?: AbortSignalLike): Promise<PatchItemByExternalIdResponse> {
+        const requestPath = `/v2/datasets/default/tables/${encodeURIComponent(encodeURIComponent(String(table)))}/externalIdFields/${encodeURIComponent(encodeURIComponent(String(externalIdField)))}/${encodeURIComponent(encodeURIComponent(String(externalId)))}`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<PatchItemByExternalIdResponse>("PATCH", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `PATCH ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `PATCH ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as PatchItemByExternalIdResponse;
@@ -1151,13 +1212,13 @@ export class SalesforceClient extends ConnectorClientBase {
      * Create record
      * @remarks This operation creates a record and allows null values.
      */
-    public async postItemAsync(input: PostItemInput, table: string, abortSignal?: AbortSignalLike): Promise<PostItemResponse> {
-        const requestPath = `/v2/datasets/default/tables/${table}/items`;
+    public async postItem(input: PostItemInput, table: string, abortSignal?: AbortSignalLike): Promise<PostItemResponse> {
+        const requestPath = `/v2/datasets/default/tables/${encodeURIComponent(encodeURIComponent(String(table)))}/items`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<PostItemResponse>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as PostItemResponse;

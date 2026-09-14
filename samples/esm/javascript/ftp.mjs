@@ -14,7 +14,7 @@
  *     npm start
  */
 
-import { ManagedIdentityTokenProvider, ConnectorException } from "@azure/connectors";
+import { ManagedIdentityTokenProvider, ConnectorError } from "@azure/connectors";
 import { FtpClient } from "@azure/connectors/generated/FtpExtensions";
 
 const CONNECTION_URL = process.env.FTP_CONNECTION_URL ?? "";
@@ -30,10 +30,10 @@ async function main() {
 
     // Example 1: List the root folder.
     try {
-        const files = await client.listRootFolderAsync();
+        const files = await client.listRootFolder();
         console.log(`Found ${files.length} item(s) in the root folder.`);
     } catch (error) {
-        if (error instanceof ConnectorException) {
+        if (error instanceof ConnectorError) {
             console.log(`Connector error (${error.statusCode}): ${error.message}`);
         } else {
             throw error;
@@ -44,10 +44,10 @@ async function main() {
     const fileId = process.env.FTP_TEST_FILE_ID;
     if (fileId) {
         try {
-            const metadata = await client.getFileMetadataAsync(fileId);
+            const metadata = await client.getFileMetadata(fileId);
             console.log("File metadata:", JSON.stringify(metadata, null, 2));
         } catch (error) {
-            if (error instanceof ConnectorException) {
+            if (error instanceof ConnectorError) {
                 console.log(`Connector error (${error.statusCode}): ${error.message}`);
             } else {
                 throw error;

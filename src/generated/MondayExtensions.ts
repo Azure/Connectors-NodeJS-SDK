@@ -4,7 +4,7 @@
 import type { AbortSignalLike } from "@azure/abort-controller";
 import type { TokenCredential } from "@azure/core-auth";
 import { ConnectorClientBase } from "../azureConnectors/clientBase.ts";
-import { ConnectorException } from "../azureConnectors/connectorException.ts";
+import { ConnectorError } from "../azureConnectors/connectorError.ts";
 import { ConnectorClientOptions } from "../azureConnectors/options.ts";
 
 // #region Types
@@ -173,7 +173,7 @@ export interface CreateItemInput {
     groupId: string;
     /** Specify the name of the item you want to create. */
     itemName: string;
-    columnValues?: DynamicResponseGetListSchema;
+    columnValues?: Record<string, unknown>;
 }
 
 /**
@@ -277,7 +277,7 @@ export interface UpdateItemColumnInput {
     columnId: FieldColumnsToUpdateSingleColumn;
     /** Specify the ID of the item to update. */
     itemId: string;
-    columnValues: DynamicResponseGetSingleColumnSchema;
+    columnValues: Record<string, unknown>;
 }
 
 /**
@@ -299,7 +299,7 @@ export interface UpdateMultipleItemColumnsInput {
     itemId: string;
     /** Specify a new name for the item. Leave blank to keep the current name. */
     itemName?: string;
-    columnValues?: DynamicResponseGetListSchema;
+    columnValues?: Record<string, unknown>;
 }
 
 /**
@@ -359,7 +359,7 @@ export interface CreateSubitemInput {
     parentItemId: string;
     /** Specify a name for the subitem. */
     itemName: string;
-    columnValues?: DynamicResponseGetListSchema;
+    columnValues?: Record<string, unknown>;
 }
 
 /**
@@ -531,13 +531,13 @@ export class MondayClient extends ConnectorClientBase {
      * Create an item
      * @remarks Creates an item in the selected monday.com board and group.
      */
-    public async createItemAsync(input: CreateItemInput, abortSignal?: AbortSignalLike): Promise<CreateItemResponse> {
+    public async createItem(input: CreateItemInput, abortSignal?: AbortSignalLike): Promise<CreateItemResponse> {
         const requestPath = `/executePowerAutomateAction/CreateItem`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<CreateItemResponse>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as CreateItemResponse;
@@ -547,13 +547,13 @@ export class MondayClient extends ConnectorClientBase {
      * Duplicate a board
      * @remarks Duplicates a board in monday.com.
      */
-    public async duplicateBoardAsync(input: DuplicateBoardInput, abortSignal?: AbortSignalLike): Promise<DuplicateBoardResponse> {
+    public async duplicateBoard(input: DuplicateBoardInput, abortSignal?: AbortSignalLike): Promise<DuplicateBoardResponse> {
         const requestPath = `/executePowerAutomateAction/DuplicateBoard`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<DuplicateBoardResponse>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as DuplicateBoardResponse;
@@ -563,13 +563,13 @@ export class MondayClient extends ConnectorClientBase {
      * Create a board
      * @remarks Creates a board in monday.com.
      */
-    public async createBoardAsync(input: CreateBoardInput, abortSignal?: AbortSignalLike): Promise<CreateBoardResponse> {
+    public async createBoard(input: CreateBoardInput, abortSignal?: AbortSignalLike): Promise<CreateBoardResponse> {
         const requestPath = `/executePowerAutomateAction/CreateBoard`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<CreateBoardResponse>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as CreateBoardResponse;
@@ -579,13 +579,13 @@ export class MondayClient extends ConnectorClientBase {
      * Create a column
      * @remarks Creates a column in monday.com for the specified board.
      */
-    public async createColumnAsync(input: CreateColumnInput, abortSignal?: AbortSignalLike): Promise<CreateColumnResponse> {
+    public async createColumn(input: CreateColumnInput, abortSignal?: AbortSignalLike): Promise<CreateColumnResponse> {
         const requestPath = `/executePowerAutomateAction/CreateColumn`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<CreateColumnResponse>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as CreateColumnResponse;
@@ -595,13 +595,13 @@ export class MondayClient extends ConnectorClientBase {
      * Create a group
      * @remarks Creates a group in monday.com for the specified board.
      */
-    public async createGroupAsync(input: CreateGroupInput, abortSignal?: AbortSignalLike): Promise<CreateGroupResponse> {
+    public async createGroup(input: CreateGroupInput, abortSignal?: AbortSignalLike): Promise<CreateGroupResponse> {
         const requestPath = `/executePowerAutomateAction/CreateGroup`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<CreateGroupResponse>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as CreateGroupResponse;
@@ -611,13 +611,13 @@ export class MondayClient extends ConnectorClientBase {
      * Update an item's column value
      * @remarks Updates a single item's column. If the value is blank, the column value will be cleared.
      */
-    public async updateItemColumnAsync(input: UpdateItemColumnInput, abortSignal?: AbortSignalLike): Promise<UpdateItemColumnResponse> {
+    public async updateItemColumn(input: UpdateItemColumnInput, abortSignal?: AbortSignalLike): Promise<UpdateItemColumnResponse> {
         const requestPath = `/executePowerAutomateAction/UpdateItemColumn`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<UpdateItemColumnResponse>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as UpdateItemColumnResponse;
@@ -627,13 +627,13 @@ export class MondayClient extends ConnectorClientBase {
      * Update multiple item column values
      * @remarks Updates multiple item columns. Leave the column value blank to keep the current value.
      */
-    public async updateMultipleItemColumnsAsync(input: UpdateMultipleItemColumnsInput, abortSignal?: AbortSignalLike): Promise<UpdateMultipleItemColumnsResponse> {
+    public async updateMultipleItemColumns(input: UpdateMultipleItemColumnsInput, abortSignal?: AbortSignalLike): Promise<UpdateMultipleItemColumnsResponse> {
         const requestPath = `/executePowerAutomateAction/UpdateMultipleItemColumns`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<UpdateMultipleItemColumnsResponse>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as UpdateMultipleItemColumnsResponse;
@@ -643,13 +643,13 @@ export class MondayClient extends ConnectorClientBase {
      * Move an item to a group
      * @remarks Moves an item to another group on the same board.
      */
-    public async moveItemToGroupAsync(input: MoveItemToGroupInput, abortSignal?: AbortSignalLike): Promise<MoveItemToGroupResponse> {
+    public async moveItemToGroup(input: MoveItemToGroupInput, abortSignal?: AbortSignalLike): Promise<MoveItemToGroupResponse> {
         const requestPath = `/executePowerAutomateAction/MoveItemToGroup`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<MoveItemToGroupResponse>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as MoveItemToGroupResponse;
@@ -659,13 +659,13 @@ export class MondayClient extends ConnectorClientBase {
      * Create a notification
      * @remarks Creates a notification in monday.com for a user for either a specific board or item.
      */
-    public async createNotificationAsync(input: CreateNotificationInput, abortSignal?: AbortSignalLike): Promise<CreateNotificationResponse> {
+    public async createNotification(input: CreateNotificationInput, abortSignal?: AbortSignalLike): Promise<CreateNotificationResponse> {
         const requestPath = `/executePowerAutomateAction/CreateNotification`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<CreateNotificationResponse>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as CreateNotificationResponse;
@@ -675,13 +675,13 @@ export class MondayClient extends ConnectorClientBase {
      * Create a subitem
      * @remarks Creates a subitem in monday.com for the selected board and parent item.
      */
-    public async createSubitemAsync(input: CreateSubitemInput, abortSignal?: AbortSignalLike): Promise<CreateSubitemResponse> {
+    public async createSubitem(input: CreateSubitemInput, abortSignal?: AbortSignalLike): Promise<CreateSubitemResponse> {
         const requestPath = `/executePowerAutomateAction/CreateSubitem`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<CreateSubitemResponse>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as CreateSubitemResponse;
@@ -691,7 +691,7 @@ export class MondayClient extends ConnectorClientBase {
      * Get subitems
      * @remarks Gets subitems in monday.com for a specific item in a board.
      */
-    public async getSubitemsAsync(workspaceId?: string, boardId?: string, itemId?: string, abortSignal?: AbortSignalLike): Promise<GetSubitemColumnNamesForGetSubitems> {
+    public async getSubitems(workspaceId?: string, boardId?: string, itemId?: string, abortSignal?: AbortSignalLike): Promise<GetSubitemColumnNamesForGetSubitems> {
         const queryParams: string[] = [];
         if (workspaceId !== undefined) {
             queryParams.push(`workspaceId=${encodeURIComponent(String(workspaceId))}`);
@@ -707,7 +707,7 @@ export class MondayClient extends ConnectorClientBase {
         const httpResponse = await this.httpClient.sendAsync<GetSubitemColumnNamesForGetSubitems>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as GetSubitemColumnNamesForGetSubitems;
@@ -717,13 +717,13 @@ export class MondayClient extends ConnectorClientBase {
      * Create an update
      * @remarks Creates an update in monday.com for a specific item.
      */
-    public async createUpdateAsync(input: CreateUpdateInput, abortSignal?: AbortSignalLike): Promise<CreateUpdateResponse> {
+    public async createUpdate(input: CreateUpdateInput, abortSignal?: AbortSignalLike): Promise<CreateUpdateResponse> {
         const requestPath = `/executePowerAutomateAction/CreateUpdate`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<CreateUpdateResponse>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as CreateUpdateResponse;
@@ -733,7 +733,7 @@ export class MondayClient extends ConnectorClientBase {
      * Get an item by ID
      * @remarks Gets a monday.com item using the specified item ID and board.
      */
-    public async getItemByIdAsync(itemId?: string, workspaceId?: string, boardId?: string, abortSignal?: AbortSignalLike): Promise<DynamicResponseGetListSchemaGet> {
+    public async getItemById(itemId?: string, workspaceId?: string, boardId?: string, abortSignal?: AbortSignalLike): Promise<DynamicResponseGetListSchemaGet> {
         const queryParams: string[] = [];
         if (itemId !== undefined) {
             queryParams.push(`itemId=${encodeURIComponent(String(itemId))}`);
@@ -749,7 +749,7 @@ export class MondayClient extends ConnectorClientBase {
         const httpResponse = await this.httpClient.sendAsync<DynamicResponseGetListSchemaGet>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as DynamicResponseGetListSchemaGet;
@@ -759,13 +759,13 @@ export class MondayClient extends ConnectorClientBase {
      * Create a workspace
      * @remarks Creates a monday.com workspace with a user-specified name and description.
      */
-    public async createWorkspaceAsync(input: CreateWorkspaceInput, abortSignal?: AbortSignalLike): Promise<CreateWorkspaceResponse> {
+    public async createWorkspace(input: CreateWorkspaceInput, abortSignal?: AbortSignalLike): Promise<CreateWorkspaceResponse> {
         const requestPath = `/executePowerAutomateAction/CreateWorkspaceV2`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<CreateWorkspaceResponse>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as CreateWorkspaceResponse;
@@ -775,7 +775,7 @@ export class MondayClient extends ConnectorClientBase {
      * Get items
      * @remarks Gets items in monday.com for a specific board and group. Filter items by column values using the filters found under advanced options. More info on filtering can be found here: https://plugingenie.com/docs/filtering-items.
      */
-    public async getItemsAsync(workspaceId?: string, boardId?: string, groupId?: string, filter1Column?: string, filter1Operator?: string, filter1Value?: string, filter2Column?: string, filter2Operator?: string, filter2Value?: string, filter3Column?: string, filter3Operator?: string, filter3Value?: string, filter4Column?: string, filter4Operator?: string, filter4Value?: string, abortSignal?: AbortSignalLike): Promise<DynamicGetGetItemsSchema> {
+    public async getItems(workspaceId?: string, boardId?: string, groupId?: string, filter1Column?: string, filter1Operator?: string, filter1Value?: string, filter2Column?: string, filter2Operator?: string, filter2Value?: string, filter3Column?: string, filter3Operator?: string, filter3Value?: string, filter4Column?: string, filter4Operator?: string, filter4Value?: string, abortSignal?: AbortSignalLike): Promise<DynamicGetGetItemsSchema> {
         const queryParams: string[] = [];
         if (workspaceId !== undefined) {
             queryParams.push(`workspaceId=${encodeURIComponent(String(workspaceId))}`);
@@ -827,7 +827,7 @@ export class MondayClient extends ConnectorClientBase {
         const httpResponse = await this.httpClient.sendAsync<DynamicGetGetItemsSchema>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as DynamicGetGetItemsSchema;
@@ -837,13 +837,13 @@ export class MondayClient extends ConnectorClientBase {
      * Get tags
      * @remarks This operation gets monday.com tags.
      */
-    public async getTagsAsync(abortSignal?: AbortSignalLike): Promise<GetTagsResponse> {
+    public async getTags(abortSignal?: AbortSignalLike): Promise<GetTagsResponse> {
         const requestPath = `/getData/getTagsV2`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<GetTagsResponse>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as GetTagsResponse;
@@ -853,13 +853,13 @@ export class MondayClient extends ConnectorClientBase {
      * Get users
      * @remarks This operation gets the name, email, and ID of users in your monday.com account.
      */
-    public async getUsersAsync(abortSignal?: AbortSignalLike): Promise<GetUsersResponse> {
+    public async getUsers(abortSignal?: AbortSignalLike): Promise<GetUsersResponse> {
         const requestPath = `/getData/getUsersV2`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<GetUsersResponse>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as GetUsersResponse;

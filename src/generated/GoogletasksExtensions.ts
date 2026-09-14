@@ -4,7 +4,7 @@
 import type { AbortSignalLike } from "@azure/abort-controller";
 import type { TokenCredential } from "@azure/core-auth";
 import { ConnectorClientBase } from "../azureConnectors/clientBase.ts";
-import { ConnectorException } from "../azureConnectors/connectorException.ts";
+import { ConnectorError } from "../azureConnectors/connectorError.ts";
 import { ConnectorClientOptions } from "../azureConnectors/options.ts";
 
 // #region Types
@@ -153,13 +153,13 @@ export class GoogletasksClient extends ConnectorClientBase {
      * List task lists
      * @remarks List all task lists.
      */
-    public async listTaskListsAsync(abortSignal?: AbortSignalLike): Promise<TaskListList> {
+    public async listTaskLists(abortSignal?: AbortSignalLike): Promise<TaskListList> {
         const requestPath = `/users/@me/lists`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<TaskListList>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as TaskListList;
@@ -169,13 +169,13 @@ export class GoogletasksClient extends ConnectorClientBase {
      * Create a task list
      * @remarks Creates a new task list.
      */
-    public async createTaskListAsync(input: TaskListCreate, abortSignal?: AbortSignalLike): Promise<TaskListEntry> {
+    public async createTaskList(input: TaskListCreate, abortSignal?: AbortSignalLike): Promise<TaskListEntry> {
         const requestPath = `/users/@me/lists`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<TaskListEntry>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as TaskListEntry;
@@ -185,13 +185,13 @@ export class GoogletasksClient extends ConnectorClientBase {
      * Lists the tasks for a task list
      * @remarks Lists the tasks for a specific task list.
      */
-    public async listTasksAsync(taskListId: string, abortSignal?: AbortSignalLike): Promise<TaskList> {
+    public async listTasks(taskListId: string, abortSignal?: AbortSignalLike): Promise<TaskList> {
         const requestPath = `/lists/${taskListId}/tasks`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<TaskList>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as TaskList;
@@ -201,13 +201,13 @@ export class GoogletasksClient extends ConnectorClientBase {
      * Create a task in a task list
      * @remarks Create a task in a specific task list.
      */
-    public async createTaskAsync(input: TaskCreate, taskListId: string, abortSignal?: AbortSignalLike): Promise<TaskObject> {
+    public async createTask(input: TaskCreate, taskListId: string, abortSignal?: AbortSignalLike): Promise<TaskObject> {
         const requestPath = `/lists/${taskListId}/tasks`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<TaskObject>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as TaskObject;
@@ -217,13 +217,13 @@ export class GoogletasksClient extends ConnectorClientBase {
      * Get a task from a task list
      * @remarks Get specific task from the specified task list.
      */
-    public async listTaskAsync(taskListId: string, taskId: string, abortSignal?: AbortSignalLike): Promise<TaskObject> {
+    public async listTask(taskListId: string, taskId: string, abortSignal?: AbortSignalLike): Promise<TaskObject> {
         const requestPath = `/lists/${taskListId}/tasks/${taskId}`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<TaskObject>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as TaskObject;

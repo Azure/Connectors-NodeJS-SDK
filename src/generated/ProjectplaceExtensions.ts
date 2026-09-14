@@ -4,7 +4,7 @@
 import type { AbortSignalLike } from "@azure/abort-controller";
 import type { TokenCredential } from "@azure/core-auth";
 import { ConnectorClientBase } from "../azureConnectors/clientBase.ts";
-import { ConnectorException } from "../azureConnectors/connectorException.ts";
+import { ConnectorError } from "../azureConnectors/connectorError.ts";
 import { ConnectorClientOptions } from "../azureConnectors/options.ts";
 
 // #region Types
@@ -207,13 +207,13 @@ export class ProjectplaceClient extends ConnectorClientBase {
      * Create Card
      * @remarks Creates a new card with the parameters provided
      */
-    public async createCardAsync(input: CreateCardInput, boardId: string, abortSignal?: AbortSignalLike): Promise<CreateCardResponse> {
+    public async createCard(input: CreateCardInput, boardId: string, abortSignal?: AbortSignalLike): Promise<CreateCardResponse> {
         const requestPath = `/v1/external_notifications/${boardId}/create_card`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<CreateCardResponse>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as CreateCardResponse;
@@ -223,13 +223,13 @@ export class ProjectplaceClient extends ConnectorClientBase {
      * Move card to another column
      * @remarks Move a card on the selected board
      */
-    public async moveCardAsync(input: MoveCardInput, boardId: string, abortSignal?: AbortSignalLike): Promise<MoveCardResponse> {
+    public async moveCard(input: MoveCardInput, boardId: string, abortSignal?: AbortSignalLike): Promise<MoveCardResponse> {
         const requestPath = `/v1/external_notifications/${boardId}/move_card`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<MoveCardResponse>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as MoveCardResponse;

@@ -4,7 +4,7 @@
 import type { AbortSignalLike } from "@azure/abort-controller";
 import type { TokenCredential } from "@azure/core-auth";
 import { ConnectorClientBase } from "../azureConnectors/clientBase.ts";
-import { ConnectorException } from "../azureConnectors/connectorException.ts";
+import { ConnectorError } from "../azureConnectors/connectorError.ts";
 import { ConnectorClientOptions } from "../azureConnectors/options.ts";
 
 // #region Types
@@ -567,13 +567,13 @@ export class WebexClient extends ConnectorClientBase {
      * Add Member to Space
      * @remarks Add a member to an existing space
      */
-    public async createSpaceMemberAsync(input: CreateSpaceMemberInput, abortSignal?: AbortSignalLike): Promise<CreateSpaceMemberResponse> {
+    public async createSpaceMember(input: CreateSpaceMemberInput, abortSignal?: AbortSignalLike): Promise<CreateSpaceMemberResponse> {
         const requestPath = `/v1/memberships`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<CreateSpaceMemberResponse>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as CreateSpaceMemberResponse;
@@ -583,7 +583,7 @@ export class WebexClient extends ConnectorClientBase {
      * Get Messages
      * @remarks Get a list of recent messages for a space
      */
-    public async getMessagesAsync(roomId?: string, mentionedPeople?: string, beforeMessage?: string, before?: string, max?: string, abortSignal?: AbortSignalLike): Promise<GetMessagesResponse> {
+    public async getMessages(roomId?: string, mentionedPeople?: string, beforeMessage?: string, before?: string, max?: string, abortSignal?: AbortSignalLike): Promise<GetMessagesResponse> {
         const queryParams: string[] = [];
         if (roomId !== undefined) {
             queryParams.push(`roomId=${encodeURIComponent(String(roomId))}`);
@@ -605,7 +605,7 @@ export class WebexClient extends ConnectorClientBase {
         const httpResponse = await this.httpClient.sendAsync<GetMessagesResponse>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as GetMessagesResponse;
@@ -615,13 +615,13 @@ export class WebexClient extends ConnectorClientBase {
      * Send a Message
      * @remarks Send a message to webex
      */
-    public async sendMessageAsync(input: SendMessageInput, abortSignal?: AbortSignalLike): Promise<SendMessageResponse> {
+    public async sendMessage(input: SendMessageInput, abortSignal?: AbortSignalLike): Promise<SendMessageResponse> {
         const requestPath = `/v1/messages`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<SendMessageResponse>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as SendMessageResponse;
@@ -631,13 +631,13 @@ export class WebexClient extends ConnectorClientBase {
      * Get Message Details
      * @remarks Shows details for a message, by message ID.
      */
-    public async getMessageDetailsAsync(messageId: string, abortSignal?: AbortSignalLike): Promise<GetMessageDetailsResponse> {
+    public async getMessageDetails(messageId: string, abortSignal?: AbortSignalLike): Promise<GetMessageDetailsResponse> {
         const requestPath = `/v1/messages/${messageId}`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<GetMessageDetailsResponse>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as GetMessageDetailsResponse;
@@ -647,7 +647,7 @@ export class WebexClient extends ConnectorClientBase {
      * Get People
      * @remarks Lookup details and presence information for people in your organization
      */
-    public async getPeopleAsync(id?: string, email?: string, abortSignal?: AbortSignalLike): Promise<GetPeopleResponse> {
+    public async getPeople(id?: string, email?: string, abortSignal?: AbortSignalLike): Promise<GetPeopleResponse> {
         const queryParams: string[] = [];
         if (id !== undefined) {
             queryParams.push(`id=${encodeURIComponent(String(id))}`);
@@ -660,7 +660,7 @@ export class WebexClient extends ConnectorClientBase {
         const httpResponse = await this.httpClient.sendAsync<GetPeopleResponse>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as GetPeopleResponse;
@@ -670,13 +670,13 @@ export class WebexClient extends ConnectorClientBase {
      * Get My Own Details
      * @remarks Lookup your own details
      */
-    public async getMyOwnDetailsAsync(abortSignal?: AbortSignalLike): Promise<GetMyOwnDetailsResponse> {
+    public async getMyOwnDetails(abortSignal?: AbortSignalLike): Promise<GetMyOwnDetailsResponse> {
         const requestPath = `/v1/people/me`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<GetMyOwnDetailsResponse>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as GetMyOwnDetailsResponse;
@@ -686,7 +686,7 @@ export class WebexClient extends ConnectorClientBase {
      * Get Spaces List
      * @remarks This action retrieves a list of spaces
      */
-    public async getSpacesAsync(max?: string, type?: string, sortBy?: string, abortSignal?: AbortSignalLike): Promise<GetSpacesResponse> {
+    public async getSpaces(max?: string, type?: string, sortBy?: string, abortSignal?: AbortSignalLike): Promise<GetSpacesResponse> {
         const queryParams: string[] = [];
         if (max !== undefined) {
             queryParams.push(`max=${encodeURIComponent(String(max))}`);
@@ -702,7 +702,7 @@ export class WebexClient extends ConnectorClientBase {
         const httpResponse = await this.httpClient.sendAsync<GetSpacesResponse>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as GetSpacesResponse;
@@ -712,13 +712,13 @@ export class WebexClient extends ConnectorClientBase {
      * Create Space
      * @remarks Create space or team space
      */
-    public async createSpaceAsync(input: CreateSpaceInput, abortSignal?: AbortSignalLike): Promise<CreateSpaceResponse> {
+    public async createSpace(input: CreateSpaceInput, abortSignal?: AbortSignalLike): Promise<CreateSpaceResponse> {
         const requestPath = `/v1/rooms`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<CreateSpaceResponse>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as CreateSpaceResponse;
@@ -728,13 +728,13 @@ export class WebexClient extends ConnectorClientBase {
      * Get Space Details
      * @remarks Return details of a given space
      */
-    public async getSpaceDetailAsync(roomId: string, abortSignal?: AbortSignalLike): Promise<GetSpaceDetailResponse> {
+    public async getSpaceDetail(roomId: string, abortSignal?: AbortSignalLike): Promise<GetSpaceDetailResponse> {
         const requestPath = `/v1/rooms/${roomId}`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<GetSpaceDetailResponse>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as GetSpaceDetailResponse;
@@ -744,13 +744,13 @@ export class WebexClient extends ConnectorClientBase {
      * Add Member to Team
      * @remarks Add a member to a team
      */
-    public async createTeamMemberAsync(input: CreateTeamMemberInput, abortSignal?: AbortSignalLike): Promise<CreateTeamMemberResponse> {
+    public async createTeamMember(input: CreateTeamMemberInput, abortSignal?: AbortSignalLike): Promise<CreateTeamMemberResponse> {
         const requestPath = `/v1/team/memberships`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<CreateTeamMemberResponse>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as CreateTeamMemberResponse;

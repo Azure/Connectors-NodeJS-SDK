@@ -18,7 +18,7 @@
  *     npm start
  */
 
-import { ManagedIdentityTokenProvider, ConnectorException } from "@azure/connectors";
+import { ManagedIdentityTokenProvider, ConnectorError } from "@azure/connectors";
 import { OnedriveforbusinessClient } from "@azure/connectors/generated/OnedriveforbusinessExtensions";
 
 const CONNECTION_URL = process.env.ONEDRIVE_CONNECTION_URL ?? "";
@@ -38,7 +38,7 @@ async function main() {
     // Example 1: List root folder
     console.log("\n--- List Root Folder ---");
     try {
-        const files = await client.listRootFolderAsync();
+        const files = await client.listRootFolder();
         const fileList = files ?? [];
 
         if (fileList.length > 0) {
@@ -52,7 +52,7 @@ async function main() {
             console.log("No items found in root folder.");
         }
     } catch (error) {
-        if (error instanceof ConnectorException) {
+        if (error instanceof ConnectorError) {
             console.log(`Connector error: ${error.message}`);
         } else {
             throw error;
@@ -64,7 +64,7 @@ async function main() {
     if (fileId) {
         console.log(`\n--- Get File Metadata (${fileId}) ---`);
         try {
-            const metadata = await client.getFileMetadataAsync(fileId);
+            const metadata = await client.getFileMetadata(fileId);
 
             console.log(`  Name: ${metadata.DisplayName ?? metadata.Name}`);
             console.log(`  Size: ${metadata.Size ?? "unknown"} bytes`);
@@ -72,7 +72,7 @@ async function main() {
             console.log(`  Media Type: ${metadata.MediaType ?? "unknown"}`);
             console.log(`  Path: ${metadata.Path ?? "unknown"}`);
         } catch (error) {
-            if (error instanceof ConnectorException) {
+            if (error instanceof ConnectorError) {
                 console.log(`Connector error (${error.statusCode}): ${error.message}`);
             } else {
                 throw error;
@@ -86,7 +86,7 @@ async function main() {
         console.log(`\n--- List Folder Contents ---`);
         try {
             const contentList = [];
-            for await (const item of client.listFolderAsync(folderId)) {
+            for await (const item of client.listFolder(folderId)) {
                 contentList.push(item);
             }
 
@@ -101,7 +101,7 @@ async function main() {
                 console.log("Folder is empty.");
             }
         } catch (error) {
-            if (error instanceof ConnectorException) {
+            if (error instanceof ConnectorError) {
                 console.log(`Connector error (${error.statusCode}): ${error.message}`);
             } else {
                 throw error;
@@ -113,10 +113,10 @@ async function main() {
     if (fileId) {
         console.log(`\n--- Get File Thumbnail ---`);
         try {
-            const thumbnail = await client.getFileThumbnailAsync(fileId);
+            const thumbnail = await client.getFileThumbnail(fileId);
             console.log(`  Thumbnail URL: ${String(thumbnail.Url ?? "none").substring(0, 80)}...`);
         } catch (error) {
-            if (error instanceof ConnectorException) {
+            if (error instanceof ConnectorError) {
                 console.log(`Connector error (${error.statusCode}): ${error.message}`);
             } else {
                 throw error;

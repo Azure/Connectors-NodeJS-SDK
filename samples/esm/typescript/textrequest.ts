@@ -15,7 +15,7 @@
  *     npx tsx textrequest.ts
  */
 
-import { ManagedIdentityTokenProvider, ConnectorException } from "@azure/connectors";
+import { ManagedIdentityTokenProvider, ConnectorError } from "@azure/connectors";
 import { TextrequestClient } from "@azure/connectors/generated/TextrequestExtensions";
 
 const CONNECTION_URL = process.env.TEXTREQUEST_CONNECTION_URL ?? "";
@@ -38,10 +38,10 @@ async function main(): Promise<void> {
     // Example 1: List messages exchanged with a contact phone number.
     const phoneNumber = process.env.TEXTREQUEST_PHONE ?? "+15555550100";
     try {
-        const messages = await client.getMessagesByContactPhoneAsync(DASHBOARD_ID, phoneNumber);
+        const messages = await client.getMessagesByContactPhone(DASHBOARD_ID, phoneNumber);
         console.log("Messages:", JSON.stringify(messages, null, 2));
     } catch (error) {
-        if (error instanceof ConnectorException) {
+        if (error instanceof ConnectorError) {
             console.log(`Connector error (${error.statusCode}): ${error.message}`);
         } else {
             throw error;

@@ -4,7 +4,7 @@
 import type { AbortSignalLike } from "@azure/abort-controller";
 import type { TokenCredential } from "@azure/core-auth";
 import { ConnectorClientBase } from "../azureConnectors/clientBase.ts";
-import { ConnectorException } from "../azureConnectors/connectorException.ts";
+import { ConnectorError } from "../azureConnectors/connectorError.ts";
 import { ConnectorClientOptions } from "../azureConnectors/options.ts";
 
 // #region Types
@@ -204,7 +204,7 @@ export class CampfireClient extends ConnectorClientBase {
      * Create a message
      * @remarks Sends a message to the given room.
      */
-    public async createMessageAsync(roomId: string, account?: string, message?: string, abortSignal?: AbortSignalLike): Promise<CreateMessageResponse> {
+    public async createMessage(roomId: string, account?: string, message?: string, abortSignal?: AbortSignalLike): Promise<CreateMessageResponse> {
         const queryParams: string[] = [];
         if (account !== undefined) {
             queryParams.push(`account=${encodeURIComponent(String(account))}`);
@@ -217,7 +217,7 @@ export class CampfireClient extends ConnectorClientBase {
         const httpResponse = await this.httpClient.sendAsync<CreateMessageResponse>("POST", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as CreateMessageResponse;
@@ -227,7 +227,7 @@ export class CampfireClient extends ConnectorClientBase {
      * Get user by ID
      * @remarks Retrieves information about a user by given ID
      */
-    public async getUserAsync(userId: string, account?: string, abortSignal?: AbortSignalLike): Promise<UserResponse> {
+    public async getUser(userId: string, account?: string, abortSignal?: AbortSignalLike): Promise<UserResponse> {
         const queryParams: string[] = [];
         if (account !== undefined) {
             queryParams.push(`account=${encodeURIComponent(String(account))}`);
@@ -237,7 +237,7 @@ export class CampfireClient extends ConnectorClientBase {
         const httpResponse = await this.httpClient.sendAsync<UserResponse>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as UserResponse;

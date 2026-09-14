@@ -6,7 +6,7 @@
 
 "use strict";
 
-const { ManagedIdentityTokenProvider, ConnectorException } = require("@azure/connectors");
+const { ManagedIdentityTokenProvider, ConnectorError } = require("@azure/connectors");
 const { ShiftsClient } = require("@azure/connectors/generated/ShiftsExtensions");
 
 const CONNECTION_URL = process.env.SHIFTS_CONNECTION_URL ?? "";
@@ -22,10 +22,10 @@ async function main() {
     const client = new ShiftsClient(CONNECTION_URL, tokenProvider);
 
     try {
-        const result = await client.getScheduleAsync(SHIFTS_TEAM_ID);
+        const result = await client.getSchedule(SHIFTS_TEAM_ID);
         console.log(`Schedule keys: ${Object.keys(result).join(", ")}`);
     } catch (error) {
-        if (error instanceof ConnectorException) {
+        if (error instanceof ConnectorError) {
             console.log(`Connector error (${error.statusCode}): ${error.message}`);
             return;
         }

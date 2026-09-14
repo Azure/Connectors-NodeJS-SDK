@@ -18,6 +18,6 @@ export {
     ManagedIdentityTokenProvider,
     ConnectionStringTokenProvider,
 } from "./authentication.ts";
-export { ConnectorException } from "./connectorException.ts";
+export { ConnectorError } from "./connectorError.ts";
 export { ConnectorHttpClient, ConnectorResponse } from "./connectorHttpClient.ts";
 export { TriggerCallbackPayload, TriggerCallbackBody } from "./triggerPayload.ts";

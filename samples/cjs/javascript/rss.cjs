@@ -16,7 +16,7 @@
 
 "use strict";
 
-const { ManagedIdentityTokenProvider, ConnectorException } = require("@azure/connectors");
+const { ManagedIdentityTokenProvider, ConnectorError } = require("@azure/connectors");
 const { RssClient } = require("@azure/connectors/generated/RssExtensions");
 
 const CONNECTION_URL = process.env.RSS_CONNECTION_URL ?? "";
@@ -34,10 +34,10 @@ async function main() {
 
     // Example: List the items in an RSS feed.
     try {
-        const items = await client.listFeedItemsAsync(feedUrl);
+        const items = await client.listFeedItems(feedUrl);
         console.log(`Found ${items.length} feed item(s) from ${feedUrl}.`);
     } catch (error) {
-        if (error instanceof ConnectorException) {
+        if (error instanceof ConnectorError) {
             console.log(`Connector error (${error.statusCode}): ${error.message}`);
             return;
         }

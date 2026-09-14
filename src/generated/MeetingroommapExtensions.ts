@@ -4,7 +4,7 @@
 import type { AbortSignalLike } from "@azure/abort-controller";
 import type { TokenCredential } from "@azure/core-auth";
 import { ConnectorClientBase } from "../azureConnectors/clientBase.ts";
-import { ConnectorException } from "../azureConnectors/connectorException.ts";
+import { ConnectorError } from "../azureConnectors/connectorError.ts";
 import { ConnectorClientOptions } from "../azureConnectors/options.ts";
 
 // #region Types
@@ -114,13 +114,13 @@ export class MeetingroommapClient extends ConnectorClientBase {
      * Get all custom locations
      * @remarks Get all custom locations
      */
-    public async getCustomLocationsAsync(input: GetCustomLocationsByCategoriesQuery, abortSignal?: AbortSignalLike): Promise<void> {
+    public async getCustomLocations(input: GetCustomLocationsByCategoriesQuery, abortSignal?: AbortSignalLike): Promise<void> {
         const requestPath = `/api/CustomLocations/GetCustomLocations`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<void>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
     }
 
@@ -128,13 +128,13 @@ export class MeetingroommapClient extends ConnectorClientBase {
      * Get locations by image
      * @remarks Get all custom locations for a given image
      */
-    public async getCustomLocationsByImageNameAsync(input: GetCustomLocationListByImageNameQuery, abortSignal?: AbortSignalLike): Promise<GetCustomLocationsByImageNameResponse> {
+    public async getCustomLocationsByImageName(input: GetCustomLocationListByImageNameQuery, abortSignal?: AbortSignalLike): Promise<GetCustomLocationsByImageNameResponse> {
         const requestPath = `/api/CustomLocations/GetCustomLocationsByImageName`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<GetCustomLocationsByImageNameResponse>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as GetCustomLocationsByImageNameResponse;
@@ -144,13 +144,13 @@ export class MeetingroommapClient extends ConnectorClientBase {
      * GetCategories
      * @remarks Get custom categories
      */
-    public async getCategoriesAsync(abortSignal?: AbortSignalLike): Promise<Array<string>> {
+    public async getCategories(abortSignal?: AbortSignalLike): Promise<Array<string>> {
         const requestPath = `/api/CustomLocations/categories`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<Array<string>>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as Array<string>;
@@ -160,13 +160,13 @@ export class MeetingroommapClient extends ConnectorClientBase {
      * Get location by id
      * @remarks Get location details including image url by the location id
      */
-    public async locationDetailsAsync(locationId: string, abortSignal?: AbortSignalLike): Promise<void> {
+    public async locationDetails(locationId: string, abortSignal?: AbortSignalLike): Promise<void> {
         const requestPath = `/api/CustomLocations/${locationId}`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<void>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
     }
 
@@ -174,7 +174,7 @@ export class MeetingroommapClient extends ConnectorClientBase {
      * Search location by name
      * @remarks Search custom locations by name
      */
-    public async searchLocationsAsync(locationName: string, category?: string, abortSignal?: AbortSignalLike): Promise<Array<Record<string, unknown>>> {
+    public async searchLocations(locationName: string, category?: string, abortSignal?: AbortSignalLike): Promise<Array<Record<string, unknown>>> {
         const queryParams: string[] = [];
         if (category !== undefined) {
             queryParams.push(`Category=${encodeURIComponent(String(category))}`);
@@ -184,7 +184,7 @@ export class MeetingroommapClient extends ConnectorClientBase {
         const httpResponse = await this.httpClient.sendAsync<Array<Record<string, unknown>>>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as Array<Record<string, unknown>>;
@@ -194,7 +194,7 @@ export class MeetingroommapClient extends ConnectorClientBase {
      * Get image for location
      * @remarks Get image for specific custom location
      */
-    public async getCustomLocationImageAsync(locationId: string, large?: string, abortSignal?: AbortSignalLike): Promise<Blob> {
+    public async getCustomLocationImage(locationId: string, large?: string, abortSignal?: AbortSignalLike): Promise<Blob> {
         const queryParams: string[] = [];
         if (large !== undefined) {
             queryParams.push(`Large=${encodeURIComponent(String(large))}`);
@@ -204,7 +204,7 @@ export class MeetingroommapClient extends ConnectorClientBase {
         const httpResponse = await this.httpClient.sendAsync<Blob>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as Blob;
@@ -214,13 +214,13 @@ export class MeetingroommapClient extends ConnectorClientBase {
      * Get all images
      * @remarks Get list of all floorplans/images
      */
-    public async imagesAsync(abortSignal?: AbortSignalLike): Promise<Array<Record<string, unknown>>> {
+    public async images(abortSignal?: AbortSignalLike): Promise<Array<Record<string, unknown>>> {
         const requestPath = `/api/MapImage/thumbnails`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<Array<Record<string, unknown>>>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as Array<Record<string, unknown>>;
@@ -230,7 +230,7 @@ export class MeetingroommapClient extends ConnectorClientBase {
      * Get image for meeting room
      * @remarks Get image for a specific meeting room
      */
-    public async getMeetingRoomImageAsync(roomName: string, large?: string, abortSignal?: AbortSignalLike): Promise<Blob> {
+    public async getMeetingRoomImage(roomName: string, large?: string, abortSignal?: AbortSignalLike): Promise<Blob> {
         const queryParams: string[] = [];
         if (large !== undefined) {
             queryParams.push(`Large=${encodeURIComponent(String(large))}`);
@@ -240,7 +240,7 @@ export class MeetingroommapClient extends ConnectorClientBase {
         const httpResponse = await this.httpClient.sendAsync<Blob>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as Blob;
@@ -250,13 +250,13 @@ export class MeetingroommapClient extends ConnectorClientBase {
      * Get next meetings
      * @remarks Get the next meetings for the current user
      */
-    public async nextMeetingsAsync(meetingCount: string, abortSignal?: AbortSignalLike): Promise<void> {
+    public async nextMeetings(meetingCount: string, abortSignal?: AbortSignalLike): Promise<void> {
         const requestPath = `/api/MapImage/meetings/${meetingCount}/roomdetails`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<void>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
     }
 
@@ -264,13 +264,13 @@ export class MeetingroommapClient extends ConnectorClientBase {
      * Get meetingroom details
      * @remarks Get meetingroom details
      */
-    public async getMeetingRoomDetailsAsync(roomName: string, abortSignal?: AbortSignalLike): Promise<void> {
+    public async getMeetingRoomDetails(roomName: string, abortSignal?: AbortSignalLike): Promise<void> {
         const requestPath = `/api/MapImage/roomdetails_v2/${roomName}`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<void>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
     }
 
@@ -278,13 +278,13 @@ export class MeetingroommapClient extends ConnectorClientBase {
      * Get all office locations
      * @remarks Get all office locations
      */
-    public async getOfficeLocationsAsync(abortSignal?: AbortSignalLike): Promise<void> {
+    public async getOfficeLocations(abortSignal?: AbortSignalLike): Promise<void> {
         const requestPath = `/api/officelocations`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<void>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
     }
 
@@ -292,13 +292,13 @@ export class MeetingroommapClient extends ConnectorClientBase {
      * Search coworker
      * @remarks Search coworker by name/email
      */
-    public async searchCoworkersAsync(personSearch: string, abortSignal?: AbortSignalLike): Promise<Array<Record<string, unknown>>> {
+    public async searchCoworkers(personSearch: string, abortSignal?: AbortSignalLike): Promise<Array<Record<string, unknown>>> {
         const requestPath = `/api/officelocations/searchCoworkers/${personSearch}`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<Array<Record<string, unknown>>>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as Array<Record<string, unknown>>;
@@ -308,13 +308,13 @@ export class MeetingroommapClient extends ConnectorClientBase {
      * Get office locations on image
      * @remarks Get all office locations mapped to a specific image
      */
-    public async getOfficeLocationsByImageAsync(imageName: string, abortSignal?: AbortSignalLike): Promise<GetOfficeLocationsByImageResponse> {
+    public async getOfficeLocationsByImage(imageName: string, abortSignal?: AbortSignalLike): Promise<GetOfficeLocationsByImageResponse> {
         const requestPath = `/api/officelocations/bymapimage/${imageName}`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<GetOfficeLocationsByImageResponse>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as GetOfficeLocationsByImageResponse;
@@ -324,7 +324,7 @@ export class MeetingroommapClient extends ConnectorClientBase {
      * Get office location details
      * @remarks Get office location details including list of people for that office location
      */
-    public async getRoomWithPersonsDetailsAsync(officeLocationName: string, inludeUserInfo?: string, abortSignal?: AbortSignalLike): Promise<GetRoomWithPersonsDetailsResponse> {
+    public async getRoomWithPersonsDetails(officeLocationName: string, inludeUserInfo?: string, abortSignal?: AbortSignalLike): Promise<GetRoomWithPersonsDetailsResponse> {
         const queryParams: string[] = [];
         if (inludeUserInfo !== undefined) {
             queryParams.push(`InludeUserInfo=${encodeURIComponent(String(inludeUserInfo))}`);
@@ -334,7 +334,7 @@ export class MeetingroommapClient extends ConnectorClientBase {
         const httpResponse = await this.httpClient.sendAsync<GetRoomWithPersonsDetailsResponse>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as GetRoomWithPersonsDetailsResponse;
@@ -344,7 +344,7 @@ export class MeetingroommapClient extends ConnectorClientBase {
      * Get image of office location
      * @remarks Get image of specific office location
      */
-    public async getOfficeLocationImageAsync(officeLocationName: string, large?: string, abortSignal?: AbortSignalLike): Promise<Blob> {
+    public async getOfficeLocationImage(officeLocationName: string, large?: string, abortSignal?: AbortSignalLike): Promise<Blob> {
         const queryParams: string[] = [];
         if (large !== undefined) {
             queryParams.push(`Large=${encodeURIComponent(String(large))}`);
@@ -354,7 +354,7 @@ export class MeetingroommapClient extends ConnectorClientBase {
         const httpResponse = await this.httpClient.sendAsync<Blob>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as Blob;
@@ -364,13 +364,13 @@ export class MeetingroommapClient extends ConnectorClientBase {
      * Get all rooms
      * @remarks Get all rooms (defined in Azure AD as meeting rooms)
      */
-    public async getRoomsAsync(abortSignal?: AbortSignalLike): Promise<AADMeetingRoomCollection> {
+    public async getRooms(abortSignal?: AbortSignalLike): Promise<AADMeetingRoomCollection> {
         const requestPath = `/api/rooms`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<AADMeetingRoomCollection>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as AADMeetingRoomCollection;
@@ -380,13 +380,13 @@ export class MeetingroommapClient extends ConnectorClientBase {
      * Search for meeting room
      * @remarks Get rooms by name search (from Azure AD meeting rooms)
      */
-    public async searchMeetingRoomsAsync(name: string, abortSignal?: AbortSignalLike): Promise<AADMeetingRoomCollection> {
+    public async searchMeetingRooms(name: string, abortSignal?: AbortSignalLike): Promise<AADMeetingRoomCollection> {
         const requestPath = `/api/rooms/findbyname/${name}`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<AADMeetingRoomCollection>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as AADMeetingRoomCollection;
@@ -396,13 +396,13 @@ export class MeetingroommapClient extends ConnectorClientBase {
      * Get meeting rooms lists
      * @remarks Get meeting rooms lists as defined in Azure AD
      */
-    public async roomListsAsync(abortSignal?: AbortSignalLike): Promise<AADMeetingRoomCollection> {
+    public async roomLists(abortSignal?: AbortSignalLike): Promise<AADMeetingRoomCollection> {
         const requestPath = `/api/rooms/lists`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<AADMeetingRoomCollection>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as AADMeetingRoomCollection;
@@ -412,13 +412,13 @@ export class MeetingroommapClient extends ConnectorClientBase {
      * Get meeting rooms by list
      * @remarks Get all meeting rooms from specific list name
      */
-    public async roomsByListAddressAsync(meetingRoomListAddress: string, abortSignal?: AbortSignalLike): Promise<AADMeetingRoomCollection> {
+    public async listRoomsByAddress(meetingRoomListAddress: string, abortSignal?: AbortSignalLike): Promise<AADMeetingRoomCollection> {
         const requestPath = `/api/rooms/${meetingRoomListAddress}`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<AADMeetingRoomCollection>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as AADMeetingRoomCollection;
@@ -428,13 +428,13 @@ export class MeetingroommapClient extends ConnectorClientBase {
      * Get all meeting rooms by image
      * @remarks Get all meeting rooms mapped to a specific image
      */
-    public async getRoomsByImageNameAsync(imageName: string, abortSignal?: AbortSignalLike): Promise<GetRoomsByImageNameResponse> {
+    public async getRoomsByImageName(imageName: string, abortSignal?: AbortSignalLike): Promise<GetRoomsByImageNameResponse> {
         const requestPath = `/api/rooms/GetRoomsByImageName/${imageName}`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<GetRoomsByImageNameResponse>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as GetRoomsByImageNameResponse;

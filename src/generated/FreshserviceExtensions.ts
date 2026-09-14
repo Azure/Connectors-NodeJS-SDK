@@ -4,7 +4,7 @@
 import type { AbortSignalLike } from "@azure/abort-controller";
 import type { TokenCredential } from "@azure/core-auth";
 import { ConnectorClientBase } from "../azureConnectors/clientBase.ts";
-import { ConnectorException } from "../azureConnectors/connectorException.ts";
+import { ConnectorError } from "../azureConnectors/connectorError.ts";
 import { ConnectorClientOptions } from "../azureConnectors/options.ts";
 import { TriggerCallbackPayload } from "../azureConnectors/triggerPayload.ts";
 
@@ -208,9 +208,7 @@ export interface AddNoteResponse {
 /**
  * Definition: ListUsers_Response
  */
-export interface ListUsersResponse {
-    [key: string]: unknown;
-}
+export type ListUsersResponse = Array<Record<string, unknown>>;
 
 /**
  * Typed callback payload for trigger operation 'OnTicketCreatedV2'.
@@ -250,13 +248,13 @@ export class FreshserviceClient extends ConnectorClientBase {
      * Add a note to a ticket
      * @remarks Add a private or public note to a ticket.
      */
-    public async addNoteAsync(input: AddNoteRequest, ticketId: string, abortSignal?: AbortSignalLike): Promise<AddNoteResponse> {
+    public async addNote(input: AddNoteRequest, ticketId: string, abortSignal?: AbortSignalLike): Promise<AddNoteResponse> {
         const requestPath = `/api/v2/tickets/${ticketId}/notes`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<AddNoteResponse>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as AddNoteResponse;
@@ -266,13 +264,13 @@ export class FreshserviceClient extends ConnectorClientBase {
      * Create a ticket
      * @remarks Create a ticket.
      */
-    public async createTicketAsync(input: CreateTicketRequest, abortSignal?: AbortSignalLike): Promise<CreateUpdateTicketResponse> {
+    public async createTicket(input: CreateTicketRequest, abortSignal?: AbortSignalLike): Promise<CreateUpdateTicketResponse> {
         const requestPath = `/api/v2/tickets`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<CreateUpdateTicketResponse>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as CreateUpdateTicketResponse;
@@ -282,13 +280,13 @@ export class FreshserviceClient extends ConnectorClientBase {
      * Update a ticket
      * @remarks Update a ticket (only specified values will be updated).
      */
-    public async updateTicketAsync(input: UpdateTicketRequest, ticketId: string, abortSignal?: AbortSignalLike): Promise<CreateUpdateTicketResponse> {
+    public async updateTicket(input: UpdateTicketRequest, ticketId: string, abortSignal?: AbortSignalLike): Promise<CreateUpdateTicketResponse> {
         const requestPath = `/api/v2/tickets/${ticketId}`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<CreateUpdateTicketResponse>("PUT", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `PUT ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `PUT ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as CreateUpdateTicketResponse;

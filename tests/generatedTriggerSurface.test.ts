@@ -47,13 +47,9 @@ function loadGeneratedExtensionFiles(): GeneratedExtensionFile[] {
  * Converts a swagger operation identifier to the client method name the generator would emit for it.
  */
 function toClientMethodName(operationId: string): string {
-    const camelCased = operationId.length > 0
+    return operationId.length > 0
         ? operationId.charAt(0).toLowerCase() + operationId.slice(1)
         : operationId;
-
-    return camelCased.endsWith("Async")
-        ? camelCased
-        : `${camelCased}Async`;
 }
 
 /**
@@ -140,12 +136,12 @@ describe("Teams generated surface — trigger parameter metadata", () => {
 // ──────────────────────────────────────────────
 
 describe("Teams generated surface — triggers are not data-plane methods", () => {
-    it("should not expose onNewChannelMessageAsync on TeamsClient", () => {
+    it("should not expose onNewChannelMessage on TeamsClient", () => {
         const client = new TeamsClient(TeamsConnectionUrl, createMockCredential());
         const clientMembers = client as unknown as Record<string, unknown>;
 
-        expect(clientMembers.onNewChannelMessageAsync).toBeUndefined();
-        expect(Object.getOwnPropertyNames(Object.getPrototypeOf(client))).not.toContain("onNewChannelMessageAsync");
+        expect(clientMembers.onNewChannelMessage).toBeUndefined();
+        expect(Object.getOwnPropertyNames(Object.getPrototypeOf(client))).not.toContain("onNewChannelMessage");
     });
 
     it("should not expose any Teams trigger operation as a client method", () => {
@@ -185,7 +181,7 @@ describe("Generated clients — no trigger operation is invoked as a data-plane 
         },
     );
 
-    // NOTE(swapnilnagar): Docusign's 'triggerMaestroFlowAsync' is a real action on a '/trigger/' path,
+    // NOTE(swapnilnagar): Docusign's 'triggerMaestroFlow' is a real action on a '/trigger/' path,
     // so the guard cross-references trigger operation IDs instead of substring-matching the route.
     it("should treat the Docusign Maestro action as an action, not a trigger", () => {
         const docusign = generatedFiles.find(file => file.connector === "Docusign");
@@ -198,7 +194,7 @@ describe("Generated clients — no trigger operation is invoked as a data-plane 
         // toClientMethodName must land on a real emitted method. Otherwise a convention drift leaves
         // triggerMethodCandidates matching nothing and the violations check passes vacuously.
         expect(methodNames.has(toClientMethodName("TriggerMaestroFlow"))).toBe(true);
-        expect(methodNames.has("triggerMaestroFlowAsync")).toBe(true);
-        expect(triggerMethodCandidates).not.toContain("triggerMaestroFlowAsync");
+        expect(methodNames.has("triggerMaestroFlow")).toBe(true);
+        expect(triggerMethodCandidates).not.toContain("triggerMaestroFlow");
     });
 });

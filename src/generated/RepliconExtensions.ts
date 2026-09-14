@@ -4,7 +4,7 @@
 import type { AbortSignalLike } from "@azure/abort-controller";
 import type { TokenCredential } from "@azure/core-auth";
 import { ConnectorClientBase } from "../azureConnectors/clientBase.ts";
-import { ConnectorException } from "../azureConnectors/connectorException.ts";
+import { ConnectorError } from "../azureConnectors/connectorError.ts";
 import { ConnectorClientOptions } from "../azureConnectors/options.ts";
 
 // #region Types
@@ -306,7 +306,7 @@ export class RepliconClient extends ConnectorClientBase {
      * Get Project Details
      * @remarks Get the project details from Replicon
      */
-    public async bulkGetProjectDetails3Async(input: BulkGetProjectDetails3Input, hostUrl?: string, abortSignal?: AbortSignalLike): Promise<ProjectDetailsResponse> {
+    public async getBulkProjectDetails3(input: BulkGetProjectDetails3Input, hostUrl?: string, abortSignal?: AbortSignalLike): Promise<ProjectDetailsResponse> {
         const queryParams: string[] = [];
         if (hostUrl !== undefined) {
             queryParams.push(`hostUrl=${encodeURIComponent(String(hostUrl))}`);
@@ -316,7 +316,7 @@ export class RepliconClient extends ConnectorClientBase {
         const httpResponse = await this.httpClient.sendAsync<ProjectDetailsResponse>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as ProjectDetailsResponse;
@@ -326,7 +326,7 @@ export class RepliconClient extends ConnectorClientBase {
      * Create Project Or Apply Modifications
      * @remarks Create Project Or Apply Modifications in Replicon
      */
-    public async createProjectOrApplyModificationsAsync(input: CreateProjectOrApplyModificationsInput, hostUrl?: string, abortSignal?: AbortSignalLike): Promise<CreateProjectOrApplyModificationsResponse> {
+    public async createProjectOrApplyModifications(input: CreateProjectOrApplyModificationsInput, hostUrl?: string, abortSignal?: AbortSignalLike): Promise<CreateProjectOrApplyModificationsResponse> {
         const queryParams: string[] = [];
         if (hostUrl !== undefined) {
             queryParams.push(`hostUrl=${encodeURIComponent(String(hostUrl))}`);
@@ -336,7 +336,7 @@ export class RepliconClient extends ConnectorClientBase {
         const httpResponse = await this.httpClient.sendAsync<CreateProjectOrApplyModificationsResponse>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as CreateProjectOrApplyModificationsResponse;
@@ -346,7 +346,7 @@ export class RepliconClient extends ConnectorClientBase {
      * Get User List
      * @remarks Get User List Data from Replicon
      */
-    public async userListServiceGetDataAsync(input: UserListServiceGetDataInput, hostUrl?: string, abortSignal?: AbortSignalLike): Promise<UserListServiceGetDataResponse> {
+    public async getUserListServiceData(input: UserListServiceGetDataInput, hostUrl?: string, abortSignal?: AbortSignalLike): Promise<UserListServiceGetDataResponse> {
         const queryParams: string[] = [];
         if (hostUrl !== undefined) {
             queryParams.push(`hostUrl=${encodeURIComponent(String(hostUrl))}`);
@@ -356,7 +356,7 @@ export class RepliconClient extends ConnectorClientBase {
         const httpResponse = await this.httpClient.sendAsync<UserListServiceGetDataResponse>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as UserListServiceGetDataResponse;
@@ -366,7 +366,7 @@ export class RepliconClient extends ConnectorClientBase {
      * Get Descendant Task Details
      * @remarks Get Hierarchial Task Details from Replicon
      */
-    public async getDescendantTaskDetailsAsync(input: GetDescendantTaskDetailsInput, hostUrl?: string, abortSignal?: AbortSignalLike): Promise<GetDescendantTaskDetailsResponse> {
+    public async getDescendantTaskDetails(input: GetDescendantTaskDetailsInput, hostUrl?: string, abortSignal?: AbortSignalLike): Promise<GetDescendantTaskDetailsResponse> {
         const queryParams: string[] = [];
         if (hostUrl !== undefined) {
             queryParams.push(`hostUrl=${encodeURIComponent(String(hostUrl))}`);
@@ -376,7 +376,7 @@ export class RepliconClient extends ConnectorClientBase {
         const httpResponse = await this.httpClient.sendAsync<GetDescendantTaskDetailsResponse>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as GetDescendantTaskDetailsResponse;
@@ -386,7 +386,7 @@ export class RepliconClient extends ConnectorClientBase {
      * Create Task Hierarchy Or Apply Modifications
      * @remarks Create Task Hierarchy Or Apply Modifications to a Replicon Task
      */
-    public async createTaskHierarchyOrApplyModificationsAsync(input: CreateTaskHierarchyOrApplyModificationsInput, hostUrl?: string, abortSignal?: AbortSignalLike): Promise<CreateTaskHierarchyOrApplyModificationsResponse> {
+    public async createTaskHierarchyOrApplyModifications(input: CreateTaskHierarchyOrApplyModificationsInput, hostUrl?: string, abortSignal?: AbortSignalLike): Promise<CreateTaskHierarchyOrApplyModificationsResponse> {
         const queryParams: string[] = [];
         if (hostUrl !== undefined) {
             queryParams.push(`hostUrl=${encodeURIComponent(String(hostUrl))}`);
@@ -396,7 +396,7 @@ export class RepliconClient extends ConnectorClientBase {
         const httpResponse = await this.httpClient.sendAsync<CreateTaskHierarchyOrApplyModificationsResponse>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as CreateTaskHierarchyOrApplyModificationsResponse;
@@ -406,7 +406,7 @@ export class RepliconClient extends ConnectorClientBase {
      * Move Task
      * @remarks Move Task to a new Parent
      */
-    public async moveTaskAsync(input: MoveTaskInput, hostUrl?: string, abortSignal?: AbortSignalLike): Promise<void> {
+    public async moveTask(input: MoveTaskInput, hostUrl?: string, abortSignal?: AbortSignalLike): Promise<void> {
         const queryParams: string[] = [];
         if (hostUrl !== undefined) {
             queryParams.push(`hostUrl=${encodeURIComponent(String(hostUrl))}`);
@@ -416,7 +416,7 @@ export class RepliconClient extends ConnectorClientBase {
         const httpResponse = await this.httpClient.sendAsync<void>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
     }
 
@@ -424,7 +424,7 @@ export class RepliconClient extends ConnectorClientBase {
      * Task List Service Get Data
      * @remarks Get Task List Service Data From Replicon
      */
-    public async taskListServiceGetDataAsync(input: TaskListServiceGetDataInput, hostUrl?: string, abortSignal?: AbortSignalLike): Promise<TaskListServiceGetDataResponse> {
+    public async getTaskListServiceData(input: TaskListServiceGetDataInput, hostUrl?: string, abortSignal?: AbortSignalLike): Promise<TaskListServiceGetDataResponse> {
         const queryParams: string[] = [];
         if (hostUrl !== undefined) {
             queryParams.push(`hostUrl=${encodeURIComponent(String(hostUrl))}`);
@@ -434,7 +434,7 @@ export class RepliconClient extends ConnectorClientBase {
         const httpResponse = await this.httpClient.sendAsync<TaskListServiceGetDataResponse>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as TaskListServiceGetDataResponse;
@@ -444,7 +444,7 @@ export class RepliconClient extends ConnectorClientBase {
      * Get Timesheet Summary
      * @remarks Get Timesheet Summary from Replicon
      */
-    public async getTimesheetSummaryAsync(input: GetTimesheetSummaryInput, hostUrl?: string, abortSignal?: AbortSignalLike): Promise<GetTimesheetSummaryResponse> {
+    public async getTimesheetSummary(input: GetTimesheetSummaryInput, hostUrl?: string, abortSignal?: AbortSignalLike): Promise<GetTimesheetSummaryResponse> {
         const queryParams: string[] = [];
         if (hostUrl !== undefined) {
             queryParams.push(`hostUrl=${encodeURIComponent(String(hostUrl))}`);
@@ -454,7 +454,7 @@ export class RepliconClient extends ConnectorClientBase {
         const httpResponse = await this.httpClient.sendAsync<GetTimesheetSummaryResponse>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as GetTimesheetSummaryResponse;
@@ -464,7 +464,7 @@ export class RepliconClient extends ConnectorClientBase {
      * Get Time Entered Summary
      * @remarks Get Time Entered by Task Uri from Replicon
      */
-    public async bulkGetTimeEnteredSummaryAsync(input: BulkGetTimeEnteredSummaryInput, hostUrl?: string, abortSignal?: AbortSignalLike): Promise<BulkGetTimeEnteredSummaryResponse> {
+    public async getBulkTimeEnteredSummary(input: BulkGetTimeEnteredSummaryInput, hostUrl?: string, abortSignal?: AbortSignalLike): Promise<BulkGetTimeEnteredSummaryResponse> {
         const queryParams: string[] = [];
         if (hostUrl !== undefined) {
             queryParams.push(`hostUrl=${encodeURIComponent(String(hostUrl))}`);
@@ -474,7 +474,7 @@ export class RepliconClient extends ConnectorClientBase {
         const httpResponse = await this.httpClient.sendAsync<BulkGetTimeEnteredSummaryResponse>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as BulkGetTimeEnteredSummaryResponse;
@@ -484,7 +484,7 @@ export class RepliconClient extends ConnectorClientBase {
      * Put Project Team Member Assignments
      * @remarks Rewrite Team Member assignment of Project
      */
-    public async putProjectTeamMemberAssignmentsAsync(input: PutProjectTeamMemberAssignmentsInput, hostUrl?: string, abortSignal?: AbortSignalLike): Promise<void> {
+    public async putProjectTeamMemberAssignments(input: PutProjectTeamMemberAssignmentsInput, hostUrl?: string, abortSignal?: AbortSignalLike): Promise<void> {
         const queryParams: string[] = [];
         if (hostUrl !== undefined) {
             queryParams.push(`hostUrl=${encodeURIComponent(String(hostUrl))}`);
@@ -494,7 +494,7 @@ export class RepliconClient extends ConnectorClientBase {
         const httpResponse = await this.httpClient.sendAsync<void>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
     }
 
@@ -502,7 +502,7 @@ export class RepliconClient extends ConnectorClientBase {
      * Rewrite Resource Assignment of a task
      * @remarks Update the Resource assignment to a specified task
      */
-    public async putResourceAssignmentsAsync(input: PutResourceAssignmentsInput, hostUrl?: string, abortSignal?: AbortSignalLike): Promise<void> {
+    public async putResourceAssignments(input: PutResourceAssignmentsInput, hostUrl?: string, abortSignal?: AbortSignalLike): Promise<void> {
         const queryParams: string[] = [];
         if (hostUrl !== undefined) {
             queryParams.push(`hostUrl=${encodeURIComponent(String(hostUrl))}`);
@@ -512,7 +512,7 @@ export class RepliconClient extends ConnectorClientBase {
         const httpResponse = await this.httpClient.sendAsync<void>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
     }
 
@@ -520,13 +520,13 @@ export class RepliconClient extends ConnectorClientBase {
      * Get Tenant End Point Details
      * @remarks Get End Point Details of the Tenant
      */
-    public async getMyTenantEndpointDetailsAsync(abortSignal?: AbortSignalLike): Promise<TenantEndpointDetails> {
+    public async getMyTenantEndpointDetails(abortSignal?: AbortSignalLike): Promise<TenantEndpointDetails> {
         const requestPath = `/DiscoveryService1.svc/GetMyTenantEndpointDetails`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<TenantEndpointDetails>("POST", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as TenantEndpointDetails;

@@ -3,8 +3,9 @@
 
 import type { AbortSignalLike } from "@azure/abort-controller";
 import type { TokenCredential } from "@azure/core-auth";
+import type { PagedAsyncIterableIterator } from "@azure/core-paging";
 import { ConnectorClientBase } from "../azureConnectors/clientBase.ts";
-import { ConnectorException } from "../azureConnectors/connectorException.ts";
+import { ConnectorError } from "../azureConnectors/connectorError.ts";
 import { ConnectorClientOptions } from "../azureConnectors/options.ts";
 
 // #region Types
@@ -90,8 +91,8 @@ export interface TableMetadata {
     /** Table permission */
     "x-ms-permission"?: string;
     "x-ms-capabilities"?: TableCapabilitiesMetadata;
-    schema?: ObjectEntity;
-    referencedEntities?: ObjectEntity;
+    schema?: Record<string, unknown>;
+    referencedEntities?: Record<string, unknown>;
     /** Url link */
     webUrl?: string;
 }
@@ -156,6 +157,8 @@ export interface TableSelectRestrictionsMetadata {
 export interface ItemsList {
     /** List of Items */
     value?: Array<Item>;
+    /** The URL to retrieve the next page. */
+    "@odata.nextLink"?: string;
 }
 
 /**
@@ -243,7 +246,7 @@ export class ExcelonlineClient extends ConnectorClientBase {
      * Create table
      * @remarks Create a new table in the Excel workbook.
      */
-    public async createTableAsync(input: TableToCreate, drive: string, file: string, source?: string, abortSignal?: AbortSignalLike): Promise<TableMetadata> {
+    public async createTable(input: TableToCreate, drive: string, file: string, source?: string, abortSignal?: AbortSignalLike): Promise<TableMetadata> {
         const queryParams: string[] = [];
         if (source !== undefined) {
             queryParams.push(`source=${encodeURIComponent(String(source))}`);
@@ -253,7 +256,7 @@ export class ExcelonlineClient extends ConnectorClientBase {
         const httpResponse = await this.httpClient.sendAsync<TableMetadata>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as TableMetadata;
@@ -263,7 +266,7 @@ export class ExcelonlineClient extends ConnectorClientBase {
      * Add a key column to a table
      * @remarks Add a key column to an Excel table. The new column will be appended to the right. The new key column must be unique in the table.
      */
-    public async createIdColumnAsync(drive: string, file: string, table: string, source?: string, idColumn?: string, populateColumn?: string, abortSignal?: AbortSignalLike): Promise<void> {
+    public async createIdColumn(drive: string, file: string, table: string, source?: string, idColumn?: string, populateColumn?: string, abortSignal?: AbortSignalLike): Promise<void> {
         const queryParams: string[] = [];
         if (source !== undefined) {
             queryParams.push(`source=${encodeURIComponent(String(source))}`);
@@ -279,7 +282,7 @@ export class ExcelonlineClient extends ConnectorClientBase {
         const httpResponse = await this.httpClient.sendAsync<void>("POST", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
     }
 
@@ -287,7 +290,7 @@ export class ExcelonlineClient extends ConnectorClientBase {
      * List rows present in a table
      * @remarks List rows present in a table.
      */
-    public async getItemsAsync(drive: string, file: string, table: string, source?: string, filter?: string, orderby?: string, top?: string, skip?: string, select?: string, idColumn?: string, dateTimeFormat?: string, abortSignal?: AbortSignalLike): Promise<ItemsList> {
+    public getItems(drive: string, file: string, table: string, source?: string, filter?: string, orderby?: string, top?: string, skip?: string, select?: string, idColumn?: string, dateTimeFormat?: string, abortSignal?: AbortSignalLike): PagedAsyncIterableIterator<Item> {
         const queryParams: string[] = [];
         if (source !== undefined) {
             queryParams.push(`source=${encodeURIComponent(String(source))}`);
@@ -314,21 +317,28 @@ export class ExcelonlineClient extends ConnectorClientBase {
             queryParams.push(`dateTimeFormat=${encodeURIComponent(String(dateTimeFormat))}`);
         }
         const requestPath = `/drives/${drive}/files/${file}/tables/${table}/items` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
-        const requestUrl = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<ItemsList>("GET", requestUrl, undefined, undefined, abortSignal);
+        return this.createPageable<ItemsList, Item>(
+            requestPath,
+            async (requestUrl) => {
+                const httpResponse = await this.httpClient.sendAsync<ItemsList>("GET", requestUrl, undefined, undefined, abortSignal);
 
-        if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
-        }
+                if (!httpResponse.isSuccessStatusCode) {
+                    const operationPath = this.getOperationPath(requestUrl);
+                    throw new ConnectorError(this.connectorName, `GET ${operationPath}`, httpResponse.statusCode, httpResponse.text);
+                }
 
-        return httpResponse.value as ItemsList;
+                return httpResponse.value as ItemsList;
+            },
+            "value",
+            "@odata.nextLink",
+        );
     }
 
     /**
      * Get a row
      * @remarks Get a row using a key column. This action will retrieve all the values of the specified row given a column and key column.
      */
-    public async getItemAsync(drive: string, file: string, table: string, id: string, source?: string, idColumn?: string, dateTimeFormat?: string, abortSignal?: AbortSignalLike): Promise<Item> {
+    public async getItem(drive: string, file: string, table: string, id: string, source?: string, idColumn?: string, dateTimeFormat?: string, abortSignal?: AbortSignalLike): Promise<Item> {
         const queryParams: string[] = [];
         if (source !== undefined) {
             queryParams.push(`source=${encodeURIComponent(String(source))}`);
@@ -339,12 +349,12 @@ export class ExcelonlineClient extends ConnectorClientBase {
         if (dateTimeFormat !== undefined) {
             queryParams.push(`dateTimeFormat=${encodeURIComponent(String(dateTimeFormat))}`);
         }
-        const requestPath = `/drives/${drive}/files/${file}/tables/${table}/items/${id}` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
+        const requestPath = `/drives/${drive}/files/${file}/tables/${table}/items/${encodeURIComponent(encodeURIComponent(String(id)))}` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<Item>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as Item;
@@ -354,7 +364,7 @@ export class ExcelonlineClient extends ConnectorClientBase {
      * Delete a row
      * @remarks Delete a row using a key column.
      */
-    public async deleteItemAsync(drive: string, file: string, table: string, id: string, source?: string, idColumn?: string, abortSignal?: AbortSignalLike): Promise<void> {
+    public async deleteItem(drive: string, file: string, table: string, id: string, source?: string, idColumn?: string, abortSignal?: AbortSignalLike): Promise<void> {
         const queryParams: string[] = [];
         if (source !== undefined) {
             queryParams.push(`source=${encodeURIComponent(String(source))}`);
@@ -362,12 +372,12 @@ export class ExcelonlineClient extends ConnectorClientBase {
         if (idColumn !== undefined) {
             queryParams.push(`idColumn=${encodeURIComponent(String(idColumn))}`);
         }
-        const requestPath = `/drives/${drive}/files/${file}/tables/${table}/items/${id}` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
+        const requestPath = `/drives/${drive}/files/${file}/tables/${table}/items/${encodeURIComponent(encodeURIComponent(String(id)))}` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<void>("DELETE", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `DELETE ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `DELETE ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
     }
 
@@ -375,7 +385,7 @@ export class ExcelonlineClient extends ConnectorClientBase {
      * Update a row
      * @remarks Update a row using a key column. The input value will overwrite the specified cells and columns left blank will not be updated. In order to append (instead of overwrite) a value, use the "Get a row" action to retrieve the content first.
      */
-    public async patchItemAsync(input: Item, drive: string, file: string, table: string, id: string, source?: string, idColumn?: string, mode?: string, dateTimeFormat?: string, abortSignal?: AbortSignalLike): Promise<Item> {
+    public async patchItem(input: Item, drive: string, file: string, table: string, id: string, source?: string, idColumn?: string, mode?: string, dateTimeFormat?: string, abortSignal?: AbortSignalLike): Promise<Item> {
         const queryParams: string[] = [];
         if (source !== undefined) {
             queryParams.push(`source=${encodeURIComponent(String(source))}`);
@@ -389,12 +399,12 @@ export class ExcelonlineClient extends ConnectorClientBase {
         if (dateTimeFormat !== undefined) {
             queryParams.push(`dateTimeFormat=${encodeURIComponent(String(dateTimeFormat))}`);
         }
-        const requestPath = `/drives/${drive}/files/${file}/tables/${table}/items/${id}` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
+        const requestPath = `/drives/${drive}/files/${file}/tables/${table}/items/${encodeURIComponent(encodeURIComponent(String(id)))}` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<Item>("PATCH", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `PATCH ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `PATCH ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as Item;
@@ -404,7 +414,7 @@ export class ExcelonlineClient extends ConnectorClientBase {
      * Get worksheets
      * @remarks Get a list of worksheets in the Excel workbook.
      */
-    public async getAllWorksheetsAsync(drive: string, file: string, source?: string, abortSignal?: AbortSignalLike): Promise<GetAllWorksheetsResponse> {
+    public async getAllWorksheets(drive: string, file: string, source?: string, abortSignal?: AbortSignalLike): Promise<GetAllWorksheetsResponse> {
         const queryParams: string[] = [];
         if (source !== undefined) {
             queryParams.push(`source=${encodeURIComponent(String(source))}`);
@@ -414,7 +424,7 @@ export class ExcelonlineClient extends ConnectorClientBase {
         const httpResponse = await this.httpClient.sendAsync<GetAllWorksheetsResponse>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as GetAllWorksheetsResponse;
@@ -424,7 +434,7 @@ export class ExcelonlineClient extends ConnectorClientBase {
      * Create worksheet
      * @remarks Create a new worksheet in the Excel workbook.
      */
-    public async createWorksheetAsync(input: CreateWorksheetInput, drive: string, file: string, source?: string, abortSignal?: AbortSignalLike): Promise<WorksheetMetadata> {
+    public async createWorksheet(input: CreateWorksheetInput, drive: string, file: string, source?: string, abortSignal?: AbortSignalLike): Promise<WorksheetMetadata> {
         const queryParams: string[] = [];
         if (source !== undefined) {
             queryParams.push(`source=${encodeURIComponent(String(source))}`);
@@ -434,7 +444,7 @@ export class ExcelonlineClient extends ConnectorClientBase {
         const httpResponse = await this.httpClient.sendAsync<WorksheetMetadata>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as WorksheetMetadata;
@@ -444,7 +454,7 @@ export class ExcelonlineClient extends ConnectorClientBase {
      * Get tables
      * @remarks Get a list of tables in the Excel workbook.
      */
-    public async getTablesAsync(drive: string, file: string, source?: string, select?: string, abortSignal?: AbortSignalLike): Promise<GetTablesResponse> {
+    public async getTables(drive: string, file: string, source?: string, select?: string, abortSignal?: AbortSignalLike): Promise<GetTablesResponse> {
         const queryParams: string[] = [];
         if (source !== undefined) {
             queryParams.push(`source=${encodeURIComponent(String(source))}`);
@@ -457,7 +467,7 @@ export class ExcelonlineClient extends ConnectorClientBase {
         const httpResponse = await this.httpClient.sendAsync<GetTablesResponse>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as GetTablesResponse;
@@ -467,7 +477,7 @@ export class ExcelonlineClient extends ConnectorClientBase {
      * Add a row into a table
      * @remarks Add a new row into the Excel table.
      */
-    public async addRowAsync(input: Item, drive: string, file: string, table: string, source?: string, dateTimeFormat?: string, abortSignal?: AbortSignalLike): Promise<Item> {
+    public async addRow(input: Item, drive: string, file: string, table: string, source?: string, dateTimeFormat?: string, abortSignal?: AbortSignalLike): Promise<Item> {
         const queryParams: string[] = [];
         if (source !== undefined) {
             queryParams.push(`source=${encodeURIComponent(String(source))}`);
@@ -480,7 +490,7 @@ export class ExcelonlineClient extends ConnectorClientBase {
         const httpResponse = await this.httpClient.sendAsync<Item>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as Item;

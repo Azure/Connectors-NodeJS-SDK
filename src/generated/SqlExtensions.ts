@@ -3,8 +3,9 @@
 
 import type { AbortSignalLike } from "@azure/abort-controller";
 import type { TokenCredential } from "@azure/core-auth";
+import type { PagedAsyncIterableIterator } from "@azure/core-paging";
 import { ConnectorClientBase } from "../azureConnectors/clientBase.ts";
-import { ConnectorException } from "../azureConnectors/connectorException.ts";
+import { ConnectorError } from "../azureConnectors/connectorError.ts";
 import { ConnectorClientOptions } from "../azureConnectors/options.ts";
 import { TriggerCallbackPayload } from "../azureConnectors/triggerPayload.ts";
 
@@ -46,6 +47,8 @@ export interface GetItemsResponse {
     "@metadata"?: Array<DataWithSensitivityLabelInfo>;
     /** List of Columns */
     value?: Array<SqlItem>;
+    /** The URL to retrieve the next page. */
+    "@odata.nextLink"?: string;
 }
 
 /**
@@ -306,7 +309,7 @@ export interface PassThroughNativeQueryMetadata {
     name?: string;
     /** Query title */
     title?: string;
-    schema?: ObjectEntity;
+    schema?: Record<string, unknown>;
 }
 
 /**
@@ -337,7 +340,7 @@ export interface ProcedureMetadata {
     name?: string;
     /** Procedure title */
     title?: string;
-    schema?: ObjectEntity;
+    schema?: Record<string, unknown>;
 }
 
 /**
@@ -488,8 +491,8 @@ export interface TableMetadata {
     /** Table permission */
     "x-ms-permission"?: string;
     "x-ms-capabilities"?: TableCapabilitiesMetadata;
-    schema?: ObjectEntity;
-    referencedEntities?: ObjectEntity;
+    schema?: Record<string, unknown>;
+    referencedEntities?: Record<string, unknown>;
     /** Url link */
     webUrl?: string;
 }
@@ -571,14 +574,14 @@ export interface PQMetadataValue {
     name?: string;
     /** Query title */
     title?: string;
-    schema?: ObjectEntity;
+    schema?: Record<string, unknown>;
 }
 
 /**
  * Definition: PassThroughPQResult
  */
 export interface PassThroughPQResult {
-    value?: PQRows;
+    value?: Record<string, unknown>;
 }
 
 /**
@@ -750,13 +753,13 @@ export class SqlClient extends ConnectorClientBase {
      * Delete row
      * @remarks This operation deletes a row from a table.
      */
-    public async deleteItemAsync(server: string, database: string, table: string, id: string, abortSignal?: AbortSignalLike): Promise<void> {
-        const requestPath = `/v2/datasets/${server},${database}/tables/${table}/items/${id}`;
+    public async deleteItem(server: string, database: string, table: string, id: string, abortSignal?: AbortSignalLike): Promise<void> {
+        const requestPath = `/v2/datasets/${encodeURIComponent(encodeURIComponent(String(server)))},${encodeURIComponent(encodeURIComponent(String(database)))}/tables/${encodeURIComponent(encodeURIComponent(String(table)))}/items/${encodeURIComponent(encodeURIComponent(String(id)))}`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<void>("DELETE", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `DELETE ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `DELETE ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
     }
 
@@ -764,13 +767,13 @@ export class SqlClient extends ConnectorClientBase {
      * Execute a SQL query
      * @remarks Execute a SQL query
      */
-    public async executePassThroughNativeQueryAsync(input: SqlPassThroughNativeQueryBody, server: string, database: string, abortSignal?: AbortSignalLike): Promise<ExecutePassThroughNativeQueryResponse> {
-        const requestPath = `/v2/datasets/${server},${database}/query/sql`;
+    public async executePassThroughNativeQuery(input: SqlPassThroughNativeQueryBody, server: string, database: string, abortSignal?: AbortSignalLike): Promise<ExecutePassThroughNativeQueryResponse> {
+        const requestPath = `/v2/datasets/${encodeURIComponent(encodeURIComponent(String(server)))},${encodeURIComponent(encodeURIComponent(String(database)))}/query/sql`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<ExecutePassThroughNativeQueryResponse>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as ExecutePassThroughNativeQueryResponse;
@@ -780,13 +783,13 @@ export class SqlClient extends ConnectorClientBase {
      * Execute stored procedure
      * @remarks This operation runs a stored procedure.
      */
-    public async executeProcedureAsync(input: ExecuteProcedureInput, server: string, database: string, procedure: string, abortSignal?: AbortSignalLike): Promise<ExecuteProcedureResponse> {
-        const requestPath = `/v2/datasets/${server},${database}/procedures/${procedure}`;
+    public async executeProcedure(input: ExecuteProcedureInput, server: string, database: string, procedure: string, abortSignal?: AbortSignalLike): Promise<ExecuteProcedureResponse> {
+        const requestPath = `/v2/datasets/${encodeURIComponent(encodeURIComponent(String(server)))},${encodeURIComponent(encodeURIComponent(String(database)))}/procedures/${encodeURIComponent(encodeURIComponent(String(procedure)))}`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<ExecuteProcedureResponse>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as ExecuteProcedureResponse;
@@ -796,13 +799,13 @@ export class SqlClient extends ConnectorClientBase {
      * Get row
      * @remarks This operation gets a row from a table.
      */
-    public async getItemAsync(server: string, database: string, table: string, id: string, abortSignal?: AbortSignalLike): Promise<GetItemResponse> {
-        const requestPath = `/v2/datasets/${server},${database}/tables/${table}/items/${id}`;
+    public async getItem(server: string, database: string, table: string, id: string, abortSignal?: AbortSignalLike): Promise<GetItemResponse> {
+        const requestPath = `/v2/datasets/${encodeURIComponent(encodeURIComponent(String(server)))},${encodeURIComponent(encodeURIComponent(String(database)))}/tables/${encodeURIComponent(encodeURIComponent(String(table)))}/items/${encodeURIComponent(encodeURIComponent(String(id)))}`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<GetItemResponse>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as GetItemResponse;
@@ -812,7 +815,7 @@ export class SqlClient extends ConnectorClientBase {
      * Get rows
      * @remarks This operation gets rows from a table.
      */
-    public async getItemsAsync(server: string, database: string, table: string, apply?: string, filter?: string, orderby?: string, skip?: string, top?: string, select?: string, count?: string, extractSensitivityLabel?: string, purviewAccountName?: string, abortSignal?: AbortSignalLike): Promise<GetItemsResponse> {
+    public getItems(server: string, database: string, table: string, apply?: string, filter?: string, orderby?: string, skip?: string, top?: string, select?: string, count?: string, extractSensitivityLabel?: string, purviewAccountName?: string, abortSignal?: AbortSignalLike): PagedAsyncIterableIterator<SqlItem> {
         const queryParams: string[] = [];
         if (apply !== undefined) {
             queryParams.push(`$apply=${encodeURIComponent(String(apply))}`);
@@ -841,22 +844,29 @@ export class SqlClient extends ConnectorClientBase {
         if (purviewAccountName !== undefined) {
             queryParams.push(`purviewAccountName=${encodeURIComponent(String(purviewAccountName))}`);
         }
-        const requestPath = `/v2/datasets/${server},${database}/tables/${table}/items` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
-        const requestUrl = this.resolveUrl(requestPath);
-        const httpResponse = await this.httpClient.sendAsync<GetItemsResponse>("GET", requestUrl, undefined, undefined, abortSignal);
+        const requestPath = `/v2/datasets/${encodeURIComponent(encodeURIComponent(String(server)))},${encodeURIComponent(encodeURIComponent(String(database)))}/tables/${encodeURIComponent(encodeURIComponent(String(table)))}/items` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
+        return this.createPageable<GetItemsResponse, SqlItem>(
+            requestPath,
+            async (requestUrl) => {
+                const httpResponse = await this.httpClient.sendAsync<GetItemsResponse>("GET", requestUrl, undefined, undefined, abortSignal);
 
-        if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
-        }
+                if (!httpResponse.isSuccessStatusCode) {
+                    const operationPath = this.getOperationPath(requestUrl);
+                    throw new ConnectorError(this.connectorName, `GET ${operationPath}`, httpResponse.statusCode, httpResponse.text);
+                }
 
-        return httpResponse.value as GetItemsResponse;
+                return httpResponse.value as GetItemsResponse;
+            },
+            "value",
+            "@odata.nextLink",
+        );
     }
 
     /**
      * Get tables
      * @remarks This operation gets tables from a database.
      */
-    public async getTablesAsync(server: string, database: string, extractSensitivityLabel?: string, purviewAccountName?: string, abortSignal?: AbortSignalLike): Promise<GetTablesResponse> {
+    public async getTables(server: string, database: string, extractSensitivityLabel?: string, purviewAccountName?: string, abortSignal?: AbortSignalLike): Promise<GetTablesResponse> {
         const queryParams: string[] = [];
         if (extractSensitivityLabel !== undefined) {
             queryParams.push(`extractSensitivityLabel=${encodeURIComponent(String(extractSensitivityLabel))}`);
@@ -864,12 +874,12 @@ export class SqlClient extends ConnectorClientBase {
         if (purviewAccountName !== undefined) {
             queryParams.push(`purviewAccountName=${encodeURIComponent(String(purviewAccountName))}`);
         }
-        const requestPath = `/v2/datasets/${server},${database}/tables` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
+        const requestPath = `/v2/datasets/${encodeURIComponent(encodeURIComponent(String(server)))},${encodeURIComponent(encodeURIComponent(String(database)))}/tables` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<GetTablesResponse>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as GetTablesResponse;
@@ -879,13 +889,13 @@ export class SqlClient extends ConnectorClientBase {
      * Update row
      * @remarks This operation updates an existing row in a table.
      */
-    public async patchItemAsync(input: PatchItemInput, server: string, database: string, table: string, id: string, abortSignal?: AbortSignalLike): Promise<PatchItemResponse> {
-        const requestPath = `/v2/datasets/${server},${database}/tables/${table}/items/${id}`;
+    public async patchItem(input: PatchItemInput, server: string, database: string, table: string, id: string, abortSignal?: AbortSignalLike): Promise<PatchItemResponse> {
+        const requestPath = `/v2/datasets/${encodeURIComponent(encodeURIComponent(String(server)))},${encodeURIComponent(encodeURIComponent(String(database)))}/tables/${encodeURIComponent(encodeURIComponent(String(table)))}/items/${encodeURIComponent(encodeURIComponent(String(id)))}`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<PatchItemResponse>("PATCH", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `PATCH ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `PATCH ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as PatchItemResponse;
@@ -895,13 +905,13 @@ export class SqlClient extends ConnectorClientBase {
      * Insert row
      * @remarks This operation inserts a new row into a table.
      */
-    public async postItemAsync(input: PostItemInput, server: string, database: string, table: string, abortSignal?: AbortSignalLike): Promise<PostItemResponse> {
-        const requestPath = `/v2/datasets/${server},${database}/tables/${table}/items`;
+    public async postItem(input: PostItemInput, server: string, database: string, table: string, abortSignal?: AbortSignalLike): Promise<PostItemResponse> {
+        const requestPath = `/v2/datasets/${encodeURIComponent(encodeURIComponent(String(server)))},${encodeURIComponent(encodeURIComponent(String(database)))}/tables/${encodeURIComponent(encodeURIComponent(String(table)))}/items`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<PostItemResponse>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as PostItemResponse;

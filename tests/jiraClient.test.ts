@@ -5,7 +5,7 @@ import {
     JiraClient,
     ListIssuesResponse,
 } from "../src/generated/JiraExtensions.ts";
-import { ConnectorException } from "../src/azureConnectors/connectorException.ts";
+import { ConnectorError } from "../src/azureConnectors/connectorError.ts";
 import { ConnectorNames } from "../src/generated/connectorNames.ts";
 import { availableConnectors } from "../src/generated/ManagedConnectors.ts";
 
@@ -43,7 +43,7 @@ describe("JiraClient — constructor", () => {
     });
 });
 
-describe("JiraClient — listResourcesAsync", () => {
+describe("JiraClient — listResources", () => {
     afterEach(() => {
         jest.restoreAllMocks();
     });
@@ -53,7 +53,7 @@ describe("JiraClient — listResourcesAsync", () => {
         mockFetchResponse(mockResponse);
 
         const client = new JiraClient(TestConnectionUrl, createMockCredential());
-        const result = await client.listResourcesAsync();
+        const result = await client.listResources();
 
         expect(result).toEqual(mockResponse);
         const [url, init] = (global.fetch as jest.Mock).mock.calls[0];
@@ -61,15 +61,15 @@ describe("JiraClient — listResourcesAsync", () => {
         expect(init.method).toBe("GET");
     });
 
-    it("should throw ConnectorException on non-OK response", async () => {
+    it("should throw ConnectorError on non-OK response", async () => {
         mockFetchError(403, '{"error":"Forbidden"}');
 
         const client = new JiraClient(TestConnectionUrl, createMockCredential());
-        await expect(client.listResourcesAsync()).rejects.toThrow(ConnectorException);
+        await expect(client.listResources()).rejects.toThrow(ConnectorError);
     });
 });
 
-describe("JiraClient — listIssuesAsync", () => {
+describe("JiraClient — listIssues", () => {
     afterEach(() => {
         jest.restoreAllMocks();
     });
@@ -79,7 +79,7 @@ describe("JiraClient — listIssuesAsync", () => {
         mockFetchResponse(mockResponse);
 
         const client = new JiraClient(TestConnectionUrl, createMockCredential());
-        await client.listIssuesAsync("project = DEMO", "names", "summary");
+        await client.listIssues("project = DEMO", "names", "summary");
 
         const [url] = (global.fetch as jest.Mock).mock.calls[0];
         expect(url).toContain("/2/search");

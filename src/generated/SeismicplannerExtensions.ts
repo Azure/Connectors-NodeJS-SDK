@@ -4,7 +4,7 @@
 import type { AbortSignalLike } from "@azure/abort-controller";
 import type { TokenCredential } from "@azure/core-auth";
 import { ConnectorClientBase } from "../azureConnectors/clientBase.ts";
-import { ConnectorException } from "../azureConnectors/connectorException.ts";
+import { ConnectorError } from "../azureConnectors/connectorError.ts";
 import { ConnectorClientOptions } from "../azureConnectors/options.ts";
 
 // #region Types
@@ -828,7 +828,7 @@ export class SeismicplannerClient extends ConnectorClientBase {
      * Get comments
      * @remarks Get all comments for a given project, task, or request. Requires node (project, task, or request) ID.
      */
-    public async getCommentsAsync(spaceId: string, nodeId: string, creatorIds?: string, cursor?: string, limit?: string, sort?: string, abortSignal?: AbortSignalLike): Promise<CommentQueryResponse> {
+    public async getComments(spaceId: string, nodeId: string, creatorIds?: string, cursor?: string, limit?: string, sort?: string, abortSignal?: AbortSignalLike): Promise<CommentQueryResponse> {
         const queryParams: string[] = [];
         if (creatorIds !== undefined) {
             queryParams.push(`creatorIds=${encodeURIComponent(String(creatorIds))}`);
@@ -847,7 +847,7 @@ export class SeismicplannerClient extends ConnectorClientBase {
         const httpResponse = await this.httpClient.sendAsync<CommentQueryResponse>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as CommentQueryResponse;
@@ -857,13 +857,13 @@ export class SeismicplannerClient extends ConnectorClientBase {
      * Create comment
      * @remarks Create a comment on a given project, task, or request. Requires node (project, task, or request) ID.
      */
-    public async createCommentAsync(input: CreateCommentModel, spaceId: string, nodeId: string, abortSignal?: AbortSignalLike): Promise<Comment> {
+    public async createComment(input: CreateCommentModel, spaceId: string, nodeId: string, abortSignal?: AbortSignalLike): Promise<Comment> {
         const requestPath = `/planner/v2/spaces/${spaceId}/nodes/${nodeId}/comments`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<Comment>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as Comment;
@@ -873,13 +873,13 @@ export class SeismicplannerClient extends ConnectorClientBase {
      * Get comment
      * @remarks Get a single comment. Requires node (project, task, or request) and comment ID.
      */
-    public async getCommentAsync(spaceId: string, nodeId: string, commentId: string, abortSignal?: AbortSignalLike): Promise<Comment> {
+    public async getComment(spaceId: string, nodeId: string, commentId: string, abortSignal?: AbortSignalLike): Promise<Comment> {
         const requestPath = `/planner/v2/spaces/${spaceId}/nodes/${nodeId}/comments/${commentId}`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<Comment>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as Comment;
@@ -889,13 +889,13 @@ export class SeismicplannerClient extends ConnectorClientBase {
      * Delete comment
      * @remarks Delete a comment. Requires node (project, task, or request) and comment ID.
      */
-    public async deleteCommentAsync(spaceId: string, nodeId: string, commentId: string, abortSignal?: AbortSignalLike): Promise<void> {
+    public async deleteComment(spaceId: string, nodeId: string, commentId: string, abortSignal?: AbortSignalLike): Promise<void> {
         const requestPath = `/planner/v2/spaces/${spaceId}/nodes/${nodeId}/comments/${commentId}`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<void>("DELETE", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `DELETE ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `DELETE ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
     }
 
@@ -903,13 +903,13 @@ export class SeismicplannerClient extends ConnectorClientBase {
      * Update comment
      * @remarks Update an existing comment. Requires node (project, task, or request) and comment ID.
      */
-    public async updateCommentAsync(input: UpdateCommentModel, spaceId: string, nodeId: string, commentId: string, abortSignal?: AbortSignalLike): Promise<Comment> {
+    public async updateComment(input: UpdateCommentModel, spaceId: string, nodeId: string, commentId: string, abortSignal?: AbortSignalLike): Promise<Comment> {
         const requestPath = `/planner/v2/spaces/${spaceId}/nodes/${nodeId}/comments/${commentId}`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<Comment>("PUT", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `PUT ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `PUT ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as Comment;
@@ -919,7 +919,7 @@ export class SeismicplannerClient extends ConnectorClientBase {
      * Get projects
      * @remarks Get a list of projects with their attributes and associations.
      */
-    public async getProjectsAsync(spaceId: string, plannedEndDateFrom?: string, plannedEndDateTo?: string, plannedStartDateFrom?: string, plannedStartDateTo?: string, ids?: string, title?: string, managerIds?: string, creatorIds?: string, associatedNodeIds?: string, cursor?: string, limit?: string, sort?: string, customProperties?: string, followerIds?: string, includeAssociations?: string, abortSignal?: AbortSignalLike): Promise<PlannerProjectQueryResponse> {
+    public async getProjects(spaceId: string, plannedEndDateFrom?: string, plannedEndDateTo?: string, plannedStartDateFrom?: string, plannedStartDateTo?: string, ids?: string, title?: string, managerIds?: string, creatorIds?: string, associatedNodeIds?: string, cursor?: string, limit?: string, sort?: string, customProperties?: string, followerIds?: string, includeAssociations?: string, abortSignal?: AbortSignalLike): Promise<PlannerProjectQueryResponse> {
         const queryParams: string[] = [];
         if (plannedEndDateFrom !== undefined) {
             queryParams.push(`plannedEndDateFrom=${encodeURIComponent(String(plannedEndDateFrom))}`);
@@ -971,7 +971,7 @@ export class SeismicplannerClient extends ConnectorClientBase {
         const httpResponse = await this.httpClient.sendAsync<PlannerProjectQueryResponse>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as PlannerProjectQueryResponse;
@@ -981,7 +981,7 @@ export class SeismicplannerClient extends ConnectorClientBase {
      * Delete projects
      * @remarks Delete one or more projects.
      */
-    public async deleteProjectsAsync(spaceId: string, ids?: string, deleteTasks?: string, abortSignal?: AbortSignalLike): Promise<AsyncOperationResponse> {
+    public async deleteProjects(spaceId: string, ids?: string, deleteTasks?: string, abortSignal?: AbortSignalLike): Promise<AsyncOperationResponse> {
         const queryParams: string[] = [];
         if (ids !== undefined) {
             queryParams.push(`ids=${encodeURIComponent(String(ids))}`);
@@ -994,7 +994,7 @@ export class SeismicplannerClient extends ConnectorClientBase {
         const httpResponse = await this.httpClient.sendAsync<AsyncOperationResponse>("DELETE", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `DELETE ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `DELETE ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as AsyncOperationResponse;
@@ -1004,13 +1004,13 @@ export class SeismicplannerClient extends ConnectorClientBase {
      * Create project
      * @remarks Create a project.
      */
-    public async createProjectAsync(input: CreateProject, spaceId: string, abortSignal?: AbortSignalLike): Promise<PlannerProject> {
+    public async createProject(input: CreateProject, spaceId: string, abortSignal?: AbortSignalLike): Promise<PlannerProject> {
         const requestPath = `/planner/v2/spaces/${spaceId}/projects`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<PlannerProject>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as PlannerProject;
@@ -1020,7 +1020,7 @@ export class SeismicplannerClient extends ConnectorClientBase {
      * Get project
      * @remarks Get a single project by ID. Return tasks if desired.
      */
-    public async getProjectAsync(spaceId: string, projectId: string, associatedNodesDepth?: string, includeWorks?: string, abortSignal?: AbortSignalLike): Promise<PlannerProject> {
+    public async getProject(spaceId: string, projectId: string, associatedNodesDepth?: string, includeWorks?: string, abortSignal?: AbortSignalLike): Promise<PlannerProject> {
         const queryParams: string[] = [];
         if (associatedNodesDepth !== undefined) {
             queryParams.push(`associatedNodesDepth=${encodeURIComponent(String(associatedNodesDepth))}`);
@@ -1033,7 +1033,7 @@ export class SeismicplannerClient extends ConnectorClientBase {
         const httpResponse = await this.httpClient.sendAsync<PlannerProject>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as PlannerProject;
@@ -1043,7 +1043,7 @@ export class SeismicplannerClient extends ConnectorClientBase {
      * Delete project
      * @remarks Delete a project.
      */
-    public async deleteProjectAsync(spaceId: string, projectId: string, deleteTasks?: string, abortSignal?: AbortSignalLike): Promise<AsyncOperationResponse> {
+    public async deleteProject(spaceId: string, projectId: string, deleteTasks?: string, abortSignal?: AbortSignalLike): Promise<AsyncOperationResponse> {
         const queryParams: string[] = [];
         if (deleteTasks !== undefined) {
             queryParams.push(`deleteTasks=${encodeURIComponent(String(deleteTasks))}`);
@@ -1053,7 +1053,7 @@ export class SeismicplannerClient extends ConnectorClientBase {
         const httpResponse = await this.httpClient.sendAsync<AsyncOperationResponse>("DELETE", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `DELETE ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `DELETE ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as AsyncOperationResponse;
@@ -1063,13 +1063,13 @@ export class SeismicplannerClient extends ConnectorClientBase {
      * Update a project
      * @remarks Update and return a project.
      */
-    public async updateProjectAsync(input: UpdateProject, spaceId: string, projectId: string, abortSignal?: AbortSignalLike): Promise<PlannerProject> {
+    public async updateProject(input: UpdateProject, spaceId: string, projectId: string, abortSignal?: AbortSignalLike): Promise<PlannerProject> {
         const requestPath = `/planner/v2/spaces/${spaceId}/projects/${projectId}`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<PlannerProject>("PUT", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `PUT ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `PUT ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as PlannerProject;
@@ -1079,7 +1079,7 @@ export class SeismicplannerClient extends ConnectorClientBase {
      * Get requests
      * @remarks Get a list of requests.
      */
-    public async getRequestsAsync(spaceId: string, plannedEndDateFrom?: string, plannedEndDateTo?: string, plannedStartDateFrom?: string, plannedStartDateTo?: string, createdAtFrom?: string, createdAtTo?: string, updatedAtFrom?: string, updatedAtTo?: string, ids?: string, title?: string, assigneeIds?: string, priorities?: string, keywords?: string, assignerIds?: string, creatorIds?: string, stepIds?: string, statusSchemaId?: string, cursor?: string, limit?: string, sort?: string, projectId?: string, hasProject?: string, customProperties?: string, followerIds?: string, associatedNodeIds?: string, contentRefs?: string, includeRequestFormCustomProperties?: string, abortSignal?: AbortSignalLike): Promise<PlannerRequestQueryResponse> {
+    public async getRequests(spaceId: string, plannedEndDateFrom?: string, plannedEndDateTo?: string, plannedStartDateFrom?: string, plannedStartDateTo?: string, createdAtFrom?: string, createdAtTo?: string, updatedAtFrom?: string, updatedAtTo?: string, ids?: string, title?: string, assigneeIds?: string, priorities?: string, keywords?: string, assignerIds?: string, creatorIds?: string, stepIds?: string, statusSchemaId?: string, cursor?: string, limit?: string, sort?: string, projectId?: string, hasProject?: string, customProperties?: string, followerIds?: string, associatedNodeIds?: string, contentRefs?: string, includeRequestFormCustomProperties?: string, abortSignal?: AbortSignalLike): Promise<PlannerRequestQueryResponse> {
         const queryParams: string[] = [];
         if (plannedEndDateFrom !== undefined) {
             queryParams.push(`plannedEndDateFrom=${encodeURIComponent(String(plannedEndDateFrom))}`);
@@ -1167,7 +1167,7 @@ export class SeismicplannerClient extends ConnectorClientBase {
         const httpResponse = await this.httpClient.sendAsync<PlannerRequestQueryResponse>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as PlannerRequestQueryResponse;
@@ -1177,13 +1177,13 @@ export class SeismicplannerClient extends ConnectorClientBase {
      * Delete requests
      * @remarks Bulk delete requests.
      */
-    public async deleteRequestsAsync(input: DeleteRequest, spaceId: string, abortSignal?: AbortSignalLike): Promise<AsyncOperationResponse> {
+    public async deleteRequests(input: DeleteRequest, spaceId: string, abortSignal?: AbortSignalLike): Promise<AsyncOperationResponse> {
         const requestPath = `/planner/v2/spaces/${spaceId}/requests`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<AsyncOperationResponse>("DELETE", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `DELETE ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `DELETE ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as AsyncOperationResponse;
@@ -1193,13 +1193,13 @@ export class SeismicplannerClient extends ConnectorClientBase {
      * Create request
      * @remarks Create a request.
      */
-    public async createRequestAsync(input: CreateRequest, spaceId: string, abortSignal?: AbortSignalLike): Promise<PlannerRequest> {
+    public async createRequest(input: CreateRequest, spaceId: string, abortSignal?: AbortSignalLike): Promise<PlannerRequest> {
         const requestPath = `/planner/v2/spaces/${spaceId}/requests`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<PlannerRequest>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as PlannerRequest;
@@ -1209,13 +1209,13 @@ export class SeismicplannerClient extends ConnectorClientBase {
      * Get request
      * @remarks Get a single request.
      */
-    public async getRequestAsync(spaceId: string, requestId: string, abortSignal?: AbortSignalLike): Promise<PlannerRequest> {
+    public async getRequest(spaceId: string, requestId: string, abortSignal?: AbortSignalLike): Promise<PlannerRequest> {
         const requestPath = `/planner/v2/spaces/${spaceId}/requests/${requestId}`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<PlannerRequest>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as PlannerRequest;
@@ -1225,13 +1225,13 @@ export class SeismicplannerClient extends ConnectorClientBase {
      * Delete request
      * @remarks Delete a request.
      */
-    public async deleteRequestAsync(spaceId: string, requestId: string, abortSignal?: AbortSignalLike): Promise<void> {
+    public async deleteRequest(spaceId: string, requestId: string, abortSignal?: AbortSignalLike): Promise<void> {
         const requestPath = `/planner/v2/spaces/${spaceId}/requests/${requestId}`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<void>("DELETE", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `DELETE ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `DELETE ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
     }
 
@@ -1239,13 +1239,13 @@ export class SeismicplannerClient extends ConnectorClientBase {
      * Update request
      * @remarks Update a request.
      */
-    public async updateRequestAsync(input: UpdateRequest, spaceId: string, requestId: string, abortSignal?: AbortSignalLike): Promise<PlannerRequest> {
+    public async updateRequest(input: UpdateRequest, spaceId: string, requestId: string, abortSignal?: AbortSignalLike): Promise<PlannerRequest> {
         const requestPath = `/planner/v2/spaces/${spaceId}/requests/${requestId}`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<PlannerRequest>("PUT", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `PUT ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `PUT ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as PlannerRequest;
@@ -1255,7 +1255,7 @@ export class SeismicplannerClient extends ConnectorClientBase {
      * Get status schemas
      * @remarks Get a list of task/request status schemas. These schemas hold the data for set statuses for specific work.  Example: `(Not started, In progress, Complete)`
      */
-    public async getStatusSchemasAsync(spaceId: string, isDefault?: string, type?: string, ids?: string, creatorIds?: string, cursor?: string, limit?: string, abortSignal?: AbortSignalLike): Promise<StatusSchemaQueryResponse> {
+    public async getStatusSchemas(spaceId: string, isDefault?: string, type?: string, ids?: string, creatorIds?: string, cursor?: string, limit?: string, abortSignal?: AbortSignalLike): Promise<StatusSchemaQueryResponse> {
         const queryParams: string[] = [];
         if (isDefault !== undefined) {
             queryParams.push(`isDefault=${encodeURIComponent(String(isDefault))}`);
@@ -1280,7 +1280,7 @@ export class SeismicplannerClient extends ConnectorClientBase {
         const httpResponse = await this.httpClient.sendAsync<StatusSchemaQueryResponse>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as StatusSchemaQueryResponse;
@@ -1290,13 +1290,13 @@ export class SeismicplannerClient extends ConnectorClientBase {
      * Get status schema
      * @remarks Get a single status schema by ID. These schemas hold the data for set statuses for specific work.  Example: `(Not started, In progress, Complete)`
      */
-    public async getStatusSchemaAsync(spaceId: string, statusSchemaId: string, abortSignal?: AbortSignalLike): Promise<StatusSchema> {
+    public async getStatusSchema(spaceId: string, statusSchemaId: string, abortSignal?: AbortSignalLike): Promise<StatusSchema> {
         const requestPath = `/planner/v2/spaces/${spaceId}/statusschema/${statusSchemaId}`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<StatusSchema>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as StatusSchema;
@@ -1306,7 +1306,7 @@ export class SeismicplannerClient extends ConnectorClientBase {
      * Get tasks
      * @remarks Get a list of tasks.
      */
-    public async getTasksAsync(spaceId: string, plannedEndDateFrom?: string, plannedEndDateTo?: string, plannedStartDateFrom?: string, plannedStartDateTo?: string, createdAtFrom?: string, createdAtTo?: string, updatedAtFrom?: string, updatedAtTo?: string, ids?: string, title?: string, description?: string, assigneeIds?: string, priorities?: string, keywords?: string, assignerIds?: string, stepIds?: string, statusSchemaId?: string, cursor?: string, limit?: string, sort?: string, recursive?: string, projectId?: string, hasProject?: string, customProperties?: string, followerIds?: string, associatedNodeIds?: string, creatorIds?: string, includeAssociations?: string, parentId?: string, abortSignal?: AbortSignalLike): Promise<PlannerTaskQueryResponse> {
+    public async getTasks(spaceId: string, plannedEndDateFrom?: string, plannedEndDateTo?: string, plannedStartDateFrom?: string, plannedStartDateTo?: string, createdAtFrom?: string, createdAtTo?: string, updatedAtFrom?: string, updatedAtTo?: string, ids?: string, title?: string, description?: string, assigneeIds?: string, priorities?: string, keywords?: string, assignerIds?: string, stepIds?: string, statusSchemaId?: string, cursor?: string, limit?: string, sort?: string, recursive?: string, projectId?: string, hasProject?: string, customProperties?: string, followerIds?: string, associatedNodeIds?: string, creatorIds?: string, includeAssociations?: string, parentId?: string, abortSignal?: AbortSignalLike): Promise<PlannerTaskQueryResponse> {
         const queryParams: string[] = [];
         if (plannedEndDateFrom !== undefined) {
             queryParams.push(`plannedEndDateFrom=${encodeURIComponent(String(plannedEndDateFrom))}`);
@@ -1400,7 +1400,7 @@ export class SeismicplannerClient extends ConnectorClientBase {
         const httpResponse = await this.httpClient.sendAsync<PlannerTaskQueryResponse>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as PlannerTaskQueryResponse;
@@ -1410,13 +1410,13 @@ export class SeismicplannerClient extends ConnectorClientBase {
      * Create task
      * @remarks Create a task.
      */
-    public async createTaskAsync(input: CreateTask, spaceId: string, abortSignal?: AbortSignalLike): Promise<PlannerTask> {
+    public async createTask(input: CreateTask, spaceId: string, abortSignal?: AbortSignalLike): Promise<PlannerTask> {
         const requestPath = `/planner/v2/spaces/${spaceId}/tasks`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<PlannerTask>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as PlannerTask;
@@ -1426,13 +1426,13 @@ export class SeismicplannerClient extends ConnectorClientBase {
      * Get task
      * @remarks Get a single task by ID.
      */
-    public async getTaskAsync(spaceId: string, taskId: string, abortSignal?: AbortSignalLike): Promise<PlannerTask> {
+    public async getTask(spaceId: string, taskId: string, abortSignal?: AbortSignalLike): Promise<PlannerTask> {
         const requestPath = `/planner/v2/spaces/${spaceId}/tasks/${taskId}`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<PlannerTask>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as PlannerTask;
@@ -1442,13 +1442,13 @@ export class SeismicplannerClient extends ConnectorClientBase {
      * Delete task
      * @remarks Delete a task.
      */
-    public async deleteTaskAsync(spaceId: string, taskId: string, abortSignal?: AbortSignalLike): Promise<AsyncOperationResponse> {
+    public async deleteTask(spaceId: string, taskId: string, abortSignal?: AbortSignalLike): Promise<AsyncOperationResponse> {
         const requestPath = `/planner/v2/spaces/${spaceId}/tasks/${taskId}`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<AsyncOperationResponse>("DELETE", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `DELETE ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `DELETE ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as AsyncOperationResponse;
@@ -1458,13 +1458,13 @@ export class SeismicplannerClient extends ConnectorClientBase {
      * Update task
      * @remarks Update an existing task.
      */
-    public async updateTaskAsync(input: UpdateTask, spaceId: string, taskId: string, abortSignal?: AbortSignalLike): Promise<PlannerTask> {
+    public async updateTask(input: UpdateTask, spaceId: string, taskId: string, abortSignal?: AbortSignalLike): Promise<PlannerTask> {
         const requestPath = `/planner/v2/spaces/${spaceId}/tasks/${taskId}`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.httpClient.sendAsync<PlannerTask>("PUT", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `PUT ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `PUT ${requestPath}`, httpResponse.statusCode, httpResponse.text);
         }
 
         return httpResponse.value as PlannerTask;
