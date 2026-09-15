@@ -78,6 +78,7 @@ export const ConnectorNames = {
     Webex: "webex",
     WordPress: "wordpress",
     Zendesk: "zendesk",
+    ZohoZeptoMail: "zeptomail",
     ZohoSign: "zohosign",
 } as const;
 
