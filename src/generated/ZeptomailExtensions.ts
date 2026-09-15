@@ -51,7 +51,7 @@ export interface SendMailInput {
     /** This is the body content for your email. */
     htmlbody?: string;
     /** The email address to which the recipient's email responses will be addressed. */
-    reply_to?: Array<ReplyToAddresss>;
+    reply_to?: Array<ReplyToAddress>;
     /** Attachments */
     attachments?: Array<Record<string, unknown>>;
 }
@@ -76,7 +76,7 @@ export interface SendTemplateMailInput {
     /** You can use merge tags to replace the placeholders with multiple values for different recipients.  */
     merge_key_detail?: Array<Record<string, unknown>>;
     /** Reply To */
-    reply_to?: Array<ReplyToAddresss>;
+    reply_to?: Array<ReplyToAddress>;
 }
 
 /**
@@ -111,9 +111,9 @@ export interface EmailAddress {
 }
 
 /**
- * Definition: ReplyToAddresss
+ * Definition: ReplyToAddress
  */
-export interface ReplyToAddresss {
+export interface ReplyToAddress {
     /** A valid email address containing a domain that is verified in your Mail Agent. */
     address?: string;
     /** Name for the reply-to. */

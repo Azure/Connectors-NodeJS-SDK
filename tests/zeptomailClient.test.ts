@@ -4,6 +4,8 @@ import type { TokenCredential } from "@azure/core-auth";
 import { ConnectorNames } from "../src/generated/connectorNames.ts";
 import { availableConnectors } from "../src/generated/ManagedConnectors.ts";
 import {
+    ReplyToAddress,
+    SendMailInput,
     SendTemplateMailInput,
     ZeptomailClient,
 } from "../src/generated/ZeptomailExtensions.ts";
@@ -35,5 +37,16 @@ describe("Zoho ZeptoMail generated client", () => {
         expect(client.connectorName).toBe("zeptomail");
         expect(ConnectorNames.ZohoZeptoMail).toBe("zeptomail");
         expect(availableConnectors).toContain("zeptomail");
+    });
+
+    it("should preserve the corrected reply-to model in both request types", () => {
+        const replyToAddress: ReplyToAddress = { address: "reply@example.com", name: "Reply" };
+        const sendMail: Pick<SendMailInput, "reply_to"> = { reply_to: [replyToAddress] };
+        const sendTemplateMail: Pick<SendTemplateMailInput, "reply_to"> = { reply_to: [replyToAddress] };
+
+        expect(JSON.parse(JSON.stringify({ sendMail, sendTemplateMail }))).toEqual({
+            sendMail: { reply_to: [{ address: "reply@example.com", name: "Reply" }] },
+            sendTemplateMail: { reply_to: [{ address: "reply@example.com", name: "Reply" }] },
+        });
     });
 });

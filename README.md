@@ -335,7 +335,7 @@ samples, but have not been validated end to end against live connector services.
 | **Orderful** | `@azure/connectors/generated/OrderfulExtensions` | Mocked SDK tests; retired connector fixture |
 | **Zoho ZeptoMail** | `@azure/connectors/generated/ZeptomailExtensions` | Mocked SDK tests |
 
-**Test coverage:** 1,219 tests across 67 test suites and 75 generated connectors.
+**Test coverage:** 1,220 tests across 67 test suites and 75 generated connectors.
 
 ## Authentication
 

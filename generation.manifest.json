@@ -556,8 +556,8 @@
       "outputFile": "src/generated/ZeptomailExtensions.ts",
       "swaggerSnapshot": "swagger-cache/zeptomail.swagger.json",
       "swaggerSha256": "85dd833f593445f5fa135d342774d12f211707b1d0de6d2ef1695d985e5c4854",
-      "outputSha256": "eed2e5f1246d45591f09f5e1ea7d99ee8eb5f9333de9e6ba78dc1e73ff9c1763",
-      "generatorCommit": "b01d44468eb88b313d6e3df415260d52c0955c11"
+      "outputSha256": "5d3d0e721bb1494b1ada0890ca6b5496383f1fb8a482392dad8b502192e0ee75",
+      "generatorCommit": "e5353200897ab9da76d6a7e5fbe8ede055e03487"
     },
     {
       "apiName": "zohosign",
