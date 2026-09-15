@@ -267,7 +267,7 @@ export interface CustomPropertyDataDisplay {
 export interface CustomPropertyValues {
     id?: string;
     /** Localization object */
-    localizations?: Record<string, unknown>;
+    localizations?: Record<string, CustomPropertyDataDisplay>;
     /** Indicate if the custom property allows multiple values */
     multipleValue?: boolean;
     /** Name of custom property */

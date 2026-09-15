@@ -14,7 +14,11 @@ import { OrderfulClient } from "../src/generated/OrderfulExtensions.ts";
 import { PlivoClient } from "../src/generated/PlivoExtensions.ts";
 import { RepliconClient } from "../src/generated/RepliconExtensions.ts";
 import { RevaiClient } from "../src/generated/RevaiExtensions.ts";
-import { SeismicplannerClient } from "../src/generated/SeismicplannerExtensions.ts";
+import {
+    CustomPropertyDataDisplay,
+    CustomPropertyValues,
+    SeismicplannerClient,
+} from "../src/generated/SeismicplannerExtensions.ts";
 import { StarmindClient } from "../src/generated/StarmindExtensions.ts";
 import { Starrezrestv1Client } from "../src/generated/Starrezrestv1Extensions.ts";
 import { TallyfyClient } from "../src/generated/TallyfyExtensions.ts";
@@ -121,6 +125,19 @@ describe("Phase 5-7 connector clients", () => {
         const client = new connector.clientConstructor(TestConnectionUrl, createMockCredential());
 
         expect(client.connectorName).toBe(connector.apiName);
+    });
+
+    it("should preserve typed Seismic Planner localization map values", () => {
+        const localization: CustomPropertyDataDisplay = { name: "English" };
+        const model: CustomPropertyValues = {
+            localizations: { "en-US": localization },
+        };
+        const localizationName: string | undefined = model.localizations?.["en-US"].name;
+
+        expect(localizationName).toBe("English");
+        expect(JSON.parse(JSON.stringify(model))).toEqual({
+            localizations: { "en-US": { name: "English" } },
+        });
     });
 
     it.each(ActionConnectorCases)("should invoke an authenticated $displayName action", async connector => {
