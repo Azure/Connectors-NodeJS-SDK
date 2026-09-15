@@ -783,7 +783,7 @@ index e43e1cbbf72..ee5b1bfc40e 100644
              var markerCount = Regex.Matches(
                  input: output,
 diff --git a/src/tools/CodefulSdkGenerator.Tests/DirectClientTypeScriptOutputFormatTests.cs b/src/tools/CodefulSdkGenerator.Tests/DirectClientTypeScriptOutputFormatTests.cs
-index 40cab0cf61a..883c05dc2ad 100644
+index 86e27397c5f..883c05dc2ad 100644
 --- a/src/tools/CodefulSdkGenerator.Tests/DirectClientTypeScriptOutputFormatTests.cs
 +++ b/src/tools/CodefulSdkGenerator.Tests/DirectClientTypeScriptOutputFormatTests.cs
 @@ -132,6 +132,82 @@ namespace LogicApps.Tests
@@ -950,7 +950,7 @@ index 40cab0cf61a..883c05dc2ad 100644
          }
  
          /// <summary>
-@@ -409,31 +483,113 @@ namespace LogicApps.Tests
+@@ -409,32 +483,113 @@ namespace LogicApps.Tests
  
              var output = writer.ToString();
              Assert.IsTrue(
@@ -969,8 +969,9 @@ index 40cab0cf61a..883c05dc2ad 100644
 -                output.Contains("sendAsync<ItemListResult>(\"GET\", requestUrl, undefined, undefined, abortSignal)", StringComparison.Ordinal),
 -                message: "Every paginated page request should forward the caller's abort signal.");
 -            Assert.IsTrue(
--                output.Contains("throw new ConnectorException(this.connectorName, `GET ${requestUrl}`, httpResponse.statusCode, httpResponse.text);", StringComparison.Ordinal),
--                message: "Paginated failures should identify the URL of the page request that failed.");
+-                output.Contains("const operationPath = this.getOperationPath(requestUrl);", StringComparison.Ordinal) &&
+-                output.Contains("throw new ConnectorException(this.connectorName, `GET ${operationPath}`, httpResponse.statusCode, httpResponse.text);", StringComparison.Ordinal),
+-                message: "Paginated failures should identify the sanitized operation path of the page request that failed.");
 +                output.Contains("sendWithTracingAsync<ItemListResult>(\"Formattest.listItems\", \"ListItems\", requestMethod, requestUrl, undefined, options)", StringComparison.Ordinal),
 +                message: "Every paginated page request should preserve operation options and tracing context.");
              Assert.IsTrue(
@@ -1074,7 +1075,7 @@ index 40cab0cf61a..883c05dc2ad 100644
          {
              var swagger = JsonObject.Parse(FormatTestSwagger).AsObject();
              swagger[SchemaPropertyNames.Definitions]["ItemListResult"][SchemaPropertyNames.Properties][SchemaPropertyNames.PaginationNextLink][SchemaPropertyNames.Type] = "integer";
-@@ -443,12 +599,83 @@ namespace LogicApps.Tests
+@@ -444,12 +599,83 @@ namespace LogicApps.Tests
              generator.Generate(swagger, "formattest", writer);
  
              var output = writer.ToString();
@@ -1163,7 +1164,7 @@ index 40cab0cf61a..883c05dc2ad 100644
          }
  
          /// <summary>
-@@ -592,7 +819,7 @@ namespace LogicApps.Tests
+@@ -593,7 +819,7 @@ namespace LogicApps.Tests
              var output = writer.ToString();
  
              // NOTE(swapnilnagar): The connectorName getter should return the raw connector name string,
@@ -1172,7 +1173,7 @@ index 40cab0cf61a..883c05dc2ad 100644
              Assert.IsTrue(
                  output.Contains("return \"formattest\"", StringComparison.Ordinal),
                  message: "connectorName property should return the raw connector name.");
-@@ -619,7 +846,7 @@ namespace LogicApps.Tests
+@@ -620,7 +846,7 @@ namespace LogicApps.Tests
  
          [TestMethod]
          [Owner("swapnilnagar")]
@@ -1181,7 +1182,7 @@ index 40cab0cf61a..883c05dc2ad 100644
          {
              var swagger = JsonObject.Parse(FormatTestSwagger).AsObject();
              var generator = new DirectClientTypeScriptGenerator();
-@@ -629,10 +856,9 @@ namespace LogicApps.Tests
+@@ -630,10 +856,9 @@ namespace LogicApps.Tests
  
              var output = writer.ToString();
  
@@ -1470,7 +1471,7 @@ index b3c14ed22de..10cc8845cc6 100644
          /// Gets or sets a value indicating whether the operation's version affixes are kept in the
          /// generated method name instead of being simplified away.
 diff --git a/src/tools/CodefulSdkGenerator/DirectClient/DirectClientTypeScriptCodeGenerator.cs b/src/tools/CodefulSdkGenerator/DirectClient/DirectClientTypeScriptCodeGenerator.cs
-index c6c1f91eff0..38021cb1cec 100644
+index 8e56776df8a..38021cb1cec 100644
 --- a/src/tools/CodefulSdkGenerator/DirectClient/DirectClientTypeScriptCodeGenerator.cs
 +++ b/src/tools/CodefulSdkGenerator/DirectClient/DirectClientTypeScriptCodeGenerator.cs
 @@ -19,6 +19,7 @@ namespace Microsoft.Azure.Workflows.CodefulSdkGenerator.DirectClient
@@ -1788,7 +1789,7 @@ index c6c1f91eff0..38021cb1cec 100644
  
              if (method.HasResponse)
              {
-@@ -556,25 +572,40 @@ namespace Microsoft.Azure.Workflows.CodefulSdkGenerator.DirectClient
+@@ -556,26 +572,40 @@ namespace Microsoft.Azure.Workflows.CodefulSdkGenerator.DirectClient
                  {
                      stringBuilder.AppendLine($"        return this.createPageable<{method.ResponseTypeName}, {pageItemTypeName}>(");
                      stringBuilder.AppendLine("            requestPath,");
@@ -1796,7 +1797,8 @@ index c6c1f91eff0..38021cb1cec 100644
 -                    stringBuilder.AppendLine($"                const httpResponse = await this.httpClient.sendAsync<{method.ResponseTypeName}>(\"{httpMethod}\", requestUrl{bodyArg});");
 -                    stringBuilder.AppendLine();
 -                    stringBuilder.AppendLine("                if (!httpResponse.isSuccessStatusCode) {");
--                    stringBuilder.AppendLine($"                    throw new ConnectorException(this.connectorName, `{httpMethod} ${{requestUrl}}`, httpResponse.statusCode, httpResponse.text);");
+-                    stringBuilder.AppendLine("                    const operationPath = this.getOperationPath(requestUrl);");
+-                    stringBuilder.AppendLine($"                    throw new ConnectorException(this.connectorName, `{httpMethod} ${{operationPath}}`, httpResponse.statusCode, httpResponse.text);");
 -                    stringBuilder.AppendLine("                }");
 +                    if (method.IsPaginated)
 +                    {
@@ -1840,7 +1842,7 @@ index c6c1f91eff0..38021cb1cec 100644
                      stringBuilder.AppendLine();
                      stringBuilder.AppendLine($"        return httpResponse.value as {method.ResponseTypeName};");
                  }
-@@ -582,11 +613,7 @@ namespace Microsoft.Azure.Workflows.CodefulSdkGenerator.DirectClient
+@@ -583,11 +613,7 @@ namespace Microsoft.Azure.Workflows.CodefulSdkGenerator.DirectClient
              else
              {
                  stringBuilder.AppendLine($"        const requestUrl = this.resolveUrl(requestPath);");
@@ -1853,7 +1855,7 @@ index c6c1f91eff0..38021cb1cec 100644
              }
  
              stringBuilder.AppendLine("    }");
-@@ -623,6 +650,23 @@ namespace Microsoft.Azure.Workflows.CodefulSdkGenerator.DirectClient
+@@ -624,6 +650,23 @@ namespace Microsoft.Azure.Workflows.CodefulSdkGenerator.DirectClient
                  ?? IdentifierNormalizer.Normalize($"{simplifiedName}Input", isVariableName: false);
          }
  
@@ -1877,7 +1879,7 @@ index c6c1f91eff0..38021cb1cec 100644
          /// <summary>
          /// Generates typed callback payload aliases for triggers with resolvable item types.
          /// </summary>
-@@ -882,6 +926,12 @@ namespace Microsoft.Azure.Workflows.CodefulSdkGenerator.DirectClient
+@@ -883,6 +926,12 @@ namespace Microsoft.Azure.Workflows.CodefulSdkGenerator.DirectClient
                  var refStr = (string)refNode;
                  if (refStr.StartsWith(SchemaPropertyNames.DefinitionsRefPrefix, StringComparison.Ordinal))
                  {
@@ -1890,7 +1892,7 @@ index c6c1f91eff0..38021cb1cec 100644
                      return this.ResolveDefinitionTypeName(
                          refStr.Substring(SchemaPropertyNames.DefinitionsRefPrefix.Length));
                  }
-@@ -918,6 +968,23 @@ namespace Microsoft.Azure.Workflows.CodefulSdkGenerator.DirectClient
+@@ -919,6 +968,23 @@ namespace Microsoft.Azure.Workflows.CodefulSdkGenerator.DirectClient
              };
          }
  
@@ -1914,7 +1916,7 @@ index c6c1f91eff0..38021cb1cec 100644
          private string GetTypeScriptTypeForParameter(DirectClientParameter parameter)
          {
              if (parameter.Schema == null)
-@@ -928,6 +995,139 @@ namespace Microsoft.Azure.Workflows.CodefulSdkGenerator.DirectClient
+@@ -929,6 +995,139 @@ namespace Microsoft.Azure.Workflows.CodefulSdkGenerator.DirectClient
              return this.GetTypeScriptType(parameter.Schema, null);
          }
  
