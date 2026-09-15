@@ -8,12 +8,14 @@
 
 import type { AbortSignalLike } from "@azure/abort-controller";
 import type { TokenCredential } from "@azure/core-auth";
+import type { OperationTracingOptions } from "@azure/core-tracing";
 import {
     bearerTokenAuthenticationPolicy,
     createDefaultHttpClient,
     createPipelineFromOptions,
     createPipelineRequest,
     defaultRetryPolicy,
+    logPolicyName,
 } from "@azure/core-rest-pipeline";
 import type {
     HttpClient,
@@ -45,6 +47,9 @@ export interface ConnectorResponse<TValue = unknown> {
 
     /** Check if the response indicates success. */
     isSuccessStatusCode: boolean;
+
+    /** The complete pipeline response, including its originating request. */
+    rawResponse: PipelineResponse;
 }
 
 /**
@@ -90,6 +95,7 @@ export class ConnectorHttpClient {
      * @param scopes The authentication scopes. Defaults to API Hub scopes.
      * @param body Optional request body (will be JSON-serialized).
      * @param abortSignal Optional abort signal for caller-initiated cancellation.
+    * @param tracingOptions Optional tracing context for the HTTP span.
      */
     public async sendAsync<TValue = unknown>(
         method: string,
@@ -97,6 +103,7 @@ export class ConnectorHttpClient {
         scopes?: string[],
         body?: unknown,
         abortSignal?: AbortSignalLike,
+        tracingOptions?: OperationTracingOptions,
     ): Promise<ConnectorResponse<TValue>> {
         const effectiveScopes = scopes ?? ConnectorHttpClient.ApiHubScopes;
         const logUrl = ConnectorHttpClient.sanitizeUrlForLogging(url);
@@ -107,6 +114,7 @@ export class ConnectorHttpClient {
             method: method as HttpMethods,
             body: body === undefined ? undefined : JSON.stringify(body),
             abortSignal,
+            tracingOptions,
         });
         request.headers.set("Accept", "application/json, */*;q=0.8");
 
@@ -116,11 +124,25 @@ export class ConnectorHttpClient {
 
         try {
             const response = await this.getPipeline(effectiveScopes).sendRequest(this.httpClient, request);
-            logger.info(`Response ${response.status} ${method} ${logUrl} (${Date.now() - startTime}ms)`);
+            const responseMessage = `Response ${response.status} ${method} ${logUrl} (${Date.now() - startTime}ms)`;
+            if (response.status >= 200 && response.status < 300) {
+                logger.info(responseMessage);
+            } else {
+                logger.error(responseMessage);
+            }
+
             return ConnectorHttpClient.createConnectorResponse<TValue>(response);
         } catch (error) {
-            const errorMessage = error instanceof Error ? error.message : String(error);
-            logger.error(`${method} ${logUrl} failed: ${errorMessage}`);
+            if (abortSignal?.aborted || error instanceof Error && error.name === "AbortError") {
+                logger.info(`${method} ${logUrl} canceled`);
+            } else {
+                const errorName = error instanceof Error ? error.name : "UnknownError";
+                logger.warning(`${method} ${logUrl} failed with ${errorName}`);
+                if (error instanceof Error && error.stack) {
+                    logger.verbose(ConnectorHttpClient.sanitizeStackForLogging(error));
+                }
+            }
+
             throw error;
         }
     }
@@ -131,6 +153,7 @@ export class ConnectorHttpClient {
         let pipeline = this.pipelines.get(key);
         if (!pipeline) {
             pipeline = createPipelineFromOptions(this.pipelineOptions);
+            pipeline.removePolicy({ name: logPolicyName });
             pipeline.removePolicy({ name: ConnectorHttpClient.DefaultRetryPolicyName });
             const retryPolicy = defaultRetryPolicy(this.pipelineOptions.retryOptions);
             pipeline.addPolicy(
@@ -166,7 +189,7 @@ export class ConnectorHttpClient {
             sendRequest: async (request, next): Promise<PipelineResponse> => {
                 const state = attempts.get(request) ?? { count: 0, completedAt: Date.now() };
                 if (state.count > 0) {
-                    logger.warning(
+                    logger.info(
                         `Retry ${state.count}/${maxRetries} for ${request.method} ` +
                         `${ConnectorHttpClient.sanitizeUrlForLogging(request.url)} after ${Date.now() - state.completedAt}ms`,
                     );
@@ -186,10 +209,22 @@ export class ConnectorHttpClient {
     private static sanitizeUrlForLogging(url: string): string {
         try {
             const parsedUrl = new URL(url);
-            return `${parsedUrl.origin}${parsedUrl.pathname}`;
+            return parsedUrl.origin;
         } catch {
             return "<invalid URL>";
         }
+    }
+
+    private static sanitizeStackForLogging(error: Error): string {
+        const stackLines = error.stack?.split("\n") ?? [];
+        if (stackLines.length === 0) {
+            return error.name;
+        }
+
+        stackLines[0] = error.name;
+        return stackLines
+            .join("\n")
+            .replace(/https?:\/\/[^\s)'"\]]+/g, url => ConnectorHttpClient.sanitizeUrlForLogging(url));
     }
 
     private static createConnectorResponse<TValue>(response: PipelineResponse): ConnectorResponse<TValue> {
@@ -209,6 +244,7 @@ export class ConnectorHttpClient {
             value,
             text,
             isSuccessStatusCode: response.status >= 200 && response.status < 300,
+            rawResponse: response,
         };
     }
 }

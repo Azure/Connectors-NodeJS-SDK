@@ -102,7 +102,8 @@ describe("BoxClient — getFileMetadata", () => {
             const connectorError = error as ConnectorError;
             expect(connectorError.statusCode).toBe(404);
             expect(connectorError.responseBody).toBe("Not Found");
-            expect(connectorError.operation).toBe("GET /datasets/default/files/missing");
+            expect(connectorError.operation).toBe("GetFileMetadata");
+            expect(connectorError.request.url).toContain("/datasets/default/files/missing");
         }
     });
 });

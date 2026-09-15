@@ -50,7 +50,7 @@ describe("GoogletasksClient — constructor", () => {
     it("should strip trailing slashes from connection URL", async () => {
         mockFetchResponse([]);
         const client = new GoogletasksClient(TestConnectionUrl + "///", createMockCredential());
-        await client.listTasks("list1");
+        await client.listTasks("list1").byPage().next();
         const [url] = (global.fetch as jest.Mock).mock.calls[0];
         // NOTE: Confirms the trailing slashes were stripped by inspecting the
         //       outbound URL: after the scheme, no `//` should remain.
@@ -75,13 +75,13 @@ describe("GoogletasksClient — listTasks", () => {
     });
 
     it("should GET tasks for a task list and return the deserialized response", async () => {
-        const tasks = { value: [{ id: "task1", title: "Write report" }] };
+        const tasks = { items: [{ id: "task1", title: "Write report" }] };
         mockFetchResponse(tasks);
 
         const client = new GoogletasksClient(TestConnectionUrl, createMockCredential());
-        const result = await client.listTasks("list1");
+        const result = await client.listTasks("list1").byPage().next();
 
-        expect(result).toEqual(tasks);
+        expect(result.value).toEqual(tasks.items);
         expect(global.fetch).toHaveBeenCalledTimes(1);
         const [url, init] = (global.fetch as jest.Mock).mock.calls[0];
         expect(init.method).toBe("GET");
@@ -94,14 +94,15 @@ describe("GoogletasksClient — listTasks", () => {
 
         const client = new GoogletasksClient(TestConnectionUrl, createMockCredential());
         try {
-            await client.listTasks("missing");
+            await client.listTasks("missing").byPage().next();
             throw new Error("Expected ConnectorError to be thrown.");
         } catch (error) {
             expect(error).toBeInstanceOf(ConnectorError);
             const connectorError = error as ConnectorError;
             expect(connectorError.statusCode).toBe(404);
             expect(connectorError.responseBody).toBe("Not Found");
-            expect(connectorError.operation).toBe("GET /lists/missing/tasks");
+            expect(connectorError.operation).toBe("ListTasks");
+            expect(connectorError.request.url).toContain("/lists/missing/tasks");
         }
     });
 });

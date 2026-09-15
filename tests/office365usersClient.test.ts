@@ -271,7 +271,8 @@ describe("Office365usersClient — error handling", () => {
             const connectorError = error as ConnectorError;
             expect(connectorError.statusCode).toBe(404);
             expect(connectorError.responseBody).toBe(errorBody);
-            expect(connectorError.operation).toContain("GET");
+            expect(connectorError.operation).toBe("Manager_V2");
+            expect(connectorError.request.url).toContain("nonexistent-user");
         }
     });
 });

@@ -102,7 +102,8 @@ describe("GooglecalendarClient — getEvent", () => {
             const connectorError = error as ConnectorError;
             expect(connectorError.statusCode).toBe(404);
             expect(connectorError.responseBody).toBe("Not Found");
-            expect(connectorError.operation).toBe("GET /calendars/cal1/events/missing");
+            expect(connectorError.operation).toBe("GetEvent");
+            expect(connectorError.request.url).toContain("/calendars/cal1/events/missing");
         }
     });
 });

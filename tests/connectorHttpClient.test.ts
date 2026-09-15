@@ -322,13 +322,19 @@ describe("ConnectorHttpClient", () => {
             retryOptions: { maxRetries: 0 },
         });
 
-        await expect(client.sendAsync(
-            "GET",
-            "https://example.com/api/items",
-            undefined,
-            undefined,
-            controller.signal,
-        )).rejects.toMatchObject({ name: "AbortError" });
+        const messages = await captureConnectorLogs(async () => {
+            await expect(client.sendAsync(
+                "GET",
+                "https://example.com/api/items",
+                undefined,
+                undefined,
+                controller.signal,
+            )).rejects.toMatchObject({ name: "AbortError" });
+        });
+
+        expect(messages).toContain("azure:connectors:info GET https://example.com canceled");
+        expect(messages.some(message => message.includes("azure:connectors:warning"))).toBe(false);
+        expect(messages.some(message => message.includes("azure:connectors:error"))).toBe(false);
     });
 
     it("should propagate a plain-object AbortSignalLike during an in-flight request", async () => {
@@ -365,19 +371,19 @@ describe("ConnectorHttpClient", () => {
         await expect(sendPromise).rejects.toMatchObject({ name: "AbortError" });
     });
 
-    it("should log request and response details without query parameters", async () => {
+    it("should log request and response metadata without customer-controlled URL paths", async () => {
         const httpClient = new MockHttpClient(async request => createMockResponse(request, 200));
         const client = new ConnectorHttpClient(new MockTokenCredential(), { httpClient });
 
         const messages = await captureConnectorLogs(async () => {
-            await client.sendAsync("GET", "https://example.com/api/items?sig=secret");
+            await client.sendAsync("GET", "https://example.com/api/messages/customer-message-id?sig=secret");
         });
 
         expect(messages).toEqual(expect.arrayContaining([
-            expect.stringMatching(/^azure:connectors:info Request GET https:\/\/example\.com\/api\/items$/),
-            expect.stringMatching(/^azure:connectors:info Response 200 GET https:\/\/example\.com\/api\/items \(\d+ms\)$/),
+            expect.stringMatching(/^azure:connectors:info Request GET https:\/\/example\.com$/),
+            expect.stringMatching(/^azure:connectors:info Response 200 GET https:\/\/example\.com \(\d+ms\)$/),
         ]));
-        expect(messages.join("\n")).not.toContain("secret");
+        expect(messages.join("\n")).not.toMatch(/customer-message-id|secret/);
     });
 
     it("should log each retry attempt", async () => {
@@ -393,10 +399,24 @@ describe("ConnectorHttpClient", () => {
             await client.sendAsync("GET", "https://example.com/api/items");
         });
 
-        expect(messages.filter(message => message.includes("azure:connectors:warning Retry"))).toEqual([
-            expect.stringMatching(/Retry 1\/2 for GET https:\/\/example\.com\/api\/items after \d+ms/),
-            expect.stringMatching(/Retry 2\/2 for GET https:\/\/example\.com\/api\/items after \d+ms/),
+        expect(messages.filter(message => message.includes("azure:connectors:info Retry"))).toEqual([
+            expect.stringMatching(/Retry 1\/2 for GET https:\/\/example\.com after \d+ms/),
+            expect.stringMatching(/Retry 2\/2 for GET https:\/\/example\.com after \d+ms/),
         ]);
+    });
+
+    it("should log non-success responses as errors", async () => {
+        const httpClient = new MockHttpClient(async request => createMockResponse(request, 404, "Not found"));
+        const client = new ConnectorHttpClient(new MockTokenCredential(), { httpClient });
+
+        const messages = await captureConnectorLogs(async () => {
+            await client.sendAsync("GET", "https://example.com/api/customers/customer-id");
+        });
+
+        expect(messages).toEqual(expect.arrayContaining([
+            expect.stringMatching(/^azure:connectors:error Response 404 GET https:\/\/example\.com \(\d+ms\)$/),
+        ]));
+        expect(messages.join("\n")).not.toContain("customer-id");
     });
 
     it("should log terminal request errors", async () => {
@@ -413,9 +433,9 @@ describe("ConnectorHttpClient", () => {
                 .rejects.toThrow("invalid request");
         });
 
-        expect(messages).toContain(
-            "azure:connectors:error GET https://example.com/api/items failed: invalid request",
-        );
+        expect(messages).toContain("azure:connectors:warning GET https://example.com failed with TypeError");
+        expect(messages.some(message => message.startsWith("azure:connectors:verbose TypeError\n"))).toBe(true);
+        expect(messages.join("\n")).not.toContain("invalid request");
     });
 
     it("should redact malformed request URLs from logs", async () => {
@@ -426,7 +446,7 @@ describe("ConnectorHttpClient", () => {
         });
 
         expect(messages).toContain("azure:connectors:info Request GET <invalid URL>");
-        expect(messages.some(message => message.startsWith("azure:connectors:error GET <invalid URL> failed:")))
+        expect(messages.some(message => message.startsWith("azure:connectors:warning GET <invalid URL> failed with")))
             .toBe(true);
     });
 
@@ -442,8 +462,7 @@ describe("ConnectorHttpClient", () => {
                 .rejects.toBe("transport failed");
         });
 
-        expect(messages).toContain(
-            "azure:connectors:error GET https://example.com/api/items failed: transport failed",
-        );
+        expect(messages).toContain("azure:connectors:warning GET https://example.com failed with UnknownError");
+        expect(messages.join("\n")).not.toContain("transport failed");
     });
 });

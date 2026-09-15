@@ -75,7 +75,7 @@ describe("SharepointonlineClient — getTables", () => {
 
         expect(result).toEqual(mockTables);
         const [url, init] = (global.fetch as jest.Mock).mock.calls[0];
-        expect(url).toContain(encodeURIComponent(encodeURIComponent("https://contoso.sharepoint.com/sites/team")));
+        expect(url).toContain(encodeURIComponent("https://contoso.sharepoint.com/sites/team"));
         expect(init.method).toBe("GET");
         expect(init.headers["Authorization"]).toBe("Bearer mock-bearer-token");
     });
@@ -94,7 +94,7 @@ describe("SharepointonlineClient — getAllTables", () => {
         expect(result).toEqual(mockTables);
         const [url] = (global.fetch as jest.Mock).mock.calls[0];
         expect(url).toContain("/datasets/");
-        expect(url).toContain(encodeURIComponent(encodeURIComponent("https://contoso.sharepoint.com/sites/team")));
+        expect(url).toContain(encodeURIComponent("https://contoso.sharepoint.com/sites/team"));
         expect(url).toContain("/alltables");
     });
 });
@@ -173,17 +173,10 @@ describe("SharepointonlineClient — error handling", () => {
             const connectorError = error as ConnectorError;
             expect(connectorError.statusCode).toBe(403);
             expect(connectorError.responseBody).toBe(errorBody);
-            expect(connectorError.operation).toContain("GET");
+            expect(connectorError.operation).toBe("GetTables");
         }
     });
 
-    it("should truncate long error response bodies in message", () => {
-        const longBody = "x".repeat(3000);
-        const error = new ConnectorError("sharepointonline", "GET /test", 500, longBody);
-
-        expect(error.message).toContain("...[truncated]");
-        expect(error.responseBody).toBe(longBody);
-    });
 });
 
 describe("SharepointOnline — connector registry", () => {

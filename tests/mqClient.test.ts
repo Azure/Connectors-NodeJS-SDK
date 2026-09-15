@@ -278,7 +278,7 @@ describe("MqClient — error handling", () => {
             const connectorError = error as ConnectorError;
             expect(connectorError.statusCode).toBe(401);
             expect(connectorError.responseBody).toBe(errorBody);
-            expect(connectorError.operation).toContain("POST");
+            expect(connectorError.operation).toBe("ReceiveV2");
         }
     });
 });

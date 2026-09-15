@@ -69,16 +69,19 @@ async function main(): Promise<void> {
     if (SUBSCRIPTION_ID) {
         console.log("\n--- List Locations ---");
         try {
-            const locations: LocationListResult = await client.listSubscriptionsLocations(SUBSCRIPTION_ID);
-            const locs = locations.value ?? [];
-
-            if (locs.length > 0) {
-                console.log(`Found ${locs.length} locations:`);
-                for (const loc of locs.slice(0, 10)) {
+            let locationCount = 0;
+            for await (const loc of client.listSubscriptionsLocations(SUBSCRIPTION_ID)) {
+                if (locationCount < 10) {
                     console.log(`  - ${loc.displayName ?? "Unknown"} (${loc.name})`);
                 }
-            } else {
+
+                locationCount++;
+            }
+
+            if (locationCount === 0) {
                 console.log("No locations found.");
+            } else {
+                console.log(`Found ${locationCount} locations.`);
             }
         } catch (error) {
             if (error instanceof ConnectorError) {

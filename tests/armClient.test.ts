@@ -164,9 +164,9 @@ describe("ArmClient — listSubscriptionsLocations", () => {
         mockFetchResponse(mockLocations);
 
         const client = new ArmClient(TestConnectionUrl, createMockCredential());
-        const result = await client.listSubscriptionsLocations(TestSubscriptionId);
+        const result = await client.listSubscriptionsLocations(TestSubscriptionId).byPage().next();
 
-        expect(result).toEqual(mockLocations);
+        expect(result.value).toEqual(mockLocations.value);
         const [url] = (global.fetch as jest.Mock).mock.calls[0];
         expect(url).toContain(`/subscriptions/${TestSubscriptionId}/locations`);
     });
@@ -349,7 +349,8 @@ describe("ArmClient — error handling", () => {
             const connectorError = error as ConnectorError;
             expect(connectorError.statusCode).toBe(404);
             expect(connectorError.responseBody).toBe(errorBody);
-            expect(connectorError.operation).toContain("GET");
+            expect(connectorError.operation).toBe("Subscriptions_Get");
+            expect(connectorError.request.url).toContain(`/subscriptions/${TestSubscriptionId}`);
         }
     });
 });

@@ -64,13 +64,13 @@ describe("InsightlyClient — listTasks", () => {
     });
 
     it("should GET the tasks list and return the deserialized response", async () => {
-        const tasks = { value: [{ TASK_ID: 1, TITLE: "Follow up", STATUS: "NOT STARTED" }] };
+        const tasks = { tasks: [{ TASK_ID: 1, TITLE: "Follow up", STATUS: "NOT STARTED" }] };
         mockFetchResponse(tasks);
 
         const client = new InsightlyClient(TestConnectionUrl, createMockCredential());
-        const result = await client.listTasks();
+        const result = await client.listTasks().byPage().next();
 
-        expect(result).toEqual(tasks);
+        expect(result.value).toEqual(tasks.tasks);
         expect(global.fetch).toHaveBeenCalledTimes(1);
         const [, init] = (global.fetch as jest.Mock).mock.calls[0];
         expect(init.method).toBe("GET");
@@ -82,7 +82,7 @@ describe("InsightlyClient — listTasks", () => {
 
         const client = new InsightlyClient(TestConnectionUrl, createMockCredential());
         try {
-            await client.listTasks();
+            await client.listTasks().byPage().next();
             throw new Error("Expected ConnectorError to be thrown.");
         } catch (error) {
             expect(error).toBeInstanceOf(ConnectorError);

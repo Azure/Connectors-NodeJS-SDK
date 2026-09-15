@@ -38,18 +38,21 @@ async function main() {
     // Example 1: List root folder
     console.log("\n--- List Root Folder ---");
     try {
-        const files = await client.listRootFolder();
-        const fileList = files ?? [];
-
-        if (fileList.length > 0) {
-            console.log(`Found ${fileList.length} items in root:`);
-            for (const file of fileList.slice(0, 10)) {
+        let fileCount = 0;
+        for await (const file of client.listRootFolder()) {
+            if (fileCount < 10) {
                 const isFolder = file.IsFolder ?? false;
                 const icon = isFolder ? "[folder]" : "[file]";
                 console.log(`  ${icon} ${file.DisplayName ?? file.Name ?? "Unknown"} (${file.Size ?? "?"} bytes)`);
             }
-        } else {
+
+            fileCount++;
+        }
+
+        if (fileCount === 0) {
             console.log("No items found in root folder.");
+        } else {
+            console.log(`Found ${fileCount} items in root.`);
         }
     } catch (error) {
         if (error instanceof ConnectorError) {

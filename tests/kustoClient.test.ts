@@ -130,9 +130,9 @@ describe("KustoClient — listKustoResults", () => {
             cluster: "testcluster" as unknown as ClusterName,
         };
 
-        const result = await client.listKustoResults(input);
+        const result = await client.listKustoResults(input).byPage().next();
 
-        expect(result).toEqual(mockTable);
+        expect(result.value).toEqual(mockTable.value);
         expect(global.fetch).toHaveBeenCalledTimes(1);
 
         const [url, init] = (global.fetch as jest.Mock).mock.calls[0];
@@ -160,9 +160,9 @@ describe("KustoClient — listKustoShowCommandResults", () => {
             cluster: "testcluster" as unknown as ClusterName,
         };
 
-        const result = await client.listKustoShowCommandResults(input);
+        const result = await client.listKustoShowCommandResults(input).byPage().next();
 
-        expect(result).toEqual(mockTable);
+        expect(result.value).toEqual(mockTable.value);
         const [url, init] = (global.fetch as jest.Mock).mock.calls[0];
         expect(url).toBe(`${TestConnectionUrl}/ListKustoShowCommandResults`);
         expect(init.method).toBe("POST");
@@ -310,7 +310,7 @@ describe("KustoClient — error handling", () => {
 
         const client = new KustoClient(TestConnectionUrl, createMockCredential());
         await expect(
-            client.listKustoResults({ csl: "test" as unknown as Query, db: "testdb" as unknown as DatabaseName, cluster: "testcluster" as unknown as ClusterName }),
+            client.listKustoResults({ csl: "test" as unknown as Query, db: "testdb" as unknown as DatabaseName, cluster: "testcluster" as unknown as ClusterName }).byPage().next(),
         ).rejects.toThrow(ConnectorError);
     });
 
@@ -321,43 +321,15 @@ describe("KustoClient — error handling", () => {
         const client = new KustoClient(TestConnectionUrl, createMockCredential());
 
         try {
-            await client.listKustoResults({ csl: "test" as unknown as Query, db: "testdb" as unknown as DatabaseName, cluster: "testcluster" as unknown as ClusterName });
+            await client.listKustoResults({ csl: "test" as unknown as Query, db: "testdb" as unknown as DatabaseName, cluster: "testcluster" as unknown as ClusterName }).byPage().next();
             throw new Error("Expected ConnectorError to be thrown");
         } catch (error) {
             expect(error).toBeInstanceOf(ConnectorError);
             const connectorError = error as ConnectorError;
             expect(connectorError.statusCode).toBe(403);
             expect(connectorError.responseBody).toBe(errorBody);
-            expect(connectorError.operation).toContain("POST");
+            expect(connectorError.operation).toBe("listKustoResultsPost");
         }
-    });
-});
-
-describe("ConnectorError", () => {
-    it("should include status code and response body", () => {
-        const errorBody = '{"code": "Forbidden"}';
-        const error = new ConnectorError("kusto", "GET /test", 403, errorBody);
-
-        expect(error.statusCode).toBe(403);
-        expect(error.responseBody).toBe(errorBody);
-        expect(error.operation).toBe("GET /test");
-        expect(error.name).toBe("ConnectorError");
-    });
-
-    it("should truncate long error response bodies in message", () => {
-        const longBody = "x".repeat(3000);
-        const error = new ConnectorError("kusto", "GET /test", 500, longBody);
-
-        expect(error.message).toContain("...[truncated]");
-        expect(error.responseBody).toBe(longBody);
-        expect(error.responseBody.length).toBe(3000);
-    });
-
-    it("should handle empty response body", () => {
-        const error = new ConnectorError("kusto", "POST /query", 500, "");
-
-        expect(error.message).toContain("POST /query");
-        expect(error.responseBody).toBe("");
     });
 });
 

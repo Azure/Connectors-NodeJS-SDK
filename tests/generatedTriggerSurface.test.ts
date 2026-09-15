@@ -15,6 +15,11 @@ import {
 
 const TeamsConnectionUrl = "https://connection-runtime.azure.com/apim/teams/abc123";
 const GeneratedDirectory = path.join(process.cwd(), "src", "generated");
+const StandardActionVerbs = new Set([
+    "add", "approve", "cancel", "copy", "create", "decline", "delete", "disable", "download", "enable",
+    "execute", "finish", "forward", "get", "list", "move", "reject", "remove", "rename", "resume", "rerun",
+    "run", "search", "send", "set", "start", "stop", "submit", "test", "update", "upload",
+]);
 
 /**
  * A single generated connector extension file paired with its raw source text.
@@ -64,6 +69,10 @@ function extractClientMethodNames(content: string): string[] {
     }
 
     return methodNames;
+}
+
+function splitIdentifierWords(identifier: string): string[] {
+    return identifier.match(/[A-Z]+(?=[A-Z][a-z]|\d|$)|[A-Z]?[a-z]+|[A-Z]?\d+/g) ?? [];
 }
 
 /**
@@ -176,6 +185,22 @@ describe("Generated clients — no trigger operation is invoked as a data-plane 
 
         const methodNames = extractClientMethodNames(arm!.content);
         expect(methodNames).toEqual(expect.arrayContaining(["getSubscription", "listSubscriptions"]));
+    });
+
+    it("should project standardized action verbs before resource nouns", () => {
+        const violations = generatedFiles.flatMap(file => extractClientMethodNames(file.content).flatMap(methodName => {
+            const words = splitIdentifierWords(methodName).map(word => word.toLowerCase());
+            if (StandardActionVerbs.has(words[0])) {
+                return [];
+            }
+
+            const actionVerb = words.slice(1).find(word => StandardActionVerbs.has(word));
+            return actionVerb === undefined
+                ? []
+                : [`${file.connector}.${methodName} contains '${actionVerb}' after its resource noun`];
+        }));
+
+        expect(violations).toEqual([]);
     });
 
     it.each(generatedFiles)(

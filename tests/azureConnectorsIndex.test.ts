@@ -10,6 +10,7 @@ describe("azureConnectors index exports", () => {
         expect(sdk.ConnectionStringTokenProvider).toBeDefined();
         expect(sdk.ConnectorError).toBeDefined();
         expect(sdk.ConnectorHttpClient).toBeDefined();
+        expect(sdk.logger).toBeDefined();
     });
 
     it("should include expected runtime export keys", () => {
@@ -21,6 +22,7 @@ describe("azureConnectors index exports", () => {
                 "ConnectionStringTokenProvider",
                 "ConnectorError",
                 "ConnectorHttpClient",
+                "logger",
             ]),
         );
     });

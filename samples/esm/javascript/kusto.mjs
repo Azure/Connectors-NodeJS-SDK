@@ -55,16 +55,19 @@ async function main() {
             csl: kqlQuery,
             db: DATABASE,
         };
-        const result = await client.listKustoResults(input);
-
-        const rows = result.value ?? [];
-        if (rows.length > 0) {
-            console.log(`Returned ${rows.length} rows:`);
-            for (const row of rows.slice(0, 10)) {
+        let rowCount = 0;
+        for await (const row of client.listKustoResults(input)) {
+            if (rowCount < 10) {
                 console.log(`  ${JSON.stringify(row)}`);
             }
+
+            rowCount++;
+        }
+
+        if (rowCount === 0) {
+            console.log("No rows returned.");
         } else {
-            console.log("Result:", JSON.stringify(result, null, 2));
+            console.log(`Returned ${rowCount} rows.`);
         }
     } catch (error) {
         if (error instanceof ConnectorError) {
@@ -82,17 +85,20 @@ async function main() {
             csl: ".show databases",
             db: DATABASE,
         };
-        const controlResult = await client.listKustoShowCommandResults(controlInput);
-
-        const controlRows = controlResult.value ?? [];
-        if (controlRows.length > 0) {
-            console.log(`Found ${controlRows.length} databases:`);
-            for (const row of controlRows.slice(0, 10)) {
+        let controlRowCount = 0;
+        for await (const row of client.listKustoShowCommandResults(controlInput)) {
+            if (controlRowCount < 10) {
                 const rowRecord = row;
                 console.log(`  - ${rowRecord.DatabaseName ?? rowRecord.Name ?? JSON.stringify(row)}`);
             }
+
+            controlRowCount++;
+        }
+
+        if (controlRowCount === 0) {
+            console.log("No databases found.");
         } else {
-            console.log("Result:", JSON.stringify(controlResult, null, 2));
+            console.log(`Found ${controlRowCount} databases.`);
         }
     } catch (error) {
         if (error instanceof ConnectorError) {

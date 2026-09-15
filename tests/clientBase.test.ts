@@ -3,6 +3,7 @@
 import type { TokenCredential } from "@azure/core-auth";
 import type { PagedAsyncIterableIterator } from "@azure/core-paging";
 import { ConnectorClientBase } from "../src/azureConnectors/clientBase.ts";
+import type { ConnectorPageSettings } from "../src/azureConnectors/clientBase.ts";
 import type { ConnectorClientOptions } from "../src/azureConnectors/options.ts";
 
 interface TestItem {
@@ -45,11 +46,11 @@ class TestConnectorClient extends ConnectorClientBase {
 
     public testCreatePageable(
         firstPageLink: string,
-        fetchPage: (url: string, isFirstPage: boolean) => Promise<TestPage>,
-        itemPropertyName?: string,
+        fetchPage: (url: string, isFirstPage: boolean) => Promise<TestPage | TestItem[]>,
+        itemPropertyName?: string | null,
         nextLinkPropertyName?: string,
     ): PagedAsyncIterableIterator<TestItem> {
-        return this.createPageable<TestPage, TestItem>(
+        return this.createPageable<TestPage | TestItem[], TestItem>(
             firstPageLink,
             fetchPage,
             itemPropertyName,
@@ -248,6 +249,16 @@ describe("ConnectorClientBase", () => {
     describe("createPageable", () => {
         const baseUrl = "https://proxy.azure-apihub.net/apim/arm/conn123";
 
+        it("should expose only continuation tokens as page settings", () => {
+            const settings: ConnectorPageSettings = { continuationToken: "?page=2" };
+
+            // @ts-expect-error Connector paging does not support maxPageSize.
+            const unsupportedSettings: ConnectorPageSettings = { maxPageSize: 10 };
+
+            expect(settings.continuationToken).toBe("?page=2");
+            expect(unsupportedSettings).toEqual({ maxPageSize: 10 });
+        });
+
         it("should lazily yield items and route a foreign nextLink through the connection URL", async () => {
             const client = new TestConnectorClient(baseUrl, createMockCredential());
             const requests: Array<{ url: string; isFirstPage: boolean }> = [];
@@ -332,6 +343,22 @@ describe("ConnectorClientBase", () => {
                 `${baseUrl}/collections/items?page=1`,
                 `${baseUrl}/collections/next?page=2`,
             ]);
+        });
+
+        it("should expose a root-array response as one page", async () => {
+            const client = new TestConnectorClient(baseUrl, createMockCredential());
+            const pageable = client.testCreatePageable(
+                "/items",
+                async () => [{ id: "first" }, { id: "second" }],
+                null,
+            );
+
+            const pages: TestItem[][] = [];
+            for await (const page of pageable.byPage()) {
+                pages.push(page);
+            }
+
+            expect(pages).toEqual([[{ id: "first" }, { id: "second" }]]);
         });
 
         it("should read custom item and next-link properties", async () => {

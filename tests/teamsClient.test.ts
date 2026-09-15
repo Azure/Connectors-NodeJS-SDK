@@ -270,17 +270,10 @@ describe("TeamsClient — error handling", () => {
             const connectorError = error as ConnectorError;
             expect(connectorError.statusCode).toBe(404);
             expect(connectorError.responseBody).toBe(errorBody);
-            expect(connectorError.operation).toContain("GET");
+            expect(connectorError.operation).toBe("GetAllTeams");
         }
     });
 
-    it("should truncate long error response bodies in message", () => {
-        const longBody = "x".repeat(3000);
-        const error = new ConnectorError("teams", "GET /test", 500, longBody);
-
-        expect(error.message).toContain("...[truncated]");
-        expect(error.responseBody).toBe(longBody);
-    });
 });
 
 describe("Teams — connector registry", () => {

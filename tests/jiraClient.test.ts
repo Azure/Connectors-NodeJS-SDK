@@ -53,9 +53,9 @@ describe("JiraClient — listResources", () => {
         mockFetchResponse(mockResponse);
 
         const client = new JiraClient(TestConnectionUrl, createMockCredential());
-        const result = await client.listResources();
+        const result = await client.listResources().byPage().next();
 
-        expect(result).toEqual(mockResponse);
+        expect(result.value).toEqual(mockResponse);
         const [url, init] = (global.fetch as jest.Mock).mock.calls[0];
         expect(url).toContain("/oauth/token/accessible-resources");
         expect(init.method).toBe("GET");
@@ -65,7 +65,7 @@ describe("JiraClient — listResources", () => {
         mockFetchError(403, '{"error":"Forbidden"}');
 
         const client = new JiraClient(TestConnectionUrl, createMockCredential());
-        await expect(client.listResources()).rejects.toThrow(ConnectorError);
+        await expect(client.listResources().byPage().next()).rejects.toThrow(ConnectorError);
     });
 });
 
@@ -79,7 +79,7 @@ describe("JiraClient — listIssues", () => {
         mockFetchResponse(mockResponse);
 
         const client = new JiraClient(TestConnectionUrl, createMockCredential());
-        await client.listIssues("project = DEMO", "names", "summary");
+        await client.listIssues("project = DEMO", "names", "summary").byPage().next();
 
         const [url] = (global.fetch as jest.Mock).mock.calls[0];
         expect(url).toContain("/2/search");

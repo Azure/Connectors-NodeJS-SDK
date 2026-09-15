@@ -4,38 +4,39 @@
  * Error types for connector operations.
  */
 
-import { RestError } from "@azure/core-rest-pipeline";
+import type { PipelineRequest, PipelineResponse } from "@azure/core-rest-pipeline";
 
 /**
  * Error thrown when connector operations fail.
  */
-export class ConnectorError extends RestError {
+export class ConnectorError extends Error {
     public static readonly MaxResponseBodyLength = 2000;
 
     public readonly connectorName: string;
     public readonly operation: string;
     public readonly statusCode: number;
     public readonly responseBody: string;
+    public readonly request: PipelineRequest;
+    public readonly response: PipelineResponse;
 
     /**
      * Initializes a ConnectorError.
      * @param connectorName The connector name (e.g., "office365").
      * @param operation The operation that failed (e.g., "GET /v2/Mail").
-     * @param statusCode The HTTP status code.
-     * @param responseBody The response body from the failed request.
+     * @param response The failed pipeline response and originating request.
      */
-    constructor(connectorName: string, operation: string, statusCode: number, responseBody: string) {
+    constructor(connectorName: string, operation: string, response: PipelineResponse) {
+        const responseBody = response.bodyAsText ?? "";
         const truncated = ConnectorError.truncateBody(responseBody);
-        super(
-            `[${connectorName}] ${operation} failed with status ${statusCode}: ${truncated}`,
-            { statusCode },
-        );
+        super(`[${connectorName}] ${operation} failed with status ${response.status}: ${truncated}`);
         Object.setPrototypeOf(this, ConnectorError.prototype);
         this.name = "ConnectorError";
         this.connectorName = connectorName;
         this.operation = operation;
-        this.statusCode = statusCode;
+        this.statusCode = response.status;
         this.responseBody = responseBody;
+        this.request = response.request;
+        this.response = response;
     }
 
     private static truncateBody(body: string): string {

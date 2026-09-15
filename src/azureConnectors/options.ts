@@ -6,7 +6,18 @@
  * Mirrors the Python SDK's options.py.
  */
 
+import type { AbortSignalLike } from "@azure/abort-controller";
 import type { HttpClient, PipelineOptions } from "@azure/core-rest-pipeline";
+import type { OperationTracingOptions } from "@azure/core-tracing";
+
+/** Options shared by generated connector operations. */
+export interface ConnectorOperationOptions {
+    /** Signal used to cancel the operation. */
+    abortSignal?: AbortSignalLike;
+
+    /** Context used to parent the operation's tracing span. */
+    tracingOptions?: OperationTracingOptions;
+}
 
 /**
  * Configuration options for connector clients.

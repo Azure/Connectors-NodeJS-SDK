@@ -274,7 +274,8 @@ describe("AzureblobClient — error handling", () => {
             const connectorError = error as ConnectorError;
             expect(connectorError.statusCode).toBe(403);
             expect(connectorError.responseBody).toBe(errorBody);
-            expect(connectorError.operation).toContain("GET");
+            expect(connectorError.operation).toBe("GetFileMetadata_V2");
+            expect(connectorError.request.url).toContain("file-1");
         }
     });
 });

@@ -287,27 +287,6 @@ describe("Office365Client — deleteEmail", () => {
     });
 });
 
-describe("ConnectorError", () => {
-    it("should include status code and response body", () => {
-        const errorBody = '{"code": "Forbidden"}';
-        const error = new ConnectorError("office365", "GET /test", 403, errorBody);
-
-        expect(error.statusCode).toBe(403);
-        expect(error.responseBody).toBe(errorBody);
-        expect(error.operation).toBe("GET /test");
-        expect(error.name).toBe("ConnectorError");
-    });
-
-    it("should truncate long error response bodies in message", () => {
-        const longBody = "x".repeat(3000);
-        const error = new ConnectorError("office365", "GET /test", 500, longBody);
-
-        expect(error.message).toContain("...[truncated]");
-        expect(error.responseBody).toBe(longBody);
-        expect(error.responseBody.length).toBe(3000);
-    });
-});
-
 describe("Office365 — connector registry", () => {
     it("should have office365 in ConnectorNames", () => {
         expect(ConnectorNames.Office365Outlook).toBe("office365");

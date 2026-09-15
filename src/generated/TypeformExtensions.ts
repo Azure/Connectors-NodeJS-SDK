@@ -3,8 +3,7 @@
 
 import type { TokenCredential } from "@azure/core-auth";
 import { ConnectorClientBase } from "../azureConnectors/clientBase.ts";
-import { ConnectorError } from "../azureConnectors/connectorError.ts";
-import { ConnectorClientOptions } from "../azureConnectors/options.ts";
+import type { ConnectorClientOptions, ConnectorOperationOptions } from "../azureConnectors/options.ts";
 
 // #region Types
 
@@ -21,7 +20,9 @@ export interface NewResponseWebhookInput {
 /**
  * Definition: ListFormsResponse-Old
  */
-export type ListFormsResponseOld = Array<Record<string, unknown>>;
+export interface ListFormsResponseOld {
+    [key: string]: unknown;
+}
 
 /**
  * Definition: ResponseList

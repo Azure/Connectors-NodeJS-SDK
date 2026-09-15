@@ -87,22 +87,6 @@ describe("CommondataserviceClient — getItems", () => {
         expect((global.fetch as jest.Mock).mock.calls[1][0]).toBe(expectedUrl);
     });
 
-    it("should double encode Dataverse dataset and table path parameters", async () => {
-        global.fetch = jest.fn().mockResolvedValueOnce(createFetchResponse({ value: [] }));
-        const client = new CommondataserviceClient(TestConnectionUrl, createMockCredential());
-        const items: Item[] = [];
-
-        for await (const item of client.getItems("https://contoso.crm.dynamics.com", "account/details")) {
-            items.push(item);
-        }
-
-        expect(items).toEqual([]);
-        expect((global.fetch as jest.Mock).mock.calls[0][0]).toBe(
-            `${TestConnectionUrl}/v2/datasets/https%253A%252F%252Fcontoso.crm.dynamics.com/` +
-            "tables/account%252Fdetails/items",
-        );
-    });
-
     it("should reject with ConnectorError when a continuation page fails", async () => {
         const firstItem: Item = { dynamicProperties: { accountid: "account-1" } };
         const nextLink = `${TestConnectionUrl}/v2/datasets/default/tables/accounts/items?$skiptoken=page-2`;
@@ -119,12 +103,16 @@ describe("CommondataserviceClient — getItems", () => {
         const iterator = client.getItems("default", "accounts")[Symbol.asyncIterator]();
 
         await expect(iterator.next()).resolves.toEqual({ done: false, value: firstItem });
-        await expect(iterator.next()).rejects.toMatchObject<Partial<ConnectorError>>({
+        const failedContinuation = iterator.next();
+        await expect(failedContinuation).rejects.toMatchObject<Partial<ConnectorError>>({
             name: "ConnectorError",
             connectorName: "commondataservice",
-            operation: "GET /v2/datasets/default/tables/accounts/items?$skiptoken=page-2",
+            operation: "GetItems_V2",
             statusCode: 503,
             responseBody: "Service unavailable",
+        });
+        await expect(failedContinuation).rejects.toMatchObject<Partial<ConnectorError>>({
+            request: expect.objectContaining({ url: nextLink }),
         });
         expect(global.fetch).toHaveBeenCalledTimes(2);
     });

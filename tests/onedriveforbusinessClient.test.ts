@@ -103,9 +103,9 @@ describe("OnedriveforbusinessClient — listRootFolder", () => {
         mockFetchResponse(mockFiles);
 
         const client = new OnedriveforbusinessClient(TestConnectionUrl, createMockCredential());
-        const result = await client.listRootFolder();
+        const result = await client.listRootFolder().byPage().next();
 
-        expect(result).toEqual(mockFiles);
+        expect(result.value).toEqual(mockFiles);
         const [url, init] = (global.fetch as jest.Mock).mock.calls[0];
         expect(url).toContain("/datasets/default/folders");
         expect(init.method).toBe("GET");
@@ -292,14 +292,15 @@ describe("OnedriveforbusinessClient — error handling", () => {
         const client = new OnedriveforbusinessClient(TestConnectionUrl, createMockCredential());
 
         try {
-            await client.listRootFolder();
+            await client.listRootFolder().byPage().next();
             throw new Error("Expected ConnectorError to be thrown.");
         } catch (error) {
             expect(error).toBeInstanceOf(ConnectorError);
             const connectorError = error as ConnectorError;
             expect(connectorError.statusCode).toBe(403);
             expect(connectorError.responseBody).toBe(errorBody);
-            expect(connectorError.operation).toContain("GET");
+            expect(connectorError.operation).toBe("ListRootFolder");
+            expect(connectorError.request.url).toContain("/datasets/default/folders");
         }
     });
 });

@@ -104,7 +104,8 @@ describe("Office365groupsmailClient — listConversations", () => {
             const connectorError = error as ConnectorError;
             expect(connectorError.statusCode).toBe(403);
             expect(connectorError.responseBody).toBe("Forbidden");
-            expect(connectorError.operation).toBe("GET /v1.0/groups/group1/conversations");
+            expect(connectorError.operation).toBe("ListConversations");
+            expect(connectorError.request.url).toContain("/v1.0/groups/group1/conversations");
         }
     });
 
@@ -138,9 +139,8 @@ describe("Office365groupsmailClient — listConversations", () => {
             const connectorError = error as ConnectorError;
             expect(connectorError.statusCode).toBe(403);
             expect(connectorError.responseBody).toBe("Forbidden");
-            expect(connectorError.operation).toBe(
-                "GET /v1.0/groups/group1/conversations?page=2",
-            );
+            expect(connectorError.operation).toBe("ListConversations");
+            expect(connectorError.request.url).toContain("/v1.0/groups/group1/conversations?page=2");
         }
     });
 });

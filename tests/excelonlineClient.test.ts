@@ -113,7 +113,8 @@ describe("ExcelonlineClient — getTables", () => {
             const connectorError = error as ConnectorError;
             expect(connectorError.statusCode).toBe(403);
             expect(connectorError.responseBody).toBe("Forbidden");
-            expect(connectorError.operation).toBe("GET /codeless/v1.0/drives/drive1/items/file1/workbook/tables");
+            expect(connectorError.operation).toBe("GetTables");
+            expect(connectorError.request.url).toContain("/codeless/v1.0/drives/drive1/items/file1/workbook/tables");
         }
     });
 });

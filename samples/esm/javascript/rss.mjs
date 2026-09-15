@@ -32,8 +32,12 @@ async function main() {
 
     // Example: List the items in an RSS feed.
     try {
-        const items = await client.listFeedItems(feedUrl);
-        console.log(`Found ${items.length} feed item(s) from ${feedUrl}.`);
+        let itemCount = 0;
+        for await (const _item of client.listFeedItems(feedUrl)) {
+            itemCount++;
+        }
+
+        console.log(`Found ${itemCount} feed item(s) from ${feedUrl}.`);
     } catch (error) {
         if (error instanceof ConnectorError) {
             console.log(`Connector error (${error.statusCode}): ${error.message}`);

@@ -103,9 +103,9 @@ describe("MsgraphgroupsanduserClient — listUsers", () => {
         mockFetchResponse(mockResponse);
 
         const client = new MsgraphgroupsanduserClient(TestConnectionUrl, createMockCredential());
-        const result = await client.listUsers();
+        const result = await client.listUsers().byPage().next();
 
-        expect(result).toEqual(mockResponse);
+        expect(result.value).toEqual(mockResponse.value);
         const [url, init] = (global.fetch as jest.Mock).mock.calls[0];
         expect(url).toContain("/v1.0/users");
         expect(init.method).toBe("GET");
@@ -125,9 +125,9 @@ describe("MsgraphgroupsanduserClient — listGroupsByDisplayNameSearch", () => {
         mockFetchResponse(mockResponse);
 
         const client = new MsgraphgroupsanduserClient(TestConnectionUrl, createMockCredential());
-        const result = await client.listGroupsByDisplayNameSearch("Engineering");
+        const result = await client.listGroupsByDisplayNameSearch("Engineering").byPage().next();
 
-        expect(result).toEqual(mockResponse);
+        expect(result.value).toEqual(mockResponse.value);
         const [url] = (global.fetch as jest.Mock).mock.calls[0];
         expect(url).toContain("/v1.0/groups");
         expect(url).toContain("search=Engineering");
@@ -167,9 +167,9 @@ describe("MsgraphgroupsanduserClient — listDirectGroupMembers", () => {
         mockFetchResponse(mockResponse);
 
         const client = new MsgraphgroupsanduserClient(TestConnectionUrl, createMockCredential());
-        const result = await client.listDirectGroupMembers("group-1");
+        const result = await client.listDirectGroupMembers("group-1").byPage().next();
 
-        expect(result).toEqual(mockResponse);
+        expect(result.value).toEqual(mockResponse.value);
         const [url] = (global.fetch as jest.Mock).mock.calls[0];
         expect(url).toContain("/v1.0/groups/group-1/members");
     });
@@ -210,9 +210,9 @@ describe("MsgraphgroupsanduserClient — listSubscribedSkus", () => {
         mockFetchResponse(mockResponse);
 
         const client = new MsgraphgroupsanduserClient(TestConnectionUrl, createMockCredential());
-        const result = await client.listSubscribedSkus();
+        const result = await client.listSubscribedSkus().byPage().next();
 
-        expect(result).toEqual(mockResponse);
+        expect(result.value).toEqual(mockResponse.value);
         const [url] = (global.fetch as jest.Mock).mock.calls[0];
         expect(url).toContain("/v1.0/subscribedSkus");
     });
@@ -248,7 +248,7 @@ describe("MsgraphgroupsanduserClient — error handling", () => {
 
         const client = new MsgraphgroupsanduserClient(TestConnectionUrl, createMockCredential());
 
-        await expect(client.listUsers()).rejects.toThrow(ConnectorError);
+        await expect(client.listUsers().byPage().next()).rejects.toThrow(ConnectorError);
     });
 
     it("should include status code and response body in error", async () => {
@@ -265,7 +265,8 @@ describe("MsgraphgroupsanduserClient — error handling", () => {
             const connectorError = error as ConnectorError;
             expect(connectorError.statusCode).toBe(404);
             expect(connectorError.responseBody).toBe(errorBody);
-            expect(connectorError.operation).toContain("GET");
+            expect(connectorError.operation).toBe("GetGroupProperties");
+            expect(connectorError.request.url).toContain("nonexistent-group");
         }
     });
 });
