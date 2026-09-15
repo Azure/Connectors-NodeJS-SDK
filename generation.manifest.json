@@ -2,7 +2,7 @@
   "_comment": "Provenance record for the generated clients under src/generated/. It lets a regeneration be reproduced and any cross-language surface delta be attributed to a specific generator revision and Swagger input. Regenerate and repopulate this file on every run (see the 'Provenance & Reproducibility' section of GENERATION.md). A reviewable regeneration PR must have status 'generated' with non-null provenance, swaggerSha256 values that match the committed swagger-cache/ snapshots, and outputSha256 values that match the canonical UTF-8/LF generated outputs; the tests/generationManifest.test.ts guard enforces this.",
   "manifestVersion": 2,
   "status": "generated",
-  "generatedAtUtc": "2026-09-15T19:57:23Z",
+  "generatedAtUtc": "2026-09-15T20:05:02Z",
   "generator": {
     "repository": "https://msazure.visualstudio.com/One/_git/AzureUX-BPM",
     "tool": "CodefulSdkGenerator (LogicAppsCompiler)",
@@ -403,7 +403,8 @@
       "outputFile": "src/generated/SeismicplannerExtensions.ts",
       "swaggerSnapshot": "swagger-cache/seismicplanner.swagger.json",
       "swaggerSha256": "adb321a0255847eab5f08294342cc59e9a12124b02b3676e5c43176fab460670",
-      "outputSha256": "64680c0fa0c57c86dd8b0eb22618321ed99794ee4c8a1d09b0ca2bce3f5cf496"
+      "outputSha256": "c08793005feb1ec26fec2a0871fc9164b344bb0d82fef1125c835a05ff87a376",
+      "generatorCommit": "08204b6fe8ed4bd59f75b6af3ba3db308688a0bc"
     },
     {
       "apiName": "sendgrid",
