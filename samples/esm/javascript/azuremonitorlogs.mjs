@@ -20,7 +20,7 @@
  *     npm start
  */
 
-import { ManagedIdentityTokenProvider, ConnectorException } from "@azure/connectors";
+import { ManagedIdentityTokenProvider, ConnectorError } from "@azure/connectors";
 import { AzuremonitorlogsClient } from "@azure/connectors/generated/AzuremonitorlogsExtensions";
 
 const CONNECTION_URL = process.env.AZUREMONITOR_CONNECTION_URL ?? "";
@@ -50,7 +50,7 @@ async function main() {
             timerange: {},
         };
 
-        const result = await client.queryDataAsync(
+        const result = await client.queryData(
             input,
             SUBSCRIPTIONS || undefined,
             RESOURCE_GROUPS || undefined,
@@ -66,7 +66,7 @@ async function main() {
             console.log("Result:", JSON.stringify(result, null, 2));
         }
     } catch (error) {
-        if (error instanceof ConnectorException) {
+        if (error instanceof ConnectorError) {
             console.log(`Connector error (${error.statusCode}): ${error.message}`);
         } else {
             throw error;
@@ -82,7 +82,7 @@ async function main() {
             timerange: {},
         };
 
-        const visResult = await client.visualizeQueryAsync(
+        const visResult = await client.visualizeQuery(
             visInput,
             SUBSCRIPTIONS || undefined,
             RESOURCE_GROUPS || undefined,
@@ -93,7 +93,7 @@ async function main() {
         const visRecord = visResult;
         console.log("Visualization result keys:", Object.keys(visRecord).join(", "));
     } catch (error) {
-        if (error instanceof ConnectorException) {
+        if (error instanceof ConnectorError) {
             console.log(`Connector error (${error.statusCode}): ${error.message}`);
         } else {
             throw error;

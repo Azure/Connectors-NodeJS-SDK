@@ -11,7 +11,7 @@ import {
     CreateChannelResponse,
     GetTagsResponseSchema,
 } from "../src/generated/TeamsExtensions.ts";
-import { ConnectorException } from "../src/azureConnectors/connectorException.ts";
+import { ConnectorError } from "../src/azureConnectors/connectorError.ts";
 import { ConnectorNames } from "../src/generated/connectorNames.ts";
 import { availableConnectors } from "../src/generated/ManagedConnectors.ts";
 
@@ -91,7 +91,7 @@ describe("TeamsClient — constructor", () => {
     });
 });
 
-describe("TeamsClient — getAllTeamsAsync", () => {
+describe("TeamsClient — getAllTeams", () => {
     afterEach(() => {
         jest.restoreAllMocks();
     });
@@ -103,7 +103,7 @@ describe("TeamsClient — getAllTeamsAsync", () => {
         mockFetchResponse(mockResponse);
 
         const client = new TeamsClient(TestConnectionUrl, createMockCredential());
-        const result = await client.getAllTeamsAsync();
+        const result = await client.getAllTeams();
 
         expect(result).toEqual(mockResponse);
         const [url, init] = (global.fetch as jest.Mock).mock.calls[0];
@@ -113,7 +113,7 @@ describe("TeamsClient — getAllTeamsAsync", () => {
     });
 });
 
-describe("TeamsClient — createTeamsMeetingAsync", () => {
+describe("TeamsClient — createTeamsMeeting", () => {
     afterEach(() => {
         jest.restoreAllMocks();
     });
@@ -136,7 +136,7 @@ describe("TeamsClient — createTeamsMeetingAsync", () => {
             onlineMeetingProvider: "teamsForBusiness",
         };
 
-        const result = await client.createTeamsMeetingAsync(input, "calendar-1");
+        const result = await client.createTeamsMeeting(input, "calendar-1");
 
         expect(result).toEqual(mockResponse);
         const [url, init] = (global.fetch as jest.Mock).mock.calls[0];
@@ -149,7 +149,7 @@ describe("TeamsClient — createTeamsMeetingAsync", () => {
     });
 });
 
-describe("TeamsClient — getChannelsForGroupAsync", () => {
+describe("TeamsClient — getChannelsForGroup", () => {
     afterEach(() => {
         jest.restoreAllMocks();
     });
@@ -161,7 +161,7 @@ describe("TeamsClient — getChannelsForGroupAsync", () => {
         mockFetchResponse(mockResponse);
 
         const client = new TeamsClient(TestConnectionUrl, createMockCredential());
-        const result = await client.getChannelsForGroupAsync("team-123");
+        const result = await client.getChannelsForGroup("team-123");
 
         expect(result).toEqual(mockResponse);
         const [url] = (global.fetch as jest.Mock).mock.calls[0];
@@ -172,14 +172,14 @@ describe("TeamsClient — getChannelsForGroupAsync", () => {
         mockFetchResponse({ value: [] });
 
         const client = new TeamsClient(TestConnectionUrl, createMockCredential());
-        await client.getChannelsForGroupAsync("team-1", "$filter=name eq 'General'");
+        await client.getChannelsForGroup("team-1", "$filter=name eq 'General'");
 
         const [url] = (global.fetch as jest.Mock).mock.calls[0];
         expect(url).toContain("$filter=");
     });
 });
 
-describe("TeamsClient — createChannelAsync", () => {
+describe("TeamsClient — createChannel", () => {
     afterEach(() => {
         jest.restoreAllMocks();
     });
@@ -196,7 +196,7 @@ describe("TeamsClient — createChannelAsync", () => {
             displayName: "New Channel",
         };
 
-        const result = await client.createChannelAsync(input, "team-1");
+        const result = await client.createChannel(input, "team-1");
 
         expect(result).toEqual(mockResponse);
         const [, init] = (global.fetch as jest.Mock).mock.calls[0];
@@ -205,7 +205,7 @@ describe("TeamsClient — createChannelAsync", () => {
     });
 });
 
-describe("TeamsClient — getTagsAsync", () => {
+describe("TeamsClient — getTags", () => {
     afterEach(() => {
         jest.restoreAllMocks();
     });
@@ -217,7 +217,7 @@ describe("TeamsClient — getTagsAsync", () => {
         mockFetchResponse(mockResponse);
 
         const client = new TeamsClient(TestConnectionUrl, createMockCredential());
-        const result = await client.getTagsAsync("team-1");
+        const result = await client.getTags("team-1");
 
         expect(result).toEqual(mockResponse);
         const [url] = (global.fetch as jest.Mock).mock.calls[0];
@@ -226,7 +226,7 @@ describe("TeamsClient — getTagsAsync", () => {
     });
 });
 
-describe("TeamsClient — deleteTagAsync", () => {
+describe("TeamsClient — deleteTag", () => {
     afterEach(() => {
         jest.restoreAllMocks();
     });
@@ -235,7 +235,7 @@ describe("TeamsClient — deleteTagAsync", () => {
         mockFetchResponse(null);
 
         const client = new TeamsClient(TestConnectionUrl, createMockCredential());
-        await client.deleteTagAsync("team-1", "tag-1");
+        await client.deleteTag("team-1", "tag-1");
 
         const [, init] = (global.fetch as jest.Mock).mock.calls[0];
         expect(init.method).toBe("DELETE");
@@ -247,12 +247,12 @@ describe("TeamsClient — error handling", () => {
         jest.restoreAllMocks();
     });
 
-    it("should throw ConnectorException on non-OK response", async () => {
+    it("should throw ConnectorError on non-OK response", async () => {
         mockFetchError(403, '{"error": "Access denied"}');
 
         const client = new TeamsClient(TestConnectionUrl, createMockCredential());
 
-        await expect(client.getAllTeamsAsync()).rejects.toThrow(
+        await expect(client.getAllTeams()).rejects.toThrow(
         );
     });
 
@@ -263,24 +263,17 @@ describe("TeamsClient — error handling", () => {
         const client = new TeamsClient(TestConnectionUrl, createMockCredential());
 
         try {
-            await client.getAllTeamsAsync();
-            throw new Error("Expected ConnectorException to be thrown");
+            await client.getAllTeams();
+            throw new Error("Expected ConnectorError to be thrown");
         } catch (error) {
-            expect(error).toBeInstanceOf(ConnectorException);
-            const connectorError = error as ConnectorException;
+            expect(error).toBeInstanceOf(ConnectorError);
+            const connectorError = error as ConnectorError;
             expect(connectorError.statusCode).toBe(404);
             expect(connectorError.responseBody).toBe(errorBody);
-            expect(connectorError.operation).toContain("GET");
+            expect(connectorError.operation).toBe("GetAllTeams");
         }
     });
 
-    it("should truncate long error response bodies in message", () => {
-        const longBody = "x".repeat(3000);
-        const error = new ConnectorException("teams", "GET /test", 500, longBody);
-
-        expect(error.message).toContain("...[truncated]");
-        expect(error.responseBody).toBe(longBody);
-    });
 });
 
 describe("Teams — connector registry", () => {

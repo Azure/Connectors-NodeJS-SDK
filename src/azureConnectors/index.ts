@@ -10,14 +10,16 @@
 
 export type { AbortSignalLike } from "@azure/abort-controller";
 export type { TokenCredential } from "@azure/core-auth";
-export type { PageSettings, PagedAsyncIterableIterator } from "@azure/core-paging";
+export type { PagedAsyncIterableIterator } from "@azure/core-paging";
 export { ConnectorClientBase } from "./clientBase.ts";
+export type { ConnectorPageSettings, ConnectorPagedAsyncIterableIterator } from "./clientBase.ts";
 export { DefaultConnectorClientOptions } from "./options.ts";
-export type { ConnectorClientOptions } from "./options.ts";
+export type { ConnectorClientOptions, ConnectorOperationOptions } from "./options.ts";
 export {
     ManagedIdentityTokenProvider,
     ConnectionStringTokenProvider,
 } from "./authentication.ts";
-export { ConnectorException } from "./connectorException.ts";
+export { ConnectorError } from "./connectorError.ts";
 export { ConnectorHttpClient, ConnectorResponse } from "./connectorHttpClient.ts";
+export { logger } from "./logger.ts";
 export { TriggerCallbackPayload, TriggerCallbackBody } from "./triggerPayload.ts";

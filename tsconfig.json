@@ -6,14 +6,16 @@
         "rewriteRelativeImportExtensions": true,
         "strict": true,
         "esModuleInterop": true,
+        "allowSyntheticDefaultImports": true,
+        "importHelpers": true,
         "skipLibCheck": true,
         "forceConsistentCasingInFileNames": true,
         "declaration": true,
         "declarationMap": true,
         "sourceMap": true,
+        "inlineSources": true,
         "outDir": "./dist/esm",
-        "rootDir": "./src",
-        "lib": ["ES2023"]
+        "rootDir": "./src"
     },
     "include": ["src/**/*.ts"],
     "exclude": ["node_modules", "dist", "**/*.test.ts"]

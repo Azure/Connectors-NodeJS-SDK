@@ -12,7 +12,7 @@ import {
     GetMemberGroupsInput,
     GetMemberGroupsResponse,
 } from "../src/generated/MsgraphgroupsanduserExtensions.ts";
-import { ConnectorException } from "../src/azureConnectors/connectorException.ts";
+import { ConnectorError } from "../src/azureConnectors/connectorError.ts";
 import { ConnectorNames } from "../src/generated/connectorNames.ts";
 import { availableConnectors } from "../src/generated/ManagedConnectors.ts";
 
@@ -91,7 +91,7 @@ describe("MsgraphgroupsanduserClient — constructor", () => {
     });
 });
 
-describe("MsgraphgroupsanduserClient — listUsersAsync", () => {
+describe("MsgraphgroupsanduserClient — listUsers", () => {
     afterEach(() => {
         jest.restoreAllMocks();
     });
@@ -103,9 +103,9 @@ describe("MsgraphgroupsanduserClient — listUsersAsync", () => {
         mockFetchResponse(mockResponse);
 
         const client = new MsgraphgroupsanduserClient(TestConnectionUrl, createMockCredential());
-        const result = await client.listUsersAsync();
+        const result = await client.listUsers().byPage().next();
 
-        expect(result).toEqual(mockResponse);
+        expect(result.value).toEqual(mockResponse.value);
         const [url, init] = (global.fetch as jest.Mock).mock.calls[0];
         expect(url).toContain("/v1.0/users");
         expect(init.method).toBe("GET");
@@ -113,7 +113,7 @@ describe("MsgraphgroupsanduserClient — listUsersAsync", () => {
     });
 });
 
-describe("MsgraphgroupsanduserClient — listGroupsByDisplayNameSearchAsync", () => {
+describe("MsgraphgroupsanduserClient — listGroupsByDisplayNameSearch", () => {
     afterEach(() => {
         jest.restoreAllMocks();
     });
@@ -125,16 +125,16 @@ describe("MsgraphgroupsanduserClient — listGroupsByDisplayNameSearchAsync", ()
         mockFetchResponse(mockResponse);
 
         const client = new MsgraphgroupsanduserClient(TestConnectionUrl, createMockCredential());
-        const result = await client.listGroupsByDisplayNameSearchAsync("Engineering");
+        const result = await client.listGroupsByDisplayNameSearch("Engineering").byPage().next();
 
-        expect(result).toEqual(mockResponse);
+        expect(result.value).toEqual(mockResponse.value);
         const [url] = (global.fetch as jest.Mock).mock.calls[0];
         expect(url).toContain("/v1.0/groups");
         expect(url).toContain("search=Engineering");
     });
 });
 
-describe("MsgraphgroupsanduserClient — getGroupPropertiesAsync", () => {
+describe("MsgraphgroupsanduserClient — getGroupProperties", () => {
     afterEach(() => {
         jest.restoreAllMocks();
     });
@@ -147,7 +147,7 @@ describe("MsgraphgroupsanduserClient — getGroupPropertiesAsync", () => {
         mockFetchResponse(mockResponse);
 
         const client = new MsgraphgroupsanduserClient(TestConnectionUrl, createMockCredential());
-        const result = await client.getGroupPropertiesAsync("group-123");
+        const result = await client.getGroupProperties("group-123");
 
         expect(result).toEqual(mockResponse);
         const [url] = (global.fetch as jest.Mock).mock.calls[0];
@@ -155,7 +155,7 @@ describe("MsgraphgroupsanduserClient — getGroupPropertiesAsync", () => {
     });
 });
 
-describe("MsgraphgroupsanduserClient — listDirectGroupMembersAsync", () => {
+describe("MsgraphgroupsanduserClient — listDirectGroupMembers", () => {
     afterEach(() => {
         jest.restoreAllMocks();
     });
@@ -167,15 +167,15 @@ describe("MsgraphgroupsanduserClient — listDirectGroupMembersAsync", () => {
         mockFetchResponse(mockResponse);
 
         const client = new MsgraphgroupsanduserClient(TestConnectionUrl, createMockCredential());
-        const result = await client.listDirectGroupMembersAsync("group-1");
+        const result = await client.listDirectGroupMembers("group-1").byPage().next();
 
-        expect(result).toEqual(mockResponse);
+        expect(result.value).toEqual(mockResponse.value);
         const [url] = (global.fetch as jest.Mock).mock.calls[0];
         expect(url).toContain("/v1.0/groups/group-1/members");
     });
 });
 
-describe("MsgraphgroupsanduserClient — getMemberGroupsAsync", () => {
+describe("MsgraphgroupsanduserClient — getMemberGroups", () => {
     afterEach(() => {
         jest.restoreAllMocks();
     });
@@ -188,7 +188,7 @@ describe("MsgraphgroupsanduserClient — getMemberGroupsAsync", () => {
 
         const client = new MsgraphgroupsanduserClient(TestConnectionUrl, createMockCredential());
         const input: GetMemberGroupsInput = { securityEnabledOnly: false };
-        const result = await client.getMemberGroupsAsync(input, "user-123");
+        const result = await client.getMemberGroups(input, "user-123");
 
         expect(result).toEqual(mockResponse);
         const [url, init] = (global.fetch as jest.Mock).mock.calls[0];
@@ -198,7 +198,7 @@ describe("MsgraphgroupsanduserClient — getMemberGroupsAsync", () => {
     });
 });
 
-describe("MsgraphgroupsanduserClient — listSubscribedSkusAsync", () => {
+describe("MsgraphgroupsanduserClient — listSubscribedSkus", () => {
     afterEach(() => {
         jest.restoreAllMocks();
     });
@@ -210,15 +210,15 @@ describe("MsgraphgroupsanduserClient — listSubscribedSkusAsync", () => {
         mockFetchResponse(mockResponse);
 
         const client = new MsgraphgroupsanduserClient(TestConnectionUrl, createMockCredential());
-        const result = await client.listSubscribedSkusAsync();
+        const result = await client.listSubscribedSkus().byPage().next();
 
-        expect(result).toEqual(mockResponse);
+        expect(result.value).toEqual(mockResponse.value);
         const [url] = (global.fetch as jest.Mock).mock.calls[0];
         expect(url).toContain("/v1.0/subscribedSkus");
     });
 });
 
-describe("MsgraphgroupsanduserClient — getMemberLicenseDetailsAsync", () => {
+describe("MsgraphgroupsanduserClient — getMemberLicenseDetails", () => {
     afterEach(() => {
         jest.restoreAllMocks();
     });
@@ -230,7 +230,7 @@ describe("MsgraphgroupsanduserClient — getMemberLicenseDetailsAsync", () => {
         mockFetchResponse(mockResponse);
 
         const client = new MsgraphgroupsanduserClient(TestConnectionUrl, createMockCredential());
-        const result = await client.getMemberLicenseDetailsAsync("user-1");
+        const result = await client.getMemberLicenseDetails("user-1");
 
         expect(result).toEqual(mockResponse);
         const [url] = (global.fetch as jest.Mock).mock.calls[0];
@@ -243,12 +243,12 @@ describe("MsgraphgroupsanduserClient — error handling", () => {
         jest.restoreAllMocks();
     });
 
-    it("should throw ConnectorException on non-OK response", async () => {
+    it("should throw ConnectorError on non-OK response", async () => {
         mockFetchError(403, '{"error": "InsufficientPermissions"}');
 
         const client = new MsgraphgroupsanduserClient(TestConnectionUrl, createMockCredential());
 
-        await expect(client.listUsersAsync()).rejects.toThrow(ConnectorException);
+        await expect(client.listUsers().byPage().next()).rejects.toThrow(ConnectorError);
     });
 
     it("should include status code and response body in error", async () => {
@@ -258,14 +258,15 @@ describe("MsgraphgroupsanduserClient — error handling", () => {
         const client = new MsgraphgroupsanduserClient(TestConnectionUrl, createMockCredential());
 
         try {
-            await client.getGroupPropertiesAsync("nonexistent-group");
-            throw new Error("Expected ConnectorException to be thrown.");
+            await client.getGroupProperties("nonexistent-group");
+            throw new Error("Expected ConnectorError to be thrown.");
         } catch (error) {
-            expect(error).toBeInstanceOf(ConnectorException);
-            const connectorError = error as ConnectorException;
+            expect(error).toBeInstanceOf(ConnectorError);
+            const connectorError = error as ConnectorError;
             expect(connectorError.statusCode).toBe(404);
             expect(connectorError.responseBody).toBe(errorBody);
-            expect(connectorError.operation).toContain("GET");
+            expect(connectorError.operation).toBe("GetGroupProperties");
+            expect(connectorError.request.url).toContain("nonexistent-group");
         }
     });
 });

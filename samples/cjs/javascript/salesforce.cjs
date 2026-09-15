@@ -6,7 +6,7 @@
 
 "use strict";
 
-const { ManagedIdentityTokenProvider, ConnectorException } = require("@azure/connectors");
+const { ManagedIdentityTokenProvider, ConnectorError } = require("@azure/connectors");
 const { SalesforceClient } = require("@azure/connectors/generated/SalesforceExtensions");
 
 const CONNECTION_URL = process.env.SALESFORCE_CONNECTION_URL ?? "";
@@ -21,11 +21,14 @@ async function main() {
     const client = new SalesforceClient(CONNECTION_URL, tokenProvider);
 
     try {
-        const result = await client.getTablesAsync();
-        const tables = (result.value ?? []);
+        const tables = [];
+        for await (const table of client.getTables()) {
+            tables.push(table);
+        }
+
         console.log(`Table count: ${tables.length}`);
     } catch (error) {
-        if (error instanceof ConnectorException) {
+        if (error instanceof ConnectorError) {
             console.log(`Connector error (${error.statusCode}): ${error.message}`);
             return;
         }

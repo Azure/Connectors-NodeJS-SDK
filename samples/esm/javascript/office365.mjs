@@ -18,7 +18,7 @@
  *     npm start
  */
 
-import { ManagedIdentityTokenProvider, ConnectorException } from "@azure/connectors";
+import { ManagedIdentityTokenProvider, ConnectorError } from "@azure/connectors";
 import { Office365Client } from "@azure/connectors/generated/Office365Extensions";
 
 const CONNECTION_URL = process.env.OFFICE365_CONNECTION_URL ?? "";
@@ -38,7 +38,7 @@ async function main() {
     // Example 1: Get Outlook categories
     console.log("\n--- Get Outlook Categories ---");
     try {
-        const categories = await client.getOutlookCategoryNamesAsync();
+        const categories = await client.getOutlookCategoryNames();
 
         if (categories && categories.length > 0) {
             console.log(`Found ${categories.length} categories:`);
@@ -49,7 +49,7 @@ async function main() {
             console.log("No categories found.");
         }
     } catch (error) {
-        if (error instanceof ConnectorException) {
+        if (error instanceof ConnectorError) {
             console.log(`Connector error: ${error.message}`);
         } else {
             throw error;
@@ -65,10 +65,10 @@ async function main() {
             Body: "<p>Hello from the <strong>ESM JavaScript</strong> sample!</p>",
         };
 
-        await client.sendEmailAsync(email);
+        await client.sendEmail(email);
         console.log("Email sent successfully.");
     } catch (error) {
-        if (error instanceof ConnectorException) {
+        if (error instanceof ConnectorError) {
             console.log(`Connector error: ${error.message}`);
         } else {
             throw error;
@@ -78,14 +78,14 @@ async function main() {
     // Example 3: Get Emails
     console.log("\n--- Get Emails ---");
     try {
-        const emails = await client.getEmailsAsync();
+        const emails = await client.getEmails();
         const emailList = emails.value ?? [];
         console.log(`Found ${emailList.length} emails in inbox.`);
         for (const email of emailList.slice(0, 3)) {
             console.log(`  - ${email.subject ?? "No Subject"}`);
         }
     } catch (error) {
-        if (error instanceof ConnectorException) {
+        if (error instanceof ConnectorError) {
             console.log(`Connector error: ${error.message}`);
         } else {
             throw error;

@@ -4,7 +4,7 @@
  * Jira Connector SDK Sample - ESM TypeScript
  */
 
-import { ManagedIdentityTokenProvider, ConnectorException } from "@azure/connectors";
+import { ManagedIdentityTokenProvider, ConnectorError } from "@azure/connectors";
 import { JiraClient } from "@azure/connectors/generated/JiraExtensions";
 
 const CONNECTION_URL = process.env.JIRA_CONNECTION_URL ?? "";
@@ -19,10 +19,14 @@ async function main(): Promise<void> {
     const client = new JiraClient(CONNECTION_URL, tokenProvider);
 
     try {
-        const result: Array<Record<string, unknown>> = await client.listResourcesAsync();
-        console.log(`Resources found: ${result.length}`);
+        let resourceCount = 0;
+        for await (const _resource of client.listResources()) {
+            resourceCount++;
+        }
+
+        console.log(`Resources found: ${resourceCount}`);
     } catch (error) {
-        if (error instanceof ConnectorException) {
+        if (error instanceof ConnectorError) {
             console.log(`Connector error (${error.statusCode}): ${error.message}`);
             return;
         }

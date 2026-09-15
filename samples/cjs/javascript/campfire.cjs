@@ -16,7 +16,7 @@
 
 "use strict";
 
-const { ManagedIdentityTokenProvider, ConnectorException } = require("@azure/connectors");
+const { ManagedIdentityTokenProvider, ConnectorError } = require("@azure/connectors");
 const { CampfireClient } = require("@azure/connectors/generated/CampfireExtensions");
 
 const CONNECTION_URL = process.env.CAMPFIRE_CONNECTION_URL ?? "";
@@ -38,10 +38,10 @@ async function main() {
 
     // Example 1: Retrieve a user by id.
     try {
-        const user = await client.getUserAsync(USER_ID);
+        const user = await client.getUser(USER_ID);
         console.log("User:", JSON.stringify(user, null, 2));
     } catch (error) {
-        if (error instanceof ConnectorException) {
+        if (error instanceof ConnectorError) {
             console.log(`Connector error (${error.statusCode}): ${error.message}`);
         } else {
             throw error;

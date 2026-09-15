@@ -17,7 +17,7 @@
  *     npx tsx sql.ts
  */
 
-import { ManagedIdentityTokenProvider, ConnectorException } from "@azure/connectors";
+import { ManagedIdentityTokenProvider, ConnectorError } from "@azure/connectors";
 import { SqlClient } from "@azure/connectors/generated/SqlExtensions";
 
 const CONNECTION_URL = process.env.SQL_CONNECTION_URL ?? "";
@@ -37,10 +37,10 @@ async function main(): Promise<void> {
     const table = process.env.SQL_TABLE ?? "table";
     const itemId = process.env.SQL_ITEM_ID ?? "id123";
     try {
-        const item = await client.getItemAsync(server, database, table, itemId);
+        const item = await client.getItem(server, database, table, itemId);
         console.log("Item:", JSON.stringify(item, null, 2));
     } catch (error) {
-        if (error instanceof ConnectorException) {
+        if (error instanceof ConnectorError) {
             console.log(`Connector error (${error.statusCode}): ${error.message}`);
         } else {
             throw error;

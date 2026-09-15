@@ -4,8 +4,8 @@
  * Salesforce Connector SDK Sample - ESM TypeScript
  */
 
-import { ManagedIdentityTokenProvider, ConnectorException } from "@azure/connectors";
-import { SalesforceClient, TablesList } from "@azure/connectors/generated/SalesforceExtensions";
+import { ManagedIdentityTokenProvider, ConnectorError } from "@azure/connectors";
+import { SalesforceClient } from "@azure/connectors/generated/SalesforceExtensions";
 
 const CONNECTION_URL = process.env.SALESFORCE_CONNECTION_URL ?? "";
 
@@ -19,11 +19,14 @@ async function main(): Promise<void> {
     const client = new SalesforceClient(CONNECTION_URL, tokenProvider);
 
     try {
-        const result: TablesList = await client.getTablesAsync();
-        const tables = (result.value ?? []) as Array<Record<string, unknown>>;
+        const tables = [];
+        for await (const table of client.getTables()) {
+            tables.push(table);
+        }
+
         console.log(`Table count: ${tables.length}`);
     } catch (error) {
-        if (error instanceof ConnectorException) {
+        if (error instanceof ConnectorError) {
             console.log(`Connector error (${error.statusCode}): ${error.message}`);
             return;
         }

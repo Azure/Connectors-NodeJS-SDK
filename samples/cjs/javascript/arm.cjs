@@ -21,7 +21,7 @@
 
 "use strict";
 
-const { ManagedIdentityTokenProvider, ConnectorException } = require("@azure/connectors");
+const { ManagedIdentityTokenProvider, ConnectorError } = require("@azure/connectors");
 const { ArmClient } = require("@azure/connectors/generated/ArmExtensions");
 
 const CONNECTION_URL = process.env.ARM_CONNECTION_URL ?? "";
@@ -43,7 +43,7 @@ async function main() {
     console.log("\n--- List Subscriptions ---");
     try {
         const subscriptions = [];
-        for await (const subscription of client.subscriptionsListAsync()) {
+        for await (const subscription of client.listSubscriptions()) {
             subscriptions.push(subscription);
         }
 
@@ -56,7 +56,7 @@ async function main() {
             console.log("No subscriptions found.");
         }
     } catch (error) {
-        if (error instanceof ConnectorException) {
+        if (error instanceof ConnectorError) {
             console.log(`Connector error: ${error.message}`);
         } else {
             throw error;
@@ -67,19 +67,22 @@ async function main() {
     if (SUBSCRIPTION_ID) {
         console.log("\n--- List Locations ---");
         try {
-            const locations = await client.subscriptionsListLocationsAsync(SUBSCRIPTION_ID);
-            const locs = locations.value ?? [];
-
-            if (locs.length > 0) {
-                console.log(`Found ${locs.length} locations:`);
-                for (const loc of locs.slice(0, 10)) {
+            let locationCount = 0;
+            for await (const loc of client.listSubscriptionsLocations(SUBSCRIPTION_ID)) {
+                if (locationCount < 10) {
                     console.log(`  - ${loc.displayName ?? "Unknown"} (${loc.name})`);
                 }
-            } else {
+
+                locationCount++;
+            }
+
+            if (locationCount === 0) {
                 console.log("No locations found.");
+            } else {
+                console.log(`Found ${locationCount} locations.`);
             }
         } catch (error) {
-            if (error instanceof ConnectorException) {
+            if (error instanceof ConnectorError) {
                 console.log(`Connector error (${error.statusCode}): ${error.message}`);
             } else {
                 throw error;
@@ -90,7 +93,7 @@ async function main() {
         console.log("\n--- List Resource Groups ---");
         try {
             const groups = [];
-            for await (const group of client.resourceGroupsListAsync(SUBSCRIPTION_ID)) {
+            for await (const group of client.listResourceGroups(SUBSCRIPTION_ID)) {
                 groups.push(group);
             }
 
@@ -103,7 +106,7 @@ async function main() {
                 console.log("No resource groups found.");
             }
         } catch (error) {
-            if (error instanceof ConnectorException) {
+            if (error instanceof ConnectorError) {
                 console.log(`Connector error (${error.statusCode}): ${error.message}`);
             } else {
                 throw error;

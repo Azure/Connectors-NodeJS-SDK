@@ -2,7 +2,7 @@
 
 import type { TokenCredential } from "@azure/core-auth";
 import { PipedriveClient } from "../src/generated/PipedriveExtensions.ts";
-import { ConnectorException } from "../src/azureConnectors/connectorException.ts";
+import { ConnectorError } from "../src/azureConnectors/connectorError.ts";
 import { ConnectorNames } from "../src/generated/connectorNames.ts";
 import { availableConnectors } from "../src/generated/ManagedConnectors.ts";
 
@@ -58,7 +58,7 @@ describe("PipedriveClient — constructor", () => {
     });
 });
 
-describe("PipedriveClient — getDealAsync", () => {
+describe("PipedriveClient — getDeal", () => {
     afterEach(() => {
         jest.restoreAllMocks();
     });
@@ -68,7 +68,7 @@ describe("PipedriveClient — getDealAsync", () => {
         mockFetchResponse(deal);
 
         const client = new PipedriveClient(TestConnectionUrl, createMockCredential());
-        const result = await client.getDealAsync("123");
+        const result = await client.getDeal("123");
 
         expect(result).toEqual(deal);
         expect(global.fetch).toHaveBeenCalledTimes(1);
@@ -77,16 +77,16 @@ describe("PipedriveClient — getDealAsync", () => {
         expect(init.headers["Authorization"]).toBe("Bearer mock-bearer-token");
     });
 
-    it("should throw ConnectorException on non-OK response", async () => {
+    it("should throw ConnectorError on non-OK response", async () => {
         mockFetchError(404, "Not Found");
 
         const client = new PipedriveClient(TestConnectionUrl, createMockCredential());
         try {
-            await client.getDealAsync("123");
-            throw new Error("Expected ConnectorException to be thrown.");
+            await client.getDeal("123");
+            throw new Error("Expected ConnectorError to be thrown.");
         } catch (error) {
-            expect(error).toBeInstanceOf(ConnectorException);
-            const connectorError = error as ConnectorException;
+            expect(error).toBeInstanceOf(ConnectorError);
+            const connectorError = error as ConnectorError;
             expect(connectorError.statusCode).toBe(404);
             expect(connectorError.responseBody).toBe("Not Found");
         }

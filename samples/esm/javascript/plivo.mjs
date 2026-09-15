@@ -1,7 +1,7 @@
 // Copyright (c) Microsoft Corporation.  All rights reserved.
 
 /** Plivo Connector SDK Sample - ESM JavaScript. */
-import { ConnectorException, ManagedIdentityTokenProvider } from "@azure/connectors";
+import { ConnectorError, ManagedIdentityTokenProvider } from "@azure/connectors";
 import { PlivoClient } from "@azure/connectors/generated/PlivoExtensions";
 
 const CONNECTION_URL = process.env.PLIVO_CONNECTION_URL ?? "";
@@ -10,10 +10,10 @@ if (!CONNECTION_URL || !AUTH_ID) throw new Error("PLIVO_CONNECTION_URL and PLIVO
 
 async function main() {
     try {
-        const messages = await new PlivoClient(CONNECTION_URL, new ManagedIdentityTokenProvider()).listMessagesAsync(AUTH_ID);
+        const messages = await new PlivoClient(CONNECTION_URL, new ManagedIdentityTokenProvider()).listMessages(AUTH_ID);
         console.log("Messages:", JSON.stringify(messages, null, 2));
     } catch (error) {
-        if (error instanceof ConnectorException) console.error(`Connector error (${error.statusCode}): ${error.message}`);
+        if (error instanceof ConnectorError) console.error(`Connector error (${error.statusCode}): ${error.message}`);
         else throw error;
     }
 }

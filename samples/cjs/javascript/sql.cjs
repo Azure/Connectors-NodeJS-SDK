@@ -19,7 +19,7 @@
 
 "use strict";
 
-const { ManagedIdentityTokenProvider, ConnectorException } = require("@azure/connectors");
+const { ManagedIdentityTokenProvider, ConnectorError } = require("@azure/connectors");
 const { SqlClient } = require("@azure/connectors/generated/SqlExtensions");
 
 const CONNECTION_URL = process.env.SQL_CONNECTION_URL ?? "";
@@ -39,10 +39,10 @@ async function main() {
     const table = process.env.SQL_TABLE ?? "table";
     const itemId = process.env.SQL_ITEM_ID ?? "id123";
     try {
-        const item = await client.getItemAsync(server, database, table, itemId);
+        const item = await client.getItem(server, database, table, itemId);
         console.log("Item:", JSON.stringify(item, null, 2));
     } catch (error) {
-        if (error instanceof ConnectorException) {
+        if (error instanceof ConnectorError) {
             console.log(`Connector error (${error.statusCode}): ${error.message}`);
         } else {
             throw error;

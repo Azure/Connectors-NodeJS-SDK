@@ -2,7 +2,7 @@
 
 import type { TokenCredential } from "@azure/core-auth";
 import { ZendeskClient } from "../src/generated/ZendeskExtensions.ts";
-import { ConnectorException } from "../src/azureConnectors/connectorException.ts";
+import { ConnectorError } from "../src/azureConnectors/connectorError.ts";
 import { ConnectorNames } from "../src/generated/connectorNames.ts";
 import { availableConnectors } from "../src/generated/ManagedConnectors.ts";
 
@@ -58,7 +58,7 @@ describe("ZendeskClient — constructor", () => {
     });
 });
 
-describe("ZendeskClient — getTablesAsync", () => {
+describe("ZendeskClient — getTables", () => {
     afterEach(() => {
         jest.restoreAllMocks();
     });
@@ -68,7 +68,7 @@ describe("ZendeskClient — getTablesAsync", () => {
         mockFetchResponse(tables);
 
         const client = new ZendeskClient(TestConnectionUrl, createMockCredential());
-        const result = await client.getTablesAsync();
+        const result = await client.getTables();
 
         expect(result).toEqual(tables);
         expect(global.fetch).toHaveBeenCalledTimes(1);
@@ -77,16 +77,16 @@ describe("ZendeskClient — getTablesAsync", () => {
         expect(init.headers["Authorization"]).toBe("Bearer mock-bearer-token");
     });
 
-    it("should throw ConnectorException on non-OK response", async () => {
+    it("should throw ConnectorError on non-OK response", async () => {
         mockFetchError(404, "Not Found");
 
         const client = new ZendeskClient(TestConnectionUrl, createMockCredential());
         try {
-            await client.getTablesAsync();
-            throw new Error("Expected ConnectorException to be thrown.");
+            await client.getTables();
+            throw new Error("Expected ConnectorError to be thrown.");
         } catch (error) {
-            expect(error).toBeInstanceOf(ConnectorException);
-            const connectorError = error as ConnectorException;
+            expect(error).toBeInstanceOf(ConnectorError);
+            const connectorError = error as ConnectorError;
             expect(connectorError.statusCode).toBe(404);
             expect(connectorError.responseBody).toBe("Not Found");
         }

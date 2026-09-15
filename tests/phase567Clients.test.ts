@@ -1,7 +1,7 @@
 // Copyright (c) Microsoft Corporation.  All rights reserved.
 
 import type { TokenCredential } from "@azure/core-auth";
-import { ConnectorException } from "../src/azureConnectors/connectorException.ts";
+import { ConnectorError } from "../src/azureConnectors/connectorError.ts";
 import { ConnectorNames } from "../src/generated/connectorNames.ts";
 import { ElfsquaddataClient } from "../src/generated/ElfsquaddataExtensions.ts";
 import { EtsyClient } from "../src/generated/EtsyExtensions.ts";
@@ -55,27 +55,27 @@ interface ConnectorCase {
 }
 
 const ConnectorCases: ConnectorCase[] = [
-    { displayName: "Twitter", apiName: "twitter", connectorNameKey: "X", clientConstructor: TwitterClient, methodName: "homeTimelineAsync" },
-    { displayName: "WordPress", apiName: "wordpress", connectorNameKey: "WordPress", clientConstructor: WordpressClient, methodName: "siteStatsAsync", methodArguments: ["site-id"] },
-    { displayName: "Plivo", apiName: "plivo", connectorNameKey: "Plivo", clientConstructor: PlivoClient, methodName: "listMessagesAsync", methodArguments: ["auth-id"] },
-    { displayName: "Rev.ai", apiName: "revai", connectorNameKey: "RevAIIndependentPublisher", clientConstructor: RevaiClient, methodName: "transcriptionsGetAsync" },
-    { displayName: "Starmind", apiName: "starmind", connectorNameKey: "Starmind", clientConstructor: StarmindClient, methodName: "findQuestionsAsync" },
-    { displayName: "Tallyfy", apiName: "tallyfy", connectorNameKey: "Tallyfy", clientConstructor: TallyfyClient, methodName: "getUserTasksAsync", methodArguments: ["organization", "user-id"] },
-    { displayName: "Eventbrite", apiName: "eventbrite", connectorNameKey: "Eventbrite", clientConstructor: EventbriteClient, methodName: "createEventAsync", methodArguments: ["organization-id"] },
-    { displayName: "Formstack Forms", apiName: "formstackforms", connectorNameKey: "FormstackForms", clientConstructor: FormstackformsClient, methodName: "getAvailableFormsAsync" },
+    { displayName: "Twitter", apiName: "twitter", connectorNameKey: "X", clientConstructor: TwitterClient, methodName: "homeTimeline" },
+    { displayName: "WordPress", apiName: "wordpress", connectorNameKey: "WordPress", clientConstructor: WordpressClient, methodName: "siteStats", methodArguments: ["site-id"] },
+    { displayName: "Plivo", apiName: "plivo", connectorNameKey: "Plivo", clientConstructor: PlivoClient, methodName: "listMessages", methodArguments: ["auth-id"] },
+    { displayName: "Rev.ai", apiName: "revai", connectorNameKey: "RevAIIndependentPublisher", clientConstructor: RevaiClient, methodName: "getTranscriptions" },
+    { displayName: "Starmind", apiName: "starmind", connectorNameKey: "Starmind", clientConstructor: StarmindClient, methodName: "findQuestions" },
+    { displayName: "Tallyfy", apiName: "tallyfy", connectorNameKey: "Tallyfy", clientConstructor: TallyfyClient, methodName: "getUserTasks", methodArguments: ["organization", "user-id"] },
+    { displayName: "Eventbrite", apiName: "eventbrite", connectorNameKey: "Eventbrite", clientConstructor: EventbriteClient, methodName: "createEvent", methodArguments: ["organization-id"] },
+    { displayName: "Formstack Forms", apiName: "formstackforms", connectorNameKey: "FormstackForms", clientConstructor: FormstackformsClient, methodName: "getAvailableForms" },
     { displayName: "Typeform", apiName: "typeform", connectorNameKey: "Typeform", clientConstructor: TypeformClient },
-    { displayName: "Ticketmaster", apiName: "ticketmaster", connectorNameKey: "TicketmasterIndependentPublisher", clientConstructor: TicketmasterClient, methodName: "eventGetAsync", methodArguments: ["event-id"] },
-    { displayName: "Zoho Sign", apiName: "zohosign", connectorNameKey: "ZohoSign", clientConstructor: ZohosignClient, methodName: "downloadCompletionCertificateAsync", methodArguments: ["request-id"] },
-    { displayName: "Seismic Planner", apiName: "seismicplanner", connectorNameKey: "SeismicPlanner", clientConstructor: SeismicplannerClient, methodName: "getCommentsAsync", methodArguments: ["space-id", "node-id"] },
-    { displayName: "Way We Do", apiName: "waywedo", connectorNameKey: "WayWeDo", clientConstructor: WaywedoClient, methodName: "checklistInstancesGetAsync", methodArguments: ["instance-id"] },
-    { displayName: "Meeting Room Map", apiName: "meetingroommap", connectorNameKey: "MeetingRoomMap", clientConstructor: MeetingroommapClient, methodName: "getCategoriesAsync" },
-    { displayName: "StarRez REST V1", apiName: "starrezrestv1", connectorNameKey: "StarRezRESTV1", clientConstructor: Starrezrestv1Client, methodName: "selectEntryAsync", methodArguments: [{}] },
-    { displayName: "Replicon", apiName: "replicon", connectorNameKey: "Replicon", clientConstructor: RepliconClient, methodName: "bulkGetProjectDetails3Async", methodArguments: [{}] },
-    { displayName: "Etsy", apiName: "etsy", connectorNameKey: "EtsyIndependentPublisher", clientConstructor: EtsyClient, methodName: "pingAsync" },
-    { displayName: "Elfsquad Data", apiName: "elfsquaddata", connectorNameKey: "ElfsquadData", clientConstructor: ElfsquaddataClient, methodName: "getEntitiesAsync", methodArguments: ["entity"] },
-    { displayName: "Impexium", apiName: "impexium", connectorNameKey: "Impexium", clientConstructor: ImpexiumClient, methodName: "getAbandonedCheckoutsAsync", methodArguments: ["1"] },
-    { displayName: "Jedox OData Hub", apiName: "jedoxodatahub", connectorNameKey: "JedoxODataHub", clientConstructor: JedoxodatahubClient, methodName: "databasesAsync" },
-    { displayName: "Orderful", apiName: "orderful", connectorNameKey: "Orderful", clientConstructor: OrderfulClient, methodName: "listTransactionsAsync" },
+    { displayName: "Ticketmaster", apiName: "ticketmaster", connectorNameKey: "TicketmasterIndependentPublisher", clientConstructor: TicketmasterClient, methodName: "getEvent", methodArguments: ["event-id"] },
+    { displayName: "Zoho Sign", apiName: "zohosign", connectorNameKey: "ZohoSign", clientConstructor: ZohosignClient, methodName: "downloadCompletionCertificate", methodArguments: ["request-id"] },
+    { displayName: "Seismic Planner", apiName: "seismicplanner", connectorNameKey: "SeismicPlanner", clientConstructor: SeismicplannerClient, methodName: "getComments", methodArguments: ["space-id", "node-id"] },
+    { displayName: "Way We Do", apiName: "waywedo", connectorNameKey: "WayWeDo", clientConstructor: WaywedoClient, methodName: "getChecklistInstance", methodArguments: ["instance-id"] },
+    { displayName: "Meeting Room Map", apiName: "meetingroommap", connectorNameKey: "MeetingRoomMap", clientConstructor: MeetingroommapClient, methodName: "getCategories" },
+    { displayName: "StarRez REST V1", apiName: "starrezrestv1", connectorNameKey: "StarRezRESTV1", clientConstructor: Starrezrestv1Client, methodName: "selectEntry", methodArguments: [{}] },
+    { displayName: "Replicon", apiName: "replicon", connectorNameKey: "Replicon", clientConstructor: RepliconClient, methodName: "getBulkProjectDetails3", methodArguments: [{}] },
+    { displayName: "Etsy", apiName: "etsy", connectorNameKey: "EtsyIndependentPublisher", clientConstructor: EtsyClient, methodName: "ping" },
+    { displayName: "Elfsquad Data", apiName: "elfsquaddata", connectorNameKey: "ElfsquadData", clientConstructor: ElfsquaddataClient, methodName: "getEntities", methodArguments: ["entity"] },
+    { displayName: "Impexium", apiName: "impexium", connectorNameKey: "Impexium", clientConstructor: ImpexiumClient, methodName: "getAbandonedCheckouts", methodArguments: ["1"] },
+    { displayName: "Jedox OData Hub", apiName: "jedoxodatahub", connectorNameKey: "JedoxODataHub", clientConstructor: JedoxodatahubClient, methodName: "databases" },
+    { displayName: "Orderful", apiName: "orderful", connectorNameKey: "Orderful", clientConstructor: OrderfulClient, methodName: "listTransactions" },
 ];
 
 const ActionConnectorCases = ConnectorCases.filter(
@@ -157,10 +157,10 @@ describe("Phase 5-7 connector clients", () => {
 
         try {
             await invokeRepresentativeAction(connector, client);
-            throw new Error("Expected ConnectorException to be thrown.");
+            throw new Error("Expected ConnectorError to be thrown.");
         } catch (error) {
-            expect(error).toBeInstanceOf(ConnectorException);
-            const connectorError = error as ConnectorException;
+            expect(error).toBeInstanceOf(ConnectorError);
+            const connectorError = error as ConnectorError;
             expect(connectorError.statusCode).toBe(404);
             expect(connectorError.responseBody).toBe('{"error":"not found"}');
         }

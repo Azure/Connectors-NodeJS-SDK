@@ -22,7 +22,7 @@
  *     node dist/sampleTeams.js
  */
 
-import { ManagedIdentityTokenProvider, ConnectorException } from "@azure/connectors";
+import { ManagedIdentityTokenProvider, ConnectorError } from "@azure/connectors";
 import { TeamsClient, GetAllTeamsResponse, GetChannelsForGroupResponse, ChatMessage } from "@azure/connectors/generated/TeamsExtensions";
 
 const CONNECTION_URL = process.env.TEAMS_CONNECTION_URL ?? "";
@@ -43,7 +43,7 @@ async function main(): Promise<void> {
     console.log("\n--- List Joined Teams ---");
     let firstTeamId: string | undefined;
     try {
-        const teamsResponse: GetAllTeamsResponse = await client.getAllTeamsAsync();
+        const teamsResponse: GetAllTeamsResponse = await client.getAllTeams();
         const teams = teamsResponse.value ?? [];
 
         if (teams.length > 0) {
@@ -57,7 +57,7 @@ async function main(): Promise<void> {
             console.log("No joined teams found.");
         }
     } catch (error) {
-        if (error instanceof ConnectorException) {
+        if (error instanceof ConnectorError) {
             console.log(`Connector error: ${error.message}`);
         } else {
             throw error;
@@ -69,7 +69,7 @@ async function main(): Promise<void> {
     if (firstTeamId) {
         console.log("\n--- List Channels (first team) ---");
         try {
-            const channelsResponse: GetChannelsForGroupResponse = await client.getChannelsForGroupAsync(firstTeamId);
+            const channelsResponse: GetChannelsForGroupResponse = await client.getChannelsForGroup(firstTeamId);
             const channels = channelsResponse.value ?? [];
 
             if (channels.length > 0) {
@@ -83,7 +83,7 @@ async function main(): Promise<void> {
                 console.log("No channels found.");
             }
         } catch (error) {
-            if (error instanceof ConnectorException) {
+            if (error instanceof ConnectorError) {
                 console.log(`Connector error: ${error.message}`);
             } else {
                 throw error;
@@ -95,7 +95,7 @@ async function main(): Promise<void> {
     if (firstTeamId && firstChannelId) {
         console.log("\n--- Post Message to Channel ---");
         try {
-            const result = await client.postMessageToConversationAsync(
+            const result = await client.postMessageToConversation(
                 {
                     recipient: {
                         groupId: firstTeamId,
@@ -108,7 +108,7 @@ async function main(): Promise<void> {
             );
             console.log(`Message posted successfully (id: ${result.id ?? "unknown"}).`);
         } catch (error) {
-            if (error instanceof ConnectorException) {
+            if (error instanceof ConnectorError) {
                 console.log(`Connector error: ${error.message}`);
             } else {
                 throw error;
@@ -121,7 +121,7 @@ async function main(): Promise<void> {
         console.log("\n--- Get Channel Messages ---");
         try {
             const messages: ChatMessage[] = [];
-            for await (const message of client.getMessagesFromChannelAsync(firstTeamId, firstChannelId)) {
+            for await (const message of client.getMessagesFromChannel(firstTeamId, firstChannelId)) {
                 messages.push(message);
             }
 
@@ -139,7 +139,7 @@ async function main(): Promise<void> {
                 console.log("No messages found.");
             }
         } catch (error) {
-            if (error instanceof ConnectorException) {
+            if (error instanceof ConnectorError) {
                 console.log(`Connector error: ${error.message}`);
             } else {
                 throw error;
@@ -152,7 +152,7 @@ async function main(): Promise<void> {
         console.log("\n--- Poll Channel Messages ---");
         try {
             const polledMessages: ChatMessage[] = [];
-            for await (const message of client.getMessagesFromChannelAsync(firstTeamId, firstChannelId)) {
+            for await (const message of client.getMessagesFromChannel(firstTeamId, firstChannelId)) {
                 polledMessages.push(message);
             }
 
@@ -170,7 +170,7 @@ async function main(): Promise<void> {
                 console.log("No messages returned from poll.");
             }
         } catch (error) {
-            if (error instanceof ConnectorException) {
+            if (error instanceof ConnectorError) {
                 console.log(`Polling response (${error.statusCode}): No messages available.`);
             } else {
                 throw error;

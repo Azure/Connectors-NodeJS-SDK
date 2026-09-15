@@ -1,7 +1,7 @@
 // Copyright (c) Microsoft Corporation.  All rights reserved.
 
 /** Meeting Room Map Connector SDK Sample - ESM JavaScript. */
-import { ConnectorException, ManagedIdentityTokenProvider } from "@azure/connectors";
+import { ConnectorError, ManagedIdentityTokenProvider } from "@azure/connectors";
 import { MeetingroommapClient } from "@azure/connectors/generated/MeetingroommapExtensions";
 
 const CONNECTION_URL = process.env.MEETINGROOMMAP_CONNECTION_URL ?? "";
@@ -9,10 +9,10 @@ if (!CONNECTION_URL) throw new Error("MEETINGROOMMAP_CONNECTION_URL is required.
 
 async function main() {
     try {
-        const categories = await new MeetingroommapClient(CONNECTION_URL, new ManagedIdentityTokenProvider()).getCategoriesAsync();
+        const categories = await new MeetingroommapClient(CONNECTION_URL, new ManagedIdentityTokenProvider()).getCategories();
         console.log("Categories:", JSON.stringify(categories, null, 2));
     } catch (error) {
-        if (error instanceof ConnectorException) console.error(`Connector error (${error.statusCode}): ${error.message}`);
+        if (error instanceof ConnectorError) console.error(`Connector error (${error.statusCode}): ${error.message}`);
         else throw error;
     }
 }

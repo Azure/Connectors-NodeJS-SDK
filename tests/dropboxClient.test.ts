@@ -2,7 +2,7 @@
 
 import type { TokenCredential } from "@azure/core-auth";
 import { DropboxClient } from "../src/generated/DropboxExtensions.ts";
-import { ConnectorException } from "../src/azureConnectors/connectorException.ts";
+import { ConnectorError } from "../src/azureConnectors/connectorError.ts";
 import { ConnectorNames } from "../src/generated/connectorNames.ts";
 import { availableConnectors } from "../src/generated/ManagedConnectors.ts";
 
@@ -50,7 +50,7 @@ describe("DropboxClient — constructor", () => {
     it("should strip trailing slashes from connection URL", async () => {
         mockFetchResponse({});
         const client = new DropboxClient(TestConnectionUrl + "///", createMockCredential());
-        await client.getFileMetadataAsync("file1");
+        await client.getFileMetadata("file1");
         const [url] = (global.fetch as jest.Mock).mock.calls[0];
         // NOTE: Confirms the trailing slashes were stripped by inspecting the
         //       outbound URL: after the scheme, no `//` should remain.
@@ -69,7 +69,7 @@ describe("DropboxClient — constructor", () => {
     });
 });
 
-describe("DropboxClient — getFileMetadataAsync", () => {
+describe("DropboxClient — getFileMetadata", () => {
     afterEach(() => {
         jest.restoreAllMocks();
     });
@@ -79,7 +79,7 @@ describe("DropboxClient — getFileMetadataAsync", () => {
         mockFetchResponse(metadata);
 
         const client = new DropboxClient(TestConnectionUrl, createMockCredential());
-        const result = await client.getFileMetadataAsync("file1");
+        const result = await client.getFileMetadata("file1");
 
         expect(result).toEqual(metadata);
         expect(global.fetch).toHaveBeenCalledTimes(1);
@@ -89,19 +89,20 @@ describe("DropboxClient — getFileMetadataAsync", () => {
         expect(url).toContain("file1");
     });
 
-    it("should throw ConnectorException on non-OK response", async () => {
+    it("should throw ConnectorError on non-OK response", async () => {
         mockFetchError(404, "Not Found");
 
         const client = new DropboxClient(TestConnectionUrl, createMockCredential());
         try {
-            await client.getFileMetadataAsync("missing");
-            throw new Error("Expected ConnectorException to be thrown.");
+            await client.getFileMetadata("missing");
+            throw new Error("Expected ConnectorError to be thrown.");
         } catch (error) {
-            expect(error).toBeInstanceOf(ConnectorException);
-            const connectorError = error as ConnectorException;
+            expect(error).toBeInstanceOf(ConnectorError);
+            const connectorError = error as ConnectorError;
             expect(connectorError.statusCode).toBe(404);
             expect(connectorError.responseBody).toBe("Not Found");
-            expect(connectorError.operation).toBe("GET /datasets/default/files/missing");
+            expect(connectorError.operation).toBe("GetFileMetadata");
+            expect(connectorError.request.url).toContain("/datasets/default/files/missing");
         }
     });
 });

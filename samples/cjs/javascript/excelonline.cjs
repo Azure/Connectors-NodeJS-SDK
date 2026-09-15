@@ -17,7 +17,7 @@
 
 "use strict";
 
-const { ManagedIdentityTokenProvider, ConnectorException } = require("@azure/connectors");
+const { ManagedIdentityTokenProvider, ConnectorError } = require("@azure/connectors");
 const { ExcelonlineClient } = require("@azure/connectors/generated/ExcelonlineExtensions");
 
 const CONNECTION_URL = process.env.EXCELONLINE_CONNECTION_URL ?? "";
@@ -40,10 +40,10 @@ async function main() {
 
     // Example: List the tables in a workbook.
     try {
-        const tables = await client.getTablesAsync(driveId, fileId);
+        const tables = await client.getTables(driveId, fileId);
         console.log("Tables:", JSON.stringify(tables, null, 2));
     } catch (error) {
-        if (error instanceof ConnectorException) {
+        if (error instanceof ConnectorError) {
             console.log(`Connector error (${error.statusCode}): ${error.message}`);
             return;
         }

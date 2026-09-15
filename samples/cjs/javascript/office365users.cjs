@@ -20,7 +20,7 @@
 
 "use strict";
 
-const { ManagedIdentityTokenProvider, ConnectorException } = require("@azure/connectors");
+const { ManagedIdentityTokenProvider, ConnectorError } = require("@azure/connectors");
 const { Office365usersClient } = require("@azure/connectors/generated/Office365usersExtensions");
 
 const CONNECTION_URL = process.env.OFFICE365USERS_CONNECTION_URL ?? "";
@@ -40,14 +40,14 @@ async function main() {
     // Example 1: Get my profile
     console.log("\n--- My Profile ---");
     try {
-        const profile = await client.myProfileAsync();
+        const profile = await client.myProfile();
 
         console.log(`  Display Name: ${profile.displayName ?? "Unknown"}`);
         console.log(`  Email: ${profile.mail ?? "Unknown"}`);
         console.log(`  Job Title: ${profile.jobTitle ?? "Unknown"}`);
         console.log(`  Department: ${profile.department ?? "Unknown"}`);
     } catch (error) {
-        if (error instanceof ConnectorException) {
+        if (error instanceof ConnectorError) {
             console.log(`Connector error: ${error.message}`);
         } else {
             throw error;
@@ -57,7 +57,7 @@ async function main() {
     // Example 2: Get my trending documents
     console.log("\n--- Trending Documents ---");
     try {
-        const trendingResponse = await client.myTrendingDocumentsAsync();
+        const trendingResponse = await client.myTrendingDocuments();
         const docs = trendingResponse.value ?? [];
 
         if (docs.length > 0) {
@@ -70,7 +70,7 @@ async function main() {
             console.log("No trending documents found.");
         }
     } catch (error) {
-        if (error instanceof ConnectorException) {
+        if (error instanceof ConnectorError) {
             console.log(`Connector error (${error.statusCode}): ${error.message}`);
         } else {
             throw error;
@@ -80,7 +80,7 @@ async function main() {
     // Example 3: Get my direct reports
     console.log("\n--- My Direct Reports ---");
     try {
-        const reports = await client.directReportsAsync("me");
+        const reports = await client.directReports("me");
         const reportValues = reports.value ?? [];
 
         if (reportValues.length > 0) {
@@ -92,7 +92,7 @@ async function main() {
             console.log("No direct reports found.");
         }
     } catch (error) {
-        if (error instanceof ConnectorException) {
+        if (error instanceof ConnectorError) {
             console.log(`Connector error (${error.statusCode}): ${error.message}`);
         } else {
             throw error;
@@ -105,7 +105,7 @@ async function main() {
         console.log(`\n--- Search for User ("${searchUser}") ---`);
         try {
             const users = [];
-            for await (const user of client.searchUserAsync(searchUser)) {
+            for await (const user of client.searchUser(searchUser)) {
                 users.push(user);
             }
 
@@ -118,7 +118,7 @@ async function main() {
                 console.log("No matching users found.");
             }
         } catch (error) {
-            if (error instanceof ConnectorException) {
+            if (error instanceof ConnectorError) {
                 console.log(`Connector error (${error.statusCode}): ${error.message}`);
             } else {
                 throw error;

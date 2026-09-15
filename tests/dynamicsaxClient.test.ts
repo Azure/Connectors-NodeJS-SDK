@@ -2,7 +2,7 @@
 
 import type { TokenCredential } from "@azure/core-auth";
 import { DynamicsaxClient } from "../src/generated/DynamicsaxExtensions.ts";
-import { ConnectorException } from "../src/azureConnectors/connectorException.ts";
+import { ConnectorError } from "../src/azureConnectors/connectorError.ts";
 import { ConnectorNames } from "../src/generated/connectorNames.ts";
 import { availableConnectors } from "../src/generated/ManagedConnectors.ts";
 
@@ -58,7 +58,7 @@ describe("DynamicsaxClient — constructor", () => {
     });
 });
 
-describe("DynamicsaxClient — getItemsAsync", () => {
+describe("DynamicsaxClient — getItems", () => {
     afterEach(() => {
         jest.restoreAllMocks();
     });
@@ -68,25 +68,25 @@ describe("DynamicsaxClient — getItemsAsync", () => {
         mockFetchResponse(items);
 
         const client = new DynamicsaxClient(TestConnectionUrl, createMockCredential());
-        const result = await client.getItemsAsync("default", "Customers");
+        const result = await client.getItems("default", "Customers").byPage().next();
 
-        expect(result).toEqual(items);
+        expect(result.value).toEqual(items.value);
         expect(global.fetch).toHaveBeenCalledTimes(1);
         const [, init] = (global.fetch as jest.Mock).mock.calls[0];
         expect(init.method).toBe("GET");
         expect(init.headers["Authorization"]).toBe("Bearer mock-bearer-token");
     });
 
-    it("should throw ConnectorException on non-OK response", async () => {
+    it("should throw ConnectorError on non-OK response", async () => {
         mockFetchError(404, "Not Found");
 
         const client = new DynamicsaxClient(TestConnectionUrl, createMockCredential());
         try {
-            await client.getItemsAsync("default", "Customers");
-            throw new Error("Expected ConnectorException to be thrown.");
+            await client.getItems("default", "Customers").byPage().next();
+            throw new Error("Expected ConnectorError to be thrown.");
         } catch (error) {
-            expect(error).toBeInstanceOf(ConnectorException);
-            const connectorError = error as ConnectorException;
+            expect(error).toBeInstanceOf(ConnectorError);
+            const connectorError = error as ConnectorError;
             expect(connectorError.statusCode).toBe(404);
             expect(connectorError.responseBody).toBe("Not Found");
         }

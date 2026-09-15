@@ -13,7 +13,7 @@ import {
     ListOfBlobsWithSensitivityLabels,
     UpdateFileInput,
 } from "../src/generated/AzureblobExtensions.ts";
-import { ConnectorException } from "../src/azureConnectors/connectorException.ts";
+import { ConnectorError } from "../src/azureConnectors/connectorError.ts";
 import { ConnectorNames } from "../src/generated/connectorNames.ts";
 import { availableConnectors } from "../src/generated/ManagedConnectors.ts";
 
@@ -100,7 +100,7 @@ describe("AzureblobClient — constructor", () => {
     });
 });
 
-describe("AzureblobClient — listRootFolderAsync", () => {
+describe("AzureblobClient — listRootFolder", () => {
     afterEach(() => {
         jest.restoreAllMocks();
     });
@@ -112,7 +112,7 @@ describe("AzureblobClient — listRootFolderAsync", () => {
         mockFetchResponse(mockResponse);
 
         const client = new AzureblobClient(TestConnectionUrl, createMockCredential());
-        const result = await client.listRootFolderAsync(TestDataset).byPage().next();
+        const result = await client.listRootFolder(TestDataset).byPage().next();
 
         expect(result.value).toEqual(mockResponse.value);
         const [url, init] = (global.fetch as jest.Mock).mock.calls[0];
@@ -122,7 +122,7 @@ describe("AzureblobClient — listRootFolderAsync", () => {
     });
 });
 
-describe("AzureblobClient — getFileMetadataAsync", () => {
+describe("AzureblobClient — getFileMetadata", () => {
     afterEach(() => {
         jest.restoreAllMocks();
     });
@@ -132,7 +132,7 @@ describe("AzureblobClient — getFileMetadataAsync", () => {
         mockFetchResponse(mockMetadata);
 
         const client = new AzureblobClient(TestConnectionUrl, createMockCredential());
-        const result = await client.getFileMetadataAsync(TestDataset, "file-id-1");
+        const result = await client.getFileMetadata(TestDataset, "file-id-1");
 
         expect(result).toEqual(mockMetadata);
         const [url] = (global.fetch as jest.Mock).mock.calls[0];
@@ -140,7 +140,7 @@ describe("AzureblobClient — getFileMetadataAsync", () => {
     });
 });
 
-describe("AzureblobClient — createBlockBlobAsync", () => {
+describe("AzureblobClient — createBlockBlob", () => {
     afterEach(() => {
         jest.restoreAllMocks();
     });
@@ -151,7 +151,7 @@ describe("AzureblobClient — createBlockBlobAsync", () => {
         const client = new AzureblobClient(TestConnectionUrl, createMockCredential());
         const input: CreateBlockBlobInput = "file content";
 
-        await client.createBlockBlobAsync(input, TestStorageAccount, "/container", "newfile.txt");
+        await client.createBlockBlob(input, TestStorageAccount, "/container", "newfile.txt");
 
         const [url, init] = (global.fetch as jest.Mock).mock.calls[0];
         expect(url).toContain("/CreateBlockBlob");
@@ -160,7 +160,7 @@ describe("AzureblobClient — createBlockBlobAsync", () => {
     });
 });
 
-describe("AzureblobClient — deleteFileAsync", () => {
+describe("AzureblobClient — deleteFile", () => {
     afterEach(() => {
         jest.restoreAllMocks();
     });
@@ -169,14 +169,14 @@ describe("AzureblobClient — deleteFileAsync", () => {
         mockFetchResponse(null);
 
         const client = new AzureblobClient(TestConnectionUrl, createMockCredential());
-        await client.deleteFileAsync(TestDataset, "file-id-1");
+        await client.deleteFile(TestDataset, "file-id-1");
 
         const [, init] = (global.fetch as jest.Mock).mock.calls[0];
         expect(init.method).toBe("DELETE");
     });
 });
 
-describe("AzureblobClient — copyFileAsync", () => {
+describe("AzureblobClient — copyFile", () => {
     afterEach(() => {
         jest.restoreAllMocks();
     });
@@ -186,7 +186,7 @@ describe("AzureblobClient — copyFileAsync", () => {
         mockFetchResponse(mockResult);
 
         const client = new AzureblobClient(TestConnectionUrl, createMockCredential());
-        const result = await client.copyFileAsync(
+        const result = await client.copyFile(
             TestDataset,
             "/source/file.txt",
             "/dest/file.txt",
@@ -200,7 +200,7 @@ describe("AzureblobClient — copyFileAsync", () => {
     });
 });
 
-describe("AzureblobClient — updateFileAsync", () => {
+describe("AzureblobClient — updateFile", () => {
     afterEach(() => {
         jest.restoreAllMocks();
     });
@@ -211,7 +211,7 @@ describe("AzureblobClient — updateFileAsync", () => {
 
         const client = new AzureblobClient(TestConnectionUrl, createMockCredential());
         const input: UpdateFileInput = "updated content";
-        const result = await client.updateFileAsync(input, TestDataset, "file-id-1");
+        const result = await client.updateFile(input, TestDataset, "file-id-1");
 
         expect(result).toEqual(mockResult);
         const [, init] = (global.fetch as jest.Mock).mock.calls[0];
@@ -219,7 +219,7 @@ describe("AzureblobClient — updateFileAsync", () => {
     });
 });
 
-describe("AzureblobClient — createShareLinkByPathAsync", () => {
+describe("AzureblobClient — createShareLinkByPath", () => {
     afterEach(() => {
         jest.restoreAllMocks();
     });
@@ -232,7 +232,7 @@ describe("AzureblobClient — createShareLinkByPathAsync", () => {
 
         const client = new AzureblobClient(TestConnectionUrl, createMockCredential());
         const input: SharedAccessSignatureBlobPolicy = { Permissions: "Read" };
-        const result = await client.createShareLinkByPathAsync(
+        const result = await client.createShareLinkByPath(
             input,
             TestStorageAccount,
             "/container/file.txt",
@@ -250,14 +250,14 @@ describe("AzureblobClient — error handling", () => {
         jest.restoreAllMocks();
     });
 
-    it("should throw ConnectorException on non-OK response", async () => {
+    it("should throw ConnectorError on non-OK response", async () => {
         mockFetchError(404, '{"error": "BlobNotFound"}');
 
         const client = new AzureblobClient(TestConnectionUrl, createMockCredential());
 
         await expect(
-            client.listRootFolderAsync(TestDataset).byPage().next(),
-        ).rejects.toThrow(ConnectorException);
+            client.listRootFolder(TestDataset).byPage().next(),
+        ).rejects.toThrow(ConnectorError);
     });
 
     it("should include status code and response body in error", async () => {
@@ -267,14 +267,15 @@ describe("AzureblobClient — error handling", () => {
         const client = new AzureblobClient(TestConnectionUrl, createMockCredential());
 
         try {
-            await client.getFileMetadataAsync(TestDataset, "file-1");
-            throw new Error("Expected ConnectorException to be thrown.");
+            await client.getFileMetadata(TestDataset, "file-1");
+            throw new Error("Expected ConnectorError to be thrown.");
         } catch (error) {
-            expect(error).toBeInstanceOf(ConnectorException);
-            const connectorError = error as ConnectorException;
+            expect(error).toBeInstanceOf(ConnectorError);
+            const connectorError = error as ConnectorError;
             expect(connectorError.statusCode).toBe(403);
             expect(connectorError.responseBody).toBe(errorBody);
-            expect(connectorError.operation).toContain("GET");
+            expect(connectorError.operation).toBe("GetFileMetadata_V2");
+            expect(connectorError.request.url).toContain("file-1");
         }
     });
 });

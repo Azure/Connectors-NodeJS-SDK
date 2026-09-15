@@ -2,7 +2,7 @@
 
 import type { TokenCredential } from "@azure/core-auth";
 import { SendgridClient } from "../src/generated/SendgridExtensions.ts";
-import { ConnectorException } from "../src/azureConnectors/connectorException.ts";
+import { ConnectorError } from "../src/azureConnectors/connectorError.ts";
 import { ConnectorNames } from "../src/generated/connectorNames.ts";
 import { availableConnectors } from "../src/generated/ManagedConnectors.ts";
 
@@ -58,7 +58,7 @@ describe("SendgridClient — constructor", () => {
     });
 });
 
-describe("SendgridClient — getGlobalSuppressionAsync", () => {
+describe("SendgridClient — getGlobalSuppression", () => {
     afterEach(() => {
         jest.restoreAllMocks();
     });
@@ -68,7 +68,7 @@ describe("SendgridClient — getGlobalSuppressionAsync", () => {
         mockFetchResponse(suppression);
 
         const client = new SendgridClient(TestConnectionUrl, createMockCredential());
-        const result = await client.getGlobalSuppressionAsync("user@example.com");
+        const result = await client.getGlobalSuppression("user@example.com");
 
         expect(result).toEqual(suppression);
         expect(global.fetch).toHaveBeenCalledTimes(1);
@@ -77,16 +77,16 @@ describe("SendgridClient — getGlobalSuppressionAsync", () => {
         expect(init.headers["Authorization"]).toBe("Bearer mock-bearer-token");
     });
 
-    it("should throw ConnectorException on non-OK response", async () => {
+    it("should throw ConnectorError on non-OK response", async () => {
         mockFetchError(404, "Not Found");
 
         const client = new SendgridClient(TestConnectionUrl, createMockCredential());
         try {
-            await client.getGlobalSuppressionAsync("user@example.com");
-            throw new Error("Expected ConnectorException to be thrown.");
+            await client.getGlobalSuppression("user@example.com");
+            throw new Error("Expected ConnectorError to be thrown.");
         } catch (error) {
-            expect(error).toBeInstanceOf(ConnectorException);
-            const connectorError = error as ConnectorException;
+            expect(error).toBeInstanceOf(ConnectorError);
+            const connectorError = error as ConnectorError;
             expect(connectorError.statusCode).toBe(404);
             expect(connectorError.responseBody).toBe("Not Found");
         }
