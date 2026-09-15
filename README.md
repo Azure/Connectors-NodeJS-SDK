@@ -333,8 +333,9 @@ samples, but have not been validated end to end against live connector services.
 | **Impexium** | `@azure/connectors/generated/ImpexiumExtensions` | Mocked SDK tests |
 | **Jedox OData Hub** | `@azure/connectors/generated/JedoxodatahubExtensions` | Mocked SDK tests |
 | **Orderful** | `@azure/connectors/generated/OrderfulExtensions` | Mocked SDK tests; retired connector fixture |
+| **Zoho ZeptoMail** | `@azure/connectors/generated/ZeptomailExtensions` | Mocked SDK tests |
 
-**Test coverage:** 1,211 tests across 66 test suites and 74 generated connectors.
+**Test coverage:** 1,220 tests across 67 test suites and 75 generated connectors.
 
 ## Authentication
 
