@@ -68,7 +68,7 @@ describe("CampfireClient — getUser", () => {
         mockFetchResponse(user);
 
         const client = new CampfireClient(TestConnectionUrl, createMockCredential());
-        const result = await client.getUser("123");
+        const result = await client.getUser("123", "test-account");
 
         expect(result).toEqual(user);
         expect(global.fetch).toHaveBeenCalledTimes(1);
@@ -82,7 +82,7 @@ describe("CampfireClient — getUser", () => {
 
         const client = new CampfireClient(TestConnectionUrl, createMockCredential());
         try {
-            await client.getUser("123");
+            await client.getUser("123", "test-account");
             throw new Error("Expected ConnectorError to be thrown.");
         } catch (error) {
             expect(error).toBeInstanceOf(ConnectorError);

@@ -79,7 +79,11 @@ describe("JiraClient — listIssues", () => {
         mockFetchResponse(mockResponse);
 
         const client = new JiraClient(TestConnectionUrl, createMockCredential());
-        await client.listIssues("project = DEMO", "names", "summary").byPage().next();
+        await client.listIssues("jira.example.com", {
+            jql: "project = DEMO",
+            expand: "names",
+            fields: "summary",
+        }).byPage().next();
 
         const [url] = (global.fetch as jest.Mock).mock.calls[0];
         expect(url).toContain("/2/search");

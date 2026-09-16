@@ -7,7 +7,7 @@ const CONNECTION_URL = process.env.TWITTER_CONNECTION_URL ?? "";
 if (!CONNECTION_URL) throw new Error("TWITTER_CONNECTION_URL is required.");
 async function main(): Promise<void> {
     try {
-        const tweets = await new TwitterClient(CONNECTION_URL, new ManagedIdentityTokenProvider()).homeTimeline("10");
+        const tweets = await new TwitterClient(CONNECTION_URL, new ManagedIdentityTokenProvider()).homeTimeline({ maxResults: "10" });
         console.log("Tweets:", JSON.stringify(tweets, null, 2));
     } catch (error) {
         if (error instanceof ConnectorError) console.error(`Connector error (${error.statusCode}): ${error.message}`);

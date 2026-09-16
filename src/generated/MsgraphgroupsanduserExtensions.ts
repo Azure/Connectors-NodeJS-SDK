@@ -151,6 +151,32 @@ export interface GetMemberGroupsResponse {
     /** value */
     value?: Array<string>;
 }
+
+/**
+ * Options for the listGroupsByDisplayNameSearch operation.
+ */
+export interface ListGroupsByDisplayNameSearchOptions extends ConnectorOperationOptions {
+    /** Search by keyword in display name of the Microsoft Entra ID group */
+    search?: string;
+}
+
+/**
+ * Options for the listDirectGroupMembers operation.
+ */
+export interface ListDirectGroupMembersOptions extends ConnectorOperationOptions {
+    /** Filter By */
+    filter?: string;
+    /** Select which columns to retrieve */
+    select?: string;
+}
+
+/**
+ * Options for the getMemberLicenseDetails operation.
+ */
+export interface GetMemberLicenseDetailsOptions extends ConnectorOperationOptions {
+    /** Selection of data points(columns) */
+    select?: string;
+}
 // #endregion Types
 
 // #region Client
@@ -196,19 +222,23 @@ export class MsgraphgroupsanduserClient extends ConnectorClientBase {
      * List Groups By Display Name Search
      * @remarks Retrieve groups by searching group's display name
      */
-    public listGroupsByDisplayNameSearch(search?: string, count?: string, options: ConnectorOperationOptions = {}): ConnectorPagedAsyncIterableIterator<Record<string, unknown>> {
+    public listGroupsByDisplayNameSearch(count: string, consistencyLevel: string, options: ListGroupsByDisplayNameSearchOptions = {}): ConnectorPagedAsyncIterableIterator<Record<string, unknown>> {
         const queryParams: string[] = [];
-        if (search !== undefined) {
-            queryParams.push(`$search=${encodeURIComponent(String(search))}`);
+        if (options.search !== undefined) {
+            queryParams.push(`$search=${encodeURIComponent(String(options.search))}`);
         }
         if (count !== undefined) {
             queryParams.push(`$count=${encodeURIComponent(String(count))}`);
         }
         const requestPath = `/v1.0/groups` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
+        const requestHeaders: Record<string, string> = {};
+        if (consistencyLevel !== undefined) {
+            requestHeaders["ConsistencyLevel"] = String(consistencyLevel);
+        }
         return this.createPageable<ListGroupsByDisplayNameSearchResponse, Record<string, unknown>>(
             requestPath,
             async (requestUrl) => {
-                const httpResponse = await this.sendWithTracingAsync<ListGroupsByDisplayNameSearchResponse>("Msgraphgroupsanduser.listGroupsByDisplayNameSearch", "ListGroupsByDisplayNameSearch", "GET", requestUrl, undefined, options);
+                const httpResponse = await this.sendWithTracingAsync<ListGroupsByDisplayNameSearchResponse>("Msgraphgroupsanduser.listGroupsByDisplayNameSearch", "ListGroupsByDisplayNameSearch", "GET", requestUrl, undefined, options, requestHeaders);
 
                 return httpResponse.value as ListGroupsByDisplayNameSearchResponse;
             },
@@ -239,22 +269,26 @@ export class MsgraphgroupsanduserClient extends ConnectorClientBase {
      * List Direct Group Members
      * @remarks Retrieve direct members of a group with count
      */
-    public listDirectGroupMembers(groupId: string, filter?: string, select?: string, count?: string, options: ConnectorOperationOptions = {}): ConnectorPagedAsyncIterableIterator<Record<string, unknown>> {
+    public listDirectGroupMembers(groupId: string, count: string, consistencyLevel: string, options: ListDirectGroupMembersOptions = {}): ConnectorPagedAsyncIterableIterator<Record<string, unknown>> {
         const queryParams: string[] = [];
-        if (filter !== undefined) {
-            queryParams.push(`$filter=${encodeURIComponent(String(filter))}`);
+        if (options.filter !== undefined) {
+            queryParams.push(`$filter=${encodeURIComponent(String(options.filter))}`);
         }
-        if (select !== undefined) {
-            queryParams.push(`$select=${encodeURIComponent(String(select))}`);
+        if (options.select !== undefined) {
+            queryParams.push(`$select=${encodeURIComponent(String(options.select))}`);
         }
         if (count !== undefined) {
             queryParams.push(`$count=${encodeURIComponent(String(count))}`);
         }
         const requestPath = `/v1.0/groups/${groupId}/members` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
+        const requestHeaders: Record<string, string> = {};
+        if (consistencyLevel !== undefined) {
+            requestHeaders["ConsistencyLevel"] = String(consistencyLevel);
+        }
         return this.createPageable<ListDirectGroupMembersResponse, Record<string, unknown>>(
             requestPath,
             async (requestUrl) => {
-                const httpResponse = await this.sendWithTracingAsync<ListDirectGroupMembersResponse>("Msgraphgroupsanduser.listDirectGroupMembers", "ListDirectGroupMembers", "GET", requestUrl, undefined, options);
+                const httpResponse = await this.sendWithTracingAsync<ListDirectGroupMembersResponse>("Msgraphgroupsanduser.listDirectGroupMembers", "ListDirectGroupMembers", "GET", requestUrl, undefined, options, requestHeaders);
 
                 return httpResponse.value as ListDirectGroupMembersResponse;
             },
@@ -267,10 +301,10 @@ export class MsgraphgroupsanduserClient extends ConnectorClientBase {
      * Get Member License Details
      * @remarks Retrieve group member(user)'s license details
      */
-    public async getMemberLicenseDetails(id: string, select?: string, options: ConnectorOperationOptions = {}): Promise<GetMemberLicenseDetailsResponse> {
+    public async getMemberLicenseDetails(id: string, options: GetMemberLicenseDetailsOptions = {}): Promise<GetMemberLicenseDetailsResponse> {
         const queryParams: string[] = [];
-        if (select !== undefined) {
-            queryParams.push(`$select=${encodeURIComponent(String(select))}`);
+        if (options.select !== undefined) {
+            queryParams.push(`$select=${encodeURIComponent(String(options.select))}`);
         }
         const requestPath = `/v1.0/users/${id}/licenseDetails` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);

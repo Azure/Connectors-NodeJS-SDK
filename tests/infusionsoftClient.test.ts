@@ -68,7 +68,7 @@ describe("InfusionsoftClient — createTask", () => {
         mockFetchResponse(response);
 
         const client = new InfusionsoftClient(TestConnectionUrl, createMockCredential());
-        const result = await client.createTask({ title: "Follow up with lead" });
+        const result = await client.createTask({ title: "Follow up with lead" }, "application/json");
 
         expect(result).toEqual(response);
         expect(global.fetch).toHaveBeenCalledTimes(1);
@@ -82,7 +82,7 @@ describe("InfusionsoftClient — createTask", () => {
 
         const client = new InfusionsoftClient(TestConnectionUrl, createMockCredential());
         try {
-            await client.createTask({ title: "Follow up with lead" });
+            await client.createTask({ title: "Follow up with lead" }, "application/json");
             throw new Error("Expected ConnectorError to be thrown.");
         } catch (error) {
             expect(error).toBeInstanceOf(ConnectorError);

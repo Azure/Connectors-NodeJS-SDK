@@ -125,7 +125,11 @@ describe("MsgraphgroupsanduserClient — listGroupsByDisplayNameSearch", () => {
         mockFetchResponse(mockResponse);
 
         const client = new MsgraphgroupsanduserClient(TestConnectionUrl, createMockCredential());
-        const result = await client.listGroupsByDisplayNameSearch("Engineering").byPage().next();
+        const result = await client.listGroupsByDisplayNameSearch(
+            "true",
+            "eventual",
+            { search: "Engineering" },
+        ).byPage().next();
 
         expect(result.value).toEqual(mockResponse.value);
         const [url] = (global.fetch as jest.Mock).mock.calls[0];
@@ -167,7 +171,11 @@ describe("MsgraphgroupsanduserClient — listDirectGroupMembers", () => {
         mockFetchResponse(mockResponse);
 
         const client = new MsgraphgroupsanduserClient(TestConnectionUrl, createMockCredential());
-        const result = await client.listDirectGroupMembers("group-1").byPage().next();
+        const result = await client.listDirectGroupMembers(
+            "group-1",
+            "true",
+            "eventual",
+        ).byPage().next();
 
         expect(result.value).toEqual(mockResponse.value);
         const [url] = (global.fetch as jest.Mock).mock.calls[0];

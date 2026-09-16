@@ -212,6 +212,30 @@ export interface ListDocumentsInDocumentTrayResponse {
     Count?: number;
     Documents?: Array<Record<string, unknown>>;
 }
+
+/**
+ * Options for the transferDocument operation.
+ */
+export interface TransferDocumentOptions extends ConnectorOperationOptions {
+    /** Select the store dialog for indexing the documents being moved. */
+    storeDialogId?: string;
+}
+
+/**
+ * Options for the getDialogs operation.
+ */
+export interface GetDialogsOptions extends ConnectorOperationOptions {
+    /** Select the type of dialogs to return. */
+    dialogType?: string;
+}
+
+/**
+ * Options for the getFileCabinetFields operation.
+ */
+export interface GetFileCabinetFieldsOptions extends ConnectorOperationOptions {
+    /** Select the type of fields to return. */
+    fieldType?: string;
+}
 // #endregion Types
 
 // #region Client
@@ -239,7 +263,7 @@ export class DocuwareClient extends ConnectorClientBase {
      * Search in file cabinet
      * @remarks Search a file cabinet for documents matching the specified criteria.
      */
-    public async searchForDocumentsInFileCabinet(input: SearchForDocumentsInFileCabinetInput, fileCabinet: string, searchDialogId?: string, options: ConnectorOperationOptions = {}): Promise<SearchForDocumentsInFileCabinetResponse> {
+    public async searchForDocumentsInFileCabinet(input: SearchForDocumentsInFileCabinetInput, fileCabinet: string, searchDialogId: string, options: ConnectorOperationOptions = {}): Promise<SearchForDocumentsInFileCabinetResponse> {
         const queryParams: string[] = [];
         if (searchDialogId !== undefined) {
             queryParams.push(`SearchDialogId=${encodeURIComponent(String(searchDialogId))}`);
@@ -267,7 +291,7 @@ export class DocuwareClient extends ConnectorClientBase {
      * Get file cabinets and document trays
      * @remarks Gets a list of file cabinets and/or document trays.
      */
-    public async getFileCabinets(fileCabinetType?: string, options: ConnectorOperationOptions = {}): Promise<GetFileCabinetsResponse> {
+    public async getFileCabinets(fileCabinetType: string, options: ConnectorOperationOptions = {}): Promise<GetFileCabinetsResponse> {
         const queryParams: string[] = [];
         if (fileCabinetType !== undefined) {
             queryParams.push(`FileCabinetType=${encodeURIComponent(String(fileCabinetType))}`);
@@ -305,14 +329,21 @@ export class DocuwareClient extends ConnectorClientBase {
      * Download a file
      * @remarks Downloads a file/section of a document stored in a file cabinet or document tray.
      */
-    public async downloadFile(fileCabinetId: string, documentId: string, fileNumber: string, documentFormat?: string, options: ConnectorOperationOptions = {}): Promise<Blob> {
+    public async downloadFile(fileCabinetId: string, documentId: string, fileNumber: string, documentFormat: string, accept: string, acceptEncoding: string, options: ConnectorOperationOptions = {}): Promise<Blob> {
         const queryParams: string[] = [];
         if (documentFormat !== undefined) {
             queryParams.push(`DocumentFormat=${encodeURIComponent(String(documentFormat))}`);
         }
         const requestPath = `/FileCabinets/${fileCabinetId}/Documents/${documentId}/Sections/${fileNumber}/Download` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
+        const requestHeaders: Record<string, string> = {};
+        if (accept !== undefined) {
+            requestHeaders["Accept"] = String(accept);
+        }
+        if (acceptEncoding !== undefined) {
+            requestHeaders["Accept-Encoding"] = String(acceptEncoding);
+        }
         const requestUrl = this.resolveUrl(requestPath);
-        const httpResponse = await this.sendWithTracingAsync<Blob>("Docuware.downloadFile", "DownloadFile", "GET", requestUrl, undefined, options);
+        const httpResponse = await this.sendWithTracingAsync<Blob>("Docuware.downloadFile", "DownloadFile", "GET", requestUrl, undefined, options, requestHeaders);
 
         return httpResponse.value as Blob;
     }
@@ -321,14 +352,21 @@ export class DocuwareClient extends ConnectorClientBase {
      * Download a document
      * @remarks Downloads a document from a file cabinet or document tray.
      */
-    public async downloadDocument(fileCabinetId: string, documentId: string, documentFormat?: string, options: ConnectorOperationOptions = {}): Promise<Blob> {
+    public async downloadDocument(fileCabinetId: string, documentId: string, documentFormat: string, accept: string, acceptEncoding: string, options: ConnectorOperationOptions = {}): Promise<Blob> {
         const queryParams: string[] = [];
         if (documentFormat !== undefined) {
             queryParams.push(`DocumentFormat=${encodeURIComponent(String(documentFormat))}`);
         }
         const requestPath = `/FileCabinets/${fileCabinetId}/Documents/${documentId}/Download` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
+        const requestHeaders: Record<string, string> = {};
+        if (accept !== undefined) {
+            requestHeaders["Accept"] = String(accept);
+        }
+        if (acceptEncoding !== undefined) {
+            requestHeaders["Accept-Encoding"] = String(acceptEncoding);
+        }
         const requestUrl = this.resolveUrl(requestPath);
-        const httpResponse = await this.sendWithTracingAsync<Blob>("Docuware.downloadDocument", "DownloadDocument", "GET", requestUrl, undefined, options);
+        const httpResponse = await this.sendWithTracingAsync<Blob>("Docuware.downloadDocument", "DownloadDocument", "GET", requestUrl, undefined, options, requestHeaders);
 
         return httpResponse.value as Blob;
     }
@@ -349,10 +387,10 @@ export class DocuwareClient extends ConnectorClientBase {
      * Transfer documents
      * @remarks Moves one or more documents from one file cabinet/document tray to another.
      */
-    public async transferDocument(input: TransferDocumentInput, destinationFileCabinetId: string, storeDialogId?: string, options: ConnectorOperationOptions = {}): Promise<TransferDocumentResponse> {
+    public async transferDocument(input: TransferDocumentInput, destinationFileCabinetId: string, options: TransferDocumentOptions = {}): Promise<TransferDocumentResponse> {
         const queryParams: string[] = [];
-        if (storeDialogId !== undefined) {
-            queryParams.push(`StoreDialogID=${encodeURIComponent(String(storeDialogId))}`);
+        if (options.storeDialogId !== undefined) {
+            queryParams.push(`StoreDialogID=${encodeURIComponent(String(options.storeDialogId))}`);
         }
         const requestPath = `/FileCabinets/${destinationFileCabinetId}/Task/Transfer` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
@@ -377,10 +415,10 @@ export class DocuwareClient extends ConnectorClientBase {
      * Get dialogs
      * @remarks Gets a list of dialogs for a file cabinet or document tray.
      */
-    public async getDialogs(fileCabinet: string, dialogType?: string, options: ConnectorOperationOptions = {}): Promise<GetDialogsResponse> {
+    public async getDialogs(fileCabinet: string, options: GetDialogsOptions = {}): Promise<GetDialogsResponse> {
         const queryParams: string[] = [];
-        if (dialogType !== undefined) {
-            queryParams.push(`DialogType=${encodeURIComponent(String(dialogType))}`);
+        if (options.dialogType !== undefined) {
+            queryParams.push(`DialogType=${encodeURIComponent(String(options.dialogType))}`);
         }
         const requestPath = `/FileCabinets/${fileCabinet}/Dialogs` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
@@ -417,10 +455,10 @@ export class DocuwareClient extends ConnectorClientBase {
      * Get file cabinet fields
      * @remarks Gets a list of fields for a file cabinet.
      */
-    public async getFileCabinetFields(fileCabinet: string, fieldType?: string, options: ConnectorOperationOptions = {}): Promise<GetFileCabinetFieldsResponse> {
+    public async getFileCabinetFields(fileCabinet: string, options: GetFileCabinetFieldsOptions = {}): Promise<GetFileCabinetFieldsResponse> {
         const queryParams: string[] = [];
-        if (fieldType !== undefined) {
-            queryParams.push(`FieldType=${encodeURIComponent(String(fieldType))}`);
+        if (options.fieldType !== undefined) {
+            queryParams.push(`FieldType=${encodeURIComponent(String(options.fieldType))}`);
         }
         const requestPath = `/FileCabinets/${fileCabinet}/Fields` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);

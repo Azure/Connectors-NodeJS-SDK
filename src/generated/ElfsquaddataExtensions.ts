@@ -65,6 +65,26 @@ export interface InvokeFunctionInput {
 export interface InvokeFunctionResponse {
     [key: string]: unknown;
 }
+
+/**
+ * Options for the getEntities operation.
+ */
+export interface GetEntitiesOptions extends ConnectorOperationOptions {
+    /** Top */
+    top?: string;
+    /** Skip */
+    skip?: string;
+    /** Order by */
+    orderby?: string;
+    /** Filter items */
+    filter?: string;
+    /** Select properties */
+    select?: string;
+    /** Expand */
+    expand?: string;
+    /** Count */
+    count?: string;
+}
 // #endregion Types
 
 export const ElfsquaddataTriggerOperations = {
@@ -111,28 +131,28 @@ export class ElfsquaddataClient extends ConnectorClientBase {
      * Get entities
      * @remarks Get entities
      */
-    public getEntities(entityName: string, top?: string, skip?: string, orderby?: string, filter?: string, select?: string, expand?: string, count?: string, options: ConnectorOperationOptions = {}): ConnectorPagedAsyncIterableIterator<unknown> {
+    public getEntities(entityName: string, options: GetEntitiesOptions = {}): ConnectorPagedAsyncIterableIterator<unknown> {
         const queryParams: string[] = [];
-        if (top !== undefined) {
-            queryParams.push(`$top=${encodeURIComponent(String(top))}`);
+        if (options.top !== undefined) {
+            queryParams.push(`$top=${encodeURIComponent(String(options.top))}`);
         }
-        if (skip !== undefined) {
-            queryParams.push(`$skip=${encodeURIComponent(String(skip))}`);
+        if (options.skip !== undefined) {
+            queryParams.push(`$skip=${encodeURIComponent(String(options.skip))}`);
         }
-        if (orderby !== undefined) {
-            queryParams.push(`$orderby=${encodeURIComponent(String(orderby))}`);
+        if (options.orderby !== undefined) {
+            queryParams.push(`$orderby=${encodeURIComponent(String(options.orderby))}`);
         }
-        if (filter !== undefined) {
-            queryParams.push(`$filter=${encodeURIComponent(String(filter))}`);
+        if (options.filter !== undefined) {
+            queryParams.push(`$filter=${encodeURIComponent(String(options.filter))}`);
         }
-        if (select !== undefined) {
-            queryParams.push(`$select=${encodeURIComponent(String(select))}`);
+        if (options.select !== undefined) {
+            queryParams.push(`$select=${encodeURIComponent(String(options.select))}`);
         }
-        if (expand !== undefined) {
-            queryParams.push(`$expand=${encodeURIComponent(String(expand))}`);
+        if (options.expand !== undefined) {
+            queryParams.push(`$expand=${encodeURIComponent(String(options.expand))}`);
         }
-        if (count !== undefined) {
-            queryParams.push(`$count=${encodeURIComponent(String(count))}`);
+        if (options.count !== undefined) {
+            queryParams.push(`$count=${encodeURIComponent(String(options.count))}`);
         }
         const requestPath = `/data/1/${entityName}` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         return this.createPageable<GetEntitiesResponse, unknown>(

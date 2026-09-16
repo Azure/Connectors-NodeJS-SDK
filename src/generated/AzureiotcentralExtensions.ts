@@ -896,6 +896,200 @@ export interface WorkflowTrigger {
 export interface DynamicValues {
     [key: string]: unknown;
 }
+
+/**
+ * Options for the getDevicesCloudProperties operation.
+ */
+export interface GetDevicesCloudPropertiesOptions extends ConnectorOperationOptions {
+    /** The device template definition for the device. */
+    instanceOf?: string;
+}
+
+/**
+ * Options for the updateDevicesCloudProperties operation.
+ */
+export interface UpdateDevicesCloudPropertiesOptions extends ConnectorOperationOptions {
+    /** The device template definition for the device. */
+    instanceOf?: string;
+}
+
+/**
+ * Options for the executeDevicesComponentCommand operation.
+ */
+export interface ExecuteDevicesComponentCommandOptions extends ConnectorOperationOptions {
+    /** The device template definition for the device. */
+    instanceOf?: string;
+}
+
+/**
+ * Options for the setJobs operation.
+ */
+export interface SetJobsOptions extends ConnectorOperationOptions {
+    /** Type of the job. */
+    jobType?: string;
+}
+
+/**
+ * Options for the setScheduledJobs operation.
+ */
+export interface SetScheduledJobsOptions extends ConnectorOperationOptions {
+    /** Type of the job. */
+    jobType?: string;
+    /** How the scheduled job should end (not applied to device template migrations). */
+    scheduledJobEndType?: string;
+}
+
+/**
+ * Options for the updateScheduledJob operation.
+ */
+export interface UpdateScheduledJobOptions extends ConnectorOperationOptions {
+    /** How the scheduled job should end (not applied to device template migrations). */
+    scheduledJobEndType?: string;
+}
+
+/**
+ * Options for the getDeviceCommandResponse operation.
+ */
+export interface GetDeviceCommandResponseOptions extends ConnectorOperationOptions {
+    /** The device template definition for the device. */
+    template?: string;
+}
+
+/**
+ * Options for the getDeviceComponentCommandResponse operation.
+ */
+export interface GetDeviceComponentCommandResponseOptions extends ConnectorOperationOptions {
+    /** The device template definition for the device. */
+    template?: string;
+}
+
+/**
+ * Options for the getDeviceComponentTelemetryValue operation.
+ */
+export interface GetDeviceComponentTelemetryValueOptions extends ConnectorOperationOptions {
+    /** The device template definition for the device. */
+    template?: string;
+}
+
+/**
+ * Options for the getDeviceModuleCommandResponse operation.
+ */
+export interface GetDeviceModuleCommandResponseOptions extends ConnectorOperationOptions {
+    /** The device template definition for the device. */
+    template?: string;
+}
+
+/**
+ * Options for the getDeviceModuleComponentCommandResponse operation.
+ */
+export interface GetDeviceModuleComponentCommandResponseOptions extends ConnectorOperationOptions {
+    /** The device template definition for the device. */
+    template?: string;
+}
+
+/**
+ * Options for the getDeviceModuleComponentTelemetryValue operation.
+ */
+export interface GetDeviceModuleComponentTelemetryValueOptions extends ConnectorOperationOptions {
+    /** The device template definition for the device. */
+    template?: string;
+}
+
+/**
+ * Options for the getDevicesModuleProperties operation.
+ */
+export interface GetDevicesModulePropertiesOptions extends ConnectorOperationOptions {
+    /** The device template definition for the device. */
+    template?: string;
+}
+
+/**
+ * Options for the getDeviceModuleTelemetryValue operation.
+ */
+export interface GetDeviceModuleTelemetryValueOptions extends ConnectorOperationOptions {
+    /** The device template definition for the device. */
+    template?: string;
+}
+
+/**
+ * Options for the getDevicesProperties operation.
+ */
+export interface GetDevicesPropertiesOptions extends ConnectorOperationOptions {
+    /** The device template definition for the device. */
+    template?: string;
+}
+
+/**
+ * Options for the getDeviceTelemetryValue operation.
+ */
+export interface GetDeviceTelemetryValueOptions extends ConnectorOperationOptions {
+    /** The device template definition for the device. */
+    template?: string;
+}
+
+/**
+ * Options for the runDevicesCommand operation.
+ */
+export interface RunDevicesCommandOptions extends ConnectorOperationOptions {
+    /** The device template definition for the device. */
+    template?: string;
+}
+
+/**
+ * Options for the runDevicesComponentCommand operation.
+ */
+export interface RunDevicesComponentCommandOptions extends ConnectorOperationOptions {
+    /** The device template definition for the device. */
+    template?: string;
+}
+
+/**
+ * Options for the runDevicesModuleCommand operation.
+ */
+export interface RunDevicesModuleCommandOptions extends ConnectorOperationOptions {
+    /** The device template definition for the device. */
+    template?: string;
+}
+
+/**
+ * Options for the runDevicesModuleComponentCommand operation.
+ */
+export interface RunDevicesModuleComponentCommandOptions extends ConnectorOperationOptions {
+    /** The device template definition for the device. */
+    template?: string;
+}
+
+/**
+ * Options for the updateDevicesModuleProperties operation.
+ */
+export interface UpdateDevicesModulePropertiesOptions extends ConnectorOperationOptions {
+    /** The device template definition for the device. */
+    template?: string;
+}
+
+/**
+ * Options for the updateDevicesProperties operation.
+ */
+export interface UpdateDevicesPropertiesOptions extends ConnectorOperationOptions {
+    /** The device template definition for the device. */
+    template?: string;
+}
+
+/**
+ * Options for the createUser operation.
+ */
+export interface CreateUserOptions extends ConnectorOperationOptions {
+    /** Type of the user. */
+    userType?: string;
+}
+
+/**
+ * Options for the updateUser operation.
+ */
+export interface UpdateUserOptions extends ConnectorOperationOptions {
+    /** Type of the user. */
+    userType?: string;
+}
 // #endregion Types
 
 export const AzureiotcentralTriggerOperations = {
@@ -942,7 +1136,7 @@ export class AzureiotcentralClient extends ConnectorClientBase {
      * List device groups
      * @remarks Get the list of device groups in an application.
      */
-    public listDeviceGroups(application?: string, options: ConnectorOperationOptions = {}): ConnectorPagedAsyncIterableIterator<DeviceGroup> {
+    public listDeviceGroups(application: string, options: ConnectorOperationOptions = {}): ConnectorPagedAsyncIterableIterator<DeviceGroup> {
         const queryParams: string[] = [];
         if (application !== undefined) {
             queryParams.push(`application=${encodeURIComponent(String(application))}`);
@@ -965,7 +1159,7 @@ export class AzureiotcentralClient extends ConnectorClientBase {
      * Get a device group
      * @remarks Get details about an existing device group by ID.
      */
-    public async getDeviceGroup(deviceGroupId: string, application?: string, options: ConnectorOperationOptions = {}): Promise<DeviceGroup> {
+    public async getDeviceGroup(deviceGroupId: string, application: string, options: ConnectorOperationOptions = {}): Promise<DeviceGroup> {
         const queryParams: string[] = [];
         if (application !== undefined) {
             queryParams.push(`application=${encodeURIComponent(String(application))}`);
@@ -981,7 +1175,7 @@ export class AzureiotcentralClient extends ConnectorClientBase {
      * Create a device group
      * @remarks Create or update a device group.
      */
-    public async setDeviceGroups(input: DeviceGroup, deviceGroupId: string, application?: string, options: ConnectorOperationOptions = {}): Promise<DeviceGroup> {
+    public async setDeviceGroups(input: DeviceGroup, deviceGroupId: string, application: string, options: ConnectorOperationOptions = {}): Promise<DeviceGroup> {
         const queryParams: string[] = [];
         if (application !== undefined) {
             queryParams.push(`application=${encodeURIComponent(String(application))}`);
@@ -997,7 +1191,7 @@ export class AzureiotcentralClient extends ConnectorClientBase {
      * Delete device group
      * @remarks Delete an existing device group by ID
      */
-    public async removeDeviceGroups(deviceGroupId: string, application?: string, options: ConnectorOperationOptions = {}): Promise<void> {
+    public async removeDeviceGroups(deviceGroupId: string, application: string, options: ConnectorOperationOptions = {}): Promise<void> {
         const queryParams: string[] = [];
         if (application !== undefined) {
             queryParams.push(`application=${encodeURIComponent(String(application))}`);
@@ -1011,7 +1205,7 @@ export class AzureiotcentralClient extends ConnectorClientBase {
      * Get devices by device group ID
      * @remarks Get the list of devices in a device group in an application.
      */
-    public getDeviceGroupsDevices(deviceGroupId: string, application?: string, options: ConnectorOperationOptions = {}): ConnectorPagedAsyncIterableIterator<DeviceV1> {
+    public getDeviceGroupsDevices(deviceGroupId: string, application: string, options: ConnectorOperationOptions = {}): ConnectorPagedAsyncIterableIterator<DeviceV1> {
         const queryParams: string[] = [];
         if (application !== undefined) {
             queryParams.push(`application=${encodeURIComponent(String(application))}`);
@@ -1034,13 +1228,13 @@ export class AzureiotcentralClient extends ConnectorClientBase {
      * Get device cloud properties (deprecated)
      * @remarks Get all cloud property values of a device by device ID (deprecated).
      */
-    public async getDevicesCloudProperties(deviceId: string, application?: string, instanceOf?: string, options: ConnectorOperationOptions = {}): Promise<DeviceCloudProperties> {
+    public async getDevicesCloudProperties(deviceId: string, application: string, options: GetDevicesCloudPropertiesOptions = {}): Promise<DeviceCloudProperties> {
         const queryParams: string[] = [];
         if (application !== undefined) {
             queryParams.push(`application=${encodeURIComponent(String(application))}`);
         }
-        if (instanceOf !== undefined) {
-            queryParams.push(`instanceOf=${encodeURIComponent(String(instanceOf))}`);
+        if (options.instanceOf !== undefined) {
+            queryParams.push(`instanceOf=${encodeURIComponent(String(options.instanceOf))}`);
         }
         const requestPath = `/api/preview/devices/${deviceId}/cloudProperties` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
@@ -1053,13 +1247,13 @@ export class AzureiotcentralClient extends ConnectorClientBase {
      * Update device cloud properties (deprecated)
      * @remarks Update all cloud property values of a device by device ID (deprecated).
      */
-    public async updateDevicesCloudProperties(input: DeviceCloudProperties, deviceId: string, application?: string, instanceOf?: string, options: ConnectorOperationOptions = {}): Promise<DeviceCloudProperties> {
+    public async updateDevicesCloudProperties(input: DeviceCloudProperties, deviceId: string, application: string, options: UpdateDevicesCloudPropertiesOptions = {}): Promise<DeviceCloudProperties> {
         const queryParams: string[] = [];
         if (application !== undefined) {
             queryParams.push(`application=${encodeURIComponent(String(application))}`);
         }
-        if (instanceOf !== undefined) {
-            queryParams.push(`instanceOf=${encodeURIComponent(String(instanceOf))}`);
+        if (options.instanceOf !== undefined) {
+            queryParams.push(`instanceOf=${encodeURIComponent(String(options.instanceOf))}`);
         }
         const requestPath = `/api/preview/devices/${deviceId}/cloudProperties` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
@@ -1072,13 +1266,13 @@ export class AzureiotcentralClient extends ConnectorClientBase {
      * Execute a device command (deprecated)
      * @remarks Execute a command on a device (deprecated).
      */
-    public async executeDevicesComponentCommand(input: DeviceCommand, deviceId: string, componentName: string, commandName: string, application?: string, instanceOf?: string, options: ConnectorOperationOptions = {}): Promise<DeviceCommand> {
+    public async executeDevicesComponentCommand(input: DeviceCommand, deviceId: string, componentName: string, commandName: string, application: string, options: ExecuteDevicesComponentCommandOptions = {}): Promise<DeviceCommand> {
         const queryParams: string[] = [];
         if (application !== undefined) {
             queryParams.push(`application=${encodeURIComponent(String(application))}`);
         }
-        if (instanceOf !== undefined) {
-            queryParams.push(`instanceOf=${encodeURIComponent(String(instanceOf))}`);
+        if (options.instanceOf !== undefined) {
+            queryParams.push(`instanceOf=${encodeURIComponent(String(options.instanceOf))}`);
         }
         const requestPath = `/api/preview/devices/${deviceId}/components/${componentName}/commands/${commandName}` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
@@ -1091,7 +1285,7 @@ export class AzureiotcentralClient extends ConnectorClientBase {
      * List relationships
      * @remarks List all relationships based on device ID.
      */
-    public listDeviceRelationships(deviceId: string, application?: string, options: ConnectorOperationOptions = {}): ConnectorPagedAsyncIterableIterator<DeviceRelationshipStatic> {
+    public listDeviceRelationships(deviceId: string, application: string, options: ConnectorOperationOptions = {}): ConnectorPagedAsyncIterableIterator<DeviceRelationshipStatic> {
         const queryParams: string[] = [];
         if (application !== undefined) {
             queryParams.push(`application=${encodeURIComponent(String(application))}`);
@@ -1114,7 +1308,7 @@ export class AzureiotcentralClient extends ConnectorClientBase {
      * Get device relationship
      * @remarks Get details about an existing device relationship by device ID and by relationship ID.
      */
-    public async getDeviceRelationship(deviceId: string, relationshipId: string, application?: string, options: ConnectorOperationOptions = {}): Promise<DeviceRelationshipStatic> {
+    public async getDeviceRelationship(deviceId: string, relationshipId: string, application: string, options: ConnectorOperationOptions = {}): Promise<DeviceRelationshipStatic> {
         const queryParams: string[] = [];
         if (application !== undefined) {
             queryParams.push(`application=${encodeURIComponent(String(application))}`);
@@ -1130,7 +1324,7 @@ export class AzureiotcentralClient extends ConnectorClientBase {
      * Create a device relationship
      * @remarks Create a new device relationship between the given device and a new device given a device ID and a relationship ID.
      */
-    public async setDeviceRelationships(input: DeviceRelationship, relationshipId: string, deviceId: string, application?: string, options: ConnectorOperationOptions = {}): Promise<DeviceRelationshipStatic> {
+    public async setDeviceRelationships(input: DeviceRelationship, relationshipId: string, deviceId: string, application: string, options: ConnectorOperationOptions = {}): Promise<DeviceRelationshipStatic> {
         const queryParams: string[] = [];
         if (application !== undefined) {
             queryParams.push(`application=${encodeURIComponent(String(application))}`);
@@ -1146,7 +1340,7 @@ export class AzureiotcentralClient extends ConnectorClientBase {
      * Update a device relationship
      * @remarks Update an existing device relationship between the given device and a new device given a device ID and a relationship ID.
      */
-    public async updateDeviceRelationship(input: DeviceRelationship, deviceId: string, relationshipId: string, application?: string, options: ConnectorOperationOptions = {}): Promise<DeviceRelationshipStatic> {
+    public async updateDeviceRelationship(input: DeviceRelationship, deviceId: string, relationshipId: string, application: string, options: ConnectorOperationOptions = {}): Promise<DeviceRelationshipStatic> {
         const queryParams: string[] = [];
         if (application !== undefined) {
             queryParams.push(`application=${encodeURIComponent(String(application))}`);
@@ -1162,7 +1356,7 @@ export class AzureiotcentralClient extends ConnectorClientBase {
      * Delete a device relationship
      * @remarks Delete an existing device relationship by device ID and relationship ID.
      */
-    public async removeDeviceRelationships(deviceId: string, relationshipId: string, application?: string, options: ConnectorOperationOptions = {}): Promise<void> {
+    public async removeDeviceRelationships(deviceId: string, relationshipId: string, application: string, options: ConnectorOperationOptions = {}): Promise<void> {
         const queryParams: string[] = [];
         if (application !== undefined) {
             queryParams.push(`application=${encodeURIComponent(String(application))}`);
@@ -1176,7 +1370,7 @@ export class AzureiotcentralClient extends ConnectorClientBase {
      * List jobs
      * @remarks Get the list of jobs in an application.
      */
-    public listJobs(application?: string, options: ConnectorOperationOptions = {}): ConnectorPagedAsyncIterableIterator<JobStatic> {
+    public listJobs(application: string, options: ConnectorOperationOptions = {}): ConnectorPagedAsyncIterableIterator<JobStatic> {
         const queryParams: string[] = [];
         if (application !== undefined) {
             queryParams.push(`application=${encodeURIComponent(String(application))}`);
@@ -1199,7 +1393,7 @@ export class AzureiotcentralClient extends ConnectorClientBase {
      * Get a job
      * @remarks Get details about an existing job by ID.
      */
-    public async getJob(jobId: string, application?: string, options: ConnectorOperationOptions = {}): Promise<JobStatic> {
+    public async getJob(jobId: string, application: string, options: ConnectorOperationOptions = {}): Promise<JobStatic> {
         const queryParams: string[] = [];
         if (application !== undefined) {
             queryParams.push(`application=${encodeURIComponent(String(application))}`);
@@ -1215,13 +1409,13 @@ export class AzureiotcentralClient extends ConnectorClientBase {
      * Create a job
      * @remarks Create and execute a new job via its job definition.
      */
-    public async setJobs(input: Job, jobId: string, application?: string, jobType?: string, options: ConnectorOperationOptions = {}): Promise<Job> {
+    public async setJobs(input: Job, jobId: string, application: string, options: SetJobsOptions = {}): Promise<Job> {
         const queryParams: string[] = [];
         if (application !== undefined) {
             queryParams.push(`application=${encodeURIComponent(String(application))}`);
         }
-        if (jobType !== undefined) {
-            queryParams.push(`job_type=${encodeURIComponent(String(jobType))}`);
+        if (options.jobType !== undefined) {
+            queryParams.push(`job_type=${encodeURIComponent(String(options.jobType))}`);
         }
         const requestPath = `/api/ga_2022_07_31/jobs/${jobId}` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
@@ -1234,7 +1428,7 @@ export class AzureiotcentralClient extends ConnectorClientBase {
      * Get device statuses
      * @remarks Get the list of individual device statuses by job ID.
      */
-    public getJobsDevices(jobId: string, application?: string, options: ConnectorOperationOptions = {}): ConnectorPagedAsyncIterableIterator<JobDeviceStatus> {
+    public getJobsDevices(jobId: string, application: string, options: ConnectorOperationOptions = {}): ConnectorPagedAsyncIterableIterator<JobDeviceStatus> {
         const queryParams: string[] = [];
         if (application !== undefined) {
             queryParams.push(`application=${encodeURIComponent(String(application))}`);
@@ -1257,7 +1451,7 @@ export class AzureiotcentralClient extends ConnectorClientBase {
      * Stop a running job
      * @remarks Stop execution of a job that is currently running.
      */
-    public async stopJobs(jobId: string, application?: string, options: ConnectorOperationOptions = {}): Promise<void> {
+    public async stopJobs(jobId: string, application: string, options: ConnectorOperationOptions = {}): Promise<void> {
         const queryParams: string[] = [];
         if (application !== undefined) {
             queryParams.push(`application=${encodeURIComponent(String(application))}`);
@@ -1271,7 +1465,7 @@ export class AzureiotcentralClient extends ConnectorClientBase {
      * Resume a stopped job
      * @remarks Resume execution of an existing stopped job.
      */
-    public async resumeJobs(jobId: string, application?: string, options: ConnectorOperationOptions = {}): Promise<void> {
+    public async resumeJobs(jobId: string, application: string, options: ConnectorOperationOptions = {}): Promise<void> {
         const queryParams: string[] = [];
         if (application !== undefined) {
             queryParams.push(`application=${encodeURIComponent(String(application))}`);
@@ -1285,7 +1479,7 @@ export class AzureiotcentralClient extends ConnectorClientBase {
      * Resume a job on failed devices
      * @remarks Execute a rerun of an existing job on all failed devices.
      */
-    public async rerunJobs(jobId: string, rerunId: string, application?: string, options: ConnectorOperationOptions = {}): Promise<JobStatic> {
+    public async rerunJobs(jobId: string, rerunId: string, application: string, options: ConnectorOperationOptions = {}): Promise<JobStatic> {
         const queryParams: string[] = [];
         if (application !== undefined) {
             queryParams.push(`application=${encodeURIComponent(String(application))}`);
@@ -1301,7 +1495,7 @@ export class AzureiotcentralClient extends ConnectorClientBase {
      * List organizations
      * @remarks Get the list of organizations in an application.
      */
-    public listOrganizations(application?: string, options: ConnectorOperationOptions = {}): ConnectorPagedAsyncIterableIterator<Organization> {
+    public listOrganizations(application: string, options: ConnectorOperationOptions = {}): ConnectorPagedAsyncIterableIterator<Organization> {
         const queryParams: string[] = [];
         if (application !== undefined) {
             queryParams.push(`application=${encodeURIComponent(String(application))}`);
@@ -1324,7 +1518,7 @@ export class AzureiotcentralClient extends ConnectorClientBase {
      * Get an organization
      * @remarks Get details about an existing organization by ID.
      */
-    public async getOrganization(organizationId: string, application?: string, options: ConnectorOperationOptions = {}): Promise<Organization> {
+    public async getOrganization(organizationId: string, application: string, options: ConnectorOperationOptions = {}): Promise<Organization> {
         const queryParams: string[] = [];
         if (application !== undefined) {
             queryParams.push(`application=${encodeURIComponent(String(application))}`);
@@ -1340,7 +1534,7 @@ export class AzureiotcentralClient extends ConnectorClientBase {
      * Create an organization
      * @remarks Create a new organization.
      */
-    public async setOrganizations(input: Organization, organizationId: string, application?: string, options: ConnectorOperationOptions = {}): Promise<Organization> {
+    public async setOrganizations(input: Organization, organizationId: string, application: string, options: ConnectorOperationOptions = {}): Promise<Organization> {
         const queryParams: string[] = [];
         if (application !== undefined) {
             queryParams.push(`application=${encodeURIComponent(String(application))}`);
@@ -1356,7 +1550,7 @@ export class AzureiotcentralClient extends ConnectorClientBase {
      * Delete organization
      * @remarks Delete an existing organization by ID
      */
-    public async removeOrganizations(organizationId: string, application?: string, options: ConnectorOperationOptions = {}): Promise<void> {
+    public async removeOrganizations(organizationId: string, application: string, options: ConnectorOperationOptions = {}): Promise<void> {
         const queryParams: string[] = [];
         if (application !== undefined) {
             queryParams.push(`application=${encodeURIComponent(String(application))}`);
@@ -1370,7 +1564,7 @@ export class AzureiotcentralClient extends ConnectorClientBase {
      * List scheduled jobs
      * @remarks Get the list of scheduled jobs in an application.
      */
-    public listScheduledJobs(application?: string, options: ConnectorOperationOptions = {}): ConnectorPagedAsyncIterableIterator<ScheduledJob> {
+    public listScheduledJobs(application: string, options: ConnectorOperationOptions = {}): ConnectorPagedAsyncIterableIterator<ScheduledJob> {
         const queryParams: string[] = [];
         if (application !== undefined) {
             queryParams.push(`application=${encodeURIComponent(String(application))}`);
@@ -1393,7 +1587,7 @@ export class AzureiotcentralClient extends ConnectorClientBase {
      * Get a scheduled job
      * @remarks Get details about an existing scheduled job by ID.
      */
-    public async getScheduledJob(scheduledJobId: string, application?: string, options: ConnectorOperationOptions = {}): Promise<ScheduledJob> {
+    public async getScheduledJob(scheduledJobId: string, application: string, options: ConnectorOperationOptions = {}): Promise<ScheduledJob> {
         const queryParams: string[] = [];
         if (application !== undefined) {
             queryParams.push(`application=${encodeURIComponent(String(application))}`);
@@ -1409,16 +1603,16 @@ export class AzureiotcentralClient extends ConnectorClientBase {
      * Create a scheduled job
      * @remarks Create and execute a new scheduled job via its job definition.
      */
-    public async setScheduledJobs(input: ScheduledJob, scheduledJobId: string, application?: string, jobType?: string, scheduledJobEndType?: string, options: ConnectorOperationOptions = {}): Promise<ScheduledJob> {
+    public async setScheduledJobs(input: ScheduledJob, scheduledJobId: string, application: string, options: SetScheduledJobsOptions = {}): Promise<ScheduledJob> {
         const queryParams: string[] = [];
         if (application !== undefined) {
             queryParams.push(`application=${encodeURIComponent(String(application))}`);
         }
-        if (jobType !== undefined) {
-            queryParams.push(`job_type=${encodeURIComponent(String(jobType))}`);
+        if (options.jobType !== undefined) {
+            queryParams.push(`job_type=${encodeURIComponent(String(options.jobType))}`);
         }
-        if (scheduledJobEndType !== undefined) {
-            queryParams.push(`scheduled_job_end_type=${encodeURIComponent(String(scheduledJobEndType))}`);
+        if (options.scheduledJobEndType !== undefined) {
+            queryParams.push(`scheduled_job_end_type=${encodeURIComponent(String(options.scheduledJobEndType))}`);
         }
         const requestPath = `/api/ga_2022_07_31/scheduledJobs/${scheduledJobId}` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
@@ -1431,13 +1625,13 @@ export class AzureiotcentralClient extends ConnectorClientBase {
      * Update a scheduled job
      * @remarks Update an existing scheduled job by ID.
      */
-    public async updateScheduledJob(input: ScheduledJobPatch, scheduledJobId: string, application?: string, scheduledJobEndType?: string, options: ConnectorOperationOptions = {}): Promise<ScheduledJobStatic> {
+    public async updateScheduledJob(input: ScheduledJobPatch, scheduledJobId: string, application: string, options: UpdateScheduledJobOptions = {}): Promise<ScheduledJobStatic> {
         const queryParams: string[] = [];
         if (application !== undefined) {
             queryParams.push(`application=${encodeURIComponent(String(application))}`);
         }
-        if (scheduledJobEndType !== undefined) {
-            queryParams.push(`scheduled_job_end_type=${encodeURIComponent(String(scheduledJobEndType))}`);
+        if (options.scheduledJobEndType !== undefined) {
+            queryParams.push(`scheduled_job_end_type=${encodeURIComponent(String(options.scheduledJobEndType))}`);
         }
         const requestPath = `/api/ga_2022_07_31/scheduledJobs/${scheduledJobId}` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
@@ -1450,7 +1644,7 @@ export class AzureiotcentralClient extends ConnectorClientBase {
      * Delete a scheduled job
      * @remarks Delete an existing scheduled job by ID.
      */
-    public async removeScheduledJobs(scheduledJobId: string, application?: string, options: ConnectorOperationOptions = {}): Promise<void> {
+    public async removeScheduledJobs(scheduledJobId: string, application: string, options: ConnectorOperationOptions = {}): Promise<void> {
         const queryParams: string[] = [];
         if (application !== undefined) {
             queryParams.push(`application=${encodeURIComponent(String(application))}`);
@@ -1464,7 +1658,7 @@ export class AzureiotcentralClient extends ConnectorClientBase {
      * Get jobs by scheduled job ID
      * @remarks Get the list of jobs for a scheduled job definition.
      */
-    public listScheduledJobsJobs(scheduledJobId: string, application?: string, options: ConnectorOperationOptions = {}): ConnectorPagedAsyncIterableIterator<JobStatic> {
+    public listScheduledJobsJobs(scheduledJobId: string, application: string, options: ConnectorOperationOptions = {}): ConnectorPagedAsyncIterableIterator<JobStatic> {
         const queryParams: string[] = [];
         if (application !== undefined) {
             queryParams.push(`application=${encodeURIComponent(String(application))}`);
@@ -1487,7 +1681,7 @@ export class AzureiotcentralClient extends ConnectorClientBase {
      * Get a device by ID
      * @remarks Get details about an existing device by device ID.
      */
-    public async getDevice(deviceId: string, application?: string, options: ConnectorOperationOptions = {}): Promise<DeviceV1> {
+    public async getDevice(deviceId: string, application: string, options: ConnectorOperationOptions = {}): Promise<DeviceV1> {
         const queryParams: string[] = [];
         if (application !== undefined) {
             queryParams.push(`application=${encodeURIComponent(String(application))}`);
@@ -1503,13 +1697,13 @@ export class AzureiotcentralClient extends ConnectorClientBase {
      * Get device command response
      * @remarks Get the last response for a device command.
      */
-    public async getDeviceCommandResponse(deviceId: string, commandName: string, application?: string, template?: string, options: ConnectorOperationOptions = {}): Promise<DeviceCommandV1> {
+    public async getDeviceCommandResponse(deviceId: string, commandName: string, application: string, options: GetDeviceCommandResponseOptions = {}): Promise<DeviceCommandV1> {
         const queryParams: string[] = [];
         if (application !== undefined) {
             queryParams.push(`application=${encodeURIComponent(String(application))}`);
         }
-        if (template !== undefined) {
-            queryParams.push(`template=${encodeURIComponent(String(template))}`);
+        if (options.template !== undefined) {
+            queryParams.push(`template=${encodeURIComponent(String(options.template))}`);
         }
         const requestPath = `/api/v1/devices/${deviceId}/commands/${commandName}` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
@@ -1522,13 +1716,13 @@ export class AzureiotcentralClient extends ConnectorClientBase {
      * Get component command response
      * @remarks Get the last response for a device component command.
      */
-    public async getDeviceComponentCommandResponse(deviceId: string, componentName: string, commandName: string, application?: string, template?: string, options: ConnectorOperationOptions = {}): Promise<DeviceComponentCommand> {
+    public async getDeviceComponentCommandResponse(deviceId: string, componentName: string, commandName: string, application: string, options: GetDeviceComponentCommandResponseOptions = {}): Promise<DeviceComponentCommand> {
         const queryParams: string[] = [];
         if (application !== undefined) {
             queryParams.push(`application=${encodeURIComponent(String(application))}`);
         }
-        if (template !== undefined) {
-            queryParams.push(`template=${encodeURIComponent(String(template))}`);
+        if (options.template !== undefined) {
+            queryParams.push(`template=${encodeURIComponent(String(options.template))}`);
         }
         const requestPath = `/api/v1/devices/${deviceId}/components/${componentName}/commands/${commandName}` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
@@ -1541,13 +1735,13 @@ export class AzureiotcentralClient extends ConnectorClientBase {
      * Get component telemetry value
      * @remarks Get the last telemetry value from a component.
      */
-    public async getDeviceComponentTelemetryValue(deviceId: string, componentName: string, telemetryName: string, application?: string, template?: string, options: ConnectorOperationOptions = {}): Promise<DeviceComponentTelemetry> {
+    public async getDeviceComponentTelemetryValue(deviceId: string, componentName: string, telemetryName: string, application: string, options: GetDeviceComponentTelemetryValueOptions = {}): Promise<DeviceComponentTelemetry> {
         const queryParams: string[] = [];
         if (application !== undefined) {
             queryParams.push(`application=${encodeURIComponent(String(application))}`);
         }
-        if (template !== undefined) {
-            queryParams.push(`template=${encodeURIComponent(String(template))}`);
+        if (options.template !== undefined) {
+            queryParams.push(`template=${encodeURIComponent(String(options.template))}`);
         }
         const requestPath = `/api/v1/devices/${deviceId}/components/${componentName}/telemetry/${telemetryName}` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
@@ -1560,13 +1754,13 @@ export class AzureiotcentralClient extends ConnectorClientBase {
      * Get module command response
      * @remarks Get the last response for a device module command
      */
-    public async getDeviceModuleCommandResponse(deviceId: string, module: string, commandName: string, application?: string, template?: string, options: ConnectorOperationOptions = {}): Promise<DeviceModuleCommand> {
+    public async getDeviceModuleCommandResponse(deviceId: string, module: string, commandName: string, application: string, options: GetDeviceModuleCommandResponseOptions = {}): Promise<DeviceModuleCommand> {
         const queryParams: string[] = [];
         if (application !== undefined) {
             queryParams.push(`application=${encodeURIComponent(String(application))}`);
         }
-        if (template !== undefined) {
-            queryParams.push(`template=${encodeURIComponent(String(template))}`);
+        if (options.template !== undefined) {
+            queryParams.push(`template=${encodeURIComponent(String(options.template))}`);
         }
         const requestPath = `/api/v1/devices/${deviceId}/modules/${module}/commands/${commandName}` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
@@ -1579,13 +1773,13 @@ export class AzureiotcentralClient extends ConnectorClientBase {
      * Get module component command response
      * @remarks Get the last response for a module component command.
      */
-    public async getDeviceModuleComponentCommandResponse(deviceId: string, module: string, componentName: string, commandName: string, application?: string, template?: string, options: ConnectorOperationOptions = {}): Promise<DeviceModuleComponentCommand> {
+    public async getDeviceModuleComponentCommandResponse(deviceId: string, module: string, componentName: string, commandName: string, application: string, options: GetDeviceModuleComponentCommandResponseOptions = {}): Promise<DeviceModuleComponentCommand> {
         const queryParams: string[] = [];
         if (application !== undefined) {
             queryParams.push(`application=${encodeURIComponent(String(application))}`);
         }
-        if (template !== undefined) {
-            queryParams.push(`template=${encodeURIComponent(String(template))}`);
+        if (options.template !== undefined) {
+            queryParams.push(`template=${encodeURIComponent(String(options.template))}`);
         }
         const requestPath = `/api/v1/devices/${deviceId}/modules/${module}/components/${componentName}/commands/${commandName}` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
@@ -1598,13 +1792,13 @@ export class AzureiotcentralClient extends ConnectorClientBase {
      * Get module component telemetry value
      * @remarks Get the last telemetry value from a module component.
      */
-    public async getDeviceModuleComponentTelemetryValue(deviceId: string, module: string, componentName: string, telemetryName: string, application?: string, template?: string, options: ConnectorOperationOptions = {}): Promise<DeviceModuleComponentTelemetry> {
+    public async getDeviceModuleComponentTelemetryValue(deviceId: string, module: string, componentName: string, telemetryName: string, application: string, options: GetDeviceModuleComponentTelemetryValueOptions = {}): Promise<DeviceModuleComponentTelemetry> {
         const queryParams: string[] = [];
         if (application !== undefined) {
             queryParams.push(`application=${encodeURIComponent(String(application))}`);
         }
-        if (template !== undefined) {
-            queryParams.push(`template=${encodeURIComponent(String(template))}`);
+        if (options.template !== undefined) {
+            queryParams.push(`template=${encodeURIComponent(String(options.template))}`);
         }
         const requestPath = `/api/v1/devices/${deviceId}/modules/${module}/components/${componentName}/telemetry/${telemetryName}` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
@@ -1617,13 +1811,13 @@ export class AzureiotcentralClient extends ConnectorClientBase {
      * Get module properties
      * @remarks Get all property values of a module.
      */
-    public async getDevicesModuleProperties(deviceId: string, module: string, application?: string, template?: string, options: ConnectorOperationOptions = {}): Promise<ModuleProperties> {
+    public async getDevicesModuleProperties(deviceId: string, module: string, application: string, options: GetDevicesModulePropertiesOptions = {}): Promise<ModuleProperties> {
         const queryParams: string[] = [];
         if (application !== undefined) {
             queryParams.push(`application=${encodeURIComponent(String(application))}`);
         }
-        if (template !== undefined) {
-            queryParams.push(`template=${encodeURIComponent(String(template))}`);
+        if (options.template !== undefined) {
+            queryParams.push(`template=${encodeURIComponent(String(options.template))}`);
         }
         const requestPath = `/api/v1/devices/${deviceId}/modules/${module}/properties` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
@@ -1636,13 +1830,13 @@ export class AzureiotcentralClient extends ConnectorClientBase {
      * Get module telemetry value
      * @remarks Get the last telemetry value from a module.
      */
-    public async getDeviceModuleTelemetryValue(deviceId: string, module: string, telemetryName: string, application?: string, template?: string, options: ConnectorOperationOptions = {}): Promise<DeviceModuleTelemetry> {
+    public async getDeviceModuleTelemetryValue(deviceId: string, module: string, telemetryName: string, application: string, options: GetDeviceModuleTelemetryValueOptions = {}): Promise<DeviceModuleTelemetry> {
         const queryParams: string[] = [];
         if (application !== undefined) {
             queryParams.push(`application=${encodeURIComponent(String(application))}`);
         }
-        if (template !== undefined) {
-            queryParams.push(`template=${encodeURIComponent(String(template))}`);
+        if (options.template !== undefined) {
+            queryParams.push(`template=${encodeURIComponent(String(options.template))}`);
         }
         const requestPath = `/api/v1/devices/${deviceId}/modules/${module}/telemetry/${telemetryName}` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
@@ -1655,13 +1849,13 @@ export class AzureiotcentralClient extends ConnectorClientBase {
      * Get device properties
      * @remarks Get all property values of a device by device ID.
      */
-    public async getDevicesProperties(deviceId: string, application?: string, template?: string, options: ConnectorOperationOptions = {}): Promise<DeviceProperties> {
+    public async getDevicesProperties(deviceId: string, application: string, options: GetDevicesPropertiesOptions = {}): Promise<DeviceProperties> {
         const queryParams: string[] = [];
         if (application !== undefined) {
             queryParams.push(`application=${encodeURIComponent(String(application))}`);
         }
-        if (template !== undefined) {
-            queryParams.push(`template=${encodeURIComponent(String(template))}`);
+        if (options.template !== undefined) {
+            queryParams.push(`template=${encodeURIComponent(String(options.template))}`);
         }
         const requestPath = `/api/v1/devices/${deviceId}/properties` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
@@ -1674,13 +1868,13 @@ export class AzureiotcentralClient extends ConnectorClientBase {
      * Get device telemetry value
      * @remarks Get the last telemetry value from a device.
      */
-    public async getDeviceTelemetryValue(deviceId: string, telemetryName: string, application?: string, template?: string, options: ConnectorOperationOptions = {}): Promise<DeviceTelemetry> {
+    public async getDeviceTelemetryValue(deviceId: string, telemetryName: string, application: string, options: GetDeviceTelemetryValueOptions = {}): Promise<DeviceTelemetry> {
         const queryParams: string[] = [];
         if (application !== undefined) {
             queryParams.push(`application=${encodeURIComponent(String(application))}`);
         }
-        if (template !== undefined) {
-            queryParams.push(`template=${encodeURIComponent(String(template))}`);
+        if (options.template !== undefined) {
+            queryParams.push(`template=${encodeURIComponent(String(options.template))}`);
         }
         const requestPath = `/api/v1/devices/${deviceId}/telemetry/${telemetryName}` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
@@ -1693,7 +1887,7 @@ export class AzureiotcentralClient extends ConnectorClientBase {
      * List devices
      * @remarks Get the list of devices in an application.
      */
-    public listDevices(application?: string, options: ConnectorOperationOptions = {}): ConnectorPagedAsyncIterableIterator<DeviceV1> {
+    public listDevices(application: string, options: ConnectorOperationOptions = {}): ConnectorPagedAsyncIterableIterator<DeviceV1> {
         const queryParams: string[] = [];
         if (application !== undefined) {
             queryParams.push(`application=${encodeURIComponent(String(application))}`);
@@ -1716,7 +1910,7 @@ export class AzureiotcentralClient extends ConnectorClientBase {
      * Delete a device
      * @remarks Delete an existing device by device ID.
      */
-    public async removeDevices(deviceId: string, application?: string, options: ConnectorOperationOptions = {}): Promise<void> {
+    public async removeDevices(deviceId: string, application: string, options: ConnectorOperationOptions = {}): Promise<void> {
         const queryParams: string[] = [];
         if (application !== undefined) {
             queryParams.push(`application=${encodeURIComponent(String(application))}`);
@@ -1730,13 +1924,13 @@ export class AzureiotcentralClient extends ConnectorClientBase {
      * Run a device command
      * @remarks Run a command on a device.
      */
-    public async runDevicesCommand(input: DeviceCommandV1, deviceId: string, commandName: string, application?: string, template?: string, options: ConnectorOperationOptions = {}): Promise<DeviceCommandV1> {
+    public async runDevicesCommand(input: DeviceCommandV1, deviceId: string, commandName: string, application: string, options: RunDevicesCommandOptions = {}): Promise<DeviceCommandV1> {
         const queryParams: string[] = [];
         if (application !== undefined) {
             queryParams.push(`application=${encodeURIComponent(String(application))}`);
         }
-        if (template !== undefined) {
-            queryParams.push(`template=${encodeURIComponent(String(template))}`);
+        if (options.template !== undefined) {
+            queryParams.push(`template=${encodeURIComponent(String(options.template))}`);
         }
         const requestPath = `/api/v1/devices/${deviceId}/commands/${commandName}` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
@@ -1749,13 +1943,13 @@ export class AzureiotcentralClient extends ConnectorClientBase {
      * Run a component command
      * @remarks Run a command on a component.
      */
-    public async runDevicesComponentCommand(input: DeviceComponentCommand, deviceId: string, componentName: string, commandName: string, application?: string, template?: string, options: ConnectorOperationOptions = {}): Promise<DeviceComponentCommand> {
+    public async runDevicesComponentCommand(input: DeviceComponentCommand, deviceId: string, componentName: string, commandName: string, application: string, options: RunDevicesComponentCommandOptions = {}): Promise<DeviceComponentCommand> {
         const queryParams: string[] = [];
         if (application !== undefined) {
             queryParams.push(`application=${encodeURIComponent(String(application))}`);
         }
-        if (template !== undefined) {
-            queryParams.push(`template=${encodeURIComponent(String(template))}`);
+        if (options.template !== undefined) {
+            queryParams.push(`template=${encodeURIComponent(String(options.template))}`);
         }
         const requestPath = `/api/v1/devices/${deviceId}/components/${componentName}/commands/${commandName}` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
@@ -1768,13 +1962,13 @@ export class AzureiotcentralClient extends ConnectorClientBase {
      * Run a module command
      * @remarks Run a command on a module.
      */
-    public async runDevicesModuleCommand(input: DeviceModuleCommand, deviceId: string, module: string, commandName: string, application?: string, template?: string, options: ConnectorOperationOptions = {}): Promise<DeviceModuleCommand> {
+    public async runDevicesModuleCommand(input: DeviceModuleCommand, deviceId: string, module: string, commandName: string, application: string, options: RunDevicesModuleCommandOptions = {}): Promise<DeviceModuleCommand> {
         const queryParams: string[] = [];
         if (application !== undefined) {
             queryParams.push(`application=${encodeURIComponent(String(application))}`);
         }
-        if (template !== undefined) {
-            queryParams.push(`template=${encodeURIComponent(String(template))}`);
+        if (options.template !== undefined) {
+            queryParams.push(`template=${encodeURIComponent(String(options.template))}`);
         }
         const requestPath = `/api/v1/devices/${deviceId}/modules/${module}/commands/${commandName}` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
@@ -1787,13 +1981,13 @@ export class AzureiotcentralClient extends ConnectorClientBase {
      * Run a module component command
      * @remarks Run a command on a module component.
      */
-    public async runDevicesModuleComponentCommand(input: DeviceModuleComponentCommand, deviceId: string, module: string, componentName: string, commandName: string, application?: string, template?: string, options: ConnectorOperationOptions = {}): Promise<DeviceModuleComponentCommand> {
+    public async runDevicesModuleComponentCommand(input: DeviceModuleComponentCommand, deviceId: string, module: string, componentName: string, commandName: string, application: string, options: RunDevicesModuleComponentCommandOptions = {}): Promise<DeviceModuleComponentCommand> {
         const queryParams: string[] = [];
         if (application !== undefined) {
             queryParams.push(`application=${encodeURIComponent(String(application))}`);
         }
-        if (template !== undefined) {
-            queryParams.push(`template=${encodeURIComponent(String(template))}`);
+        if (options.template !== undefined) {
+            queryParams.push(`template=${encodeURIComponent(String(options.template))}`);
         }
         const requestPath = `/api/v1/devices/${deviceId}/modules/${module}/components/${componentName}/commands/${commandName}` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
@@ -1806,7 +2000,7 @@ export class AzureiotcentralClient extends ConnectorClientBase {
      * Create or update a device
      * @remarks Create a new device or update an existing one by device ID.
      */
-    public async setDevices(input: DeviceV2, deviceId: string, application?: string, options: ConnectorOperationOptions = {}): Promise<DeviceV2> {
+    public async setDevices(input: DeviceV2, deviceId: string, application: string, options: ConnectorOperationOptions = {}): Promise<DeviceV2> {
         const queryParams: string[] = [];
         if (application !== undefined) {
             queryParams.push(`application=${encodeURIComponent(String(application))}`);
@@ -1822,13 +2016,13 @@ export class AzureiotcentralClient extends ConnectorClientBase {
      * Update module properties
      * @remarks Update all property values of a module.
      */
-    public async updateDevicesModuleProperties(input: ModuleProperties, deviceId: string, module: string, application?: string, template?: string, options: ConnectorOperationOptions = {}): Promise<ModuleProperties> {
+    public async updateDevicesModuleProperties(input: ModuleProperties, deviceId: string, module: string, application: string, options: UpdateDevicesModulePropertiesOptions = {}): Promise<ModuleProperties> {
         const queryParams: string[] = [];
         if (application !== undefined) {
             queryParams.push(`application=${encodeURIComponent(String(application))}`);
         }
-        if (template !== undefined) {
-            queryParams.push(`template=${encodeURIComponent(String(template))}`);
+        if (options.template !== undefined) {
+            queryParams.push(`template=${encodeURIComponent(String(options.template))}`);
         }
         const requestPath = `/api/v1/devices/${deviceId}/modules/${module}/properties` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
@@ -1841,13 +2035,13 @@ export class AzureiotcentralClient extends ConnectorClientBase {
      * Update device properties
      * @remarks Update all property values of a device by device ID.
      */
-    public async updateDevicesProperties(input: DeviceProperties, deviceId: string, application?: string, template?: string, options: ConnectorOperationOptions = {}): Promise<DeviceProperties> {
+    public async updateDevicesProperties(input: DeviceProperties, deviceId: string, application: string, options: UpdateDevicesPropertiesOptions = {}): Promise<DeviceProperties> {
         const queryParams: string[] = [];
         if (application !== undefined) {
             queryParams.push(`application=${encodeURIComponent(String(application))}`);
         }
-        if (template !== undefined) {
-            queryParams.push(`template=${encodeURIComponent(String(template))}`);
+        if (options.template !== undefined) {
+            queryParams.push(`template=${encodeURIComponent(String(options.template))}`);
         }
         const requestPath = `/api/v1/devices/${deviceId}/properties` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
@@ -1860,7 +2054,7 @@ export class AzureiotcentralClient extends ConnectorClientBase {
      * Get a device template by ID
      * @remarks Get details about an existing device template by ID.
      */
-    public async getDeviceTemplate(templateId: string, application?: string, options: ConnectorOperationOptions = {}): Promise<DeviceTemplate> {
+    public async getDeviceTemplate(templateId: string, application: string, options: ConnectorOperationOptions = {}): Promise<DeviceTemplate> {
         const queryParams: string[] = [];
         if (application !== undefined) {
             queryParams.push(`application=${encodeURIComponent(String(application))}`);
@@ -1876,7 +2070,7 @@ export class AzureiotcentralClient extends ConnectorClientBase {
      * List device templates
      * @remarks Get the list of device templates in an application.
      */
-    public listDeviceTemplates(application?: string, options: ConnectorOperationOptions = {}): ConnectorPagedAsyncIterableIterator<DeviceTemplate> {
+    public listDeviceTemplates(application: string, options: ConnectorOperationOptions = {}): ConnectorPagedAsyncIterableIterator<DeviceTemplate> {
         const queryParams: string[] = [];
         if (application !== undefined) {
             queryParams.push(`application=${encodeURIComponent(String(application))}`);
@@ -1899,7 +2093,7 @@ export class AzureiotcentralClient extends ConnectorClientBase {
      * Delete a device template
      * @remarks Delete an existing device template by ID.
      */
-    public async removeDeviceTemplates(templateId: string, application?: string, options: ConnectorOperationOptions = {}): Promise<void> {
+    public async removeDeviceTemplates(templateId: string, application: string, options: ConnectorOperationOptions = {}): Promise<void> {
         const queryParams: string[] = [];
         if (application !== undefined) {
             queryParams.push(`application=${encodeURIComponent(String(application))}`);
@@ -1913,7 +2107,7 @@ export class AzureiotcentralClient extends ConnectorClientBase {
      * Get role
      * @remarks Get a role by ID.
      */
-    public async getRole(roleId: string, application?: string, options: ConnectorOperationOptions = {}): Promise<Role> {
+    public async getRole(roleId: string, application: string, options: ConnectorOperationOptions = {}): Promise<Role> {
         const queryParams: string[] = [];
         if (application !== undefined) {
             queryParams.push(`application=${encodeURIComponent(String(application))}`);
@@ -1929,7 +2123,7 @@ export class AzureiotcentralClient extends ConnectorClientBase {
      * List roles
      * @remarks Get the list of roles in an application.
      */
-    public listRoles(application?: string, options: ConnectorOperationOptions = {}): ConnectorPagedAsyncIterableIterator<Role> {
+    public listRoles(application: string, options: ConnectorOperationOptions = {}): ConnectorPagedAsyncIterableIterator<Role> {
         const queryParams: string[] = [];
         if (application !== undefined) {
             queryParams.push(`application=${encodeURIComponent(String(application))}`);
@@ -1951,13 +2145,13 @@ export class AzureiotcentralClient extends ConnectorClientBase {
      * Create user
      * @remarks Create a user in the application
      */
-    public async createUser(input: User, userId: string, application?: string, userType?: string, options: ConnectorOperationOptions = {}): Promise<User> {
+    public async createUser(input: User, userId: string, application: string, options: CreateUserOptions = {}): Promise<User> {
         const queryParams: string[] = [];
         if (application !== undefined) {
             queryParams.push(`application=${encodeURIComponent(String(application))}`);
         }
-        if (userType !== undefined) {
-            queryParams.push(`user_type=${encodeURIComponent(String(userType))}`);
+        if (options.userType !== undefined) {
+            queryParams.push(`user_type=${encodeURIComponent(String(options.userType))}`);
         }
         const requestPath = `/api/v1/users/${userId}` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
@@ -1970,7 +2164,7 @@ export class AzureiotcentralClient extends ConnectorClientBase {
      * Get user
      * @remarks Get a user by ID
      */
-    public async getUser(userId: string, application?: string, options: ConnectorOperationOptions = {}): Promise<UserStatic> {
+    public async getUser(userId: string, application: string, options: ConnectorOperationOptions = {}): Promise<UserStatic> {
         const queryParams: string[] = [];
         if (application !== undefined) {
             queryParams.push(`application=${encodeURIComponent(String(application))}`);
@@ -1986,7 +2180,7 @@ export class AzureiotcentralClient extends ConnectorClientBase {
      * List users
      * @remarks Get the list of users in an application
      */
-    public listUsers(application?: string, options: ConnectorOperationOptions = {}): ConnectorPagedAsyncIterableIterator<UserStatic> {
+    public listUsers(application: string, options: ConnectorOperationOptions = {}): ConnectorPagedAsyncIterableIterator<UserStatic> {
         const queryParams: string[] = [];
         if (application !== undefined) {
             queryParams.push(`application=${encodeURIComponent(String(application))}`);
@@ -2008,7 +2202,7 @@ export class AzureiotcentralClient extends ConnectorClientBase {
      * Delete user
      * @remarks Delete a user
      */
-    public async removeUsers(userId: string, application?: string, options: ConnectorOperationOptions = {}): Promise<void> {
+    public async removeUsers(userId: string, application: string, options: ConnectorOperationOptions = {}): Promise<void> {
         const queryParams: string[] = [];
         if (application !== undefined) {
             queryParams.push(`application=${encodeURIComponent(String(application))}`);
@@ -2022,13 +2216,13 @@ export class AzureiotcentralClient extends ConnectorClientBase {
      * Update user
      * @remarks Update a user in the application via patch
      */
-    public async updateUser(input: UserPatch, userId: string, application?: string, userType?: string, options: ConnectorOperationOptions = {}): Promise<UserPatch> {
+    public async updateUser(input: UserPatch, userId: string, application: string, options: UpdateUserOptions = {}): Promise<UserPatch> {
         const queryParams: string[] = [];
         if (application !== undefined) {
             queryParams.push(`application=${encodeURIComponent(String(application))}`);
         }
-        if (userType !== undefined) {
-            queryParams.push(`user_type=${encodeURIComponent(String(userType))}`);
+        if (options.userType !== undefined) {
+            queryParams.push(`user_type=${encodeURIComponent(String(options.userType))}`);
         }
         const requestPath = `/api/v1/users/${userId}` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);

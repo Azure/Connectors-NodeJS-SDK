@@ -39,18 +39,23 @@ async function main() {
     console.log("\n--- List Joined Teams ---");
     let firstTeamId;
     try {
-        const teamsResponse = await client.getAllTeams();
-        const teams = teamsResponse.value ?? [];
-
-        if (teams.length > 0) {
-            console.log(`Found ${teams.length} joined teams:`);
-            for (const team of teams.slice(0, 5)) {
+        let teamCount = 0;
+        for await (const team of client.getAllTeams()) {
+            if (teamCount < 5) {
                 console.log(`  - ${team.displayName ?? "Unknown"} (id: ${team.id})`);
             }
 
-            firstTeamId = teams[0].id;
-        } else {
+            if (!firstTeamId && typeof team.id === "string") {
+                firstTeamId = team.id;
+            }
+
+            teamCount++;
+        }
+
+        if (teamCount === 0) {
             console.log("No joined teams found.");
+        } else {
+            console.log(`Found ${teamCount} joined teams.`);
         }
     } catch (error) {
         if (error instanceof ConnectorError) {
@@ -65,18 +70,20 @@ async function main() {
     if (firstTeamId) {
         console.log("\n--- List Channels (first team) ---");
         try {
-            const channelsResponse = await client.getChannelsForGroup(firstTeamId);
-            const channels = channelsResponse.value ?? [];
-
-            if (channels.length > 0) {
-                console.log(`Found ${channels.length} channels:`);
-                for (const channel of channels.slice(0, 5)) {
+            let channelCount = 0;
+            for await (const channel of client.getChannelsForGroup(firstTeamId)) {
+                if (channelCount < 5) {
                     console.log(`  - ${channel.displayName ?? "Unknown"} (id: ${channel.id})`);
                 }
 
-                firstChannelId = channels[0].id;
-            } else {
+                firstChannelId ??= channel.id;
+                channelCount++;
+            }
+
+            if (channelCount === 0) {
                 console.log("No channels found.");
+            } else {
+                console.log(`Found ${channelCount} channels.`);
             }
         } catch (error) {
             if (error instanceof ConnectorError) {

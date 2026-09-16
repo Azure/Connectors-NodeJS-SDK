@@ -799,6 +799,232 @@ export interface ValueSchemaPropertyDefinition {
     max?: string;
     min?: string;
 }
+
+/**
+ * Options for the getComments operation.
+ */
+export interface GetCommentsOptions extends ConnectorOperationOptions {
+    /** List of user IDs to query by creator */
+    creatorIds?: string;
+    /** Cursor used for pagination */
+    cursor?: string;
+    /** Number to limit records */
+    limit?: string;
+    /** Sort by query */
+    sort?: string;
+}
+
+/**
+ * Options for the getProjects operation.
+ */
+export interface GetProjectsOptions extends ConnectorOperationOptions {
+    /** Filter from a planned end date */
+    plannedEndDateFrom?: string;
+    /** Filter to a planned end date */
+    plannedEndDateTo?: string;
+    /** Filter from a planned start date */
+    plannedStartDateFrom?: string;
+    /** Filter to a planned start date */
+    plannedStartDateTo?: string;
+    /** List of project IDs to query by */
+    ids?: string;
+    /** Project title to query by */
+    title?: string;
+    /** List of user IDs to query by manager */
+    managerIds?: string;
+    /** List of user IDs to query by creator */
+    creatorIds?: string;
+    /** List of association IDs to query by */
+    associatedNodeIds?: string;
+    /** Cursor used for pagination */
+    cursor?: string;
+    /** Number to limit records returned */
+    limit?: string;
+    /** Sort query */
+    sort?: string;
+    /** List of custom properties to query by */
+    customProperties?: string;
+    /** List of user IDs to query by follower */
+    followerIds?: string;
+    /** Indicator to allow for inclusion of association data */
+    includeAssociations?: string;
+}
+
+/**
+ * Options for the deleteProjects operation.
+ */
+export interface DeleteProjectsOptions extends ConnectorOperationOptions {
+    /** Also delete associated tasks */
+    deleteTasks?: string;
+}
+
+/**
+ * Options for the getProject operation.
+ */
+export interface GetProjectOptions extends ConnectorOperationOptions {
+    /** Number to indicate depth of associated node data returned */
+    associatedNodesDepth?: string;
+    /** Indicator to include associated tasks data */
+    includeWorks?: string;
+}
+
+/**
+ * Options for the deleteProject operation.
+ */
+export interface DeleteProjectOptions extends ConnectorOperationOptions {
+    /** Also delete associated tasks */
+    deleteTasks?: string;
+}
+
+/**
+ * Options for the getRequests operation.
+ */
+export interface GetRequestsOptions extends ConnectorOperationOptions {
+    /** filter by request due date (inclusive) */
+    plannedEndDateFrom?: string;
+    /** filter by request due date (exclusive) */
+    plannedEndDateTo?: string;
+    /** filter by request start date (inclusive) */
+    plannedStartDateFrom?: string;
+    /** filter by request start date (exclusive) */
+    plannedStartDateTo?: string;
+    /** filter by request created date (inclusive) */
+    createdAtFrom?: string;
+    /** filter by request created date (exclusive) */
+    createdAtTo?: string;
+    /** filter by request updated date (inclusive) */
+    updatedAtFrom?: string;
+    /** filter by request updated date (exclusive) */
+    updatedAtTo?: string;
+    /** A list of request IDs */
+    ids?: string;
+    /** Keyword values to search for on request titles */
+    title?: string;
+    /** A list of assignees' user IDs to filter by */
+    assigneeIds?: string;
+    /** A list of priority values, Available values : critical, high, medium, low */
+    priorities?: string;
+    /** Keyword values to search */
+    keywords?: string;
+    /** A list of assigner' user Ids to filter by */
+    assignerIds?: string;
+    /** A list of creators' user IDs to filter by */
+    creatorIds?: string;
+    /** A list of step IDs to filter by */
+    stepIds?: string;
+    /** Status schema ID to filter by */
+    statusSchemaId?: string;
+    /** A token used to guide the next page window */
+    cursor?: string;
+    /** Number of items to return per page, default: 50 */
+    limit?: string;
+    /** Sort by requests */
+    sort?: string;
+    /** The project ID a request is associated to */
+    projectId?: string;
+    /** Filter by if requests are associated with a project */
+    hasProject?: string;
+    /** Filter by custom properties */
+    customProperties?: string;
+    /** A list of followers' user id */
+    followerIds?: string;
+    /** A list of Associated node IDs to filter by */
+    associatedNodeIds?: string;
+    /** List of content reference objects */
+    contentRefs?: string;
+    /** whether to include request form custom properties, default false */
+    includeRequestFormCustomProperties?: string;
+}
+
+/**
+ * Options for the deleteRequests operation.
+ */
+export interface DeleteRequestsOptions extends ConnectorOperationOptions {
+    /** Content-Type */
+    contentType?: string;
+}
+
+/**
+ * Options for the getStatusSchemas operation.
+ */
+export interface GetStatusSchemasOptions extends ConnectorOperationOptions {
+    /** Get default status schema */
+    isDefault?: string;
+    /** Query by node type */
+    type?: string;
+    /** List of status schemas IDs */
+    ids?: string;
+    /** List of user IDs to query by creator */
+    creatorIds?: string;
+    /** Cursor used for pagination */
+    cursor?: string;
+    /** Number to limit returned records */
+    limit?: string;
+}
+
+/**
+ * Options for the getTasks operation.
+ */
+export interface GetTasksOptions extends ConnectorOperationOptions {
+    /** Filter by task due date (inclusive) */
+    plannedEndDateFrom?: string;
+    /** Filter by task due date (exclusive) */
+    plannedEndDateTo?: string;
+    /** Filter by task start date (inclusive) */
+    plannedStartDateFrom?: string;
+    /** Filter by task start date (exclusive) */
+    plannedStartDateTo?: string;
+    /** Filter by task created date (inclusive) */
+    createdAtFrom?: string;
+    /** Filter by task created date (exclusive) */
+    createdAtTo?: string;
+    /** Filter by task updated date (inclusive) */
+    updatedAtFrom?: string;
+    /** Filter by task updated date (exclusive) */
+    updatedAtTo?: string;
+    /** Filter by a list of task IDs */
+    ids?: string;
+    /** Filter by task title */
+    title?: string;
+    /** Filter by task description */
+    description?: string;
+    /** List of user IDs to filter by assignee */
+    assigneeIds?: string;
+    /** Filter by list of priorities */
+    priorities?: string;
+    /** Filter by keywords */
+    keywords?: string;
+    /** List of user IDs to filter by user that assigned the task */
+    assignerIds?: string;
+    /** Filter by status value IDs */
+    stepIds?: string;
+    /** Filter by status schema IDs */
+    statusSchemaId?: string;
+    /** Cursor used for pagination */
+    cursor?: string;
+    /** Number to limit returned records */
+    limit?: string;
+    /** Sort by query */
+    sort?: string;
+    /** Include subtasks within the returned list */
+    recursive?: string;
+    /** Filter by project ID */
+    projectId?: string;
+    /** Filter by tasks that are associated with a project */
+    hasProject?: string;
+    /** Filter by custom property values */
+    customProperties?: string;
+    /** List of user IDs to filter by followers */
+    followerIds?: string;
+    /** List of association IDs to filter by */
+    associatedNodeIds?: string;
+    /** List of user IDs to filter by creator */
+    creatorIds?: string;
+    /** Include association data in the response */
+    includeAssociations?: string;
+    /** List of task IDs to filter by */
+    parentId?: string;
+}
 // #endregion Types
 
 // #region Client
@@ -826,19 +1052,19 @@ export class SeismicplannerClient extends ConnectorClientBase {
      * Get comments
      * @remarks Get all comments for a given project, task, or request. Requires node (project, task, or request) ID.
      */
-    public async getComments(spaceId: string, nodeId: string, creatorIds?: string, cursor?: string, limit?: string, sort?: string, options: ConnectorOperationOptions = {}): Promise<CommentQueryResponse> {
+    public async getComments(spaceId: string, nodeId: string, options: GetCommentsOptions = {}): Promise<CommentQueryResponse> {
         const queryParams: string[] = [];
-        if (creatorIds !== undefined) {
-            queryParams.push(`creatorIds=${encodeURIComponent(String(creatorIds))}`);
+        if (options.creatorIds !== undefined) {
+            queryParams.push(`creatorIds=${encodeURIComponent(String(options.creatorIds))}`);
         }
-        if (cursor !== undefined) {
-            queryParams.push(`cursor=${encodeURIComponent(String(cursor))}`);
+        if (options.cursor !== undefined) {
+            queryParams.push(`cursor=${encodeURIComponent(String(options.cursor))}`);
         }
-        if (limit !== undefined) {
-            queryParams.push(`limit=${encodeURIComponent(String(limit))}`);
+        if (options.limit !== undefined) {
+            queryParams.push(`limit=${encodeURIComponent(String(options.limit))}`);
         }
-        if (sort !== undefined) {
-            queryParams.push(`sort=${encodeURIComponent(String(sort))}`);
+        if (options.sort !== undefined) {
+            queryParams.push(`sort=${encodeURIComponent(String(options.sort))}`);
         }
         const requestPath = `/planner/v2/spaces/${spaceId}/nodes/${nodeId}/comments` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
@@ -897,52 +1123,52 @@ export class SeismicplannerClient extends ConnectorClientBase {
      * Get projects
      * @remarks Get a list of projects with their attributes and associations.
      */
-    public async getProjects(spaceId: string, plannedEndDateFrom?: string, plannedEndDateTo?: string, plannedStartDateFrom?: string, plannedStartDateTo?: string, ids?: string, title?: string, managerIds?: string, creatorIds?: string, associatedNodeIds?: string, cursor?: string, limit?: string, sort?: string, customProperties?: string, followerIds?: string, includeAssociations?: string, options: ConnectorOperationOptions = {}): Promise<PlannerProjectQueryResponse> {
+    public async getProjects(spaceId: string, options: GetProjectsOptions = {}): Promise<PlannerProjectQueryResponse> {
         const queryParams: string[] = [];
-        if (plannedEndDateFrom !== undefined) {
-            queryParams.push(`plannedEndDateFrom=${encodeURIComponent(String(plannedEndDateFrom))}`);
+        if (options.plannedEndDateFrom !== undefined) {
+            queryParams.push(`plannedEndDateFrom=${encodeURIComponent(String(options.plannedEndDateFrom))}`);
         }
-        if (plannedEndDateTo !== undefined) {
-            queryParams.push(`plannedEndDateTo=${encodeURIComponent(String(plannedEndDateTo))}`);
+        if (options.plannedEndDateTo !== undefined) {
+            queryParams.push(`plannedEndDateTo=${encodeURIComponent(String(options.plannedEndDateTo))}`);
         }
-        if (plannedStartDateFrom !== undefined) {
-            queryParams.push(`plannedStartDateFrom=${encodeURIComponent(String(plannedStartDateFrom))}`);
+        if (options.plannedStartDateFrom !== undefined) {
+            queryParams.push(`plannedStartDateFrom=${encodeURIComponent(String(options.plannedStartDateFrom))}`);
         }
-        if (plannedStartDateTo !== undefined) {
-            queryParams.push(`plannedStartDateTo=${encodeURIComponent(String(plannedStartDateTo))}`);
+        if (options.plannedStartDateTo !== undefined) {
+            queryParams.push(`plannedStartDateTo=${encodeURIComponent(String(options.plannedStartDateTo))}`);
         }
-        if (ids !== undefined) {
-            queryParams.push(`ids=${encodeURIComponent(String(ids))}`);
+        if (options.ids !== undefined) {
+            queryParams.push(`ids=${encodeURIComponent(String(options.ids))}`);
         }
-        if (title !== undefined) {
-            queryParams.push(`title=${encodeURIComponent(String(title))}`);
+        if (options.title !== undefined) {
+            queryParams.push(`title=${encodeURIComponent(String(options.title))}`);
         }
-        if (managerIds !== undefined) {
-            queryParams.push(`managerIds=${encodeURIComponent(String(managerIds))}`);
+        if (options.managerIds !== undefined) {
+            queryParams.push(`managerIds=${encodeURIComponent(String(options.managerIds))}`);
         }
-        if (creatorIds !== undefined) {
-            queryParams.push(`creatorIds=${encodeURIComponent(String(creatorIds))}`);
+        if (options.creatorIds !== undefined) {
+            queryParams.push(`creatorIds=${encodeURIComponent(String(options.creatorIds))}`);
         }
-        if (associatedNodeIds !== undefined) {
-            queryParams.push(`associatedNodeIds=${encodeURIComponent(String(associatedNodeIds))}`);
+        if (options.associatedNodeIds !== undefined) {
+            queryParams.push(`associatedNodeIds=${encodeURIComponent(String(options.associatedNodeIds))}`);
         }
-        if (cursor !== undefined) {
-            queryParams.push(`cursor=${encodeURIComponent(String(cursor))}`);
+        if (options.cursor !== undefined) {
+            queryParams.push(`cursor=${encodeURIComponent(String(options.cursor))}`);
         }
-        if (limit !== undefined) {
-            queryParams.push(`limit=${encodeURIComponent(String(limit))}`);
+        if (options.limit !== undefined) {
+            queryParams.push(`limit=${encodeURIComponent(String(options.limit))}`);
         }
-        if (sort !== undefined) {
-            queryParams.push(`sort=${encodeURIComponent(String(sort))}`);
+        if (options.sort !== undefined) {
+            queryParams.push(`sort=${encodeURIComponent(String(options.sort))}`);
         }
-        if (customProperties !== undefined) {
-            queryParams.push(`customProperties=${encodeURIComponent(String(customProperties))}`);
+        if (options.customProperties !== undefined) {
+            queryParams.push(`customProperties=${encodeURIComponent(String(options.customProperties))}`);
         }
-        if (followerIds !== undefined) {
-            queryParams.push(`followerIds=${encodeURIComponent(String(followerIds))}`);
+        if (options.followerIds !== undefined) {
+            queryParams.push(`followerIds=${encodeURIComponent(String(options.followerIds))}`);
         }
-        if (includeAssociations !== undefined) {
-            queryParams.push(`includeAssociations=${encodeURIComponent(String(includeAssociations))}`);
+        if (options.includeAssociations !== undefined) {
+            queryParams.push(`includeAssociations=${encodeURIComponent(String(options.includeAssociations))}`);
         }
         const requestPath = `/planner/v2/spaces/${spaceId}/projects` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
@@ -955,13 +1181,13 @@ export class SeismicplannerClient extends ConnectorClientBase {
      * Delete projects
      * @remarks Delete one or more projects.
      */
-    public async deleteProjects(spaceId: string, ids?: string, deleteTasks?: string, options: ConnectorOperationOptions = {}): Promise<AsyncOperationResponse> {
+    public async deleteProjects(spaceId: string, ids: string, options: DeleteProjectsOptions = {}): Promise<AsyncOperationResponse> {
         const queryParams: string[] = [];
         if (ids !== undefined) {
             queryParams.push(`ids=${encodeURIComponent(String(ids))}`);
         }
-        if (deleteTasks !== undefined) {
-            queryParams.push(`deleteTasks=${encodeURIComponent(String(deleteTasks))}`);
+        if (options.deleteTasks !== undefined) {
+            queryParams.push(`deleteTasks=${encodeURIComponent(String(options.deleteTasks))}`);
         }
         const requestPath = `/planner/v2/spaces/${spaceId}/projects` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
@@ -986,13 +1212,13 @@ export class SeismicplannerClient extends ConnectorClientBase {
      * Get project
      * @remarks Get a single project by ID. Return tasks if desired.
      */
-    public async getProject(spaceId: string, projectId: string, associatedNodesDepth?: string, includeWorks?: string, options: ConnectorOperationOptions = {}): Promise<PlannerProject> {
+    public async getProject(spaceId: string, projectId: string, options: GetProjectOptions = {}): Promise<PlannerProject> {
         const queryParams: string[] = [];
-        if (associatedNodesDepth !== undefined) {
-            queryParams.push(`associatedNodesDepth=${encodeURIComponent(String(associatedNodesDepth))}`);
+        if (options.associatedNodesDepth !== undefined) {
+            queryParams.push(`associatedNodesDepth=${encodeURIComponent(String(options.associatedNodesDepth))}`);
         }
-        if (includeWorks !== undefined) {
-            queryParams.push(`includeWorks=${encodeURIComponent(String(includeWorks))}`);
+        if (options.includeWorks !== undefined) {
+            queryParams.push(`includeWorks=${encodeURIComponent(String(options.includeWorks))}`);
         }
         const requestPath = `/planner/v2/spaces/${spaceId}/projects/${projectId}` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
@@ -1005,10 +1231,10 @@ export class SeismicplannerClient extends ConnectorClientBase {
      * Delete project
      * @remarks Delete a project.
      */
-    public async deleteProject(spaceId: string, projectId: string, deleteTasks?: string, options: ConnectorOperationOptions = {}): Promise<AsyncOperationResponse> {
+    public async deleteProject(spaceId: string, projectId: string, options: DeleteProjectOptions = {}): Promise<AsyncOperationResponse> {
         const queryParams: string[] = [];
-        if (deleteTasks !== undefined) {
-            queryParams.push(`deleteTasks=${encodeURIComponent(String(deleteTasks))}`);
+        if (options.deleteTasks !== undefined) {
+            queryParams.push(`deleteTasks=${encodeURIComponent(String(options.deleteTasks))}`);
         }
         const requestPath = `/planner/v2/spaces/${spaceId}/projects/${projectId}` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
@@ -1033,88 +1259,88 @@ export class SeismicplannerClient extends ConnectorClientBase {
      * Get requests
      * @remarks Get a list of requests.
      */
-    public async getRequests(spaceId: string, plannedEndDateFrom?: string, plannedEndDateTo?: string, plannedStartDateFrom?: string, plannedStartDateTo?: string, createdAtFrom?: string, createdAtTo?: string, updatedAtFrom?: string, updatedAtTo?: string, ids?: string, title?: string, assigneeIds?: string, priorities?: string, keywords?: string, assignerIds?: string, creatorIds?: string, stepIds?: string, statusSchemaId?: string, cursor?: string, limit?: string, sort?: string, projectId?: string, hasProject?: string, customProperties?: string, followerIds?: string, associatedNodeIds?: string, contentRefs?: string, includeRequestFormCustomProperties?: string, options: ConnectorOperationOptions = {}): Promise<PlannerRequestQueryResponse> {
+    public async getRequests(spaceId: string, options: GetRequestsOptions = {}): Promise<PlannerRequestQueryResponse> {
         const queryParams: string[] = [];
-        if (plannedEndDateFrom !== undefined) {
-            queryParams.push(`plannedEndDateFrom=${encodeURIComponent(String(plannedEndDateFrom))}`);
+        if (options.plannedEndDateFrom !== undefined) {
+            queryParams.push(`plannedEndDateFrom=${encodeURIComponent(String(options.plannedEndDateFrom))}`);
         }
-        if (plannedEndDateTo !== undefined) {
-            queryParams.push(`plannedEndDateTo=${encodeURIComponent(String(plannedEndDateTo))}`);
+        if (options.plannedEndDateTo !== undefined) {
+            queryParams.push(`plannedEndDateTo=${encodeURIComponent(String(options.plannedEndDateTo))}`);
         }
-        if (plannedStartDateFrom !== undefined) {
-            queryParams.push(`plannedStartDateFrom=${encodeURIComponent(String(plannedStartDateFrom))}`);
+        if (options.plannedStartDateFrom !== undefined) {
+            queryParams.push(`plannedStartDateFrom=${encodeURIComponent(String(options.plannedStartDateFrom))}`);
         }
-        if (plannedStartDateTo !== undefined) {
-            queryParams.push(`plannedStartDateTo=${encodeURIComponent(String(plannedStartDateTo))}`);
+        if (options.plannedStartDateTo !== undefined) {
+            queryParams.push(`plannedStartDateTo=${encodeURIComponent(String(options.plannedStartDateTo))}`);
         }
-        if (createdAtFrom !== undefined) {
-            queryParams.push(`createdAtFrom=${encodeURIComponent(String(createdAtFrom))}`);
+        if (options.createdAtFrom !== undefined) {
+            queryParams.push(`createdAtFrom=${encodeURIComponent(String(options.createdAtFrom))}`);
         }
-        if (createdAtTo !== undefined) {
-            queryParams.push(`createdAtTo=${encodeURIComponent(String(createdAtTo))}`);
+        if (options.createdAtTo !== undefined) {
+            queryParams.push(`createdAtTo=${encodeURIComponent(String(options.createdAtTo))}`);
         }
-        if (updatedAtFrom !== undefined) {
-            queryParams.push(`updatedAtFrom=${encodeURIComponent(String(updatedAtFrom))}`);
+        if (options.updatedAtFrom !== undefined) {
+            queryParams.push(`updatedAtFrom=${encodeURIComponent(String(options.updatedAtFrom))}`);
         }
-        if (updatedAtTo !== undefined) {
-            queryParams.push(`updatedAtTo=${encodeURIComponent(String(updatedAtTo))}`);
+        if (options.updatedAtTo !== undefined) {
+            queryParams.push(`updatedAtTo=${encodeURIComponent(String(options.updatedAtTo))}`);
         }
-        if (ids !== undefined) {
-            queryParams.push(`ids=${encodeURIComponent(String(ids))}`);
+        if (options.ids !== undefined) {
+            queryParams.push(`ids=${encodeURIComponent(String(options.ids))}`);
         }
-        if (title !== undefined) {
-            queryParams.push(`title=${encodeURIComponent(String(title))}`);
+        if (options.title !== undefined) {
+            queryParams.push(`title=${encodeURIComponent(String(options.title))}`);
         }
-        if (assigneeIds !== undefined) {
-            queryParams.push(`assigneeIds=${encodeURIComponent(String(assigneeIds))}`);
+        if (options.assigneeIds !== undefined) {
+            queryParams.push(`assigneeIds=${encodeURIComponent(String(options.assigneeIds))}`);
         }
-        if (priorities !== undefined) {
-            queryParams.push(`priorities=${encodeURIComponent(String(priorities))}`);
+        if (options.priorities !== undefined) {
+            queryParams.push(`priorities=${encodeURIComponent(String(options.priorities))}`);
         }
-        if (keywords !== undefined) {
-            queryParams.push(`keywords=${encodeURIComponent(String(keywords))}`);
+        if (options.keywords !== undefined) {
+            queryParams.push(`keywords=${encodeURIComponent(String(options.keywords))}`);
         }
-        if (assignerIds !== undefined) {
-            queryParams.push(`assignerIds=${encodeURIComponent(String(assignerIds))}`);
+        if (options.assignerIds !== undefined) {
+            queryParams.push(`assignerIds=${encodeURIComponent(String(options.assignerIds))}`);
         }
-        if (creatorIds !== undefined) {
-            queryParams.push(`creatorIds=${encodeURIComponent(String(creatorIds))}`);
+        if (options.creatorIds !== undefined) {
+            queryParams.push(`creatorIds=${encodeURIComponent(String(options.creatorIds))}`);
         }
-        if (stepIds !== undefined) {
-            queryParams.push(`stepIds=${encodeURIComponent(String(stepIds))}`);
+        if (options.stepIds !== undefined) {
+            queryParams.push(`stepIds=${encodeURIComponent(String(options.stepIds))}`);
         }
-        if (statusSchemaId !== undefined) {
-            queryParams.push(`statusSchemaId=${encodeURIComponent(String(statusSchemaId))}`);
+        if (options.statusSchemaId !== undefined) {
+            queryParams.push(`statusSchemaId=${encodeURIComponent(String(options.statusSchemaId))}`);
         }
-        if (cursor !== undefined) {
-            queryParams.push(`cursor=${encodeURIComponent(String(cursor))}`);
+        if (options.cursor !== undefined) {
+            queryParams.push(`cursor=${encodeURIComponent(String(options.cursor))}`);
         }
-        if (limit !== undefined) {
-            queryParams.push(`limit=${encodeURIComponent(String(limit))}`);
+        if (options.limit !== undefined) {
+            queryParams.push(`limit=${encodeURIComponent(String(options.limit))}`);
         }
-        if (sort !== undefined) {
-            queryParams.push(`sort=${encodeURIComponent(String(sort))}`);
+        if (options.sort !== undefined) {
+            queryParams.push(`sort=${encodeURIComponent(String(options.sort))}`);
         }
-        if (projectId !== undefined) {
-            queryParams.push(`projectId=${encodeURIComponent(String(projectId))}`);
+        if (options.projectId !== undefined) {
+            queryParams.push(`projectId=${encodeURIComponent(String(options.projectId))}`);
         }
-        if (hasProject !== undefined) {
-            queryParams.push(`hasProject=${encodeURIComponent(String(hasProject))}`);
+        if (options.hasProject !== undefined) {
+            queryParams.push(`hasProject=${encodeURIComponent(String(options.hasProject))}`);
         }
-        if (customProperties !== undefined) {
-            queryParams.push(`customProperties=${encodeURIComponent(String(customProperties))}`);
+        if (options.customProperties !== undefined) {
+            queryParams.push(`customProperties=${encodeURIComponent(String(options.customProperties))}`);
         }
-        if (followerIds !== undefined) {
-            queryParams.push(`followerIds=${encodeURIComponent(String(followerIds))}`);
+        if (options.followerIds !== undefined) {
+            queryParams.push(`followerIds=${encodeURIComponent(String(options.followerIds))}`);
         }
-        if (associatedNodeIds !== undefined) {
-            queryParams.push(`associatedNodeIds=${encodeURIComponent(String(associatedNodeIds))}`);
+        if (options.associatedNodeIds !== undefined) {
+            queryParams.push(`associatedNodeIds=${encodeURIComponent(String(options.associatedNodeIds))}`);
         }
-        if (contentRefs !== undefined) {
-            queryParams.push(`contentRefs=${encodeURIComponent(String(contentRefs))}`);
+        if (options.contentRefs !== undefined) {
+            queryParams.push(`contentRefs=${encodeURIComponent(String(options.contentRefs))}`);
         }
-        if (includeRequestFormCustomProperties !== undefined) {
-            queryParams.push(`includeRequestFormCustomProperties=${encodeURIComponent(String(includeRequestFormCustomProperties))}`);
+        if (options.includeRequestFormCustomProperties !== undefined) {
+            queryParams.push(`includeRequestFormCustomProperties=${encodeURIComponent(String(options.includeRequestFormCustomProperties))}`);
         }
         const requestPath = `/planner/v2/spaces/${spaceId}/requests` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
@@ -1127,10 +1353,14 @@ export class SeismicplannerClient extends ConnectorClientBase {
      * Delete requests
      * @remarks Bulk delete requests.
      */
-    public async deleteRequests(input: DeleteRequest, spaceId: string, options: ConnectorOperationOptions = {}): Promise<AsyncOperationResponse> {
+    public async deleteRequests(input: DeleteRequest, spaceId: string, options: DeleteRequestsOptions = {}): Promise<AsyncOperationResponse> {
         const requestPath = `/planner/v2/spaces/${spaceId}/requests`;
+        const requestHeaders: Record<string, string> = {};
+        if (options.contentType !== undefined) {
+            requestHeaders["Content-Type"] = String(options.contentType);
+        }
         const requestUrl = this.resolveUrl(requestPath);
-        const httpResponse = await this.sendWithTracingAsync<AsyncOperationResponse>("Seismicplanner.deleteRequests", "DeleteRequests", "DELETE", requestUrl, input, options);
+        const httpResponse = await this.sendWithTracingAsync<AsyncOperationResponse>("Seismicplanner.deleteRequests", "DeleteRequests", "DELETE", requestUrl, input, options, requestHeaders);
 
         return httpResponse.value as AsyncOperationResponse;
     }
@@ -1185,25 +1415,25 @@ export class SeismicplannerClient extends ConnectorClientBase {
      * Get status schemas
      * @remarks Get a list of task/request status schemas. These schemas hold the data for set statuses for specific work.  Example: `(Not started, In progress, Complete)`
      */
-    public async getStatusSchemas(spaceId: string, isDefault?: string, type?: string, ids?: string, creatorIds?: string, cursor?: string, limit?: string, options: ConnectorOperationOptions = {}): Promise<StatusSchemaQueryResponse> {
+    public async getStatusSchemas(spaceId: string, options: GetStatusSchemasOptions = {}): Promise<StatusSchemaQueryResponse> {
         const queryParams: string[] = [];
-        if (isDefault !== undefined) {
-            queryParams.push(`isDefault=${encodeURIComponent(String(isDefault))}`);
+        if (options.isDefault !== undefined) {
+            queryParams.push(`isDefault=${encodeURIComponent(String(options.isDefault))}`);
         }
-        if (type !== undefined) {
-            queryParams.push(`type=${encodeURIComponent(String(type))}`);
+        if (options.type !== undefined) {
+            queryParams.push(`type=${encodeURIComponent(String(options.type))}`);
         }
-        if (ids !== undefined) {
-            queryParams.push(`ids=${encodeURIComponent(String(ids))}`);
+        if (options.ids !== undefined) {
+            queryParams.push(`ids=${encodeURIComponent(String(options.ids))}`);
         }
-        if (creatorIds !== undefined) {
-            queryParams.push(`creatorIds=${encodeURIComponent(String(creatorIds))}`);
+        if (options.creatorIds !== undefined) {
+            queryParams.push(`creatorIds=${encodeURIComponent(String(options.creatorIds))}`);
         }
-        if (cursor !== undefined) {
-            queryParams.push(`cursor=${encodeURIComponent(String(cursor))}`);
+        if (options.cursor !== undefined) {
+            queryParams.push(`cursor=${encodeURIComponent(String(options.cursor))}`);
         }
-        if (limit !== undefined) {
-            queryParams.push(`limit=${encodeURIComponent(String(limit))}`);
+        if (options.limit !== undefined) {
+            queryParams.push(`limit=${encodeURIComponent(String(options.limit))}`);
         }
         const requestPath = `/planner/v2/spaces/${spaceId}/statusschema` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
@@ -1228,94 +1458,94 @@ export class SeismicplannerClient extends ConnectorClientBase {
      * Get tasks
      * @remarks Get a list of tasks.
      */
-    public async getTasks(spaceId: string, plannedEndDateFrom?: string, plannedEndDateTo?: string, plannedStartDateFrom?: string, plannedStartDateTo?: string, createdAtFrom?: string, createdAtTo?: string, updatedAtFrom?: string, updatedAtTo?: string, ids?: string, title?: string, description?: string, assigneeIds?: string, priorities?: string, keywords?: string, assignerIds?: string, stepIds?: string, statusSchemaId?: string, cursor?: string, limit?: string, sort?: string, recursive?: string, projectId?: string, hasProject?: string, customProperties?: string, followerIds?: string, associatedNodeIds?: string, creatorIds?: string, includeAssociations?: string, parentId?: string, options: ConnectorOperationOptions = {}): Promise<PlannerTaskQueryResponse> {
+    public async getTasks(spaceId: string, options: GetTasksOptions = {}): Promise<PlannerTaskQueryResponse> {
         const queryParams: string[] = [];
-        if (plannedEndDateFrom !== undefined) {
-            queryParams.push(`plannedEndDateFrom=${encodeURIComponent(String(plannedEndDateFrom))}`);
+        if (options.plannedEndDateFrom !== undefined) {
+            queryParams.push(`plannedEndDateFrom=${encodeURIComponent(String(options.plannedEndDateFrom))}`);
         }
-        if (plannedEndDateTo !== undefined) {
-            queryParams.push(`plannedEndDateTo=${encodeURIComponent(String(plannedEndDateTo))}`);
+        if (options.plannedEndDateTo !== undefined) {
+            queryParams.push(`plannedEndDateTo=${encodeURIComponent(String(options.plannedEndDateTo))}`);
         }
-        if (plannedStartDateFrom !== undefined) {
-            queryParams.push(`plannedStartDateFrom=${encodeURIComponent(String(plannedStartDateFrom))}`);
+        if (options.plannedStartDateFrom !== undefined) {
+            queryParams.push(`plannedStartDateFrom=${encodeURIComponent(String(options.plannedStartDateFrom))}`);
         }
-        if (plannedStartDateTo !== undefined) {
-            queryParams.push(`plannedStartDateTo=${encodeURIComponent(String(plannedStartDateTo))}`);
+        if (options.plannedStartDateTo !== undefined) {
+            queryParams.push(`plannedStartDateTo=${encodeURIComponent(String(options.plannedStartDateTo))}`);
         }
-        if (createdAtFrom !== undefined) {
-            queryParams.push(`createdAtFrom=${encodeURIComponent(String(createdAtFrom))}`);
+        if (options.createdAtFrom !== undefined) {
+            queryParams.push(`createdAtFrom=${encodeURIComponent(String(options.createdAtFrom))}`);
         }
-        if (createdAtTo !== undefined) {
-            queryParams.push(`createdAtTo=${encodeURIComponent(String(createdAtTo))}`);
+        if (options.createdAtTo !== undefined) {
+            queryParams.push(`createdAtTo=${encodeURIComponent(String(options.createdAtTo))}`);
         }
-        if (updatedAtFrom !== undefined) {
-            queryParams.push(`updatedAtFrom=${encodeURIComponent(String(updatedAtFrom))}`);
+        if (options.updatedAtFrom !== undefined) {
+            queryParams.push(`updatedAtFrom=${encodeURIComponent(String(options.updatedAtFrom))}`);
         }
-        if (updatedAtTo !== undefined) {
-            queryParams.push(`updatedAtTo=${encodeURIComponent(String(updatedAtTo))}`);
+        if (options.updatedAtTo !== undefined) {
+            queryParams.push(`updatedAtTo=${encodeURIComponent(String(options.updatedAtTo))}`);
         }
-        if (ids !== undefined) {
-            queryParams.push(`ids=${encodeURIComponent(String(ids))}`);
+        if (options.ids !== undefined) {
+            queryParams.push(`ids=${encodeURIComponent(String(options.ids))}`);
         }
-        if (title !== undefined) {
-            queryParams.push(`title=${encodeURIComponent(String(title))}`);
+        if (options.title !== undefined) {
+            queryParams.push(`title=${encodeURIComponent(String(options.title))}`);
         }
-        if (description !== undefined) {
-            queryParams.push(`description=${encodeURIComponent(String(description))}`);
+        if (options.description !== undefined) {
+            queryParams.push(`description=${encodeURIComponent(String(options.description))}`);
         }
-        if (assigneeIds !== undefined) {
-            queryParams.push(`assigneeIds=${encodeURIComponent(String(assigneeIds))}`);
+        if (options.assigneeIds !== undefined) {
+            queryParams.push(`assigneeIds=${encodeURIComponent(String(options.assigneeIds))}`);
         }
-        if (priorities !== undefined) {
-            queryParams.push(`priorities=${encodeURIComponent(String(priorities))}`);
+        if (options.priorities !== undefined) {
+            queryParams.push(`priorities=${encodeURIComponent(String(options.priorities))}`);
         }
-        if (keywords !== undefined) {
-            queryParams.push(`keywords=${encodeURIComponent(String(keywords))}`);
+        if (options.keywords !== undefined) {
+            queryParams.push(`keywords=${encodeURIComponent(String(options.keywords))}`);
         }
-        if (assignerIds !== undefined) {
-            queryParams.push(`assignerIds=${encodeURIComponent(String(assignerIds))}`);
+        if (options.assignerIds !== undefined) {
+            queryParams.push(`assignerIds=${encodeURIComponent(String(options.assignerIds))}`);
         }
-        if (stepIds !== undefined) {
-            queryParams.push(`stepIds=${encodeURIComponent(String(stepIds))}`);
+        if (options.stepIds !== undefined) {
+            queryParams.push(`stepIds=${encodeURIComponent(String(options.stepIds))}`);
         }
-        if (statusSchemaId !== undefined) {
-            queryParams.push(`statusSchemaId=${encodeURIComponent(String(statusSchemaId))}`);
+        if (options.statusSchemaId !== undefined) {
+            queryParams.push(`statusSchemaId=${encodeURIComponent(String(options.statusSchemaId))}`);
         }
-        if (cursor !== undefined) {
-            queryParams.push(`cursor=${encodeURIComponent(String(cursor))}`);
+        if (options.cursor !== undefined) {
+            queryParams.push(`cursor=${encodeURIComponent(String(options.cursor))}`);
         }
-        if (limit !== undefined) {
-            queryParams.push(`limit=${encodeURIComponent(String(limit))}`);
+        if (options.limit !== undefined) {
+            queryParams.push(`limit=${encodeURIComponent(String(options.limit))}`);
         }
-        if (sort !== undefined) {
-            queryParams.push(`sort=${encodeURIComponent(String(sort))}`);
+        if (options.sort !== undefined) {
+            queryParams.push(`sort=${encodeURIComponent(String(options.sort))}`);
         }
-        if (recursive !== undefined) {
-            queryParams.push(`recursive=${encodeURIComponent(String(recursive))}`);
+        if (options.recursive !== undefined) {
+            queryParams.push(`recursive=${encodeURIComponent(String(options.recursive))}`);
         }
-        if (projectId !== undefined) {
-            queryParams.push(`projectId=${encodeURIComponent(String(projectId))}`);
+        if (options.projectId !== undefined) {
+            queryParams.push(`projectId=${encodeURIComponent(String(options.projectId))}`);
         }
-        if (hasProject !== undefined) {
-            queryParams.push(`hasProject=${encodeURIComponent(String(hasProject))}`);
+        if (options.hasProject !== undefined) {
+            queryParams.push(`hasProject=${encodeURIComponent(String(options.hasProject))}`);
         }
-        if (customProperties !== undefined) {
-            queryParams.push(`customProperties=${encodeURIComponent(String(customProperties))}`);
+        if (options.customProperties !== undefined) {
+            queryParams.push(`customProperties=${encodeURIComponent(String(options.customProperties))}`);
         }
-        if (followerIds !== undefined) {
-            queryParams.push(`followerIds=${encodeURIComponent(String(followerIds))}`);
+        if (options.followerIds !== undefined) {
+            queryParams.push(`followerIds=${encodeURIComponent(String(options.followerIds))}`);
         }
-        if (associatedNodeIds !== undefined) {
-            queryParams.push(`associatedNodeIds=${encodeURIComponent(String(associatedNodeIds))}`);
+        if (options.associatedNodeIds !== undefined) {
+            queryParams.push(`associatedNodeIds=${encodeURIComponent(String(options.associatedNodeIds))}`);
         }
-        if (creatorIds !== undefined) {
-            queryParams.push(`creatorIds=${encodeURIComponent(String(creatorIds))}`);
+        if (options.creatorIds !== undefined) {
+            queryParams.push(`creatorIds=${encodeURIComponent(String(options.creatorIds))}`);
         }
-        if (includeAssociations !== undefined) {
-            queryParams.push(`includeAssociations=${encodeURIComponent(String(includeAssociations))}`);
+        if (options.includeAssociations !== undefined) {
+            queryParams.push(`includeAssociations=${encodeURIComponent(String(options.includeAssociations))}`);
         }
-        if (parentId !== undefined) {
-            queryParams.push(`parentId=${encodeURIComponent(String(parentId))}`);
+        if (options.parentId !== undefined) {
+            queryParams.push(`parentId=${encodeURIComponent(String(options.parentId))}`);
         }
         const requestPath = `/planner/v2/spaces/${spaceId}/tasks` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);

@@ -17,6 +17,10 @@ import { availableConnectors } from "../src/generated/ManagedConnectors.ts";
 // ──────────────────────────────────────────────
 
 const TestConnectionUrl = "https://connection-runtime.azure.com/apim/azuremonitorlogs/abc123";
+const TestSubscriptions = "sub-123";
+const TestResourceGroups = "rg-test";
+const TestResourceType = "Microsoft.Compute/virtualMachines";
+const TestResourceName = "vm-test";
 
 function createMockCredential(): TokenCredential {
     return {
@@ -110,7 +114,13 @@ describe("AzuremonitorlogsClient — queryData", () => {
             timerange: {},
         };
 
-        const result = await client.queryData(input);
+        const result = await client.queryData(
+            input,
+            TestSubscriptions,
+            TestResourceGroups,
+            TestResourceType,
+            TestResourceName,
+        );
 
         expect(result).toEqual(mockTable);
         expect(global.fetch).toHaveBeenCalledTimes(1);
@@ -129,7 +139,10 @@ describe("AzuremonitorlogsClient — queryData", () => {
         const client = new AzuremonitorlogsClient(TestConnectionUrl, createMockCredential());
         await client.queryData(
             { query: "test", timerangetype: "Last hour", timerange: {} },
-            "sub-123",
+            TestSubscriptions,
+            TestResourceGroups,
+            TestResourceType,
+            TestResourceName,
         );
 
         const [url] = (global.fetch as jest.Mock).mock.calls[0];
@@ -153,7 +166,14 @@ describe("AzuremonitorlogsClient — visualizeQuery", () => {
             timerange: {},
         };
 
-        const result = await client.visualizeQuery(input);
+        const result = await client.visualizeQuery(
+            input,
+            TestSubscriptions,
+            TestResourceGroups,
+            TestResourceType,
+            TestResourceName,
+            "timechart",
+        );
 
         expect(result).toEqual(mockResult);
         const [url, init] = (global.fetch as jest.Mock).mock.calls[0];
@@ -168,10 +188,10 @@ describe("AzuremonitorlogsClient — visualizeQuery", () => {
         const client = new AzuremonitorlogsClient(TestConnectionUrl, createMockCredential());
         await client.visualizeQuery(
             { query: "test", timerangetype: "Last hour", timerange: {} },
-            undefined,
-            undefined,
-            undefined,
-            undefined,
+            TestSubscriptions,
+            TestResourceGroups,
+            TestResourceType,
+            TestResourceName,
             "piechart",
         );
 
@@ -191,7 +211,13 @@ describe("AzuremonitorlogsClient — error handling", () => {
         const client = new AzuremonitorlogsClient(TestConnectionUrl, createMockCredential());
 
         await expect(
-            client.queryData({ query: "invalid", timerangetype: "Last hour", timerange: {} }),
+            client.queryData(
+                { query: "invalid", timerangetype: "Last hour", timerange: {} },
+                TestSubscriptions,
+                TestResourceGroups,
+                TestResourceType,
+                TestResourceName,
+            ),
         ).rejects.toThrow(ConnectorError);
     });
 
@@ -202,7 +228,13 @@ describe("AzuremonitorlogsClient — error handling", () => {
         const client = new AzuremonitorlogsClient(TestConnectionUrl, createMockCredential());
 
         try {
-            await client.queryData({ query: "test", timerangetype: "Last hour", timerange: {} });
+            await client.queryData(
+                { query: "test", timerangetype: "Last hour", timerange: {} },
+                TestSubscriptions,
+                TestResourceGroups,
+                TestResourceType,
+                TestResourceName,
+            );
             throw new Error("Expected ConnectorError to be thrown.");
         } catch (error) {
             expect(error).toBeInstanceOf(ConnectorError);

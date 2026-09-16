@@ -290,7 +290,7 @@ export interface OrganizationInput {
  * Definition: organizationSettings
  */
 export interface OrganizationSettings {
-    determine_deadline?: Record<string, unknown>;
+    determine_deadline?: GenericObject;
     workdays?: Array<string>;
     holidays?: Array<string>;
 }
@@ -345,7 +345,7 @@ export interface RunViewInput {
 export interface PreferenceInput {
     slug?: string;
     value?: string;
-    metadata?: Record<string, unknown>;
+    metadata?: GenericObject;
 }
 
 /**
@@ -425,7 +425,7 @@ export interface CaptureInput {
     label?: string;
     position?: number;
     required?: boolean;
-    options?: Array<Record<string, unknown>>;
+    options?: Array<GenericObject>;
 }
 
 /**
@@ -491,13 +491,13 @@ export interface CreateChecklistInput {
     title?: string;
     summary?: string;
     privacy?: string;
-    settings?: Record<string, unknown>;
+    settings?: GenericObject;
     /** The list of users who can update the checklist. */
     contributors?: Array<number>;
     tags?: Array<string>;
     /** The list of groups and users who can access the run. */
-    start_run_permissions?: Record<string, unknown>;
-    prerun?: Record<string, unknown>;
+    start_run_permissions?: GenericObject;
+    prerun?: GenericObject;
     /** Template creator ID */
     user_id?: number;
     /** Template Owner ID */
@@ -513,10 +513,10 @@ export interface Checklist {
     summary?: string;
     privacy?: string;
     starred?: number;
-    settings?: Record<string, unknown>;
+    settings?: GenericObject;
     /** The list of users who can update the Blueprint. */
     contributors?: Array<number>;
-    statistics?: Record<string, unknown>;
+    statistics?: GenericObject;
     created_by?: number;
     /** Template Owner ID */
     owner_id?: number;
@@ -600,8 +600,8 @@ export interface Message {
     created_ago?: string;
     sent_to?: Array<number>;
     author_name?: string;
-    author?: Record<string, unknown>;
-    subject?: Record<string, unknown>;
+    author?: GenericObject;
+    subject?: GenericObject;
 }
 
 /**
@@ -630,7 +630,7 @@ export interface Organization {
 export interface Preference {
     slug?: string;
     value?: string;
-    metadata?: Record<string, unknown>;
+    metadata?: GenericObject;
     last_updated?: Date;
 }
 
@@ -656,7 +656,7 @@ export interface CreateRoleInput {
 export interface Role {
     id?: number;
     name?: string;
-    permissions?: Record<string, unknown>;
+    permissions?: GenericObject;
     created_at?: Date;
     updated_at?: Date;
 }
@@ -708,12 +708,12 @@ export interface AlertIssues {
     task_id?: string;
     label?: string;
     content?: string;
-    sent_to?: Record<string, unknown>;
+    sent_to?: GenericObject;
     sent_by?: number;
     created_at?: Date;
     created_ago?: string;
     recent_updated_at?: Date;
-    author?: Record<string, unknown>;
+    author?: GenericObject;
     resolve_id?: number;
 }
 
@@ -733,7 +733,7 @@ export interface Run {
     name?: string;
     summary?: string;
     status?: string;
-    progress?: Record<string, unknown>;
+    progress?: GenericObject;
     started_by?: number;
     owner_id?: number;
     prerun?: Array<PrerunData>;
@@ -769,7 +769,7 @@ export interface Section {
     checklist_id?: string;
     name?: string;
     position?: number;
-    condition?: Record<string, unknown>;
+    condition?: GenericObject;
 }
 
 /**
@@ -798,7 +798,7 @@ export interface StandaloneTask {
     run_id?: string;
     step_id?: string;
     alias?: string;
-    taskdata?: Record<string, unknown>;
+    taskdata?: GenericObject;
     owners?: StepOwner;
     is_completable?: number;
     status?: string;
@@ -832,7 +832,7 @@ export interface CreateStandaloneTaskInput {
  * Definition: updateStandaloneTaskInput
  */
 export interface UpdateStandaloneTaskInput {
-    taskdata?: Record<string, unknown>;
+    taskdata?: GenericObject;
     owners?: StepOwner;
     name?: string;
     description?: string;
@@ -889,9 +889,9 @@ export interface CreateStepInput {
     position?: number;
     owners?: StepOwner;
     /** The list of groups the step is invisible to. */
-    invisibility?: Record<string, unknown>;
-    settings?: Record<string, unknown>;
-    metadata?: Record<string, unknown>;
+    invisibility?: GenericObject;
+    settings?: GenericObject;
+    metadata?: GenericObject;
     condition?: StepCondition;
     captures?: Array<CaptureInput>;
 }
@@ -908,12 +908,12 @@ export interface Step {
     position?: number;
     owners?: StepOwner;
     /** The list of groups the step is invisible to. */
-    invisibility?: Record<string, unknown>;
-    settings?: Record<string, unknown>;
-    metadata?: Record<string, unknown>;
+    invisibility?: GenericObject;
+    settings?: GenericObject;
+    metadata?: GenericObject;
     deadline?: StepDeadline;
-    captures?: Record<string, unknown>;
-    condition?: Record<string, unknown>;
+    captures?: GenericObject;
+    condition?: GenericObject;
     created_at?: RequestDate;
     last_updated?: RequestDate;
     archived_at?: RequestDate;
@@ -968,7 +968,7 @@ export interface TaskObject {
     run_id?: string;
     step_id?: string;
     alias?: string;
-    taskdata?: Record<string, unknown>;
+    taskdata?: GenericObject;
     owners?: StepOwner;
     is_completable?: boolean;
     status?: string;
@@ -992,7 +992,7 @@ export interface Pagination {
     per_page?: number;
     current_page?: number;
     total_pages?: number;
-    links?: Record<string, unknown>;
+    links?: GenericObject;
 }
 
 /**
@@ -1021,7 +1021,7 @@ export interface CompletedProcessTask {
     run_id?: string;
     step_id?: string;
     alias?: string;
-    taskdata?: Record<string, unknown>;
+    taskdata?: GenericObject;
     owners?: StepOwner;
     is_completable?: boolean;
     status?: string;
@@ -1034,14 +1034,14 @@ export interface CompletedProcessTask {
     starter_id?: number;
     completer_id?: number;
     run_status?: string;
-    tasks_changed_by_rules?: Record<string, unknown>;
+    tasks_changed_by_rules?: GenericObject;
 }
 
 /**
  * Definition: updateTaskInput
  */
 export interface UpdateTaskInput {
-    taskdata?: Record<string, unknown>;
+    taskdata?: GenericObject;
     threads?: Record<string, unknown>;
     owners?: StepOwner;
     status?: string;
@@ -1054,9 +1054,9 @@ export interface UpdateTaskInput {
  */
 export interface TaskGuest {
     alias?: string;
-    organization?: Record<string, unknown>;
-    taskdata?: Record<string, unknown>;
-    threads?: Record<string, unknown>;
+    organization?: GenericObject;
+    taskdata?: GenericObject;
+    threads?: GenericObject;
     status?: string;
     is_completable?: boolean;
     deadline?: Date;
@@ -1072,7 +1072,7 @@ export interface TaskGuest {
  * Definition: updateGuestsTasksInput
  */
 export interface UpdateGuestsTasksInput {
-    taskdata?: Record<string, unknown>;
+    taskdata?: GenericObject;
     status?: string;
 }
 
@@ -1088,7 +1088,7 @@ export interface CreateGuestsTasksComment {
  */
 export interface TaskMetaInput {
     slug?: string;
-    value?: Record<string, unknown>;
+    value?: GenericObject;
 }
 
 /**
@@ -1179,6 +1179,26 @@ export interface Client {
     name?: string;
     redirect?: string;
 }
+
+/**
+ * Options for the getUserTasks operation.
+ */
+export interface GetUserTasksOptions extends ConnectorOperationOptions {
+    /** Search Tasks by their Process name */
+    q?: string;
+    /** You can search all Tasks by status */
+    status?: string;
+    /** Add minus sign (-) before sort value if you want to sort records in descending order. Ex: sort=-improvements */
+    sort?: string;
+    /** Retrieve additional data from Tasks. Separate multiple options with a comma */
+    with_?: string;
+    /** Search Tasks by Tag name */
+    tag?: string;
+    /** Which results page to retrieve. Default is 1 */
+    page?: string;
+    /** How many Tasks per page. Default is 10 */
+    perPage?: string;
+}
 // #endregion Types
 
 // #region Client
@@ -1206,28 +1226,28 @@ export class TallyfyClient extends ConnectorClientBase {
      * Get a member's tasks
      * @remarks Get all tasks that belong to a specific member
      */
-    public async getUserTasks(org: string, userId: string, q?: string, status?: string, sort?: string, with_?: string, tag?: string, page?: string, perPage?: string, options: ConnectorOperationOptions = {}): Promise<GetUserTasksResponse> {
+    public async getUserTasks(org: string, userId: string, options: GetUserTasksOptions = {}): Promise<GetUserTasksResponse> {
         const queryParams: string[] = [];
-        if (q !== undefined) {
-            queryParams.push(`q=${encodeURIComponent(String(q))}`);
+        if (options.q !== undefined) {
+            queryParams.push(`q=${encodeURIComponent(String(options.q))}`);
         }
-        if (status !== undefined) {
-            queryParams.push(`status=${encodeURIComponent(String(status))}`);
+        if (options.status !== undefined) {
+            queryParams.push(`status=${encodeURIComponent(String(options.status))}`);
         }
-        if (sort !== undefined) {
-            queryParams.push(`sort=${encodeURIComponent(String(sort))}`);
+        if (options.sort !== undefined) {
+            queryParams.push(`sort=${encodeURIComponent(String(options.sort))}`);
         }
-        if (with_ !== undefined) {
-            queryParams.push(`with=${encodeURIComponent(String(with_))}`);
+        if (options.with_ !== undefined) {
+            queryParams.push(`with=${encodeURIComponent(String(options.with_))}`);
         }
-        if (tag !== undefined) {
-            queryParams.push(`tag=${encodeURIComponent(String(tag))}`);
+        if (options.tag !== undefined) {
+            queryParams.push(`tag=${encodeURIComponent(String(options.tag))}`);
         }
-        if (page !== undefined) {
-            queryParams.push(`page=${encodeURIComponent(String(page))}`);
+        if (options.page !== undefined) {
+            queryParams.push(`page=${encodeURIComponent(String(options.page))}`);
         }
-        if (perPage !== undefined) {
-            queryParams.push(`per_page=${encodeURIComponent(String(perPage))}`);
+        if (options.perPage !== undefined) {
+            queryParams.push(`per_page=${encodeURIComponent(String(options.perPage))}`);
         }
         const requestPath = `/organizations/${org}/users/${userId}/tasks` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);

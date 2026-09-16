@@ -668,7 +668,7 @@ export class InsightlyClient extends ConnectorClientBase {
      * Update task
      * @remarks Update task
      */
-    public async updateTask(input: TaskRequest, id?: string, options: ConnectorOperationOptions = {}): Promise<TaskObject> {
+    public async updateTask(input: TaskRequest, id: string, options: ConnectorOperationOptions = {}): Promise<TaskObject> {
         const queryParams: string[] = [];
         if (id !== undefined) {
             queryParams.push(`id=${encodeURIComponent(String(id))}`);
@@ -714,7 +714,7 @@ export class InsightlyClient extends ConnectorClientBase {
      * Update project
      * @remarks Update project
      */
-    public async updateProject(input: ProjectRequest, id?: string, options: ConnectorOperationOptions = {}): Promise<Project> {
+    public async updateProject(input: ProjectRequest, id: string, options: ConnectorOperationOptions = {}): Promise<Project> {
         const queryParams: string[] = [];
         if (id !== undefined) {
             queryParams.push(`id=${encodeURIComponent(String(id))}`);
@@ -760,7 +760,7 @@ export class InsightlyClient extends ConnectorClientBase {
      * Update lead
      * @remarks Update lead
      */
-    public async updateLead(input: LeadRequest, id?: string, options: ConnectorOperationOptions = {}): Promise<Lead> {
+    public async updateLead(input: LeadRequest, id: string, options: ConnectorOperationOptions = {}): Promise<Lead> {
         const queryParams: string[] = [];
         if (id !== undefined) {
             queryParams.push(`id=${encodeURIComponent(String(id))}`);
@@ -806,7 +806,7 @@ export class InsightlyClient extends ConnectorClientBase {
      * Update contact
      * @remarks Update contact
      */
-    public async updateContact(input: ContactRequest, id?: string, options: ConnectorOperationOptions = {}): Promise<Contact> {
+    public async updateContact(input: ContactRequest, id: string, options: ConnectorOperationOptions = {}): Promise<Contact> {
         const queryParams: string[] = [];
         if (id !== undefined) {
             queryParams.push(`id=${encodeURIComponent(String(id))}`);

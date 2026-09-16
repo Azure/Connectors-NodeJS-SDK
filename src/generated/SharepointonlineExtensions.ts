@@ -349,7 +349,7 @@ export interface FormFieldMetadata {
  * Definition: GetItemChangesMetadataResponse
  */
 export interface GetItemChangesMetadataResponse {
-    schema?: Record<string, unknown>;
+    schema?: ObjectEntity;
 }
 
 /**
@@ -832,8 +832,8 @@ export interface TableMetadata {
     /** Table permission */
     "x-ms-permission"?: string;
     "x-ms-capabilities"?: TableCapabilitiesMetadata;
-    schema?: Record<string, unknown>;
-    referencedEntities?: Record<string, unknown>;
+    schema?: ObjectEntity;
+    referencedEntities?: ObjectEntity;
     /** URL link */
     webUrl?: string;
 }
@@ -890,6 +890,236 @@ export interface UserPermissionIdentity {
     displayName?: string;
     /** User email */
     email?: string;
+}
+
+/**
+ * Options for the createAgreementsSolutionDocument operation.
+ */
+export interface CreateAgreementsSolutionDocumentOptions extends ConnectorOperationOptions {
+    /** Document file name. */
+    documentName?: string;
+}
+
+/**
+ * Options for the cancelHubSiteJoinApproval operation.
+ */
+export interface CancelHubSiteJoinApprovalOptions extends ConnectorOperationOptions {
+    /** Approval correlation identifier for this request. */
+    approvalCorrelationId?: string;
+}
+
+/**
+ * Options for the copyFileLegacy operation.
+ */
+export interface CopyFileLegacyOptions extends ConnectorOperationOptions {
+    /** Whether or not to overwrite the destination file if it exists. */
+    overwrite?: string;
+    /** The 'queryParametersSingleEncoded' service parameter. */
+    queryParametersSingleEncoded?: string;
+}
+
+/**
+ * Options for the createFile operation.
+ */
+export interface CreateFileOptions extends ConnectorOperationOptions {
+    /** The 'queryParametersSingleEncoded' service parameter. */
+    queryParametersSingleEncoded?: string;
+}
+
+/**
+ * Options for the getFileContent operation.
+ */
+export interface GetFileContentOptions extends ConnectorOperationOptions {
+    /** Infer content-type based on extension. */
+    inferContentType?: string;
+}
+
+/**
+ * Options for the getFileMetadataByPath operation.
+ */
+export interface GetFileMetadataByPathOptions extends ConnectorOperationOptions {
+    /** The 'queryParametersSingleEncoded' service parameter. */
+    queryParametersSingleEncoded?: string;
+}
+
+/**
+ * Options for the getFileContentByPath operation.
+ */
+export interface GetFileContentByPathOptions extends ConnectorOperationOptions {
+    /** Infer content-type based on extension. */
+    inferContentType?: string;
+    /** The 'queryParametersSingleEncoded' service parameter. */
+    queryParametersSingleEncoded?: string;
+}
+
+/**
+ * Options for the getFolderMetadataByPath operation.
+ */
+export interface GetFolderMetadataByPathOptions extends ConnectorOperationOptions {
+    /** The 'queryParametersSingleEncoded' service parameter. */
+    queryParametersSingleEncoded?: string;
+}
+
+/**
+ * Options for the joinHubSite operation.
+ */
+export interface JoinHubSiteOptions extends ConnectorOperationOptions {
+    /** Approval token for this request. */
+    approvalToken?: string;
+    /** Approval correlation identifier for this request. */
+    approvalCorrelationId?: string;
+}
+
+/**
+ * Options for the notifyHubSiteJoinApprovalStarted operation.
+ */
+export interface NotifyHubSiteJoinApprovalStartedOptions extends ConnectorOperationOptions {
+    /** Approval correlation identifier for this request. */
+    approvalCorrelationId?: string;
+}
+
+/**
+ * Options for the createNewFolder operation.
+ */
+export interface CreateNewFolderOptions extends ConnectorOperationOptions {
+    /** Avoid column threshold issues by only using columns defined in a view. */
+    view?: string;
+}
+
+/**
+ * Options for the searchForUser operation.
+ */
+export interface SearchForUserOptions extends ConnectorOperationOptions {
+    /** Avoid column threshold issues by only using columns defined in a view. */
+    view?: string;
+}
+
+/**
+ * Options for the submitDocGenForm operation.
+ */
+export interface SubmitDocGenFormOptions extends ConnectorOperationOptions {
+    /** This parameter does nothing. Please do not use. */
+    view?: string;
+}
+
+/**
+ * Options for the getFileItems operation.
+ */
+export interface GetFileItemsOptions extends ConnectorOperationOptions {
+    /** An ODATA filter query to restrict the entries returned (e.g. stringColumn eq 'string' OR numberColumn lt 123). */
+    filter?: string;
+    /** An ODATA orderBy query for specifying the order of entries. */
+    orderby?: string;
+    /** Total number of entries to retrieve (default = all). */
+    top?: string;
+    /** Select a folder, or leave blank for the whole library */
+    folderPath?: string;
+    /** Return entries contained in sub-folders (default = true) */
+    viewScopeOption?: string;
+    /** Avoid column threshold issues by only using columns defined in a view */
+    view?: string;
+}
+
+/**
+ * Options for the getItems operation.
+ */
+export interface GetItemsOptions extends ConnectorOperationOptions {
+    /** An ODATA filter query to restrict the entries returned (e.g. stringColumn eq 'string' OR numberColumn lt 123). */
+    filter?: string;
+    /** An ODATA orderBy query for specifying the order of entries. */
+    orderby?: string;
+    /** Total number of entries to retrieve (default = all). */
+    top?: string;
+    /** Select a folder, or leave blank for the whole list */
+    folderPath?: string;
+    /** Return entries contained in sub-folders (default = true) */
+    viewScopeOption?: string;
+    /** Avoid column threshold issues by only using columns defined in a view */
+    view?: string;
+}
+
+/**
+ * Options for the postItem operation.
+ */
+export interface PostItemOptions extends ConnectorOperationOptions {
+    /** Avoid column threshold issues by only using columns defined in a view */
+    view?: string;
+}
+
+/**
+ * Options for the getItem operation.
+ */
+export interface GetItemOptions extends ConnectorOperationOptions {
+    /** Avoid column threshold issues by only using columns defined in a view */
+    view?: string;
+}
+
+/**
+ * Options for the patchItem operation.
+ */
+export interface PatchItemOptions extends ConnectorOperationOptions {
+    /** Avoid column threshold issues by only using columns defined in a view */
+    view?: string;
+}
+
+/**
+ * Options for the getItemChanges operation.
+ */
+export interface GetItemChangesOptions extends ConnectorOperationOptions {
+    /** Trigger Window End token or an item version label (ex: 3.0) or an ISO 8601 date (YYYY-MM-DDThh:mmZ). If blank, defaults to latest version. */
+    until?: string;
+    /** Boolean for whether to consider changes from minor (draft) versions. */
+    includeDrafts?: string;
+    /** Returns only columns defined in a view. */
+    view?: string;
+}
+
+/**
+ * Options for the getFileItem operation.
+ */
+export interface GetFileItemOptions extends ConnectorOperationOptions {
+    /** Avoid column threshold issues by only using columns defined in a view */
+    view?: string;
+}
+
+/**
+ * Options for the patchFileItem operation.
+ */
+export interface PatchFileItemOptions extends ConnectorOperationOptions {
+    /** Avoid column threshold issues by only using columns defined in a view */
+    view?: string;
+}
+
+/**
+ * Options for the setApprovalStatus operation.
+ */
+export interface SetApprovalStatusOptions extends ConnectorOperationOptions {
+    /** Add the comments from the approver. */
+    comments?: string;
+    /** Add an ETag (required for files and pages). */
+    entityTag?: string;
+}
+
+/**
+ * Options for the createContentAssemblyDocument operation.
+ */
+export interface CreateContentAssemblyDocumentOptions extends ConnectorOperationOptions {
+    /** Must start with an existing library. */
+    folderPath?: string;
+    /** Document file name. */
+    fileName?: string;
+    /** This parameter does nothing. Please do not use. */
+    view?: string;
+}
+
+/**
+ * Options for the extractFolder operation.
+ */
+export interface ExtractFolderOptions extends ConnectorOperationOptions {
+    /** Whether or not to overwrite the destination file if it exists. */
+    overwrite?: string;
+    /** The 'queryParametersSingleEncoded' service parameter. */
+    queryParametersSingleEncoded?: string;
 }
 
 /**
@@ -1382,10 +1612,10 @@ export class SharepointonlineClient extends ConnectorClientBase {
      * Agreements Solution - Generate document within Agreements Solution workspace
      * @remarks Use this action to create documents based on modern templates in a Agreements Solution workspace. This is behind a payment wall currently in planning (either license or PayG).
      */
-    public async createAgreementsSolutionDocument(input: CreateAgreementsSolutionDocumentInput, dataset: string, template: string, documentName?: string, options: ConnectorOperationOptions = {}): Promise<SPBlobMetadataResponse> {
+    public async createAgreementsSolutionDocument(input: CreateAgreementsSolutionDocumentInput, dataset: string, template: string, options: CreateAgreementsSolutionDocumentOptions = {}): Promise<SPBlobMetadataResponse> {
         const queryParams: string[] = [];
-        if (documentName !== undefined) {
-            queryParams.push(`documentName=${encodeURIComponent(String(documentName))}`);
+        if (options.documentName !== undefined) {
+            queryParams.push(`documentName=${encodeURIComponent(String(options.documentName))}`);
         }
         const requestPath = `/datasets/${encodeURIComponent(String(dataset))}/agreements/templates/${template}/createnewdocument` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
@@ -1410,7 +1640,7 @@ export class SharepointonlineClient extends ConnectorClientBase {
      * Approve hub site join request
      * @remarks Approve hub site join request. This will return an approval token that can be used to complete the join request using the join hub site action.
      */
-    public async approveHubSiteJoin(dataset: string, joiningSiteId?: string, options: ConnectorOperationOptions = {}): Promise<ApproveHubSiteJoinResponse> {
+    public async approveHubSiteJoin(dataset: string, joiningSiteId: string, options: ConnectorOperationOptions = {}): Promise<ApproveHubSiteJoinResponse> {
         const queryParams: string[] = [];
         if (joiningSiteId !== undefined) {
             queryParams.push(`joiningSiteId=${encodeURIComponent(String(joiningSiteId))}`);
@@ -1426,10 +1656,10 @@ export class SharepointonlineClient extends ConnectorClientBase {
      * Cancel hub site join request
      * @remarks Cancel hub join request. If applicable, you should specify the same Approval Correlation Id as used in the "Set hub site join status to pending" action.
      */
-    public async cancelHubSiteJoinApproval(dataset: string, approvalCorrelationId?: string, options: ConnectorOperationOptions = {}): Promise<void> {
+    public async cancelHubSiteJoinApproval(dataset: string, options: CancelHubSiteJoinApprovalOptions = {}): Promise<void> {
         const queryParams: string[] = [];
-        if (approvalCorrelationId !== undefined) {
-            queryParams.push(`approvalCorrelationId=${encodeURIComponent(String(approvalCorrelationId))}`);
+        if (options.approvalCorrelationId !== undefined) {
+            queryParams.push(`approvalCorrelationId=${encodeURIComponent(String(options.approvalCorrelationId))}`);
         }
         const requestPath = `/datasets/${encodeURIComponent(String(dataset))}/cancelhubsitejoinapproval` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
@@ -1453,7 +1683,7 @@ export class SharepointonlineClient extends ConnectorClientBase {
      * @remarks Copies a file to a SharePoint site.
      * @remarks Uses the curated name for operationId 'CopyFile'.
      */
-    public async copyFileLegacy(dataset: string, source?: string, destination?: string, overwrite?: string, queryParametersSingleEncoded?: string, options: ConnectorOperationOptions = {}): Promise<BlobMetadata> {
+    public async copyFileLegacy(dataset: string, source: string, destination: string, options: CopyFileLegacyOptions = {}): Promise<BlobMetadata> {
         const queryParams: string[] = [];
         if (source !== undefined) {
             queryParams.push(`source=${encodeURIComponent(String(source))}`);
@@ -1461,11 +1691,11 @@ export class SharepointonlineClient extends ConnectorClientBase {
         if (destination !== undefined) {
             queryParams.push(`destination=${encodeURIComponent(String(destination))}`);
         }
-        if (overwrite !== undefined) {
-            queryParams.push(`overwrite=${encodeURIComponent(String(overwrite))}`);
+        if (options.overwrite !== undefined) {
+            queryParams.push(`overwrite=${encodeURIComponent(String(options.overwrite))}`);
         }
-        if (queryParametersSingleEncoded !== undefined) {
-            queryParams.push(`queryParametersSingleEncoded=${encodeURIComponent(String(queryParametersSingleEncoded))}`);
+        if (options.queryParametersSingleEncoded !== undefined) {
+            queryParams.push(`queryParametersSingleEncoded=${encodeURIComponent(String(options.queryParametersSingleEncoded))}`);
         }
         const requestPath = `/datasets/${encodeURIComponent(String(dataset))}/copyFile` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
@@ -1502,7 +1732,7 @@ export class SharepointonlineClient extends ConnectorClientBase {
      * Create file
      * @remarks Uploads a file to a SharePoint site. Make sure to pick an existing library.
      */
-    public async createFile(input: CreateFileInput, dataset: string, folderPath?: string, name?: string, queryParametersSingleEncoded?: string, options: ConnectorOperationOptions = {}): Promise<SPBlobMetadataResponse> {
+    public async createFile(input: CreateFileInput, dataset: string, folderPath: string, name: string, options: CreateFileOptions = {}): Promise<SPBlobMetadataResponse> {
         const queryParams: string[] = [];
         if (folderPath !== undefined) {
             queryParams.push(`folderPath=${encodeURIComponent(String(folderPath))}`);
@@ -1510,8 +1740,8 @@ export class SharepointonlineClient extends ConnectorClientBase {
         if (name !== undefined) {
             queryParams.push(`name=${encodeURIComponent(String(name))}`);
         }
-        if (queryParametersSingleEncoded !== undefined) {
-            queryParams.push(`queryParametersSingleEncoded=${encodeURIComponent(String(queryParametersSingleEncoded))}`);
+        if (options.queryParametersSingleEncoded !== undefined) {
+            queryParams.push(`queryParametersSingleEncoded=${encodeURIComponent(String(options.queryParametersSingleEncoded))}`);
         }
         const requestPath = `/datasets/${encodeURIComponent(String(dataset))}/files` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
@@ -1558,10 +1788,10 @@ export class SharepointonlineClient extends ConnectorClientBase {
      * Get file content
      * @remarks Gets file contents using the file identifier. The contents can be copied somewhere else, or be used as an attachment.
      */
-    public async getFileContent(dataset: string, id: string, inferContentType?: string, options: ConnectorOperationOptions = {}): Promise<Blob> {
+    public async getFileContent(dataset: string, id: string, options: GetFileContentOptions = {}): Promise<Blob> {
         const queryParams: string[] = [];
-        if (inferContentType !== undefined) {
-            queryParams.push(`inferContentType=${encodeURIComponent(String(inferContentType))}`);
+        if (options.inferContentType !== undefined) {
+            queryParams.push(`inferContentType=${encodeURIComponent(String(options.inferContentType))}`);
         }
         const requestPath = `/datasets/${encodeURIComponent(String(dataset))}/files/${id}/content` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
@@ -1610,13 +1840,13 @@ export class SharepointonlineClient extends ConnectorClientBase {
      * Get file metadata using path
      * @remarks Gets information about the file such as size, etag, created date, etc. Uses a file path to pick the file. Use "Get file properties" action to get to the values stored in the columns in the library.
      */
-    public async getFileMetadataByPath(dataset: string, path?: string, queryParametersSingleEncoded?: string, options: ConnectorOperationOptions = {}): Promise<SPBlobMetadataResponse> {
+    public async getFileMetadataByPath(dataset: string, path: string, options: GetFileMetadataByPathOptions = {}): Promise<SPBlobMetadataResponse> {
         const queryParams: string[] = [];
         if (path !== undefined) {
             queryParams.push(`path=${encodeURIComponent(String(path))}`);
         }
-        if (queryParametersSingleEncoded !== undefined) {
-            queryParams.push(`queryParametersSingleEncoded=${encodeURIComponent(String(queryParametersSingleEncoded))}`);
+        if (options.queryParametersSingleEncoded !== undefined) {
+            queryParams.push(`queryParametersSingleEncoded=${encodeURIComponent(String(options.queryParametersSingleEncoded))}`);
         }
         const requestPath = `/datasets/${encodeURIComponent(String(dataset))}/GetFileByPath` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
@@ -1629,16 +1859,16 @@ export class SharepointonlineClient extends ConnectorClientBase {
      * Get file content using path
      * @remarks Gets file contents using the file path.
      */
-    public async getFileContentByPath(dataset: string, path?: string, inferContentType?: string, queryParametersSingleEncoded?: string, options: ConnectorOperationOptions = {}): Promise<Blob> {
+    public async getFileContentByPath(dataset: string, path: string, options: GetFileContentByPathOptions = {}): Promise<Blob> {
         const queryParams: string[] = [];
         if (path !== undefined) {
             queryParams.push(`path=${encodeURIComponent(String(path))}`);
         }
-        if (inferContentType !== undefined) {
-            queryParams.push(`inferContentType=${encodeURIComponent(String(inferContentType))}`);
+        if (options.inferContentType !== undefined) {
+            queryParams.push(`inferContentType=${encodeURIComponent(String(options.inferContentType))}`);
         }
-        if (queryParametersSingleEncoded !== undefined) {
-            queryParams.push(`queryParametersSingleEncoded=${encodeURIComponent(String(queryParametersSingleEncoded))}`);
+        if (options.queryParametersSingleEncoded !== undefined) {
+            queryParams.push(`queryParametersSingleEncoded=${encodeURIComponent(String(options.queryParametersSingleEncoded))}`);
         }
         const requestPath = `/datasets/${encodeURIComponent(String(dataset))}/GetFileContentByPath` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
@@ -1651,7 +1881,7 @@ export class SharepointonlineClient extends ConnectorClientBase {
      * Get folder metadata
      * @remarks Gets information about the folder. Uses a file identifier to pick the folder.
      */
-    public async getFolderMetadata(dataset: string, id?: string, options: ConnectorOperationOptions = {}): Promise<SPBlobMetadataResponse> {
+    public async getFolderMetadata(dataset: string, id: string, options: ConnectorOperationOptions = {}): Promise<SPBlobMetadataResponse> {
         const queryParams: string[] = [];
         if (id !== undefined) {
             queryParams.push(`id=${encodeURIComponent(String(id))}`);
@@ -1667,13 +1897,13 @@ export class SharepointonlineClient extends ConnectorClientBase {
      * Get folder metadata using path
      * @remarks Gets information about the folder. Uses a folder path to pick the folder.
      */
-    public async getFolderMetadataByPath(dataset: string, path?: string, queryParametersSingleEncoded?: string, options: ConnectorOperationOptions = {}): Promise<SPBlobMetadataResponse> {
+    public async getFolderMetadataByPath(dataset: string, path: string, options: GetFolderMetadataByPathOptions = {}): Promise<SPBlobMetadataResponse> {
         const queryParams: string[] = [];
         if (path !== undefined) {
             queryParams.push(`path=${encodeURIComponent(String(path))}`);
         }
-        if (queryParametersSingleEncoded !== undefined) {
-            queryParams.push(`queryParametersSingleEncoded=${encodeURIComponent(String(queryParametersSingleEncoded))}`);
+        if (options.queryParametersSingleEncoded !== undefined) {
+            queryParams.push(`queryParametersSingleEncoded=${encodeURIComponent(String(options.queryParametersSingleEncoded))}`);
         }
         const requestPath = `/datasets/${encodeURIComponent(String(dataset))}/GetFolderByPath` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
@@ -1696,16 +1926,16 @@ export class SharepointonlineClient extends ConnectorClientBase {
      * Join hub site
      * @remarks Join the requested site to the hub site. An Approval Token is required to complete the join successfully if that hub requires approval. If applicable, you should specify the same Approval Correlation Id as used in the "Set hub site join status to pending" action.
      */
-    public async joinHubSite(dataset: string, hubSiteId?: string, approvalToken?: string, approvalCorrelationId?: string, options: ConnectorOperationOptions = {}): Promise<void> {
+    public async joinHubSite(dataset: string, hubSiteId: string, options: JoinHubSiteOptions = {}): Promise<void> {
         const queryParams: string[] = [];
         if (hubSiteId !== undefined) {
             queryParams.push(`hubSiteId=${encodeURIComponent(String(hubSiteId))}`);
         }
-        if (approvalToken !== undefined) {
-            queryParams.push(`approvalToken=${encodeURIComponent(String(approvalToken))}`);
+        if (options.approvalToken !== undefined) {
+            queryParams.push(`approvalToken=${encodeURIComponent(String(options.approvalToken))}`);
         }
-        if (approvalCorrelationId !== undefined) {
-            queryParams.push(`approvalCorrelationId=${encodeURIComponent(String(approvalCorrelationId))}`);
+        if (options.approvalCorrelationId !== undefined) {
+            queryParams.push(`approvalCorrelationId=${encodeURIComponent(String(options.approvalCorrelationId))}`);
         }
         const requestPath = `/datasets/${encodeURIComponent(String(dataset))}/joinhubsite` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
@@ -1740,10 +1970,10 @@ export class SharepointonlineClient extends ConnectorClientBase {
      * Set hub site join status to pending
      * @remarks Set the requested site's hub join request status to pending. The Approval Correlation Id is an optional parameter that helps SharePoint identify a particular hub join request. The requesting site can only have one pending request at a given time.
      */
-    public async notifyHubSiteJoinApprovalStarted(dataset: string, approvalCorrelationId?: string, options: ConnectorOperationOptions = {}): Promise<void> {
+    public async notifyHubSiteJoinApprovalStarted(dataset: string, options: NotifyHubSiteJoinApprovalStartedOptions = {}): Promise<void> {
         const queryParams: string[] = [];
-        if (approvalCorrelationId !== undefined) {
-            queryParams.push(`approvalCorrelationId=${encodeURIComponent(String(approvalCorrelationId))}`);
+        if (options.approvalCorrelationId !== undefined) {
+            queryParams.push(`approvalCorrelationId=${encodeURIComponent(String(options.approvalCorrelationId))}`);
         }
         const requestPath = `/datasets/${encodeURIComponent(String(dataset))}/notifyhubsitejoinapprovalstarted` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
@@ -1778,10 +2008,10 @@ export class SharepointonlineClient extends ConnectorClientBase {
      * Create new folder
      * @remarks Creates a new folder or folder path.
      */
-    public async createNewFolder(input: CreateNewFolderParameters, dataset: string, table: string, view?: string, options: ConnectorOperationOptions = {}): Promise<CreateNewFolderResponse> {
+    public async createNewFolder(input: CreateNewFolderParameters, dataset: string, table: string, options: CreateNewFolderOptions = {}): Promise<CreateNewFolderResponse> {
         const queryParams: string[] = [];
-        if (view !== undefined) {
-            queryParams.push(`view=${encodeURIComponent(String(view))}`);
+        if (options.view !== undefined) {
+            queryParams.push(`view=${encodeURIComponent(String(options.view))}`);
         }
         const requestPath = `/datasets/${encodeURIComponent(String(dataset))}/tables/${table}/createnewfolder` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
@@ -1794,13 +2024,13 @@ export class SharepointonlineClient extends ConnectorClientBase {
      * Resolve person
      * @remarks Returns a single matching user value so it can be assigned to a column of type person. If there are no matches, or multiple matches, this action will error out.
      */
-    public async searchForUser(dataset: string, table: string, entityId: string, searchValue?: string, view?: string, options: ConnectorOperationOptions = {}): Promise<SPListExpandedUser> {
+    public async searchForUser(dataset: string, table: string, entityId: string, searchValue: string, options: SearchForUserOptions = {}): Promise<SPListExpandedUser> {
         const queryParams: string[] = [];
         if (searchValue !== undefined) {
             queryParams.push(`searchValue=${encodeURIComponent(String(searchValue))}`);
         }
-        if (view !== undefined) {
-            queryParams.push(`view=${encodeURIComponent(String(view))}`);
+        if (options.view !== undefined) {
+            queryParams.push(`view=${encodeURIComponent(String(options.view))}`);
         }
         const requestPath = `/datasets/${encodeURIComponent(String(dataset))}/tables/${table}/entities/${entityId}/searchforuser` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
@@ -1825,10 +2055,10 @@ export class SharepointonlineClient extends ConnectorClientBase {
      * Generate a document from a form (preview)
      * @remarks Use this action to create documents from a document generation template. Map the template fields to the corresponding content in the data source.             Document generation forms is a part of AI in SharePoint Public Preview. For more info on getting started, see: https://learn.microsoft.com/sharepoint/dev/declarative-customization/structured-documents.
      */
-    public async submitDocGenForm(input: SubmitDocGenFormInput, dataset: string, table: string, form: string, view?: string, options: ConnectorOperationOptions = {}): Promise<SPBlobMetadataResponse> {
+    public async submitDocGenForm(input: SubmitDocGenFormInput, dataset: string, table: string, form: string, options: SubmitDocGenFormOptions = {}): Promise<SPBlobMetadataResponse> {
         const queryParams: string[] = [];
-        if (view !== undefined) {
-            queryParams.push(`view=${encodeURIComponent(String(view))}`);
+        if (options.view !== undefined) {
+            queryParams.push(`view=${encodeURIComponent(String(options.view))}`);
         }
         const requestPath = `/datasets/${encodeURIComponent(String(dataset))}/tables/${table}/forms/${form}/submitdocgenform` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
@@ -1841,25 +2071,25 @@ export class SharepointonlineClient extends ConnectorClientBase {
      * Get files (properties only)
      * @remarks Gets the properties saved in the columns in the library for all folders and files stored in the library.             You can also filter down to the items that match a condition. An "Apply to each" section is usually used to work with the output from this action.             When using this with the On-Premises Data Gateway, the name of the library to connect to may need to be entered manually.
      */
-    public getFileItems(dataset: string, table: string, filter?: string, orderby?: string, top?: string, folderPath?: string, viewScopeOption?: string, view?: string, options: ConnectorOperationOptions = {}): ConnectorPagedAsyncIterableIterator<Item> {
+    public getFileItems(dataset: string, table: string, options: GetFileItemsOptions = {}): ConnectorPagedAsyncIterableIterator<Item> {
         const queryParams: string[] = [];
-        if (filter !== undefined) {
-            queryParams.push(`$filter=${encodeURIComponent(String(filter))}`);
+        if (options.filter !== undefined) {
+            queryParams.push(`$filter=${encodeURIComponent(String(options.filter))}`);
         }
-        if (orderby !== undefined) {
-            queryParams.push(`$orderby=${encodeURIComponent(String(orderby))}`);
+        if (options.orderby !== undefined) {
+            queryParams.push(`$orderby=${encodeURIComponent(String(options.orderby))}`);
         }
-        if (top !== undefined) {
-            queryParams.push(`$top=${encodeURIComponent(String(top))}`);
+        if (options.top !== undefined) {
+            queryParams.push(`$top=${encodeURIComponent(String(options.top))}`);
         }
-        if (folderPath !== undefined) {
-            queryParams.push(`folderPath=${encodeURIComponent(String(folderPath))}`);
+        if (options.folderPath !== undefined) {
+            queryParams.push(`folderPath=${encodeURIComponent(String(options.folderPath))}`);
         }
-        if (viewScopeOption !== undefined) {
-            queryParams.push(`viewScopeOption=${encodeURIComponent(String(viewScopeOption))}`);
+        if (options.viewScopeOption !== undefined) {
+            queryParams.push(`viewScopeOption=${encodeURIComponent(String(options.viewScopeOption))}`);
         }
-        if (view !== undefined) {
-            queryParams.push(`view=${encodeURIComponent(String(view))}`);
+        if (options.view !== undefined) {
+            queryParams.push(`view=${encodeURIComponent(String(options.view))}`);
         }
         const requestPath = `/datasets/${encodeURIComponent(String(dataset))}/tables/${table}/getfileitems` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         return this.createPageable<ItemsList, Item>(
@@ -1879,25 +2109,25 @@ export class SharepointonlineClient extends ConnectorClientBase {
      * Get items
      * @remarks Gets items from a SharePoint list.
      */
-    public getItems(dataset: string, table: string, filter?: string, orderby?: string, top?: string, folderPath?: string, viewScopeOption?: string, view?: string, options: ConnectorOperationOptions = {}): ConnectorPagedAsyncIterableIterator<Item> {
+    public getItems(dataset: string, table: string, options: GetItemsOptions = {}): ConnectorPagedAsyncIterableIterator<Item> {
         const queryParams: string[] = [];
-        if (filter !== undefined) {
-            queryParams.push(`$filter=${encodeURIComponent(String(filter))}`);
+        if (options.filter !== undefined) {
+            queryParams.push(`$filter=${encodeURIComponent(String(options.filter))}`);
         }
-        if (orderby !== undefined) {
-            queryParams.push(`$orderby=${encodeURIComponent(String(orderby))}`);
+        if (options.orderby !== undefined) {
+            queryParams.push(`$orderby=${encodeURIComponent(String(options.orderby))}`);
         }
-        if (top !== undefined) {
-            queryParams.push(`$top=${encodeURIComponent(String(top))}`);
+        if (options.top !== undefined) {
+            queryParams.push(`$top=${encodeURIComponent(String(options.top))}`);
         }
-        if (folderPath !== undefined) {
-            queryParams.push(`folderPath=${encodeURIComponent(String(folderPath))}`);
+        if (options.folderPath !== undefined) {
+            queryParams.push(`folderPath=${encodeURIComponent(String(options.folderPath))}`);
         }
-        if (viewScopeOption !== undefined) {
-            queryParams.push(`viewScopeOption=${encodeURIComponent(String(viewScopeOption))}`);
+        if (options.viewScopeOption !== undefined) {
+            queryParams.push(`viewScopeOption=${encodeURIComponent(String(options.viewScopeOption))}`);
         }
-        if (view !== undefined) {
-            queryParams.push(`view=${encodeURIComponent(String(view))}`);
+        if (options.view !== undefined) {
+            queryParams.push(`view=${encodeURIComponent(String(options.view))}`);
         }
         const requestPath = `/datasets/${encodeURIComponent(String(dataset))}/tables/${table}/items` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         return this.createPageable<ItemsList, Item>(
@@ -1917,10 +2147,10 @@ export class SharepointonlineClient extends ConnectorClientBase {
      * Create item
      * @remarks Creates a new item in a SharePoint list.
      */
-    public async postItem(input: PostItemInput, dataset: string, table: string, view?: string, options: ConnectorOperationOptions = {}): Promise<PostItemResponse> {
+    public async postItem(input: PostItemInput, dataset: string, table: string, options: PostItemOptions = {}): Promise<PostItemResponse> {
         const queryParams: string[] = [];
-        if (view !== undefined) {
-            queryParams.push(`view=${encodeURIComponent(String(view))}`);
+        if (options.view !== undefined) {
+            queryParams.push(`view=${encodeURIComponent(String(options.view))}`);
         }
         const requestPath = `/datasets/${encodeURIComponent(String(dataset))}/tables/${table}/items` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
@@ -1933,10 +2163,10 @@ export class SharepointonlineClient extends ConnectorClientBase {
      * Get item
      * @remarks Gets a single item by its id from a SharePoint list.
      */
-    public async getItem(dataset: string, table: string, id: string, view?: string, options: ConnectorOperationOptions = {}): Promise<GetItemResponse> {
+    public async getItem(dataset: string, table: string, id: string, options: GetItemOptions = {}): Promise<GetItemResponse> {
         const queryParams: string[] = [];
-        if (view !== undefined) {
-            queryParams.push(`view=${encodeURIComponent(String(view))}`);
+        if (options.view !== undefined) {
+            queryParams.push(`view=${encodeURIComponent(String(options.view))}`);
         }
         const requestPath = `/datasets/${encodeURIComponent(String(dataset))}/tables/${table}/items/${id}` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
@@ -1959,10 +2189,10 @@ export class SharepointonlineClient extends ConnectorClientBase {
      * Update item
      * @remarks Updates an item in a SharePoint list.
      */
-    public async patchItem(input: PatchItemInput, dataset: string, table: string, id: string, view?: string, options: ConnectorOperationOptions = {}): Promise<PatchItemResponse> {
+    public async patchItem(input: PatchItemInput, dataset: string, table: string, id: string, options: PatchItemOptions = {}): Promise<PatchItemResponse> {
         const queryParams: string[] = [];
-        if (view !== undefined) {
-            queryParams.push(`view=${encodeURIComponent(String(view))}`);
+        if (options.view !== undefined) {
+            queryParams.push(`view=${encodeURIComponent(String(options.view))}`);
         }
         const requestPath = `/datasets/${encodeURIComponent(String(dataset))}/tables/${table}/items/${id}` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
@@ -1975,7 +2205,7 @@ export class SharepointonlineClient extends ConnectorClientBase {
      * Create an approval request for an item or file
      * @remarks Creates an approval request for an item or file.
      */
-    public async createApprovalRequest(input: CreateApprovalRequestInput, dataset: string, table: string, id: string, approvalType?: string, options: ConnectorOperationOptions = {}): Promise<ApprovalData> {
+    public async createApprovalRequest(input: CreateApprovalRequestInput, dataset: string, table: string, id: string, approvalType: string, options: ConnectorOperationOptions = {}): Promise<ApprovalData> {
         const queryParams: string[] = [];
         if (approvalType !== undefined) {
             queryParams.push(`approvalType=${encodeURIComponent(String(approvalType))}`);
@@ -1991,19 +2221,19 @@ export class SharepointonlineClient extends ConnectorClientBase {
      * Get changes for an item or a file (properties only)
      * @remarks Returns information about columns that have changed within a given time window. Note: The list must have Versioning turned on.
      */
-    public async getItemChanges(dataset: string, table: string, id: string, since?: string, until?: string, includeDrafts?: string, view?: string, options: ConnectorOperationOptions = {}): Promise<GetItemChangesResponse> {
+    public async getItemChanges(dataset: string, table: string, id: string, since: string, options: GetItemChangesOptions = {}): Promise<GetItemChangesResponse> {
         const queryParams: string[] = [];
         if (since !== undefined) {
             queryParams.push(`since=${encodeURIComponent(String(since))}`);
         }
-        if (until !== undefined) {
-            queryParams.push(`until=${encodeURIComponent(String(until))}`);
+        if (options.until !== undefined) {
+            queryParams.push(`until=${encodeURIComponent(String(options.until))}`);
         }
-        if (includeDrafts !== undefined) {
-            queryParams.push(`includeDrafts=${encodeURIComponent(String(includeDrafts))}`);
+        if (options.includeDrafts !== undefined) {
+            queryParams.push(`includeDrafts=${encodeURIComponent(String(options.includeDrafts))}`);
         }
-        if (view !== undefined) {
-            queryParams.push(`view=${encodeURIComponent(String(view))}`);
+        if (options.view !== undefined) {
+            queryParams.push(`view=${encodeURIComponent(String(options.view))}`);
         }
         const requestPath = `/datasets/${encodeURIComponent(String(dataset))}/tables/${table}/items/${id}/changes` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
@@ -2046,10 +2276,10 @@ export class SharepointonlineClient extends ConnectorClientBase {
      * Get file properties
      * @remarks Gets the properties saved in the columns in the library for the item specified by the item id.             You can add a "Get file content" step and use the "File identifier" property returned by this action to get to the contents of the file.             When using this with the On-Premises Data Gateway, the name of the library to connect to may need to be entered manually.
      */
-    public async getFileItem(dataset: string, table: string, id: string, view?: string, options: ConnectorOperationOptions = {}): Promise<Item> {
+    public async getFileItem(dataset: string, table: string, id: string, options: GetFileItemOptions = {}): Promise<Item> {
         const queryParams: string[] = [];
-        if (view !== undefined) {
-            queryParams.push(`view=${encodeURIComponent(String(view))}`);
+        if (options.view !== undefined) {
+            queryParams.push(`view=${encodeURIComponent(String(options.view))}`);
         }
         const requestPath = `/datasets/${encodeURIComponent(String(dataset))}/tables/${table}/items/${id}/getfileitem` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
@@ -2072,10 +2302,10 @@ export class SharepointonlineClient extends ConnectorClientBase {
      * Update file properties
      * @remarks Updates the properties stored in columns in a library for the item specified by the item id. Use "Update file" action to update file contents.             When using this with the On-Premises Data Gateway, the name of the library to connect to may need to be entered manually.
      */
-    public async patchFileItem(input: PatchFileItemInput, dataset: string, table: string, id: string, view?: string, options: ConnectorOperationOptions = {}): Promise<PatchFileItemResponse> {
+    public async patchFileItem(input: PatchFileItemInput, dataset: string, table: string, id: string, options: PatchFileItemOptions = {}): Promise<PatchFileItemResponse> {
         const queryParams: string[] = [];
-        if (view !== undefined) {
-            queryParams.push(`view=${encodeURIComponent(String(view))}`);
+        if (options.view !== undefined) {
+            queryParams.push(`view=${encodeURIComponent(String(options.view))}`);
         }
         const requestPath = `/datasets/${encodeURIComponent(String(dataset))}/tables/${table}/items/${id}/patchfileitem` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
@@ -2100,16 +2330,16 @@ export class SharepointonlineClient extends ConnectorClientBase {
      * Set content approval status
      * @remarks Sets the content approval status for an item in a list or library that has content approval turned on. You must provide an ETag for pages and files. You can get the ETag using the Get File Metadata action. This action is only available for SharePoint Online and SharePoint 2019.
      */
-    public async setApprovalStatus(dataset: string, table: string, id: string, approvalAction?: string, comments?: string, entityTag?: string, options: ConnectorOperationOptions = {}): Promise<SetApprovalStatusOutput> {
+    public async setApprovalStatus(dataset: string, table: string, id: string, approvalAction: string, options: SetApprovalStatusOptions = {}): Promise<SetApprovalStatusOutput> {
         const queryParams: string[] = [];
         if (approvalAction !== undefined) {
             queryParams.push(`approvalAction=${encodeURIComponent(String(approvalAction))}`);
         }
-        if (comments !== undefined) {
-            queryParams.push(`comments=${encodeURIComponent(String(comments))}`);
+        if (options.comments !== undefined) {
+            queryParams.push(`comments=${encodeURIComponent(String(options.comments))}`);
         }
-        if (entityTag !== undefined) {
-            queryParams.push(`entityTag=${encodeURIComponent(String(entityTag))}`);
+        if (options.entityTag !== undefined) {
+            queryParams.push(`entityTag=${encodeURIComponent(String(options.entityTag))}`);
         }
         const requestPath = `/datasets/${encodeURIComponent(String(dataset))}/tables/${table}/items/${id}/setapprovalstatus` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
@@ -2144,7 +2374,7 @@ export class SharepointonlineClient extends ConnectorClientBase {
      * Add attachment
      * @remarks Adds a new attachment to the specified list item.
      */
-    public async createAttachment(input: CreateAttachmentInput, dataset: string, table: string, itemId: string, displayName?: string, options: ConnectorOperationOptions = {}): Promise<SPListItemAttachment> {
+    public async createAttachment(input: CreateAttachmentInput, dataset: string, table: string, itemId: string, displayName: string, options: ConnectorOperationOptions = {}): Promise<SPListItemAttachment> {
         const queryParams: string[] = [];
         if (displayName !== undefined) {
             queryParams.push(`displayName=${encodeURIComponent(String(displayName))}`);
@@ -2182,16 +2412,16 @@ export class SharepointonlineClient extends ConnectorClientBase {
      * Generate document using Microsoft Syntex (preview)
      * @remarks Use this action to create documents based on modern templates from Microsoft Syntex. This preview requires a Syntex license. Pricing is subject to change. For more info see: https://docs.microsoft.com/en-us/microsoft-365/contentunderstanding/content-assembly.
      */
-    public async createContentAssemblyDocument(input: CreateContentAssemblyDocumentInput, dataset: string, table: string, template: string, folderPath?: string, fileName?: string, view?: string, options: ConnectorOperationOptions = {}): Promise<SPBlobMetadataResponse> {
+    public async createContentAssemblyDocument(input: CreateContentAssemblyDocumentInput, dataset: string, table: string, template: string, options: CreateContentAssemblyDocumentOptions = {}): Promise<SPBlobMetadataResponse> {
         const queryParams: string[] = [];
-        if (folderPath !== undefined) {
-            queryParams.push(`folderPath=${encodeURIComponent(String(folderPath))}`);
+        if (options.folderPath !== undefined) {
+            queryParams.push(`folderPath=${encodeURIComponent(String(options.folderPath))}`);
         }
-        if (fileName !== undefined) {
-            queryParams.push(`fileName=${encodeURIComponent(String(fileName))}`);
+        if (options.fileName !== undefined) {
+            queryParams.push(`fileName=${encodeURIComponent(String(options.fileName))}`);
         }
-        if (view !== undefined) {
-            queryParams.push(`view=${encodeURIComponent(String(view))}`);
+        if (options.view !== undefined) {
+            queryParams.push(`view=${encodeURIComponent(String(options.view))}`);
         }
         const requestPath = `/datasets/${encodeURIComponent(String(dataset))}/tables/${table}/templates/${template}/createnewdocument` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
@@ -2216,7 +2446,7 @@ export class SharepointonlineClient extends ConnectorClientBase {
      * Extract folder
      * @remarks Extracts an archive file into a SharePoint folder (example: .zip).
      */
-    public async extractFolder(dataset: string, source?: string, destination?: string, overwrite?: string, queryParametersSingleEncoded?: string, options: ConnectorOperationOptions = {}): Promise<Array<BlobMetadata>> {
+    public async extractFolder(dataset: string, source: string, destination: string, options: ExtractFolderOptions = {}): Promise<Array<BlobMetadata>> {
         const queryParams: string[] = [];
         if (source !== undefined) {
             queryParams.push(`source=${encodeURIComponent(String(source))}`);
@@ -2224,11 +2454,11 @@ export class SharepointonlineClient extends ConnectorClientBase {
         if (destination !== undefined) {
             queryParams.push(`destination=${encodeURIComponent(String(destination))}`);
         }
-        if (overwrite !== undefined) {
-            queryParams.push(`overwrite=${encodeURIComponent(String(overwrite))}`);
+        if (options.overwrite !== undefined) {
+            queryParams.push(`overwrite=${encodeURIComponent(String(options.overwrite))}`);
         }
-        if (queryParametersSingleEncoded !== undefined) {
-            queryParams.push(`queryParametersSingleEncoded=${encodeURIComponent(String(queryParametersSingleEncoded))}`);
+        if (options.queryParametersSingleEncoded !== undefined) {
+            queryParams.push(`queryParametersSingleEncoded=${encodeURIComponent(String(options.queryParametersSingleEncoded))}`);
         }
         const requestPath = `/datasets/${encodeURIComponent(String(dataset))}/extractFolderV2` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);

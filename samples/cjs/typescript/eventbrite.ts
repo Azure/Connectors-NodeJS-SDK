@@ -8,7 +8,18 @@ const ORGANIZATION_ID = process.env.EVENTBRITE_ORGANIZATION_ID ?? "";
 if (!CONNECTION_URL || !ORGANIZATION_ID) throw new Error("EVENTBRITE_CONNECTION_URL and EVENTBRITE_ORGANIZATION_ID are required.");
 async function main(): Promise<void> {
     try {
-        const event = await new EventbriteClient(CONNECTION_URL, new ManagedIdentityTokenProvider()).createEvent(ORGANIZATION_ID);
+        const startTime = new Date(Date.now() + 60 * 60 * 1000);
+        const endTime = new Date(startTime.getTime() + 60 * 60 * 1000);
+        const event = await new EventbriteClient(CONNECTION_URL, new ManagedIdentityTokenProvider()).createEvent(
+            ORGANIZATION_ID,
+            "Connector SDK sample event",
+            "Created by the Azure Connectors Node.js SDK sample.",
+            startTime.toISOString(),
+            endTime.toISOString(),
+            "UTC",
+            "UTC",
+            "USD",
+        );
         console.log("Event:", JSON.stringify(event, null, 2));
     } catch (error) {
         if (error instanceof ConnectorError) console.error(`Connector error (${error.statusCode}): ${error.message}`);

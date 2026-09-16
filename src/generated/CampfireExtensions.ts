@@ -202,7 +202,7 @@ export class CampfireClient extends ConnectorClientBase {
      * Create a message
      * @remarks Sends a message to the given room.
      */
-    public async createMessage(roomId: string, account?: string, message?: string, options: ConnectorOperationOptions = {}): Promise<CreateMessageResponse> {
+    public async createMessage(roomId: string, account: string, message: string, options: ConnectorOperationOptions = {}): Promise<CreateMessageResponse> {
         const queryParams: string[] = [];
         if (account !== undefined) {
             queryParams.push(`account=${encodeURIComponent(String(account))}`);
@@ -221,7 +221,7 @@ export class CampfireClient extends ConnectorClientBase {
      * Get user by ID
      * @remarks Retrieves information about a user by given ID
      */
-    public async getUser(userId: string, account?: string, options: ConnectorOperationOptions = {}): Promise<UserResponse> {
+    public async getUser(userId: string, account: string, options: ConnectorOperationOptions = {}): Promise<UserResponse> {
         const queryParams: string[] = [];
         if (account !== undefined) {
             queryParams.push(`account=${encodeURIComponent(String(account))}`);

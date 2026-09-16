@@ -52,7 +52,13 @@ async function main() {
 
     // Example 1: Download a document attachment.
     try {
-        const attachment = await client.downloadAttachmentAttachment(PACKAGE_ID, DOCUMENT_ID, ATTACHMENT_ID);
+        const attachment = await client.downloadAttachmentAttachment(
+            PACKAGE_ID,
+            DOCUMENT_ID,
+            ATTACHMENT_ID,
+            "application/json",
+            "application/octet-stream",
+        );
         console.log("Attachment:", JSON.stringify(attachment, null, 2));
     } catch (error) {
         if (error instanceof ConnectorError) {

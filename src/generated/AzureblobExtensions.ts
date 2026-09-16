@@ -240,6 +240,138 @@ export interface BlobDataSetsMetadata {
 }
 
 /**
+ * Options for the copyFile operation.
+ */
+export interface CopyFileOptions extends ConnectorOperationOptions {
+    /** Should the destination blob be overwritten (true/false)?. */
+    overwrite?: string;
+    /** The 'queryParametersSingleEncoded' service parameter. */
+    queryParametersSingleEncoded?: string;
+    /** Get all file metadata from the server after file creation is complete. If this is false, some metadata properties may not be returned such as last modified time, etc. */
+    readFileMetadataFromServer?: string;
+}
+
+/**
+ * Options for the createBlockBlob operation.
+ */
+export interface CreateBlockBlobOptions extends ConnectorOperationOptions {
+    /** Specify content-type of the blob to upload. */
+    contentType?: string;
+}
+
+/**
+ * Options for the createFile operation.
+ */
+export interface CreateFileOptions extends ConnectorOperationOptions {
+    /** The 'queryParametersSingleEncoded' service parameter. */
+    queryParametersSingleEncoded?: string;
+    /** Specify content-type of the blob to upload. */
+    contentType?: string;
+    /** Get all file metadata from the server after file creation is complete. If this is false, some metadata properties may not be returned such as last modified time, etc. */
+    readFileMetadataFromServer?: string;
+}
+
+/**
+ * Options for the deleteFile operation.
+ */
+export interface DeleteFileOptions extends ConnectorOperationOptions {
+    /** Skips the deletion if a file is not found on the server. */
+    skipDeleteIfFileNotFoundOnServer?: string;
+}
+
+/**
+ * Options for the extractFolder operation.
+ */
+export interface ExtractFolderOptions extends ConnectorOperationOptions {
+    /** Should destination blob be overwritten (true/false)?. */
+    overwrite?: string;
+    /** The 'queryParametersSingleEncoded' service parameter. */
+    queryParametersSingleEncoded?: string;
+}
+
+/**
+ * Options for the getFileContent operation.
+ */
+export interface GetFileContentOptions extends ConnectorOperationOptions {
+    /** Infer content-type based on extension. */
+    inferContentType?: string;
+    /** Specify whether to extract MIP labels. */
+    extractSensitivityLabel?: string;
+    /** Default collection will be queried unless specified. */
+    purviewAccountName?: string;
+}
+
+/**
+ * Options for the getFileContentByPath operation.
+ */
+export interface GetFileContentByPathOptions extends ConnectorOperationOptions {
+    /** Infer content-type based on extension. */
+    inferContentType?: string;
+    /** The 'queryParametersSingleEncoded' service parameter. */
+    queryParametersSingleEncoded?: string;
+    /** Specify whether to extract MIP labels. */
+    extractSensitivityLabel?: string;
+    /** Default collection will be queried unless specified. */
+    purviewAccountName?: string;
+}
+
+/**
+ * Options for the getFileMetadata operation.
+ */
+export interface GetFileMetadataOptions extends ConnectorOperationOptions {
+    /** Specify whether to extract MIP labels. */
+    extractSensitivityLabel?: string;
+    /** Default collection will be queried unless specified. */
+    purviewAccountName?: string;
+}
+
+/**
+ * Options for the getFileMetadataByPath operation.
+ */
+export interface GetFileMetadataByPathOptions extends ConnectorOperationOptions {
+    /** The 'queryParametersSingleEncoded' service parameter. */
+    queryParametersSingleEncoded?: string;
+    /** Specify whether to extract MIP labels. */
+    extractSensitivityLabel?: string;
+    /** Default collection will be queried unless specified. */
+    purviewAccountName?: string;
+}
+
+/**
+ * Options for the listFolder operation.
+ */
+export interface ListFolderOptions extends ConnectorOperationOptions {
+    /** A marker that identifies the portion of the list to be returned with the list operation". */
+    nextPageMarker?: string;
+    /** Whether or not to list blobs in flat listing". */
+    useFlatListing?: string;
+    /** Specify whether to extract MIP labels. */
+    extractSensitivityLabel?: string;
+    /** Default collection will be queried unless specified. */
+    purviewAccountName?: string;
+}
+
+/**
+ * Options for the listRootFolder operation.
+ */
+export interface ListRootFolderOptions extends ConnectorOperationOptions {
+    /** A marker that identifies the portion of the list to be returned with the list operation. */
+    nextPageMarker?: string;
+    /** Whether or not to list blobs in flat listing. */
+    useFlatListing?: string;
+}
+
+/**
+ * Options for the updateFile operation.
+ */
+export interface UpdateFileOptions extends ConnectorOperationOptions {
+    /** Specify content-type of the blob to upload. */
+    contentType?: string;
+    /** Get all file metadata from the server after file is updated. If this is false, some metadata properties may not be returned such as last modified time, etc. */
+    readFileMetadataFromServer?: string;
+}
+
+/**
  * Typed callback payload for trigger operation 'OnUpdatedFiles_V2'.
  */
 export type AzureblobOnUpdatedFilesTriggerPayload = TriggerCallbackPayload<BlobMetadata>;
@@ -313,7 +445,7 @@ export class AzureblobClient extends ConnectorClientBase {
      * Copy blob
      * @remarks This operation copies a blob. If blob is being deleted/renamed on server right after it was copied, connector may return HTTP 404 error by it's design. Please use a delay for 1 minute before deleting or renaming newly created blob. Chunk transfer is not supported in this action. If source and destination are present in same storage account, please use relative path. Otherwise, maximum size of a source for copy blob operation is 50 MB.
      */
-    public async copyFile(dataset: string, source?: string, destination?: string, overwrite?: string, queryParametersSingleEncoded?: string, options: ConnectorOperationOptions = {}): Promise<BlobMetadata> {
+    public async copyFile(dataset: string, source: string, destination: string, options: CopyFileOptions = {}): Promise<BlobMetadata> {
         const queryParams: string[] = [];
         if (source !== undefined) {
             queryParams.push(`source=${encodeURIComponent(String(source))}`);
@@ -321,15 +453,19 @@ export class AzureblobClient extends ConnectorClientBase {
         if (destination !== undefined) {
             queryParams.push(`destination=${encodeURIComponent(String(destination))}`);
         }
-        if (overwrite !== undefined) {
-            queryParams.push(`overwrite=${encodeURIComponent(String(overwrite))}`);
+        if (options.overwrite !== undefined) {
+            queryParams.push(`overwrite=${encodeURIComponent(String(options.overwrite))}`);
         }
-        if (queryParametersSingleEncoded !== undefined) {
-            queryParams.push(`queryParametersSingleEncoded=${encodeURIComponent(String(queryParametersSingleEncoded))}`);
+        if (options.queryParametersSingleEncoded !== undefined) {
+            queryParams.push(`queryParametersSingleEncoded=${encodeURIComponent(String(options.queryParametersSingleEncoded))}`);
         }
         const requestPath = `/v2/datasets/${encodeURIComponent(String(dataset))}/copyFile` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
+        const requestHeaders: Record<string, string> = {};
+        if (options.readFileMetadataFromServer !== undefined) {
+            requestHeaders["ReadFileMetadataFromServer"] = String(options.readFileMetadataFromServer);
+        }
         const requestUrl = this.resolveUrl(requestPath);
-        const httpResponse = await this.sendWithTracingAsync<BlobMetadata>("Azureblob.copyFile", "CopyFile_V2", "POST", requestUrl, undefined, options);
+        const httpResponse = await this.sendWithTracingAsync<BlobMetadata>("Azureblob.copyFile", "CopyFile_V2", "POST", requestUrl, undefined, options, requestHeaders);
 
         return httpResponse.value as BlobMetadata;
     }
@@ -338,7 +474,7 @@ export class AzureblobClient extends ConnectorClientBase {
      * Create block blob
      * @remarks This operation uploads a block blob to Azure Blob Storage.
      */
-    public async createBlockBlob(input: CreateBlockBlobInput, storageAccountName: string, folderPath?: string, name?: string, options: ConnectorOperationOptions = {}): Promise<void> {
+    public async createBlockBlob(input: CreateBlockBlobInput, storageAccountName: string, folderPath: string, name: string, options: CreateBlockBlobOptions = {}): Promise<void> {
         const queryParams: string[] = [];
         if (folderPath !== undefined) {
             queryParams.push(`folderPath=${encodeURIComponent(String(folderPath))}`);
@@ -347,15 +483,19 @@ export class AzureblobClient extends ConnectorClientBase {
             queryParams.push(`name=${encodeURIComponent(String(name))}`);
         }
         const requestPath = `/v2/codeless/datasets/${storageAccountName}/CreateBlockBlob` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
+        const requestHeaders: Record<string, string> = {};
+        if (options.contentType !== undefined) {
+            requestHeaders["Content-Type"] = String(options.contentType);
+        }
         const requestUrl = this.resolveUrl(requestPath);
-        await this.sendWithTracingAsync<void>("Azureblob.createBlockBlob", "CreateBlockBlob_V2", "POST", requestUrl, input, options);
+        await this.sendWithTracingAsync<void>("Azureblob.createBlockBlob", "CreateBlockBlob_V2", "POST", requestUrl, input, options, requestHeaders);
     }
 
     /**
      * Create blob
      * @remarks This operation uploads a blob to Azure Blob Storage.
      */
-    public async createFile(input: CreateFileInput, dataset: string, folderPath?: string, name?: string, queryParametersSingleEncoded?: string, options: ConnectorOperationOptions = {}): Promise<BlobMetadata> {
+    public async createFile(input: CreateFileInput, dataset: string, folderPath: string, name: string, options: CreateFileOptions = {}): Promise<BlobMetadata> {
         const queryParams: string[] = [];
         if (folderPath !== undefined) {
             queryParams.push(`folderPath=${encodeURIComponent(String(folderPath))}`);
@@ -363,12 +503,19 @@ export class AzureblobClient extends ConnectorClientBase {
         if (name !== undefined) {
             queryParams.push(`name=${encodeURIComponent(String(name))}`);
         }
-        if (queryParametersSingleEncoded !== undefined) {
-            queryParams.push(`queryParametersSingleEncoded=${encodeURIComponent(String(queryParametersSingleEncoded))}`);
+        if (options.queryParametersSingleEncoded !== undefined) {
+            queryParams.push(`queryParametersSingleEncoded=${encodeURIComponent(String(options.queryParametersSingleEncoded))}`);
         }
         const requestPath = `/v2/datasets/${encodeURIComponent(String(dataset))}/files` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
+        const requestHeaders: Record<string, string> = {};
+        if (options.contentType !== undefined) {
+            requestHeaders["Content-Type"] = String(options.contentType);
+        }
+        if (options.readFileMetadataFromServer !== undefined) {
+            requestHeaders["ReadFileMetadataFromServer"] = String(options.readFileMetadataFromServer);
+        }
         const requestUrl = this.resolveUrl(requestPath);
-        const httpResponse = await this.sendWithTracingAsync<BlobMetadata>("Azureblob.createFile", "CreateFile_V2", "POST", requestUrl, input, options);
+        const httpResponse = await this.sendWithTracingAsync<BlobMetadata>("Azureblob.createFile", "CreateFile_V2", "POST", requestUrl, input, options, requestHeaders);
 
         return httpResponse.value as BlobMetadata;
     }
@@ -377,7 +524,7 @@ export class AzureblobClient extends ConnectorClientBase {
      * Create SAS URI by path
      * @remarks This operation creates a SAS link for a blob using the path.
      */
-    public async createShareLinkByPath(input: SharedAccessSignatureBlobPolicy, storageAccountName: string, path?: string, options: ConnectorOperationOptions = {}): Promise<SharedAccessSignature> {
+    public async createShareLinkByPath(input: SharedAccessSignatureBlobPolicy, storageAccountName: string, path: string, options: ConnectorOperationOptions = {}): Promise<SharedAccessSignature> {
         const queryParams: string[] = [];
         if (path !== undefined) {
             queryParams.push(`path=${encodeURIComponent(String(path))}`);
@@ -393,17 +540,21 @@ export class AzureblobClient extends ConnectorClientBase {
      * Delete blob
      * @remarks This operation deletes a blob.
      */
-    public async deleteFile(dataset: string, id: string, options: ConnectorOperationOptions = {}): Promise<void> {
+    public async deleteFile(dataset: string, id: string, options: DeleteFileOptions = {}): Promise<void> {
         const requestPath = `/v2/datasets/${encodeURIComponent(String(dataset))}/files/${id}`;
+        const requestHeaders: Record<string, string> = {};
+        if (options.skipDeleteIfFileNotFoundOnServer !== undefined) {
+            requestHeaders["SkipDeleteIfFileNotFoundOnServer"] = String(options.skipDeleteIfFileNotFoundOnServer);
+        }
         const requestUrl = this.resolveUrl(requestPath);
-        await this.sendWithTracingAsync<void>("Azureblob.deleteFile", "DeleteFile_V2", "DELETE", requestUrl, undefined, options);
+        await this.sendWithTracingAsync<void>("Azureblob.deleteFile", "DeleteFile_V2", "DELETE", requestUrl, undefined, options, requestHeaders);
     }
 
     /**
      * Extract archive to folder
      * @remarks This operation extracts an archive blob into a folder (example: .zip).
      */
-    public async extractFolder(dataset: string, source?: string, destination?: string, overwrite?: string, queryParametersSingleEncoded?: string, options: ConnectorOperationOptions = {}): Promise<Array<BlobMetadata>> {
+    public async extractFolder(dataset: string, source: string, destination: string, options: ExtractFolderOptions = {}): Promise<Array<BlobMetadata>> {
         const queryParams: string[] = [];
         if (source !== undefined) {
             queryParams.push(`source=${encodeURIComponent(String(source))}`);
@@ -411,11 +562,11 @@ export class AzureblobClient extends ConnectorClientBase {
         if (destination !== undefined) {
             queryParams.push(`destination=${encodeURIComponent(String(destination))}`);
         }
-        if (overwrite !== undefined) {
-            queryParams.push(`overwrite=${encodeURIComponent(String(overwrite))}`);
+        if (options.overwrite !== undefined) {
+            queryParams.push(`overwrite=${encodeURIComponent(String(options.overwrite))}`);
         }
-        if (queryParametersSingleEncoded !== undefined) {
-            queryParams.push(`queryParametersSingleEncoded=${encodeURIComponent(String(queryParametersSingleEncoded))}`);
+        if (options.queryParametersSingleEncoded !== undefined) {
+            queryParams.push(`queryParametersSingleEncoded=${encodeURIComponent(String(options.queryParametersSingleEncoded))}`);
         }
         const requestPath = `/v2/datasets/${encodeURIComponent(String(dataset))}/extractFolderV2` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
@@ -428,7 +579,7 @@ export class AzureblobClient extends ConnectorClientBase {
      * Get available access policies
      * @remarks This operation gets available shared access policies for a blob.
      */
-    public async getAccessPolicies(storageAccountName: string, path?: string, options: ConnectorOperationOptions = {}): Promise<Array<SharedAccessSignatureBlobPolicy>> {
+    public async getAccessPolicies(storageAccountName: string, path: string, options: ConnectorOperationOptions = {}): Promise<Array<SharedAccessSignatureBlobPolicy>> {
         const queryParams: string[] = [];
         if (path !== undefined) {
             queryParams.push(`path=${encodeURIComponent(String(path))}`);
@@ -444,16 +595,16 @@ export class AzureblobClient extends ConnectorClientBase {
      * Get blob content
      * @remarks This operation retrieves blob contents using id.
      */
-    public async getFileContent(dataset: string, id: string, inferContentType?: string, extractSensitivityLabel?: string, purviewAccountName?: string, options: ConnectorOperationOptions = {}): Promise<Blob> {
+    public async getFileContent(dataset: string, id: string, options: GetFileContentOptions = {}): Promise<Blob> {
         const queryParams: string[] = [];
-        if (inferContentType !== undefined) {
-            queryParams.push(`inferContentType=${encodeURIComponent(String(inferContentType))}`);
+        if (options.inferContentType !== undefined) {
+            queryParams.push(`inferContentType=${encodeURIComponent(String(options.inferContentType))}`);
         }
-        if (extractSensitivityLabel !== undefined) {
-            queryParams.push(`extractSensitivityLabel=${encodeURIComponent(String(extractSensitivityLabel))}`);
+        if (options.extractSensitivityLabel !== undefined) {
+            queryParams.push(`extractSensitivityLabel=${encodeURIComponent(String(options.extractSensitivityLabel))}`);
         }
-        if (purviewAccountName !== undefined) {
-            queryParams.push(`purviewAccountName=${encodeURIComponent(String(purviewAccountName))}`);
+        if (options.purviewAccountName !== undefined) {
+            queryParams.push(`purviewAccountName=${encodeURIComponent(String(options.purviewAccountName))}`);
         }
         const requestPath = `/v2/datasets/${encodeURIComponent(String(dataset))}/files/${id}/content` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
@@ -466,22 +617,22 @@ export class AzureblobClient extends ConnectorClientBase {
      * Get blob content using path
      * @remarks This operation retrieves blob contents using path.
      */
-    public async getFileContentByPath(dataset: string, path?: string, inferContentType?: string, queryParametersSingleEncoded?: string, extractSensitivityLabel?: string, purviewAccountName?: string, options: ConnectorOperationOptions = {}): Promise<Blob> {
+    public async getFileContentByPath(dataset: string, path: string, options: GetFileContentByPathOptions = {}): Promise<Blob> {
         const queryParams: string[] = [];
         if (path !== undefined) {
             queryParams.push(`path=${encodeURIComponent(String(path))}`);
         }
-        if (inferContentType !== undefined) {
-            queryParams.push(`inferContentType=${encodeURIComponent(String(inferContentType))}`);
+        if (options.inferContentType !== undefined) {
+            queryParams.push(`inferContentType=${encodeURIComponent(String(options.inferContentType))}`);
         }
-        if (queryParametersSingleEncoded !== undefined) {
-            queryParams.push(`queryParametersSingleEncoded=${encodeURIComponent(String(queryParametersSingleEncoded))}`);
+        if (options.queryParametersSingleEncoded !== undefined) {
+            queryParams.push(`queryParametersSingleEncoded=${encodeURIComponent(String(options.queryParametersSingleEncoded))}`);
         }
-        if (extractSensitivityLabel !== undefined) {
-            queryParams.push(`extractSensitivityLabel=${encodeURIComponent(String(extractSensitivityLabel))}`);
+        if (options.extractSensitivityLabel !== undefined) {
+            queryParams.push(`extractSensitivityLabel=${encodeURIComponent(String(options.extractSensitivityLabel))}`);
         }
-        if (purviewAccountName !== undefined) {
-            queryParams.push(`purviewAccountName=${encodeURIComponent(String(purviewAccountName))}`);
+        if (options.purviewAccountName !== undefined) {
+            queryParams.push(`purviewAccountName=${encodeURIComponent(String(options.purviewAccountName))}`);
         }
         const requestPath = `/v2/datasets/${encodeURIComponent(String(dataset))}/GetFileContentByPath` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
@@ -494,13 +645,13 @@ export class AzureblobClient extends ConnectorClientBase {
      * Get Blob Metadata
      * @remarks This operation retrieves blob metadata using blob id.
      */
-    public async getFileMetadata(dataset: string, id: string, extractSensitivityLabel?: string, purviewAccountName?: string, options: ConnectorOperationOptions = {}): Promise<DataWithSensitivityLabelInfo> {
+    public async getFileMetadata(dataset: string, id: string, options: GetFileMetadataOptions = {}): Promise<DataWithSensitivityLabelInfo> {
         const queryParams: string[] = [];
-        if (extractSensitivityLabel !== undefined) {
-            queryParams.push(`extractSensitivityLabel=${encodeURIComponent(String(extractSensitivityLabel))}`);
+        if (options.extractSensitivityLabel !== undefined) {
+            queryParams.push(`extractSensitivityLabel=${encodeURIComponent(String(options.extractSensitivityLabel))}`);
         }
-        if (purviewAccountName !== undefined) {
-            queryParams.push(`purviewAccountName=${encodeURIComponent(String(purviewAccountName))}`);
+        if (options.purviewAccountName !== undefined) {
+            queryParams.push(`purviewAccountName=${encodeURIComponent(String(options.purviewAccountName))}`);
         }
         const requestPath = `/v2/datasets/${encodeURIComponent(String(dataset))}/files/${id}` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
@@ -513,19 +664,19 @@ export class AzureblobClient extends ConnectorClientBase {
      * Get Blob Metadata using path
      * @remarks This operation retrieves blob metadata using path.
      */
-    public async getFileMetadataByPath(dataset: string, path?: string, queryParametersSingleEncoded?: string, extractSensitivityLabel?: string, purviewAccountName?: string, options: ConnectorOperationOptions = {}): Promise<DataWithSensitivityLabelInfo> {
+    public async getFileMetadataByPath(dataset: string, path: string, options: GetFileMetadataByPathOptions = {}): Promise<DataWithSensitivityLabelInfo> {
         const queryParams: string[] = [];
         if (path !== undefined) {
             queryParams.push(`path=${encodeURIComponent(String(path))}`);
         }
-        if (queryParametersSingleEncoded !== undefined) {
-            queryParams.push(`queryParametersSingleEncoded=${encodeURIComponent(String(queryParametersSingleEncoded))}`);
+        if (options.queryParametersSingleEncoded !== undefined) {
+            queryParams.push(`queryParametersSingleEncoded=${encodeURIComponent(String(options.queryParametersSingleEncoded))}`);
         }
-        if (extractSensitivityLabel !== undefined) {
-            queryParams.push(`extractSensitivityLabel=${encodeURIComponent(String(extractSensitivityLabel))}`);
+        if (options.extractSensitivityLabel !== undefined) {
+            queryParams.push(`extractSensitivityLabel=${encodeURIComponent(String(options.extractSensitivityLabel))}`);
         }
-        if (purviewAccountName !== undefined) {
-            queryParams.push(`purviewAccountName=${encodeURIComponent(String(purviewAccountName))}`);
+        if (options.purviewAccountName !== undefined) {
+            queryParams.push(`purviewAccountName=${encodeURIComponent(String(options.purviewAccountName))}`);
         }
         const requestPath = `/v2/datasets/${encodeURIComponent(String(dataset))}/GetFileByPath` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
@@ -538,19 +689,19 @@ export class AzureblobClient extends ConnectorClientBase {
      * Lists blobs
      * @remarks This operation lists blobs in a container.
      */
-    public listFolder(dataset: string, id: string, nextPageMarker?: string, useFlatListing?: string, extractSensitivityLabel?: string, purviewAccountName?: string, options: ConnectorOperationOptions = {}): ConnectorPagedAsyncIterableIterator<DataWithSensitivityLabelInfo> {
+    public listFolder(dataset: string, id: string, options: ListFolderOptions = {}): ConnectorPagedAsyncIterableIterator<DataWithSensitivityLabelInfo> {
         const queryParams: string[] = [];
-        if (nextPageMarker !== undefined) {
-            queryParams.push(`nextPageMarker=${encodeURIComponent(String(nextPageMarker))}`);
+        if (options.nextPageMarker !== undefined) {
+            queryParams.push(`nextPageMarker=${encodeURIComponent(String(options.nextPageMarker))}`);
         }
-        if (useFlatListing !== undefined) {
-            queryParams.push(`useFlatListing=${encodeURIComponent(String(useFlatListing))}`);
+        if (options.useFlatListing !== undefined) {
+            queryParams.push(`useFlatListing=${encodeURIComponent(String(options.useFlatListing))}`);
         }
-        if (extractSensitivityLabel !== undefined) {
-            queryParams.push(`extractSensitivityLabel=${encodeURIComponent(String(extractSensitivityLabel))}`);
+        if (options.extractSensitivityLabel !== undefined) {
+            queryParams.push(`extractSensitivityLabel=${encodeURIComponent(String(options.extractSensitivityLabel))}`);
         }
-        if (purviewAccountName !== undefined) {
-            queryParams.push(`purviewAccountName=${encodeURIComponent(String(purviewAccountName))}`);
+        if (options.purviewAccountName !== undefined) {
+            queryParams.push(`purviewAccountName=${encodeURIComponent(String(options.purviewAccountName))}`);
         }
         const requestPath = `/v2/datasets/${encodeURIComponent(String(dataset))}/foldersV2/${id}` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         return this.createPageable<ListOfBlobsWithSensitivityLabels, DataWithSensitivityLabelInfo>(
@@ -570,13 +721,13 @@ export class AzureblobClient extends ConnectorClientBase {
      * Lists blobs in the root folder
      * @remarks This operation lists blobs in the Azure Blob Storage root folder.
      */
-    public listRootFolder(dataset: string, nextPageMarker?: string, useFlatListing?: string, options: ConnectorOperationOptions = {}): ConnectorPagedAsyncIterableIterator<BlobMetadata> {
+    public listRootFolder(dataset: string, options: ListRootFolderOptions = {}): ConnectorPagedAsyncIterableIterator<BlobMetadata> {
         const queryParams: string[] = [];
-        if (nextPageMarker !== undefined) {
-            queryParams.push(`nextPageMarker=${encodeURIComponent(String(nextPageMarker))}`);
+        if (options.nextPageMarker !== undefined) {
+            queryParams.push(`nextPageMarker=${encodeURIComponent(String(options.nextPageMarker))}`);
         }
-        if (useFlatListing !== undefined) {
-            queryParams.push(`useFlatListing=${encodeURIComponent(String(useFlatListing))}`);
+        if (options.useFlatListing !== undefined) {
+            queryParams.push(`useFlatListing=${encodeURIComponent(String(options.useFlatListing))}`);
         }
         const requestPath = `/v2/datasets/${encodeURIComponent(String(dataset))}/foldersV2` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         return this.createPageable<BlobMetadataPage, BlobMetadata>(
@@ -596,7 +747,7 @@ export class AzureblobClient extends ConnectorClientBase {
      * Set blob tier by path
      * @remarks This operation sets a tier for a block blob on a standard storage account using the path.
      */
-    public async setBlobTierByPath(storageAccountName: string, path?: string, newTier?: string, options: ConnectorOperationOptions = {}): Promise<void> {
+    public async setBlobTierByPath(storageAccountName: string, path: string, newTier: string, options: ConnectorOperationOptions = {}): Promise<void> {
         const queryParams: string[] = [];
         if (path !== undefined) {
             queryParams.push(`path=${encodeURIComponent(String(path))}`);
@@ -613,10 +764,17 @@ export class AzureblobClient extends ConnectorClientBase {
      * Update blob
      * @remarks This operation updates a blob in Azure Blob Storage.
      */
-    public async updateFile(input: UpdateFileInput, dataset: string, id: string, options: ConnectorOperationOptions = {}): Promise<BlobMetadata> {
+    public async updateFile(input: UpdateFileInput, dataset: string, id: string, options: UpdateFileOptions = {}): Promise<BlobMetadata> {
         const requestPath = `/v2/datasets/${encodeURIComponent(String(dataset))}/files/${id}`;
+        const requestHeaders: Record<string, string> = {};
+        if (options.contentType !== undefined) {
+            requestHeaders["Content-Type"] = String(options.contentType);
+        }
+        if (options.readFileMetadataFromServer !== undefined) {
+            requestHeaders["ReadFileMetadataFromServer"] = String(options.readFileMetadataFromServer);
+        }
         const requestUrl = this.resolveUrl(requestPath);
-        const httpResponse = await this.sendWithTracingAsync<BlobMetadata>("Azureblob.updateFile", "UpdateFile_V2", "PUT", requestUrl, input, options);
+        const httpResponse = await this.sendWithTracingAsync<BlobMetadata>("Azureblob.updateFile", "UpdateFile_V2", "PUT", requestUrl, input, options, requestHeaders);
 
         return httpResponse.value as BlobMetadata;
     }

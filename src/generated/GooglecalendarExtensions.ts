@@ -168,6 +168,26 @@ export interface ResponseEventWithActionType {
 export interface ObjectEntity {
     [key: string]: unknown;
 }
+
+/**
+ * Options for the listCalendars operation.
+ */
+export interface ListCalendarsOptions extends ConnectorOperationOptions {
+    /** The minimum access role users must have to view calendars. */
+    minAccessRole?: string;
+}
+
+/**
+ * Options for the listEvents operation.
+ */
+export interface ListEventsOptions extends ConnectorOperationOptions {
+    /** Time format: yyyy-MM-ddTHH:mm:ss.fffZ (2016-07-20T08:00:00.000Z). */
+    timeMin?: string;
+    /** Time format: yyyy-MM-ddTHH:mm:ss.fffZ (2016-07-20T09:00:59.000Z). */
+    timeMax?: string;
+    /** Text search terms to find events that match these terms in any fields */
+    q?: string;
+}
 // #endregion Types
 
 export const GooglecalendarTriggerOperations = {
@@ -265,10 +285,10 @@ export class GooglecalendarClient extends ConnectorClientBase {
      * List calendars
      * @remarks This operation is used to list all calendars in your Google account.
      */
-    public listCalendars(minAccessRole?: string, options: ConnectorOperationOptions = {}): ConnectorPagedAsyncIterableIterator<CalendarListEntry> {
+    public listCalendars(options: ListCalendarsOptions = {}): ConnectorPagedAsyncIterableIterator<CalendarListEntry> {
         const queryParams: string[] = [];
-        if (minAccessRole !== undefined) {
-            queryParams.push(`minAccessRole=${encodeURIComponent(String(minAccessRole))}`);
+        if (options.minAccessRole !== undefined) {
+            queryParams.push(`minAccessRole=${encodeURIComponent(String(options.minAccessRole))}`);
         }
         const requestPath = `/users/me/calendarList` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         return this.createPageable<CalendarList, CalendarListEntry>(
@@ -287,16 +307,16 @@ export class GooglecalendarClient extends ConnectorClientBase {
      * List the events on a calendar
      * @remarks This operation is used to return the first page of arbitrarily ordered events on the selected calendar.
      */
-    public listEvents(calendarId: string, timeMin?: string, timeMax?: string, q?: string, options: ConnectorOperationOptions = {}): ConnectorPagedAsyncIterableIterator<ResponseEvent> {
+    public listEvents(calendarId: string, options: ListEventsOptions = {}): ConnectorPagedAsyncIterableIterator<ResponseEvent> {
         const queryParams: string[] = [];
-        if (timeMin !== undefined) {
-            queryParams.push(`timeMin=${encodeURIComponent(String(timeMin))}`);
+        if (options.timeMin !== undefined) {
+            queryParams.push(`timeMin=${encodeURIComponent(String(options.timeMin))}`);
         }
-        if (timeMax !== undefined) {
-            queryParams.push(`timeMax=${encodeURIComponent(String(timeMax))}`);
+        if (options.timeMax !== undefined) {
+            queryParams.push(`timeMax=${encodeURIComponent(String(options.timeMax))}`);
         }
-        if (q !== undefined) {
-            queryParams.push(`q=${encodeURIComponent(String(q))}`);
+        if (options.q !== undefined) {
+            queryParams.push(`q=${encodeURIComponent(String(options.q))}`);
         }
         const requestPath = `/calendars/${calendarId}/events` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         return this.createPageable<CalendarEventList, ResponseEvent>(

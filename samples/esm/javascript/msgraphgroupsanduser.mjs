@@ -65,7 +65,7 @@ async function main() {
     console.log(`\n--- Search Groups ("${searchTerm}") ---`);
     try {
         let groupCount = 0;
-        for await (const group of client.listGroupsByDisplayNameSearch(searchTerm)) {
+        for await (const group of client.listGroupsByDisplayNameSearch("true", "eventual", { search: searchTerm })) {
             if (groupCount < 5) {
                 console.log(`  - ${String(group.displayName ?? "Unknown")} (${String(group.id ?? "no ID")})`);
             }

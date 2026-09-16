@@ -108,7 +108,7 @@ export class MicrosoftformsClient extends ConnectorClientBase {
      * Get response details
      * @remarks This action retrieves a form response
      */
-    public async getFormResponseById(formId: string, responseId?: string, options: ConnectorOperationOptions = {}): Promise<GetFormResponseByIdResult> {
+    public async getFormResponseById(formId: string, responseId: string, options: ConnectorOperationOptions = {}): Promise<GetFormResponseByIdResult> {
         const queryParams: string[] = [];
         if (responseId !== undefined) {
             queryParams.push(`response_id=${encodeURIComponent(String(responseId))}`);
@@ -124,7 +124,7 @@ export class MicrosoftformsClient extends ConnectorClientBase {
      * Get form details
      * @remarks This action retrieves the details of a form
      */
-    public async getFormDetailsById(formId: string, select?: string, options: ConnectorOperationOptions = {}): Promise<GetFormDetailsByIdResult> {
+    public async getFormDetailsById(formId: string, select: string, options: ConnectorOperationOptions = {}): Promise<GetFormDetailsByIdResult> {
         const queryParams: string[] = [];
         if (select !== undefined) {
             queryParams.push(`$select=${encodeURIComponent(String(select))}`);

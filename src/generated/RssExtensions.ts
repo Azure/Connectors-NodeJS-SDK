@@ -42,6 +42,16 @@ export interface FeedItem {
 }
 
 /**
+ * Options for the listFeedItems operation.
+ */
+export interface ListFeedItemsOptions extends ConnectorOperationOptions {
+    /** The date since when RSS feed should be retrieved (Example: 2018-12-29 10:24:05Z). */
+    since?: string;
+    /** Chosen property will be used for trigger state. */
+    sinceProperty?: string;
+}
+
+/**
  * Typed callback payload for trigger operation 'OnNewFeed'.
  */
 export type RssOnNewFeedTriggerPayload = TriggerCallbackPayload<FeedItem>;
@@ -100,16 +110,16 @@ export class RssClient extends ConnectorClientBase {
      * List all RSS feed items
      * @remarks This operation retrieves all items from an RSS feed.
      */
-    public listFeedItems(feedUrl?: string, since?: string, sinceProperty?: string, options: ConnectorOperationOptions = {}): ConnectorPagedAsyncIterableIterator<FeedItem> {
+    public listFeedItems(feedUrl: string, options: ListFeedItemsOptions = {}): ConnectorPagedAsyncIterableIterator<FeedItem> {
         const queryParams: string[] = [];
         if (feedUrl !== undefined) {
             queryParams.push(`feedUrl=${encodeURIComponent(String(feedUrl))}`);
         }
-        if (since !== undefined) {
-            queryParams.push(`since=${encodeURIComponent(String(since))}`);
+        if (options.since !== undefined) {
+            queryParams.push(`since=${encodeURIComponent(String(options.since))}`);
         }
-        if (sinceProperty !== undefined) {
-            queryParams.push(`sinceProperty=${encodeURIComponent(String(sinceProperty))}`);
+        if (options.sinceProperty !== undefined) {
+            queryParams.push(`sinceProperty=${encodeURIComponent(String(options.sinceProperty))}`);
         }
         const requestPath = `/ListFeedItems` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         return this.createPageable<Array<FeedItem>, FeedItem>(

@@ -125,6 +125,60 @@ export interface BlobMetadataPage {
 }
 
 /**
+ * Options for the getFileMetadataByPath operation.
+ */
+export interface GetFileMetadataByPathOptions extends ConnectorOperationOptions {
+    /** The 'queryParametersSingleEncoded' service parameter. */
+    queryParametersSingleEncoded?: string;
+}
+
+/**
+ * Options for the getFileContentByPath operation.
+ */
+export interface GetFileContentByPathOptions extends ConnectorOperationOptions {
+    /** A boolean value (true, false) to infer content-type based on extension. */
+    inferContentType?: string;
+    /** The 'queryParametersSingleEncoded' service parameter. */
+    queryParametersSingleEncoded?: string;
+}
+
+/**
+ * Options for the getFileContent operation.
+ */
+export interface GetFileContentOptions extends ConnectorOperationOptions {
+    /** A boolean value (true, false) to infer content-type based on extension. */
+    inferContentType?: string;
+}
+
+/**
+ * Options for the createFile operation.
+ */
+export interface CreateFileOptions extends ConnectorOperationOptions {
+    /** The 'queryParametersSingleEncoded' service parameter. */
+    queryParametersSingleEncoded?: string;
+}
+
+/**
+ * Options for the copyFile operation.
+ */
+export interface CopyFileOptions extends ConnectorOperationOptions {
+    /** Overwrites the destination file if set to 'true'. */
+    overwrite?: string;
+    /** The 'queryParametersSingleEncoded' service parameter. */
+    queryParametersSingleEncoded?: string;
+}
+
+/**
+ * Options for the extractFolder operation.
+ */
+export interface ExtractFolderOptions extends ConnectorOperationOptions {
+    /** Overwrites the destination files if set to 'true'. */
+    overwrite?: string;
+    /** The 'queryParametersSingleEncoded' service parameter. */
+    queryParametersSingleEncoded?: string;
+}
+
+/**
  * Typed callback payload for trigger operation 'OnNewFilesV2'.
  */
 export type BoxOnNewFilesTriggerPayload = TriggerCallbackPayload<BlobMetadata>;
@@ -239,13 +293,13 @@ export class BoxClient extends ConnectorClientBase {
      * Get file metadata using path
      * @remarks Retrieves the file metadata from Box using path.
      */
-    public async getFileMetadataByPath(path?: string, queryParametersSingleEncoded?: string, options: ConnectorOperationOptions = {}): Promise<BlobMetadata> {
+    public async getFileMetadataByPath(path: string, options: GetFileMetadataByPathOptions = {}): Promise<BlobMetadata> {
         const queryParams: string[] = [];
         if (path !== undefined) {
             queryParams.push(`path=${encodeURIComponent(String(path))}`);
         }
-        if (queryParametersSingleEncoded !== undefined) {
-            queryParams.push(`queryParametersSingleEncoded=${encodeURIComponent(String(queryParametersSingleEncoded))}`);
+        if (options.queryParametersSingleEncoded !== undefined) {
+            queryParams.push(`queryParametersSingleEncoded=${encodeURIComponent(String(options.queryParametersSingleEncoded))}`);
         }
         const requestPath = `/datasets/default/GetFileByPath` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
@@ -258,16 +312,16 @@ export class BoxClient extends ConnectorClientBase {
      * Get file content using path
      * @remarks Retrieves the file contents from Box using path.
      */
-    public async getFileContentByPath(path?: string, inferContentType?: string, queryParametersSingleEncoded?: string, options: ConnectorOperationOptions = {}): Promise<Blob> {
+    public async getFileContentByPath(path: string, options: GetFileContentByPathOptions = {}): Promise<Blob> {
         const queryParams: string[] = [];
         if (path !== undefined) {
             queryParams.push(`path=${encodeURIComponent(String(path))}`);
         }
-        if (inferContentType !== undefined) {
-            queryParams.push(`inferContentType=${encodeURIComponent(String(inferContentType))}`);
+        if (options.inferContentType !== undefined) {
+            queryParams.push(`inferContentType=${encodeURIComponent(String(options.inferContentType))}`);
         }
-        if (queryParametersSingleEncoded !== undefined) {
-            queryParams.push(`queryParametersSingleEncoded=${encodeURIComponent(String(queryParametersSingleEncoded))}`);
+        if (options.queryParametersSingleEncoded !== undefined) {
+            queryParams.push(`queryParametersSingleEncoded=${encodeURIComponent(String(options.queryParametersSingleEncoded))}`);
         }
         const requestPath = `/datasets/default/GetFileContentByPath` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
@@ -280,10 +334,10 @@ export class BoxClient extends ConnectorClientBase {
      * Get file content using id
      * @remarks Retrieves the file content from Box using id.
      */
-    public async getFileContent(id: string, inferContentType?: string, options: ConnectorOperationOptions = {}): Promise<Blob> {
+    public async getFileContent(id: string, options: GetFileContentOptions = {}): Promise<Blob> {
         const queryParams: string[] = [];
-        if (inferContentType !== undefined) {
-            queryParams.push(`inferContentType=${encodeURIComponent(String(inferContentType))}`);
+        if (options.inferContentType !== undefined) {
+            queryParams.push(`inferContentType=${encodeURIComponent(String(options.inferContentType))}`);
         }
         const requestPath = `/datasets/default/files/${id}/content` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
@@ -296,7 +350,7 @@ export class BoxClient extends ConnectorClientBase {
      * Create file
      * @remarks Uploads a file to Box.
      */
-    public async createFile(input: CreateFileInput, folderPath?: string, name?: string, queryParametersSingleEncoded?: string, options: ConnectorOperationOptions = {}): Promise<BlobMetadata> {
+    public async createFile(input: CreateFileInput, folderPath: string, name: string, options: CreateFileOptions = {}): Promise<BlobMetadata> {
         const queryParams: string[] = [];
         if (folderPath !== undefined) {
             queryParams.push(`folderPath=${encodeURIComponent(String(folderPath))}`);
@@ -304,8 +358,8 @@ export class BoxClient extends ConnectorClientBase {
         if (name !== undefined) {
             queryParams.push(`name=${encodeURIComponent(String(name))}`);
         }
-        if (queryParametersSingleEncoded !== undefined) {
-            queryParams.push(`queryParametersSingleEncoded=${encodeURIComponent(String(queryParametersSingleEncoded))}`);
+        if (options.queryParametersSingleEncoded !== undefined) {
+            queryParams.push(`queryParametersSingleEncoded=${encodeURIComponent(String(options.queryParametersSingleEncoded))}`);
         }
         const requestPath = `/datasets/default/files` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
@@ -318,7 +372,7 @@ export class BoxClient extends ConnectorClientBase {
      * Copy file
      * @remarks Copy a file to a file path in Box.
      */
-    public async copyFile(source?: string, destination?: string, overwrite?: string, queryParametersSingleEncoded?: string, options: ConnectorOperationOptions = {}): Promise<BlobMetadata> {
+    public async copyFile(source: string, destination: string, options: CopyFileOptions = {}): Promise<BlobMetadata> {
         const queryParams: string[] = [];
         if (source !== undefined) {
             queryParams.push(`source=${encodeURIComponent(String(source))}`);
@@ -326,11 +380,11 @@ export class BoxClient extends ConnectorClientBase {
         if (destination !== undefined) {
             queryParams.push(`destination=${encodeURIComponent(String(destination))}`);
         }
-        if (overwrite !== undefined) {
-            queryParams.push(`overwrite=${encodeURIComponent(String(overwrite))}`);
+        if (options.overwrite !== undefined) {
+            queryParams.push(`overwrite=${encodeURIComponent(String(options.overwrite))}`);
         }
-        if (queryParametersSingleEncoded !== undefined) {
-            queryParams.push(`queryParametersSingleEncoded=${encodeURIComponent(String(queryParametersSingleEncoded))}`);
+        if (options.queryParametersSingleEncoded !== undefined) {
+            queryParams.push(`queryParametersSingleEncoded=${encodeURIComponent(String(options.queryParametersSingleEncoded))}`);
         }
         const requestPath = `/datasets/default/copyFile` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
@@ -379,7 +433,7 @@ export class BoxClient extends ConnectorClientBase {
      * Extract archive to folder
      * @remarks Extracts an archive file into a folder in Box (example: .zip).
      */
-    public async extractFolder(source?: string, destination?: string, overwrite?: string, queryParametersSingleEncoded?: string, options: ConnectorOperationOptions = {}): Promise<Array<BlobMetadata>> {
+    public async extractFolder(source: string, destination: string, options: ExtractFolderOptions = {}): Promise<Array<BlobMetadata>> {
         const queryParams: string[] = [];
         if (source !== undefined) {
             queryParams.push(`source=${encodeURIComponent(String(source))}`);
@@ -387,11 +441,11 @@ export class BoxClient extends ConnectorClientBase {
         if (destination !== undefined) {
             queryParams.push(`destination=${encodeURIComponent(String(destination))}`);
         }
-        if (overwrite !== undefined) {
-            queryParams.push(`overwrite=${encodeURIComponent(String(overwrite))}`);
+        if (options.overwrite !== undefined) {
+            queryParams.push(`overwrite=${encodeURIComponent(String(options.overwrite))}`);
         }
-        if (queryParametersSingleEncoded !== undefined) {
-            queryParams.push(`queryParametersSingleEncoded=${encodeURIComponent(String(queryParametersSingleEncoded))}`);
+        if (options.queryParametersSingleEncoded !== undefined) {
+            queryParams.push(`queryParametersSingleEncoded=${encodeURIComponent(String(options.queryParametersSingleEncoded))}`);
         }
         const requestPath = `/datasets/default/extractFolderV2` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);

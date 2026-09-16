@@ -93,6 +93,74 @@ export interface GetEventsForOrganizationResponse {
 }
 
 /**
+ * Options for the createEvent operation.
+ */
+export interface CreateEventOptions extends ConnectorOperationOptions {
+    /** The organizer of the event. */
+    eventOrganizerId?: string;
+    /** A previously-created venue to associate with this event. */
+    eventVenueId?: string;
+    /** The category of the event. */
+    eventCategoryId?: string;
+    /** Password needed to see the event in unlisted mode. */
+    eventPassword?: string;
+    /** Set specific capacity (if omitted, sums ticket capacities). */
+    eventCapacity?: string;
+    /** If users can share the event on social media. */
+    eventShareable?: string;
+    /** Only invited users can see the event page. */
+    eventInviteOnly?: string;
+    /** Whether the event is online-only (no venue). */
+    eventOnlineEvent?: string;
+    /** If the event is publicly listed and searchable. */
+    eventListed?: string;
+    /** Whether the start date should be hidden. */
+    eventHideStartDate?: string;
+    /** Whether the end date should be hidden. */
+    eventHideEndDate?: string;
+    /** If the remaining number of tickets is publicly visible on the event page. */
+    eventShowRemaining?: string;
+}
+
+/**
+ * Options for the updateEvent operation.
+ */
+export interface UpdateEventOptions extends ConnectorOperationOptions {
+    /** The name of the event. */
+    eventNameHtml?: string;
+    /** The description on the event page. */
+    eventDescriptionHtml?: string;
+    /** Start time (UTC format Ex. 2017-01-12T13:45:30Z). */
+    eventStartUtc?: string;
+    /** End time (UTC format Ex. 2017-01-12T16:45:30Z). */
+    eventEndUtc?: string;
+    /** The organizer of the event. */
+    eventOrganizerId?: string;
+    /** A previously-created venue to associate with this event. */
+    eventVenueId?: string;
+    /** The category of the event. */
+    eventCategoryId?: string;
+    /** Password needed to see the event in unlisted mode. */
+    eventPassword?: string;
+    /** Set specific capacity (if omitted, sums ticket capacities). */
+    eventCapacity?: string;
+    /** Set specific capacity (if omitted, sums ticket capacities). */
+    eventShareable?: string;
+    /** Only invited users can see the event page. */
+    eventInviteOnly?: string;
+    /** Whether the event is online-only (no venue). */
+    eventOnlineEvent?: string;
+    /** If the event is publicly listed and searchable. */
+    eventListed?: string;
+    /** Whether the start date should be hidden. */
+    eventHideStartDate?: string;
+    /** Whether the start date should be hidden. */
+    eventHideEndDate?: string;
+    /** If the remaining number of tickets is publicly visible on the event page. */
+    eventShowRemaining?: string;
+}
+
+/**
  * Typed callback payload for trigger operation 'OnNewEventV2'.
  */
 export type EventbriteOnNewEventTriggerPayload = TriggerCallbackPayload<Record<string, unknown>>;
@@ -183,7 +251,7 @@ export class EventbriteClient extends ConnectorClientBase {
      * Create event
      * @remarks Create a new Eventbrite event.
      */
-    public async createEvent(organizationId: string, eventNameHtml?: string, eventDescriptionHtml?: string, eventStartUtc?: string, eventEndUtc?: string, eventStartTimezone?: string, eventEndTimezone?: string, eventCurrency?: string, eventOrganizerId?: string, eventVenueId?: string, eventCategoryId?: string, eventPassword?: string, eventCapacity?: string, eventShareable?: string, eventInviteOnly?: string, eventOnlineEvent?: string, eventListed?: string, eventHideStartDate?: string, eventHideEndDate?: string, eventShowRemaining?: string, options: ConnectorOperationOptions = {}): Promise<CreateEventResponse> {
+    public async createEvent(organizationId: string, eventNameHtml: string, eventDescriptionHtml: string, eventStartUtc: string, eventEndUtc: string, eventStartTimezone: string, eventEndTimezone: string, eventCurrency: string, options: CreateEventOptions = {}): Promise<CreateEventResponse> {
         const queryParams: string[] = [];
         if (eventNameHtml !== undefined) {
             queryParams.push(`event.name.html=${encodeURIComponent(String(eventNameHtml))}`);
@@ -206,41 +274,41 @@ export class EventbriteClient extends ConnectorClientBase {
         if (eventCurrency !== undefined) {
             queryParams.push(`event.currency=${encodeURIComponent(String(eventCurrency))}`);
         }
-        if (eventOrganizerId !== undefined) {
-            queryParams.push(`event.organizer_id=${encodeURIComponent(String(eventOrganizerId))}`);
+        if (options.eventOrganizerId !== undefined) {
+            queryParams.push(`event.organizer_id=${encodeURIComponent(String(options.eventOrganizerId))}`);
         }
-        if (eventVenueId !== undefined) {
-            queryParams.push(`event.venue_id=${encodeURIComponent(String(eventVenueId))}`);
+        if (options.eventVenueId !== undefined) {
+            queryParams.push(`event.venue_id=${encodeURIComponent(String(options.eventVenueId))}`);
         }
-        if (eventCategoryId !== undefined) {
-            queryParams.push(`event.category_id=${encodeURIComponent(String(eventCategoryId))}`);
+        if (options.eventCategoryId !== undefined) {
+            queryParams.push(`event.category_id=${encodeURIComponent(String(options.eventCategoryId))}`);
         }
-        if (eventPassword !== undefined) {
-            queryParams.push(`event.password=${encodeURIComponent(String(eventPassword))}`);
+        if (options.eventPassword !== undefined) {
+            queryParams.push(`event.password=${encodeURIComponent(String(options.eventPassword))}`);
         }
-        if (eventCapacity !== undefined) {
-            queryParams.push(`event.capacity=${encodeURIComponent(String(eventCapacity))}`);
+        if (options.eventCapacity !== undefined) {
+            queryParams.push(`event.capacity=${encodeURIComponent(String(options.eventCapacity))}`);
         }
-        if (eventShareable !== undefined) {
-            queryParams.push(`event.shareable=${encodeURIComponent(String(eventShareable))}`);
+        if (options.eventShareable !== undefined) {
+            queryParams.push(`event.shareable=${encodeURIComponent(String(options.eventShareable))}`);
         }
-        if (eventInviteOnly !== undefined) {
-            queryParams.push(`event.invite_only=${encodeURIComponent(String(eventInviteOnly))}`);
+        if (options.eventInviteOnly !== undefined) {
+            queryParams.push(`event.invite_only=${encodeURIComponent(String(options.eventInviteOnly))}`);
         }
-        if (eventOnlineEvent !== undefined) {
-            queryParams.push(`event.online_event=${encodeURIComponent(String(eventOnlineEvent))}`);
+        if (options.eventOnlineEvent !== undefined) {
+            queryParams.push(`event.online_event=${encodeURIComponent(String(options.eventOnlineEvent))}`);
         }
-        if (eventListed !== undefined) {
-            queryParams.push(`event.listed=${encodeURIComponent(String(eventListed))}`);
+        if (options.eventListed !== undefined) {
+            queryParams.push(`event.listed=${encodeURIComponent(String(options.eventListed))}`);
         }
-        if (eventHideStartDate !== undefined) {
-            queryParams.push(`event.hide_start_date=${encodeURIComponent(String(eventHideStartDate))}`);
+        if (options.eventHideStartDate !== undefined) {
+            queryParams.push(`event.hide_start_date=${encodeURIComponent(String(options.eventHideStartDate))}`);
         }
-        if (eventHideEndDate !== undefined) {
-            queryParams.push(`event.hide_end_date=${encodeURIComponent(String(eventHideEndDate))}`);
+        if (options.eventHideEndDate !== undefined) {
+            queryParams.push(`event.hide_end_date=${encodeURIComponent(String(options.eventHideEndDate))}`);
         }
-        if (eventShowRemaining !== undefined) {
-            queryParams.push(`event.show_remaining=${encodeURIComponent(String(eventShowRemaining))}`);
+        if (options.eventShowRemaining !== undefined) {
+            queryParams.push(`event.show_remaining=${encodeURIComponent(String(options.eventShowRemaining))}`);
         }
         const requestPath = `/v3/organizations/${organizationId}/events/` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
@@ -253,22 +321,22 @@ export class EventbriteClient extends ConnectorClientBase {
      * Update event
      * @remarks Update an existing event.
      */
-    public async updateEvent(id: string, organizationId?: string, eventNameHtml?: string, eventDescriptionHtml?: string, eventStartUtc?: string, eventEndUtc?: string, eventStartTimezone?: string, eventEndTimezone?: string, eventCurrency?: string, eventOrganizerId?: string, eventVenueId?: string, eventCategoryId?: string, eventPassword?: string, eventCapacity?: string, eventShareable?: string, eventInviteOnly?: string, eventOnlineEvent?: string, eventListed?: string, eventHideStartDate?: string, eventHideEndDate?: string, eventShowRemaining?: string, options: ConnectorOperationOptions = {}): Promise<CreateEventResponse> {
+    public async updateEvent(id: string, organizationId: string, eventStartTimezone: string, eventEndTimezone: string, eventCurrency: string, options: UpdateEventOptions = {}): Promise<CreateEventResponse> {
         const queryParams: string[] = [];
         if (organizationId !== undefined) {
             queryParams.push(`organization_id=${encodeURIComponent(String(organizationId))}`);
         }
-        if (eventNameHtml !== undefined) {
-            queryParams.push(`event.name.html=${encodeURIComponent(String(eventNameHtml))}`);
+        if (options.eventNameHtml !== undefined) {
+            queryParams.push(`event.name.html=${encodeURIComponent(String(options.eventNameHtml))}`);
         }
-        if (eventDescriptionHtml !== undefined) {
-            queryParams.push(`event.description.html=${encodeURIComponent(String(eventDescriptionHtml))}`);
+        if (options.eventDescriptionHtml !== undefined) {
+            queryParams.push(`event.description.html=${encodeURIComponent(String(options.eventDescriptionHtml))}`);
         }
-        if (eventStartUtc !== undefined) {
-            queryParams.push(`event.start.utc=${encodeURIComponent(String(eventStartUtc))}`);
+        if (options.eventStartUtc !== undefined) {
+            queryParams.push(`event.start.utc=${encodeURIComponent(String(options.eventStartUtc))}`);
         }
-        if (eventEndUtc !== undefined) {
-            queryParams.push(`event.end.utc=${encodeURIComponent(String(eventEndUtc))}`);
+        if (options.eventEndUtc !== undefined) {
+            queryParams.push(`event.end.utc=${encodeURIComponent(String(options.eventEndUtc))}`);
         }
         if (eventStartTimezone !== undefined) {
             queryParams.push(`event.start.timezone=${encodeURIComponent(String(eventStartTimezone))}`);
@@ -279,41 +347,41 @@ export class EventbriteClient extends ConnectorClientBase {
         if (eventCurrency !== undefined) {
             queryParams.push(`event.currency=${encodeURIComponent(String(eventCurrency))}`);
         }
-        if (eventOrganizerId !== undefined) {
-            queryParams.push(`event.organizer_id=${encodeURIComponent(String(eventOrganizerId))}`);
+        if (options.eventOrganizerId !== undefined) {
+            queryParams.push(`event.organizer_id=${encodeURIComponent(String(options.eventOrganizerId))}`);
         }
-        if (eventVenueId !== undefined) {
-            queryParams.push(`event.venue_id=${encodeURIComponent(String(eventVenueId))}`);
+        if (options.eventVenueId !== undefined) {
+            queryParams.push(`event.venue_id=${encodeURIComponent(String(options.eventVenueId))}`);
         }
-        if (eventCategoryId !== undefined) {
-            queryParams.push(`event.category_id=${encodeURIComponent(String(eventCategoryId))}`);
+        if (options.eventCategoryId !== undefined) {
+            queryParams.push(`event.category_id=${encodeURIComponent(String(options.eventCategoryId))}`);
         }
-        if (eventPassword !== undefined) {
-            queryParams.push(`event.password=${encodeURIComponent(String(eventPassword))}`);
+        if (options.eventPassword !== undefined) {
+            queryParams.push(`event.password=${encodeURIComponent(String(options.eventPassword))}`);
         }
-        if (eventCapacity !== undefined) {
-            queryParams.push(`event.capacity=${encodeURIComponent(String(eventCapacity))}`);
+        if (options.eventCapacity !== undefined) {
+            queryParams.push(`event.capacity=${encodeURIComponent(String(options.eventCapacity))}`);
         }
-        if (eventShareable !== undefined) {
-            queryParams.push(`event.shareable=${encodeURIComponent(String(eventShareable))}`);
+        if (options.eventShareable !== undefined) {
+            queryParams.push(`event.shareable=${encodeURIComponent(String(options.eventShareable))}`);
         }
-        if (eventInviteOnly !== undefined) {
-            queryParams.push(`event.invite_only=${encodeURIComponent(String(eventInviteOnly))}`);
+        if (options.eventInviteOnly !== undefined) {
+            queryParams.push(`event.invite_only=${encodeURIComponent(String(options.eventInviteOnly))}`);
         }
-        if (eventOnlineEvent !== undefined) {
-            queryParams.push(`event.online_event=${encodeURIComponent(String(eventOnlineEvent))}`);
+        if (options.eventOnlineEvent !== undefined) {
+            queryParams.push(`event.online_event=${encodeURIComponent(String(options.eventOnlineEvent))}`);
         }
-        if (eventListed !== undefined) {
-            queryParams.push(`event.listed=${encodeURIComponent(String(eventListed))}`);
+        if (options.eventListed !== undefined) {
+            queryParams.push(`event.listed=${encodeURIComponent(String(options.eventListed))}`);
         }
-        if (eventHideStartDate !== undefined) {
-            queryParams.push(`event.hide_start_date=${encodeURIComponent(String(eventHideStartDate))}`);
+        if (options.eventHideStartDate !== undefined) {
+            queryParams.push(`event.hide_start_date=${encodeURIComponent(String(options.eventHideStartDate))}`);
         }
-        if (eventHideEndDate !== undefined) {
-            queryParams.push(`event.hide_end_date=${encodeURIComponent(String(eventHideEndDate))}`);
+        if (options.eventHideEndDate !== undefined) {
+            queryParams.push(`event.hide_end_date=${encodeURIComponent(String(options.eventHideEndDate))}`);
         }
-        if (eventShowRemaining !== undefined) {
-            queryParams.push(`event.show_remaining=${encodeURIComponent(String(eventShowRemaining))}`);
+        if (options.eventShowRemaining !== undefined) {
+            queryParams.push(`event.show_remaining=${encodeURIComponent(String(options.eventShowRemaining))}`);
         }
         const requestPath = `/v2/v3/events/${id}/` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);

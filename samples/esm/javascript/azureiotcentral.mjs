@@ -17,9 +17,15 @@ import { ManagedIdentityTokenProvider, ConnectorError } from "@azure/connectors"
 import { AzureiotcentralClient } from "@azure/connectors/generated/AzureiotcentralExtensions";
 
 const CONNECTION_URL = process.env.AZUREIOTCENTRAL_CONNECTION_URL ?? "";
+const APPLICATION_ID = process.env.AZUREIOTCENTRAL_APPLICATION_ID ?? "";
 
 if (!CONNECTION_URL) {
     console.error("Error: AZUREIOTCENTRAL_CONNECTION_URL environment variable is not set.");
+    process.exit(1);
+}
+
+if (!APPLICATION_ID) {
+    console.error("Error: AZUREIOTCENTRAL_APPLICATION_ID environment variable is not set.");
     process.exit(1);
 }
 
@@ -29,8 +35,13 @@ async function main() {
 
     // Example 1: List the device groups in the application.
     try {
-        const deviceGroups = await client.listDeviceGroups();
-        console.log("Device groups:", JSON.stringify(deviceGroups, null, 2));
+        let deviceGroupCount = 0;
+        for await (const deviceGroup of client.listDeviceGroups(APPLICATION_ID)) {
+            console.log("Device group:", JSON.stringify(deviceGroup, null, 2));
+            deviceGroupCount++;
+        }
+
+        console.log(`Device groups found: ${deviceGroupCount}`);
     } catch (error) {
         if (error instanceof ConnectorError) {
             console.log(`Connector error (${error.statusCode}): ${error.message}`);

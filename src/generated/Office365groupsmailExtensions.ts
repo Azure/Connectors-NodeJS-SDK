@@ -304,6 +304,24 @@ export interface ObjectWithoutType {
 }
 
 /**
+ * Options for the httpRequest operation.
+ */
+export interface HttpRequestOptions extends ConnectorOperationOptions {
+    /** The content-type header for the body (default is application/json). */
+    contentType?: string;
+    /** Custom header 1. Specify in format: header-name: header-value */
+    customHeader1?: string;
+    /** Custom header 2. Specify in format: header-name: header-value */
+    customHeader2?: string;
+    /** Custom header 3. Specify in format: header-name: header-value */
+    customHeader3?: string;
+    /** Custom header 4. Specify in format: header-name: header-value */
+    customHeader4?: string;
+    /** Custom header 5. Specify in format: header-name: header-value */
+    customHeader5?: string;
+}
+
+/**
  * Typed callback payload for trigger operation 'OnNewEmailInGroup'.
  */
 export type Office365groupsmailOnNewEmailInGroupTriggerPayload = TriggerCallbackPayload<ConversationTriggerResponse>;
@@ -396,10 +414,14 @@ export class Office365groupsmailClient extends ConnectorClientBase {
      * Create a new conversation in a group
      * @remarks Create a new conversation in this group.
      */
-    public async createConversation(input: CreateConversationBody, groupId: string, options: ConnectorOperationOptions = {}): Promise<CreateConversationResponse> {
+    public async createConversation(input: CreateConversationBody, groupId: string, contentType: string, options: ConnectorOperationOptions = {}): Promise<CreateConversationResponse> {
         const requestPath = `/v1.0/groups/${groupId}/conversations`;
+        const requestHeaders: Record<string, string> = {};
+        if (contentType !== undefined) {
+            requestHeaders["content-type"] = String(contentType);
+        }
         const requestUrl = this.resolveUrl(requestPath);
-        const httpResponse = await this.sendWithTracingAsync<CreateConversationResponse>("Office365groupsmail.createConversation", "CreateConversation", "POST", requestUrl, input, options);
+        const httpResponse = await this.sendWithTracingAsync<CreateConversationResponse>("Office365groupsmail.createConversation", "CreateConversation", "POST", requestUrl, input, options, requestHeaders);
 
         return httpResponse.value as CreateConversationResponse;
     }
@@ -439,10 +461,14 @@ export class Office365groupsmailClient extends ConnectorClientBase {
      * Create a conversation thread
      * @remarks Create a new thread in the specified conversation.
      */
-    public async createConversationThread(input: CreateConversationBody, groupId: string, conversationId: string, options: ConnectorOperationOptions = {}): Promise<NewConversationThreadResponse> {
+    public async createConversationThread(input: CreateConversationBody, groupId: string, conversationId: string, contentType: string, options: ConnectorOperationOptions = {}): Promise<NewConversationThreadResponse> {
         const requestPath = `/v1.0/groups/${groupId}/conversations/${conversationId}/threads`;
+        const requestHeaders: Record<string, string> = {};
+        if (contentType !== undefined) {
+            requestHeaders["content-type"] = String(contentType);
+        }
         const requestUrl = this.resolveUrl(requestPath);
-        const httpResponse = await this.sendWithTracingAsync<NewConversationThreadResponse>("Office365groupsmail.createConversationThread", "CreateConversationThread", "POST", requestUrl, input, options);
+        const httpResponse = await this.sendWithTracingAsync<NewConversationThreadResponse>("Office365groupsmail.createConversationThread", "CreateConversationThread", "POST", requestUrl, input, options, requestHeaders);
 
         return httpResponse.value as NewConversationThreadResponse;
     }
@@ -470,10 +496,14 @@ export class Office365groupsmailClient extends ConnectorClientBase {
      * Start a new group conversation by creating a thread
      * @remarks Start a new group conversation by first creating a thread.
      */
-    public async createGroupThread(input: CreateConversationBody, groupId: string, options: ConnectorOperationOptions = {}): Promise<NewConversationThreadResponse> {
+    public async createGroupThread(input: CreateConversationBody, groupId: string, contentType: string, options: ConnectorOperationOptions = {}): Promise<NewConversationThreadResponse> {
         const requestPath = `/v1.0/groups/${groupId}/threads`;
+        const requestHeaders: Record<string, string> = {};
+        if (contentType !== undefined) {
+            requestHeaders["content-type"] = String(contentType);
+        }
         const requestUrl = this.resolveUrl(requestPath);
-        const httpResponse = await this.sendWithTracingAsync<NewConversationThreadResponse>("Office365groupsmail.createGroupThread", "CreateGroupThread", "POST", requestUrl, input, options);
+        const httpResponse = await this.sendWithTracingAsync<NewConversationThreadResponse>("Office365groupsmail.createGroupThread", "CreateGroupThread", "POST", requestUrl, input, options, requestHeaders);
 
         return httpResponse.value as NewConversationThreadResponse;
     }
@@ -523,7 +553,7 @@ export class Office365groupsmailClient extends ConnectorClientBase {
      * Get a thread post
      * @remarks Retrieves a post in a specified thread.
      */
-    public async getThread(groupId: string, threadId: string, postId: string, expand?: string, options: ConnectorOperationOptions = {}): Promise<Post> {
+    public async getThread(groupId: string, threadId: string, postId: string, expand: string, options: ConnectorOperationOptions = {}): Promise<Post> {
         const queryParams: string[] = [];
         if (expand !== undefined) {
             queryParams.push(`$expand=${encodeURIComponent(String(expand))}`);
@@ -558,30 +588,63 @@ export class Office365groupsmailClient extends ConnectorClientBase {
      * Reply to a conversation thread
      * @remarks Reply to a thread in a group conversation and add a new post to it.
      */
-    public async replyToAThread(input: ReplyConversationThreadBody, groupId: string, threadId: string, options: ConnectorOperationOptions = {}): Promise<void> {
+    public async replyToAThread(input: ReplyConversationThreadBody, groupId: string, threadId: string, contentType: string, options: ConnectorOperationOptions = {}): Promise<void> {
         const requestPath = `/v1.0/groups/${groupId}/threads/${threadId}/reply`;
+        const requestHeaders: Record<string, string> = {};
+        if (contentType !== undefined) {
+            requestHeaders["content-type"] = String(contentType);
+        }
         const requestUrl = this.resolveUrl(requestPath);
-        await this.sendWithTracingAsync<void>("Office365groupsmail.replyToAThread", "ReplyToAThread", "POST", requestUrl, input, options);
+        await this.sendWithTracingAsync<void>("Office365groupsmail.replyToAThread", "ReplyToAThread", "POST", requestUrl, input, options, requestHeaders);
     }
 
     /**
      * Reply to a post
      * @remarks Reply to a post and add a new post to the specified thread in a group conversation.
      */
-    public async reply(input: ReplyConversationThreadBody, groupId: string, threadId: string, postId: string, options: ConnectorOperationOptions = {}): Promise<void> {
+    public async reply(input: ReplyConversationThreadBody, groupId: string, threadId: string, postId: string, contentType: string, options: ConnectorOperationOptions = {}): Promise<void> {
         const requestPath = `/v1.0/groups/${groupId}/threads/${threadId}/posts/${postId}/reply`;
+        const requestHeaders: Record<string, string> = {};
+        if (contentType !== undefined) {
+            requestHeaders["content-type"] = String(contentType);
+        }
         const requestUrl = this.resolveUrl(requestPath);
-        await this.sendWithTracingAsync<void>("Office365groupsmail.reply", "ReplyPost", "POST", requestUrl, input, options);
+        await this.sendWithTracingAsync<void>("Office365groupsmail.reply", "ReplyPost", "POST", requestUrl, input, options, requestHeaders);
     }
 
     /**
      * Send an HTTP request
      * @remarks Construct a Microsoft Graph REST API request to invoke. Learn more: https://docs.microsoft.com/en-us/graph/use-the-api
      */
-    public async httpRequest(input: HttpRequestInput, options: ConnectorOperationOptions = {}): Promise<ObjectWithoutType> {
+    public async httpRequest(input: HttpRequestInput, uri: string, method: string, options: HttpRequestOptions = {}): Promise<ObjectWithoutType> {
         const requestPath = `/httprequest`;
+        const requestHeaders: Record<string, string> = {};
+        if (uri !== undefined) {
+            requestHeaders["Uri"] = String(uri);
+        }
+        if (method !== undefined) {
+            requestHeaders["Method"] = String(method);
+        }
+        if (options.contentType !== undefined) {
+            requestHeaders["ContentType"] = String(options.contentType);
+        }
+        if (options.customHeader1 !== undefined) {
+            requestHeaders["CustomHeader1"] = String(options.customHeader1);
+        }
+        if (options.customHeader2 !== undefined) {
+            requestHeaders["CustomHeader2"] = String(options.customHeader2);
+        }
+        if (options.customHeader3 !== undefined) {
+            requestHeaders["CustomHeader3"] = String(options.customHeader3);
+        }
+        if (options.customHeader4 !== undefined) {
+            requestHeaders["CustomHeader4"] = String(options.customHeader4);
+        }
+        if (options.customHeader5 !== undefined) {
+            requestHeaders["CustomHeader5"] = String(options.customHeader5);
+        }
         const requestUrl = this.resolveUrl(requestPath);
-        const httpResponse = await this.sendWithTracingAsync<ObjectWithoutType>("Office365groupsmail.httpRequest", "HttpRequest", "POST", requestUrl, input, options);
+        const httpResponse = await this.sendWithTracingAsync<ObjectWithoutType>("Office365groupsmail.httpRequest", "HttpRequest", "POST", requestUrl, input, options, requestHeaders);
 
         return httpResponse.value as ObjectWithoutType;
     }
@@ -590,10 +653,17 @@ export class Office365groupsmailClient extends ConnectorClientBase {
      * Forward a post
      * @remarks Forward a post to a recipient.
      */
-    public async forward(input: ForwardPostBody, groupMail: string, conversationId: string, threadId: string, postId: string, options: ConnectorOperationOptions = {}): Promise<void> {
+    public async forward(input: ForwardPostBody, groupMail: string, conversationId: string, threadId: string, postId: string, prefer: string, contentType: string, options: ConnectorOperationOptions = {}): Promise<void> {
         const requestPath = `/beta/groups/${groupMail}/conversations/${conversationId}/threads/${threadId}/posts/${postId}/forward`;
+        const requestHeaders: Record<string, string> = {};
+        if (prefer !== undefined) {
+            requestHeaders["Prefer"] = String(prefer);
+        }
+        if (contentType !== undefined) {
+            requestHeaders["content-type"] = String(contentType);
+        }
         const requestUrl = this.resolveUrl(requestPath);
-        await this.sendWithTracingAsync<void>("Office365groupsmail.forward", "ForwardPost_V2", "POST", requestUrl, input, options);
+        await this.sendWithTracingAsync<void>("Office365groupsmail.forward", "ForwardPost_V2", "POST", requestUrl, input, options, requestHeaders);
     }
 
 }

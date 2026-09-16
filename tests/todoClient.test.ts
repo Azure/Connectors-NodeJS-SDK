@@ -61,11 +61,11 @@ describe("TodoClient — getAllTodoLists", () => {
         mockFetchResponse(mockResponse);
 
         const client = new TodoClient(TestConnectionUrl, createMockCredential());
-        const result = await client.getAllTodoLists();
+        const result = await client.getAllTodoLists().byPage().next();
 
-        expect(result).toEqual(mockResponse);
-        expect(result[0].displayName).toBe("Tasks");
-        expect(result[0].wellknownListName).toBe("defaultList");
+        expect(result.value).toEqual(mockResponse);
+        expect(result.value[0].displayName).toBe("Tasks");
+        expect(result.value[0].wellknownListName).toBe("defaultList");
         const [url, init] = (global.fetch as jest.Mock).mock.calls[0];
         expect(url).toBe(`${TestConnectionUrl}/lists`);
         expect(init.method).toBe("GET");
@@ -79,7 +79,7 @@ describe("TodoClient — getAllTodoLists", () => {
             createMockCredential(),
             { retryOptions: { maxRetries: 0 } },
         );
-        await expect(client.getAllTodoLists()).rejects.toThrow(ConnectorError);
+        await expect(client.getAllTodoLists().byPage().next()).rejects.toThrow(ConnectorError);
     });
 });
 

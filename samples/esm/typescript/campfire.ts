@@ -19,6 +19,7 @@ import { CampfireClient } from "@azure/connectors/generated/CampfireExtensions";
 
 const CONNECTION_URL = process.env.CAMPFIRE_CONNECTION_URL ?? "";
 const USER_ID = process.env.CAMPFIRE_USER_ID ?? "";
+const ACCOUNT_ID = process.env.CAMPFIRE_ACCOUNT_ID ?? "";
 
 if (!CONNECTION_URL) {
     console.error("Error: CAMPFIRE_CONNECTION_URL environment variable is not set.");
@@ -30,13 +31,18 @@ if (!/^\d+$/.test(USER_ID)) {
     process.exit(1);
 }
 
+if (!ACCOUNT_ID) {
+    console.error("Error: CAMPFIRE_ACCOUNT_ID environment variable is not set.");
+    process.exit(1);
+}
+
 async function main(): Promise<void> {
     const tokenProvider = new ManagedIdentityTokenProvider();
     const client = new CampfireClient(CONNECTION_URL, tokenProvider);
 
     // Example 1: Retrieve a user by id.
     try {
-        const user = await client.getUser(USER_ID);
+        const user = await client.getUser(USER_ID, ACCOUNT_ID);
         console.log("User:", JSON.stringify(user, null, 2));
     } catch (error) {
         if (error instanceof ConnectorError) {

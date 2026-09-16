@@ -166,8 +166,8 @@ export interface TableMetadata {
     /** Table permission */
     "x-ms-permission"?: string;
     "x-ms-capabilities"?: TableCapabilitiesMetadata;
-    schema?: Record<string, unknown>;
-    referencedEntities?: Record<string, unknown>;
+    schema?: ObjectEntity;
+    referencedEntities?: ObjectEntity;
     /** Url link */
     webUrl?: string;
 }
@@ -2118,6 +2118,246 @@ export interface MCPQueryResponse {
 }
 
 /**
+ * Options for the draftEmail operation.
+ */
+export interface DraftEmailOptions extends ConnectorOperationOptions {
+    /** Message Id. */
+    messageId?: string;
+    /** Draft Type. */
+    draftType?: string;
+    /** Draft Comment */
+    comment?: string;
+}
+
+/**
+ * Options for the updateMyContactPhoto operation.
+ */
+export interface UpdateMyContactPhotoOptions extends ConnectorOperationOptions {
+    /** Image content type (like 'image/jpeg') */
+    contentType?: string;
+}
+
+/**
+ * Options for the httpRequest operation.
+ */
+export interface HttpRequestOptions extends ConnectorOperationOptions {
+    /** The content-type header for the body (default is application/json). */
+    contentType?: string;
+    /** Custom header 1. Specify in format: header-name: header-value */
+    customHeader1?: string;
+    /** Custom header 2. Specify in format: header-name: header-value */
+    customHeader2?: string;
+    /** Custom header 3. Specify in format: header-name: header-value */
+    customHeader3?: string;
+    /** Custom header 4. Specify in format: header-name: header-value */
+    customHeader4?: string;
+    /** Custom header 5. Specify in format: header-name: header-value */
+    customHeader5?: string;
+}
+
+/**
+ * Options for the mcpEmailsManagement operation.
+ */
+export interface McpEmailsManagementOptions extends ConnectorOperationOptions {
+    /** The 'sessionId' service parameter. */
+    sessionId?: string;
+}
+
+/**
+ * Options for the mcpMeetingManagement operation.
+ */
+export interface McpMeetingManagementOptions extends ConnectorOperationOptions {
+    /** The 'sessionId' service parameter. */
+    sessionId?: string;
+}
+
+/**
+ * Options for the mcpContactsManagement operation.
+ */
+export interface McpContactsManagementOptions extends ConnectorOperationOptions {
+    /** The 'sessionId' service parameter. */
+    sessionId?: string;
+}
+
+/**
+ * Options for the getCalendarItems operation.
+ */
+export interface GetCalendarItemsOptions extends ConnectorOperationOptions {
+    /** An ODATA filter query to restrict the entries returned (e.g. stringColumn eq 'string' OR numberColumn lt 123). */
+    filter?: string;
+    /** An ODATA orderBy query for specifying the order of entries. */
+    orderby?: string;
+    /** Total number of entries to retrieve (default = all). */
+    top?: string;
+    /** The number of entries to skip (default = 0). */
+    skip?: string;
+}
+
+/**
+ * Options for the getCalendarTables operation.
+ */
+export interface GetCalendarTablesOptions extends ConnectorOperationOptions {
+    /** Number of calendars to skip. */
+    skip?: string;
+    /** Calendar page size. */
+    top?: string;
+    /** Orders calendars. */
+    orderBy?: string;
+}
+
+/**
+ * Options for the getContactItems operation.
+ */
+export interface GetContactItemsOptions extends ConnectorOperationOptions {
+    /** An ODATA filter query to restrict the entries returned (e.g. stringColumn eq 'string' OR numberColumn lt 123). */
+    filter?: string;
+    /** An ODATA orderBy query for specifying the order of entries. */
+    orderby?: string;
+    /** Total number of entries to retrieve (default = all). */
+    top?: string;
+    /** The number of entries to skip (default = 0). */
+    skip?: string;
+}
+
+/**
+ * Options for the deleteEmail operation.
+ */
+export interface DeleteEmailOptions extends ConnectorOperationOptions {
+    /** Address of the shared mailbox to delete mail from. */
+    mailboxAddress?: string;
+}
+
+/**
+ * Options for the exportEmail operation.
+ */
+export interface ExportEmailOptions extends ConnectorOperationOptions {
+    /** Address of the shared mailbox to export from. */
+    mailboxAddress?: string;
+}
+
+/**
+ * Options for the flag operation.
+ */
+export interface FlagOptions extends ConnectorOperationOptions {
+    /** Address of the shared mailbox to update mail. */
+    mailboxAddress?: string;
+}
+
+/**
+ * Options for the forwardEmail operation.
+ */
+export interface ForwardEmailOptions extends ConnectorOperationOptions {
+    /** Address of the shared mailbox to forward mail from. */
+    mailboxAddress?: string;
+    /** Select if you want to extract Sensitivity label ( false, true). */
+    extractSensitivityLabel?: string;
+    /** A boolean whether to fetch sensitivity label Metadata for associated LabelId. */
+    fetchSensitivityLabelMetadata?: string;
+}
+
+/**
+ * Options for the getAttachment operation.
+ */
+export interface GetAttachmentOptions extends ConnectorOperationOptions {
+    /** Address of the shared mailbox to retrieve attachment from. */
+    mailboxAddress?: string;
+    /** Select if you want to extract Sensitivity label ( false, true). */
+    extractSensitivityLabel?: string;
+    /** A boolean whether to fetch sensitivity label Metadata for associated LabelId. */
+    fetchSensitivityLabelMetadata?: string;
+}
+
+/**
+ * Options for the getEmail operation.
+ */
+export interface GetEmailOptions extends ConnectorOperationOptions {
+    /** Address of the shared mailbox to retrieve mail from. */
+    mailboxAddress?: string;
+    /** If set to true, attachments content will also be retrieved along with the email. */
+    includeAttachments?: string;
+    /** Internet Message Id. */
+    internetMessageId?: string;
+    /** Select if you want to extract Sensitivity label ( false, true). */
+    extractSensitivityLabel?: string;
+    /** A boolean whether to fetch sensitivity label Metadata for associated LabelId. */
+    fetchSensitivityLabelMetadata?: string;
+}
+
+/**
+ * Options for the getEmails operation.
+ */
+export interface GetEmailsOptions extends ConnectorOperationOptions {
+    /** Mail folder to retrieve emails from (default: 'Inbox'). */
+    folderPath?: string;
+    /** Recipient email addresses separated by semicolons (If any match, the trigger will run). */
+    to?: string;
+    /** CC recipient email addresses separated by semicolons (If any match, the trigger will run). */
+    cc?: string;
+    /** To or CC recipient email addresses separated by semicolons (If any match, the trigger will run). */
+    toOrCc?: string;
+    /** Sender email addresses separated by semicolons (If any match, the trigger will run). */
+    from?: string;
+    /** Importance of the email (Any, High, Normal, Low). */
+    importance?: string;
+    /** If set to true, only emails with an attachment will be retrieved. Emails without any attachments will be skipped. If set to false, all emails will be retrieved. */
+    fetchOnlyWithAttachment?: string;
+    /** String to look for in the subject line. */
+    subjectFilter?: string;
+    /** Retrieve only unread emails?. */
+    fetchOnlyUnread?: string;
+    /** Retrieve only flagged emails?. */
+    fetchOnlyFlagged?: string;
+    /** Address of the shared mailbox to retrieve mails from. */
+    mailboxAddress?: string;
+    /** If set to true, attachments content will also be retrieved along with the email. */
+    includeAttachments?: string;
+    /** Search query to filter emails. How to use '$search' parameter please refer to: https://docs.microsoft.com/graph/query-parameters#search-parameter. */
+    searchQuery?: string;
+    /** Number of emails to retrieve (default: 10, max: 1000). */
+    top?: string;
+}
+
+/**
+ * Options for the getEventsCalendarView operation.
+ */
+export interface GetEventsCalendarViewOptions extends ConnectorOperationOptions {
+    /** An ODATA filter query to restrict the entries returned (e.g. stringColumn eq 'string' OR numberColumn lt 123). */
+    filter?: string;
+    /** An ODATA orderBy query for specifying the order of entries. */
+    orderby?: string;
+    /** Total number of entries to retrieve (default = all). */
+    top?: string;
+    /** The number of entries to skip (default = 0). */
+    skip?: string;
+    /** Search text for matching event body and subject */
+    search?: string;
+}
+
+/**
+ * Options for the markAsRead operation.
+ */
+export interface MarkAsReadOptions extends ConnectorOperationOptions {
+    /** Address of the shared mailbox to update mail. */
+    mailboxAddress?: string;
+}
+
+/**
+ * Options for the move operation.
+ */
+export interface MoveOptions extends ConnectorOperationOptions {
+    /** Address of the shared mailbox to move mail from. */
+    mailboxAddress?: string;
+}
+
+/**
+ * Options for the replyTo operation.
+ */
+export interface ReplyToOptions extends ConnectorOperationOptions {
+    /** Address of the shared mailbox to reply from. */
+    mailboxAddress?: string;
+}
+
+/**
  * Typed callback payload for trigger operation 'CalendarGetOnChangedItemsV3'.
  */
 export type Office365OnCalendarChangedItemsTriggerPayload = TriggerCallbackPayload<GraphCalendarEventClientWithActionType>;
@@ -2646,16 +2886,16 @@ export class Office365Client extends ConnectorClientBase {
      * Draft an email message
      * @remarks This operation drafts an email message.
      */
-    public async draftEmail(input: DraftEmailInput, messageId?: string, draftType?: string, comment?: string, options: ConnectorOperationOptions = {}): Promise<OutlookReceiveMessage> {
+    public async draftEmail(input: DraftEmailInput, options: DraftEmailOptions = {}): Promise<OutlookReceiveMessage> {
         const queryParams: string[] = [];
-        if (messageId !== undefined) {
-            queryParams.push(`messageId=${encodeURIComponent(String(messageId))}`);
+        if (options.messageId !== undefined) {
+            queryParams.push(`messageId=${encodeURIComponent(String(options.messageId))}`);
         }
-        if (draftType !== undefined) {
-            queryParams.push(`draftType=${encodeURIComponent(String(draftType))}`);
+        if (options.draftType !== undefined) {
+            queryParams.push(`draftType=${encodeURIComponent(String(options.draftType))}`);
         }
-        if (comment !== undefined) {
-            queryParams.push(`comment=${encodeURIComponent(String(comment))}`);
+        if (options.comment !== undefined) {
+            queryParams.push(`comment=${encodeURIComponent(String(options.comment))}`);
         }
         const requestPath = `/Draft` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
@@ -2668,7 +2908,7 @@ export class Office365Client extends ConnectorClientBase {
      * Updates an email Draft message
      * @remarks This operation updates an an email Draft message.
      */
-    public async updateDraftEmail(input: DraftEmailInput, messageId?: string, options: ConnectorOperationOptions = {}): Promise<void> {
+    public async updateDraftEmail(input: DraftEmailInput, messageId: string, options: ConnectorOperationOptions = {}): Promise<void> {
         const queryParams: string[] = [];
         if (messageId !== undefined) {
             queryParams.push(`messageId=${encodeURIComponent(String(messageId))}`);
@@ -2692,7 +2932,7 @@ export class Office365Client extends ConnectorClientBase {
      * Assigns an Outlook category
      * @remarks This operation assigns an Outlook category to an email.
      */
-    public async assignCategory(messageId?: string, category?: string, options: ConnectorOperationOptions = {}): Promise<void> {
+    public async assignCategory(messageId: string, category: string, options: ConnectorOperationOptions = {}): Promise<void> {
         const queryParams: string[] = [];
         if (messageId !== undefined) {
             queryParams.push(`messageId=${encodeURIComponent(String(messageId))}`);
@@ -2745,20 +2985,49 @@ export class Office365Client extends ConnectorClientBase {
      * Update my contact's photo
      * @remarks Updates the photo of the specified contact of the current user. The size of the photo must be less than 4 MB.
      */
-    public async updateMyContactPhoto(input: UpdateMyContactPhotoInput, folder: string, id: string, options: ConnectorOperationOptions = {}): Promise<void> {
+    public async updateMyContactPhoto(input: UpdateMyContactPhotoInput, folder: string, id: string, options: UpdateMyContactPhotoOptions = {}): Promise<void> {
         const requestPath = `/codeless/v1.0/me/contactFolders/${folder}/contacts/${id}/photo/$value`;
+        const requestHeaders: Record<string, string> = {};
+        if (options.contentType !== undefined) {
+            requestHeaders["Content-Type"] = String(options.contentType);
+        }
         const requestUrl = this.resolveUrl(requestPath);
-        await this.sendWithTracingAsync<void>("Office365.updateMyContactPhoto", "UpdateMyContactPhoto", "PUT", requestUrl, input, options);
+        await this.sendWithTracingAsync<void>("Office365.updateMyContactPhoto", "UpdateMyContactPhoto", "PUT", requestUrl, input, options, requestHeaders);
     }
 
     /**
      * Send an HTTP request
      * @remarks Construct a Microsoft Graph REST API request to invoke. These segments are supported: 1st segement: /me, /users/<userId> 2nd segment: messages, mailFolders, events, calendar, calendars, outlook, inferenceClassification. Learn more: https://docs.microsoft.com/en-us/graph/use-the-api.
      */
-    public async httpRequest(input: HttpRequestInput, options: ConnectorOperationOptions = {}): Promise<ObjectWithoutType> {
+    public async httpRequest(input: HttpRequestInput, uri: string, method: string, options: HttpRequestOptions = {}): Promise<ObjectWithoutType> {
         const requestPath = `/codeless/httprequest`;
+        const requestHeaders: Record<string, string> = {};
+        if (uri !== undefined) {
+            requestHeaders["Uri"] = String(uri);
+        }
+        if (method !== undefined) {
+            requestHeaders["Method"] = String(method);
+        }
+        if (options.contentType !== undefined) {
+            requestHeaders["ContentType"] = String(options.contentType);
+        }
+        if (options.customHeader1 !== undefined) {
+            requestHeaders["CustomHeader1"] = String(options.customHeader1);
+        }
+        if (options.customHeader2 !== undefined) {
+            requestHeaders["CustomHeader2"] = String(options.customHeader2);
+        }
+        if (options.customHeader3 !== undefined) {
+            requestHeaders["CustomHeader3"] = String(options.customHeader3);
+        }
+        if (options.customHeader4 !== undefined) {
+            requestHeaders["CustomHeader4"] = String(options.customHeader4);
+        }
+        if (options.customHeader5 !== undefined) {
+            requestHeaders["CustomHeader5"] = String(options.customHeader5);
+        }
         const requestUrl = this.resolveUrl(requestPath);
-        const httpResponse = await this.sendWithTracingAsync<ObjectWithoutType>("Office365.httpRequest", "HttpRequest", "POST", requestUrl, input, options);
+        const httpResponse = await this.sendWithTracingAsync<ObjectWithoutType>("Office365.httpRequest", "HttpRequest", "POST", requestUrl, input, options, requestHeaders);
 
         return httpResponse.value as ObjectWithoutType;
     }
@@ -2767,10 +3036,10 @@ export class Office365Client extends ConnectorClientBase {
      * Email Management MCP Server (deprecated)
      * @remarks This MCP server manages email messages from your Office 365 account
      */
-    public async mcpEmailsManagement(input: MCPQueryRequest, sessionId?: string, options: ConnectorOperationOptions = {}): Promise<MCPQueryResponse> {
+    public async mcpEmailsManagement(input: MCPQueryRequest, options: McpEmailsManagementOptions = {}): Promise<MCPQueryResponse> {
         const queryParams: string[] = [];
-        if (sessionId !== undefined) {
-            queryParams.push(`sessionId=${encodeURIComponent(String(sessionId))}`);
+        if (options.sessionId !== undefined) {
+            queryParams.push(`sessionId=${encodeURIComponent(String(options.sessionId))}`);
         }
         const requestPath = `/mcp/EmailsManagement` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
@@ -2783,10 +3052,10 @@ export class Office365Client extends ConnectorClientBase {
      * Meeting Management MCP Server (deprecated)
      * @remarks This MCP server manages events, calendars and meetings
      */
-    public async mcpMeetingManagement(input: MCPQueryRequest, sessionId?: string, options: ConnectorOperationOptions = {}): Promise<MCPQueryResponse> {
+    public async mcpMeetingManagement(input: MCPQueryRequest, options: McpMeetingManagementOptions = {}): Promise<MCPQueryResponse> {
         const queryParams: string[] = [];
-        if (sessionId !== undefined) {
-            queryParams.push(`sessionId=${encodeURIComponent(String(sessionId))}`);
+        if (options.sessionId !== undefined) {
+            queryParams.push(`sessionId=${encodeURIComponent(String(options.sessionId))}`);
         }
         const requestPath = `/mcp/MeetingManagement` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
@@ -2799,10 +3068,10 @@ export class Office365Client extends ConnectorClientBase {
      * Contact Management MCP Server
      * @remarks This MCP server manages contacts
      */
-    public async mcpContactsManagement(input: MCPQueryRequest, sessionId?: string, options: ConnectorOperationOptions = {}): Promise<MCPQueryResponse> {
+    public async mcpContactsManagement(input: MCPQueryRequest, options: McpContactsManagementOptions = {}): Promise<MCPQueryResponse> {
         const queryParams: string[] = [];
-        if (sessionId !== undefined) {
-            queryParams.push(`sessionId=${encodeURIComponent(String(sessionId))}`);
+        if (options.sessionId !== undefined) {
+            queryParams.push(`sessionId=${encodeURIComponent(String(options.sessionId))}`);
         }
         const requestPath = `/mcp/ContactsManagement` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
@@ -2837,19 +3106,19 @@ export class Office365Client extends ConnectorClientBase {
      * Get events
      * @remarks This operation gets events from a calendar using Graph API.
      */
-    public async getCalendarItems(table: string, filter?: string, orderby?: string, top?: string, skip?: string, options: ConnectorOperationOptions = {}): Promise<GraphCalendarEventListClientReceive> {
+    public async getCalendarItems(table: string, options: GetCalendarItemsOptions = {}): Promise<GraphCalendarEventListClientReceive> {
         const queryParams: string[] = [];
-        if (filter !== undefined) {
-            queryParams.push(`$filter=${encodeURIComponent(String(filter))}`);
+        if (options.filter !== undefined) {
+            queryParams.push(`$filter=${encodeURIComponent(String(options.filter))}`);
         }
-        if (orderby !== undefined) {
-            queryParams.push(`$orderby=${encodeURIComponent(String(orderby))}`);
+        if (options.orderby !== undefined) {
+            queryParams.push(`$orderby=${encodeURIComponent(String(options.orderby))}`);
         }
-        if (top !== undefined) {
-            queryParams.push(`$top=${encodeURIComponent(String(top))}`);
+        if (options.top !== undefined) {
+            queryParams.push(`$top=${encodeURIComponent(String(options.top))}`);
         }
-        if (skip !== undefined) {
-            queryParams.push(`$skip=${encodeURIComponent(String(skip))}`);
+        if (options.skip !== undefined) {
+            queryParams.push(`$skip=${encodeURIComponent(String(options.skip))}`);
         }
         const requestPath = `/datasets/calendars/v4/tables/${table}/items` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
@@ -2862,16 +3131,16 @@ export class Office365Client extends ConnectorClientBase {
      * Get calendars
      * @remarks This operation lists available calendars.
      */
-    public async getCalendarTables(skip?: string, top?: string, orderBy?: string, options: ConnectorOperationOptions = {}): Promise<CalendarGetTablesResponse> {
+    public async getCalendarTables(options: GetCalendarTablesOptions = {}): Promise<CalendarGetTablesResponse> {
         const queryParams: string[] = [];
-        if (skip !== undefined) {
-            queryParams.push(`skip=${encodeURIComponent(String(skip))}`);
+        if (options.skip !== undefined) {
+            queryParams.push(`skip=${encodeURIComponent(String(options.skip))}`);
         }
-        if (top !== undefined) {
-            queryParams.push(`top=${encodeURIComponent(String(top))}`);
+        if (options.top !== undefined) {
+            queryParams.push(`top=${encodeURIComponent(String(options.top))}`);
         }
-        if (orderBy !== undefined) {
-            queryParams.push(`orderBy=${encodeURIComponent(String(orderBy))}`);
+        if (options.orderBy !== undefined) {
+            queryParams.push(`orderBy=${encodeURIComponent(String(options.orderBy))}`);
         }
         const requestPath = `/codeless/v1.0/me/calendars` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
@@ -2884,10 +3153,10 @@ export class Office365Client extends ConnectorClientBase {
      * Update event
      * @remarks This operation updates an event in a calendar using Graph API.
      */
-    public async calendarPatchItem(input: GraphCalendarEventClient, table: string, id: string, options: ConnectorOperationOptions = {}): Promise<GraphCalendarEventClientReceive> {
+    public async patchCalendarItem(input: GraphCalendarEventClient, table: string, id: string, options: ConnectorOperationOptions = {}): Promise<GraphCalendarEventClientReceive> {
         const requestPath = `/datasets/calendars/v4/tables/${table}/items/${id}`;
         const requestUrl = this.resolveUrl(requestPath);
-        const httpResponse = await this.sendWithTracingAsync<GraphCalendarEventClientReceive>("Office365.calendarPatchItem", "V4CalendarPatchItem", "PATCH", requestUrl, input, options);
+        const httpResponse = await this.sendWithTracingAsync<GraphCalendarEventClientReceive>("Office365.patchCalendarItem", "V4CalendarPatchItem", "PATCH", requestUrl, input, options);
 
         return httpResponse.value as GraphCalendarEventClientReceive;
     }
@@ -2930,19 +3199,19 @@ export class Office365Client extends ConnectorClientBase {
      * Get contacts
      * @remarks This operation gets contacts from a contacts folder.
      */
-    public getContactItems(folder: string, filter?: string, orderby?: string, top?: string, skip?: string, options: ConnectorOperationOptions = {}): ConnectorPagedAsyncIterableIterator<ContactResponse> {
+    public getContactItems(folder: string, options: GetContactItemsOptions = {}): ConnectorPagedAsyncIterableIterator<ContactResponse> {
         const queryParams: string[] = [];
-        if (filter !== undefined) {
-            queryParams.push(`$filter=${encodeURIComponent(String(filter))}`);
+        if (options.filter !== undefined) {
+            queryParams.push(`$filter=${encodeURIComponent(String(options.filter))}`);
         }
-        if (orderby !== undefined) {
-            queryParams.push(`$orderby=${encodeURIComponent(String(orderby))}`);
+        if (options.orderby !== undefined) {
+            queryParams.push(`$orderby=${encodeURIComponent(String(options.orderby))}`);
         }
-        if (top !== undefined) {
-            queryParams.push(`$top=${encodeURIComponent(String(top))}`);
+        if (options.top !== undefined) {
+            queryParams.push(`$top=${encodeURIComponent(String(options.top))}`);
         }
-        if (skip !== undefined) {
-            queryParams.push(`$skip=${encodeURIComponent(String(skip))}`);
+        if (options.skip !== undefined) {
+            queryParams.push(`$skip=${encodeURIComponent(String(options.skip))}`);
         }
         const requestPath = `/codeless/v1.0/me/contactFolders/${folder}/contacts` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         return this.createPageable<EntityListResponseContactResponse, ContactResponse>(
@@ -2974,10 +3243,10 @@ export class Office365Client extends ConnectorClientBase {
      * Update contact
      * @remarks This operation updates a contact in a contacts folder.
      */
-    public async contactPatchItem(input: Contact, folder: string, id: string, options: ConnectorOperationOptions = {}): Promise<ContactResponse> {
+    public async patchContactItem(input: Contact, folder: string, id: string, options: ConnectorOperationOptions = {}): Promise<ContactResponse> {
         const requestPath = `/codeless/v1.0/me/contactFolders/${folder}/contacts/${id}`;
         const requestUrl = this.resolveUrl(requestPath);
-        const httpResponse = await this.sendWithTracingAsync<ContactResponse>("Office365.contactPatchItem", "ContactPatchItem_V2", "PATCH", requestUrl, input, options);
+        const httpResponse = await this.sendWithTracingAsync<ContactResponse>("Office365.patchContactItem", "ContactPatchItem_V2", "PATCH", requestUrl, input, options);
 
         return httpResponse.value as ContactResponse;
     }
@@ -2998,10 +3267,10 @@ export class Office365Client extends ConnectorClientBase {
      * Delete email
      * @remarks This operation deletes an email by id.
      */
-    public async deleteEmail(messageId: string, mailboxAddress?: string, options: ConnectorOperationOptions = {}): Promise<void> {
+    public async deleteEmail(messageId: string, options: DeleteEmailOptions = {}): Promise<void> {
         const queryParams: string[] = [];
-        if (mailboxAddress !== undefined) {
-            queryParams.push(`mailboxAddress=${encodeURIComponent(String(mailboxAddress))}`);
+        if (options.mailboxAddress !== undefined) {
+            queryParams.push(`mailboxAddress=${encodeURIComponent(String(options.mailboxAddress))}`);
         }
         const requestPath = `/codeless/v1.0/me/messages/${messageId}` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
@@ -3012,10 +3281,10 @@ export class Office365Client extends ConnectorClientBase {
      * Export email
      * @remarks Export the content of the email in the EML file format.
      */
-    public async exportEmail(messageId: string, mailboxAddress?: string, options: ConnectorOperationOptions = {}): Promise<Blob> {
+    public async exportEmail(messageId: string, options: ExportEmailOptions = {}): Promise<Blob> {
         const queryParams: string[] = [];
-        if (mailboxAddress !== undefined) {
-            queryParams.push(`mailboxAddress=${encodeURIComponent(String(mailboxAddress))}`);
+        if (options.mailboxAddress !== undefined) {
+            queryParams.push(`mailboxAddress=${encodeURIComponent(String(options.mailboxAddress))}`);
         }
         const requestPath = `/codeless/beta/me/messages/${messageId}/$value` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
@@ -3040,10 +3309,10 @@ export class Office365Client extends ConnectorClientBase {
      * Flag email
      * @remarks This operation updates an email flag.
      */
-    public async flag(input: UpdateEmailFlag, messageId: string, mailboxAddress?: string, options: ConnectorOperationOptions = {}): Promise<void> {
+    public async flag(input: UpdateEmailFlag, messageId: string, options: FlagOptions = {}): Promise<void> {
         const queryParams: string[] = [];
-        if (mailboxAddress !== undefined) {
-            queryParams.push(`mailboxAddress=${encodeURIComponent(String(mailboxAddress))}`);
+        if (options.mailboxAddress !== undefined) {
+            queryParams.push(`mailboxAddress=${encodeURIComponent(String(options.mailboxAddress))}`);
         }
         const requestPath = `/codeless/v1.0/me/messages/${messageId}/flag` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
@@ -3054,16 +3323,16 @@ export class Office365Client extends ConnectorClientBase {
      * Forward an email
      * @remarks Forward an email.
      */
-    public async forwardEmail(input: DirectForwardMessage, messageId: string, mailboxAddress?: string, extractSensitivityLabel?: string, fetchSensitivityLabelMetadata?: string, options: ConnectorOperationOptions = {}): Promise<void> {
+    public async forwardEmail(input: DirectForwardMessage, messageId: string, options: ForwardEmailOptions = {}): Promise<void> {
         const queryParams: string[] = [];
-        if (mailboxAddress !== undefined) {
-            queryParams.push(`mailboxAddress=${encodeURIComponent(String(mailboxAddress))}`);
+        if (options.mailboxAddress !== undefined) {
+            queryParams.push(`mailboxAddress=${encodeURIComponent(String(options.mailboxAddress))}`);
         }
-        if (extractSensitivityLabel !== undefined) {
-            queryParams.push(`extractSensitivityLabel=${encodeURIComponent(String(extractSensitivityLabel))}`);
+        if (options.extractSensitivityLabel !== undefined) {
+            queryParams.push(`extractSensitivityLabel=${encodeURIComponent(String(options.extractSensitivityLabel))}`);
         }
-        if (fetchSensitivityLabelMetadata !== undefined) {
-            queryParams.push(`fetchSensitivityLabelMetadata=${encodeURIComponent(String(fetchSensitivityLabelMetadata))}`);
+        if (options.fetchSensitivityLabelMetadata !== undefined) {
+            queryParams.push(`fetchSensitivityLabelMetadata=${encodeURIComponent(String(options.fetchSensitivityLabelMetadata))}`);
         }
         const requestPath = `/codeless/v1.0/me/messages/${messageId}/forward` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
@@ -3074,16 +3343,16 @@ export class Office365Client extends ConnectorClientBase {
      * Get Attachment
      * @remarks This operation gets an email attachment by id.
      */
-    public async getAttachment(messageId: string, attachmentId: string, mailboxAddress?: string, extractSensitivityLabel?: string, fetchSensitivityLabelMetadata?: string, options: ConnectorOperationOptions = {}): Promise<GetAttachmentResponse> {
+    public async getAttachment(messageId: string, attachmentId: string, options: GetAttachmentOptions = {}): Promise<GetAttachmentResponse> {
         const queryParams: string[] = [];
-        if (mailboxAddress !== undefined) {
-            queryParams.push(`mailboxAddress=${encodeURIComponent(String(mailboxAddress))}`);
+        if (options.mailboxAddress !== undefined) {
+            queryParams.push(`mailboxAddress=${encodeURIComponent(String(options.mailboxAddress))}`);
         }
-        if (extractSensitivityLabel !== undefined) {
-            queryParams.push(`extractSensitivityLabel=${encodeURIComponent(String(extractSensitivityLabel))}`);
+        if (options.extractSensitivityLabel !== undefined) {
+            queryParams.push(`extractSensitivityLabel=${encodeURIComponent(String(options.extractSensitivityLabel))}`);
         }
-        if (fetchSensitivityLabelMetadata !== undefined) {
-            queryParams.push(`fetchSensitivityLabelMetadata=${encodeURIComponent(String(fetchSensitivityLabelMetadata))}`);
+        if (options.fetchSensitivityLabelMetadata !== undefined) {
+            queryParams.push(`fetchSensitivityLabelMetadata=${encodeURIComponent(String(options.fetchSensitivityLabelMetadata))}`);
         }
         const requestPath = `/codeless/v1.0/me/messages/${messageId}/attachments/${attachmentId}` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
@@ -3096,22 +3365,22 @@ export class Office365Client extends ConnectorClientBase {
      * Get email
      * @remarks This operation gets an email by id.
      */
-    public async getEmail(messageId: string, mailboxAddress?: string, includeAttachments?: string, internetMessageId?: string, extractSensitivityLabel?: string, fetchSensitivityLabelMetadata?: string, options: ConnectorOperationOptions = {}): Promise<GraphClientReceiveMessage> {
+    public async getEmail(messageId: string, options: GetEmailOptions = {}): Promise<GraphClientReceiveMessage> {
         const queryParams: string[] = [];
-        if (mailboxAddress !== undefined) {
-            queryParams.push(`mailboxAddress=${encodeURIComponent(String(mailboxAddress))}`);
+        if (options.mailboxAddress !== undefined) {
+            queryParams.push(`mailboxAddress=${encodeURIComponent(String(options.mailboxAddress))}`);
         }
-        if (includeAttachments !== undefined) {
-            queryParams.push(`includeAttachments=${encodeURIComponent(String(includeAttachments))}`);
+        if (options.includeAttachments !== undefined) {
+            queryParams.push(`includeAttachments=${encodeURIComponent(String(options.includeAttachments))}`);
         }
-        if (internetMessageId !== undefined) {
-            queryParams.push(`internetMessageId=${encodeURIComponent(String(internetMessageId))}`);
+        if (options.internetMessageId !== undefined) {
+            queryParams.push(`internetMessageId=${encodeURIComponent(String(options.internetMessageId))}`);
         }
-        if (extractSensitivityLabel !== undefined) {
-            queryParams.push(`extractSensitivityLabel=${encodeURIComponent(String(extractSensitivityLabel))}`);
+        if (options.extractSensitivityLabel !== undefined) {
+            queryParams.push(`extractSensitivityLabel=${encodeURIComponent(String(options.extractSensitivityLabel))}`);
         }
-        if (fetchSensitivityLabelMetadata !== undefined) {
-            queryParams.push(`fetchSensitivityLabelMetadata=${encodeURIComponent(String(fetchSensitivityLabelMetadata))}`);
+        if (options.fetchSensitivityLabelMetadata !== undefined) {
+            queryParams.push(`fetchSensitivityLabelMetadata=${encodeURIComponent(String(options.fetchSensitivityLabelMetadata))}`);
         }
         const requestPath = `/v2/Mail/${messageId}` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
@@ -3124,49 +3393,49 @@ export class Office365Client extends ConnectorClientBase {
      * Get emails
      * @remarks This operation gets emails from a folder via graph apis. Please note that filtering related to these fields: To, Cc, To Or Cc, From, Importance, Fetch Only With Attachments, Subject Filter, is performed using first 250 items in a given mail folder. To avoid that limitation you can use 'Search Query' field.
      */
-    public async getEmails(folderPath?: string, to?: string, cc?: string, toOrCc?: string, from?: string, importance?: string, fetchOnlyWithAttachment?: string, subjectFilter?: string, fetchOnlyUnread?: string, fetchOnlyFlagged?: string, mailboxAddress?: string, includeAttachments?: string, searchQuery?: string, top?: string, options: ConnectorOperationOptions = {}): Promise<BatchResponseGraphClientReceiveMessage> {
+    public async getEmails(options: GetEmailsOptions = {}): Promise<BatchResponseGraphClientReceiveMessage> {
         const queryParams: string[] = [];
-        if (folderPath !== undefined) {
-            queryParams.push(`folderPath=${encodeURIComponent(String(folderPath))}`);
+        if (options.folderPath !== undefined) {
+            queryParams.push(`folderPath=${encodeURIComponent(String(options.folderPath))}`);
         }
-        if (to !== undefined) {
-            queryParams.push(`to=${encodeURIComponent(String(to))}`);
+        if (options.to !== undefined) {
+            queryParams.push(`to=${encodeURIComponent(String(options.to))}`);
         }
-        if (cc !== undefined) {
-            queryParams.push(`cc=${encodeURIComponent(String(cc))}`);
+        if (options.cc !== undefined) {
+            queryParams.push(`cc=${encodeURIComponent(String(options.cc))}`);
         }
-        if (toOrCc !== undefined) {
-            queryParams.push(`toOrCc=${encodeURIComponent(String(toOrCc))}`);
+        if (options.toOrCc !== undefined) {
+            queryParams.push(`toOrCc=${encodeURIComponent(String(options.toOrCc))}`);
         }
-        if (from !== undefined) {
-            queryParams.push(`from=${encodeURIComponent(String(from))}`);
+        if (options.from !== undefined) {
+            queryParams.push(`from=${encodeURIComponent(String(options.from))}`);
         }
-        if (importance !== undefined) {
-            queryParams.push(`importance=${encodeURIComponent(String(importance))}`);
+        if (options.importance !== undefined) {
+            queryParams.push(`importance=${encodeURIComponent(String(options.importance))}`);
         }
-        if (fetchOnlyWithAttachment !== undefined) {
-            queryParams.push(`fetchOnlyWithAttachment=${encodeURIComponent(String(fetchOnlyWithAttachment))}`);
+        if (options.fetchOnlyWithAttachment !== undefined) {
+            queryParams.push(`fetchOnlyWithAttachment=${encodeURIComponent(String(options.fetchOnlyWithAttachment))}`);
         }
-        if (subjectFilter !== undefined) {
-            queryParams.push(`subjectFilter=${encodeURIComponent(String(subjectFilter))}`);
+        if (options.subjectFilter !== undefined) {
+            queryParams.push(`subjectFilter=${encodeURIComponent(String(options.subjectFilter))}`);
         }
-        if (fetchOnlyUnread !== undefined) {
-            queryParams.push(`fetchOnlyUnread=${encodeURIComponent(String(fetchOnlyUnread))}`);
+        if (options.fetchOnlyUnread !== undefined) {
+            queryParams.push(`fetchOnlyUnread=${encodeURIComponent(String(options.fetchOnlyUnread))}`);
         }
-        if (fetchOnlyFlagged !== undefined) {
-            queryParams.push(`fetchOnlyFlagged=${encodeURIComponent(String(fetchOnlyFlagged))}`);
+        if (options.fetchOnlyFlagged !== undefined) {
+            queryParams.push(`fetchOnlyFlagged=${encodeURIComponent(String(options.fetchOnlyFlagged))}`);
         }
-        if (mailboxAddress !== undefined) {
-            queryParams.push(`mailboxAddress=${encodeURIComponent(String(mailboxAddress))}`);
+        if (options.mailboxAddress !== undefined) {
+            queryParams.push(`mailboxAddress=${encodeURIComponent(String(options.mailboxAddress))}`);
         }
-        if (includeAttachments !== undefined) {
-            queryParams.push(`includeAttachments=${encodeURIComponent(String(includeAttachments))}`);
+        if (options.includeAttachments !== undefined) {
+            queryParams.push(`includeAttachments=${encodeURIComponent(String(options.includeAttachments))}`);
         }
-        if (searchQuery !== undefined) {
-            queryParams.push(`searchQuery=${encodeURIComponent(String(searchQuery))}`);
+        if (options.searchQuery !== undefined) {
+            queryParams.push(`searchQuery=${encodeURIComponent(String(options.searchQuery))}`);
         }
-        if (top !== undefined) {
-            queryParams.push(`top=${encodeURIComponent(String(top))}`);
+        if (options.top !== undefined) {
+            queryParams.push(`top=${encodeURIComponent(String(options.top))}`);
         }
         const requestPath = `/v3/Mail` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
@@ -3179,7 +3448,7 @@ export class Office365Client extends ConnectorClientBase {
      * Get calendar view of events
      * @remarks This operation gets all events (including instances of recurrences) in a calendar using Graph API. Recurrence property is null in this case.
      */
-    public async getEventsCalendarView(calendarId?: string, startDateTimeUtc?: string, endDateTimeUtc?: string, filter?: string, orderby?: string, top?: string, skip?: string, search?: string, options: ConnectorOperationOptions = {}): Promise<EntityListResponseGraphCalendarEventClientReceive> {
+    public async getEventsCalendarView(calendarId: string, startDateTimeUtc: string, endDateTimeUtc: string, options: GetEventsCalendarViewOptions = {}): Promise<EntityListResponseGraphCalendarEventClientReceive> {
         const queryParams: string[] = [];
         if (calendarId !== undefined) {
             queryParams.push(`calendarId=${encodeURIComponent(String(calendarId))}`);
@@ -3190,20 +3459,20 @@ export class Office365Client extends ConnectorClientBase {
         if (endDateTimeUtc !== undefined) {
             queryParams.push(`endDateTimeUtc=${encodeURIComponent(String(endDateTimeUtc))}`);
         }
-        if (filter !== undefined) {
-            queryParams.push(`$filter=${encodeURIComponent(String(filter))}`);
+        if (options.filter !== undefined) {
+            queryParams.push(`$filter=${encodeURIComponent(String(options.filter))}`);
         }
-        if (orderby !== undefined) {
-            queryParams.push(`$orderby=${encodeURIComponent(String(orderby))}`);
+        if (options.orderby !== undefined) {
+            queryParams.push(`$orderby=${encodeURIComponent(String(options.orderby))}`);
         }
-        if (top !== undefined) {
-            queryParams.push(`$top=${encodeURIComponent(String(top))}`);
+        if (options.top !== undefined) {
+            queryParams.push(`$top=${encodeURIComponent(String(options.top))}`);
         }
-        if (skip !== undefined) {
-            queryParams.push(`$skip=${encodeURIComponent(String(skip))}`);
+        if (options.skip !== undefined) {
+            queryParams.push(`$skip=${encodeURIComponent(String(options.skip))}`);
         }
-        if (search !== undefined) {
-            queryParams.push(`search=${encodeURIComponent(String(search))}`);
+        if (options.search !== undefined) {
+            queryParams.push(`search=${encodeURIComponent(String(options.search))}`);
         }
         const requestPath = `/datasets/calendars/v3/tables/items/calendarview` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
@@ -3264,10 +3533,10 @@ export class Office365Client extends ConnectorClientBase {
      * Mark as read or unread
      * @remarks This operation marks an email as read/unread.
      */
-    public async markAsRead(input: MarkAsReadInput, messageId: string, mailboxAddress?: string, options: ConnectorOperationOptions = {}): Promise<void> {
+    public async markAsRead(input: MarkAsReadInput, messageId: string, options: MarkAsReadOptions = {}): Promise<void> {
         const queryParams: string[] = [];
-        if (mailboxAddress !== undefined) {
-            queryParams.push(`mailboxAddress=${encodeURIComponent(String(mailboxAddress))}`);
+        if (options.mailboxAddress !== undefined) {
+            queryParams.push(`mailboxAddress=${encodeURIComponent(String(options.mailboxAddress))}`);
         }
         const requestPath = `/codeless/v3/v1.0/me/messages/${messageId}/markAsRead` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
@@ -3278,13 +3547,13 @@ export class Office365Client extends ConnectorClientBase {
      * Move email
      * @remarks This operation moves an email to the specified folder within the same mailbox.
      */
-    public async move(messageId: string, folderPath?: string, mailboxAddress?: string, options: ConnectorOperationOptions = {}): Promise<GraphClientReceiveMessage> {
+    public async move(messageId: string, folderPath: string, options: MoveOptions = {}): Promise<GraphClientReceiveMessage> {
         const queryParams: string[] = [];
         if (folderPath !== undefined) {
             queryParams.push(`folderPath=${encodeURIComponent(String(folderPath))}`);
         }
-        if (mailboxAddress !== undefined) {
-            queryParams.push(`mailboxAddress=${encodeURIComponent(String(mailboxAddress))}`);
+        if (options.mailboxAddress !== undefined) {
+            queryParams.push(`mailboxAddress=${encodeURIComponent(String(options.mailboxAddress))}`);
         }
         const requestPath = `/v2/Mail/Move/${messageId}` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
@@ -3297,10 +3566,10 @@ export class Office365Client extends ConnectorClientBase {
      * Reply to email
      * @remarks This operation replies to an email.
      */
-    public async replyTo(input: ReplyEmailInput, messageId: string, mailboxAddress?: string, options: ConnectorOperationOptions = {}): Promise<void> {
+    public async replyTo(input: ReplyEmailInput, messageId: string, options: ReplyToOptions = {}): Promise<void> {
         const queryParams: string[] = [];
-        if (mailboxAddress !== undefined) {
-            queryParams.push(`mailboxAddress=${encodeURIComponent(String(mailboxAddress))}`);
+        if (options.mailboxAddress !== undefined) {
+            queryParams.push(`mailboxAddress=${encodeURIComponent(String(options.mailboxAddress))}`);
         }
         const requestPath = `/v3/Mail/ReplyTo/${messageId}` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);

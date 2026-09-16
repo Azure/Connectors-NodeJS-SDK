@@ -86,6 +86,46 @@ export interface UserDetailsDTO {
     tenantId?: string;
     email?: string;
 }
+
+/**
+ * Options for the searchLocations operation.
+ */
+export interface SearchLocationsOptions extends ConnectorOperationOptions {
+    /** Optional category filter */
+    category?: string;
+}
+
+/**
+ * Options for the getCustomLocationImage operation.
+ */
+export interface GetCustomLocationImageOptions extends ConnectorOperationOptions {
+    /** Large image returned */
+    large?: string;
+}
+
+/**
+ * Options for the getMeetingRoomImage operation.
+ */
+export interface GetMeetingRoomImageOptions extends ConnectorOperationOptions {
+    /** Large image. */
+    large?: string;
+}
+
+/**
+ * Options for the getRoomWithPersonsDetails operation.
+ */
+export interface GetRoomWithPersonsDetailsOptions extends ConnectorOperationOptions {
+    /** Flag to indicate if user info should be included */
+    inludeUserInfo?: string;
+}
+
+/**
+ * Options for the getOfficeLocationImage operation.
+ */
+export interface GetOfficeLocationImageOptions extends ConnectorOperationOptions {
+    /** Image size. */
+    large?: string;
+}
 // #endregion Types
 
 // #region Client
@@ -157,10 +197,10 @@ export class MeetingroommapClient extends ConnectorClientBase {
      * Search location by name
      * @remarks Search custom locations by name
      */
-    public async searchLocations(locationName: string, category?: string, options: ConnectorOperationOptions = {}): Promise<Array<Record<string, unknown>>> {
+    public async searchLocations(locationName: string, options: SearchLocationsOptions = {}): Promise<Array<Record<string, unknown>>> {
         const queryParams: string[] = [];
-        if (category !== undefined) {
-            queryParams.push(`Category=${encodeURIComponent(String(category))}`);
+        if (options.category !== undefined) {
+            queryParams.push(`Category=${encodeURIComponent(String(options.category))}`);
         }
         const requestPath = `/api/CustomLocations/findbyname/${locationName}` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
@@ -173,10 +213,10 @@ export class MeetingroommapClient extends ConnectorClientBase {
      * Get image for location
      * @remarks Get image for specific custom location
      */
-    public async getCustomLocationImage(locationId: string, large?: string, options: ConnectorOperationOptions = {}): Promise<Blob> {
+    public async getCustomLocationImage(locationId: string, options: GetCustomLocationImageOptions = {}): Promise<Blob> {
         const queryParams: string[] = [];
-        if (large !== undefined) {
-            queryParams.push(`Large=${encodeURIComponent(String(large))}`);
+        if (options.large !== undefined) {
+            queryParams.push(`Large=${encodeURIComponent(String(options.large))}`);
         }
         const requestPath = `/api/CustomLocations/createimage/${locationId}` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
@@ -201,10 +241,10 @@ export class MeetingroommapClient extends ConnectorClientBase {
      * Get image for meeting room
      * @remarks Get image for a specific meeting room
      */
-    public async getMeetingRoomImage(roomName: string, large?: string, options: ConnectorOperationOptions = {}): Promise<Blob> {
+    public async getMeetingRoomImage(roomName: string, options: GetMeetingRoomImageOptions = {}): Promise<Blob> {
         const queryParams: string[] = [];
-        if (large !== undefined) {
-            queryParams.push(`Large=${encodeURIComponent(String(large))}`);
+        if (options.large !== undefined) {
+            queryParams.push(`Large=${encodeURIComponent(String(options.large))}`);
         }
         const requestPath = `/api/MapImage/create/${roomName}` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
@@ -271,10 +311,10 @@ export class MeetingroommapClient extends ConnectorClientBase {
      * Get office location details
      * @remarks Get office location details including list of people for that office location
      */
-    public async getRoomWithPersonsDetails(officeLocationName: string, inludeUserInfo?: string, options: ConnectorOperationOptions = {}): Promise<GetRoomWithPersonsDetailsResponse> {
+    public async getRoomWithPersonsDetails(officeLocationName: string, options: GetRoomWithPersonsDetailsOptions = {}): Promise<GetRoomWithPersonsDetailsResponse> {
         const queryParams: string[] = [];
-        if (inludeUserInfo !== undefined) {
-            queryParams.push(`InludeUserInfo=${encodeURIComponent(String(inludeUserInfo))}`);
+        if (options.inludeUserInfo !== undefined) {
+            queryParams.push(`InludeUserInfo=${encodeURIComponent(String(options.inludeUserInfo))}`);
         }
         const requestPath = `/api/officelocations/mapimagewithpersoninfo/${officeLocationName}` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
@@ -287,10 +327,10 @@ export class MeetingroommapClient extends ConnectorClientBase {
      * Get image of office location
      * @remarks Get image of specific office location
      */
-    public async getOfficeLocationImage(officeLocationName: string, large?: string, options: ConnectorOperationOptions = {}): Promise<Blob> {
+    public async getOfficeLocationImage(officeLocationName: string, options: GetOfficeLocationImageOptions = {}): Promise<Blob> {
         const queryParams: string[] = [];
-        if (large !== undefined) {
-            queryParams.push(`Large=${encodeURIComponent(String(large))}`);
+        if (options.large !== undefined) {
+            queryParams.push(`Large=${encodeURIComponent(String(options.large))}`);
         }
         const requestPath = `/api/officelocationimage/create/${officeLocationName}` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);

@@ -304,7 +304,7 @@ export class RepliconClient extends ConnectorClientBase {
      * Get Project Details
      * @remarks Get the project details from Replicon
      */
-    public async getBulkProjectDetails3(input: BulkGetProjectDetails3Input, hostUrl?: string, options: ConnectorOperationOptions = {}): Promise<ProjectDetailsResponse> {
+    public async getBulkProjectDetails3(input: BulkGetProjectDetails3Input, hostUrl: string, options: ConnectorOperationOptions = {}): Promise<ProjectDetailsResponse> {
         const queryParams: string[] = [];
         if (hostUrl !== undefined) {
             queryParams.push(`hostUrl=${encodeURIComponent(String(hostUrl))}`);
@@ -320,7 +320,7 @@ export class RepliconClient extends ConnectorClientBase {
      * Create Project Or Apply Modifications
      * @remarks Create Project Or Apply Modifications in Replicon
      */
-    public async createProjectOrApplyModifications(input: CreateProjectOrApplyModificationsInput, hostUrl?: string, options: ConnectorOperationOptions = {}): Promise<CreateProjectOrApplyModificationsResponse> {
+    public async createProjectOrApplyModifications(input: CreateProjectOrApplyModificationsInput, hostUrl: string, options: ConnectorOperationOptions = {}): Promise<CreateProjectOrApplyModificationsResponse> {
         const queryParams: string[] = [];
         if (hostUrl !== undefined) {
             queryParams.push(`hostUrl=${encodeURIComponent(String(hostUrl))}`);
@@ -336,7 +336,7 @@ export class RepliconClient extends ConnectorClientBase {
      * Get User List
      * @remarks Get User List Data from Replicon
      */
-    public async getUserListServiceData(input: UserListServiceGetDataInput, hostUrl?: string, options: ConnectorOperationOptions = {}): Promise<UserListServiceGetDataResponse> {
+    public async getUserListServiceData(input: UserListServiceGetDataInput, hostUrl: string, options: ConnectorOperationOptions = {}): Promise<UserListServiceGetDataResponse> {
         const queryParams: string[] = [];
         if (hostUrl !== undefined) {
             queryParams.push(`hostUrl=${encodeURIComponent(String(hostUrl))}`);
@@ -352,7 +352,7 @@ export class RepliconClient extends ConnectorClientBase {
      * Get Descendant Task Details
      * @remarks Get Hierarchial Task Details from Replicon
      */
-    public async getDescendantTaskDetails(input: GetDescendantTaskDetailsInput, hostUrl?: string, options: ConnectorOperationOptions = {}): Promise<GetDescendantTaskDetailsResponse> {
+    public async getDescendantTaskDetails(input: GetDescendantTaskDetailsInput, hostUrl: string, options: ConnectorOperationOptions = {}): Promise<GetDescendantTaskDetailsResponse> {
         const queryParams: string[] = [];
         if (hostUrl !== undefined) {
             queryParams.push(`hostUrl=${encodeURIComponent(String(hostUrl))}`);
@@ -368,7 +368,7 @@ export class RepliconClient extends ConnectorClientBase {
      * Create Task Hierarchy Or Apply Modifications
      * @remarks Create Task Hierarchy Or Apply Modifications to a Replicon Task
      */
-    public async createTaskHierarchyOrApplyModifications(input: CreateTaskHierarchyOrApplyModificationsInput, hostUrl?: string, options: ConnectorOperationOptions = {}): Promise<CreateTaskHierarchyOrApplyModificationsResponse> {
+    public async createTaskHierarchyOrApplyModifications(input: CreateTaskHierarchyOrApplyModificationsInput, hostUrl: string, options: ConnectorOperationOptions = {}): Promise<CreateTaskHierarchyOrApplyModificationsResponse> {
         const queryParams: string[] = [];
         if (hostUrl !== undefined) {
             queryParams.push(`hostUrl=${encodeURIComponent(String(hostUrl))}`);
@@ -384,7 +384,7 @@ export class RepliconClient extends ConnectorClientBase {
      * Move Task
      * @remarks Move Task to a new Parent
      */
-    public async moveTask(input: MoveTaskInput, hostUrl?: string, options: ConnectorOperationOptions = {}): Promise<void> {
+    public async moveTask(input: MoveTaskInput, hostUrl: string, options: ConnectorOperationOptions = {}): Promise<void> {
         const queryParams: string[] = [];
         if (hostUrl !== undefined) {
             queryParams.push(`hostUrl=${encodeURIComponent(String(hostUrl))}`);
@@ -398,7 +398,7 @@ export class RepliconClient extends ConnectorClientBase {
      * Task List Service Get Data
      * @remarks Get Task List Service Data From Replicon
      */
-    public async getTaskListServiceData(input: TaskListServiceGetDataInput, hostUrl?: string, options: ConnectorOperationOptions = {}): Promise<TaskListServiceGetDataResponse> {
+    public async getTaskListServiceData(input: TaskListServiceGetDataInput, hostUrl: string, options: ConnectorOperationOptions = {}): Promise<TaskListServiceGetDataResponse> {
         const queryParams: string[] = [];
         if (hostUrl !== undefined) {
             queryParams.push(`hostUrl=${encodeURIComponent(String(hostUrl))}`);
@@ -414,7 +414,7 @@ export class RepliconClient extends ConnectorClientBase {
      * Get Timesheet Summary
      * @remarks Get Timesheet Summary from Replicon
      */
-    public async getTimesheetSummary(input: GetTimesheetSummaryInput, hostUrl?: string, options: ConnectorOperationOptions = {}): Promise<GetTimesheetSummaryResponse> {
+    public async getTimesheetSummary(input: GetTimesheetSummaryInput, hostUrl: string, options: ConnectorOperationOptions = {}): Promise<GetTimesheetSummaryResponse> {
         const queryParams: string[] = [];
         if (hostUrl !== undefined) {
             queryParams.push(`hostUrl=${encodeURIComponent(String(hostUrl))}`);
@@ -430,7 +430,7 @@ export class RepliconClient extends ConnectorClientBase {
      * Get Time Entered Summary
      * @remarks Get Time Entered by Task Uri from Replicon
      */
-    public async getBulkTimeEnteredSummary(input: BulkGetTimeEnteredSummaryInput, hostUrl?: string, options: ConnectorOperationOptions = {}): Promise<BulkGetTimeEnteredSummaryResponse> {
+    public async getBulkTimeEnteredSummary(input: BulkGetTimeEnteredSummaryInput, hostUrl: string, options: ConnectorOperationOptions = {}): Promise<BulkGetTimeEnteredSummaryResponse> {
         const queryParams: string[] = [];
         if (hostUrl !== undefined) {
             queryParams.push(`hostUrl=${encodeURIComponent(String(hostUrl))}`);
@@ -446,7 +446,7 @@ export class RepliconClient extends ConnectorClientBase {
      * Put Project Team Member Assignments
      * @remarks Rewrite Team Member assignment of Project
      */
-    public async putProjectTeamMemberAssignments(input: PutProjectTeamMemberAssignmentsInput, hostUrl?: string, options: ConnectorOperationOptions = {}): Promise<void> {
+    public async putProjectTeamMemberAssignments(input: PutProjectTeamMemberAssignmentsInput, hostUrl: string, options: ConnectorOperationOptions = {}): Promise<void> {
         const queryParams: string[] = [];
         if (hostUrl !== undefined) {
             queryParams.push(`hostUrl=${encodeURIComponent(String(hostUrl))}`);
@@ -460,7 +460,7 @@ export class RepliconClient extends ConnectorClientBase {
      * Rewrite Resource Assignment of a task
      * @remarks Update the Resource assignment to a specified task
      */
-    public async putResourceAssignments(input: PutResourceAssignmentsInput, hostUrl?: string, options: ConnectorOperationOptions = {}): Promise<void> {
+    public async putResourceAssignments(input: PutResourceAssignmentsInput, hostUrl: string, options: ConnectorOperationOptions = {}): Promise<void> {
         const queryParams: string[] = [];
         if (hostUrl !== undefined) {
             queryParams.push(`hostUrl=${encodeURIComponent(String(hostUrl))}`);

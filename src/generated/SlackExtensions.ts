@@ -97,6 +97,32 @@ export interface PostMessageResponse {
 }
 
 /**
+ * Options for the setDND operation.
+ */
+export interface SetDNDOptions extends ConnectorOperationOptions {
+    /** The number of minutes to set do not disturb. */
+    numMinutes?: string;
+}
+
+/**
+ * Options for the createChannel operation.
+ */
+export interface CreateChannelOptions extends ConnectorOperationOptions {
+    /** The name of the new channel. */
+    name?: string;
+    /** Channel is private or not */
+    isPrivate?: string;
+}
+
+/**
+ * Options for the joinChannel operation.
+ */
+export interface JoinChannelOptions extends ConnectorOperationOptions {
+    /** The name of the channel. */
+    channel?: string;
+}
+
+/**
  * Typed callback payload for trigger operation 'OnNewFile'.
  */
 export type SlackOnNewFileTriggerPayload = TriggerCallbackPayload<Record<string, unknown>>;
@@ -147,10 +173,10 @@ export class SlackClient extends ConnectorClientBase {
      * Set do not disturb
      * @remarks Set the do not disturb status for the user.
      */
-    public async setDND(numMinutes?: string, options: ConnectorOperationOptions = {}): Promise<SetDNDResponse> {
+    public async setDND(options: SetDNDOptions = {}): Promise<SetDNDResponse> {
         const queryParams: string[] = [];
-        if (numMinutes !== undefined) {
-            queryParams.push(`num_minutes=${encodeURIComponent(String(numMinutes))}`);
+        if (options.numMinutes !== undefined) {
+            queryParams.push(`num_minutes=${encodeURIComponent(String(options.numMinutes))}`);
         }
         const requestPath = `/dnd.setSnooze` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
@@ -163,13 +189,13 @@ export class SlackClient extends ConnectorClientBase {
      * Create a channel
      * @remarks Create a channel in slack.
      */
-    public async createChannel(name?: string, isPrivate?: string, options: ConnectorOperationOptions = {}): Promise<CreateChannelResponse> {
+    public async createChannel(options: CreateChannelOptions = {}): Promise<CreateChannelResponse> {
         const queryParams: string[] = [];
-        if (name !== undefined) {
-            queryParams.push(`name=${encodeURIComponent(String(name))}`);
+        if (options.name !== undefined) {
+            queryParams.push(`name=${encodeURIComponent(String(options.name))}`);
         }
-        if (isPrivate !== undefined) {
-            queryParams.push(`is_private=${encodeURIComponent(String(isPrivate))}`);
+        if (options.isPrivate !== undefined) {
+            queryParams.push(`is_private=${encodeURIComponent(String(options.isPrivate))}`);
         }
         const requestPath = `/conversations.create` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
@@ -182,10 +208,10 @@ export class SlackClient extends ConnectorClientBase {
      * Join a public channel
      * @remarks Join a public channel in slack.
      */
-    public async joinChannel(channel?: string, options: ConnectorOperationOptions = {}): Promise<JoinChannelResponse> {
+    public async joinChannel(options: JoinChannelOptions = {}): Promise<JoinChannelResponse> {
         const queryParams: string[] = [];
-        if (channel !== undefined) {
-            queryParams.push(`channel=${encodeURIComponent(String(channel))}`);
+        if (options.channel !== undefined) {
+            queryParams.push(`channel=${encodeURIComponent(String(options.channel))}`);
         }
         const requestPath = `/conversations.join` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);

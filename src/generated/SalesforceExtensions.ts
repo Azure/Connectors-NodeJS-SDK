@@ -289,8 +289,8 @@ export interface TableMetadata {
     /** Table permission */
     "x-ms-permission"?: string;
     "x-ms-capabilities"?: TableCapabilitiesMetadata;
-    schema?: Record<string, unknown>;
-    referencedEntities?: Record<string, unknown>;
+    schema?: ObjectEntity;
+    referencedEntities?: ObjectEntity;
     /** URL link */
     webUrl?: string;
 }
@@ -523,6 +523,174 @@ export interface MCPQueryResponse {
 }
 
 /**
+ * Options for the getItems operation.
+ */
+export interface GetItemsOptions extends ConnectorOperationOptions {
+    /** An ODATA filter query to restrict the entries returned (e.g. stringColumn eq 'string' OR numberColumn lt 123). */
+    filter?: string;
+    /** An ODATA orderBy query for specifying the order of entries. */
+    orderby?: string;
+    /** Total number of entries to retrieve (default = all). */
+    top?: string;
+    /** The number of entries to skip (default = 0). */
+    skip?: string;
+    /** Specific fields to retrieve from entries (default = all). */
+    select?: string;
+}
+
+/**
+ * Options for the getItemsTableAccount operation.
+ */
+export interface GetItemsTableAccountOptions extends ConnectorOperationOptions {
+    /** An ODATA filter query to restrict the entries returned (e.g. stringColumn eq 'string' OR numberColumn lt 123). */
+    filter?: string;
+    /** An ODATA orderBy query for specifying the order of entries. */
+    orderby?: string;
+    /** Total number of entries to retrieve (default = all). */
+    top?: string;
+    /** The number of entries to skip (default = 0). */
+    skip?: string;
+    /** Specific fields to retrieve from entries (default = all). */
+    select?: string;
+}
+
+/**
+ * Options for the getItemsTableUser operation.
+ */
+export interface GetItemsTableUserOptions extends ConnectorOperationOptions {
+    /** An ODATA filter query to restrict the entries returned (e.g. stringColumn eq 'string' OR numberColumn lt 123). */
+    filter?: string;
+    /** An ODATA orderBy query for specifying the order of entries. */
+    orderby?: string;
+    /** Total number of entries to retrieve (default = all). */
+    top?: string;
+    /** The number of entries to skip (default = 0). */
+    skip?: string;
+    /** Specific fields to retrieve from entries (default = all). */
+    select?: string;
+}
+
+/**
+ * Options for the getItemsTableCase operation.
+ */
+export interface GetItemsTableCaseOptions extends ConnectorOperationOptions {
+    /** An ODATA filter query to restrict the entries returned (e.g. stringColumn eq 'string' OR numberColumn lt 123). */
+    filter?: string;
+    /** An ODATA orderBy query for specifying the order of entries. */
+    orderby?: string;
+    /** Total number of entries to retrieve (default = all). */
+    top?: string;
+    /** The number of entries to skip (default = 0). */
+    skip?: string;
+    /** Specific fields to retrieve from entries (default = all). */
+    select?: string;
+}
+
+/**
+ * Options for the getItemsTableOpportunity operation.
+ */
+export interface GetItemsTableOpportunityOptions extends ConnectorOperationOptions {
+    /** An ODATA filter query to restrict the entries returned (e.g. stringColumn eq 'string' OR numberColumn lt 123). */
+    filter?: string;
+    /** An ODATA orderBy query for specifying the order of entries. */
+    orderby?: string;
+    /** Total number of entries to retrieve (default = all). */
+    top?: string;
+    /** The number of entries to skip (default = 0). */
+    skip?: string;
+    /** Specific fields to retrieve from entries (default = all). */
+    select?: string;
+}
+
+/**
+ * Options for the getItemsTableProduct2 operation.
+ */
+export interface GetItemsTableProduct2Options extends ConnectorOperationOptions {
+    /** An ODATA filter query to restrict the entries returned (e.g. stringColumn eq 'string' OR numberColumn lt 123). */
+    filter?: string;
+    /** An ODATA orderBy query for specifying the order of entries. */
+    orderby?: string;
+    /** Total number of entries to retrieve (default = all). */
+    top?: string;
+    /** The number of entries to skip (default = 0). */
+    skip?: string;
+    /** Specific fields to retrieve from entries (default = all). */
+    select?: string;
+}
+
+/**
+ * Options for the getItemsTableContact operation.
+ */
+export interface GetItemsTableContactOptions extends ConnectorOperationOptions {
+    /** An ODATA filter query to restrict the entries returned (e.g. stringColumn eq 'string' OR numberColumn lt 123). */
+    filter?: string;
+    /** An ODATA orderBy query for specifying the order of entries. */
+    orderby?: string;
+    /** Total number of entries to retrieve (default = all). */
+    top?: string;
+    /** The number of entries to skip (default = 0). */
+    skip?: string;
+    /** Specific fields to retrieve from entries (default = all). */
+    select?: string;
+}
+
+/**
+ * Options for the getAllJobs operation.
+ */
+export interface GetAllJobsOptions extends ConnectorOperationOptions {
+    /** Concurrency Mode */
+    concurrenyMode?: string;
+    /** Is PK Chunking Enabled */
+    isPkChunkingEnabled?: string;
+    /** Job Type */
+    jobType?: string;
+    /** Query Locator */
+    queryLocator?: string;
+}
+
+/**
+ * Options for the httpRequest operation.
+ */
+export interface HttpRequestOptions extends ConnectorOperationOptions {
+    /** The content-type header for the body (default is application/json). */
+    contentType?: string;
+    /** Custom header 1. Specify in format: header-name: header-value */
+    customHeader1?: string;
+    /** Custom header 2. Specify in format: header-name: header-value */
+    customHeader2?: string;
+    /** Custom header 3. Specify in format: header-name: header-value */
+    customHeader3?: string;
+    /** Custom header 4. Specify in format: header-name: header-value */
+    customHeader4?: string;
+    /** Custom header 5. Specify in format: header-name: header-value */
+    customHeader5?: string;
+}
+
+/**
+ * Options for the mcpSalesforceManagement operation.
+ */
+export interface McpSalesforceManagementOptions extends ConnectorOperationOptions {
+    /** The 'sessionId' service parameter. */
+    sessionId?: string;
+}
+
+/**
+ * Options for the getItem operation.
+ */
+export interface GetItemOptions extends ConnectorOperationOptions {
+    /** Specific fields to retrieve from entries (default = all). */
+    select?: string;
+}
+
+/**
+ * Options for the patchItem operation.
+ */
+export interface PatchItemOptions extends ConnectorOperationOptions {
+    /** Specific fields to retrieve from entries (default = all). */
+    select?: string;
+}
+
+/**
  * Typed callback payload for trigger operation 'GetOnNewItems'.
  */
 export type SalesforceOnNewItemsTriggerPayload = TriggerCallbackPayload<Item>;
@@ -662,22 +830,22 @@ export class SalesforceClient extends ConnectorClientBase {
      * Get records
      * @remarks This operation gets records of a certain Salesforce object type like 'Leads'.
      */
-    public getItems(table: string, filter?: string, orderby?: string, top?: string, skip?: string, select?: string, options: ConnectorOperationOptions = {}): ConnectorPagedAsyncIterableIterator<Item> {
+    public getItems(table: string, options: GetItemsOptions = {}): ConnectorPagedAsyncIterableIterator<Item> {
         const queryParams: string[] = [];
-        if (filter !== undefined) {
-            queryParams.push(`$filter=${encodeURIComponent(String(filter))}`);
+        if (options.filter !== undefined) {
+            queryParams.push(`$filter=${encodeURIComponent(String(options.filter))}`);
         }
-        if (orderby !== undefined) {
-            queryParams.push(`$orderby=${encodeURIComponent(String(orderby))}`);
+        if (options.orderby !== undefined) {
+            queryParams.push(`$orderby=${encodeURIComponent(String(options.orderby))}`);
         }
-        if (top !== undefined) {
-            queryParams.push(`$top=${encodeURIComponent(String(top))}`);
+        if (options.top !== undefined) {
+            queryParams.push(`$top=${encodeURIComponent(String(options.top))}`);
         }
-        if (skip !== undefined) {
-            queryParams.push(`$skip=${encodeURIComponent(String(skip))}`);
+        if (options.skip !== undefined) {
+            queryParams.push(`$skip=${encodeURIComponent(String(options.skip))}`);
         }
-        if (select !== undefined) {
-            queryParams.push(`$select=${encodeURIComponent(String(select))}`);
+        if (options.select !== undefined) {
+            queryParams.push(`$select=${encodeURIComponent(String(options.select))}`);
         }
         const requestPath = `/datasets/default/tables/${table}/items` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         return this.createPageable<ItemsList, Item>(
@@ -697,22 +865,22 @@ export class SalesforceClient extends ConnectorClientBase {
      * Get Account records from Salesforce
      * @remarks This operation gets Account records from Salesforce.
      */
-    public getItemsTableAccount(filter?: string, orderby?: string, top?: string, skip?: string, select?: string, options: ConnectorOperationOptions = {}): ConnectorPagedAsyncIterableIterator<Item> {
+    public getItemsTableAccount(options: GetItemsTableAccountOptions = {}): ConnectorPagedAsyncIterableIterator<Item> {
         const queryParams: string[] = [];
-        if (filter !== undefined) {
-            queryParams.push(`$filter=${encodeURIComponent(String(filter))}`);
+        if (options.filter !== undefined) {
+            queryParams.push(`$filter=${encodeURIComponent(String(options.filter))}`);
         }
-        if (orderby !== undefined) {
-            queryParams.push(`$orderby=${encodeURIComponent(String(orderby))}`);
+        if (options.orderby !== undefined) {
+            queryParams.push(`$orderby=${encodeURIComponent(String(options.orderby))}`);
         }
-        if (top !== undefined) {
-            queryParams.push(`$top=${encodeURIComponent(String(top))}`);
+        if (options.top !== undefined) {
+            queryParams.push(`$top=${encodeURIComponent(String(options.top))}`);
         }
-        if (skip !== undefined) {
-            queryParams.push(`$skip=${encodeURIComponent(String(skip))}`);
+        if (options.skip !== undefined) {
+            queryParams.push(`$skip=${encodeURIComponent(String(options.skip))}`);
         }
-        if (select !== undefined) {
-            queryParams.push(`$select=${encodeURIComponent(String(select))}`);
+        if (options.select !== undefined) {
+            queryParams.push(`$select=${encodeURIComponent(String(options.select))}`);
         }
         const requestPath = `/datasets/default/tables/account/items` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         return this.createPageable<ItemsList, Item>(
@@ -732,22 +900,22 @@ export class SalesforceClient extends ConnectorClientBase {
      * Get User records from Salesforce
      * @remarks This operation gets User records from Salesforce.
      */
-    public getItemsTableUser(filter?: string, orderby?: string, top?: string, skip?: string, select?: string, options: ConnectorOperationOptions = {}): ConnectorPagedAsyncIterableIterator<Item> {
+    public getItemsTableUser(options: GetItemsTableUserOptions = {}): ConnectorPagedAsyncIterableIterator<Item> {
         const queryParams: string[] = [];
-        if (filter !== undefined) {
-            queryParams.push(`$filter=${encodeURIComponent(String(filter))}`);
+        if (options.filter !== undefined) {
+            queryParams.push(`$filter=${encodeURIComponent(String(options.filter))}`);
         }
-        if (orderby !== undefined) {
-            queryParams.push(`$orderby=${encodeURIComponent(String(orderby))}`);
+        if (options.orderby !== undefined) {
+            queryParams.push(`$orderby=${encodeURIComponent(String(options.orderby))}`);
         }
-        if (top !== undefined) {
-            queryParams.push(`$top=${encodeURIComponent(String(top))}`);
+        if (options.top !== undefined) {
+            queryParams.push(`$top=${encodeURIComponent(String(options.top))}`);
         }
-        if (skip !== undefined) {
-            queryParams.push(`$skip=${encodeURIComponent(String(skip))}`);
+        if (options.skip !== undefined) {
+            queryParams.push(`$skip=${encodeURIComponent(String(options.skip))}`);
         }
-        if (select !== undefined) {
-            queryParams.push(`$select=${encodeURIComponent(String(select))}`);
+        if (options.select !== undefined) {
+            queryParams.push(`$select=${encodeURIComponent(String(options.select))}`);
         }
         const requestPath = `/datasets/default/tables/user/items` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         return this.createPageable<ItemsList, Item>(
@@ -767,22 +935,22 @@ export class SalesforceClient extends ConnectorClientBase {
      * Get Case records from Salesforce
      * @remarks This operation gets Case records from Salesforce.
      */
-    public getItemsTableCase(filter?: string, orderby?: string, top?: string, skip?: string, select?: string, options: ConnectorOperationOptions = {}): ConnectorPagedAsyncIterableIterator<Item> {
+    public getItemsTableCase(options: GetItemsTableCaseOptions = {}): ConnectorPagedAsyncIterableIterator<Item> {
         const queryParams: string[] = [];
-        if (filter !== undefined) {
-            queryParams.push(`$filter=${encodeURIComponent(String(filter))}`);
+        if (options.filter !== undefined) {
+            queryParams.push(`$filter=${encodeURIComponent(String(options.filter))}`);
         }
-        if (orderby !== undefined) {
-            queryParams.push(`$orderby=${encodeURIComponent(String(orderby))}`);
+        if (options.orderby !== undefined) {
+            queryParams.push(`$orderby=${encodeURIComponent(String(options.orderby))}`);
         }
-        if (top !== undefined) {
-            queryParams.push(`$top=${encodeURIComponent(String(top))}`);
+        if (options.top !== undefined) {
+            queryParams.push(`$top=${encodeURIComponent(String(options.top))}`);
         }
-        if (skip !== undefined) {
-            queryParams.push(`$skip=${encodeURIComponent(String(skip))}`);
+        if (options.skip !== undefined) {
+            queryParams.push(`$skip=${encodeURIComponent(String(options.skip))}`);
         }
-        if (select !== undefined) {
-            queryParams.push(`$select=${encodeURIComponent(String(select))}`);
+        if (options.select !== undefined) {
+            queryParams.push(`$select=${encodeURIComponent(String(options.select))}`);
         }
         const requestPath = `/datasets/default/tables/case/items` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         return this.createPageable<ItemsList, Item>(
@@ -802,22 +970,22 @@ export class SalesforceClient extends ConnectorClientBase {
      * Get Opportunity records from Salesforce
      * @remarks This operation gets Opportunity records from Salesforce.
      */
-    public getItemsTableOpportunity(filter?: string, orderby?: string, top?: string, skip?: string, select?: string, options: ConnectorOperationOptions = {}): ConnectorPagedAsyncIterableIterator<Item> {
+    public getItemsTableOpportunity(options: GetItemsTableOpportunityOptions = {}): ConnectorPagedAsyncIterableIterator<Item> {
         const queryParams: string[] = [];
-        if (filter !== undefined) {
-            queryParams.push(`$filter=${encodeURIComponent(String(filter))}`);
+        if (options.filter !== undefined) {
+            queryParams.push(`$filter=${encodeURIComponent(String(options.filter))}`);
         }
-        if (orderby !== undefined) {
-            queryParams.push(`$orderby=${encodeURIComponent(String(orderby))}`);
+        if (options.orderby !== undefined) {
+            queryParams.push(`$orderby=${encodeURIComponent(String(options.orderby))}`);
         }
-        if (top !== undefined) {
-            queryParams.push(`$top=${encodeURIComponent(String(top))}`);
+        if (options.top !== undefined) {
+            queryParams.push(`$top=${encodeURIComponent(String(options.top))}`);
         }
-        if (skip !== undefined) {
-            queryParams.push(`$skip=${encodeURIComponent(String(skip))}`);
+        if (options.skip !== undefined) {
+            queryParams.push(`$skip=${encodeURIComponent(String(options.skip))}`);
         }
-        if (select !== undefined) {
-            queryParams.push(`$select=${encodeURIComponent(String(select))}`);
+        if (options.select !== undefined) {
+            queryParams.push(`$select=${encodeURIComponent(String(options.select))}`);
         }
         const requestPath = `/datasets/default/tables/opportunity/items` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         return this.createPageable<ItemsList, Item>(
@@ -837,22 +1005,22 @@ export class SalesforceClient extends ConnectorClientBase {
      * Get Product records from Salesforce
      * @remarks This operation gets Product records from Salesforce.
      */
-    public getItemsTableProduct2(filter?: string, orderby?: string, top?: string, skip?: string, select?: string, options: ConnectorOperationOptions = {}): ConnectorPagedAsyncIterableIterator<Item> {
+    public getItemsTableProduct2(options: GetItemsTableProduct2Options = {}): ConnectorPagedAsyncIterableIterator<Item> {
         const queryParams: string[] = [];
-        if (filter !== undefined) {
-            queryParams.push(`$filter=${encodeURIComponent(String(filter))}`);
+        if (options.filter !== undefined) {
+            queryParams.push(`$filter=${encodeURIComponent(String(options.filter))}`);
         }
-        if (orderby !== undefined) {
-            queryParams.push(`$orderby=${encodeURIComponent(String(orderby))}`);
+        if (options.orderby !== undefined) {
+            queryParams.push(`$orderby=${encodeURIComponent(String(options.orderby))}`);
         }
-        if (top !== undefined) {
-            queryParams.push(`$top=${encodeURIComponent(String(top))}`);
+        if (options.top !== undefined) {
+            queryParams.push(`$top=${encodeURIComponent(String(options.top))}`);
         }
-        if (skip !== undefined) {
-            queryParams.push(`$skip=${encodeURIComponent(String(skip))}`);
+        if (options.skip !== undefined) {
+            queryParams.push(`$skip=${encodeURIComponent(String(options.skip))}`);
         }
-        if (select !== undefined) {
-            queryParams.push(`$select=${encodeURIComponent(String(select))}`);
+        if (options.select !== undefined) {
+            queryParams.push(`$select=${encodeURIComponent(String(options.select))}`);
         }
         const requestPath = `/datasets/default/tables/product2/items` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         return this.createPageable<ItemsList, Item>(
@@ -872,22 +1040,22 @@ export class SalesforceClient extends ConnectorClientBase {
      * Get Contact records from Salesforce
      * @remarks This operation gets Contact records from Salesforce.
      */
-    public getItemsTableContact(filter?: string, orderby?: string, top?: string, skip?: string, select?: string, options: ConnectorOperationOptions = {}): ConnectorPagedAsyncIterableIterator<Item> {
+    public getItemsTableContact(options: GetItemsTableContactOptions = {}): ConnectorPagedAsyncIterableIterator<Item> {
         const queryParams: string[] = [];
-        if (filter !== undefined) {
-            queryParams.push(`$filter=${encodeURIComponent(String(filter))}`);
+        if (options.filter !== undefined) {
+            queryParams.push(`$filter=${encodeURIComponent(String(options.filter))}`);
         }
-        if (orderby !== undefined) {
-            queryParams.push(`$orderby=${encodeURIComponent(String(orderby))}`);
+        if (options.orderby !== undefined) {
+            queryParams.push(`$orderby=${encodeURIComponent(String(options.orderby))}`);
         }
-        if (top !== undefined) {
-            queryParams.push(`$top=${encodeURIComponent(String(top))}`);
+        if (options.top !== undefined) {
+            queryParams.push(`$top=${encodeURIComponent(String(options.top))}`);
         }
-        if (skip !== undefined) {
-            queryParams.push(`$skip=${encodeURIComponent(String(skip))}`);
+        if (options.skip !== undefined) {
+            queryParams.push(`$skip=${encodeURIComponent(String(options.skip))}`);
         }
-        if (select !== undefined) {
-            queryParams.push(`$select=${encodeURIComponent(String(select))}`);
+        if (options.select !== undefined) {
+            queryParams.push(`$select=${encodeURIComponent(String(options.select))}`);
         }
         const requestPath = `/datasets/default/tables/contact/items` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         return this.createPageable<ItemsList, Item>(
@@ -929,19 +1097,19 @@ export class SalesforceClient extends ConnectorClientBase {
      * Get all jobs
      * @remarks Get a list of all jobs
      */
-    public async getAllJobs(concurrenyMode?: string, isPkChunkingEnabled?: string, jobType?: string, queryLocator?: string, options: ConnectorOperationOptions = {}): Promise<GetAllJobsResponse> {
+    public async getAllJobs(options: GetAllJobsOptions = {}): Promise<GetAllJobsResponse> {
         const queryParams: string[] = [];
-        if (concurrenyMode !== undefined) {
-            queryParams.push(`concurrenyMode=${encodeURIComponent(String(concurrenyMode))}`);
+        if (options.concurrenyMode !== undefined) {
+            queryParams.push(`concurrenyMode=${encodeURIComponent(String(options.concurrenyMode))}`);
         }
-        if (isPkChunkingEnabled !== undefined) {
-            queryParams.push(`isPkChunkingEnabled=${encodeURIComponent(String(isPkChunkingEnabled))}`);
+        if (options.isPkChunkingEnabled !== undefined) {
+            queryParams.push(`isPkChunkingEnabled=${encodeURIComponent(String(options.isPkChunkingEnabled))}`);
         }
-        if (jobType !== undefined) {
-            queryParams.push(`jobType=${encodeURIComponent(String(jobType))}`);
+        if (options.jobType !== undefined) {
+            queryParams.push(`jobType=${encodeURIComponent(String(options.jobType))}`);
         }
-        if (queryLocator !== undefined) {
-            queryParams.push(`queryLocator=${encodeURIComponent(String(queryLocator))}`);
+        if (options.queryLocator !== undefined) {
+            queryParams.push(`queryLocator=${encodeURIComponent(String(options.queryLocator))}`);
         }
         const requestPath = `/codeless/jobs/ingest` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
@@ -998,7 +1166,7 @@ export class SalesforceClient extends ConnectorClientBase {
      * Get job results
      * @remarks Retrieves a list of records based on the result type for a completed job.
      */
-    public async getJobRecordResults(jobId: string, resultType?: string, options: ConnectorOperationOptions = {}): Promise<string> {
+    public async getJobRecordResults(jobId: string, resultType: string, options: ConnectorOperationOptions = {}): Promise<string> {
         const queryParams: string[] = [];
         if (resultType !== undefined) {
             queryParams.push(`resultType=${encodeURIComponent(String(resultType))}`);
@@ -1014,7 +1182,7 @@ export class SalesforceClient extends ConnectorClientBase {
      * Execute SOSL search query
      * @remarks Execute the specified SOSL search qyery
      */
-    public async executeSOSLQuery(q?: string, options: ConnectorOperationOptions = {}): Promise<SOSLSearchQueryResponse> {
+    public async executeSOSLQuery(q: string, options: ConnectorOperationOptions = {}): Promise<SOSLSearchQueryResponse> {
         const queryParams: string[] = [];
         if (q !== undefined) {
             queryParams.push(`q=${encodeURIComponent(String(q))}`);
@@ -1030,10 +1198,35 @@ export class SalesforceClient extends ConnectorClientBase {
      * Send an HTTP request
      * @remarks Construct a Salesforce REST API request to invoke
      */
-    public async httpRequest(input: HttpRequestInput, options: ConnectorOperationOptions = {}): Promise<ObjectWithoutType> {
+    public async httpRequest(input: HttpRequestInput, uri: string, method: string, options: HttpRequestOptions = {}): Promise<ObjectWithoutType> {
         const requestPath = `/codeless/httprequest`;
+        const requestHeaders: Record<string, string> = {};
+        if (uri !== undefined) {
+            requestHeaders["Uri"] = String(uri);
+        }
+        if (method !== undefined) {
+            requestHeaders["Method"] = String(method);
+        }
+        if (options.contentType !== undefined) {
+            requestHeaders["ContentType"] = String(options.contentType);
+        }
+        if (options.customHeader1 !== undefined) {
+            requestHeaders["CustomHeader1"] = String(options.customHeader1);
+        }
+        if (options.customHeader2 !== undefined) {
+            requestHeaders["CustomHeader2"] = String(options.customHeader2);
+        }
+        if (options.customHeader3 !== undefined) {
+            requestHeaders["CustomHeader3"] = String(options.customHeader3);
+        }
+        if (options.customHeader4 !== undefined) {
+            requestHeaders["CustomHeader4"] = String(options.customHeader4);
+        }
+        if (options.customHeader5 !== undefined) {
+            requestHeaders["CustomHeader5"] = String(options.customHeader5);
+        }
         const requestUrl = this.resolveUrl(requestPath);
-        const httpResponse = await this.sendWithTracingAsync<ObjectWithoutType>("Salesforce.httpRequest", "HttpRequest", "POST", requestUrl, input, options);
+        const httpResponse = await this.sendWithTracingAsync<ObjectWithoutType>("Salesforce.httpRequest", "HttpRequest", "POST", requestUrl, input, options, requestHeaders);
 
         return httpResponse.value as ObjectWithoutType;
     }
@@ -1042,10 +1235,10 @@ export class SalesforceClient extends ConnectorClientBase {
      * MCP server for Salesforce
      * @remarks MCP server for Salesforce
      */
-    public async mcpSalesforceManagement(input: MCPQueryRequest, sessionId?: string, options: ConnectorOperationOptions = {}): Promise<MCPQueryResponse> {
+    public async mcpSalesforceManagement(input: MCPQueryRequest, options: McpSalesforceManagementOptions = {}): Promise<MCPQueryResponse> {
         const queryParams: string[] = [];
-        if (sessionId !== undefined) {
-            queryParams.push(`sessionId=${encodeURIComponent(String(sessionId))}`);
+        if (options.sessionId !== undefined) {
+            queryParams.push(`sessionId=${encodeURIComponent(String(options.sessionId))}`);
         }
         const requestPath = `/mcp/SalesforceManagement` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
@@ -1070,10 +1263,10 @@ export class SalesforceClient extends ConnectorClientBase {
      * Get record
      * @remarks This operation gets a record.
      */
-    public async getItem(table: string, id: string, select?: string, options: ConnectorOperationOptions = {}): Promise<GetItemResponse> {
+    public async getItem(table: string, id: string, options: GetItemOptions = {}): Promise<GetItemResponse> {
         const queryParams: string[] = [];
-        if (select !== undefined) {
-            queryParams.push(`$select=${encodeURIComponent(String(select))}`);
+        if (options.select !== undefined) {
+            queryParams.push(`$select=${encodeURIComponent(String(options.select))}`);
         }
         const requestPath = `/v2/datasets/default/tables/${table}/items/${id}` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
@@ -1086,10 +1279,10 @@ export class SalesforceClient extends ConnectorClientBase {
      * Update record
      * @remarks This operation updates a record and allows null values.
      */
-    public async patchItem(input: PatchItemInput, table: string, id: string, select?: string, options: ConnectorOperationOptions = {}): Promise<PatchItemResponse> {
+    public async patchItem(input: PatchItemInput, table: string, id: string, options: PatchItemOptions = {}): Promise<PatchItemResponse> {
         const queryParams: string[] = [];
-        if (select !== undefined) {
-            queryParams.push(`$select=${encodeURIComponent(String(select))}`);
+        if (options.select !== undefined) {
+            queryParams.push(`$select=${encodeURIComponent(String(options.select))}`);
         }
         const requestPath = `/v3/datasets/default/tables/${table}/items/${id}` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);

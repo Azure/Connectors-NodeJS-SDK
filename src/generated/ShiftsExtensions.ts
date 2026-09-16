@@ -716,6 +716,138 @@ export interface CreateTimeOffRequest {
     /** Assigned to User ID */
     userId: string;
 }
+
+/**
+ * Options for the listTimesOff operation.
+ */
+export interface ListTimesOffOptions extends ConnectorOperationOptions {
+    /** yyyy-MM-ddTHH:mm:ss.fffZ (UTC format) */
+    startTime?: string;
+    /** yyyy-MM-ddTHH:mm:ss.fffZ (UTC format) */
+    endTime?: string;
+    /** Items per page (enable Pagination under .../Settings) */
+    top?: string;
+}
+
+/**
+ * Options for the listShifts operation.
+ */
+export interface ListShiftsOptions extends ConnectorOperationOptions {
+    /** yyyy-MM-ddTHH:mm:ss.fffZ (UTC format) */
+    startTime?: string;
+    /** yyyy-MM-ddTHH:mm:ss.fffZ (UTC format) */
+    endTime?: string;
+    /** Items per page (enable Pagination under .../Settings) */
+    top?: string;
+}
+
+/**
+ * Options for the listOpenShifts operation.
+ */
+export interface ListOpenShiftsOptions extends ConnectorOperationOptions {
+    /** yyyy-MM-ddTHH:mm:ss.fffZ (UTC format) */
+    startTime?: string;
+    /** yyyy-MM-ddTHH:mm:ss.fffZ (UTC format) */
+    endTime?: string;
+    /** Items per page (enable Pagination under .../Settings) */
+    top?: string;
+}
+
+/**
+ * Options for the listTimeOffReasons operation.
+ */
+export interface ListTimeOffReasonsOptions extends ConnectorOperationOptions {
+    /** Items per page (enable Pagination under .../Settings) */
+    top?: string;
+}
+
+/**
+ * Options for the listSchedulingGroups operation.
+ */
+export interface ListSchedulingGroupsOptions extends ConnectorOperationOptions {
+    /** Items per page (enable Pagination under .../Settings) */
+    top?: string;
+}
+
+/**
+ * Options for the listTimeOffRequests operation.
+ */
+export interface ListTimeOffRequestsOptions extends ConnectorOperationOptions {
+    /** Items per page (enable Pagination under .../Settings) */
+    top?: string;
+    /** Request state filter */
+    state?: string;
+}
+
+/**
+ * Options for the listOfferShiftRequests operation.
+ */
+export interface ListOfferShiftRequestsOptions extends ConnectorOperationOptions {
+    /** Items per page (enable Pagination under .../Settings) */
+    top?: string;
+    /** Request state filter */
+    state?: string;
+}
+
+/**
+ * Options for the listSwapShiftsChangeRequests operation.
+ */
+export interface ListSwapShiftsChangeRequestsOptions extends ConnectorOperationOptions {
+    /** Items per page (enable Pagination under .../Settings) */
+    top?: string;
+    /** Request state filter */
+    state?: string;
+}
+
+/**
+ * Options for the listOpenShiftChangeRequests operation.
+ */
+export interface ListOpenShiftChangeRequestsOptions extends ConnectorOperationOptions {
+    /** Items per page (enable Pagination under .../Settings) */
+    top?: string;
+    /** Request state filter */
+    state?: string;
+}
+
+/**
+ * Options for the listOpenShiftsCrossTeam operation.
+ */
+export interface ListOpenShiftsCrossTeamOptions extends ConnectorOperationOptions {
+    /** yyyy-MM-ddTHH:mm:ss.fffZ (UTC format) */
+    startTime?: string;
+    /** yyyy-MM-ddTHH:mm:ss.fffZ (UTC format) */
+    endTime?: string;
+    /** Items per page (enable Pagination under .../Settings) */
+    top?: string;
+}
+
+/**
+ * Options for the listShiftsCrossTeam operation.
+ */
+export interface ListShiftsCrossTeamOptions extends ConnectorOperationOptions {
+    /** yyyy-MM-ddTHH:mm:ss.fffZ (UTC format) */
+    startTime?: string;
+    /** yyyy-MM-ddTHH:mm:ss.fffZ (UTC format) */
+    endTime?: string;
+    /** Assigned to user with name */
+    assignedToUserName?: string;
+    /** Items per page (enable Pagination under .../Settings) */
+    top?: string;
+}
+
+/**
+ * Options for the listTimesOffCrossTeam operation.
+ */
+export interface ListTimesOffCrossTeamOptions extends ConnectorOperationOptions {
+    /** yyyy-MM-ddTHH:mm:ss.fffZ (UTC format) */
+    startTime?: string;
+    /** yyyy-MM-ddTHH:mm:ss.fffZ (UTC format) */
+    endTime?: string;
+    /** Assigned to user with name */
+    assignedToUserName?: string;
+    /** How many times off to fetch */
+    top?: string;
+}
 // #endregion Types
 
 export const ShiftsTriggerOperations = {
@@ -818,16 +950,16 @@ export class ShiftsClient extends ConnectorClientBase {
      * List all Time Off instances in a team
      * @remarks This operation returns all Time Off instances in a Schedule
      */
-    public listTimesOff(teamId: string, startTime?: string, endTime?: string, top?: string, options: ConnectorOperationOptions = {}): ConnectorPagedAsyncIterableIterator<TimeOffResponse> {
+    public listTimesOff(teamId: string, options: ListTimesOffOptions = {}): ConnectorPagedAsyncIterableIterator<TimeOffResponse> {
         const queryParams: string[] = [];
-        if (startTime !== undefined) {
-            queryParams.push(`startTime=${encodeURIComponent(String(startTime))}`);
+        if (options.startTime !== undefined) {
+            queryParams.push(`startTime=${encodeURIComponent(String(options.startTime))}`);
         }
-        if (endTime !== undefined) {
-            queryParams.push(`endTime=${encodeURIComponent(String(endTime))}`);
+        if (options.endTime !== undefined) {
+            queryParams.push(`endTime=${encodeURIComponent(String(options.endTime))}`);
         }
-        if (top !== undefined) {
-            queryParams.push(`$top=${encodeURIComponent(String(top))}`);
+        if (options.top !== undefined) {
+            queryParams.push(`$top=${encodeURIComponent(String(options.top))}`);
         }
         const requestPath = `/v1.0/teams/${teamId}/schedule/timesoff` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         return this.createPageable<ListTimesOffResponse, TimeOffResponse>(
@@ -881,16 +1013,16 @@ export class ShiftsClient extends ConnectorClientBase {
      * List all Shifts in a team
      * @remarks This operation returns all Shifts assigned to members of a team
      */
-    public listShifts(teamId: string, startTime?: string, endTime?: string, top?: string, options: ConnectorOperationOptions = {}): ConnectorPagedAsyncIterableIterator<ShiftResponse> {
+    public listShifts(teamId: string, options: ListShiftsOptions = {}): ConnectorPagedAsyncIterableIterator<ShiftResponse> {
         const queryParams: string[] = [];
-        if (startTime !== undefined) {
-            queryParams.push(`startTime=${encodeURIComponent(String(startTime))}`);
+        if (options.startTime !== undefined) {
+            queryParams.push(`startTime=${encodeURIComponent(String(options.startTime))}`);
         }
-        if (endTime !== undefined) {
-            queryParams.push(`endTime=${encodeURIComponent(String(endTime))}`);
+        if (options.endTime !== undefined) {
+            queryParams.push(`endTime=${encodeURIComponent(String(options.endTime))}`);
         }
-        if (top !== undefined) {
-            queryParams.push(`$top=${encodeURIComponent(String(top))}`);
+        if (options.top !== undefined) {
+            queryParams.push(`$top=${encodeURIComponent(String(options.top))}`);
         }
         const requestPath = `/v1.0/teams/${teamId}/schedule/shifts` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         return this.createPageable<ListShiftsResponse, ShiftResponse>(
@@ -944,16 +1076,16 @@ export class ShiftsClient extends ConnectorClientBase {
      * List all Open Shifts in a team
      * @remarks This operation returns all Open Shifts in a team.
      */
-    public listOpenShifts(teamId: string, startTime?: string, endTime?: string, top?: string, options: ConnectorOperationOptions = {}): ConnectorPagedAsyncIterableIterator<OpenShiftResponse> {
+    public listOpenShifts(teamId: string, options: ListOpenShiftsOptions = {}): ConnectorPagedAsyncIterableIterator<OpenShiftResponse> {
         const queryParams: string[] = [];
-        if (startTime !== undefined) {
-            queryParams.push(`startTime=${encodeURIComponent(String(startTime))}`);
+        if (options.startTime !== undefined) {
+            queryParams.push(`startTime=${encodeURIComponent(String(options.startTime))}`);
         }
-        if (endTime !== undefined) {
-            queryParams.push(`endTime=${encodeURIComponent(String(endTime))}`);
+        if (options.endTime !== undefined) {
+            queryParams.push(`endTime=${encodeURIComponent(String(options.endTime))}`);
         }
-        if (top !== undefined) {
-            queryParams.push(`$top=${encodeURIComponent(String(top))}`);
+        if (options.top !== undefined) {
+            queryParams.push(`$top=${encodeURIComponent(String(options.top))}`);
         }
         const requestPath = `/v1.0/teams/${teamId}/schedule/openShifts` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         return this.createPageable<ListOpenShiftsResponse, OpenShiftResponse>(
@@ -1019,10 +1151,10 @@ export class ShiftsClient extends ConnectorClientBase {
      * List all Time Off Reasons in a team
      * @remarks This operation returns the list of Time Off Reasons associated with a team.
      */
-    public listTimeOffReasons(teamId: string, top?: string, options: ConnectorOperationOptions = {}): ConnectorPagedAsyncIterableIterator<unknown> {
+    public listTimeOffReasons(teamId: string, options: ListTimeOffReasonsOptions = {}): ConnectorPagedAsyncIterableIterator<unknown> {
         const queryParams: string[] = [];
-        if (top !== undefined) {
-            queryParams.push(`$top=${encodeURIComponent(String(top))}`);
+        if (options.top !== undefined) {
+            queryParams.push(`$top=${encodeURIComponent(String(options.top))}`);
         }
         const requestPath = `/v1.0/teams/${teamId}/schedule/timeOffReasons` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         return this.createPageable<GetTimeOffReasonsResponse, unknown>(
@@ -1042,10 +1174,10 @@ export class ShiftsClient extends ConnectorClientBase {
      * List all Scheduling Groups in a team
      * @remarks This operation returns all Scheduling Groups in a Schedule.
      */
-    public listSchedulingGroups(teamId: string, top?: string, options: ConnectorOperationOptions = {}): ConnectorPagedAsyncIterableIterator<SchedulingGroupResponse> {
+    public listSchedulingGroups(teamId: string, options: ListSchedulingGroupsOptions = {}): ConnectorPagedAsyncIterableIterator<SchedulingGroupResponse> {
         const queryParams: string[] = [];
-        if (top !== undefined) {
-            queryParams.push(`$top=${encodeURIComponent(String(top))}`);
+        if (options.top !== undefined) {
+            queryParams.push(`$top=${encodeURIComponent(String(options.top))}`);
         }
         const requestPath = `/v1.0/teams/${teamId}/schedule/schedulinggroups` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         return this.createPageable<ListSchedulingGroupsResponse, SchedulingGroupResponse>(
@@ -1077,13 +1209,13 @@ export class ShiftsClient extends ConnectorClientBase {
      * List all Time Off requests in a team
      * @remarks This operation returns all Time Off requests in a Schedule.
      */
-    public listTimeOffRequests(teamId: string, top?: string, state?: string, options: ConnectorOperationOptions = {}): ConnectorPagedAsyncIterableIterator<TimeOffRequestResponse> {
+    public listTimeOffRequests(teamId: string, options: ListTimeOffRequestsOptions = {}): ConnectorPagedAsyncIterableIterator<TimeOffRequestResponse> {
         const queryParams: string[] = [];
-        if (top !== undefined) {
-            queryParams.push(`$top=${encodeURIComponent(String(top))}`);
+        if (options.top !== undefined) {
+            queryParams.push(`$top=${encodeURIComponent(String(options.top))}`);
         }
-        if (state !== undefined) {
-            queryParams.push(`state=${encodeURIComponent(String(state))}`);
+        if (options.state !== undefined) {
+            queryParams.push(`state=${encodeURIComponent(String(options.state))}`);
         }
         const requestPath = `/v1.0/teams/${teamId}/schedule/timeOffRequests` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         return this.createPageable<ListTimeOffRequestsResponse, TimeOffRequestResponse>(
@@ -1139,13 +1271,13 @@ export class ShiftsClient extends ConnectorClientBase {
      * List all Offer Shift requests in a team
      * @remarks This operation returns all Offer Shift requests in a Schedule.
      */
-    public listOfferShiftRequests(teamId: string, top?: string, state?: string, options: ConnectorOperationOptions = {}): ConnectorPagedAsyncIterableIterator<OfferShiftRequestResponse> {
+    public listOfferShiftRequests(teamId: string, options: ListOfferShiftRequestsOptions = {}): ConnectorPagedAsyncIterableIterator<OfferShiftRequestResponse> {
         const queryParams: string[] = [];
-        if (top !== undefined) {
-            queryParams.push(`$top=${encodeURIComponent(String(top))}`);
+        if (options.top !== undefined) {
+            queryParams.push(`$top=${encodeURIComponent(String(options.top))}`);
         }
-        if (state !== undefined) {
-            queryParams.push(`state=${encodeURIComponent(String(state))}`);
+        if (options.state !== undefined) {
+            queryParams.push(`state=${encodeURIComponent(String(options.state))}`);
         }
         const requestPath = `/v1.0/teams/${teamId}/schedule/offerShiftRequests` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         return this.createPageable<ListOfferShiftRequestsResponse, OfferShiftRequestResponse>(
@@ -1201,13 +1333,13 @@ export class ShiftsClient extends ConnectorClientBase {
      * List all Swap Shifts requests in a team
      * @remarks This operation returns all Swap Shifts requests in a Schedule.
      */
-    public listSwapShiftsChangeRequests(teamId: string, top?: string, state?: string, options: ConnectorOperationOptions = {}): ConnectorPagedAsyncIterableIterator<SwapShiftsChangeRequestResponse> {
+    public listSwapShiftsChangeRequests(teamId: string, options: ListSwapShiftsChangeRequestsOptions = {}): ConnectorPagedAsyncIterableIterator<SwapShiftsChangeRequestResponse> {
         const queryParams: string[] = [];
-        if (top !== undefined) {
-            queryParams.push(`$top=${encodeURIComponent(String(top))}`);
+        if (options.top !== undefined) {
+            queryParams.push(`$top=${encodeURIComponent(String(options.top))}`);
         }
-        if (state !== undefined) {
-            queryParams.push(`state=${encodeURIComponent(String(state))}`);
+        if (options.state !== undefined) {
+            queryParams.push(`state=${encodeURIComponent(String(options.state))}`);
         }
         const requestPath = `/v1.0/teams/${teamId}/schedule/swapShiftsChangeRequests` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         return this.createPageable<ListSwapShiftsChangeRequestsResponse, SwapShiftsChangeRequestResponse>(
@@ -1263,13 +1395,13 @@ export class ShiftsClient extends ConnectorClientBase {
      * List all Open Shift requests in a team
      * @remarks This operation returns all Open Shift change requests in a Schedule.
      */
-    public listOpenShiftChangeRequests(teamId: string, top?: string, state?: string, options: ConnectorOperationOptions = {}): ConnectorPagedAsyncIterableIterator<OpenShiftChangeRequestResponse> {
+    public listOpenShiftChangeRequests(teamId: string, options: ListOpenShiftChangeRequestsOptions = {}): ConnectorPagedAsyncIterableIterator<OpenShiftChangeRequestResponse> {
         const queryParams: string[] = [];
-        if (top !== undefined) {
-            queryParams.push(`$top=${encodeURIComponent(String(top))}`);
+        if (options.top !== undefined) {
+            queryParams.push(`$top=${encodeURIComponent(String(options.top))}`);
         }
-        if (state !== undefined) {
-            queryParams.push(`state=${encodeURIComponent(String(state))}`);
+        if (options.state !== undefined) {
+            queryParams.push(`state=${encodeURIComponent(String(options.state))}`);
         }
         const requestPath = `/v1.0/teams/${teamId}/schedule/openShiftChangeRequests` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         return this.createPageable<ListOpenShiftChangeRequestsResponse, OpenShiftChangeRequestResponse>(
@@ -1325,16 +1457,16 @@ export class ShiftsClient extends ConnectorClientBase {
      * List all Open Shifts from my teams
      * @remarks This operation returns Open Shifts that need to be filled from all your teams.
      */
-    public listOpenShiftsCrossTeam(startTime?: string, endTime?: string, top?: string, options: ConnectorOperationOptions = {}): ConnectorPagedAsyncIterableIterator<OpenShiftResponse> {
+    public listOpenShiftsCrossTeam(options: ListOpenShiftsCrossTeamOptions = {}): ConnectorPagedAsyncIterableIterator<OpenShiftResponse> {
         const queryParams: string[] = [];
-        if (startTime !== undefined) {
-            queryParams.push(`startTime=${encodeURIComponent(String(startTime))}`);
+        if (options.startTime !== undefined) {
+            queryParams.push(`startTime=${encodeURIComponent(String(options.startTime))}`);
         }
-        if (endTime !== undefined) {
-            queryParams.push(`endTime=${encodeURIComponent(String(endTime))}`);
+        if (options.endTime !== undefined) {
+            queryParams.push(`endTime=${encodeURIComponent(String(options.endTime))}`);
         }
-        if (top !== undefined) {
-            queryParams.push(`$top=${encodeURIComponent(String(top))}`);
+        if (options.top !== undefined) {
+            queryParams.push(`$top=${encodeURIComponent(String(options.top))}`);
         }
         const requestPath = `/beta/me/joinedTeams/getOpenShifts` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         return this.createPageable<ListOpenShiftsCrossTeamResponse, OpenShiftResponse>(
@@ -1354,19 +1486,19 @@ export class ShiftsClient extends ConnectorClientBase {
      * List all Shifts from my teams
      * @remarks This operation returns assigned Shifts from all your teams.
      */
-    public listShiftsCrossTeam(startTime?: string, endTime?: string, assignedToUserName?: string, top?: string, options: ConnectorOperationOptions = {}): ConnectorPagedAsyncIterableIterator<ShiftResponse> {
+    public listShiftsCrossTeam(options: ListShiftsCrossTeamOptions = {}): ConnectorPagedAsyncIterableIterator<ShiftResponse> {
         const queryParams: string[] = [];
-        if (startTime !== undefined) {
-            queryParams.push(`startTime=${encodeURIComponent(String(startTime))}`);
+        if (options.startTime !== undefined) {
+            queryParams.push(`startTime=${encodeURIComponent(String(options.startTime))}`);
         }
-        if (endTime !== undefined) {
-            queryParams.push(`endTime=${encodeURIComponent(String(endTime))}`);
+        if (options.endTime !== undefined) {
+            queryParams.push(`endTime=${encodeURIComponent(String(options.endTime))}`);
         }
-        if (assignedToUserName !== undefined) {
-            queryParams.push(`assignedToUserName=${encodeURIComponent(String(assignedToUserName))}`);
+        if (options.assignedToUserName !== undefined) {
+            queryParams.push(`assignedToUserName=${encodeURIComponent(String(options.assignedToUserName))}`);
         }
-        if (top !== undefined) {
-            queryParams.push(`$top=${encodeURIComponent(String(top))}`);
+        if (options.top !== undefined) {
+            queryParams.push(`$top=${encodeURIComponent(String(options.top))}`);
         }
         const requestPath = `/beta/me/joinedTeams/getShifts` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         return this.createPageable<ListShiftsCrossTeamResponse, ShiftResponse>(
@@ -1386,19 +1518,19 @@ export class ShiftsClient extends ConnectorClientBase {
      * List all Times Off from my teams
      * @remarks This operation returns times when people are off from all your teams.
      */
-    public listTimesOffCrossTeam(startTime?: string, endTime?: string, assignedToUserName?: string, top?: string, options: ConnectorOperationOptions = {}): ConnectorPagedAsyncIterableIterator<TimeOffResponse> {
+    public listTimesOffCrossTeam(options: ListTimesOffCrossTeamOptions = {}): ConnectorPagedAsyncIterableIterator<TimeOffResponse> {
         const queryParams: string[] = [];
-        if (startTime !== undefined) {
-            queryParams.push(`startTime=${encodeURIComponent(String(startTime))}`);
+        if (options.startTime !== undefined) {
+            queryParams.push(`startTime=${encodeURIComponent(String(options.startTime))}`);
         }
-        if (endTime !== undefined) {
-            queryParams.push(`endTime=${encodeURIComponent(String(endTime))}`);
+        if (options.endTime !== undefined) {
+            queryParams.push(`endTime=${encodeURIComponent(String(options.endTime))}`);
         }
-        if (assignedToUserName !== undefined) {
-            queryParams.push(`assignedToUserName=${encodeURIComponent(String(assignedToUserName))}`);
+        if (options.assignedToUserName !== undefined) {
+            queryParams.push(`assignedToUserName=${encodeURIComponent(String(options.assignedToUserName))}`);
         }
-        if (top !== undefined) {
-            queryParams.push(`$top=${encodeURIComponent(String(top))}`);
+        if (options.top !== undefined) {
+            queryParams.push(`$top=${encodeURIComponent(String(options.top))}`);
         }
         const requestPath = `/beta/me/joinedTeams/getTimesOff` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         return this.createPageable<ListTimesOffCrossTeamResponse, TimeOffResponse>(

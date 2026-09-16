@@ -107,7 +107,7 @@ async function main(): Promise<void> {
         console.log(`\n--- Search for User ("${searchUser}") ---`);
         try {
             const users: User[] = [];
-            for await (const user of client.searchUser(searchUser)) {
+            for await (const user of client.searchUser({ searchTerm: searchUser })) {
                 users.push(user);
             }
 

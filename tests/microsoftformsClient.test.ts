@@ -67,7 +67,7 @@ describe("MicrosoftformsClient — getFormDetailsById", () => {
         mockFetchError(400, '{"error":"BadRequest"}');
 
         const client = new MicrosoftformsClient(TestConnectionUrl, createMockCredential());
-        await expect(client.getFormDetailsById("form-1")).rejects.toThrow(ConnectorError);
+        await expect(client.getFormDetailsById("form-1", "id,title")).rejects.toThrow(ConnectorError);
     });
 });
 

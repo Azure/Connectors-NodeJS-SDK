@@ -103,9 +103,9 @@ describe("TeamsClient — getAllTeams", () => {
         mockFetchResponse(mockResponse);
 
         const client = new TeamsClient(TestConnectionUrl, createMockCredential());
-        const result = await client.getAllTeams();
+        const result = await client.getAllTeams().byPage().next();
 
-        expect(result).toEqual(mockResponse);
+        expect(result.value).toEqual(mockResponse.value);
         const [url, init] = (global.fetch as jest.Mock).mock.calls[0];
         expect(url).toBe(`${TestConnectionUrl}/beta/me/joinedTeams`);
         expect(init.method).toBe("GET");
@@ -161,9 +161,9 @@ describe("TeamsClient — getChannelsForGroup", () => {
         mockFetchResponse(mockResponse);
 
         const client = new TeamsClient(TestConnectionUrl, createMockCredential());
-        const result = await client.getChannelsForGroup("team-123");
+        const result = await client.getChannelsForGroup("team-123").byPage().next();
 
-        expect(result).toEqual(mockResponse);
+        expect(result.value).toEqual(mockResponse.value);
         const [url] = (global.fetch as jest.Mock).mock.calls[0];
         expect(url).toContain("/team-123/channels");
     });
@@ -172,7 +172,7 @@ describe("TeamsClient — getChannelsForGroup", () => {
         mockFetchResponse({ value: [] });
 
         const client = new TeamsClient(TestConnectionUrl, createMockCredential());
-        await client.getChannelsForGroup("team-1", "$filter=name eq 'General'");
+        await client.getChannelsForGroup("team-1", { filter: "name eq 'General'" }).byPage().next();
 
         const [url] = (global.fetch as jest.Mock).mock.calls[0];
         expect(url).toContain("$filter=");
@@ -217,9 +217,9 @@ describe("TeamsClient — getTags", () => {
         mockFetchResponse(mockResponse);
 
         const client = new TeamsClient(TestConnectionUrl, createMockCredential());
-        const result = await client.getTags("team-1");
+        const result = await client.getTags("team-1").byPage().next();
 
-        expect(result).toEqual(mockResponse);
+        expect(result.value).toEqual(mockResponse.value);
         const [url] = (global.fetch as jest.Mock).mock.calls[0];
         expect(url).toContain("/v1.0/teams/");
         expect(url).toContain("/tags");
@@ -252,7 +252,7 @@ describe("TeamsClient — error handling", () => {
 
         const client = new TeamsClient(TestConnectionUrl, createMockCredential());
 
-        await expect(client.getAllTeams()).rejects.toThrow(
+        await expect(client.getAllTeams().byPage().next()).rejects.toThrow(
         );
     });
 
@@ -263,7 +263,7 @@ describe("TeamsClient — error handling", () => {
         const client = new TeamsClient(TestConnectionUrl, createMockCredential());
 
         try {
-            await client.getAllTeams();
+            await client.getAllTeams().byPage().next();
             throw new Error("Expected ConnectorError to be thrown");
         } catch (error) {
             expect(error).toBeInstanceOf(ConnectorError);

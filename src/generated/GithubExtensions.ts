@@ -43,7 +43,7 @@ export interface IssueDetailsModel {
  */
 export interface MultipleSearchFetchModel {
     /** body of result */
-    body?: Array<Record<string, unknown>>;
+    body?: Array<GeneralAPIModel>;
 }
 
 /**
@@ -51,7 +51,7 @@ export interface MultipleSearchFetchModel {
  */
 export interface SingleSearchFetchModel {
     /** body of result */
-    body?: Array<Record<string, unknown>>;
+    body?: Array<GeneralAPIModel>;
 }
 
 /**
@@ -939,6 +939,188 @@ export interface QueryRequest {
 }
 
 /**
+ * Options for the getIssues operation.
+ */
+export interface GetIssuesOptions extends ConnectorOperationOptions {
+    /** Filter by milestone. */
+    milestone?: string;
+    /** Filter by state. */
+    state?: string;
+    /** Filter by assignee. */
+    assignee?: string;
+    /** Filter by creator. */
+    creator?: string;
+    /** Filter by mentions. */
+    mentioned?: string;
+    /** Filter by label names. */
+    labels?: string;
+    /** Field to sort results by. */
+    sort?: string;
+    /** Direction of sort. */
+    direction?: string;
+    /** Filter by issues after given date. */
+    since?: string;
+    /** Number of results per page. */
+    perPage?: string;
+    /** Page number to display. */
+    page?: string;
+}
+
+/**
+ * Options for the getPullRequests operation.
+ */
+export interface GetPullRequestsOptions extends ConnectorOperationOptions {
+    /** Filter by state. */
+    state?: string;
+    /** Filter by head user or organization. */
+    head?: string;
+    /** Filter by base branch name. */
+    base?: string;
+    /** What to sort the results by. */
+    sort?: string;
+    /** Direction of sort. */
+    direction?: string;
+    /** Number of results per page. */
+    perPage?: string;
+    /** Page number to display. */
+    page?: string;
+}
+
+/**
+ * Options for the getAssignees operation.
+ */
+export interface GetAssigneesOptions extends ConnectorOperationOptions {
+    /** Number of results per page. */
+    perPage?: string;
+    /** Page number to display. */
+    page?: string;
+}
+
+/**
+ * Options for the listCollaborators operation.
+ */
+export interface ListCollaboratorsOptions extends ConnectorOperationOptions {
+    /** Number of results per page. */
+    perPage?: string;
+    /** Page number to display. */
+    page?: string;
+}
+
+/**
+ * Options for the getMilestones operation.
+ */
+export interface GetMilestonesOptions extends ConnectorOperationOptions {
+    /** State of the milestone. */
+    state?: string;
+    /** What to sort the results by. */
+    sort?: string;
+    /** Direction of sort. */
+    direction?: string;
+    /** Number of results per page. */
+    perPage?: string;
+    /** Page number to display. */
+    page?: string;
+}
+
+/**
+ * Options for the getLabels operation.
+ */
+export interface GetLabelsOptions extends ConnectorOperationOptions {
+    /** Number of results per page. */
+    perPage?: string;
+    /** Page number to display. */
+    page?: string;
+}
+
+/**
+ * Options for the getIssueLabels operation.
+ */
+export interface GetIssueLabelsOptions extends ConnectorOperationOptions {
+    /** Number of results per page. */
+    perPage?: string;
+    /** Page number to display. */
+    page?: string;
+}
+
+/**
+ * Options for the getRepos operation.
+ */
+export interface GetReposOptions extends ConnectorOperationOptions {
+    /** Limit results to repositories of the specified type. */
+    type?: string;
+    /** The property to sort the results by. */
+    sort?: string;
+    /** Direction of sort. */
+    direction?: string;
+    /** Number of results per page. */
+    perPage?: string;
+    /** Page number to fetch */
+    page?: string;
+}
+
+/**
+ * Options for the getOrgRepos operation.
+ */
+export interface GetOrgReposOptions extends ConnectorOperationOptions {
+    /** Limit results to repositories of the specified type. */
+    type?: string;
+    /** The property to sort the results by. */
+    sort?: string;
+    /** Direction of sort. */
+    direction?: string;
+    /** Number of results per page. */
+    perPage?: string;
+    /** Page number to fetch */
+    page?: string;
+}
+
+/**
+ * Options for the getUserRepos operation.
+ */
+export interface GetUserReposOptions extends ConnectorOperationOptions {
+    /** Limit results to repositories of the specified visibility(public/private/all). */
+    visibility?: string;
+    /** Limit results based on affiliation. */
+    affiliation?: string;
+    /** Limit results to repositories updated after a given time. */
+    since?: string;
+    /** Limit results to repositories updated before a given time. */
+    before?: string;
+    /** Limit results to repositories of the specified type. */
+    type?: string;
+    /** The property to sort the results by. */
+    sort?: string;
+    /** Direction of sort. */
+    direction?: string;
+    /** Number of results per page. */
+    perPage?: string;
+    /** Page number to fetch */
+    page?: string;
+}
+
+/**
+ * Options for the searchIssues operation.
+ */
+export interface SearchIssuesOptions extends ConnectorOperationOptions {
+    /** The property to sort the results by. */
+    sort?: string;
+    /** Direction of sort. */
+    order?: string;
+    /** Number of results per page. */
+    perPage?: string;
+    /** Page number to fetch */
+    page?: string;
+}
+
+/**
+ * Options for the invokeMCPServer operation.
+ */
+export interface InvokeMCPServerOptions extends ConnectorOperationOptions {
+    /** This is the session Id */
+    mcpSessionId?: string;
+}
+
+/**
  * Typed callback payload for trigger operation 'IssueAssigned'.
  */
 export type GithubOnIssueAssignedTriggerPayload = TriggerCallbackPayload<IssueDetailsModel>;
@@ -1026,40 +1208,40 @@ export class GithubClient extends ConnectorClientBase {
      * Get all issues of a repository
      * @remarks Get all issues of a repository.
      */
-    public async getIssues(repositoryOwner: string, repositoryName: string, milestone?: string, state?: string, assignee?: string, creator?: string, mentioned?: string, labels?: string, sort?: string, direction?: string, since?: string, perPage?: string, page?: string, options: ConnectorOperationOptions = {}): Promise<Array<GeneralAPIModel>> {
+    public async getIssues(repositoryOwner: string, repositoryName: string, options: GetIssuesOptions = {}): Promise<Array<GeneralAPIModel>> {
         const queryParams: string[] = [];
-        if (milestone !== undefined) {
-            queryParams.push(`milestone=${encodeURIComponent(String(milestone))}`);
+        if (options.milestone !== undefined) {
+            queryParams.push(`milestone=${encodeURIComponent(String(options.milestone))}`);
         }
-        if (state !== undefined) {
-            queryParams.push(`state=${encodeURIComponent(String(state))}`);
+        if (options.state !== undefined) {
+            queryParams.push(`state=${encodeURIComponent(String(options.state))}`);
         }
-        if (assignee !== undefined) {
-            queryParams.push(`assignee=${encodeURIComponent(String(assignee))}`);
+        if (options.assignee !== undefined) {
+            queryParams.push(`assignee=${encodeURIComponent(String(options.assignee))}`);
         }
-        if (creator !== undefined) {
-            queryParams.push(`creator=${encodeURIComponent(String(creator))}`);
+        if (options.creator !== undefined) {
+            queryParams.push(`creator=${encodeURIComponent(String(options.creator))}`);
         }
-        if (mentioned !== undefined) {
-            queryParams.push(`mentioned=${encodeURIComponent(String(mentioned))}`);
+        if (options.mentioned !== undefined) {
+            queryParams.push(`mentioned=${encodeURIComponent(String(options.mentioned))}`);
         }
-        if (labels !== undefined) {
-            queryParams.push(`labels=${encodeURIComponent(String(labels))}`);
+        if (options.labels !== undefined) {
+            queryParams.push(`labels=${encodeURIComponent(String(options.labels))}`);
         }
-        if (sort !== undefined) {
-            queryParams.push(`sort=${encodeURIComponent(String(sort))}`);
+        if (options.sort !== undefined) {
+            queryParams.push(`sort=${encodeURIComponent(String(options.sort))}`);
         }
-        if (direction !== undefined) {
-            queryParams.push(`direction=${encodeURIComponent(String(direction))}`);
+        if (options.direction !== undefined) {
+            queryParams.push(`direction=${encodeURIComponent(String(options.direction))}`);
         }
-        if (since !== undefined) {
-            queryParams.push(`since=${encodeURIComponent(String(since))}`);
+        if (options.since !== undefined) {
+            queryParams.push(`since=${encodeURIComponent(String(options.since))}`);
         }
-        if (perPage !== undefined) {
-            queryParams.push(`per_page=${encodeURIComponent(String(perPage))}`);
+        if (options.perPage !== undefined) {
+            queryParams.push(`per_page=${encodeURIComponent(String(options.perPage))}`);
         }
-        if (page !== undefined) {
-            queryParams.push(`page=${encodeURIComponent(String(page))}`);
+        if (options.page !== undefined) {
+            queryParams.push(`page=${encodeURIComponent(String(options.page))}`);
         }
         const requestPath = `/repos/${repositoryOwner}/${repositoryName}/issues` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
@@ -1072,10 +1254,14 @@ export class GithubClient extends ConnectorClientBase {
      * Get a repository public key
      * @remarks Gets your public key, which you need to encrypt secrets. You need to encrypt a secret before you can create or update secrets.
      */
-    public async getRepositoryPublicKey(repositoryOwner: string, repositoryName: string, options: ConnectorOperationOptions = {}): Promise<ActionsPublicKey> {
+    public async getRepositoryPublicKey(repositoryOwner: string, repositoryName: string, accept: string, options: ConnectorOperationOptions = {}): Promise<ActionsPublicKey> {
         const requestPath = `/repos/${repositoryOwner}/${repositoryName}/actions/secrets/public-key`;
+        const requestHeaders: Record<string, string> = {};
+        if (accept !== undefined) {
+            requestHeaders["Accept"] = String(accept);
+        }
         const requestUrl = this.resolveUrl(requestPath);
-        const httpResponse = await this.sendWithTracingAsync<ActionsPublicKey>("Github.getRepositoryPublicKey", "GetRepositoryPublicKey", "GET", requestUrl, undefined, options);
+        const httpResponse = await this.sendWithTracingAsync<ActionsPublicKey>("Github.getRepositoryPublicKey", "GetRepositoryPublicKey", "GET", requestUrl, undefined, options, requestHeaders);
 
         return httpResponse.value as ActionsPublicKey;
     }
@@ -1084,20 +1270,28 @@ export class GithubClient extends ConnectorClientBase {
      * Create or update a repository secret
      * @remarks Creates or updates a repository secret with an encrypted value. Encrypt your secret using LibSodium.
      */
-    public async createUpdateRepositorySecret(input: CreateRepositorySecretRequest, repositoryOwner: string, repositoryName: string, secretName: string, options: ConnectorOperationOptions = {}): Promise<void> {
+    public async createUpdateRepositorySecret(input: CreateRepositorySecretRequest, repositoryOwner: string, repositoryName: string, secretName: string, accept: string, options: ConnectorOperationOptions = {}): Promise<void> {
         const requestPath = `/repos/${repositoryOwner}/${repositoryName}/actions/secrets/${secretName}`;
+        const requestHeaders: Record<string, string> = {};
+        if (accept !== undefined) {
+            requestHeaders["Accept"] = String(accept);
+        }
         const requestUrl = this.resolveUrl(requestPath);
-        await this.sendWithTracingAsync<void>("Github.createUpdateRepositorySecret", "CreateUpdateRepositorySecret", "PUT", requestUrl, input, options);
+        await this.sendWithTracingAsync<void>("Github.createUpdateRepositorySecret", "CreateUpdateRepositorySecret", "PUT", requestUrl, input, options, requestHeaders);
     }
 
     /**
      * Create a repository using a template
      * @remarks Creates a new repository using a repository template. The authenticated user must own or be a member of an organization that owns the repository.
      */
-    public async createRepositoryUsingTemplate(input: CreateRepositoryUsingTemplateRequest, templateOwner: string, templateRepository: string, options: ConnectorOperationOptions = {}): Promise<RepositoryDetails> {
+    public async createRepositoryUsingTemplate(input: CreateRepositoryUsingTemplateRequest, templateOwner: string, templateRepository: string, accept: string, options: ConnectorOperationOptions = {}): Promise<RepositoryDetails> {
         const requestPath = `/repos/${templateOwner}/${templateRepository}/generate`;
+        const requestHeaders: Record<string, string> = {};
+        if (accept !== undefined) {
+            requestHeaders["Accept"] = String(accept);
+        }
         const requestUrl = this.resolveUrl(requestPath);
-        const httpResponse = await this.sendWithTracingAsync<RepositoryDetails>("Github.createRepositoryUsingTemplate", "CreateRepositoryUsingTemplate", "POST", requestUrl, input, options);
+        const httpResponse = await this.sendWithTracingAsync<RepositoryDetails>("Github.createRepositoryUsingTemplate", "CreateRepositoryUsingTemplate", "POST", requestUrl, input, options, requestHeaders);
 
         return httpResponse.value as RepositoryDetails;
     }
@@ -1106,10 +1300,14 @@ export class GithubClient extends ConnectorClientBase {
      * Get a repository by Id
      * @remarks Gets a repository by Id.
      */
-    public async getRepositoryById(repositoryId: string, options: ConnectorOperationOptions = {}): Promise<RepositoryDetails> {
+    public async getRepositoryById(repositoryId: string, accept: string, options: ConnectorOperationOptions = {}): Promise<RepositoryDetails> {
         const requestPath = `/repositories/${repositoryId}`;
+        const requestHeaders: Record<string, string> = {};
+        if (accept !== undefined) {
+            requestHeaders["Accept"] = String(accept);
+        }
         const requestUrl = this.resolveUrl(requestPath);
-        const httpResponse = await this.sendWithTracingAsync<RepositoryDetails>("Github.getRepositoryById", "GetRepositoryById", "GET", requestUrl, undefined, options);
+        const httpResponse = await this.sendWithTracingAsync<RepositoryDetails>("Github.getRepositoryById", "GetRepositoryById", "GET", requestUrl, undefined, options, requestHeaders);
 
         return httpResponse.value as RepositoryDetails;
     }
@@ -1118,10 +1316,14 @@ export class GithubClient extends ConnectorClientBase {
      * Create a reference
      * @remarks Creates a reference for your repository. You are unable to create new references for empty repositories, even if the commit SHA-1 hash used exists. Empty repositories are repositories without branches.
      */
-    public async createReference(input: CreateReferenceRequest, repositoryOwner: string, repositoryName: string, options: ConnectorOperationOptions = {}): Promise<GitReference> {
+    public async createReference(input: CreateReferenceRequest, repositoryOwner: string, repositoryName: string, accept: string, options: ConnectorOperationOptions = {}): Promise<GitReference> {
         const requestPath = `/repos/${repositoryOwner}/${repositoryName}/git/refs`;
+        const requestHeaders: Record<string, string> = {};
+        if (accept !== undefined) {
+            requestHeaders["Accept"] = String(accept);
+        }
         const requestUrl = this.resolveUrl(requestPath);
-        const httpResponse = await this.sendWithTracingAsync<GitReference>("Github.createReference", "CreateReference", "POST", requestUrl, input, options);
+        const httpResponse = await this.sendWithTracingAsync<GitReference>("Github.createReference", "CreateReference", "POST", requestUrl, input, options, requestHeaders);
 
         return httpResponse.value as GitReference;
     }
@@ -1130,10 +1332,14 @@ export class GithubClient extends ConnectorClientBase {
      * Get a reference
      * @remarks Returns a single reference from your Git database. The `reference` parameter must be formatted as `heads/<branch name>` for branches and `tags/<tag name>` for tags. If the `reference` doesn't match an existing ref, a `404` is returned.
      */
-    public async getReference(repositoryOwner: string, repositoryName: string, reference: string, options: ConnectorOperationOptions = {}): Promise<GitReference> {
+    public async getReference(repositoryOwner: string, repositoryName: string, reference: string, accept: string, options: ConnectorOperationOptions = {}): Promise<GitReference> {
         const requestPath = `/repos/${repositoryOwner}/${repositoryName}/git/ref/${reference}`;
+        const requestHeaders: Record<string, string> = {};
+        if (accept !== undefined) {
+            requestHeaders["Accept"] = String(accept);
+        }
         const requestUrl = this.resolveUrl(requestPath);
-        const httpResponse = await this.sendWithTracingAsync<GitReference>("Github.getReference", "GetReference", "GET", requestUrl, undefined, options);
+        const httpResponse = await this.sendWithTracingAsync<GitReference>("Github.getReference", "GetReference", "GET", requestUrl, undefined, options, requestHeaders);
 
         return httpResponse.value as GitReference;
     }
@@ -1142,10 +1348,14 @@ export class GithubClient extends ConnectorClientBase {
      * Merge a pull request
      * @remarks This operation is used to merge a pull request for the repository.
      */
-    public async mergePullRequest(input: PullRequestMergeRequest, repositoryOwner: string, repositoryName: string, pullNumber: string, options: ConnectorOperationOptions = {}): Promise<PullRequestMergeResult> {
+    public async mergePullRequest(input: PullRequestMergeRequest, repositoryOwner: string, repositoryName: string, pullNumber: string, accept: string, options: ConnectorOperationOptions = {}): Promise<PullRequestMergeResult> {
         const requestPath = `/repos/${repositoryOwner}/${repositoryName}/pulls/${pullNumber}/merge`;
+        const requestHeaders: Record<string, string> = {};
+        if (accept !== undefined) {
+            requestHeaders["Accept"] = String(accept);
+        }
         const requestUrl = this.resolveUrl(requestPath);
-        const httpResponse = await this.sendWithTracingAsync<PullRequestMergeResult>("Github.mergePullRequest", "MergePullRequest", "PUT", requestUrl, input, options);
+        const httpResponse = await this.sendWithTracingAsync<PullRequestMergeResult>("Github.mergePullRequest", "MergePullRequest", "PUT", requestUrl, input, options, requestHeaders);
 
         return httpResponse.value as PullRequestMergeResult;
     }
@@ -1154,10 +1364,14 @@ export class GithubClient extends ConnectorClientBase {
      * Get a pull request
      * @remarks This operation is used to get a pull request for the repository.
      */
-    public async getPullRequest(repositoryOwner: string, repositoryName: string, pullNumber: string, options: ConnectorOperationOptions = {}): Promise<PullRequest> {
+    public async getPullRequest(repositoryOwner: string, repositoryName: string, pullNumber: string, accept: string, options: ConnectorOperationOptions = {}): Promise<PullRequest> {
         const requestPath = `/repos/${repositoryOwner}/${repositoryName}/pulls/${pullNumber}`;
+        const requestHeaders: Record<string, string> = {};
+        if (accept !== undefined) {
+            requestHeaders["Accept"] = String(accept);
+        }
         const requestUrl = this.resolveUrl(requestPath);
-        const httpResponse = await this.sendWithTracingAsync<PullRequest>("Github.getPullRequest", "GetPullRequest", "GET", requestUrl, undefined, options);
+        const httpResponse = await this.sendWithTracingAsync<PullRequest>("Github.getPullRequest", "GetPullRequest", "GET", requestUrl, undefined, options, requestHeaders);
 
         return httpResponse.value as PullRequest;
     }
@@ -1166,10 +1380,14 @@ export class GithubClient extends ConnectorClientBase {
      * Update a pull request
      * @remarks This operation is used to update a pull request for the repository. To update a pull request in a public repository, you must have write access to the head or the source branch. For organization-owned repositories, you must be a member of the organization that owns the repository to open or update a pull request.
      */
-    public async updatePullRequest(input: PullRequestUpdateRequest, repositoryOwner: string, repositoryName: string, pullNumber: string, options: ConnectorOperationOptions = {}): Promise<PullRequest> {
+    public async updatePullRequest(input: PullRequestUpdateRequest, repositoryOwner: string, repositoryName: string, pullNumber: string, accept: string, options: ConnectorOperationOptions = {}): Promise<PullRequest> {
         const requestPath = `/repos/${repositoryOwner}/${repositoryName}/pulls/${pullNumber}`;
+        const requestHeaders: Record<string, string> = {};
+        if (accept !== undefined) {
+            requestHeaders["Accept"] = String(accept);
+        }
         const requestUrl = this.resolveUrl(requestPath);
-        const httpResponse = await this.sendWithTracingAsync<PullRequest>("Github.updatePullRequest", "UpdatePullRequest", "PATCH", requestUrl, input, options);
+        const httpResponse = await this.sendWithTracingAsync<PullRequest>("Github.updatePullRequest", "UpdatePullRequest", "PATCH", requestUrl, input, options, requestHeaders);
 
         return httpResponse.value as PullRequest;
     }
@@ -1178,10 +1396,14 @@ export class GithubClient extends ConnectorClientBase {
      * Get the list of files from a pull request
      * @remarks This operation is used to get the list of files from a pull request for the repository.
      */
-    public async getPullRequestFiles(repositoryOwner: string, repositoryName: string, pullNumber: string, options: ConnectorOperationOptions = {}): Promise<Array<PullRequestFile>> {
+    public async getPullRequestFiles(repositoryOwner: string, repositoryName: string, pullNumber: string, accept: string, options: ConnectorOperationOptions = {}): Promise<Array<PullRequestFile>> {
         const requestPath = `/repos/${repositoryOwner}/${repositoryName}/pulls/${pullNumber}/files`;
+        const requestHeaders: Record<string, string> = {};
+        if (accept !== undefined) {
+            requestHeaders["Accept"] = String(accept);
+        }
         const requestUrl = this.resolveUrl(requestPath);
-        const httpResponse = await this.sendWithTracingAsync<Array<PullRequestFile>>("Github.getPullRequestFiles", "GetPullRequestFiles", "GET", requestUrl, undefined, options);
+        const httpResponse = await this.sendWithTracingAsync<Array<PullRequestFile>>("Github.getPullRequestFiles", "GetPullRequestFiles", "GET", requestUrl, undefined, options, requestHeaders);
 
         return httpResponse.value as Array<PullRequestFile>;
     }
@@ -1190,30 +1412,42 @@ export class GithubClient extends ConnectorClientBase {
      * Request reviewers for a pull request
      * @remarks Requests reviews for a pull request from a given set of users and/or teams.
      */
-    public async requestReviewersPullRequest(input: RequestReviewersBody, repositoryOwner: string, repositoryName: string, pullNumber: string, options: ConnectorOperationOptions = {}): Promise<void> {
+    public async requestReviewersPullRequest(input: RequestReviewersBody, repositoryOwner: string, repositoryName: string, pullNumber: string, accept: string, options: ConnectorOperationOptions = {}): Promise<void> {
         const requestPath = `/repos/${repositoryOwner}/${repositoryName}/pulls/${pullNumber}/requested_reviewers`;
+        const requestHeaders: Record<string, string> = {};
+        if (accept !== undefined) {
+            requestHeaders["Accept"] = String(accept);
+        }
         const requestUrl = this.resolveUrl(requestPath);
-        await this.sendWithTracingAsync<void>("Github.requestReviewersPullRequest", "RequestReviewersPullRequest", "POST", requestUrl, input, options);
+        await this.sendWithTracingAsync<void>("Github.requestReviewersPullRequest", "RequestReviewersPullRequest", "POST", requestUrl, input, options, requestHeaders);
     }
 
     /**
      * Remove requested reviewers from a pull request
      * @remarks Remove requested reviewers from a pull request from a given set of users and/or teams.
      */
-    public async removeReviewersPullRequest(input: RequestReviewersBody, repositoryOwner: string, repositoryName: string, pullNumber: string, options: ConnectorOperationOptions = {}): Promise<void> {
+    public async removeReviewersPullRequest(input: RequestReviewersBody, repositoryOwner: string, repositoryName: string, pullNumber: string, accept: string, options: ConnectorOperationOptions = {}): Promise<void> {
         const requestPath = `/repos/${repositoryOwner}/${repositoryName}/pulls/${pullNumber}/requested_reviewers`;
+        const requestHeaders: Record<string, string> = {};
+        if (accept !== undefined) {
+            requestHeaders["Accept"] = String(accept);
+        }
         const requestUrl = this.resolveUrl(requestPath);
-        await this.sendWithTracingAsync<void>("Github.removeReviewersPullRequest", "RemoveReviewersPullRequest", "DELETE", requestUrl, input, options);
+        await this.sendWithTracingAsync<void>("Github.removeReviewersPullRequest", "RemoveReviewersPullRequest", "DELETE", requestUrl, input, options, requestHeaders);
     }
 
     /**
      * Create a pull request
      * @remarks This operation is to create a pull request in a repository. To open or update a pull request in a public repository, you must have write access to the head or the source branch. For organization-owned repositories, you must be a member of the organization that owns the repository to create a pull request.
      */
-    public async createPullRequest(input: PullRequestCreateRequest, repositoryOwner: string, repositoryName: string, options: ConnectorOperationOptions = {}): Promise<PullRequest> {
+    public async createPullRequest(input: PullRequestCreateRequest, repositoryOwner: string, repositoryName: string, accept: string, options: ConnectorOperationOptions = {}): Promise<PullRequest> {
         const requestPath = `/repos/${repositoryOwner}/${repositoryName}/pulls`;
+        const requestHeaders: Record<string, string> = {};
+        if (accept !== undefined) {
+            requestHeaders["Accept"] = String(accept);
+        }
         const requestUrl = this.resolveUrl(requestPath);
-        const httpResponse = await this.sendWithTracingAsync<PullRequest>("Github.createPullRequest", "CreatePullRequest", "POST", requestUrl, input, options);
+        const httpResponse = await this.sendWithTracingAsync<PullRequest>("Github.createPullRequest", "CreatePullRequest", "POST", requestUrl, input, options, requestHeaders);
 
         return httpResponse.value as PullRequest;
     }
@@ -1222,28 +1456,28 @@ export class GithubClient extends ConnectorClientBase {
      * Get all Pull Requests of A Repository
      * @remarks Get all Pull Requests of A Repository.
      */
-    public async getPullRequests(repositoryOwner: string, repositoryName: string, state?: string, head?: string, base?: string, sort?: string, direction?: string, perPage?: string, page?: string, options: ConnectorOperationOptions = {}): Promise<Array<GeneralAPIModel>> {
+    public async getPullRequests(repositoryOwner: string, repositoryName: string, options: GetPullRequestsOptions = {}): Promise<Array<GeneralAPIModel>> {
         const queryParams: string[] = [];
-        if (state !== undefined) {
-            queryParams.push(`state=${encodeURIComponent(String(state))}`);
+        if (options.state !== undefined) {
+            queryParams.push(`state=${encodeURIComponent(String(options.state))}`);
         }
-        if (head !== undefined) {
-            queryParams.push(`head=${encodeURIComponent(String(head))}`);
+        if (options.head !== undefined) {
+            queryParams.push(`head=${encodeURIComponent(String(options.head))}`);
         }
-        if (base !== undefined) {
-            queryParams.push(`base=${encodeURIComponent(String(base))}`);
+        if (options.base !== undefined) {
+            queryParams.push(`base=${encodeURIComponent(String(options.base))}`);
         }
-        if (sort !== undefined) {
-            queryParams.push(`sort=${encodeURIComponent(String(sort))}`);
+        if (options.sort !== undefined) {
+            queryParams.push(`sort=${encodeURIComponent(String(options.sort))}`);
         }
-        if (direction !== undefined) {
-            queryParams.push(`direction=${encodeURIComponent(String(direction))}`);
+        if (options.direction !== undefined) {
+            queryParams.push(`direction=${encodeURIComponent(String(options.direction))}`);
         }
-        if (perPage !== undefined) {
-            queryParams.push(`per_page=${encodeURIComponent(String(perPage))}`);
+        if (options.perPage !== undefined) {
+            queryParams.push(`per_page=${encodeURIComponent(String(options.perPage))}`);
         }
-        if (page !== undefined) {
-            queryParams.push(`page=${encodeURIComponent(String(page))}`);
+        if (options.page !== undefined) {
+            queryParams.push(`page=${encodeURIComponent(String(options.page))}`);
         }
         const requestPath = `/repos/${repositoryOwner}/${repositoryName}/pulls` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
@@ -1256,20 +1490,28 @@ export class GithubClient extends ConnectorClientBase {
      * Create a repository dispatch event
      * @remarks This operation is to trigger a webhook event called `repository_dispatch` when you want activity that happens outside of GitHub to trigger a GitHub Actions workflow or GitHub App webhook. You must configure your GitHub Actions workflow or GitHub App to run when the `repository_dispatch` event occurs.
      */
-    public async createRepositoryDispatchEvent(input: RepositoryDispatchEvent, repositoryOwner: string, repositoryName: string, options: ConnectorOperationOptions = {}): Promise<void> {
+    public async createRepositoryDispatchEvent(input: RepositoryDispatchEvent, repositoryOwner: string, repositoryName: string, accept: string, options: ConnectorOperationOptions = {}): Promise<void> {
         const requestPath = `/repos/${repositoryOwner}/${repositoryName}/dispatches`;
+        const requestHeaders: Record<string, string> = {};
+        if (accept !== undefined) {
+            requestHeaders["Accept"] = String(accept);
+        }
         const requestUrl = this.resolveUrl(requestPath);
-        await this.sendWithTracingAsync<void>("Github.createRepositoryDispatchEvent", "CreateRepositoryDispatchEvent", "POST", requestUrl, input, options);
+        await this.sendWithTracingAsync<void>("Github.createRepositoryDispatchEvent", "CreateRepositoryDispatchEvent", "POST", requestUrl, input, options, requestHeaders);
     }
 
     /**
      * Compare two commits
      * @remarks Both `base` and `head` must be branch names in `repositoryName`. To compare branches across other repositories in the same network as `repositoryName`, use the format `<USERNAME>:branch`. The response is equivalent to running the `git log base..head` command; however, commits are returned in chronological order.
      */
-    public async compareRepositoryCommits(repositoryOwner: string, repositoryName: string, base: string, head: string, options: ConnectorOperationOptions = {}): Promise<CommitComparison> {
+    public async compareRepositoryCommits(repositoryOwner: string, repositoryName: string, base: string, head: string, accept: string, options: ConnectorOperationOptions = {}): Promise<CommitComparison> {
         const requestPath = `/repos/${repositoryOwner}/${repositoryName}/compare/${base}...${head}`;
+        const requestHeaders: Record<string, string> = {};
+        if (accept !== undefined) {
+            requestHeaders["Accept"] = String(accept);
+        }
         const requestUrl = this.resolveUrl(requestPath);
-        const httpResponse = await this.sendWithTracingAsync<CommitComparison>("Github.compareRepositoryCommits", "CompareRepositoryCommits", "GET", requestUrl, undefined, options);
+        const httpResponse = await this.sendWithTracingAsync<CommitComparison>("Github.compareRepositoryCommits", "CompareRepositoryCommits", "GET", requestUrl, undefined, options, requestHeaders);
 
         return httpResponse.value as CommitComparison;
     }
@@ -1366,13 +1608,13 @@ export class GithubClient extends ConnectorClientBase {
      * Lists the available assignees for issues in a repository
      * @remarks Lists the available assignees for issues in a repository.
      */
-    public async getAssignees(repositoryOwner: string, repositoryName: string, perPage?: string, page?: string, options: ConnectorOperationOptions = {}): Promise<Array<GeneralAPIModel>> {
+    public async getAssignees(repositoryOwner: string, repositoryName: string, options: GetAssigneesOptions = {}): Promise<Array<GeneralAPIModel>> {
         const queryParams: string[] = [];
-        if (perPage !== undefined) {
-            queryParams.push(`per_page=${encodeURIComponent(String(perPage))}`);
+        if (options.perPage !== undefined) {
+            queryParams.push(`per_page=${encodeURIComponent(String(options.perPage))}`);
         }
-        if (page !== undefined) {
-            queryParams.push(`page=${encodeURIComponent(String(page))}`);
+        if (options.page !== undefined) {
+            queryParams.push(`page=${encodeURIComponent(String(options.page))}`);
         }
         const requestPath = `/repos/${repositoryOwner}/${repositoryName}/assignees` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
@@ -1385,13 +1627,13 @@ export class GithubClient extends ConnectorClientBase {
      * List repository collaborators
      * @remarks List repository collaborators.
      */
-    public listCollaborators(repositoryOwner: string, repositoryName: string, perPage?: string, page?: string, options: ConnectorOperationOptions = {}): ConnectorPagedAsyncIterableIterator<GeneralAPIModel> {
+    public listCollaborators(repositoryOwner: string, repositoryName: string, options: ListCollaboratorsOptions = {}): ConnectorPagedAsyncIterableIterator<GeneralAPIModel> {
         const queryParams: string[] = [];
-        if (perPage !== undefined) {
-            queryParams.push(`per_page=${encodeURIComponent(String(perPage))}`);
+        if (options.perPage !== undefined) {
+            queryParams.push(`per_page=${encodeURIComponent(String(options.perPage))}`);
         }
-        if (page !== undefined) {
-            queryParams.push(`page=${encodeURIComponent(String(page))}`);
+        if (options.page !== undefined) {
+            queryParams.push(`page=${encodeURIComponent(String(options.page))}`);
         }
         const requestPath = `/repos/${repositoryOwner}/${repositoryName}/collaborators` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         return this.createPageable<Array<GeneralAPIModel>, GeneralAPIModel>(
@@ -1422,22 +1664,22 @@ export class GithubClient extends ConnectorClientBase {
      * Lists all milestones of a repository
      * @remarks Lists all milestones of a repository.
      */
-    public async getMilestones(repositoryOwner: string, repositoryName: string, state?: string, sort?: string, direction?: string, perPage?: string, page?: string, options: ConnectorOperationOptions = {}): Promise<Array<GeneralAPIModel>> {
+    public async getMilestones(repositoryOwner: string, repositoryName: string, options: GetMilestonesOptions = {}): Promise<Array<GeneralAPIModel>> {
         const queryParams: string[] = [];
-        if (state !== undefined) {
-            queryParams.push(`state=${encodeURIComponent(String(state))}`);
+        if (options.state !== undefined) {
+            queryParams.push(`state=${encodeURIComponent(String(options.state))}`);
         }
-        if (sort !== undefined) {
-            queryParams.push(`sort=${encodeURIComponent(String(sort))}`);
+        if (options.sort !== undefined) {
+            queryParams.push(`sort=${encodeURIComponent(String(options.sort))}`);
         }
-        if (direction !== undefined) {
-            queryParams.push(`direction=${encodeURIComponent(String(direction))}`);
+        if (options.direction !== undefined) {
+            queryParams.push(`direction=${encodeURIComponent(String(options.direction))}`);
         }
-        if (perPage !== undefined) {
-            queryParams.push(`per_page=${encodeURIComponent(String(perPage))}`);
+        if (options.perPage !== undefined) {
+            queryParams.push(`per_page=${encodeURIComponent(String(options.perPage))}`);
         }
-        if (page !== undefined) {
-            queryParams.push(`page=${encodeURIComponent(String(page))}`);
+        if (options.page !== undefined) {
+            queryParams.push(`page=${encodeURIComponent(String(options.page))}`);
         }
         const requestPath = `/repos/${repositoryOwner}/${repositoryName}/milestones` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
@@ -1450,13 +1692,13 @@ export class GithubClient extends ConnectorClientBase {
      * Lists all labels for a repository
      * @remarks Lists all labels for a repository.
      */
-    public async getLabels(repositoryOwner: string, repositoryName: string, perPage?: string, page?: string, options: ConnectorOperationOptions = {}): Promise<Array<GeneralAPIModel>> {
+    public async getLabels(repositoryOwner: string, repositoryName: string, options: GetLabelsOptions = {}): Promise<Array<GeneralAPIModel>> {
         const queryParams: string[] = [];
-        if (perPage !== undefined) {
-            queryParams.push(`per_page=${encodeURIComponent(String(perPage))}`);
+        if (options.perPage !== undefined) {
+            queryParams.push(`per_page=${encodeURIComponent(String(options.perPage))}`);
         }
-        if (page !== undefined) {
-            queryParams.push(`page=${encodeURIComponent(String(page))}`);
+        if (options.page !== undefined) {
+            queryParams.push(`page=${encodeURIComponent(String(options.page))}`);
         }
         const requestPath = `/repos/${repositoryOwner}/${repositoryName}/labels` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
@@ -1469,13 +1711,13 @@ export class GithubClient extends ConnectorClientBase {
      * Lists all labels for an issue
      * @remarks Lists all labels for an issue.
      */
-    public async getIssueLabels(repositoryOwner: string, repositoryName: string, issueNumber: string, perPage?: string, page?: string, options: ConnectorOperationOptions = {}): Promise<Array<GeneralAPIModel>> {
+    public async getIssueLabels(repositoryOwner: string, repositoryName: string, issueNumber: string, options: GetIssueLabelsOptions = {}): Promise<Array<GeneralAPIModel>> {
         const queryParams: string[] = [];
-        if (perPage !== undefined) {
-            queryParams.push(`per_page=${encodeURIComponent(String(perPage))}`);
+        if (options.perPage !== undefined) {
+            queryParams.push(`per_page=${encodeURIComponent(String(options.perPage))}`);
         }
-        if (page !== undefined) {
-            queryParams.push(`page=${encodeURIComponent(String(page))}`);
+        if (options.page !== undefined) {
+            queryParams.push(`page=${encodeURIComponent(String(options.page))}`);
         }
         const requestPath = `/repos/${repositoryOwner}/${repositoryName}/issues/${issueNumber}/labels` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
@@ -1488,22 +1730,22 @@ export class GithubClient extends ConnectorClientBase {
      * Lists all public repositories for a user
      * @remarks Lists all public repositories for a user.
      */
-    public async getRepos(repositoryOwner: string, type?: string, sort?: string, direction?: string, perPage?: string, page?: string, options: ConnectorOperationOptions = {}): Promise<Array<GeneralAPIModel>> {
+    public async getRepos(repositoryOwner: string, options: GetReposOptions = {}): Promise<Array<GeneralAPIModel>> {
         const queryParams: string[] = [];
-        if (type !== undefined) {
-            queryParams.push(`type=${encodeURIComponent(String(type))}`);
+        if (options.type !== undefined) {
+            queryParams.push(`type=${encodeURIComponent(String(options.type))}`);
         }
-        if (sort !== undefined) {
-            queryParams.push(`sort=${encodeURIComponent(String(sort))}`);
+        if (options.sort !== undefined) {
+            queryParams.push(`sort=${encodeURIComponent(String(options.sort))}`);
         }
-        if (direction !== undefined) {
-            queryParams.push(`direction=${encodeURIComponent(String(direction))}`);
+        if (options.direction !== undefined) {
+            queryParams.push(`direction=${encodeURIComponent(String(options.direction))}`);
         }
-        if (perPage !== undefined) {
-            queryParams.push(`per_page=${encodeURIComponent(String(perPage))}`);
+        if (options.perPage !== undefined) {
+            queryParams.push(`per_page=${encodeURIComponent(String(options.perPage))}`);
         }
-        if (page !== undefined) {
-            queryParams.push(`page=${encodeURIComponent(String(page))}`);
+        if (options.page !== undefined) {
+            queryParams.push(`page=${encodeURIComponent(String(options.page))}`);
         }
         const requestPath = `/users/${repositoryOwner}/repos` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
@@ -1516,22 +1758,22 @@ export class GithubClient extends ConnectorClientBase {
      * Lists all public repositories for an organization
      * @remarks Lists all public repositories for an organization.
      */
-    public async getOrgRepos(repositoryOwner: string, type?: string, sort?: string, direction?: string, perPage?: string, page?: string, options: ConnectorOperationOptions = {}): Promise<Array<GeneralAPIModel>> {
+    public async getOrgRepos(repositoryOwner: string, options: GetOrgReposOptions = {}): Promise<Array<GeneralAPIModel>> {
         const queryParams: string[] = [];
-        if (type !== undefined) {
-            queryParams.push(`type=${encodeURIComponent(String(type))}`);
+        if (options.type !== undefined) {
+            queryParams.push(`type=${encodeURIComponent(String(options.type))}`);
         }
-        if (sort !== undefined) {
-            queryParams.push(`sort=${encodeURIComponent(String(sort))}`);
+        if (options.sort !== undefined) {
+            queryParams.push(`sort=${encodeURIComponent(String(options.sort))}`);
         }
-        if (direction !== undefined) {
-            queryParams.push(`direction=${encodeURIComponent(String(direction))}`);
+        if (options.direction !== undefined) {
+            queryParams.push(`direction=${encodeURIComponent(String(options.direction))}`);
         }
-        if (perPage !== undefined) {
-            queryParams.push(`per_page=${encodeURIComponent(String(perPage))}`);
+        if (options.perPage !== undefined) {
+            queryParams.push(`per_page=${encodeURIComponent(String(options.perPage))}`);
         }
-        if (page !== undefined) {
-            queryParams.push(`page=${encodeURIComponent(String(page))}`);
+        if (options.page !== undefined) {
+            queryParams.push(`page=${encodeURIComponent(String(options.page))}`);
         }
         const requestPath = `/orgs/${repositoryOwner}/repos` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
@@ -1544,34 +1786,34 @@ export class GithubClient extends ConnectorClientBase {
      * Lists all repositories for the authenticated user
      * @remarks Lists all repositories (both public and private) for the authenticated user.
      */
-    public async getUserRepos(visibility?: string, affiliation?: string, since?: string, before?: string, type?: string, sort?: string, direction?: string, perPage?: string, page?: string, options: ConnectorOperationOptions = {}): Promise<Array<GeneralAPIModel>> {
+    public async getUserRepos(options: GetUserReposOptions = {}): Promise<Array<GeneralAPIModel>> {
         const queryParams: string[] = [];
-        if (visibility !== undefined) {
-            queryParams.push(`visibility=${encodeURIComponent(String(visibility))}`);
+        if (options.visibility !== undefined) {
+            queryParams.push(`visibility=${encodeURIComponent(String(options.visibility))}`);
         }
-        if (affiliation !== undefined) {
-            queryParams.push(`affiliation=${encodeURIComponent(String(affiliation))}`);
+        if (options.affiliation !== undefined) {
+            queryParams.push(`affiliation=${encodeURIComponent(String(options.affiliation))}`);
         }
-        if (since !== undefined) {
-            queryParams.push(`since=${encodeURIComponent(String(since))}`);
+        if (options.since !== undefined) {
+            queryParams.push(`since=${encodeURIComponent(String(options.since))}`);
         }
-        if (before !== undefined) {
-            queryParams.push(`before=${encodeURIComponent(String(before))}`);
+        if (options.before !== undefined) {
+            queryParams.push(`before=${encodeURIComponent(String(options.before))}`);
         }
-        if (type !== undefined) {
-            queryParams.push(`type=${encodeURIComponent(String(type))}`);
+        if (options.type !== undefined) {
+            queryParams.push(`type=${encodeURIComponent(String(options.type))}`);
         }
-        if (sort !== undefined) {
-            queryParams.push(`sort=${encodeURIComponent(String(sort))}`);
+        if (options.sort !== undefined) {
+            queryParams.push(`sort=${encodeURIComponent(String(options.sort))}`);
         }
-        if (direction !== undefined) {
-            queryParams.push(`direction=${encodeURIComponent(String(direction))}`);
+        if (options.direction !== undefined) {
+            queryParams.push(`direction=${encodeURIComponent(String(options.direction))}`);
         }
-        if (perPage !== undefined) {
-            queryParams.push(`per_page=${encodeURIComponent(String(perPage))}`);
+        if (options.perPage !== undefined) {
+            queryParams.push(`per_page=${encodeURIComponent(String(options.perPage))}`);
         }
-        if (page !== undefined) {
-            queryParams.push(`page=${encodeURIComponent(String(page))}`);
+        if (options.page !== undefined) {
+            queryParams.push(`page=${encodeURIComponent(String(options.page))}`);
         }
         const requestPath = `/user/repos` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
@@ -1584,22 +1826,22 @@ export class GithubClient extends ConnectorClientBase {
      * Find issues by state and keyword
      * @remarks Find issues by state and keyword.
      */
-    public async searchIssues(q?: string, sort?: string, order?: string, perPage?: string, page?: string, options: ConnectorOperationOptions = {}): Promise<MultipleSearchFetchModel> {
+    public async searchIssues(q: string, options: SearchIssuesOptions = {}): Promise<MultipleSearchFetchModel> {
         const queryParams: string[] = [];
         if (q !== undefined) {
             queryParams.push(`q=${encodeURIComponent(String(q))}`);
         }
-        if (sort !== undefined) {
-            queryParams.push(`sort=${encodeURIComponent(String(sort))}`);
+        if (options.sort !== undefined) {
+            queryParams.push(`sort=${encodeURIComponent(String(options.sort))}`);
         }
-        if (order !== undefined) {
-            queryParams.push(`order=${encodeURIComponent(String(order))}`);
+        if (options.order !== undefined) {
+            queryParams.push(`order=${encodeURIComponent(String(options.order))}`);
         }
-        if (perPage !== undefined) {
-            queryParams.push(`per_page=${encodeURIComponent(String(perPage))}`);
+        if (options.perPage !== undefined) {
+            queryParams.push(`per_page=${encodeURIComponent(String(options.perPage))}`);
         }
-        if (page !== undefined) {
-            queryParams.push(`page=${encodeURIComponent(String(page))}`);
+        if (options.page !== undefined) {
+            queryParams.push(`page=${encodeURIComponent(String(options.page))}`);
         }
         const requestPath = `/search/issues` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
@@ -1612,10 +1854,14 @@ export class GithubClient extends ConnectorClientBase {
      * Github MCP Server
      * @remarks Github MCP Server
      */
-    public async invokeMCPServer(input: QueryRequest, options: ConnectorOperationOptions = {}): Promise<void> {
+    public async invokeMCPServer(input: QueryRequest, options: InvokeMCPServerOptions = {}): Promise<void> {
         const requestPath = `/mcp`;
+        const requestHeaders: Record<string, string> = {};
+        if (options.mcpSessionId !== undefined) {
+            requestHeaders["Mcp-Session-Id"] = String(options.mcpSessionId);
+        }
         const requestUrl = this.resolveUrl(requestPath);
-        await this.sendWithTracingAsync<void>("Github.invokeMCPServer", "InvokeMCPServer", "POST", requestUrl, input, options);
+        await this.sendWithTracingAsync<void>("Github.invokeMCPServer", "InvokeMCPServer", "POST", requestUrl, input, options, requestHeaders);
     }
 
 }

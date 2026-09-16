@@ -58,7 +58,7 @@ export interface ProcedureMetadata {
     name?: string;
     /** Procedure title */
     title?: string;
-    schema?: Record<string, unknown>;
+    schema?: ObjectEntity;
 }
 
 /**
@@ -115,8 +115,8 @@ export interface TableMetadata {
     /** Table permission */
     "x-ms-permission"?: string;
     "x-ms-capabilities"?: TableCapabilitiesMetadata;
-    schema?: Record<string, unknown>;
-    referencedEntities?: Record<string, unknown>;
+    schema?: ObjectEntity;
+    referencedEntities?: ObjectEntity;
     /** Url link */
     webUrl?: string;
 }
@@ -335,6 +335,26 @@ export interface ExportableItemsList {
 export interface ExportableItem {
     dynamicProperties?: Record<string, unknown>;
 }
+
+/**
+ * Options for the getItems operation.
+ */
+export interface GetItemsOptions extends ConnectorOperationOptions {
+    /** A sequence of OData aggregation transformations */
+    apply?: string;
+    /** An ODATA filter query to restrict the entries returned (e.g. stringColumn eq 'string' OR numberColumn lt 123). */
+    filter?: string;
+    /** An ODATA orderBy query for specifying the order of entries. */
+    orderby?: string;
+    /** Total number of entries to retrieve (default = all). */
+    top?: string;
+    /** The number of entries to skip (default = 0). */
+    skip?: string;
+    /** Specific fields to retrieve from entries (default = all). */
+    select?: string;
+    /** Query across companies (default = no). */
+    crossCompany?: string;
+}
 // #endregion Types
 
 export const DynamicsaxTriggerOperations = {
@@ -417,28 +437,28 @@ export class DynamicsaxClient extends ConnectorClientBase {
      * Lists items present in table
      * @remarks Lists items present in table
      */
-    public getItems(dataset: string, table: string, apply?: string, filter?: string, orderby?: string, top?: string, skip?: string, select?: string, crossCompany?: string, options: ConnectorOperationOptions = {}): ConnectorPagedAsyncIterableIterator<Item> {
+    public getItems(dataset: string, table: string, options: GetItemsOptions = {}): ConnectorPagedAsyncIterableIterator<Item> {
         const queryParams: string[] = [];
-        if (apply !== undefined) {
-            queryParams.push(`$apply=${encodeURIComponent(String(apply))}`);
+        if (options.apply !== undefined) {
+            queryParams.push(`$apply=${encodeURIComponent(String(options.apply))}`);
         }
-        if (filter !== undefined) {
-            queryParams.push(`$filter=${encodeURIComponent(String(filter))}`);
+        if (options.filter !== undefined) {
+            queryParams.push(`$filter=${encodeURIComponent(String(options.filter))}`);
         }
-        if (orderby !== undefined) {
-            queryParams.push(`$orderby=${encodeURIComponent(String(orderby))}`);
+        if (options.orderby !== undefined) {
+            queryParams.push(`$orderby=${encodeURIComponent(String(options.orderby))}`);
         }
-        if (top !== undefined) {
-            queryParams.push(`$top=${encodeURIComponent(String(top))}`);
+        if (options.top !== undefined) {
+            queryParams.push(`$top=${encodeURIComponent(String(options.top))}`);
         }
-        if (skip !== undefined) {
-            queryParams.push(`$skip=${encodeURIComponent(String(skip))}`);
+        if (options.skip !== undefined) {
+            queryParams.push(`$skip=${encodeURIComponent(String(options.skip))}`);
         }
-        if (select !== undefined) {
-            queryParams.push(`$select=${encodeURIComponent(String(select))}`);
+        if (options.select !== undefined) {
+            queryParams.push(`$select=${encodeURIComponent(String(options.select))}`);
         }
-        if (crossCompany !== undefined) {
-            queryParams.push(`cross-company=${encodeURIComponent(String(crossCompany))}`);
+        if (options.crossCompany !== undefined) {
+            queryParams.push(`cross-company=${encodeURIComponent(String(options.crossCompany))}`);
         }
         const requestPath = `/datasets/${encodeURIComponent(String(dataset))}/tables/${table}/items` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         return this.createPageable<ItemsList, Item>(

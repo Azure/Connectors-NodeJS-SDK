@@ -337,6 +337,96 @@ export interface GraphUser {
 export interface ObjectWithoutType {
     [key: string]: unknown;
 }
+
+/**
+ * Options for the myTrendingDocuments operation.
+ */
+export interface MyTrendingDocumentsOptions extends ConnectorOperationOptions {
+    /** An OData filter to filter the resources selected. Filter selected resources on ResourceVisualization/Type or ResourceVisualization/containerType */
+    filter?: string;
+    /** Select if you want to extract Sensitivity label ( false, true). */
+    extractSensitivityLabel?: string;
+    /** A boolean whether to fetch sensitivity label Metadata for associated LabelId. */
+    fetchSensitivityLabelMetadata?: string;
+}
+
+/**
+ * Options for the trendingDocuments operation.
+ */
+export interface TrendingDocumentsOptions extends ConnectorOperationOptions {
+    /** An OData filter to filter the resources selected. Filter selected resources on ResourceVisualization/Type or ResourceVisualization/containerType */
+    filter?: string;
+    /** Select if you want to extract Sensitivity label ( false, true). */
+    extractSensitivityLabel?: string;
+    /** A boolean whether to fetch sensitivity label Metadata for associated LabelId. */
+    fetchSensitivityLabelMetadata?: string;
+}
+
+/**
+ * Options for the httpRequest operation.
+ */
+export interface HttpRequestOptions extends ConnectorOperationOptions {
+    /** The content-type header for the body (default is application/json). */
+    contentType?: string;
+    /** Custom header 1. Specify in format: header-name: header-value */
+    customHeader1?: string;
+    /** Custom header 2. Specify in format: header-name: header-value */
+    customHeader2?: string;
+    /** Custom header 3. Specify in format: header-name: header-value */
+    customHeader3?: string;
+    /** Custom header 4. Specify in format: header-name: header-value */
+    customHeader4?: string;
+    /** Custom header 5. Specify in format: header-name: header-value */
+    customHeader5?: string;
+}
+
+/**
+ * Options for the directReports operation.
+ */
+export interface DirectReportsOptions extends ConnectorOperationOptions {
+    /** Comma separated list of fields to select. Example: surname, department, jobTitle */
+    select?: string;
+    /** Limit on the number of results to return. By default returns all entries. */
+    top?: string;
+}
+
+/**
+ * Options for the manager operation.
+ */
+export interface ManagerOptions extends ConnectorOperationOptions {
+    /** Comma separated list of fields to select. Example: surname, department, jobTitle */
+    select?: string;
+}
+
+/**
+ * Options for the myProfile operation.
+ */
+export interface MyProfileOptions extends ConnectorOperationOptions {
+    /** Comma separated list of fields to select. Example: surname, department, jobTitle */
+    select?: string;
+}
+
+/**
+ * Options for the searchUser operation.
+ */
+export interface SearchUserOptions extends ConnectorOperationOptions {
+    /** Search string (applies to: display name, given name, surname, mail, mail nickname and user principal name). */
+    searchTerm?: string;
+    /** Limit on the number of results to return. Minimum value is 1. Default value is 1000. */
+    top?: string;
+    /** If set to 'Yes' then no user profiles will be returned when the search term is empty. If set to 'No' then no filtering will be applied when the search term is empty. */
+    isSearchTermRequired?: string;
+    /** Skip token to get next users. */
+    skipToken?: string;
+}
+
+/**
+ * Options for the userProfile operation.
+ */
+export interface UserProfileOptions extends ConnectorOperationOptions {
+    /** Comma separated list of fields to select. Example: surname, department, jobTitle */
+    select?: string;
+}
 // #endregion Types
 
 // #region Client
@@ -374,26 +464,30 @@ export class Office365usersClient extends ConnectorClientBase {
      * Update my profile photo
      * @remarks Updates the profile photo of the current user. The size of the photo must be less than 4 MB.
      */
-    public async updateMyPhoto(input: UpdateMyPhotoInput, options: ConnectorOperationOptions = {}): Promise<void> {
+    public async updateMyPhoto(input: UpdateMyPhotoInput, contentType: string, options: ConnectorOperationOptions = {}): Promise<void> {
         const requestPath = `/codeless/v1.0/me/photo/$value`;
+        const requestHeaders: Record<string, string> = {};
+        if (contentType !== undefined) {
+            requestHeaders["Content-Type"] = String(contentType);
+        }
         const requestUrl = this.resolveUrl(requestPath);
-        await this.sendWithTracingAsync<void>("Office365users.updateMyPhoto", "UpdateMyPhoto", "PUT", requestUrl, input, options);
+        await this.sendWithTracingAsync<void>("Office365users.updateMyPhoto", "UpdateMyPhoto", "PUT", requestUrl, input, options, requestHeaders);
     }
 
     /**
      * Get my trending documents
      * @remarks Retrieves the trending documents for the signed in user
      */
-    public async myTrendingDocuments(filter?: string, extractSensitivityLabel?: string, fetchSensitivityLabelMetadata?: string, options: ConnectorOperationOptions = {}): Promise<MyTrendingDocumentsResponse> {
+    public async myTrendingDocuments(options: MyTrendingDocumentsOptions = {}): Promise<MyTrendingDocumentsResponse> {
         const queryParams: string[] = [];
-        if (filter !== undefined) {
-            queryParams.push(`$filter=${encodeURIComponent(String(filter))}`);
+        if (options.filter !== undefined) {
+            queryParams.push(`$filter=${encodeURIComponent(String(options.filter))}`);
         }
-        if (extractSensitivityLabel !== undefined) {
-            queryParams.push(`extractSensitivityLabel=${encodeURIComponent(String(extractSensitivityLabel))}`);
+        if (options.extractSensitivityLabel !== undefined) {
+            queryParams.push(`extractSensitivityLabel=${encodeURIComponent(String(options.extractSensitivityLabel))}`);
         }
-        if (fetchSensitivityLabelMetadata !== undefined) {
-            queryParams.push(`fetchSensitivityLabelMetadata=${encodeURIComponent(String(fetchSensitivityLabelMetadata))}`);
+        if (options.fetchSensitivityLabelMetadata !== undefined) {
+            queryParams.push(`fetchSensitivityLabelMetadata=${encodeURIComponent(String(options.fetchSensitivityLabelMetadata))}`);
         }
         const requestPath = `/codeless/beta/me/insights/trending` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
@@ -418,7 +512,7 @@ export class Office365usersClient extends ConnectorClientBase {
      * Get user photo metadata
      * @remarks Get user photo metadata.
      */
-    public async userPhotoMetadata(userId?: string, options: ConnectorOperationOptions = {}): Promise<ClientPhotoMetadata> {
+    public async userPhotoMetadata(userId: string, options: ConnectorOperationOptions = {}): Promise<ClientPhotoMetadata> {
         const queryParams: string[] = [];
         if (userId !== undefined) {
             queryParams.push(`userId=${encodeURIComponent(String(userId))}`);
@@ -434,16 +528,16 @@ export class Office365usersClient extends ConnectorClientBase {
      * Get trending documents
      * @remarks Retrieves the trending documents for a user
      */
-    public async trendingDocuments(id: string, filter?: string, extractSensitivityLabel?: string, fetchSensitivityLabelMetadata?: string, options: ConnectorOperationOptions = {}): Promise<TrendingDocumentsResponse> {
+    public async trendingDocuments(id: string, options: TrendingDocumentsOptions = {}): Promise<TrendingDocumentsResponse> {
         const queryParams: string[] = [];
-        if (filter !== undefined) {
-            queryParams.push(`$filter=${encodeURIComponent(String(filter))}`);
+        if (options.filter !== undefined) {
+            queryParams.push(`$filter=${encodeURIComponent(String(options.filter))}`);
         }
-        if (extractSensitivityLabel !== undefined) {
-            queryParams.push(`extractSensitivityLabel=${encodeURIComponent(String(extractSensitivityLabel))}`);
+        if (options.extractSensitivityLabel !== undefined) {
+            queryParams.push(`extractSensitivityLabel=${encodeURIComponent(String(options.extractSensitivityLabel))}`);
         }
-        if (fetchSensitivityLabelMetadata !== undefined) {
-            queryParams.push(`fetchSensitivityLabelMetadata=${encodeURIComponent(String(fetchSensitivityLabelMetadata))}`);
+        if (options.fetchSensitivityLabelMetadata !== undefined) {
+            queryParams.push(`fetchSensitivityLabelMetadata=${encodeURIComponent(String(options.fetchSensitivityLabelMetadata))}`);
         }
         const requestPath = `/codeless/beta/users/${id}/insights/trending` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
@@ -456,10 +550,35 @@ export class Office365usersClient extends ConnectorClientBase {
      * Send an HTTP request
      * @remarks Construct a Microsoft Graph REST API request to invoke. These segments are supported: 1st segement: /me, /users/<userId> 2nd segment: messages, mailFolders, events, calendar, calendars, outlook, inferenceClassification. Learn more: https://docs.microsoft.com/en-us/graph/use-the-api.
      */
-    public async httpRequest(input: HttpRequestInput, options: ConnectorOperationOptions = {}): Promise<ObjectWithoutType> {
+    public async httpRequest(input: HttpRequestInput, uri: string, method: string, options: HttpRequestOptions = {}): Promise<ObjectWithoutType> {
         const requestPath = `/codeless/httprequest`;
+        const requestHeaders: Record<string, string> = {};
+        if (uri !== undefined) {
+            requestHeaders["Uri"] = String(uri);
+        }
+        if (method !== undefined) {
+            requestHeaders["Method"] = String(method);
+        }
+        if (options.contentType !== undefined) {
+            requestHeaders["ContentType"] = String(options.contentType);
+        }
+        if (options.customHeader1 !== undefined) {
+            requestHeaders["CustomHeader1"] = String(options.customHeader1);
+        }
+        if (options.customHeader2 !== undefined) {
+            requestHeaders["CustomHeader2"] = String(options.customHeader2);
+        }
+        if (options.customHeader3 !== undefined) {
+            requestHeaders["CustomHeader3"] = String(options.customHeader3);
+        }
+        if (options.customHeader4 !== undefined) {
+            requestHeaders["CustomHeader4"] = String(options.customHeader4);
+        }
+        if (options.customHeader5 !== undefined) {
+            requestHeaders["CustomHeader5"] = String(options.customHeader5);
+        }
         const requestUrl = this.resolveUrl(requestPath);
-        const httpResponse = await this.sendWithTracingAsync<ObjectWithoutType>("Office365users.httpRequest", "HttpRequest", "POST", requestUrl, input, options);
+        const httpResponse = await this.sendWithTracingAsync<ObjectWithoutType>("Office365users.httpRequest", "HttpRequest", "POST", requestUrl, input, options, requestHeaders);
 
         return httpResponse.value as ObjectWithoutType;
     }
@@ -468,13 +587,13 @@ export class Office365usersClient extends ConnectorClientBase {
      * Get direct reports
      * @remarks Retrieves the user profiles of the specified user's direct reports. Learn more about available fields to select: https://developer.microsoft.com/en-us/graph/docs/api-reference/v1.0/resources/user#properties
      */
-    public async directReports(id: string, select?: string, top?: string, options: ConnectorOperationOptions = {}): Promise<DirectReportsResponse> {
+    public async directReports(id: string, options: DirectReportsOptions = {}): Promise<DirectReportsResponse> {
         const queryParams: string[] = [];
-        if (select !== undefined) {
-            queryParams.push(`$select=${encodeURIComponent(String(select))}`);
+        if (options.select !== undefined) {
+            queryParams.push(`$select=${encodeURIComponent(String(options.select))}`);
         }
-        if (top !== undefined) {
-            queryParams.push(`$top=${encodeURIComponent(String(top))}`);
+        if (options.top !== undefined) {
+            queryParams.push(`$top=${encodeURIComponent(String(options.top))}`);
         }
         const requestPath = `/codeless/v1.0/users/${id}/directReports` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
@@ -487,10 +606,10 @@ export class Office365usersClient extends ConnectorClientBase {
      * Get manager
      * @remarks Retrieves the profile of the specified user's manager. Learn more about available fields to select: https://developer.microsoft.com/en-us/graph/docs/api-reference/v1.0/resources/user#properties
      */
-    public async manager(id: string, select?: string, options: ConnectorOperationOptions = {}): Promise<GraphUser> {
+    public async manager(id: string, options: ManagerOptions = {}): Promise<GraphUser> {
         const queryParams: string[] = [];
-        if (select !== undefined) {
-            queryParams.push(`$select=${encodeURIComponent(String(select))}`);
+        if (options.select !== undefined) {
+            queryParams.push(`$select=${encodeURIComponent(String(options.select))}`);
         }
         const requestPath = `/codeless/v1.0/users/${id}/manager` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
@@ -503,10 +622,10 @@ export class Office365usersClient extends ConnectorClientBase {
      * Get my profile
      * @remarks Retrieves the profile of the current user. Learn more about available fields to select: https://developer.microsoft.com/en-us/graph/docs/api-reference/v1.0/resources/user#properties
      */
-    public async myProfile(select?: string, options: ConnectorOperationOptions = {}): Promise<GraphUser> {
+    public async myProfile(options: MyProfileOptions = {}): Promise<GraphUser> {
         const queryParams: string[] = [];
-        if (select !== undefined) {
-            queryParams.push(`$select=${encodeURIComponent(String(select))}`);
+        if (options.select !== undefined) {
+            queryParams.push(`$select=${encodeURIComponent(String(options.select))}`);
         }
         const requestPath = `/codeless/v1.0/me` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
@@ -519,19 +638,19 @@ export class Office365usersClient extends ConnectorClientBase {
      * Search for users
      * @remarks Retrieves the user profiles that match the search term.
      */
-    public searchUser(searchTerm?: string, top?: string, isSearchTermRequired?: string, skipToken?: string, options: ConnectorOperationOptions = {}): ConnectorPagedAsyncIterableIterator<User> {
+    public searchUser(options: SearchUserOptions = {}): ConnectorPagedAsyncIterableIterator<User> {
         const queryParams: string[] = [];
-        if (searchTerm !== undefined) {
-            queryParams.push(`searchTerm=${encodeURIComponent(String(searchTerm))}`);
+        if (options.searchTerm !== undefined) {
+            queryParams.push(`searchTerm=${encodeURIComponent(String(options.searchTerm))}`);
         }
-        if (top !== undefined) {
-            queryParams.push(`top=${encodeURIComponent(String(top))}`);
+        if (options.top !== undefined) {
+            queryParams.push(`top=${encodeURIComponent(String(options.top))}`);
         }
-        if (isSearchTermRequired !== undefined) {
-            queryParams.push(`isSearchTermRequired=${encodeURIComponent(String(isSearchTermRequired))}`);
+        if (options.isSearchTermRequired !== undefined) {
+            queryParams.push(`isSearchTermRequired=${encodeURIComponent(String(options.isSearchTermRequired))}`);
         }
-        if (skipToken !== undefined) {
-            queryParams.push(`skipToken=${encodeURIComponent(String(skipToken))}`);
+        if (options.skipToken !== undefined) {
+            queryParams.push(`skipToken=${encodeURIComponent(String(options.skipToken))}`);
         }
         const requestPath = `/v2/users` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         return this.createPageable<EntityListResponseIReadOnlyListUser, User>(
@@ -563,10 +682,10 @@ export class Office365usersClient extends ConnectorClientBase {
      * Get user profile
      * @remarks Retrieves the profile of a specific user. Learn more about available fields to select: https://developer.microsoft.com/en-us/graph/docs/api-reference/v1.0/resources/user#properties
      */
-    public async userProfile(id: string, select?: string, options: ConnectorOperationOptions = {}): Promise<GraphUser> {
+    public async userProfile(id: string, options: UserProfileOptions = {}): Promise<GraphUser> {
         const queryParams: string[] = [];
-        if (select !== undefined) {
-            queryParams.push(`$select=${encodeURIComponent(String(select))}`);
+        if (options.select !== undefined) {
+            queryParams.push(`$select=${encodeURIComponent(String(options.select))}`);
         }
         const requestPath = `/codeless/v1.0/users/${id}` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);

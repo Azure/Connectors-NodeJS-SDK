@@ -1781,6 +1781,208 @@ export type WhoMade2 = "i_did" | "someone_else" | "collective";
  * Definition: WhoMade
  */
 export type WhoMade = "i_did" | "someone_else" | "collective";
+
+/**
+ * Options for the paymentLedgerEntries operation.
+ */
+export interface PaymentLedgerEntriesOptions extends ConnectorOperationOptions {
+    /** The maximum number of results to return. */
+    limit?: string;
+    /** The number of records to skip before selecting the first result. */
+    offset?: string;
+}
+
+/**
+ * Options for the getReceipts operation.
+ */
+export interface GetReceiptsOptions extends ConnectorOperationOptions {
+    /** The earliest unix timestamp for when a record was created. */
+    minCreated?: string;
+    /** The latest unix timestamp for when a record was created. */
+    maxCreated?: string;
+    /** The earliest unix timestamp for when a record last changed. */
+    minLastModified?: string;
+    /** The latest unix timestamp for when a record last changed. */
+    maxLastModified?: string;
+    /** The maximum number of results to return. */
+    limit?: string;
+    /** The number of records to skip before selecting the first result. */
+    offset?: string;
+    /** When true, the seller received payment for the product(s) in this receipt. */
+    wasPaid?: string;
+    /** When true, the seller shipped the product(s) in this receipt. */
+    wasShipped?: string;
+}
+
+/**
+ * Options for the transactionsListing operation.
+ */
+export interface TransactionsListingOptions extends ConnectorOperationOptions {
+    /** The maximum number of results to return. */
+    limit?: string;
+    /** The number of records to skip before selecting the first result. */
+    offset?: string;
+}
+
+/**
+ * Options for the getTransactionShop operation.
+ */
+export interface GetTransactionShopOptions extends ConnectorOperationOptions {
+    /** The maximum number of results to return. */
+    limit?: string;
+    /** The number of records to skip before selecting the first result. */
+    offset?: string;
+}
+
+/**
+ * Options for the getReviews operation.
+ */
+export interface GetReviewsOptions extends ConnectorOperationOptions {
+    /** The maximum number of results to return. */
+    limit?: string;
+    /** The number of records to skip before selecting the first result. */
+    offset?: string;
+}
+
+/**
+ * Options for the getShippingDestinations operation.
+ */
+export interface GetShippingDestinationsOptions extends ConnectorOperationOptions {
+    /** The maximum number of results to return. */
+    limit?: string;
+    /** The number of records to skip before selecting the first result. */
+    offset?: string;
+}
+
+/**
+ * Options for the searchShop operation.
+ */
+export interface SearchShopOptions extends ConnectorOperationOptions {
+    /** The maximum number of results to return. */
+    limit?: string;
+    /** The number of records to skip before selecting the first result. */
+    offset?: string;
+}
+
+/**
+ * Options for the getUserAddresses operation.
+ */
+export interface GetUserAddressesOptions extends ConnectorOperationOptions {
+    /** The maximum number of results to return. */
+    limit?: string;
+    /** The number of records to skip before selecting the first result. */
+    offset?: string;
+}
+
+/**
+ * Options for the getListingShop operation.
+ */
+export interface GetListingShopOptions extends ConnectorOperationOptions {
+    /** An enumerated string from any of: active or inactive. */
+    state?: string;
+    /** The maximum number of results to return. */
+    limit?: string;
+    /** The number of records to skip before selecting the first result. */
+    offset?: string;
+    /** The value to sort a search result of listings on. */
+    sortOn?: string;
+    /** The ascending(up) or descending(down) order to sort listings by. */
+    sortOrder?: string;
+}
+
+/**
+ * Options for the getListing operation.
+ */
+export interface GetListingOptions extends ConnectorOperationOptions {
+    /** An enumerated string that attaches a valid association. Acceptable inputs are 'shop', 'images' and 'user'. */
+    includes?: string;
+}
+
+/**
+ * Options for the getListingActive operation.
+ */
+export interface GetListingActiveOptions extends ConnectorOperationOptions {
+    /** The maximum number of results to return. */
+    limit?: string;
+    /** The number of records to skip before selecting the first result. */
+    offset?: string;
+    /** Search term or phrase that must appear in all results. */
+    keywords?: string;
+    /** The value to sort a search result of listings on. NOTE: sort on only works when combined with one of the search options (keywords, region, etc.). */
+    sortOn?: string;
+    /** The ascending(up) or descending(down) order to sort listings by. NOTE: sort_order only works when combined with one of the search options (keywords, region, etc.). */
+    sortOrder?: string;
+    /** The minimum price of listings to be returned by a search result. */
+    minPrice?: string;
+    /** The maximum price of listings to be returned by a search result. */
+    maxPrice?: string;
+    /** The numeric taxonomy ID of the listing. The seller manages listing taxonomy IDs for their shop. */
+    taxonomyId?: string;
+    /** Filters by shop location. If location cannot be parsed, Etsy responds with an error. */
+    shopLocation?: string;
+}
+
+/**
+ * Options for the getListingActiveByShop operation.
+ */
+export interface GetListingActiveByShopOptions extends ConnectorOperationOptions {
+    /** The maximum number of results to return. */
+    limit?: string;
+    /** The number of records to skip before selecting the first result. */
+    offset?: string;
+    /** Search term or phrase that must appear in all results. */
+    keywords?: string;
+}
+
+/**
+ * Options for the getListingById operation.
+ */
+export interface GetListingByIdOptions extends ConnectorOperationOptions {
+    /** An enumerated string that attaches a valid association. */
+    includes?: string;
+}
+
+/**
+ * Options for the getListingFeatured operation.
+ */
+export interface GetListingFeaturedOptions extends ConnectorOperationOptions {
+    /** The maximum number of results to return. */
+    limit?: string;
+    /** The number of records to skip before selecting the first result. */
+    offset?: string;
+}
+
+/**
+ * Options for the getListingByReceipt operation.
+ */
+export interface GetListingByReceiptOptions extends ConnectorOperationOptions {
+    /** The maximum number of results to return. */
+    limit?: string;
+    /** The number of records to skip before selecting the first result. */
+    offset?: string;
+}
+
+/**
+ * Options for the getListingBySectionId operation.
+ */
+export interface GetListingBySectionIdOptions extends ConnectorOperationOptions {
+    /** The maximum number of results to return. */
+    limit?: string;
+    /** The number of records to skip before selecting the first result. */
+    offset?: string;
+    /** The value to sort a search result of listings on. */
+    sortOn?: string;
+    /** The ascending(up) or descending(down) order to sort listings by. */
+    sortOrder?: string;
+}
+
+/**
+ * Options for the getListingInventory operation.
+ */
+export interface GetListingInventoryOptions extends ConnectorOperationOptions {
+    /** An enumerated string that attaches an valid association. */
+    includes?: string;
+}
 // #endregion Types
 
 // #region Client
@@ -1820,7 +2022,7 @@ export class EtsyClient extends ConnectorClientBase {
      * Get a shop payment account ledger's entries
      * @remarks Retrieve the entries of a shop's payment account ledger.
      */
-    public async paymentLedgerEntries(shopId: string, minCreated?: string, maxCreated?: string, limit?: string, offset?: string, options: ConnectorOperationOptions = {}): Promise<PaymentAccountLedgerEntries> {
+    public async paymentLedgerEntries(shopId: string, minCreated: string, maxCreated: string, options: PaymentLedgerEntriesOptions = {}): Promise<PaymentAccountLedgerEntries> {
         const queryParams: string[] = [];
         if (minCreated !== undefined) {
             queryParams.push(`min_created=${encodeURIComponent(String(minCreated))}`);
@@ -1828,11 +2030,11 @@ export class EtsyClient extends ConnectorClientBase {
         if (maxCreated !== undefined) {
             queryParams.push(`max_created=${encodeURIComponent(String(maxCreated))}`);
         }
-        if (limit !== undefined) {
-            queryParams.push(`limit=${encodeURIComponent(String(limit))}`);
+        if (options.limit !== undefined) {
+            queryParams.push(`limit=${encodeURIComponent(String(options.limit))}`);
         }
-        if (offset !== undefined) {
-            queryParams.push(`offset=${encodeURIComponent(String(offset))}`);
+        if (options.offset !== undefined) {
+            queryParams.push(`offset=${encodeURIComponent(String(options.offset))}`);
         }
         const requestPath = `/shops/${shopId}/payment-account/ledger-entries` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
@@ -1845,7 +2047,7 @@ export class EtsyClient extends ConnectorClientBase {
      * Get a payment from a payment account ledger entry ID
      * @remarks Get a Payment from a Payment Account Ledger Entry ID, if applicable.
      */
-    public async getPaymentEntryId(shopId: string, ledgerEntryIds?: string, options: ConnectorOperationOptions = {}): Promise<Payments> {
+    public async getPaymentEntryId(shopId: string, ledgerEntryIds: string, options: ConnectorOperationOptions = {}): Promise<Payments> {
         const queryParams: string[] = [];
         if (ledgerEntryIds !== undefined) {
             queryParams.push(`ledger_entry_ids=${encodeURIComponent(String(ledgerEntryIds))}`);
@@ -1873,7 +2075,7 @@ export class EtsyClient extends ConnectorClientBase {
      * Get a list of payments
      * @remarks Retrieves a list of payments from a shop identified by shop ID. You can also filter results using a list of payment IDs.
      */
-    public async getPayments(shopId: string, paymentIds?: string, options: ConnectorOperationOptions = {}): Promise<Payments> {
+    public async getPayments(shopId: string, paymentIds: string, options: ConnectorOperationOptions = {}): Promise<Payments> {
         const queryParams: string[] = [];
         if (paymentIds !== undefined) {
             queryParams.push(`payment-ids=${encodeURIComponent(String(paymentIds))}`);
@@ -1901,31 +2103,31 @@ export class EtsyClient extends ConnectorClientBase {
      * Get receipts
      * @remarks Requests the shop receipts from a specific shop, unfiltered or filtered by receipt ID range or offset, date, paid, and/or shipped purchases.
      */
-    public async getReceipts(shopId: string, minCreated?: string, maxCreated?: string, minLastModified?: string, maxLastModified?: string, limit?: string, offset?: string, wasPaid?: string, wasShipped?: string, options: ConnectorOperationOptions = {}): Promise<ShopReceipts> {
+    public async getReceipts(shopId: string, options: GetReceiptsOptions = {}): Promise<ShopReceipts> {
         const queryParams: string[] = [];
-        if (minCreated !== undefined) {
-            queryParams.push(`min_created=${encodeURIComponent(String(minCreated))}`);
+        if (options.minCreated !== undefined) {
+            queryParams.push(`min_created=${encodeURIComponent(String(options.minCreated))}`);
         }
-        if (maxCreated !== undefined) {
-            queryParams.push(`max_created=${encodeURIComponent(String(maxCreated))}`);
+        if (options.maxCreated !== undefined) {
+            queryParams.push(`max_created=${encodeURIComponent(String(options.maxCreated))}`);
         }
-        if (minLastModified !== undefined) {
-            queryParams.push(`min_last_modified=${encodeURIComponent(String(minLastModified))}`);
+        if (options.minLastModified !== undefined) {
+            queryParams.push(`min_last_modified=${encodeURIComponent(String(options.minLastModified))}`);
         }
-        if (maxLastModified !== undefined) {
-            queryParams.push(`max_last_modified=${encodeURIComponent(String(maxLastModified))}`);
+        if (options.maxLastModified !== undefined) {
+            queryParams.push(`max_last_modified=${encodeURIComponent(String(options.maxLastModified))}`);
         }
-        if (limit !== undefined) {
-            queryParams.push(`limit=${encodeURIComponent(String(limit))}`);
+        if (options.limit !== undefined) {
+            queryParams.push(`limit=${encodeURIComponent(String(options.limit))}`);
         }
-        if (offset !== undefined) {
-            queryParams.push(`offset=${encodeURIComponent(String(offset))}`);
+        if (options.offset !== undefined) {
+            queryParams.push(`offset=${encodeURIComponent(String(options.offset))}`);
         }
-        if (wasPaid !== undefined) {
-            queryParams.push(`was_paid=${encodeURIComponent(String(wasPaid))}`);
+        if (options.wasPaid !== undefined) {
+            queryParams.push(`was_paid=${encodeURIComponent(String(options.wasPaid))}`);
         }
-        if (wasShipped !== undefined) {
-            queryParams.push(`was_shipped=${encodeURIComponent(String(wasShipped))}`);
+        if (options.wasShipped !== undefined) {
+            queryParams.push(`was_shipped=${encodeURIComponent(String(options.wasShipped))}`);
         }
         const requestPath = `/shops/${shopId}/receipts` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
@@ -1938,10 +2140,14 @@ export class EtsyClient extends ConnectorClientBase {
      * Create a Shipment Receipt
      * @remarks Submits tracking information for a shop receipt, which creates a shop receipt Shipment entry for the given receipt ID. Each time you successfully submit tracking info, Etsy sends a notification email to the buyer User. When send BCC is true, Etsy sends shipping notifications to the seller as well. When tracking code and carrier name aren't sent, the receipt is marked as shipped only.
      */
-    public async createReceiptShipment(input: ReceiptCreateShipmentInput, shopId: string, receiptId: string, options: ConnectorOperationOptions = {}): Promise<ShopReceipt> {
+    public async createReceiptShipment(input: ReceiptCreateShipmentInput, shopId: string, receiptId: string, contentType: string, options: ConnectorOperationOptions = {}): Promise<ShopReceipt> {
         const requestPath = `/shops/${shopId}/receipts/${receiptId}/tracking`;
+        const requestHeaders: Record<string, string> = {};
+        if (contentType !== undefined) {
+            requestHeaders["Content-Type"] = String(contentType);
+        }
         const requestUrl = this.resolveUrl(requestPath);
-        const httpResponse = await this.sendWithTracingAsync<ShopReceipt>("Etsy.createReceiptShipment", "ReceiptCreateShipment", "POST", requestUrl, input, options);
+        const httpResponse = await this.sendWithTracingAsync<ShopReceipt>("Etsy.createReceiptShipment", "ReceiptCreateShipment", "POST", requestUrl, input, options, requestHeaders);
 
         return httpResponse.value as ShopReceipt;
     }
@@ -1950,13 +2156,13 @@ export class EtsyClient extends ConnectorClientBase {
      * Retrieve a listing's transactions
      * @remarks Retrieves the list of transactions associated with a listing.
      */
-    public async transactionsListing(shopId: string, listingId: string, limit?: string, offset?: string, options: ConnectorOperationOptions = {}): Promise<ShopReceiptTransactions> {
+    public async transactionsListing(shopId: string, listingId: string, options: TransactionsListingOptions = {}): Promise<ShopReceiptTransactions> {
         const queryParams: string[] = [];
-        if (limit !== undefined) {
-            queryParams.push(`limit=${encodeURIComponent(String(limit))}`);
+        if (options.limit !== undefined) {
+            queryParams.push(`limit=${encodeURIComponent(String(options.limit))}`);
         }
-        if (offset !== undefined) {
-            queryParams.push(`offset=${encodeURIComponent(String(offset))}`);
+        if (options.offset !== undefined) {
+            queryParams.push(`offset=${encodeURIComponent(String(options.offset))}`);
         }
         const requestPath = `/shops/${shopId}/listings/${listingId}/transactions` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
@@ -1993,13 +2199,13 @@ export class EtsyClient extends ConnectorClientBase {
      * Get a shop's transaction
      * @remarks Retrieves the list of transactions associated with a shop.
      */
-    public async getTransactionShop(shopId: string, limit?: string, offset?: string, options: ConnectorOperationOptions = {}): Promise<ShopReceiptTransactions> {
+    public async getTransactionShop(shopId: string, options: GetTransactionShopOptions = {}): Promise<ShopReceiptTransactions> {
         const queryParams: string[] = [];
-        if (limit !== undefined) {
-            queryParams.push(`limit=${encodeURIComponent(String(limit))}`);
+        if (options.limit !== undefined) {
+            queryParams.push(`limit=${encodeURIComponent(String(options.limit))}`);
         }
-        if (offset !== undefined) {
-            queryParams.push(`offset=${encodeURIComponent(String(offset))}`);
+        if (options.offset !== undefined) {
+            queryParams.push(`offset=${encodeURIComponent(String(options.offset))}`);
         }
         const requestPath = `/shops/${shopId}/transactions` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
@@ -2012,13 +2218,13 @@ export class EtsyClient extends ConnectorClientBase {
      * Get reviews
      * @remarks Retrieves the reviews from a shop given its ID.
      */
-    public async getReviews(shopId: string, limit?: string, offset?: string, options: ConnectorOperationOptions = {}): Promise<TransactionReviews> {
+    public async getReviews(shopId: string, options: GetReviewsOptions = {}): Promise<TransactionReviews> {
         const queryParams: string[] = [];
-        if (limit !== undefined) {
-            queryParams.push(`limit=${encodeURIComponent(String(limit))}`);
+        if (options.limit !== undefined) {
+            queryParams.push(`limit=${encodeURIComponent(String(options.limit))}`);
         }
-        if (offset !== undefined) {
-            queryParams.push(`offset=${encodeURIComponent(String(offset))}`);
+        if (options.offset !== undefined) {
+            queryParams.push(`offset=${encodeURIComponent(String(options.offset))}`);
         }
         const requestPath = `/shops/${shopId}/reviews` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
@@ -2031,7 +2237,7 @@ export class EtsyClient extends ConnectorClientBase {
      * Get shipping carriers
      * @remarks Retrieves a list of available shipping carriers and the mail classes associated with them for a given country.
      */
-    public async shippingCarriers(originCountryIso?: string, options: ConnectorOperationOptions = {}): Promise<ShippingCarriers> {
+    public async shippingCarriers(originCountryIso: string, options: ConnectorOperationOptions = {}): Promise<ShippingCarriers> {
         const queryParams: string[] = [];
         if (originCountryIso !== undefined) {
             queryParams.push(`origin_country_iso=${encodeURIComponent(String(originCountryIso))}`);
@@ -2059,10 +2265,14 @@ export class EtsyClient extends ConnectorClientBase {
      * Create a shipping profile
      * @remarks Creates a new shipping profile. You can pass a country ISO code or a region when creating a shipping profile, but not both. Only one is required. You must pass either a shipping carrier ID and mail class, or both min and max delivery days.
      */
-    public async createShippingProfile(input: ShippingCreateProfileInput, shopId: string, options: ConnectorOperationOptions = {}): Promise<ShopShippingProfile> {
+    public async createShippingProfile(input: ShippingCreateProfileInput, shopId: string, contentType: string, options: ConnectorOperationOptions = {}): Promise<ShopShippingProfile> {
         const requestPath = `/shops/${shopId}/shipping-profiles`;
+        const requestHeaders: Record<string, string> = {};
+        if (contentType !== undefined) {
+            requestHeaders["Content-Type"] = String(contentType);
+        }
         const requestUrl = this.resolveUrl(requestPath);
-        const httpResponse = await this.sendWithTracingAsync<ShopShippingProfile>("Etsy.createShippingProfile", "ShippingCreateProfile", "POST", requestUrl, input, options);
+        const httpResponse = await this.sendWithTracingAsync<ShopShippingProfile>("Etsy.createShippingProfile", "ShippingCreateProfile", "POST", requestUrl, input, options, requestHeaders);
 
         return httpResponse.value as ShopShippingProfile;
     }
@@ -2093,10 +2303,14 @@ export class EtsyClient extends ConnectorClientBase {
      * Update a shipping profile
      * @remarks Changes the settings in a shipping profile.
      */
-    public async updateShippingProfile(input: ShippingUpdateProfileInput, shopId: string, shippingProfileId: string, options: ConnectorOperationOptions = {}): Promise<ShopShippingProfile> {
+    public async updateShippingProfile(input: ShippingUpdateProfileInput, shopId: string, shippingProfileId: string, contentType: string, options: ConnectorOperationOptions = {}): Promise<ShopShippingProfile> {
         const requestPath = `/shops/${shopId}/shipping-profiles/${shippingProfileId}`;
+        const requestHeaders: Record<string, string> = {};
+        if (contentType !== undefined) {
+            requestHeaders["Content-Type"] = String(contentType);
+        }
         const requestUrl = this.resolveUrl(requestPath);
-        const httpResponse = await this.sendWithTracingAsync<ShopShippingProfile>("Etsy.updateShippingProfile", "ShippingUpdateProfile", "PUT", requestUrl, input, options);
+        const httpResponse = await this.sendWithTracingAsync<ShopShippingProfile>("Etsy.updateShippingProfile", "ShippingUpdateProfile", "PUT", requestUrl, input, options, requestHeaders);
 
         return httpResponse.value as ShopShippingProfile;
     }
@@ -2105,13 +2319,13 @@ export class EtsyClient extends ConnectorClientBase {
      * Get profile destinations by shipping profile
      * @remarks Retrieves a list of shipping destination objects associated with a shipping profile.
      */
-    public async getShippingDestinations(shopId: string, shippingProfileId: string, limit?: string, offset?: string, options: ConnectorOperationOptions = {}): Promise<ShopShippingProfileDestinations> {
+    public async getShippingDestinations(shopId: string, shippingProfileId: string, options: GetShippingDestinationsOptions = {}): Promise<ShopShippingProfileDestinations> {
         const queryParams: string[] = [];
-        if (limit !== undefined) {
-            queryParams.push(`limit=${encodeURIComponent(String(limit))}`);
+        if (options.limit !== undefined) {
+            queryParams.push(`limit=${encodeURIComponent(String(options.limit))}`);
         }
-        if (offset !== undefined) {
-            queryParams.push(`offset=${encodeURIComponent(String(offset))}`);
+        if (options.offset !== undefined) {
+            queryParams.push(`offset=${encodeURIComponent(String(options.offset))}`);
         }
         const requestPath = `/shops/${shopId}/shipping-profiles/${shippingProfileId}/destinations` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
@@ -2124,10 +2338,14 @@ export class EtsyClient extends ConnectorClientBase {
      * Create a shipping profile destination
      * @remarks Creates a new shipping destination, which sets the shipping cost, carrier, and class for a destination in a shipping profile. This assigns costs using the currency of the associated shop. Set the destination using either destination country ISO or destination region; destination country ISO and destination region are mutually exclusive — set one or the other. Setting both triggers error 400. If the request sets neither destination country ISO nor destination region, the default destination is everywhere. You must also either assign both a shipping carrier ID and mail class or both min delivery days and max delivery days.
      */
-    public async createShippingDestination(input: ShippingCreateDestinationInput, shopId: string, shippingProfileId: string, options: ConnectorOperationOptions = {}): Promise<ShopShippingProfileDestination> {
+    public async createShippingDestination(input: ShippingCreateDestinationInput, shopId: string, shippingProfileId: string, contentType: string, options: ConnectorOperationOptions = {}): Promise<ShopShippingProfileDestination> {
         const requestPath = `/shops/${shopId}/shipping-profiles/${shippingProfileId}/destinations`;
+        const requestHeaders: Record<string, string> = {};
+        if (contentType !== undefined) {
+            requestHeaders["Content-Type"] = String(contentType);
+        }
         const requestUrl = this.resolveUrl(requestPath);
-        const httpResponse = await this.sendWithTracingAsync<ShopShippingProfileDestination>("Etsy.createShippingDestination", "ShippingCreateDestination", "POST", requestUrl, input, options);
+        const httpResponse = await this.sendWithTracingAsync<ShopShippingProfileDestination>("Etsy.createShippingDestination", "ShippingCreateDestination", "POST", requestUrl, input, options, requestHeaders);
 
         return httpResponse.value as ShopShippingProfileDestination;
     }
@@ -2146,10 +2364,14 @@ export class EtsyClient extends ConnectorClientBase {
      * Update a shipping profile destination
      * @remarks Updates an existing shipping destination, which can set or reassign the shipping cost, carrier, and class for a destination.
      */
-    public async updateShippingProfileDestination(input: ShippingUpdateProfileDestinationInput, shopId: string, shippingProfileId: string, shippingProfileDestinationId: string, options: ConnectorOperationOptions = {}): Promise<ShopShippingProfileDestination> {
+    public async updateShippingProfileDestination(input: ShippingUpdateProfileDestinationInput, shopId: string, shippingProfileId: string, shippingProfileDestinationId: string, contentType: string, options: ConnectorOperationOptions = {}): Promise<ShopShippingProfileDestination> {
         const requestPath = `/shops/${shopId}/shipping-profiles/${shippingProfileId}/destinations/${shippingProfileDestinationId}`;
+        const requestHeaders: Record<string, string> = {};
+        if (contentType !== undefined) {
+            requestHeaders["Content-Type"] = String(contentType);
+        }
         const requestUrl = this.resolveUrl(requestPath);
-        const httpResponse = await this.sendWithTracingAsync<ShopShippingProfileDestination>("Etsy.updateShippingProfileDestination", "ShippingUpdateProfileDestination", "PUT", requestUrl, input, options);
+        const httpResponse = await this.sendWithTracingAsync<ShopShippingProfileDestination>("Etsy.updateShippingProfileDestination", "ShippingUpdateProfileDestination", "PUT", requestUrl, input, options, requestHeaders);
 
         return httpResponse.value as ShopShippingProfileDestination;
     }
@@ -2170,10 +2392,14 @@ export class EtsyClient extends ConnectorClientBase {
      * Create a shipping profile upgrade
      * @remarks Creates a new shipping profile upgrade, which can establish a price for a shipping option, such as an alternate carrier or faster delivery.
      */
-    public async createShippingUpgrade(input: ShippingCreateUpgradeInput, shopId: string, shippingProfileId: string, options: ConnectorOperationOptions = {}): Promise<ShopShippingProfileUpgrade> {
+    public async createShippingUpgrade(input: ShippingCreateUpgradeInput, shopId: string, shippingProfileId: string, contentType: string, options: ConnectorOperationOptions = {}): Promise<ShopShippingProfileUpgrade> {
         const requestPath = `/shops/${shopId}/shipping-profiles/${shippingProfileId}/upgrades`;
+        const requestHeaders: Record<string, string> = {};
+        if (contentType !== undefined) {
+            requestHeaders["Content-Type"] = String(contentType);
+        }
         const requestUrl = this.resolveUrl(requestPath);
-        const httpResponse = await this.sendWithTracingAsync<ShopShippingProfileUpgrade>("Etsy.createShippingUpgrade", "ShippingCreateUpgrade", "POST", requestUrl, input, options);
+        const httpResponse = await this.sendWithTracingAsync<ShopShippingProfileUpgrade>("Etsy.createShippingUpgrade", "ShippingCreateUpgrade", "POST", requestUrl, input, options, requestHeaders);
 
         return httpResponse.value as ShopShippingProfileUpgrade;
     }
@@ -2192,10 +2418,14 @@ export class EtsyClient extends ConnectorClientBase {
      * Update a shipping profile upgrade
      * @remarks Updates a shipping profile upgrade and updates any listings that use the shipping profile.
      */
-    public async updateShippingProfileUpgrade(input: ShippingUpdateProfileUpgradeInput, shopId: string, shippingProfileId: string, upgradeId: string, options: ConnectorOperationOptions = {}): Promise<ShopShippingProfileUpgrade> {
+    public async updateShippingProfileUpgrade(input: ShippingUpdateProfileUpgradeInput, shopId: string, shippingProfileId: string, upgradeId: string, contentType: string, options: ConnectorOperationOptions = {}): Promise<ShopShippingProfileUpgrade> {
         const requestPath = `/shops/${shopId}/shipping-profiles/${shippingProfileId}/upgrades/${upgradeId}`;
+        const requestHeaders: Record<string, string> = {};
+        if (contentType !== undefined) {
+            requestHeaders["Content-Type"] = String(contentType);
+        }
         const requestUrl = this.resolveUrl(requestPath);
-        const httpResponse = await this.sendWithTracingAsync<ShopShippingProfileUpgrade>("Etsy.updateShippingProfileUpgrade", "ShippingUpdateProfileUpgrade", "PUT", requestUrl, input, options);
+        const httpResponse = await this.sendWithTracingAsync<ShopShippingProfileUpgrade>("Etsy.updateShippingProfileUpgrade", "ShippingUpdateProfileUpgrade", "PUT", requestUrl, input, options, requestHeaders);
 
         return httpResponse.value as ShopShippingProfileUpgrade;
     }
@@ -2204,10 +2434,14 @@ export class EtsyClient extends ConnectorClientBase {
      * Update a shop
      * @remarks Update a shop. Assumes that all string parameters are provided in the shop's primary language.
      */
-    public async updateShop(input: ShopUpdateInput, shopId: string, options: ConnectorOperationOptions = {}): Promise<Shop> {
+    public async updateShop(input: ShopUpdateInput, shopId: string, contentType: string, options: ConnectorOperationOptions = {}): Promise<Shop> {
         const requestPath = `/shops/${shopId}`;
+        const requestHeaders: Record<string, string> = {};
+        if (contentType !== undefined) {
+            requestHeaders["Content-Type"] = String(contentType);
+        }
         const requestUrl = this.resolveUrl(requestPath);
-        const httpResponse = await this.sendWithTracingAsync<Shop>("Etsy.updateShop", "ShopUpdate", "PUT", requestUrl, input, options);
+        const httpResponse = await this.sendWithTracingAsync<Shop>("Etsy.updateShop", "ShopUpdate", "PUT", requestUrl, input, options, requestHeaders);
 
         return httpResponse.value as Shop;
     }
@@ -2228,16 +2462,16 @@ export class EtsyClient extends ConnectorClientBase {
      * Search shops
      * @remarks Returns a list of shops with the matching name.
      */
-    public async searchShop(shopName?: string, limit?: string, offset?: string, options: ConnectorOperationOptions = {}): Promise<Shops> {
+    public async searchShop(shopName: string, options: SearchShopOptions = {}): Promise<Shops> {
         const queryParams: string[] = [];
         if (shopName !== undefined) {
             queryParams.push(`shop_name=${encodeURIComponent(String(shopName))}`);
         }
-        if (limit !== undefined) {
-            queryParams.push(`limit=${encodeURIComponent(String(limit))}`);
+        if (options.limit !== undefined) {
+            queryParams.push(`limit=${encodeURIComponent(String(options.limit))}`);
         }
-        if (offset !== undefined) {
-            queryParams.push(`offset=${encodeURIComponent(String(offset))}`);
+        if (options.offset !== undefined) {
+            queryParams.push(`offset=${encodeURIComponent(String(options.offset))}`);
         }
         const requestPath = `/shops` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
@@ -2262,10 +2496,14 @@ export class EtsyClient extends ConnectorClientBase {
      * Create a shop section
      * @remarks Creates a new section in a specific shop.
      */
-    public async createShopSection(input: ShopCreateSectionInput, shopId: string, options: ConnectorOperationOptions = {}): Promise<ShopSection> {
+    public async createShopSection(input: ShopCreateSectionInput, shopId: string, contentType: string, options: ConnectorOperationOptions = {}): Promise<ShopSection> {
         const requestPath = `/shops/${shopId}/sections`;
+        const requestHeaders: Record<string, string> = {};
+        if (contentType !== undefined) {
+            requestHeaders["Content-Type"] = String(contentType);
+        }
         const requestUrl = this.resolveUrl(requestPath);
-        const httpResponse = await this.sendWithTracingAsync<ShopSection>("Etsy.createShopSection", "ShopCreateSection", "POST", requestUrl, input, options);
+        const httpResponse = await this.sendWithTracingAsync<ShopSection>("Etsy.createShopSection", "ShopCreateSection", "POST", requestUrl, input, options, requestHeaders);
 
         return httpResponse.value as ShopSection;
     }
@@ -2310,13 +2548,13 @@ export class EtsyClient extends ConnectorClientBase {
      * Get user addresses
      * @remarks Retrieve a list of user addresses.
      */
-    public async getUserAddresses(limit?: string, offset?: string, options: ConnectorOperationOptions = {}): Promise<UserAddresses> {
+    public async getUserAddresses(options: GetUserAddressesOptions = {}): Promise<UserAddresses> {
         const queryParams: string[] = [];
-        if (limit !== undefined) {
-            queryParams.push(`limit=${encodeURIComponent(String(limit))}`);
+        if (options.limit !== undefined) {
+            queryParams.push(`limit=${encodeURIComponent(String(options.limit))}`);
         }
-        if (offset !== undefined) {
-            queryParams.push(`offset=${encodeURIComponent(String(offset))}`);
+        if (options.offset !== undefined) {
+            queryParams.push(`offset=${encodeURIComponent(String(options.offset))}`);
         }
         const requestPath = `/user/addresses` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
@@ -2353,22 +2591,22 @@ export class EtsyClient extends ConnectorClientBase {
      * Get listings by shop
      * @remarks Returns listings that belong to a Shop. Listings can be filtered using the state parameter.
      */
-    public async getListingShop(shopId: string, state?: string, limit?: string, offset?: string, sortOn?: string, sortOrder?: string, options: ConnectorOperationOptions = {}): Promise<ShopListings> {
+    public async getListingShop(shopId: string, options: GetListingShopOptions = {}): Promise<ShopListings> {
         const queryParams: string[] = [];
-        if (state !== undefined) {
-            queryParams.push(`State=${encodeURIComponent(String(state))}`);
+        if (options.state !== undefined) {
+            queryParams.push(`State=${encodeURIComponent(String(options.state))}`);
         }
-        if (limit !== undefined) {
-            queryParams.push(`limit=${encodeURIComponent(String(limit))}`);
+        if (options.limit !== undefined) {
+            queryParams.push(`limit=${encodeURIComponent(String(options.limit))}`);
         }
-        if (offset !== undefined) {
-            queryParams.push(`offset=${encodeURIComponent(String(offset))}`);
+        if (options.offset !== undefined) {
+            queryParams.push(`offset=${encodeURIComponent(String(options.offset))}`);
         }
-        if (sortOn !== undefined) {
-            queryParams.push(`Sort On=${encodeURIComponent(String(sortOn))}`);
+        if (options.sortOn !== undefined) {
+            queryParams.push(`Sort On=${encodeURIComponent(String(options.sortOn))}`);
         }
-        if (sortOrder !== undefined) {
-            queryParams.push(`Sort Order=${encodeURIComponent(String(sortOrder))}`);
+        if (options.sortOrder !== undefined) {
+            queryParams.push(`Sort Order=${encodeURIComponent(String(options.sortOrder))}`);
         }
         const requestPath = `/shops/${shopId}/listings` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
@@ -2381,10 +2619,14 @@ export class EtsyClient extends ConnectorClientBase {
      * Create a draft listing
      * @remarks Creates a physical draft listing product in a shop on the Etsy channel.
      */
-    public async createListing(input: ListingCreateInput, shopId: string, options: ConnectorOperationOptions = {}): Promise<ShopListing> {
+    public async createListing(input: ListingCreateInput, shopId: string, contentType: string, options: ConnectorOperationOptions = {}): Promise<ShopListing> {
         const requestPath = `/shops/${shopId}/listings`;
+        const requestHeaders: Record<string, string> = {};
+        if (contentType !== undefined) {
+            requestHeaders["Content-Type"] = String(contentType);
+        }
         const requestUrl = this.resolveUrl(requestPath);
-        const httpResponse = await this.sendWithTracingAsync<ShopListing>("Etsy.createListing", "ListingCreate", "POST", requestUrl, input, options);
+        const httpResponse = await this.sendWithTracingAsync<ShopListing>("Etsy.createListing", "ListingCreate", "POST", requestUrl, input, options, requestHeaders);
 
         return httpResponse.value as ShopListing;
     }
@@ -2393,10 +2635,10 @@ export class EtsyClient extends ConnectorClientBase {
      * Get a listing
      * @remarks Retrieves a listing record by listing ID.
      */
-    public async getListing(listingId: string, includes?: string, options: ConnectorOperationOptions = {}): Promise<void> {
+    public async getListing(listingId: string, options: GetListingOptions = {}): Promise<void> {
         const queryParams: string[] = [];
-        if (includes !== undefined) {
-            queryParams.push(`includes=${encodeURIComponent(String(includes))}`);
+        if (options.includes !== undefined) {
+            queryParams.push(`includes=${encodeURIComponent(String(options.includes))}`);
         }
         const requestPath = `/listings/${listingId}` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
@@ -2417,34 +2659,34 @@ export class EtsyClient extends ConnectorClientBase {
      * Get active listings
      * @remarks A list of all active listings on Etsy paginated by their creation date. Without sort order listings will be returned newest-first by default.
      */
-    public async getListingActive(limit?: string, offset?: string, keywords?: string, sortOn?: string, sortOrder?: string, minPrice?: string, maxPrice?: string, taxonomyId?: string, shopLocation?: string, options: ConnectorOperationOptions = {}): Promise<ShopListings> {
+    public async getListingActive(options: GetListingActiveOptions = {}): Promise<ShopListings> {
         const queryParams: string[] = [];
-        if (limit !== undefined) {
-            queryParams.push(`limit=${encodeURIComponent(String(limit))}`);
+        if (options.limit !== undefined) {
+            queryParams.push(`limit=${encodeURIComponent(String(options.limit))}`);
         }
-        if (offset !== undefined) {
-            queryParams.push(`offset=${encodeURIComponent(String(offset))}`);
+        if (options.offset !== undefined) {
+            queryParams.push(`offset=${encodeURIComponent(String(options.offset))}`);
         }
-        if (keywords !== undefined) {
-            queryParams.push(`keywords=${encodeURIComponent(String(keywords))}`);
+        if (options.keywords !== undefined) {
+            queryParams.push(`keywords=${encodeURIComponent(String(options.keywords))}`);
         }
-        if (sortOn !== undefined) {
-            queryParams.push(`sort_on=${encodeURIComponent(String(sortOn))}`);
+        if (options.sortOn !== undefined) {
+            queryParams.push(`sort_on=${encodeURIComponent(String(options.sortOn))}`);
         }
-        if (sortOrder !== undefined) {
-            queryParams.push(`sort_order=${encodeURIComponent(String(sortOrder))}`);
+        if (options.sortOrder !== undefined) {
+            queryParams.push(`sort_order=${encodeURIComponent(String(options.sortOrder))}`);
         }
-        if (minPrice !== undefined) {
-            queryParams.push(`min_price=${encodeURIComponent(String(minPrice))}`);
+        if (options.minPrice !== undefined) {
+            queryParams.push(`min_price=${encodeURIComponent(String(options.minPrice))}`);
         }
-        if (maxPrice !== undefined) {
-            queryParams.push(`max_price=${encodeURIComponent(String(maxPrice))}`);
+        if (options.maxPrice !== undefined) {
+            queryParams.push(`max_price=${encodeURIComponent(String(options.maxPrice))}`);
         }
-        if (taxonomyId !== undefined) {
-            queryParams.push(`taxonomy_id=${encodeURIComponent(String(taxonomyId))}`);
+        if (options.taxonomyId !== undefined) {
+            queryParams.push(`taxonomy_id=${encodeURIComponent(String(options.taxonomyId))}`);
         }
-        if (shopLocation !== undefined) {
-            queryParams.push(`shop_location=${encodeURIComponent(String(shopLocation))}`);
+        if (options.shopLocation !== undefined) {
+            queryParams.push(`shop_location=${encodeURIComponent(String(options.shopLocation))}`);
         }
         const requestPath = `/listings/active` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
@@ -2457,16 +2699,16 @@ export class EtsyClient extends ConnectorClientBase {
      * Get active listings by shop
      * @remarks Retrieves a list of all active listings on Etsy in a specific shop, paginated by listing creation date.
      */
-    public async getListingActiveByShop(shopId: string, limit?: string, offset?: string, keywords?: string, options: ConnectorOperationOptions = {}): Promise<ShopListings> {
+    public async getListingActiveByShop(shopId: string, options: GetListingActiveByShopOptions = {}): Promise<ShopListings> {
         const queryParams: string[] = [];
-        if (limit !== undefined) {
-            queryParams.push(`limit=${encodeURIComponent(String(limit))}`);
+        if (options.limit !== undefined) {
+            queryParams.push(`limit=${encodeURIComponent(String(options.limit))}`);
         }
-        if (offset !== undefined) {
-            queryParams.push(`offset=${encodeURIComponent(String(offset))}`);
+        if (options.offset !== undefined) {
+            queryParams.push(`offset=${encodeURIComponent(String(options.offset))}`);
         }
-        if (keywords !== undefined) {
-            queryParams.push(`keywords=${encodeURIComponent(String(keywords))}`);
+        if (options.keywords !== undefined) {
+            queryParams.push(`keywords=${encodeURIComponent(String(options.keywords))}`);
         }
         const requestPath = `/shops/${shopId}/listings/active` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
@@ -2479,13 +2721,13 @@ export class EtsyClient extends ConnectorClientBase {
      * Get listings by ID
      * @remarks Allows to query multiple listing IDs at once. Limit 100 IDs maximum per query.
      */
-    public async getListingById(listingIds?: string, includes?: string, options: ConnectorOperationOptions = {}): Promise<ShopListingsWithAssociations> {
+    public async getListingById(listingIds: string, options: GetListingByIdOptions = {}): Promise<ShopListingsWithAssociations> {
         const queryParams: string[] = [];
         if (listingIds !== undefined) {
             queryParams.push(`listing_ids=${encodeURIComponent(String(listingIds))}`);
         }
-        if (includes !== undefined) {
-            queryParams.push(`includes=${encodeURIComponent(String(includes))}`);
+        if (options.includes !== undefined) {
+            queryParams.push(`includes=${encodeURIComponent(String(options.includes))}`);
         }
         const requestPath = `/listings/batch` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
@@ -2498,13 +2740,13 @@ export class EtsyClient extends ConnectorClientBase {
      * Get featured listings by shop
      * @remarks Retrieves listings associated to a shop that are featured.
      */
-    public async getListingFeatured(shopId: string, limit?: string, offset?: string, options: ConnectorOperationOptions = {}): Promise<ShopListings> {
+    public async getListingFeatured(shopId: string, options: GetListingFeaturedOptions = {}): Promise<ShopListings> {
         const queryParams: string[] = [];
-        if (limit !== undefined) {
-            queryParams.push(`limit=${encodeURIComponent(String(limit))}`);
+        if (options.limit !== undefined) {
+            queryParams.push(`limit=${encodeURIComponent(String(options.limit))}`);
         }
-        if (offset !== undefined) {
-            queryParams.push(`offset=${encodeURIComponent(String(offset))}`);
+        if (options.offset !== undefined) {
+            queryParams.push(`offset=${encodeURIComponent(String(options.offset))}`);
         }
         const requestPath = `/shops/${shopId}/listings/featured` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
@@ -2527,10 +2769,14 @@ export class EtsyClient extends ConnectorClientBase {
      * Update a listing property
      * @remarks Updates or populates the properties list defining product offerings for a listing. Each offering requires both a value and a value ID that are valid for a scale ID assigned to the listing or that you assign to the listing with this request.
      */
-    public async updateListingProperty(input: ListingUpdatePropertyInput, shopId: string, listingId: string, propertyId: string, options: ConnectorOperationOptions = {}): Promise<ListingPropertyValue> {
+    public async updateListingProperty(input: ListingUpdatePropertyInput, shopId: string, listingId: string, propertyId: string, contentType: string, options: ConnectorOperationOptions = {}): Promise<ListingPropertyValue> {
         const requestPath = `/shops/${shopId}/listings/${listingId}/properties/${propertyId}`;
+        const requestHeaders: Record<string, string> = {};
+        if (contentType !== undefined) {
+            requestHeaders["Content-Type"] = String(contentType);
+        }
         const requestUrl = this.resolveUrl(requestPath);
-        const httpResponse = await this.sendWithTracingAsync<ListingPropertyValue>("Etsy.updateListingProperty", "ListingUpdateProperty", "PUT", requestUrl, input, options);
+        const httpResponse = await this.sendWithTracingAsync<ListingPropertyValue>("Etsy.updateListingProperty", "ListingUpdateProperty", "PUT", requestUrl, input, options, requestHeaders);
 
         return httpResponse.value as ListingPropertyValue;
     }
@@ -2563,10 +2809,14 @@ export class EtsyClient extends ConnectorClientBase {
      * Update a listing
      * @remarks Updates a listing, identified by a listing ID, for a specific shop identified by a shop ID.
      */
-    public async updateListing(input: ListingUpdateInput, shopId: string, listingId: string, options: ConnectorOperationOptions = {}): Promise<ShopListing> {
+    public async updateListing(input: ListingUpdateInput, shopId: string, listingId: string, contentType: string, options: ConnectorOperationOptions = {}): Promise<ShopListing> {
         const requestPath = `/shops/${shopId}/listings/${listingId}`;
+        const requestHeaders: Record<string, string> = {};
+        if (contentType !== undefined) {
+            requestHeaders["Content-Type"] = String(contentType);
+        }
         const requestUrl = this.resolveUrl(requestPath);
-        const httpResponse = await this.sendWithTracingAsync<ShopListing>("Etsy.updateListing", "ListingUpdate", "PUT", requestUrl, input, options);
+        const httpResponse = await this.sendWithTracingAsync<ShopListing>("Etsy.updateListing", "ListingUpdate", "PUT", requestUrl, input, options, requestHeaders);
 
         return httpResponse.value as ShopListing;
     }
@@ -2575,13 +2825,13 @@ export class EtsyClient extends ConnectorClientBase {
      * Get listings by shop receipt
      * @remarks Gets all listings associated with a receipt.
      */
-    public async getListingByReceipt(shopId: string, receiptId: string, limit?: string, offset?: string, options: ConnectorOperationOptions = {}): Promise<ShopListings> {
+    public async getListingByReceipt(shopId: string, receiptId: string, options: GetListingByReceiptOptions = {}): Promise<ShopListings> {
         const queryParams: string[] = [];
-        if (limit !== undefined) {
-            queryParams.push(`limit=${encodeURIComponent(String(limit))}`);
+        if (options.limit !== undefined) {
+            queryParams.push(`limit=${encodeURIComponent(String(options.limit))}`);
         }
-        if (offset !== undefined) {
-            queryParams.push(`offset=${encodeURIComponent(String(offset))}`);
+        if (options.offset !== undefined) {
+            queryParams.push(`offset=${encodeURIComponent(String(options.offset))}`);
         }
         const requestPath = `/shops/${shopId}/receipts/${receiptId}/listings` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
@@ -2594,22 +2844,22 @@ export class EtsyClient extends ConnectorClientBase {
      * Get listings by shop section ID
      * @remarks Retrieves all the listings from the section of a specific shop.
      */
-    public async getListingBySectionId(shopId: string, shopSectionIds?: string, limit?: string, offset?: string, sortOn?: string, sortOrder?: string, options: ConnectorOperationOptions = {}): Promise<ShopListings> {
+    public async getListingBySectionId(shopId: string, shopSectionIds: string, options: GetListingBySectionIdOptions = {}): Promise<ShopListings> {
         const queryParams: string[] = [];
         if (shopSectionIds !== undefined) {
             queryParams.push(`shop_section_ids=${encodeURIComponent(String(shopSectionIds))}`);
         }
-        if (limit !== undefined) {
-            queryParams.push(`limit=${encodeURIComponent(String(limit))}`);
+        if (options.limit !== undefined) {
+            queryParams.push(`limit=${encodeURIComponent(String(options.limit))}`);
         }
-        if (offset !== undefined) {
-            queryParams.push(`offset=${encodeURIComponent(String(offset))}`);
+        if (options.offset !== undefined) {
+            queryParams.push(`offset=${encodeURIComponent(String(options.offset))}`);
         }
-        if (sortOn !== undefined) {
-            queryParams.push(`sort_on=${encodeURIComponent(String(sortOn))}`);
+        if (options.sortOn !== undefined) {
+            queryParams.push(`sort_on=${encodeURIComponent(String(options.sortOn))}`);
         }
-        if (sortOrder !== undefined) {
-            queryParams.push(`sort_order=${encodeURIComponent(String(sortOrder))}`);
+        if (options.sortOrder !== undefined) {
+            queryParams.push(`sort_order=${encodeURIComponent(String(options.sortOrder))}`);
         }
         const requestPath = `/shops/${shopId}/shop-sections/listings` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
@@ -2656,10 +2906,14 @@ export class EtsyClient extends ConnectorClientBase {
      * Upload a listing file
      * @remarks Uploads a new file for a digital listing, or associates an existing file with a specific listing. You must either provide the listing file ID of an existing file, or the name and binary file data for a file to upload. Associating an existing file to a physical listing converts the physical listing into a digital listing, which removes all shipping costs and any product and inventory variations.
      */
-    public async uploadListing(input: ListingUploadInput, shopId: string, listingId: string, options: ConnectorOperationOptions = {}): Promise<ShopListingFile> {
+    public async uploadListing(input: ListingUploadInput, shopId: string, listingId: string, contentType: string, options: ConnectorOperationOptions = {}): Promise<ShopListingFile> {
         const requestPath = `/shops/${shopId}/listings/${listingId}/files`;
+        const requestHeaders: Record<string, string> = {};
+        if (contentType !== undefined) {
+            requestHeaders["Content-Type"] = String(contentType);
+        }
         const requestUrl = this.resolveUrl(requestPath);
-        const httpResponse = await this.sendWithTracingAsync<ShopListingFile>("Etsy.uploadListing", "ListingUpload", "POST", requestUrl, input, options);
+        const httpResponse = await this.sendWithTracingAsync<ShopListingFile>("Etsy.uploadListing", "ListingUpload", "POST", requestUrl, input, options, requestHeaders);
 
         return httpResponse.value as ShopListingFile;
     }
@@ -2702,10 +2956,14 @@ export class EtsyClient extends ConnectorClientBase {
      * Upload a listing image
      * @remarks Uploads or assigns an image to a listing identified by a shop ID with a listing ID. To upload a new image, set the image file as the value for the image parameter. You can assign a previously deleted image to a listing using the deleted image's image ID in the listing image ID parameter. When a request contains both image and listing image ID parameter values, the endpoint uploads the image in the image parameter only.
      */
-    public async uploadListingImage(input: ListingUploadImageInput, shopId: string, listingId: string, options: ConnectorOperationOptions = {}): Promise<ListingImage> {
+    public async uploadListingImage(input: ListingUploadImageInput, shopId: string, listingId: string, contentType: string, options: ConnectorOperationOptions = {}): Promise<ListingImage> {
         const requestPath = `/shops/${shopId}/listings/${listingId}/images`;
+        const requestHeaders: Record<string, string> = {};
+        if (contentType !== undefined) {
+            requestHeaders["Content-Type"] = String(contentType);
+        }
         const requestUrl = this.resolveUrl(requestPath);
-        const httpResponse = await this.sendWithTracingAsync<ListingImage>("Etsy.uploadListingImage", "ListingUploadImage", "POST", requestUrl, input, options);
+        const httpResponse = await this.sendWithTracingAsync<ListingImage>("Etsy.uploadListingImage", "ListingUploadImage", "POST", requestUrl, input, options, requestHeaders);
 
         return httpResponse.value as ListingImage;
     }
@@ -2714,10 +2972,10 @@ export class EtsyClient extends ConnectorClientBase {
      * Get a listing's inventory
      * @remarks Retrieves the inventory record for a listing. Listings you did not edit using the Etsy.com inventory tools have no inventory records. This endpoint returns SKU data if you are the owner of the inventory records being fetched.
      */
-    public async getListingInventory(listingId: string, includes?: string, options: ConnectorOperationOptions = {}): Promise<ListingInventoryWithAssociations> {
+    public async getListingInventory(listingId: string, options: GetListingInventoryOptions = {}): Promise<ListingInventoryWithAssociations> {
         const queryParams: string[] = [];
-        if (includes !== undefined) {
-            queryParams.push(`includes=${encodeURIComponent(String(includes))}`);
+        if (options.includes !== undefined) {
+            queryParams.push(`includes=${encodeURIComponent(String(options.includes))}`);
         }
         const requestPath = `/listings/${listingId}/inventory` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
@@ -2730,10 +2988,14 @@ export class EtsyClient extends ConnectorClientBase {
      * Update a listing's inventory
      * @remarks Updates the inventory for a listing identified by a listing ID. The update fails if the supplied values for product SKU, offering quantity, and/or price are incompatible with values in on property fields. When setting a price, assign a float equal to amount divided by divisor as specified in the money resource.
      */
-    public async updateListingInventory(input: ListingUpdateInventoryInput, listingId: string, options: ConnectorOperationOptions = {}): Promise<ListingInventory> {
+    public async updateListingInventory(input: ListingUpdateInventoryInput, listingId: string, contentType: string, options: ConnectorOperationOptions = {}): Promise<ListingInventory> {
         const requestPath = `/listings/${listingId}/inventory`;
+        const requestHeaders: Record<string, string> = {};
+        if (contentType !== undefined) {
+            requestHeaders["Content-Type"] = String(contentType);
+        }
         const requestUrl = this.resolveUrl(requestPath);
-        const httpResponse = await this.sendWithTracingAsync<ListingInventory>("Etsy.updateListingInventory", "ListingUpdateInventory", "PUT", requestUrl, input, options);
+        const httpResponse = await this.sendWithTracingAsync<ListingInventory>("Etsy.updateListingInventory", "ListingUpdateInventory", "PUT", requestUrl, input, options, requestHeaders);
 
         return httpResponse.value as ListingInventory;
     }
@@ -2778,10 +3040,14 @@ export class EtsyClient extends ConnectorClientBase {
      * Create a listing translation
      * @remarks Creates a listing translation by listing ID and language.
      */
-    public async createListingTranslation(input: ListingCreateTranslationInput, shopId: string, listingId: string, language: string, options: ConnectorOperationOptions = {}): Promise<ListingTranslation> {
+    public async createListingTranslation(input: ListingCreateTranslationInput, shopId: string, listingId: string, language: string, contentType: string, options: ConnectorOperationOptions = {}): Promise<ListingTranslation> {
         const requestPath = `/shops/${shopId}/listings/${listingId}/translations/${language}`;
+        const requestHeaders: Record<string, string> = {};
+        if (contentType !== undefined) {
+            requestHeaders["Content-Type"] = String(contentType);
+        }
         const requestUrl = this.resolveUrl(requestPath);
-        const httpResponse = await this.sendWithTracingAsync<ListingTranslation>("Etsy.createListingTranslation", "ListingCreateTranslation", "POST", requestUrl, input, options);
+        const httpResponse = await this.sendWithTracingAsync<ListingTranslation>("Etsy.createListingTranslation", "ListingCreateTranslation", "POST", requestUrl, input, options, requestHeaders);
 
         return httpResponse.value as ListingTranslation;
     }
@@ -2790,10 +3056,14 @@ export class EtsyClient extends ConnectorClientBase {
      * Update a listing translation
      * @remarks Updates a listing translation by listing ID and language.
      */
-    public async updateListingTranslation(input: ListingUpdateTranslationInput, shopId: string, listingId: string, language: string, options: ConnectorOperationOptions = {}): Promise<ListingTranslation> {
+    public async updateListingTranslation(input: ListingUpdateTranslationInput, shopId: string, listingId: string, language: string, contentType: string, options: ConnectorOperationOptions = {}): Promise<ListingTranslation> {
         const requestPath = `/shops/${shopId}/listings/${listingId}/translations/${language}`;
+        const requestHeaders: Record<string, string> = {};
+        if (contentType !== undefined) {
+            requestHeaders["Content-Type"] = String(contentType);
+        }
         const requestUrl = this.resolveUrl(requestPath);
-        const httpResponse = await this.sendWithTracingAsync<ListingTranslation>("Etsy.updateListingTranslation", "ListingUpdateTranslation", "PUT", requestUrl, input, options);
+        const httpResponse = await this.sendWithTracingAsync<ListingTranslation>("Etsy.updateListingTranslation", "ListingUpdateTranslation", "PUT", requestUrl, input, options, requestHeaders);
 
         return httpResponse.value as ListingTranslation;
     }
@@ -2814,10 +3084,14 @@ export class EtsyClient extends ConnectorClientBase {
      * Update a listing's variation images
      * @remarks Creates variation images on a listing.
      */
-    public async updateListingVariation(input: ListingUpdateVariationInput, shopId: string, listingId: string, options: ConnectorOperationOptions = {}): Promise<ListingVariationImages> {
+    public async updateListingVariation(input: ListingUpdateVariationInput, shopId: string, listingId: string, contentType: string, options: ConnectorOperationOptions = {}): Promise<ListingVariationImages> {
         const requestPath = `/shops/${shopId}/listings/${listingId}/variation-images`;
+        const requestHeaders: Record<string, string> = {};
+        if (contentType !== undefined) {
+            requestHeaders["Content-Type"] = String(contentType);
+        }
         const requestUrl = this.resolveUrl(requestPath);
-        const httpResponse = await this.sendWithTracingAsync<ListingVariationImages>("Etsy.updateListingVariation", "ListingUpdateVariation", "POST", requestUrl, input, options);
+        const httpResponse = await this.sendWithTracingAsync<ListingVariationImages>("Etsy.updateListingVariation", "ListingUpdateVariation", "POST", requestUrl, input, options, requestHeaders);
 
         return httpResponse.value as ListingVariationImages;
     }

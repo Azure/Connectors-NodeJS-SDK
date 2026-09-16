@@ -89,8 +89,8 @@ export interface TableMetadata {
     /** Table permission */
     "x-ms-permission"?: string;
     "x-ms-capabilities"?: TableCapabilitiesMetadata;
-    schema?: Record<string, unknown>;
-    referencedEntities?: Record<string, unknown>;
+    schema?: ObjectEntity;
+    referencedEntities?: ObjectEntity;
     /** Url link */
     webUrl?: string;
 }
@@ -217,6 +217,70 @@ export interface WorksheetMetadata {
     /** Worksheet visibility. */
     visibility?: string;
 }
+
+/**
+ * Options for the createIdColumn operation.
+ */
+export interface CreateIdColumnOptions extends ConnectorOperationOptions {
+    /** Provide the key column name. */
+    idColumn?: string;
+    /** Should the key column be populated or not. */
+    populateColumn?: string;
+}
+
+/**
+ * Options for the getItems operation.
+ */
+export interface GetItemsOptions extends ConnectorOperationOptions {
+    /** An ODATA filter query to restrict the entries returned. */
+    filter?: string;
+    /** An ODATA orderBy query for specifying the order of entries. */
+    orderby?: string;
+    /** Total number of entries to retrieve (default = all). */
+    top?: string;
+    /** The number of entries to skip (default = 0). */
+    skip?: string;
+    /** Comma-separated list of columns to retrieve (first 500 by default). */
+    select?: string;
+    /** Select a column from the drop-down. */
+    idColumn?: string;
+    /** DateTime Format. */
+    dateTimeFormat?: string;
+}
+
+/**
+ * Options for the getItem operation.
+ */
+export interface GetItemOptions extends ConnectorOperationOptions {
+    /** DateTime Format. */
+    dateTimeFormat?: string;
+}
+
+/**
+ * Options for the patchItem operation.
+ */
+export interface PatchItemOptions extends ConnectorOperationOptions {
+    /** Mode of the operation. */
+    mode?: string;
+    /** DateTime Format. */
+    dateTimeFormat?: string;
+}
+
+/**
+ * Options for the getTables operation.
+ */
+export interface GetTablesOptions extends ConnectorOperationOptions {
+    /** Select. */
+    select?: string;
+}
+
+/**
+ * Options for the addRow operation.
+ */
+export interface AddRowOptions extends ConnectorOperationOptions {
+    /** DateTime Format. */
+    dateTimeFormat?: string;
+}
 // #endregion Types
 
 // #region Client
@@ -244,7 +308,7 @@ export class ExcelonlineClient extends ConnectorClientBase {
      * Create table
      * @remarks Create a new table in the Excel workbook.
      */
-    public async createTable(input: TableToCreate, drive: string, file: string, source?: string, options: ConnectorOperationOptions = {}): Promise<TableMetadata> {
+    public async createTable(input: TableToCreate, drive: string, file: string, source: string, options: ConnectorOperationOptions = {}): Promise<TableMetadata> {
         const queryParams: string[] = [];
         if (source !== undefined) {
             queryParams.push(`source=${encodeURIComponent(String(source))}`);
@@ -260,16 +324,16 @@ export class ExcelonlineClient extends ConnectorClientBase {
      * Add a key column to a table
      * @remarks Add a key column to an Excel table. The new column will be appended to the right. The new key column must be unique in the table.
      */
-    public async createIdColumn(drive: string, file: string, table: string, source?: string, idColumn?: string, populateColumn?: string, options: ConnectorOperationOptions = {}): Promise<void> {
+    public async createIdColumn(drive: string, file: string, table: string, source: string, options: CreateIdColumnOptions = {}): Promise<void> {
         const queryParams: string[] = [];
         if (source !== undefined) {
             queryParams.push(`source=${encodeURIComponent(String(source))}`);
         }
-        if (idColumn !== undefined) {
-            queryParams.push(`idColumn=${encodeURIComponent(String(idColumn))}`);
+        if (options.idColumn !== undefined) {
+            queryParams.push(`idColumn=${encodeURIComponent(String(options.idColumn))}`);
         }
-        if (populateColumn !== undefined) {
-            queryParams.push(`populateColumn=${encodeURIComponent(String(populateColumn))}`);
+        if (options.populateColumn !== undefined) {
+            queryParams.push(`populateColumn=${encodeURIComponent(String(options.populateColumn))}`);
         }
         const requestPath = `/drives/${drive}/files/${file}/tables/${table}/createIdColumn` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
@@ -280,31 +344,31 @@ export class ExcelonlineClient extends ConnectorClientBase {
      * List rows present in a table
      * @remarks List rows present in a table.
      */
-    public getItems(drive: string, file: string, table: string, source?: string, filter?: string, orderby?: string, top?: string, skip?: string, select?: string, idColumn?: string, dateTimeFormat?: string, options: ConnectorOperationOptions = {}): ConnectorPagedAsyncIterableIterator<Item> {
+    public getItems(drive: string, file: string, table: string, source: string, options: GetItemsOptions = {}): ConnectorPagedAsyncIterableIterator<Item> {
         const queryParams: string[] = [];
         if (source !== undefined) {
             queryParams.push(`source=${encodeURIComponent(String(source))}`);
         }
-        if (filter !== undefined) {
-            queryParams.push(`$filter=${encodeURIComponent(String(filter))}`);
+        if (options.filter !== undefined) {
+            queryParams.push(`$filter=${encodeURIComponent(String(options.filter))}`);
         }
-        if (orderby !== undefined) {
-            queryParams.push(`$orderby=${encodeURIComponent(String(orderby))}`);
+        if (options.orderby !== undefined) {
+            queryParams.push(`$orderby=${encodeURIComponent(String(options.orderby))}`);
         }
-        if (top !== undefined) {
-            queryParams.push(`$top=${encodeURIComponent(String(top))}`);
+        if (options.top !== undefined) {
+            queryParams.push(`$top=${encodeURIComponent(String(options.top))}`);
         }
-        if (skip !== undefined) {
-            queryParams.push(`$skip=${encodeURIComponent(String(skip))}`);
+        if (options.skip !== undefined) {
+            queryParams.push(`$skip=${encodeURIComponent(String(options.skip))}`);
         }
-        if (select !== undefined) {
-            queryParams.push(`$select=${encodeURIComponent(String(select))}`);
+        if (options.select !== undefined) {
+            queryParams.push(`$select=${encodeURIComponent(String(options.select))}`);
         }
-        if (idColumn !== undefined) {
-            queryParams.push(`idColumn=${encodeURIComponent(String(idColumn))}`);
+        if (options.idColumn !== undefined) {
+            queryParams.push(`idColumn=${encodeURIComponent(String(options.idColumn))}`);
         }
-        if (dateTimeFormat !== undefined) {
-            queryParams.push(`dateTimeFormat=${encodeURIComponent(String(dateTimeFormat))}`);
+        if (options.dateTimeFormat !== undefined) {
+            queryParams.push(`dateTimeFormat=${encodeURIComponent(String(options.dateTimeFormat))}`);
         }
         const requestPath = `/drives/${drive}/files/${file}/tables/${table}/items` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         return this.createPageable<ItemsList, Item>(
@@ -324,7 +388,7 @@ export class ExcelonlineClient extends ConnectorClientBase {
      * Get a row
      * @remarks Get a row using a key column. This action will retrieve all the values of the specified row given a column and key column.
      */
-    public async getItem(drive: string, file: string, table: string, id: string, source?: string, idColumn?: string, dateTimeFormat?: string, options: ConnectorOperationOptions = {}): Promise<Item> {
+    public async getItem(drive: string, file: string, table: string, id: string, source: string, idColumn: string, options: GetItemOptions = {}): Promise<Item> {
         const queryParams: string[] = [];
         if (source !== undefined) {
             queryParams.push(`source=${encodeURIComponent(String(source))}`);
@@ -332,8 +396,8 @@ export class ExcelonlineClient extends ConnectorClientBase {
         if (idColumn !== undefined) {
             queryParams.push(`idColumn=${encodeURIComponent(String(idColumn))}`);
         }
-        if (dateTimeFormat !== undefined) {
-            queryParams.push(`dateTimeFormat=${encodeURIComponent(String(dateTimeFormat))}`);
+        if (options.dateTimeFormat !== undefined) {
+            queryParams.push(`dateTimeFormat=${encodeURIComponent(String(options.dateTimeFormat))}`);
         }
         const requestPath = `/drives/${drive}/files/${file}/tables/${table}/items/${id}` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
@@ -346,7 +410,7 @@ export class ExcelonlineClient extends ConnectorClientBase {
      * Delete a row
      * @remarks Delete a row using a key column.
      */
-    public async deleteItem(drive: string, file: string, table: string, id: string, source?: string, idColumn?: string, options: ConnectorOperationOptions = {}): Promise<void> {
+    public async deleteItem(drive: string, file: string, table: string, id: string, source: string, idColumn: string, options: ConnectorOperationOptions = {}): Promise<void> {
         const queryParams: string[] = [];
         if (source !== undefined) {
             queryParams.push(`source=${encodeURIComponent(String(source))}`);
@@ -363,7 +427,7 @@ export class ExcelonlineClient extends ConnectorClientBase {
      * Update a row
      * @remarks Update a row using a key column. The input value will overwrite the specified cells and columns left blank will not be updated. In order to append (instead of overwrite) a value, use the "Get a row" action to retrieve the content first.
      */
-    public async patchItem(input: Item, drive: string, file: string, table: string, id: string, source?: string, idColumn?: string, mode?: string, dateTimeFormat?: string, options: ConnectorOperationOptions = {}): Promise<Item> {
+    public async patchItem(input: Item, drive: string, file: string, table: string, id: string, source: string, idColumn: string, options: PatchItemOptions = {}): Promise<Item> {
         const queryParams: string[] = [];
         if (source !== undefined) {
             queryParams.push(`source=${encodeURIComponent(String(source))}`);
@@ -371,11 +435,11 @@ export class ExcelonlineClient extends ConnectorClientBase {
         if (idColumn !== undefined) {
             queryParams.push(`idColumn=${encodeURIComponent(String(idColumn))}`);
         }
-        if (mode !== undefined) {
-            queryParams.push(`mode=${encodeURIComponent(String(mode))}`);
+        if (options.mode !== undefined) {
+            queryParams.push(`mode=${encodeURIComponent(String(options.mode))}`);
         }
-        if (dateTimeFormat !== undefined) {
-            queryParams.push(`dateTimeFormat=${encodeURIComponent(String(dateTimeFormat))}`);
+        if (options.dateTimeFormat !== undefined) {
+            queryParams.push(`dateTimeFormat=${encodeURIComponent(String(options.dateTimeFormat))}`);
         }
         const requestPath = `/drives/${drive}/files/${file}/tables/${table}/items/${id}` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
@@ -388,7 +452,7 @@ export class ExcelonlineClient extends ConnectorClientBase {
      * Get worksheets
      * @remarks Get a list of worksheets in the Excel workbook.
      */
-    public async getAllWorksheets(drive: string, file: string, source?: string, options: ConnectorOperationOptions = {}): Promise<GetAllWorksheetsResponse> {
+    public async getAllWorksheets(drive: string, file: string, source: string, options: ConnectorOperationOptions = {}): Promise<GetAllWorksheetsResponse> {
         const queryParams: string[] = [];
         if (source !== undefined) {
             queryParams.push(`source=${encodeURIComponent(String(source))}`);
@@ -404,7 +468,7 @@ export class ExcelonlineClient extends ConnectorClientBase {
      * Create worksheet
      * @remarks Create a new worksheet in the Excel workbook.
      */
-    public async createWorksheet(input: CreateWorksheetInput, drive: string, file: string, source?: string, options: ConnectorOperationOptions = {}): Promise<WorksheetMetadata> {
+    public async createWorksheet(input: CreateWorksheetInput, drive: string, file: string, source: string, options: ConnectorOperationOptions = {}): Promise<WorksheetMetadata> {
         const queryParams: string[] = [];
         if (source !== undefined) {
             queryParams.push(`source=${encodeURIComponent(String(source))}`);
@@ -420,13 +484,13 @@ export class ExcelonlineClient extends ConnectorClientBase {
      * Get tables
      * @remarks Get a list of tables in the Excel workbook.
      */
-    public async getTables(drive: string, file: string, source?: string, select?: string, options: ConnectorOperationOptions = {}): Promise<GetTablesResponse> {
+    public async getTables(drive: string, file: string, source: string, options: GetTablesOptions = {}): Promise<GetTablesResponse> {
         const queryParams: string[] = [];
         if (source !== undefined) {
             queryParams.push(`source=${encodeURIComponent(String(source))}`);
         }
-        if (select !== undefined) {
-            queryParams.push(`$select=${encodeURIComponent(String(select))}`);
+        if (options.select !== undefined) {
+            queryParams.push(`$select=${encodeURIComponent(String(options.select))}`);
         }
         const requestPath = `/codeless/v1.0/drives/${drive}/items/${file}/workbook/tables` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
@@ -439,13 +503,13 @@ export class ExcelonlineClient extends ConnectorClientBase {
      * Add a row into a table
      * @remarks Add a new row into the Excel table.
      */
-    public async addRow(input: Item, drive: string, file: string, table: string, source?: string, dateTimeFormat?: string, options: ConnectorOperationOptions = {}): Promise<Item> {
+    public async addRow(input: Item, drive: string, file: string, table: string, source: string, options: AddRowOptions = {}): Promise<Item> {
         const queryParams: string[] = [];
         if (source !== undefined) {
             queryParams.push(`source=${encodeURIComponent(String(source))}`);
         }
-        if (dateTimeFormat !== undefined) {
-            queryParams.push(`dateTimeFormat=${encodeURIComponent(String(dateTimeFormat))}`);
+        if (options.dateTimeFormat !== undefined) {
+            queryParams.push(`dateTimeFormat=${encodeURIComponent(String(options.dateTimeFormat))}`);
         }
         const requestPath = `/codeless/v1.2/drives/${drive}/items/${file}/workbook/tables/${table}/rows` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);

@@ -193,6 +193,14 @@ export interface Error {
     message?: string;
     fields?: string;
 }
+
+/**
+ * Options for the siteStats operation.
+ */
+export interface SiteStatsOptions extends ConnectorOperationOptions {
+    /** Fields to include */
+    fields?: string;
+}
 // #endregion Types
 
 export const WordpressTriggerOperations = {
@@ -226,10 +234,10 @@ export class WordpressClient extends ConnectorClientBase {
      * Get site statistics
      * @remarks Get statistics for a specified site
      */
-    public async siteStats(siteId: string, fields?: string, options: ConnectorOperationOptions = {}): Promise<SiteStatsModel> {
+    public async siteStats(siteId: string, options: SiteStatsOptions = {}): Promise<SiteStatsModel> {
         const queryParams: string[] = [];
-        if (fields !== undefined) {
-            queryParams.push(`fields=${encodeURIComponent(String(fields))}`);
+        if (options.fields !== undefined) {
+            queryParams.push(`fields=${encodeURIComponent(String(options.fields))}`);
         }
         const requestPath = `/sites/${siteId}/stats` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);

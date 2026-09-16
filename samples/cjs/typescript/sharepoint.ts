@@ -127,7 +127,7 @@ async function main(): Promise<void> {
     // Example 4: Get root folder metadata
     console.log("\n--- Get Root Folder Metadata ---");
     try {
-        const rootFolder: SPBlobMetadataResponse = await client.getFolderMetadataByPath(SITE_URL);
+        const rootFolder: SPBlobMetadataResponse = await client.getFolderMetadataByPath(SITE_URL, "/");
 
         if (rootFolder) {
             console.log(`Root folder metadata:`);

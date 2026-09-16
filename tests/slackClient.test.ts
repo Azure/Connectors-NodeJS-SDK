@@ -85,7 +85,7 @@ describe("SlackClient — joinChannel", () => {
         mockFetchResponse(mockResponse);
 
         const client = new SlackClient(TestConnectionUrl, createMockCredential());
-        const result = await client.joinChannel("C123");
+        const result = await client.joinChannel({ channel: "C123" });
 
         expect(result.warning).toBe("already_in_channel");
         const [url, init] = (global.fetch as jest.Mock).mock.calls[0];

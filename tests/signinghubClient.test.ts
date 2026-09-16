@@ -68,7 +68,13 @@ describe("SigninghubClient — downloadAttachmentAttachment", () => {
         mockFetchResponse(attachment);
 
         const client = new SigninghubClient(TestConnectionUrl, createMockCredential());
-        const result = await client.downloadAttachmentAttachment("123", "456", "789");
+        const result = await client.downloadAttachmentAttachment(
+            "123",
+            "456",
+            "789",
+            "application/json",
+            "application/pdf",
+        );
 
         expect(result).toEqual(attachment);
         expect(global.fetch).toHaveBeenCalledTimes(1);
@@ -82,7 +88,13 @@ describe("SigninghubClient — downloadAttachmentAttachment", () => {
 
         const client = new SigninghubClient(TestConnectionUrl, createMockCredential());
         try {
-            await client.downloadAttachmentAttachment("123", "456", "789");
+            await client.downloadAttachmentAttachment(
+                "123",
+                "456",
+                "789",
+                "application/json",
+                "application/pdf",
+            );
             throw new Error("Expected ConnectorError to be thrown.");
         } catch (error) {
             expect(error).toBeInstanceOf(ConnectorError);

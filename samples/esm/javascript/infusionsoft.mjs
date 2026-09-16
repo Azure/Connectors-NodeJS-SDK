@@ -29,7 +29,7 @@ async function main() {
 
     // Example 1: Create a task.
     try {
-        const task = await client.createTask({ title: "Follow up with lead" });
+        const task = await client.createTask({ title: "Follow up with lead" }, "application/json");
         console.log("Task:", JSON.stringify(task, null, 2));
     } catch (error) {
         if (error instanceof ConnectorError) {

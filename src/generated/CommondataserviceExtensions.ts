@@ -158,7 +158,7 @@ export interface OrganizationsDynamicValuesListItem {
  */
 export interface EntityMetadata {
     /** Swagger schema */
-    schema?: Record<string, unknown>;
+    schema?: ObjectEntity;
 }
 
 /**
@@ -219,7 +219,7 @@ export interface UserLocalizedLabel {
  */
 export interface WebhookNotificationContent {
     /** Swagger schema */
-    schema?: Record<string, unknown>;
+    schema?: ObjectEntity;
 }
 
 /**
@@ -307,7 +307,32 @@ export interface WhenAnActionIsPerformedSubscriptionRequest {
  */
 export interface WebhookNotificationContentForWhenAnActionIsPerformed {
     /** Swagger schema */
-    schema?: Record<string, unknown>;
+    schema?: ObjectEntity;
+}
+
+/**
+ * Options for the getItems operation.
+ */
+export interface GetItemsOptions extends ConnectorOperationOptions {
+    /** A sequence of OData aggregation transformations */
+    apply?: string;
+    /** An ODATA filter query to restrict the entries returned (e.g. stringColumn eq 'string' OR numberColumn lt 123). */
+    filter?: string;
+    /** An ODATA orderBy query for specifying the order of entries. */
+    orderby?: string;
+    /** Total number of entries to retrieve (default = all). */
+    top?: string;
+    /** The number of entries to skip (default = 0). */
+    skip?: string;
+    /** Related entries to include with requested entries (default = none) */
+    expand?: string;
+}
+
+/**
+ * Unresolved definition: Object
+ */
+export interface ObjectEntity {
+    [key: string]: unknown;
 }
 
 /**
@@ -461,25 +486,25 @@ export class CommondataserviceClient extends ConnectorClientBase {
      * List rows (legacy)
      * @remarks This operation gets rows for a table
      */
-    public getItems(dataset: string, table: string, apply?: string, filter?: string, orderby?: string, top?: string, skip?: string, expand?: string, options: ConnectorOperationOptions = {}): ConnectorPagedAsyncIterableIterator<Item> {
+    public getItems(dataset: string, table: string, options: GetItemsOptions = {}): ConnectorPagedAsyncIterableIterator<Item> {
         const queryParams: string[] = [];
-        if (apply !== undefined) {
-            queryParams.push(`$apply=${encodeURIComponent(String(apply))}`);
+        if (options.apply !== undefined) {
+            queryParams.push(`$apply=${encodeURIComponent(String(options.apply))}`);
         }
-        if (filter !== undefined) {
-            queryParams.push(`$filter=${encodeURIComponent(String(filter))}`);
+        if (options.filter !== undefined) {
+            queryParams.push(`$filter=${encodeURIComponent(String(options.filter))}`);
         }
-        if (orderby !== undefined) {
-            queryParams.push(`$orderby=${encodeURIComponent(String(orderby))}`);
+        if (options.orderby !== undefined) {
+            queryParams.push(`$orderby=${encodeURIComponent(String(options.orderby))}`);
         }
-        if (top !== undefined) {
-            queryParams.push(`$top=${encodeURIComponent(String(top))}`);
+        if (options.top !== undefined) {
+            queryParams.push(`$top=${encodeURIComponent(String(options.top))}`);
         }
-        if (skip !== undefined) {
-            queryParams.push(`$skip=${encodeURIComponent(String(skip))}`);
+        if (options.skip !== undefined) {
+            queryParams.push(`$skip=${encodeURIComponent(String(options.skip))}`);
         }
-        if (expand !== undefined) {
-            queryParams.push(`$expand=${encodeURIComponent(String(expand))}`);
+        if (options.expand !== undefined) {
+            queryParams.push(`$expand=${encodeURIComponent(String(options.expand))}`);
         }
         const requestPath = `/v2/datasets/${encodeURIComponent(String(dataset))}/tables/${table}/items` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         return this.createPageable<ItemsList, Item>(

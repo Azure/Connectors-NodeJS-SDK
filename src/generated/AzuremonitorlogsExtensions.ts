@@ -42,7 +42,7 @@ export interface ObjectEntity {
  * Definition: Table
  */
 export interface Table {
-    value?: Array<Record<string, unknown>>;
+    value?: Array<Row>;
     error?: PartialQueryError;
 }
 
@@ -188,7 +188,7 @@ export class AzuremonitorlogsClient extends ConnectorClientBase {
      * Run query and list results
      * @remarks Returns each row as its own object. Use this action when you want to work with each row separately in the rest of the workflow. 
      */
-    public async queryData(input: QueryDataInput, subscriptions?: string, resourcegroups?: string, resourcetype?: string, resourcename?: string, options: ConnectorOperationOptions = {}): Promise<Table> {
+    public async queryData(input: QueryDataInput, subscriptions: string, resourcegroups: string, resourcetype: string, resourcename: string, options: ConnectorOperationOptions = {}): Promise<Table> {
         const queryParams: string[] = [];
         if (subscriptions !== undefined) {
             queryParams.push(`subscriptions=${encodeURIComponent(String(subscriptions))}`);
@@ -213,7 +213,7 @@ export class AzuremonitorlogsClient extends ConnectorClientBase {
      * Run query and visualize results
      * @remarks Returns all rows in the result set as a single formatted object. Use this action when you want to use the result set together in the rest of the workflow. 
      */
-    public async visualizeQuery(input: VisualizeQueryInput, subscriptions?: string, resourcegroups?: string, resourcetype?: string, resourcename?: string, visType?: string, options: ConnectorOperationOptions = {}): Promise<VisualizeResults> {
+    public async visualizeQuery(input: VisualizeQueryInput, subscriptions: string, resourcegroups: string, resourcetype: string, resourcename: string, visType: string, options: ConnectorOperationOptions = {}): Promise<VisualizeResults> {
         const queryParams: string[] = [];
         if (subscriptions !== undefined) {
             queryParams.push(`subscriptions=${encodeURIComponent(String(subscriptions))}`);

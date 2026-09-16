@@ -20,7 +20,7 @@ async function main(): Promise<void> {
     const client = new PowerbiClient(CONNECTION_URL, tokenProvider);
 
     try {
-        const result: ListedScorecards = await client.getScorecards(POWERBI_GROUP_ID, "firstparty");
+        const result: ListedScorecards = await client.getScorecards(POWERBI_GROUP_ID, { pbiSource: "firstparty" });
         console.log(`Scorecard payload keys: ${Object.keys(result as Record<string, unknown>).join(", ")}`);
     } catch (error) {
         if (error instanceof ConnectorError) {

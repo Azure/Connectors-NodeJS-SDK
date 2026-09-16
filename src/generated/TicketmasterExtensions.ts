@@ -181,6 +181,346 @@ export interface SuggestionsGetResponse {
     _links?: Record<string, unknown>;
     _embedded?: Record<string, unknown>;
 }
+
+/**
+ * Options for the getEvents operation.
+ */
+export interface GetEventsOptions extends ConnectorOperationOptions {
+    /** The page size of the response. */
+    size?: string;
+    /** The filter for entities by their identifier. */
+    id?: string;
+    /** The keyword to search on. */
+    keyword?: string;
+    /** The filter by attraction identifier. */
+    attractionId?: string;
+    /** The filter by venue identifier. */
+    venueId?: string;
+    /** The filter by postal code or zipcode. */
+    postalCode?: string;
+    /** The filter for events by latitude and longitude. This filter is deprecated and may be removed in a future release, please use geoPoint instead. */
+    latlong?: string;
+    /** The radius of the area in which we want to search for events. */
+    radius?: string;
+    /** The unit of the radius. */
+    unit?: string;
+    /** The filter for entities by their primary source name or publishing source name. */
+    source?: string;
+    /** The locale in ISO code format. Multiple comma-separated values can be provided. */
+    locale?: string;
+    /** The filter by market identifier. */
+    marketId?: string;
+    /** The filter with a start date after this date. */
+    startDateTime?: string;
+    /** The filter with a start date before this date. */
+    endDateTime?: string;
+    /** Indicates whether to include events with date to be announced (TBA). */
+    includeTBA?: string;
+    /** Indicates whether to include events with a date to be defined (TBD). */
+    includeTBD?: string;
+    /** Indicates whether to include entities flagged as test in the response. */
+    includeTest?: string;
+    /** The page number. */
+    page?: string;
+    /** The sorting order of the search result. */
+    sort?: string;
+    /** The filter with onsale start date after this date. */
+    onsaleStartDateTime?: string;
+    /** The filter with onsale end date before this date. */
+    onsaleEndDateTime?: string;
+    /** The filter by city. */
+    city?: string;
+    /** The filter by country code. */
+    countryCode?: string;
+    /** The filter by state code. */
+    stateCode?: string;
+    /** The filter by classification name: name of any segment, genre, sub-genre, type, sub-type. */
+    classificationName?: string;
+    /** The filter by classification identifier: identifier of any segment, genre, sub-genre, type, sub-type. */
+    classificationId?: string;
+    /** The filter by DMA identifier. */
+    dmaId?: string;
+    /** The filter with event local start date time within this range. */
+    localStartDateTime?: string;
+    /** The filter for events where event local start and end date overlap this range. */
+    localStartEndDateTime?: string;
+    /** The filter for events where event start and end date overlap this range. */
+    startEndDateTime?: string;
+    /** The filter for events with public visibility starting. */
+    publicVisibilityStartDateTime?: string;
+    /** The filter for events with a presale start and end that intersects with this range. */
+    preSaleDateTime?: string;
+    /** The filter with onsale start date on this date. */
+    onsaleOnStartDate?: string;
+    /** The filter with onsale range within this date. */
+    onsaleOnAfterStartDate?: string;
+    /** The filter by collection identifier. */
+    collectionId?: string;
+    /** The filter by segment identifier. */
+    segmentId?: string;
+    /** The filter by segment name. */
+    segmentName?: string;
+    /** The filter by classification that are family-friendly. */
+    includeFamily?: string;
+    /** The filter by promoter identifier. */
+    promoterId?: string;
+    /** The filter by genre identifier. */
+    genreId?: string;
+    /** The filter by sub-genre identifier. */
+    subGenreId?: string;
+    /** The filter by type identifier. */
+    typeId?: string;
+    /** The filter by sub-type identifier. */
+    subTypeId?: string;
+    /** The filter for events by geoHash. */
+    geoPoint?: string;
+    /** The popularity boost by country, default is us. */
+    preferredCountry?: string;
+    /** Indicates whether to include spell check suggestions in the response. */
+    includeSpellcheck?: string;
+    /** The filter for entities based on domains they are available on. */
+    domain?: string;
+}
+
+/**
+ * Options for the getEvent operation.
+ */
+export interface GetEventOptions extends ConnectorOperationOptions {
+    /** The locale in ISO code format. Multiple comma-separated values can be provided. */
+    locale?: string;
+    /** The filter for entities based on domains they are available on. */
+    domain?: string;
+}
+
+/**
+ * Options for the getEventImages operation.
+ */
+export interface GetEventImagesOptions extends ConnectorOperationOptions {
+    /** The locale in ISO code format. Multiple comma-separated values can be provided. */
+    locale?: string;
+    /** The filter for entities based on domains they are available on. */
+    domain?: string;
+}
+
+/**
+ * Options for the getAttractions operation.
+ */
+export interface GetAttractionsOptions extends ConnectorOperationOptions {
+    /** The filter for entities by their identifier. */
+    id?: string;
+    /** The keyword to search on. */
+    keyword?: string;
+    /** The filter for entities by their primary source name or publishing source name. */
+    source?: string;
+    /** The locale in ISO code format. Multiple comma-separated values can be provided. */
+    locale?: string;
+    /** Indicates whether to include entities flagged as test in the response. */
+    includeTest?: string;
+    /** The page size of the response. */
+    size?: string;
+    /** The page number. */
+    page?: string;
+    /** The sorting order of the search result. */
+    sort?: string;
+    /** The filter for attractions by classification name. */
+    classificationName?: string;
+    /** The filter for attractions by classification identifier. */
+    classificationId?: string;
+    /** The filter by classification that are family-friendly. */
+    includeFamily?: string;
+    /** The filter for attractions by segment identifier. */
+    segmentId?: string;
+    /** The filter for attractions by genre identifier. */
+    genreId?: string;
+    /** The filter for attractions by sub-genre identifier. */
+    subGenreId?: string;
+    /** The filter for attractions by type identifier. */
+    typeId?: string;
+    /** The filter for attractions by sub-type identifier. */
+    subTypeId?: string;
+    /** The filter for attractions by country code. */
+    countryCode?: string;
+    /** The popularity boost by country, default is us. */
+    preferredCountry?: string;
+    /** Indicates whether to include spell check suggestions in the response. */
+    includeSpellcheck?: string;
+    /** The filter for entities based on domains they are available on. */
+    domain?: string;
+}
+
+/**
+ * Options for the getAttraction operation.
+ */
+export interface GetAttractionOptions extends ConnectorOperationOptions {
+    /** The locale in ISO code format. Multiple comma-separated values can be provided. */
+    locale?: string;
+    /** The filter for entities based on domains they are available on. */
+    domain?: string;
+}
+
+/**
+ * Options for the getClassifications operation.
+ */
+export interface GetClassificationsOptions extends ConnectorOperationOptions {
+    /** The filter for entities by their identifier. */
+    id?: string;
+    /** The keyword to search on. */
+    keyword?: string;
+    /** The filter for entities by their primary source name or publishing source name. */
+    source?: string;
+    /** The locale in ISO code format. Multiple comma-separated values can be provided. */
+    locale?: string;
+    /** Indicates whether to include entities flagged as test in the response. */
+    includeTest?: string;
+    /** The page size of the response. */
+    size?: string;
+    /** The page number. */
+    page?: string;
+    /** The sorting order of the search result. */
+    sort?: string;
+    /** The filter for classifications by country code. */
+    countryCode?: string;
+    /** The popularity boost by country, default is us. */
+    preferredCountry?: string;
+    /** Indicates whether to include spell check suggestions in the response. */
+    includeSpellcheck?: string;
+    /** The filter for entities based on domains they are available on. */
+    domain?: string;
+}
+
+/**
+ * Options for the getClassification operation.
+ */
+export interface GetClassificationOptions extends ConnectorOperationOptions {
+    /** The locale in ISO code format. Multiple comma-separated values can be provided. */
+    locale?: string;
+    /** The filter for entities based on domains they are available on. */
+    domain?: string;
+}
+
+/**
+ * Options for the getGenre operation.
+ */
+export interface GetGenreOptions extends ConnectorOperationOptions {
+    /** The locale in ISO code format. Multiple comma-separated values can be provided. */
+    locale?: string;
+    /** The filter for entities based on domains they are available on. */
+    domain?: string;
+}
+
+/**
+ * Options for the getSegment operation.
+ */
+export interface GetSegmentOptions extends ConnectorOperationOptions {
+    /** The locale in ISO code format. Multiple comma-separated values can be provided. */
+    locale?: string;
+    /** The filter for entities based on domains they are available on. */
+    domain?: string;
+}
+
+/**
+ * Options for the getSubGenre operation.
+ */
+export interface GetSubGenreOptions extends ConnectorOperationOptions {
+    /** The locale in ISO code format. Multiple comma-separated values can be provided. */
+    locale?: string;
+    /** The filter for entities based on domains they are available on. */
+    domain?: string;
+}
+
+/**
+ * Options for the getVenues operation.
+ */
+export interface GetVenuesOptions extends ConnectorOperationOptions {
+    /** The filter for entities by their identifier. */
+    id?: string;
+    /** The keyword to search on. */
+    keyword?: string;
+    /** The filter for venues by latitude and longitude. This filter is deprecated and may be removed in a future release, please use geoPoint instead. */
+    latlong?: string;
+    /** The radius of the area in which we want to search for venues. */
+    radius?: string;
+    /** The unit of the radius. */
+    unit?: string;
+    /** The filter for entities by their primary source name or publishing source name. */
+    source?: string;
+    /** The locale in ISO code format. Multiple comma-separated values can be provided. */
+    locale?: string;
+    /** Indicates whether to include entities flagged as test in the response. */
+    includeTest?: string;
+    /** The page size of the response. */
+    size?: string;
+    /** The page number. */
+    page?: string;
+    /** The sorting order of the search result. */
+    sort?: string;
+    /** The filter for venues by country code. */
+    countryCode?: string;
+    /** The filter by state / province code. */
+    stateCode?: string;
+    /** The filter for venues by geoHash. */
+    geoPoint?: string;
+    /** The popularity boost by country, default is us. */
+    preferredCountry?: string;
+    /** Indicates whether to include spell check suggestions in the response. */
+    includeSpellcheck?: string;
+    /** The filter for entities based on domains they are available on. */
+    domain?: string;
+}
+
+/**
+ * Options for the getVenue operation.
+ */
+export interface GetVenueOptions extends ConnectorOperationOptions {
+    /** The locale in ISO code format. Multiple comma-separated values can be provided. */
+    locale?: string;
+    /** The filter for entities based on domains they are available on. */
+    domain?: string;
+}
+
+/**
+ * Options for the getSuggestions operation.
+ */
+export interface GetSuggestionsOptions extends ConnectorOperationOptions {
+    /** The keyword to search on. */
+    keyword?: string;
+    /** The filter for events by latitude and longitude. This filter is deprecated and may be removed in a future release, please use geoPoint instead. */
+    latlong?: string;
+    /** The radius of the area in which we want to search for events. */
+    radius?: string;
+    /** The unit of the radius. */
+    unit?: string;
+    /** The filter for entities by their primary source name or publishing source name. */
+    source?: string;
+    /** The locale in ISO code format. Multiple comma-separated values can be provided. */
+    locale?: string;
+    /** Indicates whether to include events with date to be announced (TBA).  Defaults to no if date parameter sent, yes otherwise. */
+    includeTBA?: string;
+    /** Indicates whether to include events with a date to be defined (TBD). Defaults to no if date parameter sent, yes otherwise. */
+    includeTBD?: string;
+    /** Indicates whether to include entities flagged as test in the response. */
+    includeTest?: string;
+    /** Size of every entity returned in the response. */
+    size?: string;
+    /** The filter suggestions by country code. */
+    countryCode?: string;
+    /** The filter suggestions by segment identifier. */
+    segmentId?: string;
+    /** The filter for events by geoHash. */
+    geoPoint?: string;
+    /** Which resources to include in the suggest response, defaults to all resources. */
+    resource?: string;
+    /** The popularity boost by country, default is us. */
+    preferredCountry?: string;
+    /** The filter for events where event start and end date overlap this range. */
+    startEndDateTime?: string;
+    /** The filter for events where event local start and end date overlap this range. */
+    localStartEndDateTime?: string;
+    /** Indicates whether to include spell check suggestions in the response. */
+    includeSpellcheck?: string;
+    /** The filter for entities based on domains they are available on. */
+    domain?: string;
+}
 // #endregion Types
 
 // #region Client
@@ -208,148 +548,148 @@ export class TicketmasterClient extends ConnectorClientBase {
      * Event search
      * @remarks Find events and filter your search by location, date, availability, and much more.
      */
-    public async getEvents(size?: string, id?: string, keyword?: string, attractionId?: string, venueId?: string, postalCode?: string, latlong?: string, radius?: string, unit?: string, source?: string, locale?: string, marketId?: string, startDateTime?: string, endDateTime?: string, includeTBA?: string, includeTBD?: string, includeTest?: string, page?: string, sort?: string, onsaleStartDateTime?: string, onsaleEndDateTime?: string, city?: string, countryCode?: string, stateCode?: string, classificationName?: string, classificationId?: string, dmaId?: string, localStartDateTime?: string, localStartEndDateTime?: string, startEndDateTime?: string, publicVisibilityStartDateTime?: string, preSaleDateTime?: string, onsaleOnStartDate?: string, onsaleOnAfterStartDate?: string, collectionId?: string, segmentId?: string, segmentName?: string, includeFamily?: string, promoterId?: string, genreId?: string, subGenreId?: string, typeId?: string, subTypeId?: string, geoPoint?: string, preferredCountry?: string, includeSpellcheck?: string, domain?: string, options: ConnectorOperationOptions = {}): Promise<EventsGetResponse> {
+    public async getEvents(options: GetEventsOptions = {}): Promise<EventsGetResponse> {
         const queryParams: string[] = [];
-        if (size !== undefined) {
-            queryParams.push(`size=${encodeURIComponent(String(size))}`);
+        if (options.size !== undefined) {
+            queryParams.push(`size=${encodeURIComponent(String(options.size))}`);
         }
-        if (id !== undefined) {
-            queryParams.push(`id=${encodeURIComponent(String(id))}`);
+        if (options.id !== undefined) {
+            queryParams.push(`id=${encodeURIComponent(String(options.id))}`);
         }
-        if (keyword !== undefined) {
-            queryParams.push(`keyword=${encodeURIComponent(String(keyword))}`);
+        if (options.keyword !== undefined) {
+            queryParams.push(`keyword=${encodeURIComponent(String(options.keyword))}`);
         }
-        if (attractionId !== undefined) {
-            queryParams.push(`attractionId=${encodeURIComponent(String(attractionId))}`);
+        if (options.attractionId !== undefined) {
+            queryParams.push(`attractionId=${encodeURIComponent(String(options.attractionId))}`);
         }
-        if (venueId !== undefined) {
-            queryParams.push(`venueId=${encodeURIComponent(String(venueId))}`);
+        if (options.venueId !== undefined) {
+            queryParams.push(`venueId=${encodeURIComponent(String(options.venueId))}`);
         }
-        if (postalCode !== undefined) {
-            queryParams.push(`postalCode=${encodeURIComponent(String(postalCode))}`);
+        if (options.postalCode !== undefined) {
+            queryParams.push(`postalCode=${encodeURIComponent(String(options.postalCode))}`);
         }
-        if (latlong !== undefined) {
-            queryParams.push(`latlong=${encodeURIComponent(String(latlong))}`);
+        if (options.latlong !== undefined) {
+            queryParams.push(`latlong=${encodeURIComponent(String(options.latlong))}`);
         }
-        if (radius !== undefined) {
-            queryParams.push(`radius=${encodeURIComponent(String(radius))}`);
+        if (options.radius !== undefined) {
+            queryParams.push(`radius=${encodeURIComponent(String(options.radius))}`);
         }
-        if (unit !== undefined) {
-            queryParams.push(`unit=${encodeURIComponent(String(unit))}`);
+        if (options.unit !== undefined) {
+            queryParams.push(`unit=${encodeURIComponent(String(options.unit))}`);
         }
-        if (source !== undefined) {
-            queryParams.push(`source=${encodeURIComponent(String(source))}`);
+        if (options.source !== undefined) {
+            queryParams.push(`source=${encodeURIComponent(String(options.source))}`);
         }
-        if (locale !== undefined) {
-            queryParams.push(`locale=${encodeURIComponent(String(locale))}`);
+        if (options.locale !== undefined) {
+            queryParams.push(`locale=${encodeURIComponent(String(options.locale))}`);
         }
-        if (marketId !== undefined) {
-            queryParams.push(`marketId=${encodeURIComponent(String(marketId))}`);
+        if (options.marketId !== undefined) {
+            queryParams.push(`marketId=${encodeURIComponent(String(options.marketId))}`);
         }
-        if (startDateTime !== undefined) {
-            queryParams.push(`startDateTime=${encodeURIComponent(String(startDateTime))}`);
+        if (options.startDateTime !== undefined) {
+            queryParams.push(`startDateTime=${encodeURIComponent(String(options.startDateTime))}`);
         }
-        if (endDateTime !== undefined) {
-            queryParams.push(`endDateTime=${encodeURIComponent(String(endDateTime))}`);
+        if (options.endDateTime !== undefined) {
+            queryParams.push(`endDateTime=${encodeURIComponent(String(options.endDateTime))}`);
         }
-        if (includeTBA !== undefined) {
-            queryParams.push(`includeTBA=${encodeURIComponent(String(includeTBA))}`);
+        if (options.includeTBA !== undefined) {
+            queryParams.push(`includeTBA=${encodeURIComponent(String(options.includeTBA))}`);
         }
-        if (includeTBD !== undefined) {
-            queryParams.push(`includeTBD=${encodeURIComponent(String(includeTBD))}`);
+        if (options.includeTBD !== undefined) {
+            queryParams.push(`includeTBD=${encodeURIComponent(String(options.includeTBD))}`);
         }
-        if (includeTest !== undefined) {
-            queryParams.push(`includeTest=${encodeURIComponent(String(includeTest))}`);
+        if (options.includeTest !== undefined) {
+            queryParams.push(`includeTest=${encodeURIComponent(String(options.includeTest))}`);
         }
-        if (page !== undefined) {
-            queryParams.push(`page=${encodeURIComponent(String(page))}`);
+        if (options.page !== undefined) {
+            queryParams.push(`page=${encodeURIComponent(String(options.page))}`);
         }
-        if (sort !== undefined) {
-            queryParams.push(`sort=${encodeURIComponent(String(sort))}`);
+        if (options.sort !== undefined) {
+            queryParams.push(`sort=${encodeURIComponent(String(options.sort))}`);
         }
-        if (onsaleStartDateTime !== undefined) {
-            queryParams.push(`onsaleStartDateTime=${encodeURIComponent(String(onsaleStartDateTime))}`);
+        if (options.onsaleStartDateTime !== undefined) {
+            queryParams.push(`onsaleStartDateTime=${encodeURIComponent(String(options.onsaleStartDateTime))}`);
         }
-        if (onsaleEndDateTime !== undefined) {
-            queryParams.push(`onsaleEndDateTime=${encodeURIComponent(String(onsaleEndDateTime))}`);
+        if (options.onsaleEndDateTime !== undefined) {
+            queryParams.push(`onsaleEndDateTime=${encodeURIComponent(String(options.onsaleEndDateTime))}`);
         }
-        if (city !== undefined) {
-            queryParams.push(`city=${encodeURIComponent(String(city))}`);
+        if (options.city !== undefined) {
+            queryParams.push(`city=${encodeURIComponent(String(options.city))}`);
         }
-        if (countryCode !== undefined) {
-            queryParams.push(`countryCode=${encodeURIComponent(String(countryCode))}`);
+        if (options.countryCode !== undefined) {
+            queryParams.push(`countryCode=${encodeURIComponent(String(options.countryCode))}`);
         }
-        if (stateCode !== undefined) {
-            queryParams.push(`stateCode=${encodeURIComponent(String(stateCode))}`);
+        if (options.stateCode !== undefined) {
+            queryParams.push(`stateCode=${encodeURIComponent(String(options.stateCode))}`);
         }
-        if (classificationName !== undefined) {
-            queryParams.push(`classificationName=${encodeURIComponent(String(classificationName))}`);
+        if (options.classificationName !== undefined) {
+            queryParams.push(`classificationName=${encodeURIComponent(String(options.classificationName))}`);
         }
-        if (classificationId !== undefined) {
-            queryParams.push(`classificationId=${encodeURIComponent(String(classificationId))}`);
+        if (options.classificationId !== undefined) {
+            queryParams.push(`classificationId=${encodeURIComponent(String(options.classificationId))}`);
         }
-        if (dmaId !== undefined) {
-            queryParams.push(`dmaId=${encodeURIComponent(String(dmaId))}`);
+        if (options.dmaId !== undefined) {
+            queryParams.push(`dmaId=${encodeURIComponent(String(options.dmaId))}`);
         }
-        if (localStartDateTime !== undefined) {
-            queryParams.push(`localStartDateTime=${encodeURIComponent(String(localStartDateTime))}`);
+        if (options.localStartDateTime !== undefined) {
+            queryParams.push(`localStartDateTime=${encodeURIComponent(String(options.localStartDateTime))}`);
         }
-        if (localStartEndDateTime !== undefined) {
-            queryParams.push(`localStartEndDateTime=${encodeURIComponent(String(localStartEndDateTime))}`);
+        if (options.localStartEndDateTime !== undefined) {
+            queryParams.push(`localStartEndDateTime=${encodeURIComponent(String(options.localStartEndDateTime))}`);
         }
-        if (startEndDateTime !== undefined) {
-            queryParams.push(`startEndDateTime=${encodeURIComponent(String(startEndDateTime))}`);
+        if (options.startEndDateTime !== undefined) {
+            queryParams.push(`startEndDateTime=${encodeURIComponent(String(options.startEndDateTime))}`);
         }
-        if (publicVisibilityStartDateTime !== undefined) {
-            queryParams.push(`publicVisibilityStartDateTime=${encodeURIComponent(String(publicVisibilityStartDateTime))}`);
+        if (options.publicVisibilityStartDateTime !== undefined) {
+            queryParams.push(`publicVisibilityStartDateTime=${encodeURIComponent(String(options.publicVisibilityStartDateTime))}`);
         }
-        if (preSaleDateTime !== undefined) {
-            queryParams.push(`preSaleDateTime=${encodeURIComponent(String(preSaleDateTime))}`);
+        if (options.preSaleDateTime !== undefined) {
+            queryParams.push(`preSaleDateTime=${encodeURIComponent(String(options.preSaleDateTime))}`);
         }
-        if (onsaleOnStartDate !== undefined) {
-            queryParams.push(`onsaleOnStartDate=${encodeURIComponent(String(onsaleOnStartDate))}`);
+        if (options.onsaleOnStartDate !== undefined) {
+            queryParams.push(`onsaleOnStartDate=${encodeURIComponent(String(options.onsaleOnStartDate))}`);
         }
-        if (onsaleOnAfterStartDate !== undefined) {
-            queryParams.push(`onsaleOnAfterStartDate=${encodeURIComponent(String(onsaleOnAfterStartDate))}`);
+        if (options.onsaleOnAfterStartDate !== undefined) {
+            queryParams.push(`onsaleOnAfterStartDate=${encodeURIComponent(String(options.onsaleOnAfterStartDate))}`);
         }
-        if (collectionId !== undefined) {
-            queryParams.push(`collectionId=${encodeURIComponent(String(collectionId))}`);
+        if (options.collectionId !== undefined) {
+            queryParams.push(`collectionId=${encodeURIComponent(String(options.collectionId))}`);
         }
-        if (segmentId !== undefined) {
-            queryParams.push(`segmentId=${encodeURIComponent(String(segmentId))}`);
+        if (options.segmentId !== undefined) {
+            queryParams.push(`segmentId=${encodeURIComponent(String(options.segmentId))}`);
         }
-        if (segmentName !== undefined) {
-            queryParams.push(`segmentName=${encodeURIComponent(String(segmentName))}`);
+        if (options.segmentName !== undefined) {
+            queryParams.push(`segmentName=${encodeURIComponent(String(options.segmentName))}`);
         }
-        if (includeFamily !== undefined) {
-            queryParams.push(`includeFamily=${encodeURIComponent(String(includeFamily))}`);
+        if (options.includeFamily !== undefined) {
+            queryParams.push(`includeFamily=${encodeURIComponent(String(options.includeFamily))}`);
         }
-        if (promoterId !== undefined) {
-            queryParams.push(`promoterId=${encodeURIComponent(String(promoterId))}`);
+        if (options.promoterId !== undefined) {
+            queryParams.push(`promoterId=${encodeURIComponent(String(options.promoterId))}`);
         }
-        if (genreId !== undefined) {
-            queryParams.push(`genreId=${encodeURIComponent(String(genreId))}`);
+        if (options.genreId !== undefined) {
+            queryParams.push(`genreId=${encodeURIComponent(String(options.genreId))}`);
         }
-        if (subGenreId !== undefined) {
-            queryParams.push(`subGenreId=${encodeURIComponent(String(subGenreId))}`);
+        if (options.subGenreId !== undefined) {
+            queryParams.push(`subGenreId=${encodeURIComponent(String(options.subGenreId))}`);
         }
-        if (typeId !== undefined) {
-            queryParams.push(`typeId=${encodeURIComponent(String(typeId))}`);
+        if (options.typeId !== undefined) {
+            queryParams.push(`typeId=${encodeURIComponent(String(options.typeId))}`);
         }
-        if (subTypeId !== undefined) {
-            queryParams.push(`subTypeId=${encodeURIComponent(String(subTypeId))}`);
+        if (options.subTypeId !== undefined) {
+            queryParams.push(`subTypeId=${encodeURIComponent(String(options.subTypeId))}`);
         }
-        if (geoPoint !== undefined) {
-            queryParams.push(`geoPoint=${encodeURIComponent(String(geoPoint))}`);
+        if (options.geoPoint !== undefined) {
+            queryParams.push(`geoPoint=${encodeURIComponent(String(options.geoPoint))}`);
         }
-        if (preferredCountry !== undefined) {
-            queryParams.push(`preferredCountry=${encodeURIComponent(String(preferredCountry))}`);
+        if (options.preferredCountry !== undefined) {
+            queryParams.push(`preferredCountry=${encodeURIComponent(String(options.preferredCountry))}`);
         }
-        if (includeSpellcheck !== undefined) {
-            queryParams.push(`includeSpellcheck=${encodeURIComponent(String(includeSpellcheck))}`);
+        if (options.includeSpellcheck !== undefined) {
+            queryParams.push(`includeSpellcheck=${encodeURIComponent(String(options.includeSpellcheck))}`);
         }
-        if (domain !== undefined) {
-            queryParams.push(`domain=${encodeURIComponent(String(domain))}`);
+        if (options.domain !== undefined) {
+            queryParams.push(`domain=${encodeURIComponent(String(options.domain))}`);
         }
         const requestPath = `/discovery/v2/events.json` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
@@ -362,13 +702,13 @@ export class TicketmasterClient extends ConnectorClientBase {
      * Get event details
      * @remarks Get details for a specific event using the unique identifier for the event. This includes the venue and location, the attraction(s), and the Ticketmaster Website URL for purchasing tickets for the event
      */
-    public async getEvent(id: string, locale?: string, domain?: string, options: ConnectorOperationOptions = {}): Promise<EventGetResponse> {
+    public async getEvent(id: string, options: GetEventOptions = {}): Promise<EventGetResponse> {
         const queryParams: string[] = [];
-        if (locale !== undefined) {
-            queryParams.push(`locale=${encodeURIComponent(String(locale))}`);
+        if (options.locale !== undefined) {
+            queryParams.push(`locale=${encodeURIComponent(String(options.locale))}`);
         }
-        if (domain !== undefined) {
-            queryParams.push(`domain=${encodeURIComponent(String(domain))}`);
+        if (options.domain !== undefined) {
+            queryParams.push(`domain=${encodeURIComponent(String(options.domain))}`);
         }
         const requestPath = `/discovery/v2/events/${id}` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
@@ -381,13 +721,13 @@ export class TicketmasterClient extends ConnectorClientBase {
      * Get event images
      * @remarks Get images for a specific event using the unique identifier for the event.
      */
-    public async getEventImages(id: string, locale?: string, domain?: string, options: ConnectorOperationOptions = {}): Promise<EventImagesGetResponse> {
+    public async getEventImages(id: string, options: GetEventImagesOptions = {}): Promise<EventImagesGetResponse> {
         const queryParams: string[] = [];
-        if (locale !== undefined) {
-            queryParams.push(`locale=${encodeURIComponent(String(locale))}`);
+        if (options.locale !== undefined) {
+            queryParams.push(`locale=${encodeURIComponent(String(options.locale))}`);
         }
-        if (domain !== undefined) {
-            queryParams.push(`domain=${encodeURIComponent(String(domain))}`);
+        if (options.domain !== undefined) {
+            queryParams.push(`domain=${encodeURIComponent(String(options.domain))}`);
         }
         const requestPath = `/discovery/v2/events/${id}/images` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
@@ -400,67 +740,67 @@ export class TicketmasterClient extends ConnectorClientBase {
      * Attraction search
      * @remarks Find attractions (artists, sports, packages, plays and so on) and filter your search by name, and much more.
      */
-    public async getAttractions(id?: string, keyword?: string, source?: string, locale?: string, includeTest?: string, size?: string, page?: string, sort?: string, classificationName?: string, classificationId?: string, includeFamily?: string, segmentId?: string, genreId?: string, subGenreId?: string, typeId?: string, subTypeId?: string, countryCode?: string, preferredCountry?: string, includeSpellcheck?: string, domain?: string, options: ConnectorOperationOptions = {}): Promise<AttractionsGetResponse> {
+    public async getAttractions(options: GetAttractionsOptions = {}): Promise<AttractionsGetResponse> {
         const queryParams: string[] = [];
-        if (id !== undefined) {
-            queryParams.push(`id=${encodeURIComponent(String(id))}`);
+        if (options.id !== undefined) {
+            queryParams.push(`id=${encodeURIComponent(String(options.id))}`);
         }
-        if (keyword !== undefined) {
-            queryParams.push(`keyword=${encodeURIComponent(String(keyword))}`);
+        if (options.keyword !== undefined) {
+            queryParams.push(`keyword=${encodeURIComponent(String(options.keyword))}`);
         }
-        if (source !== undefined) {
-            queryParams.push(`source=${encodeURIComponent(String(source))}`);
+        if (options.source !== undefined) {
+            queryParams.push(`source=${encodeURIComponent(String(options.source))}`);
         }
-        if (locale !== undefined) {
-            queryParams.push(`locale=${encodeURIComponent(String(locale))}`);
+        if (options.locale !== undefined) {
+            queryParams.push(`locale=${encodeURIComponent(String(options.locale))}`);
         }
-        if (includeTest !== undefined) {
-            queryParams.push(`includeTest=${encodeURIComponent(String(includeTest))}`);
+        if (options.includeTest !== undefined) {
+            queryParams.push(`includeTest=${encodeURIComponent(String(options.includeTest))}`);
         }
-        if (size !== undefined) {
-            queryParams.push(`size=${encodeURIComponent(String(size))}`);
+        if (options.size !== undefined) {
+            queryParams.push(`size=${encodeURIComponent(String(options.size))}`);
         }
-        if (page !== undefined) {
-            queryParams.push(`page=${encodeURIComponent(String(page))}`);
+        if (options.page !== undefined) {
+            queryParams.push(`page=${encodeURIComponent(String(options.page))}`);
         }
-        if (sort !== undefined) {
-            queryParams.push(`sort=${encodeURIComponent(String(sort))}`);
+        if (options.sort !== undefined) {
+            queryParams.push(`sort=${encodeURIComponent(String(options.sort))}`);
         }
-        if (classificationName !== undefined) {
-            queryParams.push(`classificationName=${encodeURIComponent(String(classificationName))}`);
+        if (options.classificationName !== undefined) {
+            queryParams.push(`classificationName=${encodeURIComponent(String(options.classificationName))}`);
         }
-        if (classificationId !== undefined) {
-            queryParams.push(`classificationId=${encodeURIComponent(String(classificationId))}`);
+        if (options.classificationId !== undefined) {
+            queryParams.push(`classificationId=${encodeURIComponent(String(options.classificationId))}`);
         }
-        if (includeFamily !== undefined) {
-            queryParams.push(`includeFamily=${encodeURIComponent(String(includeFamily))}`);
+        if (options.includeFamily !== undefined) {
+            queryParams.push(`includeFamily=${encodeURIComponent(String(options.includeFamily))}`);
         }
-        if (segmentId !== undefined) {
-            queryParams.push(`segmentId=${encodeURIComponent(String(segmentId))}`);
+        if (options.segmentId !== undefined) {
+            queryParams.push(`segmentId=${encodeURIComponent(String(options.segmentId))}`);
         }
-        if (genreId !== undefined) {
-            queryParams.push(`genreId=${encodeURIComponent(String(genreId))}`);
+        if (options.genreId !== undefined) {
+            queryParams.push(`genreId=${encodeURIComponent(String(options.genreId))}`);
         }
-        if (subGenreId !== undefined) {
-            queryParams.push(`subGenreId=${encodeURIComponent(String(subGenreId))}`);
+        if (options.subGenreId !== undefined) {
+            queryParams.push(`subGenreId=${encodeURIComponent(String(options.subGenreId))}`);
         }
-        if (typeId !== undefined) {
-            queryParams.push(`typeId=${encodeURIComponent(String(typeId))}`);
+        if (options.typeId !== undefined) {
+            queryParams.push(`typeId=${encodeURIComponent(String(options.typeId))}`);
         }
-        if (subTypeId !== undefined) {
-            queryParams.push(`subTypeId=${encodeURIComponent(String(subTypeId))}`);
+        if (options.subTypeId !== undefined) {
+            queryParams.push(`subTypeId=${encodeURIComponent(String(options.subTypeId))}`);
         }
-        if (countryCode !== undefined) {
-            queryParams.push(`countryCode=${encodeURIComponent(String(countryCode))}`);
+        if (options.countryCode !== undefined) {
+            queryParams.push(`countryCode=${encodeURIComponent(String(options.countryCode))}`);
         }
-        if (preferredCountry !== undefined) {
-            queryParams.push(`preferredCountry=${encodeURIComponent(String(preferredCountry))}`);
+        if (options.preferredCountry !== undefined) {
+            queryParams.push(`preferredCountry=${encodeURIComponent(String(options.preferredCountry))}`);
         }
-        if (includeSpellcheck !== undefined) {
-            queryParams.push(`includeSpellcheck=${encodeURIComponent(String(includeSpellcheck))}`);
+        if (options.includeSpellcheck !== undefined) {
+            queryParams.push(`includeSpellcheck=${encodeURIComponent(String(options.includeSpellcheck))}`);
         }
-        if (domain !== undefined) {
-            queryParams.push(`domain=${encodeURIComponent(String(domain))}`);
+        if (options.domain !== undefined) {
+            queryParams.push(`domain=${encodeURIComponent(String(options.domain))}`);
         }
         const requestPath = `/discovery/v2/attractions` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
@@ -473,13 +813,13 @@ export class TicketmasterClient extends ConnectorClientBase {
      * Get attraction details
      * @remarks Get details for a specific attraction using the unique identifier for the attraction.
      */
-    public async getAttraction(id: string, locale?: string, domain?: string, options: ConnectorOperationOptions = {}): Promise<AttractionGetResponse> {
+    public async getAttraction(id: string, options: GetAttractionOptions = {}): Promise<AttractionGetResponse> {
         const queryParams: string[] = [];
-        if (locale !== undefined) {
-            queryParams.push(`locale=${encodeURIComponent(String(locale))}`);
+        if (options.locale !== undefined) {
+            queryParams.push(`locale=${encodeURIComponent(String(options.locale))}`);
         }
-        if (domain !== undefined) {
-            queryParams.push(`domain=${encodeURIComponent(String(domain))}`);
+        if (options.domain !== undefined) {
+            queryParams.push(`domain=${encodeURIComponent(String(options.domain))}`);
         }
         const requestPath = `/discovery/v2/attractions/${id}` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
@@ -492,43 +832,43 @@ export class TicketmasterClient extends ConnectorClientBase {
      * Classification search
      * @remarks Find classifications and filter your search by name, and much more. Classifications help define the nature of attractions and events.
      */
-    public async getClassifications(id?: string, keyword?: string, source?: string, locale?: string, includeTest?: string, size?: string, page?: string, sort?: string, countryCode?: string, preferredCountry?: string, includeSpellcheck?: string, domain?: string, options: ConnectorOperationOptions = {}): Promise<ClassificationsGetResponse> {
+    public async getClassifications(options: GetClassificationsOptions = {}): Promise<ClassificationsGetResponse> {
         const queryParams: string[] = [];
-        if (id !== undefined) {
-            queryParams.push(`id=${encodeURIComponent(String(id))}`);
+        if (options.id !== undefined) {
+            queryParams.push(`id=${encodeURIComponent(String(options.id))}`);
         }
-        if (keyword !== undefined) {
-            queryParams.push(`keyword=${encodeURIComponent(String(keyword))}`);
+        if (options.keyword !== undefined) {
+            queryParams.push(`keyword=${encodeURIComponent(String(options.keyword))}`);
         }
-        if (source !== undefined) {
-            queryParams.push(`source=${encodeURIComponent(String(source))}`);
+        if (options.source !== undefined) {
+            queryParams.push(`source=${encodeURIComponent(String(options.source))}`);
         }
-        if (locale !== undefined) {
-            queryParams.push(`locale=${encodeURIComponent(String(locale))}`);
+        if (options.locale !== undefined) {
+            queryParams.push(`locale=${encodeURIComponent(String(options.locale))}`);
         }
-        if (includeTest !== undefined) {
-            queryParams.push(`includeTest=${encodeURIComponent(String(includeTest))}`);
+        if (options.includeTest !== undefined) {
+            queryParams.push(`includeTest=${encodeURIComponent(String(options.includeTest))}`);
         }
-        if (size !== undefined) {
-            queryParams.push(`size=${encodeURIComponent(String(size))}`);
+        if (options.size !== undefined) {
+            queryParams.push(`size=${encodeURIComponent(String(options.size))}`);
         }
-        if (page !== undefined) {
-            queryParams.push(`page=${encodeURIComponent(String(page))}`);
+        if (options.page !== undefined) {
+            queryParams.push(`page=${encodeURIComponent(String(options.page))}`);
         }
-        if (sort !== undefined) {
-            queryParams.push(`sort=${encodeURIComponent(String(sort))}`);
+        if (options.sort !== undefined) {
+            queryParams.push(`sort=${encodeURIComponent(String(options.sort))}`);
         }
-        if (countryCode !== undefined) {
-            queryParams.push(`countryCode=${encodeURIComponent(String(countryCode))}`);
+        if (options.countryCode !== undefined) {
+            queryParams.push(`countryCode=${encodeURIComponent(String(options.countryCode))}`);
         }
-        if (preferredCountry !== undefined) {
-            queryParams.push(`preferredCountry=${encodeURIComponent(String(preferredCountry))}`);
+        if (options.preferredCountry !== undefined) {
+            queryParams.push(`preferredCountry=${encodeURIComponent(String(options.preferredCountry))}`);
         }
-        if (includeSpellcheck !== undefined) {
-            queryParams.push(`includeSpellcheck=${encodeURIComponent(String(includeSpellcheck))}`);
+        if (options.includeSpellcheck !== undefined) {
+            queryParams.push(`includeSpellcheck=${encodeURIComponent(String(options.includeSpellcheck))}`);
         }
-        if (domain !== undefined) {
-            queryParams.push(`domain=${encodeURIComponent(String(domain))}`);
+        if (options.domain !== undefined) {
+            queryParams.push(`domain=${encodeURIComponent(String(options.domain))}`);
         }
         const requestPath = `/discovery/v2/classifications` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
@@ -541,13 +881,13 @@ export class TicketmasterClient extends ConnectorClientBase {
      * Get classification details
      * @remarks Get details for a specific segment, genre, or sub-genre using its unique identifier.
      */
-    public async getClassification(id: string, locale?: string, domain?: string, options: ConnectorOperationOptions = {}): Promise<ClassificationGetResponse> {
+    public async getClassification(id: string, options: GetClassificationOptions = {}): Promise<ClassificationGetResponse> {
         const queryParams: string[] = [];
-        if (locale !== undefined) {
-            queryParams.push(`locale=${encodeURIComponent(String(locale))}`);
+        if (options.locale !== undefined) {
+            queryParams.push(`locale=${encodeURIComponent(String(options.locale))}`);
         }
-        if (domain !== undefined) {
-            queryParams.push(`domain=${encodeURIComponent(String(domain))}`);
+        if (options.domain !== undefined) {
+            queryParams.push(`domain=${encodeURIComponent(String(options.domain))}`);
         }
         const requestPath = `/discovery/v2/classifications/${id}` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
@@ -560,13 +900,13 @@ export class TicketmasterClient extends ConnectorClientBase {
      * Get genre details
      * @remarks Get details for a specific genre using its unique identifier.
      */
-    public async getGenre(id: string, locale?: string, domain?: string, options: ConnectorOperationOptions = {}): Promise<GenreGetResponse> {
+    public async getGenre(id: string, options: GetGenreOptions = {}): Promise<GenreGetResponse> {
         const queryParams: string[] = [];
-        if (locale !== undefined) {
-            queryParams.push(`locale=${encodeURIComponent(String(locale))}`);
+        if (options.locale !== undefined) {
+            queryParams.push(`locale=${encodeURIComponent(String(options.locale))}`);
         }
-        if (domain !== undefined) {
-            queryParams.push(`domain=${encodeURIComponent(String(domain))}`);
+        if (options.domain !== undefined) {
+            queryParams.push(`domain=${encodeURIComponent(String(options.domain))}`);
         }
         const requestPath = `/discovery/v2/classifications/genres/${id}` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
@@ -579,13 +919,13 @@ export class TicketmasterClient extends ConnectorClientBase {
      * Get segment details
      * @remarks Get details for a specific segment using its unique identifier.
      */
-    public async getSegment(id: string, locale?: string, domain?: string, options: ConnectorOperationOptions = {}): Promise<SegmentGetResponse> {
+    public async getSegment(id: string, options: GetSegmentOptions = {}): Promise<SegmentGetResponse> {
         const queryParams: string[] = [];
-        if (locale !== undefined) {
-            queryParams.push(`locale=${encodeURIComponent(String(locale))}`);
+        if (options.locale !== undefined) {
+            queryParams.push(`locale=${encodeURIComponent(String(options.locale))}`);
         }
-        if (domain !== undefined) {
-            queryParams.push(`domain=${encodeURIComponent(String(domain))}`);
+        if (options.domain !== undefined) {
+            queryParams.push(`domain=${encodeURIComponent(String(options.domain))}`);
         }
         const requestPath = `/discovery/v2/classifications/segments/${id}` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
@@ -598,13 +938,13 @@ export class TicketmasterClient extends ConnectorClientBase {
      * Get sub-genre details
      * @remarks Get details for a specific sub-genre using its unique identifier.
      */
-    public async getSubGenre(id: string, locale?: string, domain?: string, options: ConnectorOperationOptions = {}): Promise<SubGenreGetResponse> {
+    public async getSubGenre(id: string, options: GetSubGenreOptions = {}): Promise<SubGenreGetResponse> {
         const queryParams: string[] = [];
-        if (locale !== undefined) {
-            queryParams.push(`locale=${encodeURIComponent(String(locale))}`);
+        if (options.locale !== undefined) {
+            queryParams.push(`locale=${encodeURIComponent(String(options.locale))}`);
         }
-        if (domain !== undefined) {
-            queryParams.push(`domain=${encodeURIComponent(String(domain))}`);
+        if (options.domain !== undefined) {
+            queryParams.push(`domain=${encodeURIComponent(String(options.domain))}`);
         }
         const requestPath = `/discovery/v2/classifications/subgenres/${id}` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
@@ -617,58 +957,58 @@ export class TicketmasterClient extends ConnectorClientBase {
      * Venue search
      * @remarks Find venues and filter your search by name, and much more.
      */
-    public async getVenues(id?: string, keyword?: string, latlong?: string, radius?: string, unit?: string, source?: string, locale?: string, includeTest?: string, size?: string, page?: string, sort?: string, countryCode?: string, stateCode?: string, geoPoint?: string, preferredCountry?: string, includeSpellcheck?: string, domain?: string, options: ConnectorOperationOptions = {}): Promise<VenuesGetResponse> {
+    public async getVenues(options: GetVenuesOptions = {}): Promise<VenuesGetResponse> {
         const queryParams: string[] = [];
-        if (id !== undefined) {
-            queryParams.push(`id=${encodeURIComponent(String(id))}`);
+        if (options.id !== undefined) {
+            queryParams.push(`id=${encodeURIComponent(String(options.id))}`);
         }
-        if (keyword !== undefined) {
-            queryParams.push(`keyword=${encodeURIComponent(String(keyword))}`);
+        if (options.keyword !== undefined) {
+            queryParams.push(`keyword=${encodeURIComponent(String(options.keyword))}`);
         }
-        if (latlong !== undefined) {
-            queryParams.push(`latlong=${encodeURIComponent(String(latlong))}`);
+        if (options.latlong !== undefined) {
+            queryParams.push(`latlong=${encodeURIComponent(String(options.latlong))}`);
         }
-        if (radius !== undefined) {
-            queryParams.push(`radius=${encodeURIComponent(String(radius))}`);
+        if (options.radius !== undefined) {
+            queryParams.push(`radius=${encodeURIComponent(String(options.radius))}`);
         }
-        if (unit !== undefined) {
-            queryParams.push(`unit=${encodeURIComponent(String(unit))}`);
+        if (options.unit !== undefined) {
+            queryParams.push(`unit=${encodeURIComponent(String(options.unit))}`);
         }
-        if (source !== undefined) {
-            queryParams.push(`source=${encodeURIComponent(String(source))}`);
+        if (options.source !== undefined) {
+            queryParams.push(`source=${encodeURIComponent(String(options.source))}`);
         }
-        if (locale !== undefined) {
-            queryParams.push(`locale=${encodeURIComponent(String(locale))}`);
+        if (options.locale !== undefined) {
+            queryParams.push(`locale=${encodeURIComponent(String(options.locale))}`);
         }
-        if (includeTest !== undefined) {
-            queryParams.push(`includeTest=${encodeURIComponent(String(includeTest))}`);
+        if (options.includeTest !== undefined) {
+            queryParams.push(`includeTest=${encodeURIComponent(String(options.includeTest))}`);
         }
-        if (size !== undefined) {
-            queryParams.push(`size=${encodeURIComponent(String(size))}`);
+        if (options.size !== undefined) {
+            queryParams.push(`size=${encodeURIComponent(String(options.size))}`);
         }
-        if (page !== undefined) {
-            queryParams.push(`page=${encodeURIComponent(String(page))}`);
+        if (options.page !== undefined) {
+            queryParams.push(`page=${encodeURIComponent(String(options.page))}`);
         }
-        if (sort !== undefined) {
-            queryParams.push(`sort=${encodeURIComponent(String(sort))}`);
+        if (options.sort !== undefined) {
+            queryParams.push(`sort=${encodeURIComponent(String(options.sort))}`);
         }
-        if (countryCode !== undefined) {
-            queryParams.push(`countryCode=${encodeURIComponent(String(countryCode))}`);
+        if (options.countryCode !== undefined) {
+            queryParams.push(`countryCode=${encodeURIComponent(String(options.countryCode))}`);
         }
-        if (stateCode !== undefined) {
-            queryParams.push(`stateCode=${encodeURIComponent(String(stateCode))}`);
+        if (options.stateCode !== undefined) {
+            queryParams.push(`stateCode=${encodeURIComponent(String(options.stateCode))}`);
         }
-        if (geoPoint !== undefined) {
-            queryParams.push(`geoPoint=${encodeURIComponent(String(geoPoint))}`);
+        if (options.geoPoint !== undefined) {
+            queryParams.push(`geoPoint=${encodeURIComponent(String(options.geoPoint))}`);
         }
-        if (preferredCountry !== undefined) {
-            queryParams.push(`preferredCountry=${encodeURIComponent(String(preferredCountry))}`);
+        if (options.preferredCountry !== undefined) {
+            queryParams.push(`preferredCountry=${encodeURIComponent(String(options.preferredCountry))}`);
         }
-        if (includeSpellcheck !== undefined) {
-            queryParams.push(`includeSpellcheck=${encodeURIComponent(String(includeSpellcheck))}`);
+        if (options.includeSpellcheck !== undefined) {
+            queryParams.push(`includeSpellcheck=${encodeURIComponent(String(options.includeSpellcheck))}`);
         }
-        if (domain !== undefined) {
-            queryParams.push(`domain=${encodeURIComponent(String(domain))}`);
+        if (options.domain !== undefined) {
+            queryParams.push(`domain=${encodeURIComponent(String(options.domain))}`);
         }
         const requestPath = `/discovery/v2/venues` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
@@ -681,13 +1021,13 @@ export class TicketmasterClient extends ConnectorClientBase {
      * Get venue details
      * @remarks Get details for a specific venue using the unique identifier for the venue.
      */
-    public async getVenue(id: string, locale?: string, domain?: string, options: ConnectorOperationOptions = {}): Promise<VenueGetResponse> {
+    public async getVenue(id: string, options: GetVenueOptions = {}): Promise<VenueGetResponse> {
         const queryParams: string[] = [];
-        if (locale !== undefined) {
-            queryParams.push(`locale=${encodeURIComponent(String(locale))}`);
+        if (options.locale !== undefined) {
+            queryParams.push(`locale=${encodeURIComponent(String(options.locale))}`);
         }
-        if (domain !== undefined) {
-            queryParams.push(`domain=${encodeURIComponent(String(domain))}`);
+        if (options.domain !== undefined) {
+            queryParams.push(`domain=${encodeURIComponent(String(options.domain))}`);
         }
         const requestPath = `/discovery/v2/venues/${id}` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
@@ -700,64 +1040,64 @@ export class TicketmasterClient extends ConnectorClientBase {
      * Find suggestions
      * @remarks Find search suggestions and filter your suggestions by location, source, etc.
      */
-    public async getSuggestions(keyword?: string, latlong?: string, radius?: string, unit?: string, source?: string, locale?: string, includeTBA?: string, includeTBD?: string, includeTest?: string, size?: string, countryCode?: string, segmentId?: string, geoPoint?: string, resource?: string, preferredCountry?: string, startEndDateTime?: string, localStartEndDateTime?: string, includeSpellcheck?: string, domain?: string, options: ConnectorOperationOptions = {}): Promise<SuggestionsGetResponse> {
+    public async getSuggestions(options: GetSuggestionsOptions = {}): Promise<SuggestionsGetResponse> {
         const queryParams: string[] = [];
-        if (keyword !== undefined) {
-            queryParams.push(`keyword=${encodeURIComponent(String(keyword))}`);
+        if (options.keyword !== undefined) {
+            queryParams.push(`keyword=${encodeURIComponent(String(options.keyword))}`);
         }
-        if (latlong !== undefined) {
-            queryParams.push(`latlong=${encodeURIComponent(String(latlong))}`);
+        if (options.latlong !== undefined) {
+            queryParams.push(`latlong=${encodeURIComponent(String(options.latlong))}`);
         }
-        if (radius !== undefined) {
-            queryParams.push(`radius=${encodeURIComponent(String(radius))}`);
+        if (options.radius !== undefined) {
+            queryParams.push(`radius=${encodeURIComponent(String(options.radius))}`);
         }
-        if (unit !== undefined) {
-            queryParams.push(`unit=${encodeURIComponent(String(unit))}`);
+        if (options.unit !== undefined) {
+            queryParams.push(`unit=${encodeURIComponent(String(options.unit))}`);
         }
-        if (source !== undefined) {
-            queryParams.push(`source=${encodeURIComponent(String(source))}`);
+        if (options.source !== undefined) {
+            queryParams.push(`source=${encodeURIComponent(String(options.source))}`);
         }
-        if (locale !== undefined) {
-            queryParams.push(`locale=${encodeURIComponent(String(locale))}`);
+        if (options.locale !== undefined) {
+            queryParams.push(`locale=${encodeURIComponent(String(options.locale))}`);
         }
-        if (includeTBA !== undefined) {
-            queryParams.push(`includeTBA=${encodeURIComponent(String(includeTBA))}`);
+        if (options.includeTBA !== undefined) {
+            queryParams.push(`includeTBA=${encodeURIComponent(String(options.includeTBA))}`);
         }
-        if (includeTBD !== undefined) {
-            queryParams.push(`includeTBD=${encodeURIComponent(String(includeTBD))}`);
+        if (options.includeTBD !== undefined) {
+            queryParams.push(`includeTBD=${encodeURIComponent(String(options.includeTBD))}`);
         }
-        if (includeTest !== undefined) {
-            queryParams.push(`includeTest=${encodeURIComponent(String(includeTest))}`);
+        if (options.includeTest !== undefined) {
+            queryParams.push(`includeTest=${encodeURIComponent(String(options.includeTest))}`);
         }
-        if (size !== undefined) {
-            queryParams.push(`size=${encodeURIComponent(String(size))}`);
+        if (options.size !== undefined) {
+            queryParams.push(`size=${encodeURIComponent(String(options.size))}`);
         }
-        if (countryCode !== undefined) {
-            queryParams.push(`countryCode=${encodeURIComponent(String(countryCode))}`);
+        if (options.countryCode !== undefined) {
+            queryParams.push(`countryCode=${encodeURIComponent(String(options.countryCode))}`);
         }
-        if (segmentId !== undefined) {
-            queryParams.push(`segmentId=${encodeURIComponent(String(segmentId))}`);
+        if (options.segmentId !== undefined) {
+            queryParams.push(`segmentId=${encodeURIComponent(String(options.segmentId))}`);
         }
-        if (geoPoint !== undefined) {
-            queryParams.push(`geoPoint=${encodeURIComponent(String(geoPoint))}`);
+        if (options.geoPoint !== undefined) {
+            queryParams.push(`geoPoint=${encodeURIComponent(String(options.geoPoint))}`);
         }
-        if (resource !== undefined) {
-            queryParams.push(`resource=${encodeURIComponent(String(resource))}`);
+        if (options.resource !== undefined) {
+            queryParams.push(`resource=${encodeURIComponent(String(options.resource))}`);
         }
-        if (preferredCountry !== undefined) {
-            queryParams.push(`preferredCountry=${encodeURIComponent(String(preferredCountry))}`);
+        if (options.preferredCountry !== undefined) {
+            queryParams.push(`preferredCountry=${encodeURIComponent(String(options.preferredCountry))}`);
         }
-        if (startEndDateTime !== undefined) {
-            queryParams.push(`startEndDateTime=${encodeURIComponent(String(startEndDateTime))}`);
+        if (options.startEndDateTime !== undefined) {
+            queryParams.push(`startEndDateTime=${encodeURIComponent(String(options.startEndDateTime))}`);
         }
-        if (localStartEndDateTime !== undefined) {
-            queryParams.push(`localStartEndDateTime=${encodeURIComponent(String(localStartEndDateTime))}`);
+        if (options.localStartEndDateTime !== undefined) {
+            queryParams.push(`localStartEndDateTime=${encodeURIComponent(String(options.localStartEndDateTime))}`);
         }
-        if (includeSpellcheck !== undefined) {
-            queryParams.push(`includeSpellcheck=${encodeURIComponent(String(includeSpellcheck))}`);
+        if (options.includeSpellcheck !== undefined) {
+            queryParams.push(`includeSpellcheck=${encodeURIComponent(String(options.includeSpellcheck))}`);
         }
-        if (domain !== undefined) {
-            queryParams.push(`domain=${encodeURIComponent(String(domain))}`);
+        if (options.domain !== undefined) {
+            queryParams.push(`domain=${encodeURIComponent(String(options.domain))}`);
         }
         const requestPath = `/discovery/v2/suggest` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);

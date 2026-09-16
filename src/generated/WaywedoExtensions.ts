@@ -297,6 +297,38 @@ export interface WebhookRegistered {
     /** The name of the webhook event. */
     webHookEvent?: string;
 }
+
+/**
+ * Options for the findSteps operation.
+ */
+export interface FindStepsOptions extends ConnectorOperationOptions {
+    /** Search for a step title */
+    query?: string;
+}
+
+/**
+ * Options for the findChecklist operation.
+ */
+export interface FindChecklistOptions extends ConnectorOperationOptions {
+    /** The title of the checklist */
+    query?: string;
+}
+
+/**
+ * Options for the findChecklistInstances operation.
+ */
+export interface FindChecklistInstancesOptions extends ConnectorOperationOptions {
+    /** The title of the checklist instance. */
+    query?: string;
+}
+
+/**
+ * Options for the findUser operation.
+ */
+export interface FindUserOptions extends ConnectorOperationOptions {
+    /** The name or email address of the user. */
+    query?: string;
+}
 // #endregion Types
 
 export const WaywedoTriggerOperations = {
@@ -383,10 +415,10 @@ export class WaywedoClient extends ConnectorClientBase {
      * Find Checklist Step
      * @remarks Find a step of a checklist instance
      */
-    public async findSteps(instanceId: string, query?: string, options: ConnectorOperationOptions = {}): Promise<Array<ChecklistStep>> {
+    public async findSteps(instanceId: string, options: FindStepsOptions = {}): Promise<Array<ChecklistStep>> {
         const queryParams: string[] = [];
-        if (query !== undefined) {
-            queryParams.push(`query=${encodeURIComponent(String(query))}`);
+        if (options.query !== undefined) {
+            queryParams.push(`query=${encodeURIComponent(String(options.query))}`);
         }
         const requestPath = `/v1/ChecklistInstances/${instanceId}/Steps` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
@@ -435,10 +467,10 @@ export class WaywedoClient extends ConnectorClientBase {
      * Find Checklist
      * @remarks Search for a checklist by title
      */
-    public async findChecklist(query?: string, type?: string, options: ConnectorOperationOptions = {}): Promise<Array<Procedure>> {
+    public async findChecklist(type: string, options: FindChecklistOptions = {}): Promise<Array<Procedure>> {
         const queryParams: string[] = [];
-        if (query !== undefined) {
-            queryParams.push(`query=${encodeURIComponent(String(query))}`);
+        if (options.query !== undefined) {
+            queryParams.push(`query=${encodeURIComponent(String(options.query))}`);
         }
         if (type !== undefined) {
             queryParams.push(`type=${encodeURIComponent(String(type))}`);
@@ -466,10 +498,10 @@ export class WaywedoClient extends ConnectorClientBase {
      * Find Checklist Instance
      * @remarks Search for a checklist instance by title.
      */
-    public async findChecklistInstances(procedureId: string, query?: string, options: ConnectorOperationOptions = {}): Promise<Array<ChecklistInstance>> {
+    public async findChecklistInstances(procedureId: string, options: FindChecklistInstancesOptions = {}): Promise<Array<ChecklistInstance>> {
         const queryParams: string[] = [];
-        if (query !== undefined) {
-            queryParams.push(`query=${encodeURIComponent(String(query))}`);
+        if (options.query !== undefined) {
+            queryParams.push(`query=${encodeURIComponent(String(options.query))}`);
         }
         const requestPath = `/v1/Procedures/${procedureId}/ChecklistInstances` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
@@ -482,10 +514,10 @@ export class WaywedoClient extends ConnectorClientBase {
      * Find User
      * @remarks Search for a user by name or email.
      */
-    public async findUser(query?: string, options: ConnectorOperationOptions = {}): Promise<Array<User>> {
+    public async findUser(options: FindUserOptions = {}): Promise<Array<User>> {
         const queryParams: string[] = [];
-        if (query !== undefined) {
-            queryParams.push(`query=${encodeURIComponent(String(query))}`);
+        if (options.query !== undefined) {
+            queryParams.push(`query=${encodeURIComponent(String(options.query))}`);
         }
         const requestPath = `/v1/Users` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);

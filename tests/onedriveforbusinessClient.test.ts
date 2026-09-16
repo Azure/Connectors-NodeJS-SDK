@@ -222,7 +222,7 @@ describe("OnedriveforbusinessClient — createShareLink", () => {
         mockFetchResponse(mockLink);
 
         const client = new OnedriveforbusinessClient(TestConnectionUrl, createMockCredential());
-        const result = await client.createShareLink("file-1", "view", "organization");
+        const result = await client.createShareLink("file-1", "view", { scope: "organization" });
 
         expect(result).toEqual(mockLink);
         const [url, init] = (global.fetch as jest.Mock).mock.calls[0];
@@ -261,7 +261,7 @@ describe("OnedriveforbusinessClient — findFiles", () => {
         mockFetchResponse(mockResults);
 
         const client = new OnedriveforbusinessClient(TestConnectionUrl, createMockCredential());
-        const result = await client.findFiles("folder-1", "report");
+        const result = await client.findFiles("folder-1", "report", "default");
 
         expect(result).toEqual(mockResults);
         const [url] = (global.fetch as jest.Mock).mock.calls[0];

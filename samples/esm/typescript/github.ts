@@ -20,7 +20,10 @@ async function main(): Promise<void> {
     const client = new GithubClient(CONNECTION_URL, tokenProvider);
 
     try {
-        const result: RepositoryDetails = await client.getRepositoryById(GITHUB_REPOSITORY_ID);
+        const result: RepositoryDetails = await client.getRepositoryById(
+            GITHUB_REPOSITORY_ID,
+            "application/vnd.github+json",
+        );
         console.log(`Repository id: ${String(result.id ?? "unknown")}`);
     } catch (error) {
         if (error instanceof ConnectorError) {

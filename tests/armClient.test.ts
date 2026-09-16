@@ -31,6 +31,7 @@ import { availableConnectors } from "../src/generated/ManagedConnectors.ts";
 const TestConnectionUrl = "https://connection-runtime.azure.com/apim/arm/abc123";
 const TestSubscriptionId = "sub-12345";
 const TestResourceGroupName = "rg-test";
+const TestApiVersion = "2021-04-01";
 
 function createMockCredential(): TokenCredential {
     return {
@@ -121,7 +122,7 @@ describe("ArmClient — listSubscriptions", () => {
         mockFetchResponse(mockResponse);
 
         const client = new ArmClient(TestConnectionUrl, createMockCredential());
-        const result = await client.listSubscriptions(TestSubscriptionId).byPage().next();
+        const result = await client.listSubscriptions(TestApiVersion).byPage().next();
 
         expect(result.value).toEqual(mockResponse.value);
         const [url, init] = (global.fetch as jest.Mock).mock.calls[0];
@@ -144,7 +145,7 @@ describe("ArmClient — getSubscription", () => {
         mockFetchResponse(mockSubscription);
 
         const client = new ArmClient(TestConnectionUrl, createMockCredential());
-        const result = await client.getSubscription(TestSubscriptionId);
+        const result = await client.getSubscription(TestSubscriptionId, TestApiVersion);
 
         expect(result).toEqual(mockSubscription);
         const [url] = (global.fetch as jest.Mock).mock.calls[0];
@@ -164,7 +165,7 @@ describe("ArmClient — listSubscriptionsLocations", () => {
         mockFetchResponse(mockLocations);
 
         const client = new ArmClient(TestConnectionUrl, createMockCredential());
-        const result = await client.listSubscriptionsLocations(TestSubscriptionId).byPage().next();
+        const result = await client.listSubscriptionsLocations(TestSubscriptionId, TestApiVersion).byPage().next();
 
         expect(result.value).toEqual(mockLocations.value);
         const [url] = (global.fetch as jest.Mock).mock.calls[0];
@@ -184,7 +185,7 @@ describe("ArmClient — listResourceGroups", () => {
         mockFetchResponse(mockResponse);
 
         const client = new ArmClient(TestConnectionUrl, createMockCredential());
-        const result = await client.listResourceGroups(TestSubscriptionId).byPage().next();
+        const result = await client.listResourceGroups(TestSubscriptionId, TestApiVersion).byPage().next();
 
         expect(result.value).toEqual(mockResponse.value);
         const [url, init] = (global.fetch as jest.Mock).mock.calls[0];
@@ -203,7 +204,7 @@ describe("ArmClient — getResourceGroup", () => {
         mockFetchResponse(mockGroup);
 
         const client = new ArmClient(TestConnectionUrl, createMockCredential());
-        const result = await client.getResourceGroup(TestSubscriptionId, TestResourceGroupName);
+        const result = await client.getResourceGroup(TestSubscriptionId, TestResourceGroupName, TestApiVersion);
 
         expect(result).toEqual(mockGroup);
         const [url] = (global.fetch as jest.Mock).mock.calls[0];
@@ -226,6 +227,7 @@ describe("ArmClient — createResourceGroupOrUpdate", () => {
             input,
             TestSubscriptionId,
             TestResourceGroupName,
+            TestApiVersion,
         );
 
         expect(result).toEqual(mockResponse);
@@ -245,7 +247,7 @@ describe("ArmClient — deleteResourceGroup", () => {
         mockFetchResponse(null);
 
         const client = new ArmClient(TestConnectionUrl, createMockCredential());
-        await client.deleteResourceGroup(TestSubscriptionId, TestResourceGroupName);
+        await client.deleteResourceGroup(TestSubscriptionId, TestResourceGroupName, TestApiVersion);
 
         const [, init] = (global.fetch as jest.Mock).mock.calls[0];
         expect(init.method).toBe("DELETE");
@@ -268,6 +270,7 @@ describe("ArmClient — createDeploymentOrUpdate", () => {
             TestSubscriptionId,
             TestResourceGroupName,
             "deploy-1",
+            TestApiVersion,
         );
 
         expect(result).toEqual(mockResponse);
@@ -292,6 +295,7 @@ describe("ArmClient — getDeployment", () => {
             TestSubscriptionId,
             TestResourceGroupName,
             "deploy-1",
+            TestApiVersion,
         );
 
         expect(result).toEqual(mockDeployment);
@@ -312,7 +316,7 @@ describe("ArmClient — listProviders", () => {
         mockFetchResponse(mockResponse);
 
         const client = new ArmClient(TestConnectionUrl, createMockCredential());
-        const result = await client.listProviders(TestSubscriptionId).byPage().next();
+        const result = await client.listProviders(TestSubscriptionId, TestApiVersion).byPage().next();
 
         expect(result.value).toEqual(mockResponse.value);
         const [url] = (global.fetch as jest.Mock).mock.calls[0];
@@ -331,7 +335,7 @@ describe("ArmClient — error handling", () => {
         const client = new ArmClient(TestConnectionUrl, createMockCredential());
 
         await expect(
-            client.listSubscriptions(TestSubscriptionId).byPage().next(),
+            client.listSubscriptions(TestApiVersion).byPage().next(),
         ).rejects.toThrow(ConnectorError);
     });
 
@@ -342,7 +346,7 @@ describe("ArmClient — error handling", () => {
         const client = new ArmClient(TestConnectionUrl, createMockCredential());
 
         try {
-            await client.getSubscription(TestSubscriptionId);
+            await client.getSubscription(TestSubscriptionId, TestApiVersion);
             throw new Error("Expected ConnectorError to be thrown.");
         } catch (error) {
             expect(error).toBeInstanceOf(ConnectorError);

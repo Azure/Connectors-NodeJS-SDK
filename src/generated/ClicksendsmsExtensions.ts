@@ -339,6 +339,16 @@ export interface SmsInboundAutomationInput {
     /** enabled */
     enabled: number;
 }
+
+/**
+ * Options for the getContactLists operation.
+ */
+export interface GetContactListsOptions extends ConnectorOperationOptions {
+    /** Page number */
+    page?: string;
+    /** Number of records per page */
+    limit?: string;
+}
 // #endregion Types
 
 export const ClicksendsmsTriggerOperations = {
@@ -396,13 +406,13 @@ export class ClicksendsmsClient extends ConnectorClientBase {
      * Get Contact Lists
      * @remarks Get all contact lists unless specified in the advance options
      */
-    public async getContactLists(page?: string, limit?: string, options: ConnectorOperationOptions = {}): Promise<GetContactListsResponse> {
+    public async getContactLists(options: GetContactListsOptions = {}): Promise<GetContactListsResponse> {
         const queryParams: string[] = [];
-        if (page !== undefined) {
-            queryParams.push(`page=${encodeURIComponent(String(page))}`);
+        if (options.page !== undefined) {
+            queryParams.push(`page=${encodeURIComponent(String(options.page))}`);
         }
-        if (limit !== undefined) {
-            queryParams.push(`limit=${encodeURIComponent(String(limit))}`);
+        if (options.limit !== undefined) {
+            queryParams.push(`limit=${encodeURIComponent(String(options.limit))}`);
         }
         const requestPath = `/lists` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
@@ -499,7 +509,7 @@ export class ClicksendsmsClient extends ConnectorClientBase {
      * Convert Media File Format
      * @remarks Convert Media File Format
      */
-    public async uploadMedia(input: UploadMediaInput, convert?: string, options: ConnectorOperationOptions = {}): Promise<UploadMediaResponse> {
+    public async uploadMedia(input: UploadMediaInput, convert: string, options: ConnectorOperationOptions = {}): Promise<UploadMediaResponse> {
         const queryParams: string[] = [];
         if (convert !== undefined) {
             queryParams.push(`convert=${encodeURIComponent(String(convert))}`);
@@ -515,7 +525,7 @@ export class ClicksendsmsClient extends ConnectorClientBase {
      * Search Contact Lists
      * @remarks Get list of searched contact list
      */
-    public async listSearchContact(q?: string, options: ConnectorOperationOptions = {}): Promise<SearchContactListResponse> {
+    public async listSearchContact(q: string, options: ConnectorOperationOptions = {}): Promise<SearchContactListResponse> {
         const queryParams: string[] = [];
         if (q !== undefined) {
             queryParams.push(`q=${encodeURIComponent(String(q))}`);

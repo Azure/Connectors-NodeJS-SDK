@@ -96,6 +96,7 @@ export class ConnectorHttpClient {
      * @param body Optional request body (will be JSON-serialized).
      * @param abortSignal Optional abort signal for caller-initiated cancellation.
     * @param tracingOptions Optional tracing context for the HTTP span.
+    * @param requestHeaders Service-specific request headers.
      */
     public async sendAsync<TValue = unknown>(
         method: string,
@@ -104,6 +105,7 @@ export class ConnectorHttpClient {
         body?: unknown,
         abortSignal?: AbortSignalLike,
         tracingOptions?: OperationTracingOptions,
+        requestHeaders?: Readonly<Record<string, string>>,
     ): Promise<ConnectorResponse<TValue>> {
         const effectiveScopes = scopes ?? ConnectorHttpClient.ApiHubScopes;
         const logUrl = ConnectorHttpClient.sanitizeUrlForLogging(url);
@@ -120,6 +122,10 @@ export class ConnectorHttpClient {
 
         if (body !== undefined) {
             request.headers.set("Content-Type", "application/json");
+        }
+
+        for (const [name, value] of Object.entries(requestHeaders ?? {})) {
+            request.headers.set(name, value);
         }
 
         try {

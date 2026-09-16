@@ -3,6 +3,7 @@
 
 import type { TokenCredential } from "@azure/core-auth";
 import { ConnectorClientBase } from "../azureConnectors/clientBase.ts";
+import type { ConnectorPagedAsyncIterableIterator } from "../azureConnectors/clientBase.ts";
 import type { ConnectorClientOptions, ConnectorOperationOptions } from "../azureConnectors/options.ts";
 
 // #region Types
@@ -676,6 +677,36 @@ export interface AddUserResponseModel {
     /** A list of link types and descriptions for the API schema documents */
     _links?: Array<Link>;
 }
+
+/**
+ * Options for the getLists operation.
+ */
+export interface GetListsOptions extends ConnectorOperationOptions {
+    /** The number of records to return. Default value is 10. Maximum value is 1000 */
+    count?: string;
+    /** The number of records from a collection to skip. Default value is 0. */
+    offset?: string;
+}
+
+/**
+ * Options for the addMembers operation.
+ */
+export interface AddMembersOptions extends ConnectorOperationOptions {
+    /** Allows member data to be accepted without merge field values */
+    skipMergeValidation?: string;
+    /** Ignores duplicates sent in the request */
+    skipDuplicateCheck?: string;
+}
+
+/**
+ * Options for the getListMembers operation.
+ */
+export interface GetListMembersOptions extends ConnectorOperationOptions {
+    /** The number of records to return. Default value is 10. Maximum value is 1000 */
+    count?: string;
+    /** The number of records from a collection to skip. Default value is 0. */
+    offset?: string;
+}
 // #endregion Types
 
 export const MailchimpTriggerOperations = {
@@ -723,12 +754,18 @@ export class MailchimpClient extends ConnectorClientBase {
      * List campaigns
      * @remarks This operation retrieves a list of campaigns in an account
      */
-    public async getCampaigns(options: ConnectorOperationOptions = {}): Promise<GetCampaignsResponse> {
+    public getCampaigns(options: ConnectorOperationOptions = {}): ConnectorPagedAsyncIterableIterator<CampaignResponseModel> {
         const requestPath = `/campaigns`;
-        const requestUrl = this.resolveUrl(requestPath);
-        const httpResponse = await this.sendWithTracingAsync<GetCampaignsResponse>("Mailchimp.getCampaigns", "GetCampaigns", "GET", requestUrl, undefined, options);
+        return this.createPageable<GetCampaignsResponse, CampaignResponseModel>(
+            requestPath,
+            async (requestUrl) => {
+                const httpResponse = await this.sendWithTracingAsync<GetCampaignsResponse>("Mailchimp.getCampaigns", "GetCampaigns", "GET", requestUrl, undefined, options);
 
-        return httpResponse.value as GetCampaignsResponse;
+                return httpResponse.value as GetCampaignsResponse;
+            },
+            "campaigns",
+            undefined,
+        );
     }
 
     /**
@@ -745,13 +782,13 @@ export class MailchimpClient extends ConnectorClientBase {
      * Get all the lists
      * @remarks Find all the lists for the current user
      */
-    public async getLists(count?: string, offset?: string, options: ConnectorOperationOptions = {}): Promise<GetListsResponseModel> {
+    public async getLists(options: GetListsOptions = {}): Promise<GetListsResponseModel> {
         const queryParams: string[] = [];
-        if (count !== undefined) {
-            queryParams.push(`count=${encodeURIComponent(String(count))}`);
+        if (options.count !== undefined) {
+            queryParams.push(`count=${encodeURIComponent(String(options.count))}`);
         }
-        if (offset !== undefined) {
-            queryParams.push(`offset=${encodeURIComponent(String(offset))}`);
+        if (options.offset !== undefined) {
+            queryParams.push(`offset=${encodeURIComponent(String(options.offset))}`);
         }
         const requestPath = `/lists` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
@@ -776,13 +813,13 @@ export class MailchimpClient extends ConnectorClientBase {
      * Subscribe or unsubscribe list members
      * @remarks Batch subscribe or unsubscribe list members.
      */
-    public async addMembers(input: NewMembersInListRequest, listId: string, skipMergeValidation?: string, skipDuplicateCheck?: string, options: ConnectorOperationOptions = {}): Promise<GetAddMembersBatchResponseModel> {
+    public async addMembers(input: NewMembersInListRequest, listId: string, options: AddMembersOptions = {}): Promise<GetAddMembersBatchResponseModel> {
         const queryParams: string[] = [];
-        if (skipMergeValidation !== undefined) {
-            queryParams.push(`skip_merge_validation=${encodeURIComponent(String(skipMergeValidation))}`);
+        if (options.skipMergeValidation !== undefined) {
+            queryParams.push(`skip_merge_validation=${encodeURIComponent(String(options.skipMergeValidation))}`);
         }
-        if (skipDuplicateCheck !== undefined) {
-            queryParams.push(`skip_duplicate_check=${encodeURIComponent(String(skipDuplicateCheck))}`);
+        if (options.skipDuplicateCheck !== undefined) {
+            queryParams.push(`skip_duplicate_check=${encodeURIComponent(String(options.skipDuplicateCheck))}`);
         }
         const requestPath = `/lists/${listId}` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
@@ -795,13 +832,13 @@ export class MailchimpClient extends ConnectorClientBase {
      * Show list members
      * @remarks Show all the members of a list
      */
-    public async getListMembers(listId: string, count?: string, offset?: string, options: ConnectorOperationOptions = {}): Promise<GetAllMembersResponseModel> {
+    public async getListMembers(listId: string, options: GetListMembersOptions = {}): Promise<GetAllMembersResponseModel> {
         const queryParams: string[] = [];
-        if (count !== undefined) {
-            queryParams.push(`count=${encodeURIComponent(String(count))}`);
+        if (options.count !== undefined) {
+            queryParams.push(`count=${encodeURIComponent(String(options.count))}`);
         }
-        if (offset !== undefined) {
-            queryParams.push(`offset=${encodeURIComponent(String(offset))}`);
+        if (options.offset !== undefined) {
+            queryParams.push(`offset=${encodeURIComponent(String(options.offset))}`);
         }
         const requestPath = `/lists/${listId}/members` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
@@ -838,20 +875,28 @@ export class MailchimpClient extends ConnectorClientBase {
      * Remove Member from list
      * @remarks Delete a member from a list.
      */
-    public async removemember(listId: string, options: ConnectorOperationOptions = {}): Promise<void> {
+    public async removemember(listId: string, memberEmail: string, options: ConnectorOperationOptions = {}): Promise<void> {
         const requestPath = `/lists/replacemailwithhash/${listId}/members`;
+        const requestHeaders: Record<string, string> = {};
+        if (memberEmail !== undefined) {
+            requestHeaders["member_email"] = String(memberEmail);
+        }
         const requestUrl = this.resolveUrl(requestPath);
-        await this.sendWithTracingAsync<void>("Mailchimp.removemember", "removemember_v2", "DELETE", requestUrl, undefined, options);
+        await this.sendWithTracingAsync<void>("Mailchimp.removemember", "removemember_v2", "DELETE", requestUrl, undefined, options, requestHeaders);
     }
 
     /**
      * Update member information
      * @remarks Update information for a specific list member.
      */
-    public async updatemember(input: UpdateMemberInListRequest, listId: string, options: ConnectorOperationOptions = {}): Promise<MemberResponseModel> {
+    public async updatemember(input: UpdateMemberInListRequest, listId: string, memberEmail: string, options: ConnectorOperationOptions = {}): Promise<MemberResponseModel> {
         const requestPath = `/lists/replacemailwithhash/${listId}/members`;
+        const requestHeaders: Record<string, string> = {};
+        if (memberEmail !== undefined) {
+            requestHeaders["member_email"] = String(memberEmail);
+        }
         const requestUrl = this.resolveUrl(requestPath);
-        const httpResponse = await this.sendWithTracingAsync<MemberResponseModel>("Mailchimp.updatemember", "updatemember_v2", "PATCH", requestUrl, input, options);
+        const httpResponse = await this.sendWithTracingAsync<MemberResponseModel>("Mailchimp.updatemember", "updatemember_v2", "PATCH", requestUrl, input, options, requestHeaders);
 
         return httpResponse.value as MemberResponseModel;
     }

@@ -2487,6 +2487,308 @@ export interface MembershipTypeTerminatedPayload {
     Properties?: Record<string, unknown>;
     Notifications?: Array<Record<string, unknown>>;
 }
+
+/**
+ * Options for the getAbandonedCheckouts operation.
+ */
+export interface GetAbandonedCheckoutsOptions extends ConnectorOperationOptions {
+    /** Product Code */
+    productCode?: string;
+    /** Customer Record Number */
+    customerRecordNumber?: string;
+}
+
+/**
+ * Options for the listOfExams operation.
+ */
+export interface ListOfExamsOptions extends ConnectorOperationOptions {
+    /** A specific Exam code. */
+    code?: string;
+    /** A specific Exam Category name. */
+    categoryName?: string;
+    /** When set to true, only public Exams will be displayed; If it's not specified will display all. */
+    isPublic?: string;
+    /** When a date (yyyy-MM-ddTHH:mm:ss (UTC)) is specified, only Exams modified after this date will be displayed. */
+    changedSince?: string;
+    /** Tag */
+    tag?: string;
+    /** When set to true, add the active price list for every product. */
+    includePrices?: string;
+}
+
+/**
+ * Options for the listRegistrants operation.
+ */
+export interface ListRegistrantsOptions extends ConnectorOperationOptions {
+    /** Session Code. */
+    sessionCode?: string;
+    /** Include Details */
+    includeDetails?: string;
+    /** Registered Since */
+    registeredSince?: string;
+}
+
+/**
+ * Options for the getPurchasesForAnIndividual operation.
+ */
+export interface GetPurchasesForAnIndividualOptions extends ConnectorOperationOptions {
+    /** Product Code. */
+    productCode?: string;
+    /** yyyy-MM-ddTHH:mm:ss */
+    purchasedSince?: string;
+    /** Product Category Code. */
+    productCategoryCode?: string;
+}
+
+/**
+ * Options for the listAllEventCancellationsByEvent operation.
+ */
+export interface ListAllEventCancellationsByEventOptions extends ConnectorOperationOptions {
+    /** Indicates if additional information should be returned. */
+    includeDetails?: string;
+    /** The initial date to search cancellations (yyyy-MM-ddTHH:mm:ss) */
+    cancelledSince?: string;
+}
+
+/**
+ * Options for the getAllOpenOrdersForAnIndividual operation.
+ */
+export interface GetAllOpenOrdersForAnIndividualOptions extends ConnectorOperationOptions {
+    /** Include Line Items. */
+    includeLineItems?: string;
+    /** From Date. */
+    fromDate?: string;
+    /** To Date. */
+    toDate?: string;
+}
+
+/**
+ * Options for the findMembersOrIndividualsByFirstName operation.
+ */
+export interface FindMembersOrIndividualsByFirstNameOptions extends ConnectorOperationOptions {
+    /** Include Email Data */
+    includeEmail?: string;
+}
+
+/**
+ * Options for the findMembersOrIndividualsByLastName operation.
+ */
+export interface FindMembersOrIndividualsByLastNameOptions extends ConnectorOperationOptions {
+    /** Include Email Data. */
+    includeEmail?: string;
+}
+
+/**
+ * Options for the listOfAllOrganizationMembers operation.
+ */
+export interface ListOfAllOrganizationMembersOptions extends ConnectorOperationOptions {
+    /** Zip Code */
+    zipCode?: string;
+    /** Radius in Miles */
+    radius?: string;
+    /** State Abbreviation */
+    stateAbbreviation?: string;
+    /** Congressional District */
+    congressionalDistrict?: string;
+    /** A valid code for a Membership Type */
+    membershipTypeCode?: string;
+    /** A valid Membership Type Category name */
+    membershipTypeCategory?: string;
+    /** City */
+    city?: string;
+    /** Name */
+    name?: string;
+    /** Tag */
+    tag?: string;
+    /** Latitude */
+    latitude?: string;
+    /** Longitude */
+    longitude?: string;
+    /** Domain */
+    domain?: string;
+    /** Include Membership Data */
+    includeMembership?: string;
+    /** Include Address Data */
+    includeAddress?: string;
+    /** Include Phone Data */
+    includePhone?: string;
+    /** Include Email Data */
+    includeEmail?: string;
+    /** Include Custom Field Data */
+    includeCustomFields?: string;
+    /** Expire Date - From */
+    expiringFrom?: string;
+    /** Expire Date - To */
+    expiringTo?: string;
+}
+
+/**
+ * Options for the listOfAllIndividualMembers operation.
+ */
+export interface ListOfAllIndividualMembersOptions extends ConnectorOperationOptions {
+    /** Zip Code */
+    zipCode?: string;
+    /** Radius in Miles */
+    radius?: string;
+    /** A valid code for a Membership Type */
+    membershipTypeCode?: string;
+    /** A valid Membership Type Category name */
+    membershipTypeCategory?: string;
+    /** Tag */
+    tag?: string;
+    /** Include Membership Data */
+    includeMembership?: string;
+    /** Include Address Data */
+    includeAddress?: string;
+    /** Include Phone Data */
+    includePhone?: string;
+    /** Include Email Data */
+    includeEmail?: string;
+    /** Include Link Data */
+    includeLink?: string;
+    /** Include Custom Field Data */
+    includeCustomFields?: string;
+    /** Include Categories Data */
+    includeCategories?: string;
+    /** Include Membership Renewal URLs */
+    includeMembershipRenewalUrl?: string;
+    /** Expire Date - From */
+    expiringFrom?: string;
+    /** Expire Date - To */
+    expiringTo?: string;
+}
+
+/**
+ * Options for the registerAnIndividualForAFreeSession operation.
+ */
+export interface RegisterAnIndividualForAFreeSessionOptions extends ConnectorOperationOptions {
+    /** A Valid Registration Number. */
+    registrationNumber?: string;
+}
+
+/**
+ * Options for the listAllAwards operation.
+ */
+export interface ListAllAwardsOptions extends ConnectorOperationOptions {
+    /** Year. */
+    year?: string;
+}
+
+/**
+ * Options for the findMembersOrIndividualsByName operation.
+ */
+export interface FindMembersOrIndividualsByNameOptions extends ConnectorOperationOptions {
+    /** Include Email Data. */
+    includeEmail?: string;
+}
+
+/**
+ * Options for the getNomineesByCommittee operation.
+ */
+export interface GetNomineesByCommitteeOptions extends ConnectorOperationOptions {
+    /** Term */
+    term?: string;
+}
+
+/**
+ * Options for the getOrganizationsRelationships operation.
+ */
+export interface GetOrganizationsRelationshipsOptions extends ConnectorOperationOptions {
+    /** Name of the Relationship. */
+    relationshipName?: string;
+    /** Includes Details. */
+    includesDetails?: string;
+}
+
+/**
+ * Options for the getCommitteeInformationForAnIndividual operation.
+ */
+export interface GetCommitteeInformationForAnIndividualOptions extends ConnectorOperationOptions {
+    /** Include Inactive */
+    includeInactive?: string;
+}
+
+/**
+ * Options for the getAllEvents operation.
+ */
+export interface GetAllEventsOptions extends ConnectorOperationOptions {
+    /** Code. */
+    code?: string;
+    /** Name. */
+    name?: string;
+    /** Tag. */
+    tag?: string;
+}
+
+/**
+ * Options for the getAllEventRegistrationsInformationForAnIndividual operation.
+ */
+export interface GetAllEventRegistrationsInformationForAnIndividualOptions extends ConnectorOperationOptions {
+    /** Event Code. */
+    eventCode?: string;
+}
+
+/**
+ * Options for the getIndividualsRelationships operation.
+ */
+export interface GetIndividualsRelationshipsOptions extends ConnectorOperationOptions {
+    /** Name of the Relationship. */
+    relationshipName?: string;
+    /** Include Details. */
+    includeDetails?: string;
+}
+
+/**
+ * Options for the addIndividual operation.
+ */
+export interface AddIndividualOptions extends ConnectorOperationOptions {
+    /** Choose True if a user account should be created when the individual is created. */
+    createUser?: string;
+}
+
+/**
+ * Options for the findMembersOrIndividualsByFirstAndLastName operation.
+ */
+export interface FindMembersOrIndividualsByFirstAndLastNameOptions extends ConnectorOperationOptions {
+    /** Include Email Data. */
+    includeEmail?: string;
+}
+
+/**
+ * Options for the getCommitteeMembersByCommitteeIdOrCode operation.
+ */
+export interface GetCommitteeMembersByCommitteeIdOrCodeOptions extends ConnectorOperationOptions {
+    /** Term */
+    term?: string;
+    /** Position Codes */
+    positionCodes?: string;
+}
+
+/**
+ * Options for the getAllCommittees operation.
+ */
+export interface GetAllCommitteesOptions extends ConnectorOperationOptions {
+    /** Committee Code. */
+    code?: string;
+    /** Committee Name. */
+    name?: string;
+    /** Term. */
+    term?: string;
+    /** Active Only. */
+    activeOnly?: string;
+}
+
+/**
+ * Options for the listAllIndividuals operation.
+ */
+export interface ListAllIndividualsOptions extends ConnectorOperationOptions {
+    /** Individual Name. */
+    name?: string;
+    /** Include Details. */
+    includeDetails?: string;
+    /** Individual Old ID. */
+    oldId?: string;
+}
 // #endregion Types
 
 export const ImpexiumTriggerOperations = {
@@ -2666,20 +2968,24 @@ export class ImpexiumClient extends ConnectorClientBase {
      * Get Abandoned Checkouts
      * @remarks Get Abandoned Checkouts
      */
-    public async getAbandonedCheckouts(pageNumber: string, abandonedFrom?: string, productCode?: string, customerRecordNumber?: string, options: ConnectorOperationOptions = {}): Promise<GetAbandonedCheckoutsResponse> {
+    public async getAbandonedCheckouts(pageNumber: string, abandonedFrom: string, contentType: string, options: GetAbandonedCheckoutsOptions = {}): Promise<GetAbandonedCheckoutsResponse> {
         const queryParams: string[] = [];
         if (abandonedFrom !== undefined) {
             queryParams.push(`abandonedFrom=${encodeURIComponent(String(abandonedFrom))}`);
         }
-        if (productCode !== undefined) {
-            queryParams.push(`productCode=${encodeURIComponent(String(productCode))}`);
+        if (options.productCode !== undefined) {
+            queryParams.push(`productCode=${encodeURIComponent(String(options.productCode))}`);
         }
-        if (customerRecordNumber !== undefined) {
-            queryParams.push(`customerRecordNumber=${encodeURIComponent(String(customerRecordNumber))}`);
+        if (options.customerRecordNumber !== undefined) {
+            queryParams.push(`customerRecordNumber=${encodeURIComponent(String(options.customerRecordNumber))}`);
         }
         const requestPath = `/api/v1/Shopping/AbandonedCheckOuts/${pageNumber}` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
+        const requestHeaders: Record<string, string> = {};
+        if (contentType !== undefined) {
+            requestHeaders["Content-Type"] = String(contentType);
+        }
         const requestUrl = this.resolveUrl(requestPath);
-        const httpResponse = await this.sendWithTracingAsync<GetAbandonedCheckoutsResponse>("Impexium.getAbandonedCheckouts", "GetAbandonedCheckouts", "GET", requestUrl, undefined, options);
+        const httpResponse = await this.sendWithTracingAsync<GetAbandonedCheckoutsResponse>("Impexium.getAbandonedCheckouts", "GetAbandonedCheckouts", "GET", requestUrl, undefined, options, requestHeaders);
 
         return httpResponse.value as GetAbandonedCheckoutsResponse;
     }
@@ -2688,12 +2994,16 @@ export class ImpexiumClient extends ConnectorClientBase {
      * List All Exhibitors
      * @remarks List All Exhibitors
      */
-    public listAllExhibitors(exhibitCode: string, pageNumber: string, options: ConnectorOperationOptions = {}): ConnectorPagedAsyncIterableIterator<ExhibitorData> {
+    public listAllExhibitors(exhibitCode: string, pageNumber: string, contentType: string, options: ConnectorOperationOptions = {}): ConnectorPagedAsyncIterableIterator<ExhibitorData> {
         const requestPath = `/api/v1/Exhibits/${exhibitCode}/Exhibitors/${pageNumber}`;
+        const requestHeaders: Record<string, string> = {};
+        if (contentType !== undefined) {
+            requestHeaders["Content-Type"] = String(contentType);
+        }
         return this.createPageable<ListAllExhibitorsResponse, ExhibitorData>(
             requestPath,
             async (requestUrl) => {
-                const httpResponse = await this.sendWithTracingAsync<ListAllExhibitorsResponse>("Impexium.listAllExhibitors", "List-All-Exhibitors", "GET", requestUrl, undefined, options);
+                const httpResponse = await this.sendWithTracingAsync<ListAllExhibitorsResponse>("Impexium.listAllExhibitors", "List-All-Exhibitors", "GET", requestUrl, undefined, options, requestHeaders);
 
                 return httpResponse.value as ListAllExhibitorsResponse;
             },
@@ -2706,31 +3016,35 @@ export class ImpexiumClient extends ConnectorClientBase {
      * List of Exams
      * @remarks List of Exams
      */
-    public listOfExams(pageNumber: string, code?: string, categoryName?: string, isPublic?: string, changedSince?: string, tag?: string, includePrices?: string, options: ConnectorOperationOptions = {}): ConnectorPagedAsyncIterableIterator<ExamData> {
+    public listOfExams(pageNumber: string, contentType: string, options: ListOfExamsOptions = {}): ConnectorPagedAsyncIterableIterator<ExamData> {
         const queryParams: string[] = [];
-        if (code !== undefined) {
-            queryParams.push(`Code=${encodeURIComponent(String(code))}`);
+        if (options.code !== undefined) {
+            queryParams.push(`Code=${encodeURIComponent(String(options.code))}`);
         }
-        if (categoryName !== undefined) {
-            queryParams.push(`categoryName=${encodeURIComponent(String(categoryName))}`);
+        if (options.categoryName !== undefined) {
+            queryParams.push(`categoryName=${encodeURIComponent(String(options.categoryName))}`);
         }
-        if (isPublic !== undefined) {
-            queryParams.push(`isPublic=${encodeURIComponent(String(isPublic))}`);
+        if (options.isPublic !== undefined) {
+            queryParams.push(`isPublic=${encodeURIComponent(String(options.isPublic))}`);
         }
-        if (changedSince !== undefined) {
-            queryParams.push(`changedSince=${encodeURIComponent(String(changedSince))}`);
+        if (options.changedSince !== undefined) {
+            queryParams.push(`changedSince=${encodeURIComponent(String(options.changedSince))}`);
         }
-        if (tag !== undefined) {
-            queryParams.push(`Tag=${encodeURIComponent(String(tag))}`);
+        if (options.tag !== undefined) {
+            queryParams.push(`Tag=${encodeURIComponent(String(options.tag))}`);
         }
-        if (includePrices !== undefined) {
-            queryParams.push(`includePrices=${encodeURIComponent(String(includePrices))}`);
+        if (options.includePrices !== undefined) {
+            queryParams.push(`includePrices=${encodeURIComponent(String(options.includePrices))}`);
         }
         const requestPath = `/api/v1/Products/Exams/${pageNumber}` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
+        const requestHeaders: Record<string, string> = {};
+        if (contentType !== undefined) {
+            requestHeaders["Content-Type"] = String(contentType);
+        }
         return this.createPageable<ListOfExamsResponse, ExamData>(
             requestPath,
             async (requestUrl) => {
-                const httpResponse = await this.sendWithTracingAsync<ListOfExamsResponse>("Impexium.listOfExams", "List-of-Exams", "GET", requestUrl, undefined, options);
+                const httpResponse = await this.sendWithTracingAsync<ListOfExamsResponse>("Impexium.listOfExams", "List-of-Exams", "GET", requestUrl, undefined, options, requestHeaders);
 
                 return httpResponse.value as ListOfExamsResponse;
             },
@@ -2743,22 +3057,26 @@ export class ImpexiumClient extends ConnectorClientBase {
      * List Registrants
      * @remarks List Registrants
      */
-    public listRegistrants(eventCode: string, pageNumber: string, sessionCode?: string, includeDetails?: string, registeredSince?: string, options: ConnectorOperationOptions = {}): ConnectorPagedAsyncIterableIterator<RegistrantData> {
+    public listRegistrants(eventCode: string, pageNumber: string, contentType: string, options: ListRegistrantsOptions = {}): ConnectorPagedAsyncIterableIterator<RegistrantData> {
         const queryParams: string[] = [];
-        if (sessionCode !== undefined) {
-            queryParams.push(`sessionCode=${encodeURIComponent(String(sessionCode))}`);
+        if (options.sessionCode !== undefined) {
+            queryParams.push(`sessionCode=${encodeURIComponent(String(options.sessionCode))}`);
         }
-        if (includeDetails !== undefined) {
-            queryParams.push(`includeDetails=${encodeURIComponent(String(includeDetails))}`);
+        if (options.includeDetails !== undefined) {
+            queryParams.push(`includeDetails=${encodeURIComponent(String(options.includeDetails))}`);
         }
-        if (registeredSince !== undefined) {
-            queryParams.push(`registeredSince=${encodeURIComponent(String(registeredSince))}`);
+        if (options.registeredSince !== undefined) {
+            queryParams.push(`registeredSince=${encodeURIComponent(String(options.registeredSince))}`);
         }
         const requestPath = `/api/v1/Events/${eventCode}/Registrations/${pageNumber}` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
+        const requestHeaders: Record<string, string> = {};
+        if (contentType !== undefined) {
+            requestHeaders["Content-Type"] = String(contentType);
+        }
         return this.createPageable<ListRegistrantsResponse, RegistrantData>(
             requestPath,
             async (requestUrl) => {
-                const httpResponse = await this.sendWithTracingAsync<ListRegistrantsResponse>("Impexium.listRegistrants", "List-Registrants", "GET", requestUrl, undefined, options);
+                const httpResponse = await this.sendWithTracingAsync<ListRegistrantsResponse>("Impexium.listRegistrants", "List-Registrants", "GET", requestUrl, undefined, options, requestHeaders);
 
                 return httpResponse.value as ListRegistrantsResponse;
             },
@@ -2771,10 +3089,14 @@ export class ImpexiumClient extends ConnectorClientBase {
      * Get Course Attendees
      * @remarks Get Course Attendees
      */
-    public async getCourseAttendees(code: string, pageNumber: string, options: ConnectorOperationOptions = {}): Promise<GetCourseAttendeesResponse> {
+    public async getCourseAttendees(code: string, pageNumber: string, contentType: string, options: ConnectorOperationOptions = {}): Promise<GetCourseAttendeesResponse> {
         const requestPath = `/api/v1/Courses/${code}/Attendees/${pageNumber}`;
+        const requestHeaders: Record<string, string> = {};
+        if (contentType !== undefined) {
+            requestHeaders["Content-Type"] = String(contentType);
+        }
         const requestUrl = this.resolveUrl(requestPath);
-        const httpResponse = await this.sendWithTracingAsync<GetCourseAttendeesResponse>("Impexium.getCourseAttendees", "Get-Course-Attendees", "GET", requestUrl, undefined, options);
+        const httpResponse = await this.sendWithTracingAsync<GetCourseAttendeesResponse>("Impexium.getCourseAttendees", "Get-Course-Attendees", "GET", requestUrl, undefined, options, requestHeaders);
 
         return httpResponse.value as GetCourseAttendeesResponse;
     }
@@ -2783,10 +3105,14 @@ export class ImpexiumClient extends ConnectorClientBase {
      * Add Exam Scores
      * @remarks Add Exam Scores
      */
-    public async addExamScores(input: AddExamScoresInput, examCode: string, options: ConnectorOperationOptions = {}): Promise<Array<ExamScoreResultData>> {
+    public async addExamScores(input: AddExamScoresInput, examCode: string, contentType: string, options: ConnectorOperationOptions = {}): Promise<Array<ExamScoreResultData>> {
         const requestPath = `/api/v1/Exams/${examCode}/Scores`;
+        const requestHeaders: Record<string, string> = {};
+        if (contentType !== undefined) {
+            requestHeaders["Content-Type"] = String(contentType);
+        }
         const requestUrl = this.resolveUrl(requestPath);
-        const httpResponse = await this.sendWithTracingAsync<Array<ExamScoreResultData>>("Impexium.addExamScores", "Add-Exam-Scores", "POST", requestUrl, input, options);
+        const httpResponse = await this.sendWithTracingAsync<Array<ExamScoreResultData>>("Impexium.addExamScores", "Add-Exam-Scores", "POST", requestUrl, input, options, requestHeaders);
 
         return httpResponse.value as Array<ExamScoreResultData>;
     }
@@ -2795,10 +3121,14 @@ export class ImpexiumClient extends ConnectorClientBase {
      * Find Members by Name
      * @remarks Find Members by Name
      */
-    public async findMembersByName(name: string, pageNumber: string, options: ConnectorOperationOptions = {}): Promise<FindMembersByNameResponse> {
+    public async findMembersByName(name: string, pageNumber: string, contentType: string, options: ConnectorOperationOptions = {}): Promise<FindMembersByNameResponse> {
         const requestPath = `/api/v1/Customers/Members/FindByName/${name}/${pageNumber}`;
+        const requestHeaders: Record<string, string> = {};
+        if (contentType !== undefined) {
+            requestHeaders["Content-Type"] = String(contentType);
+        }
         const requestUrl = this.resolveUrl(requestPath);
-        const httpResponse = await this.sendWithTracingAsync<FindMembersByNameResponse>("Impexium.findMembersByName", "Find-Members-by-Name", "GET", requestUrl, undefined, options);
+        const httpResponse = await this.sendWithTracingAsync<FindMembersByNameResponse>("Impexium.findMembersByName", "Find-Members-by-Name", "GET", requestUrl, undefined, options, requestHeaders);
 
         return httpResponse.value as FindMembersByNameResponse;
     }
@@ -2807,20 +3137,24 @@ export class ImpexiumClient extends ConnectorClientBase {
      * Get Purchases for an Individual
      * @remarks Get Purchases for an Individual
      */
-    public async getPurchasesForAnIndividual(idOrRecordNumber: string, pageNumber: string, productCode?: string, purchasedSince?: string, productCategoryCode?: string, options: ConnectorOperationOptions = {}): Promise<GetPurchasesForAnIndividualResponse> {
+    public async getPurchasesForAnIndividual(idOrRecordNumber: string, pageNumber: string, contentType: string, options: GetPurchasesForAnIndividualOptions = {}): Promise<GetPurchasesForAnIndividualResponse> {
         const queryParams: string[] = [];
-        if (productCode !== undefined) {
-            queryParams.push(`productCode=${encodeURIComponent(String(productCode))}`);
+        if (options.productCode !== undefined) {
+            queryParams.push(`productCode=${encodeURIComponent(String(options.productCode))}`);
         }
-        if (purchasedSince !== undefined) {
-            queryParams.push(`purchasedSince=${encodeURIComponent(String(purchasedSince))}`);
+        if (options.purchasedSince !== undefined) {
+            queryParams.push(`purchasedSince=${encodeURIComponent(String(options.purchasedSince))}`);
         }
-        if (productCategoryCode !== undefined) {
-            queryParams.push(`productCategoryCode=${encodeURIComponent(String(productCategoryCode))}`);
+        if (options.productCategoryCode !== undefined) {
+            queryParams.push(`productCategoryCode=${encodeURIComponent(String(options.productCategoryCode))}`);
         }
         const requestPath = `/api/v1/Individuals/${idOrRecordNumber}/Purchases/${pageNumber}` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
+        const requestHeaders: Record<string, string> = {};
+        if (contentType !== undefined) {
+            requestHeaders["Content-Type"] = String(contentType);
+        }
         const requestUrl = this.resolveUrl(requestPath);
-        const httpResponse = await this.sendWithTracingAsync<GetPurchasesForAnIndividualResponse>("Impexium.getPurchasesForAnIndividual", "Get-Purchases-for-an-Individual", "GET", requestUrl, undefined, options);
+        const httpResponse = await this.sendWithTracingAsync<GetPurchasesForAnIndividualResponse>("Impexium.getPurchasesForAnIndividual", "Get-Purchases-for-an-Individual", "GET", requestUrl, undefined, options, requestHeaders);
 
         return httpResponse.value as GetPurchasesForAnIndividualResponse;
     }
@@ -2829,10 +3163,14 @@ export class ImpexiumClient extends ConnectorClientBase {
      * Add or Update a List of Custom Fields Per Organization
      * @remarks Add or Update a List of Custom Fields Per Organization
      */
-    public async addOrUpdateAListOfCustomFieldsPerOrganization(input: AddOrUpdateAListOfCustomFieldsPerOrganizationInput, idOrRecordNumber: string, options: ConnectorOperationOptions = {}): Promise<Array<CustomFieldResultData>> {
+    public async addOrUpdateAListOfCustomFieldsPerOrganization(input: AddOrUpdateAListOfCustomFieldsPerOrganizationInput, idOrRecordNumber: string, contentType: string, options: ConnectorOperationOptions = {}): Promise<Array<CustomFieldResultData>> {
         const requestPath = `/api/v1/Organizations/${idOrRecordNumber}/CustomFieldsList`;
+        const requestHeaders: Record<string, string> = {};
+        if (contentType !== undefined) {
+            requestHeaders["Content-Type"] = String(contentType);
+        }
         const requestUrl = this.resolveUrl(requestPath);
-        const httpResponse = await this.sendWithTracingAsync<Array<CustomFieldResultData>>("Impexium.addOrUpdateAListOfCustomFieldsPerOrganization", "Add-or-Update-a-List-of-Custom-Fields-Per-Organization", "POST", requestUrl, input, options);
+        const httpResponse = await this.sendWithTracingAsync<Array<CustomFieldResultData>>("Impexium.addOrUpdateAListOfCustomFieldsPerOrganization", "Add-or-Update-a-List-of-Custom-Fields-Per-Organization", "POST", requestUrl, input, options, requestHeaders);
 
         return httpResponse.value as Array<CustomFieldResultData>;
     }
@@ -2841,20 +3179,28 @@ export class ImpexiumClient extends ConnectorClientBase {
      * Add Nominee
      * @remarks Add Nominee
      */
-    public async addNominee(input: CommitteeNomineeSaveData, code: string, options: ConnectorOperationOptions = {}): Promise<void> {
+    public async addNominee(input: CommitteeNomineeSaveData, code: string, contentType: string, options: ConnectorOperationOptions = {}): Promise<void> {
         const requestPath = `/api/v1/Committees/${code}/Nominations`;
+        const requestHeaders: Record<string, string> = {};
+        if (contentType !== undefined) {
+            requestHeaders["Content-Type"] = String(contentType);
+        }
         const requestUrl = this.resolveUrl(requestPath);
-        await this.sendWithTracingAsync<void>("Impexium.addNominee", "Add-Nominee", "POST", requestUrl, input, options);
+        await this.sendWithTracingAsync<void>("Impexium.addNominee", "Add-Nominee", "POST", requestUrl, input, options, requestHeaders);
     }
 
     /**
      * Get Individual Custom Field Values
      * @remarks Get Individual Custom Field Values
      */
-    public async getIndividualCustomFieldValues(id: string, options: ConnectorOperationOptions = {}): Promise<Array<CustomFieldData>> {
+    public async getIndividualCustomFieldValues(id: string, contentType: string, options: ConnectorOperationOptions = {}): Promise<Array<CustomFieldData>> {
         const requestPath = `/api/v1/Individuals/${id}/CustomFields`;
+        const requestHeaders: Record<string, string> = {};
+        if (contentType !== undefined) {
+            requestHeaders["Content-Type"] = String(contentType);
+        }
         const requestUrl = this.resolveUrl(requestPath);
-        const httpResponse = await this.sendWithTracingAsync<Array<CustomFieldData>>("Impexium.getIndividualCustomFieldValues", "Get-Individual-Custom-Field-Values", "GET", requestUrl, undefined, options);
+        const httpResponse = await this.sendWithTracingAsync<Array<CustomFieldData>>("Impexium.getIndividualCustomFieldValues", "Get-Individual-Custom-Field-Values", "GET", requestUrl, undefined, options, requestHeaders);
 
         return httpResponse.value as Array<CustomFieldData>;
     }
@@ -2863,29 +3209,37 @@ export class ImpexiumClient extends ConnectorClientBase {
      * Update Individual Custom Field Values
      * @remarks Update Individual Custom Field Values.
      */
-    public async updateCustomFieldValue(input: CustomFieldData, id: string, options: ConnectorOperationOptions = {}): Promise<void> {
+    public async updateCustomFieldValue(input: CustomFieldData, id: string, contentType: string, options: ConnectorOperationOptions = {}): Promise<void> {
         const requestPath = `/api/v1/Individuals/${id}/CustomFields`;
+        const requestHeaders: Record<string, string> = {};
+        if (contentType !== undefined) {
+            requestHeaders["Content-Type"] = String(contentType);
+        }
         const requestUrl = this.resolveUrl(requestPath);
-        await this.sendWithTracingAsync<void>("Impexium.updateCustomFieldValue", "Update-custom-field-value", "POST", requestUrl, input, options);
+        await this.sendWithTracingAsync<void>("Impexium.updateCustomFieldValue", "Update-custom-field-value", "POST", requestUrl, input, options, requestHeaders);
     }
 
     /**
      * List All Event Cancellations by Event
      * @remarks List All Event Cancellations by Event
      */
-    public listAllEventCancellationsByEvent(eventCode: string, pageNumber: string, includeDetails?: string, cancelledSince?: string, options: ConnectorOperationOptions = {}): ConnectorPagedAsyncIterableIterator<RegistrantCancellationData> {
+    public listAllEventCancellationsByEvent(eventCode: string, pageNumber: string, contentType: string, options: ListAllEventCancellationsByEventOptions = {}): ConnectorPagedAsyncIterableIterator<RegistrantCancellationData> {
         const queryParams: string[] = [];
-        if (includeDetails !== undefined) {
-            queryParams.push(`includeDetails=${encodeURIComponent(String(includeDetails))}`);
+        if (options.includeDetails !== undefined) {
+            queryParams.push(`includeDetails=${encodeURIComponent(String(options.includeDetails))}`);
         }
-        if (cancelledSince !== undefined) {
-            queryParams.push(`cancelledSince=${encodeURIComponent(String(cancelledSince))}`);
+        if (options.cancelledSince !== undefined) {
+            queryParams.push(`cancelledSince=${encodeURIComponent(String(options.cancelledSince))}`);
         }
         const requestPath = `/api/v1/Events/${eventCode}/Cancellations/${pageNumber}` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
+        const requestHeaders: Record<string, string> = {};
+        if (contentType !== undefined) {
+            requestHeaders["Content-Type"] = String(contentType);
+        }
         return this.createPageable<ListAllEventCancellationsByEventResponse, RegistrantCancellationData>(
             requestPath,
             async (requestUrl) => {
-                const httpResponse = await this.sendWithTracingAsync<ListAllEventCancellationsByEventResponse>("Impexium.listAllEventCancellationsByEvent", "List-All-Event-Cancellations-by-Event", "GET", requestUrl, undefined, options);
+                const httpResponse = await this.sendWithTracingAsync<ListAllEventCancellationsByEventResponse>("Impexium.listAllEventCancellationsByEvent", "List-All-Event-Cancellations-by-Event", "GET", requestUrl, undefined, options, requestHeaders);
 
                 return httpResponse.value as ListAllEventCancellationsByEventResponse;
             },
@@ -2898,20 +3252,24 @@ export class ImpexiumClient extends ConnectorClientBase {
      * Get All Open Orders for an Individual
      * @remarks Get All Open Orders for an Individual
      */
-    public async getAllOpenOrdersForAnIndividual(idOrRecordNumber: string, pageNumber: string, includeLineItems?: string, fromDate?: string, toDate?: string, options: ConnectorOperationOptions = {}): Promise<GetAllOpenOrdersForAnIndividualResponse> {
+    public async getAllOpenOrdersForAnIndividual(idOrRecordNumber: string, pageNumber: string, contentType: string, options: GetAllOpenOrdersForAnIndividualOptions = {}): Promise<GetAllOpenOrdersForAnIndividualResponse> {
         const queryParams: string[] = [];
-        if (includeLineItems !== undefined) {
-            queryParams.push(`includeLineItems=${encodeURIComponent(String(includeLineItems))}`);
+        if (options.includeLineItems !== undefined) {
+            queryParams.push(`includeLineItems=${encodeURIComponent(String(options.includeLineItems))}`);
         }
-        if (fromDate !== undefined) {
-            queryParams.push(`fromDate=${encodeURIComponent(String(fromDate))}`);
+        if (options.fromDate !== undefined) {
+            queryParams.push(`fromDate=${encodeURIComponent(String(options.fromDate))}`);
         }
-        if (toDate !== undefined) {
-            queryParams.push(`toDate=${encodeURIComponent(String(toDate))}`);
+        if (options.toDate !== undefined) {
+            queryParams.push(`toDate=${encodeURIComponent(String(options.toDate))}`);
         }
         const requestPath = `/api/v1/Individuals/${idOrRecordNumber}/Orders/Open/${pageNumber}` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
+        const requestHeaders: Record<string, string> = {};
+        if (contentType !== undefined) {
+            requestHeaders["Content-Type"] = String(contentType);
+        }
         const requestUrl = this.resolveUrl(requestPath);
-        const httpResponse = await this.sendWithTracingAsync<GetAllOpenOrdersForAnIndividualResponse>("Impexium.getAllOpenOrdersForAnIndividual", "Get-All-Open-Orders-for-an-Individual", "GET", requestUrl, undefined, options);
+        const httpResponse = await this.sendWithTracingAsync<GetAllOpenOrdersForAnIndividualResponse>("Impexium.getAllOpenOrdersForAnIndividual", "Get-All-Open-Orders-for-an-Individual", "GET", requestUrl, undefined, options, requestHeaders);
 
         return httpResponse.value as GetAllOpenOrdersForAnIndividualResponse;
     }
@@ -2920,12 +3278,16 @@ export class ImpexiumClient extends ConnectorClientBase {
      * List Completed User Tasks by User ID or Email
      * @remarks List Completed User Tasks by User ID or Email
      */
-    public listCompletedUserTasksByUserIdOrEmail(userIdOrEmail: string, pageNumber: string, options: ConnectorOperationOptions = {}): ConnectorPagedAsyncIterableIterator<UserTaskData> {
+    public listCompletedUserTasksByUserIdOrEmail(userIdOrEmail: string, pageNumber: string, contentType: string, options: ConnectorOperationOptions = {}): ConnectorPagedAsyncIterableIterator<UserTaskData> {
         const requestPath = `/api/v1/tasks/Users/${userIdOrEmail}/Completed/${pageNumber}`;
+        const requestHeaders: Record<string, string> = {};
+        if (contentType !== undefined) {
+            requestHeaders["Content-Type"] = String(contentType);
+        }
         return this.createPageable<ListCompletedUserTasksByUserIdOrEmailResponse, UserTaskData>(
             requestPath,
             async (requestUrl) => {
-                const httpResponse = await this.sendWithTracingAsync<ListCompletedUserTasksByUserIdOrEmailResponse>("Impexium.listCompletedUserTasksByUserIdOrEmail", "List-Completed-User-Tasks-by-User-ID-or-Email", "GET", requestUrl, undefined, options);
+                const httpResponse = await this.sendWithTracingAsync<ListCompletedUserTasksByUserIdOrEmailResponse>("Impexium.listCompletedUserTasksByUserIdOrEmail", "List-Completed-User-Tasks-by-User-ID-or-Email", "GET", requestUrl, undefined, options, requestHeaders);
 
                 return httpResponse.value as ListCompletedUserTasksByUserIdOrEmailResponse;
             },
@@ -2938,12 +3300,16 @@ export class ImpexiumClient extends ConnectorClientBase {
      * List Pending User Tasks by User ID or Email
      * @remarks List Pending User Tasks by User ID or Email
      */
-    public listPendingUserTasksByUserIdOrEmail(userIdOrEmail: string, pageNumber: string, options: ConnectorOperationOptions = {}): ConnectorPagedAsyncIterableIterator<UserTaskData> {
+    public listPendingUserTasksByUserIdOrEmail(userIdOrEmail: string, pageNumber: string, contentType: string, options: ConnectorOperationOptions = {}): ConnectorPagedAsyncIterableIterator<UserTaskData> {
         const requestPath = `/api/v1/tasks/Users/${userIdOrEmail}/Pending/${pageNumber}`;
+        const requestHeaders: Record<string, string> = {};
+        if (contentType !== undefined) {
+            requestHeaders["Content-Type"] = String(contentType);
+        }
         return this.createPageable<ListPendingUserTasksByUserIdOrEmailResponse, UserTaskData>(
             requestPath,
             async (requestUrl) => {
-                const httpResponse = await this.sendWithTracingAsync<ListPendingUserTasksByUserIdOrEmailResponse>("Impexium.listPendingUserTasksByUserIdOrEmail", "List-Pending-User-Tasks-by-User-ID-or-Email", "GET", requestUrl, undefined, options);
+                const httpResponse = await this.sendWithTracingAsync<ListPendingUserTasksByUserIdOrEmailResponse>("Impexium.listPendingUserTasksByUserIdOrEmail", "List-Pending-User-Tasks-by-User-ID-or-Email", "GET", requestUrl, undefined, options, requestHeaders);
 
                 return httpResponse.value as ListPendingUserTasksByUserIdOrEmailResponse;
             },
@@ -2956,30 +3322,42 @@ export class ImpexiumClient extends ConnectorClientBase {
      * Add Note to Sales Opportunity
      * @remarks Add Note to Sales Opportunity
      */
-    public async addNoteToSalesOpportunity(input: BaseNoteData, id: string, options: ConnectorOperationOptions = {}): Promise<void> {
+    public async addNoteToSalesOpportunity(input: BaseNoteData, id: string, contentType: string, options: ConnectorOperationOptions = {}): Promise<void> {
         const requestPath = `/api/v1/Sales/Opportunities/${id}/Notes`;
+        const requestHeaders: Record<string, string> = {};
+        if (contentType !== undefined) {
+            requestHeaders["Content-Type"] = String(contentType);
+        }
         const requestUrl = this.resolveUrl(requestPath);
-        await this.sendWithTracingAsync<void>("Impexium.addNoteToSalesOpportunity", "Add-Note-to-Sales-Opportunity", "POST", requestUrl, input, options);
+        await this.sendWithTracingAsync<void>("Impexium.addNoteToSalesOpportunity", "Add-Note-to-Sales-Opportunity", "POST", requestUrl, input, options, requestHeaders);
     }
 
     /**
      * Add Activity to Sales Opportunity
      * @remarks Add Activity to Sales Opportunity
      */
-    public async addActivityToSalesOpportunity(input: ActivityData, id: string, options: ConnectorOperationOptions = {}): Promise<void> {
+    public async addActivityToSalesOpportunity(input: ActivityData, id: string, contentType: string, options: ConnectorOperationOptions = {}): Promise<void> {
         const requestPath = `/api/v1/Sales/Opportunities/${id}/Activities`;
+        const requestHeaders: Record<string, string> = {};
+        if (contentType !== undefined) {
+            requestHeaders["Content-Type"] = String(contentType);
+        }
         const requestUrl = this.resolveUrl(requestPath);
-        await this.sendWithTracingAsync<void>("Impexium.addActivityToSalesOpportunity", "Add-Activity-to-Sales-Opportunity", "POST", requestUrl, input, options);
+        await this.sendWithTracingAsync<void>("Impexium.addActivityToSalesOpportunity", "Add-Activity-to-Sales-Opportunity", "POST", requestUrl, input, options, requestHeaders);
     }
 
     /**
      * Update Task by Task Number
      * @remarks Update Task by Task Number
      */
-    public async updateTaskByTaskNumber(input: TaskSaveData, taskNumber: string, options: ConnectorOperationOptions = {}): Promise<TaskData> {
+    public async updateTaskByTaskNumber(input: TaskSaveData, taskNumber: string, contentType: string, options: ConnectorOperationOptions = {}): Promise<TaskData> {
         const requestPath = `/api/v1/tasks/${taskNumber}`;
+        const requestHeaders: Record<string, string> = {};
+        if (contentType !== undefined) {
+            requestHeaders["Content-Type"] = String(contentType);
+        }
         const requestUrl = this.resolveUrl(requestPath);
-        const httpResponse = await this.sendWithTracingAsync<TaskData>("Impexium.updateTaskByTaskNumber", "Update-Task-by-Task-Number", "PUT", requestUrl, input, options);
+        const httpResponse = await this.sendWithTracingAsync<TaskData>("Impexium.updateTaskByTaskNumber", "Update-Task-by-Task-Number", "PUT", requestUrl, input, options, requestHeaders);
 
         return httpResponse.value as TaskData;
     }
@@ -2988,12 +3366,16 @@ export class ImpexiumClient extends ConnectorClientBase {
      * List All Countries
      * @remarks List All Countries
      */
-    public listAllCountries(pageNumber: string, options: ConnectorOperationOptions = {}): ConnectorPagedAsyncIterableIterator<CountryData> {
+    public listAllCountries(pageNumber: string, contentType: string, options: ConnectorOperationOptions = {}): ConnectorPagedAsyncIterableIterator<CountryData> {
         const requestPath = `/api/v1/Countries/All/${pageNumber}`;
+        const requestHeaders: Record<string, string> = {};
+        if (contentType !== undefined) {
+            requestHeaders["Content-Type"] = String(contentType);
+        }
         return this.createPageable<ListAllCountriesResponse, CountryData>(
             requestPath,
             async (requestUrl) => {
-                const httpResponse = await this.sendWithTracingAsync<ListAllCountriesResponse>("Impexium.listAllCountries", "List-All-Countries", "GET", requestUrl, undefined, options);
+                const httpResponse = await this.sendWithTracingAsync<ListAllCountriesResponse>("Impexium.listAllCountries", "List-All-Countries", "GET", requestUrl, undefined, options, requestHeaders);
 
                 return httpResponse.value as ListAllCountriesResponse;
             },
@@ -3006,10 +3388,14 @@ export class ImpexiumClient extends ConnectorClientBase {
      * Get All States by Country
      * @remarks Get All States by Country
      */
-    public async getAllStatesByCountry(countryId: string, pageNumber: string, options: ConnectorOperationOptions = {}): Promise<GetAllStatesByCountryResponse> {
+    public async getAllStatesByCountry(countryId: string, pageNumber: string, contentType: string, options: ConnectorOperationOptions = {}): Promise<GetAllStatesByCountryResponse> {
         const requestPath = `/api/v1/Countries/${countryId}/States/All/${pageNumber}`;
+        const requestHeaders: Record<string, string> = {};
+        if (contentType !== undefined) {
+            requestHeaders["Content-Type"] = String(contentType);
+        }
         const requestUrl = this.resolveUrl(requestPath);
-        const httpResponse = await this.sendWithTracingAsync<GetAllStatesByCountryResponse>("Impexium.getAllStatesByCountry", "Get-All-States-by-Country", "GET", requestUrl, undefined, options);
+        const httpResponse = await this.sendWithTracingAsync<GetAllStatesByCountryResponse>("Impexium.getAllStatesByCountry", "Get-All-States-by-Country", "GET", requestUrl, undefined, options, requestHeaders);
 
         return httpResponse.value as GetAllStatesByCountryResponse;
     }
@@ -3018,12 +3404,16 @@ export class ImpexiumClient extends ConnectorClientBase {
      * List All Exhibits
      * @remarks List All Exhibits
      */
-    public listAllExhibits(pageNumber: string, options: ConnectorOperationOptions = {}): ConnectorPagedAsyncIterableIterator<ExhibitData> {
+    public listAllExhibits(pageNumber: string, contentType: string, options: ConnectorOperationOptions = {}): ConnectorPagedAsyncIterableIterator<ExhibitData> {
         const requestPath = `/api/v1/Exhibits/${pageNumber}`;
+        const requestHeaders: Record<string, string> = {};
+        if (contentType !== undefined) {
+            requestHeaders["Content-Type"] = String(contentType);
+        }
         return this.createPageable<ListAllExhibitsResponse, ExhibitData>(
             requestPath,
             async (requestUrl) => {
-                const httpResponse = await this.sendWithTracingAsync<ListAllExhibitsResponse>("Impexium.listAllExhibits", "List-All-Exhibits", "GET", requestUrl, undefined, options);
+                const httpResponse = await this.sendWithTracingAsync<ListAllExhibitsResponse>("Impexium.listAllExhibits", "List-All-Exhibits", "GET", requestUrl, undefined, options, requestHeaders);
 
                 return httpResponse.value as ListAllExhibitsResponse;
             },
@@ -3036,30 +3426,42 @@ export class ImpexiumClient extends ConnectorClientBase {
      * Delete a Category for an Organization
      * @remarks Delete a Category for an Organization
      */
-    public async deleteACategoryForAnOrganization(recordNumber: string, categoryCode: string, options: ConnectorOperationOptions = {}): Promise<void> {
+    public async deleteACategoryForAnOrganization(recordNumber: string, categoryCode: string, contentType: string, options: ConnectorOperationOptions = {}): Promise<void> {
         const requestPath = `/api/v1/Organizations/${recordNumber}/Categories/${categoryCode}`;
+        const requestHeaders: Record<string, string> = {};
+        if (contentType !== undefined) {
+            requestHeaders["Content-Type"] = String(contentType);
+        }
         const requestUrl = this.resolveUrl(requestPath);
-        await this.sendWithTracingAsync<void>("Impexium.deleteACategoryForAnOrganization", "Delete-a-Category-for-an-Organization", "DELETE", requestUrl, undefined, options);
+        await this.sendWithTracingAsync<void>("Impexium.deleteACategoryForAnOrganization", "Delete-a-Category-for-an-Organization", "DELETE", requestUrl, undefined, options, requestHeaders);
     }
 
     /**
      * Add Customer Request
      * @remarks Add Customer Request
      */
-    public async addCustomerRequest(input: RequestSaveData, options: ConnectorOperationOptions = {}): Promise<void> {
+    public async addCustomerRequest(input: RequestSaveData, contentType: string, options: ConnectorOperationOptions = {}): Promise<void> {
         const requestPath = `/api/v1/Requests`;
+        const requestHeaders: Record<string, string> = {};
+        if (contentType !== undefined) {
+            requestHeaders["Content-Type"] = String(contentType);
+        }
         const requestUrl = this.resolveUrl(requestPath);
-        await this.sendWithTracingAsync<void>("Impexium.addCustomerRequest", "Add-Customer-Request", "POST", requestUrl, input, options);
+        await this.sendWithTracingAsync<void>("Impexium.addCustomerRequest", "Add-Customer-Request", "POST", requestUrl, input, options, requestHeaders);
     }
 
     /**
      * Update Customer Request
      * @remarks Update Customer Request
      */
-    public async updateCustomerRequest(input: RequestUpdateData, options: ConnectorOperationOptions = {}): Promise<RequestUpdateData> {
+    public async updateCustomerRequest(input: RequestUpdateData, contentType: string, options: ConnectorOperationOptions = {}): Promise<RequestUpdateData> {
         const requestPath = `/api/v1/Requests`;
+        const requestHeaders: Record<string, string> = {};
+        if (contentType !== undefined) {
+            requestHeaders["Content-Type"] = String(contentType);
+        }
         const requestUrl = this.resolveUrl(requestPath);
-        const httpResponse = await this.sendWithTracingAsync<RequestUpdateData>("Impexium.updateCustomerRequest", "Update-Customer-Request", "PUT", requestUrl, input, options);
+        const httpResponse = await this.sendWithTracingAsync<RequestUpdateData>("Impexium.updateCustomerRequest", "Update-Customer-Request", "PUT", requestUrl, input, options, requestHeaders);
 
         return httpResponse.value as RequestUpdateData;
     }
@@ -3068,22 +3470,30 @@ export class ImpexiumClient extends ConnectorClientBase {
      * Add Categories for an Organization
      * @remarks Add Categories for an Organization
      */
-    public async addCategoriesForAnOrganization(input: AddCategoriesForAnOrganizationInput, recordNumber: string, options: ConnectorOperationOptions = {}): Promise<void> {
+    public async addCategoriesForAnOrganization(input: AddCategoriesForAnOrganizationInput, recordNumber: string, contentType: string, options: ConnectorOperationOptions = {}): Promise<void> {
         const requestPath = `/api/v1/Organizations/${recordNumber}/Categories`;
+        const requestHeaders: Record<string, string> = {};
+        if (contentType !== undefined) {
+            requestHeaders["Content-Type"] = String(contentType);
+        }
         const requestUrl = this.resolveUrl(requestPath);
-        await this.sendWithTracingAsync<void>("Impexium.addCategoriesForAnOrganization", "Add-Categories-for-an-Organization", "POST", requestUrl, input, options);
+        await this.sendWithTracingAsync<void>("Impexium.addCategoriesForAnOrganization", "Add-Categories-for-an-Organization", "POST", requestUrl, input, options, requestHeaders);
     }
 
     /**
      * List of Customer Relationships
      * @remarks List of Customer Relationships
      */
-    public listOfCustomerRelationships(pageNumber: string, options: ConnectorOperationOptions = {}): ConnectorPagedAsyncIterableIterator<RelationshipTypeData> {
+    public listOfCustomerRelationships(pageNumber: string, contentType: string, options: ConnectorOperationOptions = {}): ConnectorPagedAsyncIterableIterator<RelationshipTypeData> {
         const requestPath = `/api/v1/Customers/RelationshipTypes/${pageNumber}`;
+        const requestHeaders: Record<string, string> = {};
+        if (contentType !== undefined) {
+            requestHeaders["Content-Type"] = String(contentType);
+        }
         return this.createPageable<ListOfCustomerRelationshipsResponse, RelationshipTypeData>(
             requestPath,
             async (requestUrl) => {
-                const httpResponse = await this.sendWithTracingAsync<ListOfCustomerRelationshipsResponse>("Impexium.listOfCustomerRelationships", "List-of-Customer-Relationships", "GET", requestUrl, undefined, options);
+                const httpResponse = await this.sendWithTracingAsync<ListOfCustomerRelationshipsResponse>("Impexium.listOfCustomerRelationships", "List-of-Customer-Relationships", "GET", requestUrl, undefined, options, requestHeaders);
 
                 return httpResponse.value as ListOfCustomerRelationshipsResponse;
             },
@@ -3096,12 +3506,16 @@ export class ImpexiumClient extends ConnectorClientBase {
      * List All Open Customer Request
      * @remarks List All Open Customer Request
      */
-    public listAllOpenCustomerRequest(pageNumber: string, options: ConnectorOperationOptions = {}): ConnectorPagedAsyncIterableIterator<RequestData> {
+    public listAllOpenCustomerRequest(pageNumber: string, contentType: string, options: ConnectorOperationOptions = {}): ConnectorPagedAsyncIterableIterator<RequestData> {
         const requestPath = `/api/v1/Requests/Open/${pageNumber}`;
+        const requestHeaders: Record<string, string> = {};
+        if (contentType !== undefined) {
+            requestHeaders["Content-Type"] = String(contentType);
+        }
         return this.createPageable<ListAllOpenCustomerRequestResponse, RequestData>(
             requestPath,
             async (requestUrl) => {
-                const httpResponse = await this.sendWithTracingAsync<ListAllOpenCustomerRequestResponse>("Impexium.listAllOpenCustomerRequest", "List-All-Open-Customer-Request", "GET", requestUrl, undefined, options);
+                const httpResponse = await this.sendWithTracingAsync<ListAllOpenCustomerRequestResponse>("Impexium.listAllOpenCustomerRequest", "List-All-Open-Customer-Request", "GET", requestUrl, undefined, options, requestHeaders);
 
                 return httpResponse.value as ListAllOpenCustomerRequestResponse;
             },
@@ -3114,10 +3528,14 @@ export class ImpexiumClient extends ConnectorClientBase {
      * Get Organization Inactive Memberships
      * @remarks Get Organization Inactive Memberships
      */
-    public async getOrganizationInactiveMemberships(id: string, options: ConnectorOperationOptions = {}): Promise<MembershipData> {
+    public async getOrganizationInactiveMemberships(id: string, contentType: string, options: ConnectorOperationOptions = {}): Promise<MembershipData> {
         const requestPath = `/api/v1/Organizations/${id}/Memberships/Inactive`;
+        const requestHeaders: Record<string, string> = {};
+        if (contentType !== undefined) {
+            requestHeaders["Content-Type"] = String(contentType);
+        }
         const requestUrl = this.resolveUrl(requestPath);
-        const httpResponse = await this.sendWithTracingAsync<MembershipData>("Impexium.getOrganizationInactiveMemberships", "Get-Organization-Inactive-Memberships", "GET", requestUrl, undefined, options);
+        const httpResponse = await this.sendWithTracingAsync<MembershipData>("Impexium.getOrganizationInactiveMemberships", "Get-Organization-Inactive-Memberships", "GET", requestUrl, undefined, options, requestHeaders);
 
         return httpResponse.value as MembershipData;
     }
@@ -3126,20 +3544,28 @@ export class ImpexiumClient extends ConnectorClientBase {
      * Delete Record From Custom Data Table
      * @remarks Delete Record From Custom Data Table
      */
-    public async deleteRecordFromCustomDataTable(tableName: string, id: string, options: ConnectorOperationOptions = {}): Promise<void> {
+    public async deleteRecordFromCustomDataTable(tableName: string, id: string, contentType: string, options: ConnectorOperationOptions = {}): Promise<void> {
         const requestPath = `/api/v1/CustomData/${tableName}/${id}`;
+        const requestHeaders: Record<string, string> = {};
+        if (contentType !== undefined) {
+            requestHeaders["Content-Type"] = String(contentType);
+        }
         const requestUrl = this.resolveUrl(requestPath);
-        await this.sendWithTracingAsync<void>("Impexium.deleteRecordFromCustomDataTable", "Delete-Record-From-Custom-Data-Table", "DELETE", requestUrl, undefined, options);
+        await this.sendWithTracingAsync<void>("Impexium.deleteRecordFromCustomDataTable", "Delete-Record-From-Custom-Data-Table", "DELETE", requestUrl, undefined, options, requestHeaders);
     }
 
     /**
      * Update User Task Progress or Mark as Completed
      * @remarks Update User Task Progress or Mark as Completed
      */
-    public async updateUserTaskProgressOrMarkAsCompleted(input: UserTaskData, userIdOrEmail: string, options: ConnectorOperationOptions = {}): Promise<UserTaskData> {
+    public async updateUserTaskProgressOrMarkAsCompleted(input: UserTaskData, userIdOrEmail: string, contentType: string, options: ConnectorOperationOptions = {}): Promise<UserTaskData> {
         const requestPath = `/api/v1/tasks/Users/${userIdOrEmail}`;
+        const requestHeaders: Record<string, string> = {};
+        if (contentType !== undefined) {
+            requestHeaders["Content-Type"] = String(contentType);
+        }
         const requestUrl = this.resolveUrl(requestPath);
-        const httpResponse = await this.sendWithTracingAsync<UserTaskData>("Impexium.updateUserTaskProgressOrMarkAsCompleted", "Update-User-Task-Progress-or-Mark-as-Completed", "PUT", requestUrl, input, options);
+        const httpResponse = await this.sendWithTracingAsync<UserTaskData>("Impexium.updateUserTaskProgressOrMarkAsCompleted", "Update-User-Task-Progress-or-Mark-as-Completed", "PUT", requestUrl, input, options, requestHeaders);
 
         return httpResponse.value as UserTaskData;
     }
@@ -3148,14 +3574,18 @@ export class ImpexiumClient extends ConnectorClientBase {
      * Find Members (Individuals) by First Name
      * @remarks Find Members (Individuals) by First Name
      */
-    public async findMembersOrIndividualsByFirstName(firstName: string, pageNumber: string, includeEmail?: string, options: ConnectorOperationOptions = {}): Promise<IndividualData> {
+    public async findMembersOrIndividualsByFirstName(firstName: string, pageNumber: string, contentType: string, options: FindMembersOrIndividualsByFirstNameOptions = {}): Promise<IndividualData> {
         const queryParams: string[] = [];
-        if (includeEmail !== undefined) {
-            queryParams.push(`includeEmail=${encodeURIComponent(String(includeEmail))}`);
+        if (options.includeEmail !== undefined) {
+            queryParams.push(`includeEmail=${encodeURIComponent(String(options.includeEmail))}`);
         }
         const requestPath = `/api/v1/Individuals/Members/FindByFirstName/${firstName}/${pageNumber}` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
+        const requestHeaders: Record<string, string> = {};
+        if (contentType !== undefined) {
+            requestHeaders["Content-Type"] = String(contentType);
+        }
         const requestUrl = this.resolveUrl(requestPath);
-        const httpResponse = await this.sendWithTracingAsync<IndividualData>("Impexium.findMembersOrIndividualsByFirstName", "Find-Members-or-Individuals-by-First-Name", "GET", requestUrl, undefined, options);
+        const httpResponse = await this.sendWithTracingAsync<IndividualData>("Impexium.findMembersOrIndividualsByFirstName", "Find-Members-or-Individuals-by-First-Name", "GET", requestUrl, undefined, options, requestHeaders);
 
         return httpResponse.value as IndividualData;
     }
@@ -3164,14 +3594,18 @@ export class ImpexiumClient extends ConnectorClientBase {
      * Find Members (Individuals) by Last Name
      * @remarks Find Members (Individuals) by Last Name
      */
-    public async findMembersOrIndividualsByLastName(lastName: string, pageNumber: string, includeEmail?: string, options: ConnectorOperationOptions = {}): Promise<IndividualData> {
+    public async findMembersOrIndividualsByLastName(lastName: string, pageNumber: string, contentType: string, options: FindMembersOrIndividualsByLastNameOptions = {}): Promise<IndividualData> {
         const queryParams: string[] = [];
-        if (includeEmail !== undefined) {
-            queryParams.push(`includeEmail=${encodeURIComponent(String(includeEmail))}`);
+        if (options.includeEmail !== undefined) {
+            queryParams.push(`includeEmail=${encodeURIComponent(String(options.includeEmail))}`);
         }
         const requestPath = `/api/v1/Individuals/Members/FindByLastName/${lastName}/${pageNumber}` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
+        const requestHeaders: Record<string, string> = {};
+        if (contentType !== undefined) {
+            requestHeaders["Content-Type"] = String(contentType);
+        }
         const requestUrl = this.resolveUrl(requestPath);
-        const httpResponse = await this.sendWithTracingAsync<IndividualData>("Impexium.findMembersOrIndividualsByLastName", "Find-Members-or-Individuals-by-Last-Name", "GET", requestUrl, undefined, options);
+        const httpResponse = await this.sendWithTracingAsync<IndividualData>("Impexium.findMembersOrIndividualsByLastName", "Find-Members-or-Individuals-by-Last-Name", "GET", requestUrl, undefined, options, requestHeaders);
 
         return httpResponse.value as IndividualData;
     }
@@ -3180,50 +3614,70 @@ export class ImpexiumClient extends ConnectorClientBase {
      * Create a new task or Assign Task to a User
      * @remarks Create a new task or Assign Task to a User
      */
-    public async assignTaskToAUser(input: UserTaskData, userIdOrEmail: string, options: ConnectorOperationOptions = {}): Promise<void> {
+    public async assignTaskToAUser(input: UserTaskData, userIdOrEmail: string, contentType: string, options: ConnectorOperationOptions = {}): Promise<void> {
         const requestPath = `/api/v1/tasks/Users/${userIdOrEmail}/Task`;
+        const requestHeaders: Record<string, string> = {};
+        if (contentType !== undefined) {
+            requestHeaders["Content-Type"] = String(contentType);
+        }
         const requestUrl = this.resolveUrl(requestPath);
-        await this.sendWithTracingAsync<void>("Impexium.assignTaskToAUser", "Assign-Task-to-a-User", "POST", requestUrl, input, options);
+        await this.sendWithTracingAsync<void>("Impexium.assignTaskToAUser", "Assign-Task-to-a-User", "POST", requestUrl, input, options, requestHeaders);
     }
 
     /**
      * Delete a Category for an Individual
      * @remarks Delete a Category for an Individual
      */
-    public async deleteACategoryForAnIndividual(recordNumber: string, categoryCode: string, options: ConnectorOperationOptions = {}): Promise<void> {
+    public async deleteACategoryForAnIndividual(recordNumber: string, categoryCode: string, contentType: string, options: ConnectorOperationOptions = {}): Promise<void> {
         const requestPath = `/api/v1/Individuals/${recordNumber}/Categories/${categoryCode}`;
+        const requestHeaders: Record<string, string> = {};
+        if (contentType !== undefined) {
+            requestHeaders["Content-Type"] = String(contentType);
+        }
         const requestUrl = this.resolveUrl(requestPath);
-        await this.sendWithTracingAsync<void>("Impexium.deleteACategoryForAnIndividual", "Delete-a-Category-for-an-Individual", "DELETE", requestUrl, undefined, options);
+        await this.sendWithTracingAsync<void>("Impexium.deleteACategoryForAnIndividual", "Delete-a-Category-for-an-Individual", "DELETE", requestUrl, undefined, options, requestHeaders);
     }
 
     /**
      * Add Notification to Individual
      * @remarks Add Notification to Individual
      */
-    public async addNotificationToIndividual(input: NotificationData, id: string, options: ConnectorOperationOptions = {}): Promise<void> {
+    public async addNotificationToIndividual(input: NotificationData, id: string, contentType: string, options: ConnectorOperationOptions = {}): Promise<void> {
         const requestPath = `/api/v1/Individuals/${id}/Notifications`;
+        const requestHeaders: Record<string, string> = {};
+        if (contentType !== undefined) {
+            requestHeaders["Content-Type"] = String(contentType);
+        }
         const requestUrl = this.resolveUrl(requestPath);
-        await this.sendWithTracingAsync<void>("Impexium.addNotificationToIndividual", "Add-Notification-to-Individual", "POST", requestUrl, input, options);
+        await this.sendWithTracingAsync<void>("Impexium.addNotificationToIndividual", "Add-Notification-to-Individual", "POST", requestUrl, input, options, requestHeaders);
     }
 
     /**
      * Add Categories for an Individual
      * @remarks Add Categories for an Individual
      */
-    public async addCategoriesForAnIndividual(input: AddCategoriesForAnIndividualInput, recordNumber: string, options: ConnectorOperationOptions = {}): Promise<void> {
+    public async addCategoriesForAnIndividual(input: AddCategoriesForAnIndividualInput, recordNumber: string, contentType: string, options: ConnectorOperationOptions = {}): Promise<void> {
         const requestPath = `/api/v1/Individuals/${recordNumber}/Categories`;
+        const requestHeaders: Record<string, string> = {};
+        if (contentType !== undefined) {
+            requestHeaders["Content-Type"] = String(contentType);
+        }
         const requestUrl = this.resolveUrl(requestPath);
-        await this.sendWithTracingAsync<void>("Impexium.addCategoriesForAnIndividual", "Add-Categories-for-an-Individual", "POST", requestUrl, input, options);
+        await this.sendWithTracingAsync<void>("Impexium.addCategoriesForAnIndividual", "Add-Categories-for-an-Individual", "POST", requestUrl, input, options, requestHeaders);
     }
 
     /**
      * Add a New Task
      * @remarks Add a New Task
      */
-    public async addANewTask(input: TaskSaveData, options: ConnectorOperationOptions = {}): Promise<TaskData> {
+    public async addANewTask(input: TaskSaveData, contentType: string, options: ConnectorOperationOptions = {}): Promise<TaskData> {
         const requestPath = `/api/v1/tasks`;
+        const requestHeaders: Record<string, string> = {};
+        if (contentType !== undefined) {
+            requestHeaders["Content-Type"] = String(contentType);
+        }
         const requestUrl = this.resolveUrl(requestPath);
-        const httpResponse = await this.sendWithTracingAsync<TaskData>("Impexium.addANewTask", "Add-a-New-Task", "POST", requestUrl, input, options);
+        const httpResponse = await this.sendWithTracingAsync<TaskData>("Impexium.addANewTask", "Add-a-New-Task", "POST", requestUrl, input, options, requestHeaders);
 
         return httpResponse.value as TaskData;
     }
@@ -3232,70 +3686,74 @@ export class ImpexiumClient extends ConnectorClientBase {
      * List of All Organization Members
      * @remarks List of All Organization Members
      */
-    public listOfAllOrganizationMembers(pageNumber: string, zipCode?: string, radius?: string, stateAbbreviation?: string, congressionalDistrict?: string, membershipTypeCode?: string, membershipTypeCategory?: string, city?: string, name?: string, tag?: string, latitude?: string, longitude?: string, domain?: string, includeMembership?: string, includeAddress?: string, includePhone?: string, includeEmail?: string, includeCustomFields?: string, expiringFrom?: string, expiringTo?: string, options: ConnectorOperationOptions = {}): ConnectorPagedAsyncIterableIterator<OrganizationData> {
+    public listOfAllOrganizationMembers(pageNumber: string, contentType: string, options: ListOfAllOrganizationMembersOptions = {}): ConnectorPagedAsyncIterableIterator<OrganizationData> {
         const queryParams: string[] = [];
-        if (zipCode !== undefined) {
-            queryParams.push(`zipCode=${encodeURIComponent(String(zipCode))}`);
+        if (options.zipCode !== undefined) {
+            queryParams.push(`zipCode=${encodeURIComponent(String(options.zipCode))}`);
         }
-        if (radius !== undefined) {
-            queryParams.push(`Radius=${encodeURIComponent(String(radius))}`);
+        if (options.radius !== undefined) {
+            queryParams.push(`Radius=${encodeURIComponent(String(options.radius))}`);
         }
-        if (stateAbbreviation !== undefined) {
-            queryParams.push(`stateAbbreviation=${encodeURIComponent(String(stateAbbreviation))}`);
+        if (options.stateAbbreviation !== undefined) {
+            queryParams.push(`stateAbbreviation=${encodeURIComponent(String(options.stateAbbreviation))}`);
         }
-        if (congressionalDistrict !== undefined) {
-            queryParams.push(`congressionalDistrict=${encodeURIComponent(String(congressionalDistrict))}`);
+        if (options.congressionalDistrict !== undefined) {
+            queryParams.push(`congressionalDistrict=${encodeURIComponent(String(options.congressionalDistrict))}`);
         }
-        if (membershipTypeCode !== undefined) {
-            queryParams.push(`membershipTypeCode=${encodeURIComponent(String(membershipTypeCode))}`);
+        if (options.membershipTypeCode !== undefined) {
+            queryParams.push(`membershipTypeCode=${encodeURIComponent(String(options.membershipTypeCode))}`);
         }
-        if (membershipTypeCategory !== undefined) {
-            queryParams.push(`membershipTypeCategory=${encodeURIComponent(String(membershipTypeCategory))}`);
+        if (options.membershipTypeCategory !== undefined) {
+            queryParams.push(`membershipTypeCategory=${encodeURIComponent(String(options.membershipTypeCategory))}`);
         }
-        if (city !== undefined) {
-            queryParams.push(`City=${encodeURIComponent(String(city))}`);
+        if (options.city !== undefined) {
+            queryParams.push(`City=${encodeURIComponent(String(options.city))}`);
         }
-        if (name !== undefined) {
-            queryParams.push(`Name=${encodeURIComponent(String(name))}`);
+        if (options.name !== undefined) {
+            queryParams.push(`Name=${encodeURIComponent(String(options.name))}`);
         }
-        if (tag !== undefined) {
-            queryParams.push(`Tag=${encodeURIComponent(String(tag))}`);
+        if (options.tag !== undefined) {
+            queryParams.push(`Tag=${encodeURIComponent(String(options.tag))}`);
         }
-        if (latitude !== undefined) {
-            queryParams.push(`Latitude=${encodeURIComponent(String(latitude))}`);
+        if (options.latitude !== undefined) {
+            queryParams.push(`Latitude=${encodeURIComponent(String(options.latitude))}`);
         }
-        if (longitude !== undefined) {
-            queryParams.push(`Longitude=${encodeURIComponent(String(longitude))}`);
+        if (options.longitude !== undefined) {
+            queryParams.push(`Longitude=${encodeURIComponent(String(options.longitude))}`);
         }
-        if (domain !== undefined) {
-            queryParams.push(`Domain=${encodeURIComponent(String(domain))}`);
+        if (options.domain !== undefined) {
+            queryParams.push(`Domain=${encodeURIComponent(String(options.domain))}`);
         }
-        if (includeMembership !== undefined) {
-            queryParams.push(`includeMembership=${encodeURIComponent(String(includeMembership))}`);
+        if (options.includeMembership !== undefined) {
+            queryParams.push(`includeMembership=${encodeURIComponent(String(options.includeMembership))}`);
         }
-        if (includeAddress !== undefined) {
-            queryParams.push(`includeAddress=${encodeURIComponent(String(includeAddress))}`);
+        if (options.includeAddress !== undefined) {
+            queryParams.push(`includeAddress=${encodeURIComponent(String(options.includeAddress))}`);
         }
-        if (includePhone !== undefined) {
-            queryParams.push(`includePhone=${encodeURIComponent(String(includePhone))}`);
+        if (options.includePhone !== undefined) {
+            queryParams.push(`includePhone=${encodeURIComponent(String(options.includePhone))}`);
         }
-        if (includeEmail !== undefined) {
-            queryParams.push(`includeEmail=${encodeURIComponent(String(includeEmail))}`);
+        if (options.includeEmail !== undefined) {
+            queryParams.push(`includeEmail=${encodeURIComponent(String(options.includeEmail))}`);
         }
-        if (includeCustomFields !== undefined) {
-            queryParams.push(`includeCustomFields=${encodeURIComponent(String(includeCustomFields))}`);
+        if (options.includeCustomFields !== undefined) {
+            queryParams.push(`includeCustomFields=${encodeURIComponent(String(options.includeCustomFields))}`);
         }
-        if (expiringFrom !== undefined) {
-            queryParams.push(`expiringFrom=${encodeURIComponent(String(expiringFrom))}`);
+        if (options.expiringFrom !== undefined) {
+            queryParams.push(`expiringFrom=${encodeURIComponent(String(options.expiringFrom))}`);
         }
-        if (expiringTo !== undefined) {
-            queryParams.push(`expiringTo=${encodeURIComponent(String(expiringTo))}`);
+        if (options.expiringTo !== undefined) {
+            queryParams.push(`expiringTo=${encodeURIComponent(String(options.expiringTo))}`);
         }
         const requestPath = `/api/v1/Organizations/Members/All/${pageNumber}` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
+        const requestHeaders: Record<string, string> = {};
+        if (contentType !== undefined) {
+            requestHeaders["Content-Type"] = String(contentType);
+        }
         return this.createPageable<ListOfAllOrganizationMembersResponse, OrganizationData>(
             requestPath,
             async (requestUrl) => {
-                const httpResponse = await this.sendWithTracingAsync<ListOfAllOrganizationMembersResponse>("Impexium.listOfAllOrganizationMembers", "List-of-All-Organization-Members", "GET", requestUrl, undefined, options);
+                const httpResponse = await this.sendWithTracingAsync<ListOfAllOrganizationMembersResponse>("Impexium.listOfAllOrganizationMembers", "List-of-All-Organization-Members", "GET", requestUrl, undefined, options, requestHeaders);
 
                 return httpResponse.value as ListOfAllOrganizationMembersResponse;
             },
@@ -3308,58 +3766,62 @@ export class ImpexiumClient extends ConnectorClientBase {
      * List of All Individual Members
      * @remarks List of All Individual Members
      */
-    public listOfAllIndividualMembers(pageNumber: string, zipCode?: string, radius?: string, membershipTypeCode?: string, membershipTypeCategory?: string, tag?: string, includeMembership?: string, includeAddress?: string, includePhone?: string, includeEmail?: string, includeLink?: string, includeCustomFields?: string, includeCategories?: string, includeMembershipRenewalUrl?: string, expiringFrom?: string, expiringTo?: string, options: ConnectorOperationOptions = {}): ConnectorPagedAsyncIterableIterator<IndividualData> {
+    public listOfAllIndividualMembers(pageNumber: string, contentType: string, options: ListOfAllIndividualMembersOptions = {}): ConnectorPagedAsyncIterableIterator<IndividualData> {
         const queryParams: string[] = [];
-        if (zipCode !== undefined) {
-            queryParams.push(`zipCode=${encodeURIComponent(String(zipCode))}`);
+        if (options.zipCode !== undefined) {
+            queryParams.push(`zipCode=${encodeURIComponent(String(options.zipCode))}`);
         }
-        if (radius !== undefined) {
-            queryParams.push(`Radius=${encodeURIComponent(String(radius))}`);
+        if (options.radius !== undefined) {
+            queryParams.push(`Radius=${encodeURIComponent(String(options.radius))}`);
         }
-        if (membershipTypeCode !== undefined) {
-            queryParams.push(`membershipTypeCode=${encodeURIComponent(String(membershipTypeCode))}`);
+        if (options.membershipTypeCode !== undefined) {
+            queryParams.push(`membershipTypeCode=${encodeURIComponent(String(options.membershipTypeCode))}`);
         }
-        if (membershipTypeCategory !== undefined) {
-            queryParams.push(`membershipTypeCategory=${encodeURIComponent(String(membershipTypeCategory))}`);
+        if (options.membershipTypeCategory !== undefined) {
+            queryParams.push(`membershipTypeCategory=${encodeURIComponent(String(options.membershipTypeCategory))}`);
         }
-        if (tag !== undefined) {
-            queryParams.push(`Tag=${encodeURIComponent(String(tag))}`);
+        if (options.tag !== undefined) {
+            queryParams.push(`Tag=${encodeURIComponent(String(options.tag))}`);
         }
-        if (includeMembership !== undefined) {
-            queryParams.push(`includeMembership=${encodeURIComponent(String(includeMembership))}`);
+        if (options.includeMembership !== undefined) {
+            queryParams.push(`includeMembership=${encodeURIComponent(String(options.includeMembership))}`);
         }
-        if (includeAddress !== undefined) {
-            queryParams.push(`includeAddress=${encodeURIComponent(String(includeAddress))}`);
+        if (options.includeAddress !== undefined) {
+            queryParams.push(`includeAddress=${encodeURIComponent(String(options.includeAddress))}`);
         }
-        if (includePhone !== undefined) {
-            queryParams.push(`includePhone=${encodeURIComponent(String(includePhone))}`);
+        if (options.includePhone !== undefined) {
+            queryParams.push(`includePhone=${encodeURIComponent(String(options.includePhone))}`);
         }
-        if (includeEmail !== undefined) {
-            queryParams.push(`includeEmail=${encodeURIComponent(String(includeEmail))}`);
+        if (options.includeEmail !== undefined) {
+            queryParams.push(`includeEmail=${encodeURIComponent(String(options.includeEmail))}`);
         }
-        if (includeLink !== undefined) {
-            queryParams.push(`includeLink=${encodeURIComponent(String(includeLink))}`);
+        if (options.includeLink !== undefined) {
+            queryParams.push(`includeLink=${encodeURIComponent(String(options.includeLink))}`);
         }
-        if (includeCustomFields !== undefined) {
-            queryParams.push(`includeCustomFields=${encodeURIComponent(String(includeCustomFields))}`);
+        if (options.includeCustomFields !== undefined) {
+            queryParams.push(`includeCustomFields=${encodeURIComponent(String(options.includeCustomFields))}`);
         }
-        if (includeCategories !== undefined) {
-            queryParams.push(`includeCategories=${encodeURIComponent(String(includeCategories))}`);
+        if (options.includeCategories !== undefined) {
+            queryParams.push(`includeCategories=${encodeURIComponent(String(options.includeCategories))}`);
         }
-        if (includeMembershipRenewalUrl !== undefined) {
-            queryParams.push(`includeMembershipRenewalUrl=${encodeURIComponent(String(includeMembershipRenewalUrl))}`);
+        if (options.includeMembershipRenewalUrl !== undefined) {
+            queryParams.push(`includeMembershipRenewalUrl=${encodeURIComponent(String(options.includeMembershipRenewalUrl))}`);
         }
-        if (expiringFrom !== undefined) {
-            queryParams.push(`expiringFrom=${encodeURIComponent(String(expiringFrom))}`);
+        if (options.expiringFrom !== undefined) {
+            queryParams.push(`expiringFrom=${encodeURIComponent(String(options.expiringFrom))}`);
         }
-        if (expiringTo !== undefined) {
-            queryParams.push(`expiringTo=${encodeURIComponent(String(expiringTo))}`);
+        if (options.expiringTo !== undefined) {
+            queryParams.push(`expiringTo=${encodeURIComponent(String(options.expiringTo))}`);
         }
         const requestPath = `/api/v1/Individuals/Members/All/${pageNumber}` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
+        const requestHeaders: Record<string, string> = {};
+        if (contentType !== undefined) {
+            requestHeaders["Content-Type"] = String(contentType);
+        }
         return this.createPageable<ListOfAllIndividualMembersResponse, IndividualData>(
             requestPath,
             async (requestUrl) => {
-                const httpResponse = await this.sendWithTracingAsync<ListOfAllIndividualMembersResponse>("Impexium.listOfAllIndividualMembers", "List-of-All-Individual-Members", "GET", requestUrl, undefined, options);
+                const httpResponse = await this.sendWithTracingAsync<ListOfAllIndividualMembersResponse>("Impexium.listOfAllIndividualMembers", "List-of-All-Individual-Members", "GET", requestUrl, undefined, options, requestHeaders);
 
                 return httpResponse.value as ListOfAllIndividualMembersResponse;
             },
@@ -3372,10 +3834,14 @@ export class ImpexiumClient extends ConnectorClientBase {
      * Get List of Active Certifications for an Organization
      * @remarks Get List of Active Certifications for an Organization
      */
-    public async getListOfActiveCertificationsForAnOrganization(idOrRecordNumber: string, pageNumber: string, options: ConnectorOperationOptions = {}): Promise<GetListOfActiveCertificationsForAnOrganizationResponse> {
+    public async getListOfActiveCertificationsForAnOrganization(idOrRecordNumber: string, pageNumber: string, contentType: string, options: ConnectorOperationOptions = {}): Promise<GetListOfActiveCertificationsForAnOrganizationResponse> {
         const requestPath = `/api/v1/Organizations/${idOrRecordNumber}/Certifications/${pageNumber}`;
+        const requestHeaders: Record<string, string> = {};
+        if (contentType !== undefined) {
+            requestHeaders["Content-Type"] = String(contentType);
+        }
         const requestUrl = this.resolveUrl(requestPath);
-        const httpResponse = await this.sendWithTracingAsync<GetListOfActiveCertificationsForAnOrganizationResponse>("Impexium.getListOfActiveCertificationsForAnOrganization", "Get-List-of-Active-Certifications-for-an-Organization", "GET", requestUrl, undefined, options);
+        const httpResponse = await this.sendWithTracingAsync<GetListOfActiveCertificationsForAnOrganizationResponse>("Impexium.getListOfActiveCertificationsForAnOrganization", "Get-List-of-Active-Certifications-for-an-Organization", "GET", requestUrl, undefined, options, requestHeaders);
 
         return httpResponse.value as GetListOfActiveCertificationsForAnOrganizationResponse;
     }
@@ -3384,10 +3850,14 @@ export class ImpexiumClient extends ConnectorClientBase {
      * Get List of Active Certifications for an Individual
      * @remarks Get List of Active Certifications for an Individual
      */
-    public async getListOfActiveCertificationsForAnIndividual(idOrRecordNumber: string, pageNumber: string, options: ConnectorOperationOptions = {}): Promise<GetListOfActiveCertificationsForAnIndividualResponse> {
+    public async getListOfActiveCertificationsForAnIndividual(idOrRecordNumber: string, pageNumber: string, contentType: string, options: ConnectorOperationOptions = {}): Promise<GetListOfActiveCertificationsForAnIndividualResponse> {
         const requestPath = `/api/v1/Individuals/${idOrRecordNumber}/Certifications/${pageNumber}`;
+        const requestHeaders: Record<string, string> = {};
+        if (contentType !== undefined) {
+            requestHeaders["Content-Type"] = String(contentType);
+        }
         const requestUrl = this.resolveUrl(requestPath);
-        const httpResponse = await this.sendWithTracingAsync<GetListOfActiveCertificationsForAnIndividualResponse>("Impexium.getListOfActiveCertificationsForAnIndividual", "Get-List-of-Active-Certifications-for-an-Individual", "GET", requestUrl, undefined, options);
+        const httpResponse = await this.sendWithTracingAsync<GetListOfActiveCertificationsForAnIndividualResponse>("Impexium.getListOfActiveCertificationsForAnIndividual", "Get-List-of-Active-Certifications-for-an-Individual", "GET", requestUrl, undefined, options, requestHeaders);
 
         return httpResponse.value as GetListOfActiveCertificationsForAnIndividualResponse;
     }
@@ -3396,10 +3866,14 @@ export class ImpexiumClient extends ConnectorClientBase {
      * Get Individual Inactive Memberships
      * @remarks Get Individual Inactive Memberships
      */
-    public async getIndividualInactiveMemberships(id: string, options: ConnectorOperationOptions = {}): Promise<MembershipData> {
+    public async getIndividualInactiveMemberships(id: string, contentType: string, options: ConnectorOperationOptions = {}): Promise<MembershipData> {
         const requestPath = `/api/v1/Individuals/${id}/Memberships/Inactive`;
+        const requestHeaders: Record<string, string> = {};
+        if (contentType !== undefined) {
+            requestHeaders["Content-Type"] = String(contentType);
+        }
         const requestUrl = this.resolveUrl(requestPath);
-        const httpResponse = await this.sendWithTracingAsync<MembershipData>("Impexium.getIndividualInactiveMemberships", "Get-Individual-Inactive-Memberships", "GET", requestUrl, undefined, options);
+        const httpResponse = await this.sendWithTracingAsync<MembershipData>("Impexium.getIndividualInactiveMemberships", "Get-Individual-Inactive-Memberships", "GET", requestUrl, undefined, options, requestHeaders);
 
         return httpResponse.value as MembershipData;
     }
@@ -3408,34 +3882,46 @@ export class ImpexiumClient extends ConnectorClientBase {
      * Add Activity to Organization
      * @remarks Add Activity to Organization
      */
-    public async addActivityToOrganization(input: ActivityData, id: string, options: ConnectorOperationOptions = {}): Promise<void> {
+    public async addActivityToOrganization(input: ActivityData, id: string, contentType: string, options: ConnectorOperationOptions = {}): Promise<void> {
         const requestPath = `/api/v1/Organizations/${id}/Activities`;
+        const requestHeaders: Record<string, string> = {};
+        if (contentType !== undefined) {
+            requestHeaders["Content-Type"] = String(contentType);
+        }
         const requestUrl = this.resolveUrl(requestPath);
-        await this.sendWithTracingAsync<void>("Impexium.addActivityToOrganization", "Add-Activity-to-Organization", "POST", requestUrl, input, options);
+        await this.sendWithTracingAsync<void>("Impexium.addActivityToOrganization", "Add-Activity-to-Organization", "POST", requestUrl, input, options, requestHeaders);
     }
 
     /**
      * Register an Individual for a Free Session
      * @remarks Register an Individual for a Free Session
      */
-    public async registerAnIndividualForAFreeSession(input: RegisterAnIndividualForAFreeSessionInput, eventCode: string, customerIdOrRecordNumber: string, registrationNumber?: string, options: ConnectorOperationOptions = {}): Promise<void> {
+    public async registerAnIndividualForAFreeSession(input: RegisterAnIndividualForAFreeSessionInput, eventCode: string, customerIdOrRecordNumber: string, contentType: string, options: RegisterAnIndividualForAFreeSessionOptions = {}): Promise<void> {
         const queryParams: string[] = [];
-        if (registrationNumber !== undefined) {
-            queryParams.push(`registrationNumber=${encodeURIComponent(String(registrationNumber))}`);
+        if (options.registrationNumber !== undefined) {
+            queryParams.push(`registrationNumber=${encodeURIComponent(String(options.registrationNumber))}`);
         }
         const requestPath = `/api/v1/Events/${eventCode}/Sessions/Register/${customerIdOrRecordNumber}` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
+        const requestHeaders: Record<string, string> = {};
+        if (contentType !== undefined) {
+            requestHeaders["Content-Type"] = String(contentType);
+        }
         const requestUrl = this.resolveUrl(requestPath);
-        await this.sendWithTracingAsync<void>("Impexium.registerAnIndividualForAFreeSession", "Register-an-Individual-for-a-Free-Session", "POST", requestUrl, input, options);
+        await this.sendWithTracingAsync<void>("Impexium.registerAnIndividualForAFreeSession", "Register-an-Individual-for-a-Free-Session", "POST", requestUrl, input, options, requestHeaders);
     }
 
     /**
      * Get a List of Licenses
      * @remarks Get a List of Licenses
      */
-    public async getAListOfLicenses(id: string, pageNumber: string, options: ConnectorOperationOptions = {}): Promise<GetAListOfLicensesResponse> {
+    public async getAListOfLicenses(id: string, pageNumber: string, contentType: string, options: ConnectorOperationOptions = {}): Promise<GetAListOfLicensesResponse> {
         const requestPath = `/api/v1/Individuals/${id}/Licenses/${pageNumber}`;
+        const requestHeaders: Record<string, string> = {};
+        if (contentType !== undefined) {
+            requestHeaders["Content-Type"] = String(contentType);
+        }
         const requestUrl = this.resolveUrl(requestPath);
-        const httpResponse = await this.sendWithTracingAsync<GetAListOfLicensesResponse>("Impexium.getAListOfLicenses", "Get-a-List-of-Licenses", "GET", requestUrl, undefined, options);
+        const httpResponse = await this.sendWithTracingAsync<GetAListOfLicensesResponse>("Impexium.getAListOfLicenses", "Get-a-List-of-Licenses", "GET", requestUrl, undefined, options, requestHeaders);
 
         return httpResponse.value as GetAListOfLicensesResponse;
     }
@@ -3444,16 +3930,20 @@ export class ImpexiumClient extends ConnectorClientBase {
      * List All Awards
      * @remarks List All Awards
      */
-    public listAllAwards(pageNumber: string, year?: string, options: ConnectorOperationOptions = {}): ConnectorPagedAsyncIterableIterator<AwardData> {
+    public listAllAwards(pageNumber: string, contentType: string, options: ListAllAwardsOptions = {}): ConnectorPagedAsyncIterableIterator<AwardData> {
         const queryParams: string[] = [];
-        if (year !== undefined) {
-            queryParams.push(`Year=${encodeURIComponent(String(year))}`);
+        if (options.year !== undefined) {
+            queryParams.push(`Year=${encodeURIComponent(String(options.year))}`);
         }
         const requestPath = `/api/v1/Awards/${pageNumber}` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
+        const requestHeaders: Record<string, string> = {};
+        if (contentType !== undefined) {
+            requestHeaders["Content-Type"] = String(contentType);
+        }
         return this.createPageable<ListAllAwardsResponse, AwardData>(
             requestPath,
             async (requestUrl) => {
-                const httpResponse = await this.sendWithTracingAsync<ListAllAwardsResponse>("Impexium.listAllAwards", "List-All-Awards", "GET", requestUrl, undefined, options);
+                const httpResponse = await this.sendWithTracingAsync<ListAllAwardsResponse>("Impexium.listAllAwards", "List-All-Awards", "GET", requestUrl, undefined, options, requestHeaders);
 
                 return httpResponse.value as ListAllAwardsResponse;
             },
@@ -3466,14 +3956,18 @@ export class ImpexiumClient extends ConnectorClientBase {
      * Find Members (Individuals) by Name
      * @remarks Find Members (Individuals) by Name
      */
-    public async findMembersOrIndividualsByName(name: string, pageNumber: string, includeEmail?: string, options: ConnectorOperationOptions = {}): Promise<FindMembersOrIndividualsByNameResponse> {
+    public async findMembersOrIndividualsByName(name: string, pageNumber: string, contentType: string, options: FindMembersOrIndividualsByNameOptions = {}): Promise<FindMembersOrIndividualsByNameResponse> {
         const queryParams: string[] = [];
-        if (includeEmail !== undefined) {
-            queryParams.push(`includeEmail=${encodeURIComponent(String(includeEmail))}`);
+        if (options.includeEmail !== undefined) {
+            queryParams.push(`includeEmail=${encodeURIComponent(String(options.includeEmail))}`);
         }
         const requestPath = `/api/v1/Individuals/Members/FindByName/${name}/${pageNumber}` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
+        const requestHeaders: Record<string, string> = {};
+        if (contentType !== undefined) {
+            requestHeaders["Content-Type"] = String(contentType);
+        }
         const requestUrl = this.resolveUrl(requestPath);
-        const httpResponse = await this.sendWithTracingAsync<FindMembersOrIndividualsByNameResponse>("Impexium.findMembersOrIndividualsByName", "Find-Members-or-Individuals-by-Name", "GET", requestUrl, undefined, options);
+        const httpResponse = await this.sendWithTracingAsync<FindMembersOrIndividualsByNameResponse>("Impexium.findMembersOrIndividualsByName", "Find-Members-or-Individuals-by-Name", "GET", requestUrl, undefined, options, requestHeaders);
 
         return httpResponse.value as FindMembersOrIndividualsByNameResponse;
     }
@@ -3482,10 +3976,14 @@ export class ImpexiumClient extends ConnectorClientBase {
      * Get a List of All Services of an Organization
      * @remarks Get a List of All Services of an Organization
      */
-    public async getAListOfAllServicesOfAnOrganization(id: string, options: ConnectorOperationOptions = {}): Promise<GetAListOfAllServicesOfAnOrganizationResponse> {
+    public async getAListOfAllServicesOfAnOrganization(id: string, contentType: string, options: ConnectorOperationOptions = {}): Promise<GetAListOfAllServicesOfAnOrganizationResponse> {
         const requestPath = `/api/v1/Organizations/${id}/Services`;
+        const requestHeaders: Record<string, string> = {};
+        if (contentType !== undefined) {
+            requestHeaders["Content-Type"] = String(contentType);
+        }
         const requestUrl = this.resolveUrl(requestPath);
-        const httpResponse = await this.sendWithTracingAsync<GetAListOfAllServicesOfAnOrganizationResponse>("Impexium.getAListOfAllServicesOfAnOrganization", "Get-a-List-of-All-Services-of-an-Organization", "GET", requestUrl, undefined, options);
+        const httpResponse = await this.sendWithTracingAsync<GetAListOfAllServicesOfAnOrganizationResponse>("Impexium.getAListOfAllServicesOfAnOrganization", "Get-a-List-of-All-Services-of-an-Organization", "GET", requestUrl, undefined, options, requestHeaders);
 
         return httpResponse.value as GetAListOfAllServicesOfAnOrganizationResponse;
     }
@@ -3494,10 +3992,14 @@ export class ImpexiumClient extends ConnectorClientBase {
      * Add a Service to an Organization
      * @remarks Add a Service to an Organization
      */
-    public async addAServiceToAnOrganization(input: ServiceData, id: string, options: ConnectorOperationOptions = {}): Promise<ServiceData> {
+    public async addAServiceToAnOrganization(input: ServiceData, id: string, contentType: string, options: ConnectorOperationOptions = {}): Promise<ServiceData> {
         const requestPath = `/api/v1/Organizations/${id}/Services`;
+        const requestHeaders: Record<string, string> = {};
+        if (contentType !== undefined) {
+            requestHeaders["Content-Type"] = String(contentType);
+        }
         const requestUrl = this.resolveUrl(requestPath);
-        const httpResponse = await this.sendWithTracingAsync<ServiceData>("Impexium.addAServiceToAnOrganization", "Add-a-Service-to-an-Organization", "POST", requestUrl, input, options);
+        const httpResponse = await this.sendWithTracingAsync<ServiceData>("Impexium.addAServiceToAnOrganization", "Add-a-Service-to-an-Organization", "POST", requestUrl, input, options, requestHeaders);
 
         return httpResponse.value as ServiceData;
     }
@@ -3506,10 +4008,14 @@ export class ImpexiumClient extends ConnectorClientBase {
      * Update Phone for an Individual
      * @remarks Update Phone for an Individual
      */
-    public async updatePhoneForAnIndividual(input: PhoneSaveData, idOrRecordNumber: string, id: string, options: ConnectorOperationOptions = {}): Promise<PhoneDataSet> {
+    public async updatePhoneForAnIndividual(input: PhoneSaveData, idOrRecordNumber: string, id: string, contentType: string, options: ConnectorOperationOptions = {}): Promise<PhoneDataSet> {
         const requestPath = `/api/v1/Individuals/${idOrRecordNumber}/Phones/${id}`;
+        const requestHeaders: Record<string, string> = {};
+        if (contentType !== undefined) {
+            requestHeaders["Content-Type"] = String(contentType);
+        }
         const requestUrl = this.resolveUrl(requestPath);
-        const httpResponse = await this.sendWithTracingAsync<PhoneDataSet>("Impexium.updatePhoneForAnIndividual", "Update-Phone-for-an-Individual", "PUT", requestUrl, input, options);
+        const httpResponse = await this.sendWithTracingAsync<PhoneDataSet>("Impexium.updatePhoneForAnIndividual", "Update-Phone-for-an-Individual", "PUT", requestUrl, input, options, requestHeaders);
 
         return httpResponse.value as PhoneDataSet;
     }
@@ -3518,10 +4024,14 @@ export class ImpexiumClient extends ConnectorClientBase {
      * Update Phone for an Organization
      * @remarks Update Phone for an Organization
      */
-    public async updatePhoneForAnOrganization(input: PhoneSaveData, idOrRecordNumber: string, id: string, options: ConnectorOperationOptions = {}): Promise<PhoneDataSet> {
+    public async updatePhoneForAnOrganization(input: PhoneSaveData, idOrRecordNumber: string, id: string, contentType: string, options: ConnectorOperationOptions = {}): Promise<PhoneDataSet> {
         const requestPath = `/api/v1/Organizations/${idOrRecordNumber}/Phones/${id}`;
+        const requestHeaders: Record<string, string> = {};
+        if (contentType !== undefined) {
+            requestHeaders["Content-Type"] = String(contentType);
+        }
         const requestUrl = this.resolveUrl(requestPath);
-        const httpResponse = await this.sendWithTracingAsync<PhoneDataSet>("Impexium.updatePhoneForAnOrganization", "Update-Phone-for-an-Organization", "PUT", requestUrl, input, options);
+        const httpResponse = await this.sendWithTracingAsync<PhoneDataSet>("Impexium.updatePhoneForAnOrganization", "Update-Phone-for-an-Organization", "PUT", requestUrl, input, options, requestHeaders);
 
         return httpResponse.value as PhoneDataSet;
     }
@@ -3530,30 +4040,42 @@ export class ImpexiumClient extends ConnectorClientBase {
      * Delete an Individual Web Link
      * @remarks Delete an Individual Web Link
      */
-    public async deleteAnIndividualWebLink(input: DeleteAnIndividualWebLinkInput, idOrRecordNumber: string, options: ConnectorOperationOptions = {}): Promise<void> {
+    public async deleteAnIndividualWebLink(input: DeleteAnIndividualWebLinkInput, idOrRecordNumber: string, contentType: string, options: ConnectorOperationOptions = {}): Promise<void> {
         const requestPath = `/api/v1/Individuals/${idOrRecordNumber}/Links`;
+        const requestHeaders: Record<string, string> = {};
+        if (contentType !== undefined) {
+            requestHeaders["Content-Type"] = String(contentType);
+        }
         const requestUrl = this.resolveUrl(requestPath);
-        await this.sendWithTracingAsync<void>("Impexium.deleteAnIndividualWebLink", "Delete-an-Individual-Web-Link", "DELETE", requestUrl, input, options);
+        await this.sendWithTracingAsync<void>("Impexium.deleteAnIndividualWebLink", "Delete-an-Individual-Web-Link", "DELETE", requestUrl, input, options, requestHeaders);
     }
 
     /**
      * Add Web Link for Individual
      * @remarks Add Web Link for Individual
      */
-    public async addWebLinkForIndividual(input: AddWebLinkForIndividualInput, idOrRecordNumber: string, options: ConnectorOperationOptions = {}): Promise<void> {
+    public async addWebLinkForIndividual(input: AddWebLinkForIndividualInput, idOrRecordNumber: string, contentType: string, options: ConnectorOperationOptions = {}): Promise<void> {
         const requestPath = `/api/v1/Individuals/${idOrRecordNumber}/Links`;
+        const requestHeaders: Record<string, string> = {};
+        if (contentType !== undefined) {
+            requestHeaders["Content-Type"] = String(contentType);
+        }
         const requestUrl = this.resolveUrl(requestPath);
-        await this.sendWithTracingAsync<void>("Impexium.addWebLinkForIndividual", "Add-Web-Link-for-Individual", "POST", requestUrl, input, options);
+        await this.sendWithTracingAsync<void>("Impexium.addWebLinkForIndividual", "Add-Web-Link-for-Individual", "POST", requestUrl, input, options, requestHeaders);
     }
 
     /**
      * Add Phone to Organization
      * @remarks Add Phone to Organization
      */
-    public async addPhoneToOrganization(input: PhoneSaveData, idOrRecordNumber: string, options: ConnectorOperationOptions = {}): Promise<PhoneDataSet> {
+    public async addPhoneToOrganization(input: PhoneSaveData, idOrRecordNumber: string, contentType: string, options: ConnectorOperationOptions = {}): Promise<PhoneDataSet> {
         const requestPath = `/api/v1/Organizations/${idOrRecordNumber}/Phones`;
+        const requestHeaders: Record<string, string> = {};
+        if (contentType !== undefined) {
+            requestHeaders["Content-Type"] = String(contentType);
+        }
         const requestUrl = this.resolveUrl(requestPath);
-        const httpResponse = await this.sendWithTracingAsync<PhoneDataSet>("Impexium.addPhoneToOrganization", "Add-Phone-to-Organization", "POST", requestUrl, input, options);
+        const httpResponse = await this.sendWithTracingAsync<PhoneDataSet>("Impexium.addPhoneToOrganization", "Add-Phone-to-Organization", "POST", requestUrl, input, options, requestHeaders);
 
         return httpResponse.value as PhoneDataSet;
     }
@@ -3562,14 +4084,18 @@ export class ImpexiumClient extends ConnectorClientBase {
      * Get Nominees by Committee
      * @remarks Get Nominees by Committee
      */
-    public async getNomineesByCommittee(code: string, pageNumber: string, term?: string, options: ConnectorOperationOptions = {}): Promise<GetNomineesByCommitteeResponse> {
+    public async getNomineesByCommittee(code: string, pageNumber: string, contentType: string, options: GetNomineesByCommitteeOptions = {}): Promise<GetNomineesByCommitteeResponse> {
         const queryParams: string[] = [];
-        if (term !== undefined) {
-            queryParams.push(`Term=${encodeURIComponent(String(term))}`);
+        if (options.term !== undefined) {
+            queryParams.push(`Term=${encodeURIComponent(String(options.term))}`);
         }
         const requestPath = `/api/v1/Committees/${code}/Nominations/${pageNumber}` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
+        const requestHeaders: Record<string, string> = {};
+        if (contentType !== undefined) {
+            requestHeaders["Content-Type"] = String(contentType);
+        }
         const requestUrl = this.resolveUrl(requestPath);
-        const httpResponse = await this.sendWithTracingAsync<GetNomineesByCommitteeResponse>("Impexium.getNomineesByCommittee", "Get-Nominees-by-Committee", "GET", requestUrl, undefined, options);
+        const httpResponse = await this.sendWithTracingAsync<GetNomineesByCommitteeResponse>("Impexium.getNomineesByCommittee", "Get-Nominees-by-Committee", "GET", requestUrl, undefined, options, requestHeaders);
 
         return httpResponse.value as GetNomineesByCommitteeResponse;
     }
@@ -3578,10 +4104,14 @@ export class ImpexiumClient extends ConnectorClientBase {
      * Get Organization's Active Subscriptions
      * @remarks Get Organization's Active Subscriptions
      */
-    public async getOrganizationsActiveSubscriptions(id: string, pageNumber: string, options: ConnectorOperationOptions = {}): Promise<GetOrganizationsActiveSubscriptionsResponse> {
+    public async getOrganizationsActiveSubscriptions(id: string, pageNumber: string, contentType: string, options: ConnectorOperationOptions = {}): Promise<GetOrganizationsActiveSubscriptionsResponse> {
         const requestPath = `/api/v1/Organizations/${id}/Subscriptions/${pageNumber}`;
+        const requestHeaders: Record<string, string> = {};
+        if (contentType !== undefined) {
+            requestHeaders["Content-Type"] = String(contentType);
+        }
         const requestUrl = this.resolveUrl(requestPath);
-        const httpResponse = await this.sendWithTracingAsync<GetOrganizationsActiveSubscriptionsResponse>("Impexium.getOrganizationsActiveSubscriptions", "Get-Organizations-Active-Subscriptions", "GET", requestUrl, undefined, options);
+        const httpResponse = await this.sendWithTracingAsync<GetOrganizationsActiveSubscriptionsResponse>("Impexium.getOrganizationsActiveSubscriptions", "Get-Organizations-Active-Subscriptions", "GET", requestUrl, undefined, options, requestHeaders);
 
         return httpResponse.value as GetOrganizationsActiveSubscriptionsResponse;
     }
@@ -3590,47 +4120,63 @@ export class ImpexiumClient extends ConnectorClientBase {
      * Delete an Organization Web Link
      * @remarks Delete an Organization Web Link
      */
-    public async deleteAnOrganizationWebLink(input: DeleteAnOrganizationWebLinkInput, idOrRecordNumber: string, options: ConnectorOperationOptions = {}): Promise<void> {
+    public async deleteAnOrganizationWebLink(input: DeleteAnOrganizationWebLinkInput, idOrRecordNumber: string, contentType: string, options: ConnectorOperationOptions = {}): Promise<void> {
         const requestPath = `/api/v1/Organizations/${idOrRecordNumber}/Links`;
+        const requestHeaders: Record<string, string> = {};
+        if (contentType !== undefined) {
+            requestHeaders["Content-Type"] = String(contentType);
+        }
         const requestUrl = this.resolveUrl(requestPath);
-        await this.sendWithTracingAsync<void>("Impexium.deleteAnOrganizationWebLink", "Delete-an-Organization-Web-Link", "DELETE", requestUrl, input, options);
+        await this.sendWithTracingAsync<void>("Impexium.deleteAnOrganizationWebLink", "Delete-an-Organization-Web-Link", "DELETE", requestUrl, input, options, requestHeaders);
     }
 
     /**
      * Add Web Link for Organization
      * @remarks Add Web Link for Organization
      */
-    public async addWebLinkForOrganization(input: AddWebLinkForOrganizationInput, idOrRecordNumber: string, options: ConnectorOperationOptions = {}): Promise<void> {
+    public async addWebLinkForOrganization(input: AddWebLinkForOrganizationInput, idOrRecordNumber: string, contentType: string, options: ConnectorOperationOptions = {}): Promise<void> {
         const requestPath = `/api/v1/Organizations/${idOrRecordNumber}/Links`;
+        const requestHeaders: Record<string, string> = {};
+        if (contentType !== undefined) {
+            requestHeaders["Content-Type"] = String(contentType);
+        }
         const requestUrl = this.resolveUrl(requestPath);
-        await this.sendWithTracingAsync<void>("Impexium.addWebLinkForOrganization", "Add-Web-Link-for-Organization", "POST", requestUrl, input, options);
+        await this.sendWithTracingAsync<void>("Impexium.addWebLinkForOrganization", "Add-Web-Link-for-Organization", "POST", requestUrl, input, options, requestHeaders);
     }
 
     /**
      * Add Email to Organization
      * @remarks Add Email to Organization
      */
-    public async addEmailToOrganization(input: EmailData, id: string, options: ConnectorOperationOptions = {}): Promise<void> {
+    public async addEmailToOrganization(input: EmailData, id: string, contentType: string, options: ConnectorOperationOptions = {}): Promise<void> {
         const requestPath = `/api/v1/Organizations/${id}/Emails`;
+        const requestHeaders: Record<string, string> = {};
+        if (contentType !== undefined) {
+            requestHeaders["Content-Type"] = String(contentType);
+        }
         const requestUrl = this.resolveUrl(requestPath);
-        await this.sendWithTracingAsync<void>("Impexium.addEmailToOrganization", "Add-Email-to-Organization", "POST", requestUrl, input, options);
+        await this.sendWithTracingAsync<void>("Impexium.addEmailToOrganization", "Add-Email-to-Organization", "POST", requestUrl, input, options, requestHeaders);
     }
 
     /**
      * Get Organization's Relationships
      * @remarks Get Organization's Relationships
      */
-    public async getOrganizationsRelationships(id: string, pageNumber: string, relationshipName?: string, includesDetails?: string, options: ConnectorOperationOptions = {}): Promise<GetOrganizationsRelationshipsResponse> {
+    public async getOrganizationsRelationships(id: string, pageNumber: string, contentType: string, options: GetOrganizationsRelationshipsOptions = {}): Promise<GetOrganizationsRelationshipsResponse> {
         const queryParams: string[] = [];
-        if (relationshipName !== undefined) {
-            queryParams.push(`relationshipName.=${encodeURIComponent(String(relationshipName))}`);
+        if (options.relationshipName !== undefined) {
+            queryParams.push(`relationshipName.=${encodeURIComponent(String(options.relationshipName))}`);
         }
-        if (includesDetails !== undefined) {
-            queryParams.push(`includesDetails=${encodeURIComponent(String(includesDetails))}`);
+        if (options.includesDetails !== undefined) {
+            queryParams.push(`includesDetails=${encodeURIComponent(String(options.includesDetails))}`);
         }
         const requestPath = `/api/v1/Organizations/${id}/Relationships/${pageNumber}` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
+        const requestHeaders: Record<string, string> = {};
+        if (contentType !== undefined) {
+            requestHeaders["Content-Type"] = String(contentType);
+        }
         const requestUrl = this.resolveUrl(requestPath);
-        const httpResponse = await this.sendWithTracingAsync<GetOrganizationsRelationshipsResponse>("Impexium.getOrganizationsRelationships", "Get-Organizations-Relationships", "GET", requestUrl, undefined, options);
+        const httpResponse = await this.sendWithTracingAsync<GetOrganizationsRelationshipsResponse>("Impexium.getOrganizationsRelationships", "Get-Organizations-Relationships", "GET", requestUrl, undefined, options, requestHeaders);
 
         return httpResponse.value as GetOrganizationsRelationshipsResponse;
     }
@@ -3639,10 +4185,14 @@ export class ImpexiumClient extends ConnectorClientBase {
      * Add or Update Address to Organization
      * @remarks Add or Update Address to Organization
      */
-    public async addOrUpdateAddressToOrganization(input: AddressSaveData, idOrRecordNumber: string, options: ConnectorOperationOptions = {}): Promise<AddressSaveData> {
+    public async addOrUpdateAddressToOrganization(input: AddressSaveData, idOrRecordNumber: string, contentType: string, options: ConnectorOperationOptions = {}): Promise<AddressSaveData> {
         const requestPath = `/api/v1/Organizations/${idOrRecordNumber}/Addresses`;
+        const requestHeaders: Record<string, string> = {};
+        if (contentType !== undefined) {
+            requestHeaders["Content-Type"] = String(contentType);
+        }
         const requestUrl = this.resolveUrl(requestPath);
-        const httpResponse = await this.sendWithTracingAsync<AddressSaveData>("Impexium.addOrUpdateAddressToOrganization", "Add-or-Update-Address-to-Organization", "POST", requestUrl, input, options);
+        const httpResponse = await this.sendWithTracingAsync<AddressSaveData>("Impexium.addOrUpdateAddressToOrganization", "Add-or-Update-Address-to-Organization", "POST", requestUrl, input, options, requestHeaders);
 
         return httpResponse.value as AddressSaveData;
     }
@@ -3651,10 +4201,14 @@ export class ImpexiumClient extends ConnectorClientBase {
      * Add or Update a List of Custom Fields Per Individual
      * @remarks Add or Update a List of Custom Fields Per Individual
      */
-    public async addOrUpdateAListOfCustomFieldsPerIndividual(input: AddOrUpdateAListOfCustomFieldsPerIndividualInput, idOrRecordNumber: string, options: ConnectorOperationOptions = {}): Promise<Array<CustomFieldResultData>> {
+    public async addOrUpdateAListOfCustomFieldsPerIndividual(input: AddOrUpdateAListOfCustomFieldsPerIndividualInput, idOrRecordNumber: string, contentType: string, options: ConnectorOperationOptions = {}): Promise<Array<CustomFieldResultData>> {
         const requestPath = `/api/v1/Individuals/${idOrRecordNumber}/CustomFieldsList`;
+        const requestHeaders: Record<string, string> = {};
+        if (contentType !== undefined) {
+            requestHeaders["Content-Type"] = String(contentType);
+        }
         const requestUrl = this.resolveUrl(requestPath);
-        const httpResponse = await this.sendWithTracingAsync<Array<CustomFieldResultData>>("Impexium.addOrUpdateAListOfCustomFieldsPerIndividual", "Add-or-Update-a-List-of-Custom-Fields-Per-Individual", "POST", requestUrl, input, options);
+        const httpResponse = await this.sendWithTracingAsync<Array<CustomFieldResultData>>("Impexium.addOrUpdateAListOfCustomFieldsPerIndividual", "Add-or-Update-a-List-of-Custom-Fields-Per-Individual", "POST", requestUrl, input, options, requestHeaders);
 
         return httpResponse.value as Array<CustomFieldResultData>;
     }
@@ -3663,10 +4217,14 @@ export class ImpexiumClient extends ConnectorClientBase {
      * Get Upcoming Events
      * @remarks Get Upcoming Events
      */
-    public async getUpcomingEvents(pageNumber: string, options: ConnectorOperationOptions = {}): Promise<GetUpcomingEventsResponse> {
+    public async getUpcomingEvents(pageNumber: string, contentType: string, options: ConnectorOperationOptions = {}): Promise<GetUpcomingEventsResponse> {
         const requestPath = `/api/v1/Events/Upcoming/${pageNumber}`;
+        const requestHeaders: Record<string, string> = {};
+        if (contentType !== undefined) {
+            requestHeaders["Content-Type"] = String(contentType);
+        }
         const requestUrl = this.resolveUrl(requestPath);
-        const httpResponse = await this.sendWithTracingAsync<GetUpcomingEventsResponse>("Impexium.getUpcomingEvents", "Get-Upcoming-Events", "GET", requestUrl, undefined, options);
+        const httpResponse = await this.sendWithTracingAsync<GetUpcomingEventsResponse>("Impexium.getUpcomingEvents", "Get-Upcoming-Events", "GET", requestUrl, undefined, options, requestHeaders);
 
         return httpResponse.value as GetUpcomingEventsResponse;
     }
@@ -3675,10 +4233,14 @@ export class ImpexiumClient extends ConnectorClientBase {
      * Add Phone to Individual
      * @remarks Add Phone to Individual
      */
-    public async addPhoneToIndividual(input: PhoneSaveData, idOrRecordNumber: string, options: ConnectorOperationOptions = {}): Promise<PhoneDataSet> {
+    public async addPhoneToIndividual(input: PhoneSaveData, idOrRecordNumber: string, contentType: string, options: ConnectorOperationOptions = {}): Promise<PhoneDataSet> {
         const requestPath = `/api/v1/Individuals/${idOrRecordNumber}/Phones`;
+        const requestHeaders: Record<string, string> = {};
+        if (contentType !== undefined) {
+            requestHeaders["Content-Type"] = String(contentType);
+        }
         const requestUrl = this.resolveUrl(requestPath);
-        const httpResponse = await this.sendWithTracingAsync<PhoneDataSet>("Impexium.addPhoneToIndividual", "Add-Phone-to-Individual", "POST", requestUrl, input, options);
+        const httpResponse = await this.sendWithTracingAsync<PhoneDataSet>("Impexium.addPhoneToIndividual", "Add-Phone-to-Individual", "POST", requestUrl, input, options, requestHeaders);
 
         return httpResponse.value as PhoneDataSet;
     }
@@ -3687,14 +4249,18 @@ export class ImpexiumClient extends ConnectorClientBase {
      * Get Committee Information for an Individual
      * @remarks Get Committee Information for an Individual
      */
-    public async getCommitteeInformationForAnIndividual(id: string, pageNumber: string, includeInactive?: string, options: ConnectorOperationOptions = {}): Promise<GetCommitteeInformationForAnIndividualResponse> {
+    public async getCommitteeInformationForAnIndividual(id: string, pageNumber: string, contentType: string, options: GetCommitteeInformationForAnIndividualOptions = {}): Promise<GetCommitteeInformationForAnIndividualResponse> {
         const queryParams: string[] = [];
-        if (includeInactive !== undefined) {
-            queryParams.push(`includeInactive=${encodeURIComponent(String(includeInactive))}`);
+        if (options.includeInactive !== undefined) {
+            queryParams.push(`includeInactive=${encodeURIComponent(String(options.includeInactive))}`);
         }
         const requestPath = `/api/v1/Individuals/${id}/Committees/${pageNumber}` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
+        const requestHeaders: Record<string, string> = {};
+        if (contentType !== undefined) {
+            requestHeaders["Content-Type"] = String(contentType);
+        }
         const requestUrl = this.resolveUrl(requestPath);
-        const httpResponse = await this.sendWithTracingAsync<GetCommitteeInformationForAnIndividualResponse>("Impexium.getCommitteeInformationForAnIndividual", "Get-Committee-Information-for-an-Individual", "GET", requestUrl, undefined, options);
+        const httpResponse = await this.sendWithTracingAsync<GetCommitteeInformationForAnIndividualResponse>("Impexium.getCommitteeInformationForAnIndividual", "Get-Committee-Information-for-an-Individual", "GET", requestUrl, undefined, options, requestHeaders);
 
         return httpResponse.value as GetCommitteeInformationForAnIndividualResponse;
     }
@@ -3703,10 +4269,14 @@ export class ImpexiumClient extends ConnectorClientBase {
      * Get Organization Custom Field Values
      * @remarks Get Organization Custom Field Values
      */
-    public async getOrganizationCustomFieldValues(id: string, options: ConnectorOperationOptions = {}): Promise<Array<CustomFieldData>> {
+    public async getOrganizationCustomFieldValues(id: string, contentType: string, options: ConnectorOperationOptions = {}): Promise<Array<CustomFieldData>> {
         const requestPath = `/api/v1/Organizations/${id}/CustomFields`;
+        const requestHeaders: Record<string, string> = {};
+        if (contentType !== undefined) {
+            requestHeaders["Content-Type"] = String(contentType);
+        }
         const requestUrl = this.resolveUrl(requestPath);
-        const httpResponse = await this.sendWithTracingAsync<Array<CustomFieldData>>("Impexium.getOrganizationCustomFieldValues", "Get-Organization-Custom-Field-Values", "GET", requestUrl, undefined, options);
+        const httpResponse = await this.sendWithTracingAsync<Array<CustomFieldData>>("Impexium.getOrganizationCustomFieldValues", "Get-Organization-Custom-Field-Values", "GET", requestUrl, undefined, options, requestHeaders);
 
         return httpResponse.value as Array<CustomFieldData>;
     }
@@ -3715,10 +4285,14 @@ export class ImpexiumClient extends ConnectorClientBase {
      * Get Organization Active Memberships
      * @remarks Get Organization Active Memberships
      */
-    public async getOrganizationActiveMemberships(id: string, options: ConnectorOperationOptions = {}): Promise<Array<MembershipData>> {
+    public async getOrganizationActiveMemberships(id: string, contentType: string, options: ConnectorOperationOptions = {}): Promise<Array<MembershipData>> {
         const requestPath = `/api/v1/Organizations/${id}/Memberships/Active`;
+        const requestHeaders: Record<string, string> = {};
+        if (contentType !== undefined) {
+            requestHeaders["Content-Type"] = String(contentType);
+        }
         const requestUrl = this.resolveUrl(requestPath);
-        const httpResponse = await this.sendWithTracingAsync<Array<MembershipData>>("Impexium.getOrganizationActiveMemberships", "Get-Organization-Active-Memberships", "GET", requestUrl, undefined, options);
+        const httpResponse = await this.sendWithTracingAsync<Array<MembershipData>>("Impexium.getOrganizationActiveMemberships", "Get-Organization-Active-Memberships", "GET", requestUrl, undefined, options, requestHeaders);
 
         return httpResponse.value as Array<MembershipData>;
     }
@@ -3727,20 +4301,24 @@ export class ImpexiumClient extends ConnectorClientBase {
      * Get All Events
      * @remarks Get All Events
      */
-    public async getAllEvents(pageNumber: string, code?: string, name?: string, tag?: string, options: ConnectorOperationOptions = {}): Promise<GetAllEventsResponse> {
+    public async getAllEvents(pageNumber: string, contentType: string, options: GetAllEventsOptions = {}): Promise<GetAllEventsResponse> {
         const queryParams: string[] = [];
-        if (code !== undefined) {
-            queryParams.push(`Code=${encodeURIComponent(String(code))}`);
+        if (options.code !== undefined) {
+            queryParams.push(`Code=${encodeURIComponent(String(options.code))}`);
         }
-        if (name !== undefined) {
-            queryParams.push(`Name=${encodeURIComponent(String(name))}`);
+        if (options.name !== undefined) {
+            queryParams.push(`Name=${encodeURIComponent(String(options.name))}`);
         }
-        if (tag !== undefined) {
-            queryParams.push(`Tag=${encodeURIComponent(String(tag))}`);
+        if (options.tag !== undefined) {
+            queryParams.push(`Tag=${encodeURIComponent(String(options.tag))}`);
         }
         const requestPath = `/api/v1/Events/All/${pageNumber}` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
+        const requestHeaders: Record<string, string> = {};
+        if (contentType !== undefined) {
+            requestHeaders["Content-Type"] = String(contentType);
+        }
         const requestUrl = this.resolveUrl(requestPath);
-        const httpResponse = await this.sendWithTracingAsync<GetAllEventsResponse>("Impexium.getAllEvents", "Get-All-Events", "GET", requestUrl, undefined, options);
+        const httpResponse = await this.sendWithTracingAsync<GetAllEventsResponse>("Impexium.getAllEvents", "Get-All-Events", "GET", requestUrl, undefined, options, requestHeaders);
 
         return httpResponse.value as GetAllEventsResponse;
     }
@@ -3749,10 +4327,14 @@ export class ImpexiumClient extends ConnectorClientBase {
      * Get Individual Active Memberships
      * @remarks Get Individual Active Memberships
      */
-    public async getIndividualActiveMemberships(id: string, options: ConnectorOperationOptions = {}): Promise<Array<MembershipData>> {
+    public async getIndividualActiveMemberships(id: string, contentType: string, options: ConnectorOperationOptions = {}): Promise<Array<MembershipData>> {
         const requestPath = `/api/v1/Individuals/${id}/Memberships/Active`;
+        const requestHeaders: Record<string, string> = {};
+        if (contentType !== undefined) {
+            requestHeaders["Content-Type"] = String(contentType);
+        }
         const requestUrl = this.resolveUrl(requestPath);
-        const httpResponse = await this.sendWithTracingAsync<Array<MembershipData>>("Impexium.getIndividualActiveMemberships", "Get-Individual-Active-Memberships", "GET", requestUrl, undefined, options);
+        const httpResponse = await this.sendWithTracingAsync<Array<MembershipData>>("Impexium.getIndividualActiveMemberships", "Get-Individual-Active-Memberships", "GET", requestUrl, undefined, options, requestHeaders);
 
         return httpResponse.value as Array<MembershipData>;
     }
@@ -3761,14 +4343,18 @@ export class ImpexiumClient extends ConnectorClientBase {
      * Get All Event Registrations Information for an Individual
      * @remarks Get All Event Registrations Information for an Individual
      */
-    public async getAllEventRegistrationsInformationForAnIndividual(idOrRecordNumber: string, pageNumber: string, eventCode?: string, options: ConnectorOperationOptions = {}): Promise<GetAllEventRegistrationsInformationForAnIndividualResponse> {
+    public async getAllEventRegistrationsInformationForAnIndividual(idOrRecordNumber: string, pageNumber: string, contentType: string, options: GetAllEventRegistrationsInformationForAnIndividualOptions = {}): Promise<GetAllEventRegistrationsInformationForAnIndividualResponse> {
         const queryParams: string[] = [];
-        if (eventCode !== undefined) {
-            queryParams.push(`eventCode=${encodeURIComponent(String(eventCode))}`);
+        if (options.eventCode !== undefined) {
+            queryParams.push(`eventCode=${encodeURIComponent(String(options.eventCode))}`);
         }
         const requestPath = `/api/v1/Individuals/${idOrRecordNumber}/Registrations/${pageNumber}` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
+        const requestHeaders: Record<string, string> = {};
+        if (contentType !== undefined) {
+            requestHeaders["Content-Type"] = String(contentType);
+        }
         const requestUrl = this.resolveUrl(requestPath);
-        const httpResponse = await this.sendWithTracingAsync<GetAllEventRegistrationsInformationForAnIndividualResponse>("Impexium.getAllEventRegistrationsInformationForAnIndividual", "Get-All-Event-Registrations-Information-for-an-Individual", "GET", requestUrl, undefined, options);
+        const httpResponse = await this.sendWithTracingAsync<GetAllEventRegistrationsInformationForAnIndividualResponse>("Impexium.getAllEventRegistrationsInformationForAnIndividual", "Get-All-Event-Registrations-Information-for-an-Individual", "GET", requestUrl, undefined, options, requestHeaders);
 
         return httpResponse.value as GetAllEventRegistrationsInformationForAnIndividualResponse;
     }
@@ -3777,17 +4363,21 @@ export class ImpexiumClient extends ConnectorClientBase {
      * Get Individual's Relationships
      * @remarks Get Individual's Relationships
      */
-    public async getIndividualsRelationships(id: string, pageNumber: string, relationshipName?: string, includeDetails?: string, options: ConnectorOperationOptions = {}): Promise<GetIndividualsRelationshipsResponse> {
+    public async getIndividualsRelationships(id: string, pageNumber: string, contentType: string, options: GetIndividualsRelationshipsOptions = {}): Promise<GetIndividualsRelationshipsResponse> {
         const queryParams: string[] = [];
-        if (relationshipName !== undefined) {
-            queryParams.push(`relationshipName=${encodeURIComponent(String(relationshipName))}`);
+        if (options.relationshipName !== undefined) {
+            queryParams.push(`relationshipName=${encodeURIComponent(String(options.relationshipName))}`);
         }
-        if (includeDetails !== undefined) {
-            queryParams.push(`includeDetails=${encodeURIComponent(String(includeDetails))}`);
+        if (options.includeDetails !== undefined) {
+            queryParams.push(`includeDetails=${encodeURIComponent(String(options.includeDetails))}`);
         }
         const requestPath = `/api/v1/Individuals/${id}/Relationships/${pageNumber}` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
+        const requestHeaders: Record<string, string> = {};
+        if (contentType !== undefined) {
+            requestHeaders["Content-Type"] = String(contentType);
+        }
         const requestUrl = this.resolveUrl(requestPath);
-        const httpResponse = await this.sendWithTracingAsync<GetIndividualsRelationshipsResponse>("Impexium.getIndividualsRelationships", "Get-Individuals-Relationships", "GET", requestUrl, undefined, options);
+        const httpResponse = await this.sendWithTracingAsync<GetIndividualsRelationshipsResponse>("Impexium.getIndividualsRelationships", "Get-Individuals-Relationships", "GET", requestUrl, undefined, options, requestHeaders);
 
         return httpResponse.value as GetIndividualsRelationshipsResponse;
     }
@@ -3796,34 +4386,46 @@ export class ImpexiumClient extends ConnectorClientBase {
      * Update an Individual Email
      * @remarks Update an Individual Email
      */
-    public async updateAnIndividualEmail(input: UpdateAnIndividualEmailInput, idOrRecordNumber: string, currentEmailAddress: string, options: ConnectorOperationOptions = {}): Promise<void> {
+    public async updateAnIndividualEmail(input: UpdateAnIndividualEmailInput, idOrRecordNumber: string, currentEmailAddress: string, contentType: string, options: ConnectorOperationOptions = {}): Promise<void> {
         const requestPath = `/api/v1/Individuals/${idOrRecordNumber}/Emails/${currentEmailAddress}`;
+        const requestHeaders: Record<string, string> = {};
+        if (contentType !== undefined) {
+            requestHeaders["Content-Type"] = String(contentType);
+        }
         const requestUrl = this.resolveUrl(requestPath);
-        await this.sendWithTracingAsync<void>("Impexium.updateAnIndividualEmail", "Update-an-Individual-Email", "PUT", requestUrl, input, options);
+        await this.sendWithTracingAsync<void>("Impexium.updateAnIndividualEmail", "Update-an-Individual-Email", "PUT", requestUrl, input, options, requestHeaders);
     }
 
     /**
      * Save Relationship for Organization
      * @remarks Save Relationship for Organization
      */
-    public async saveRelationshipForOrganization(input: SaveRelationshipForOrganizationInput, id: string, options: ConnectorOperationOptions = {}): Promise<void> {
+    public async saveRelationshipForOrganization(input: SaveRelationshipForOrganizationInput, id: string, contentType: string, options: ConnectorOperationOptions = {}): Promise<void> {
         const requestPath = `/api/v1/Organizations/${id}/Relationships`;
+        const requestHeaders: Record<string, string> = {};
+        if (contentType !== undefined) {
+            requestHeaders["Content-Type"] = String(contentType);
+        }
         const requestUrl = this.resolveUrl(requestPath);
-        await this.sendWithTracingAsync<void>("Impexium.saveRelationshipForOrganization", "Save-Relationship-for-Organization", "POST", requestUrl, input, options);
+        await this.sendWithTracingAsync<void>("Impexium.saveRelationshipForOrganization", "Save-Relationship-for-Organization", "POST", requestUrl, input, options, requestHeaders);
     }
 
     /**
      * Add Individual
      * @remarks Adds an Individual.
      */
-    public async addIndividual(input: AddIndividualInput, createUser?: string, options: ConnectorOperationOptions = {}): Promise<IndividualData> {
+    public async addIndividual(input: AddIndividualInput, contentType: string, options: AddIndividualOptions = {}): Promise<IndividualData> {
         const queryParams: string[] = [];
-        if (createUser !== undefined) {
-            queryParams.push(`createUser=${encodeURIComponent(String(createUser))}`);
+        if (options.createUser !== undefined) {
+            queryParams.push(`createUser=${encodeURIComponent(String(options.createUser))}`);
         }
         const requestPath = `/api/v1/Individuals` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
+        const requestHeaders: Record<string, string> = {};
+        if (contentType !== undefined) {
+            requestHeaders["Content-Type"] = String(contentType);
+        }
         const requestUrl = this.resolveUrl(requestPath);
-        const httpResponse = await this.sendWithTracingAsync<IndividualData>("Impexium.addIndividual", "Add-Individual", "POST", requestUrl, input, options);
+        const httpResponse = await this.sendWithTracingAsync<IndividualData>("Impexium.addIndividual", "Add-Individual", "POST", requestUrl, input, options, requestHeaders);
 
         return httpResponse.value as IndividualData;
     }
@@ -3832,10 +4434,14 @@ export class ImpexiumClient extends ConnectorClientBase {
      * Add Email to Individual
      * @remarks Add Email to Individual
      */
-    public async addEmailToIndividual(input: AddEmailToIndividualInput, idOrRecordNumber: string, options: ConnectorOperationOptions = {}): Promise<EmailData> {
+    public async addEmailToIndividual(input: AddEmailToIndividualInput, idOrRecordNumber: string, contentType: string, options: ConnectorOperationOptions = {}): Promise<EmailData> {
         const requestPath = `/api/v1/Individuals/${idOrRecordNumber}/Emails`;
+        const requestHeaders: Record<string, string> = {};
+        if (contentType !== undefined) {
+            requestHeaders["Content-Type"] = String(contentType);
+        }
         const requestUrl = this.resolveUrl(requestPath);
-        const httpResponse = await this.sendWithTracingAsync<EmailData>("Impexium.addEmailToIndividual", "Add-Email-to-Individual", "POST", requestUrl, input, options);
+        const httpResponse = await this.sendWithTracingAsync<EmailData>("Impexium.addEmailToIndividual", "Add-Email-to-Individual", "POST", requestUrl, input, options, requestHeaders);
 
         return httpResponse.value as EmailData;
     }
@@ -3844,10 +4450,14 @@ export class ImpexiumClient extends ConnectorClientBase {
      * Add or Update Address to Individual
      * @remarks Add or Update Address to Individual
      */
-    public async addOrUpdateAddressToIndividual(input: AddressSaveData, idOrRecordNumber: string, options: ConnectorOperationOptions = {}): Promise<AddressSaveData> {
+    public async addOrUpdateAddressToIndividual(input: AddressSaveData, idOrRecordNumber: string, contentType: string, options: ConnectorOperationOptions = {}): Promise<AddressSaveData> {
         const requestPath = `/api/v1/Individuals/${idOrRecordNumber}/Addresses`;
+        const requestHeaders: Record<string, string> = {};
+        if (contentType !== undefined) {
+            requestHeaders["Content-Type"] = String(contentType);
+        }
         const requestUrl = this.resolveUrl(requestPath);
-        const httpResponse = await this.sendWithTracingAsync<AddressSaveData>("Impexium.addOrUpdateAddressToIndividual", "Add-or-Update-Address-to-Individual", "POST", requestUrl, input, options);
+        const httpResponse = await this.sendWithTracingAsync<AddressSaveData>("Impexium.addOrUpdateAddressToIndividual", "Add-or-Update-Address-to-Individual", "POST", requestUrl, input, options, requestHeaders);
 
         return httpResponse.value as AddressSaveData;
     }
@@ -3856,14 +4466,18 @@ export class ImpexiumClient extends ConnectorClientBase {
      * Find Members (Individuals) by First Name and Last Name
      * @remarks Find Members (Individuals) by First Name and Last Name
      */
-    public async findMembersOrIndividualsByFirstAndLastName(firstName: string, lastName: string, pageNumber: string, includeEmail?: string, options: ConnectorOperationOptions = {}): Promise<FindMembersOrIndividualsByFirstAndLastNameResponse> {
+    public async findMembersOrIndividualsByFirstAndLastName(firstName: string, lastName: string, pageNumber: string, contentType: string, options: FindMembersOrIndividualsByFirstAndLastNameOptions = {}): Promise<FindMembersOrIndividualsByFirstAndLastNameResponse> {
         const queryParams: string[] = [];
-        if (includeEmail !== undefined) {
-            queryParams.push(`includeEmail=${encodeURIComponent(String(includeEmail))}`);
+        if (options.includeEmail !== undefined) {
+            queryParams.push(`includeEmail=${encodeURIComponent(String(options.includeEmail))}`);
         }
         const requestPath = `/api/v1/Individuals/Members/FindByName/${firstName}/${lastName}/${pageNumber}` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
+        const requestHeaders: Record<string, string> = {};
+        if (contentType !== undefined) {
+            requestHeaders["Content-Type"] = String(contentType);
+        }
         const requestUrl = this.resolveUrl(requestPath);
-        const httpResponse = await this.sendWithTracingAsync<FindMembersOrIndividualsByFirstAndLastNameResponse>("Impexium.findMembersOrIndividualsByFirstAndLastName", "Find-members-or-individuals-by-first-and-last-name", "GET", requestUrl, undefined, options);
+        const httpResponse = await this.sendWithTracingAsync<FindMembersOrIndividualsByFirstAndLastNameResponse>("Impexium.findMembersOrIndividualsByFirstAndLastName", "Find-members-or-individuals-by-first-and-last-name", "GET", requestUrl, undefined, options, requestHeaders);
 
         return httpResponse.value as FindMembersOrIndividualsByFirstAndLastNameResponse;
     }
@@ -3872,41 +4486,53 @@ export class ImpexiumClient extends ConnectorClientBase {
      * Get Committee Members by committee ID or code
      * @remarks Get Committee Members by Committee ID or Code
      */
-    public async getCommitteeMembersByCommitteeIdOrCode(idOrCode: string, pageNumber: string, term?: string, positionCodes?: string, options: ConnectorOperationOptions = {}): Promise<void> {
+    public async getCommitteeMembersByCommitteeIdOrCode(idOrCode: string, pageNumber: string, contentType: string, options: GetCommitteeMembersByCommitteeIdOrCodeOptions = {}): Promise<void> {
         const queryParams: string[] = [];
-        if (term !== undefined) {
-            queryParams.push(`Term=${encodeURIComponent(String(term))}`);
+        if (options.term !== undefined) {
+            queryParams.push(`Term=${encodeURIComponent(String(options.term))}`);
         }
-        if (positionCodes !== undefined) {
-            queryParams.push(`positionCodes=${encodeURIComponent(String(positionCodes))}`);
+        if (options.positionCodes !== undefined) {
+            queryParams.push(`positionCodes=${encodeURIComponent(String(options.positionCodes))}`);
         }
         const requestPath = `/api/v1/Committees/${idOrCode}/Members/${pageNumber}` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
+        const requestHeaders: Record<string, string> = {};
+        if (contentType !== undefined) {
+            requestHeaders["Content-Type"] = String(contentType);
+        }
         const requestUrl = this.resolveUrl(requestPath);
-        await this.sendWithTracingAsync<void>("Impexium.getCommitteeMembersByCommitteeIdOrCode", "Get-Committee-Members-by-committee-ID-or-code", "GET", requestUrl, undefined, options);
+        await this.sendWithTracingAsync<void>("Impexium.getCommitteeMembersByCommitteeIdOrCode", "Get-Committee-Members-by-committee-ID-or-code", "GET", requestUrl, undefined, options, requestHeaders);
     }
 
     /**
      * Add Activity
      * @remarks Add Activity.
      */
-    public async addActivity(input: AddActivityInput, id: string, options: ConnectorOperationOptions = {}): Promise<void> {
+    public async addActivity(input: AddActivityInput, id: string, contentType: string, options: ConnectorOperationOptions = {}): Promise<void> {
         const requestPath = `/api/v1/Individuals/${id}/Activities`;
+        const requestHeaders: Record<string, string> = {};
+        if (contentType !== undefined) {
+            requestHeaders["Content-Type"] = String(contentType);
+        }
         const requestUrl = this.resolveUrl(requestPath);
-        await this.sendWithTracingAsync<void>("Impexium.addActivity", "Add-Activity", "POST", requestUrl, input, options);
+        await this.sendWithTracingAsync<void>("Impexium.addActivity", "Add-Activity", "POST", requestUrl, input, options, requestHeaders);
     }
 
     /**
      * Find Individual by Id or Email or Record Number
      * @remarks Find Individual by Id or Email.
      */
-    public async findIndividualIdOrEmail(idOrRecordNumberOrEmail: string, pageNumber: string, includeDetails?: string, options: ConnectorOperationOptions = {}): Promise<FindIndividualIdOrEmailResponse> {
+    public async findIndividualIdOrEmail(idOrRecordNumberOrEmail: string, pageNumber: string, includeDetails: string, contentType: string, options: ConnectorOperationOptions = {}): Promise<FindIndividualIdOrEmailResponse> {
         const queryParams: string[] = [];
         if (includeDetails !== undefined) {
             queryParams.push(`IncludeDetails=${encodeURIComponent(String(includeDetails))}`);
         }
         const requestPath = `/api/v1/Individuals/Profile/${idOrRecordNumberOrEmail}/${pageNumber}/` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
+        const requestHeaders: Record<string, string> = {};
+        if (contentType !== undefined) {
+            requestHeaders["Content-Type"] = String(contentType);
+        }
         const requestUrl = this.resolveUrl(requestPath);
-        const httpResponse = await this.sendWithTracingAsync<FindIndividualIdOrEmailResponse>("Impexium.findIndividualIdOrEmail", "Find-Individual-IDOrEmail", "GET", requestUrl, undefined, options);
+        const httpResponse = await this.sendWithTracingAsync<FindIndividualIdOrEmailResponse>("Impexium.findIndividualIdOrEmail", "Find-Individual-IDOrEmail", "GET", requestUrl, undefined, options, requestHeaders);
 
         return httpResponse.value as FindIndividualIdOrEmailResponse;
     }
@@ -3915,37 +4541,49 @@ export class ImpexiumClient extends ConnectorClientBase {
      * Add Relationship to Individual
      * @remarks Add Relationship to Individual.
      */
-    public async addRelationshipToIndividual(input: AddRelationshipToIndividualInput, id: string, options: ConnectorOperationOptions = {}): Promise<void> {
+    public async addRelationshipToIndividual(input: AddRelationshipToIndividualInput, id: string, contentType: string, options: ConnectorOperationOptions = {}): Promise<void> {
         const requestPath = `/api/v1/Individuals/${id}/Relationships`;
+        const requestHeaders: Record<string, string> = {};
+        if (contentType !== undefined) {
+            requestHeaders["Content-Type"] = String(contentType);
+        }
         const requestUrl = this.resolveUrl(requestPath);
-        await this.sendWithTracingAsync<void>("Impexium.addRelationshipToIndividual", "Add-relationship-to-individual", "POST", requestUrl, input, options);
+        await this.sendWithTracingAsync<void>("Impexium.addRelationshipToIndividual", "Add-relationship-to-individual", "POST", requestUrl, input, options, requestHeaders);
     }
 
     /**
      * Add Education Credits to Individual
      * @remarks Add a new Education Credit to an Individual.
      */
-    public async addIndividualEducationCredit(input: EducationCreditData, idOrRecordNumber: string, options: ConnectorOperationOptions = {}): Promise<void> {
+    public async addIndividualEducationCredit(input: EducationCreditData, idOrRecordNumber: string, contentType: string, options: ConnectorOperationOptions = {}): Promise<void> {
         const requestPath = `/api/v1/Individuals/${idOrRecordNumber}/EducationCredits`;
+        const requestHeaders: Record<string, string> = {};
+        if (contentType !== undefined) {
+            requestHeaders["Content-Type"] = String(contentType);
+        }
         const requestUrl = this.resolveUrl(requestPath);
-        await this.sendWithTracingAsync<void>("Impexium.addIndividualEducationCredit", "Individual-Add-Education-Credit", "POST", requestUrl, input, options);
+        await this.sendWithTracingAsync<void>("Impexium.addIndividualEducationCredit", "Individual-Add-Education-Credit", "POST", requestUrl, input, options, requestHeaders);
     }
 
     /**
      * Add Note to Individual
      * @remarks Add a Note to an Individual.
      */
-    public async addIndividualNote(input: NoteData, id: string, options: ConnectorOperationOptions = {}): Promise<void> {
+    public async addIndividualNote(input: NoteData, id: string, contentType: string, options: ConnectorOperationOptions = {}): Promise<void> {
         const requestPath = `/api/v1/Individuals/${id}/Notes`;
+        const requestHeaders: Record<string, string> = {};
+        if (contentType !== undefined) {
+            requestHeaders["Content-Type"] = String(contentType);
+        }
         const requestUrl = this.resolveUrl(requestPath);
-        await this.sendWithTracingAsync<void>("Impexium.addIndividualNote", "Individual-AddNote", "POST", requestUrl, input, options);
+        await this.sendWithTracingAsync<void>("Impexium.addIndividualNote", "Individual-AddNote", "POST", requestUrl, input, options, requestHeaders);
     }
 
     /**
      * Lookup Individuals
      * @remarks Lookup Individuals by Name
      */
-    public async individualsLookupByName(pageNumber: string, name?: string, includeOrgAddresses?: string, options: ConnectorOperationOptions = {}): Promise<IndividualsLookupByNameResponse> {
+    public async individualsLookupByName(pageNumber: string, name: string, includeOrgAddresses: string, contentType: string, options: ConnectorOperationOptions = {}): Promise<IndividualsLookupByNameResponse> {
         const queryParams: string[] = [];
         if (name !== undefined) {
             queryParams.push(`name=${encodeURIComponent(String(name))}`);
@@ -3954,8 +4592,12 @@ export class ImpexiumClient extends ConnectorClientBase {
             queryParams.push(`includeOrgAddresses=${encodeURIComponent(String(includeOrgAddresses))}`);
         }
         const requestPath = `/api/v1/Individuals/Lookup/${pageNumber}` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
+        const requestHeaders: Record<string, string> = {};
+        if (contentType !== undefined) {
+            requestHeaders["Content-Type"] = String(contentType);
+        }
         const requestUrl = this.resolveUrl(requestPath);
-        const httpResponse = await this.sendWithTracingAsync<IndividualsLookupByNameResponse>("Impexium.individualsLookupByName", "Individuals-LookupByName", "GET", requestUrl, undefined, options);
+        const httpResponse = await this.sendWithTracingAsync<IndividualsLookupByNameResponse>("Impexium.individualsLookupByName", "Individuals-LookupByName", "GET", requestUrl, undefined, options, requestHeaders);
 
         return httpResponse.value as IndividualsLookupByNameResponse;
     }
@@ -3964,10 +4606,14 @@ export class ImpexiumClient extends ConnectorClientBase {
      * Add Individual to Committee
      * @remarks Add Individual to Committee.
      */
-    public async addToCommittee(input: CommitteeMemberCreateData, code: string, options: ConnectorOperationOptions = {}): Promise<AddToCommitteeResponse> {
+    public async addToCommittee(input: CommitteeMemberCreateData, code: string, contentType: string, options: ConnectorOperationOptions = {}): Promise<AddToCommitteeResponse> {
         const requestPath = `/api/v1/Committees/${code}/Members`;
+        const requestHeaders: Record<string, string> = {};
+        if (contentType !== undefined) {
+            requestHeaders["Content-Type"] = String(contentType);
+        }
         const requestUrl = this.resolveUrl(requestPath);
-        const httpResponse = await this.sendWithTracingAsync<AddToCommitteeResponse>("Impexium.addToCommittee", "Add-To-Committee", "POST", requestUrl, input, options);
+        const httpResponse = await this.sendWithTracingAsync<AddToCommitteeResponse>("Impexium.addToCommittee", "Add-To-Committee", "POST", requestUrl, input, options, requestHeaders);
 
         return httpResponse.value as AddToCommitteeResponse;
     }
@@ -3976,20 +4622,28 @@ export class ImpexiumClient extends ConnectorClientBase {
      * Update Committee Member
      * @remarks Update Committee Member.
      */
-    public async updateCommitteeMember(input: CommitteeMemberUpdateData, code: string, memberRecordNumber: string, currentPositionCode: string, options: ConnectorOperationOptions = {}): Promise<void> {
+    public async updateCommitteeMember(input: CommitteeMemberUpdateData, code: string, memberRecordNumber: string, currentPositionCode: string, contentType: string, options: ConnectorOperationOptions = {}): Promise<void> {
         const requestPath = `/api/v1/Committees/${code}/Members/${memberRecordNumber}/${currentPositionCode}`;
+        const requestHeaders: Record<string, string> = {};
+        if (contentType !== undefined) {
+            requestHeaders["Content-Type"] = String(contentType);
+        }
         const requestUrl = this.resolveUrl(requestPath);
-        await this.sendWithTracingAsync<void>("Impexium.updateCommitteeMember", "Update-Committee-Member", "PUT", requestUrl, input, options);
+        await this.sendWithTracingAsync<void>("Impexium.updateCommitteeMember", "Update-Committee-Member", "PUT", requestUrl, input, options, requestHeaders);
     }
 
     /**
      * Add Organization
      * @remarks Add Organization.
      */
-    public async addOrganization(input: AddOrganizationInput, options: ConnectorOperationOptions = {}): Promise<OrganizationData> {
+    public async addOrganization(input: AddOrganizationInput, contentType: string, options: ConnectorOperationOptions = {}): Promise<OrganizationData> {
         const requestPath = `/api/v1/Organizations`;
+        const requestHeaders: Record<string, string> = {};
+        if (contentType !== undefined) {
+            requestHeaders["Content-Type"] = String(contentType);
+        }
         const requestUrl = this.resolveUrl(requestPath);
-        const httpResponse = await this.sendWithTracingAsync<OrganizationData>("Impexium.addOrganization", "Add-Organization", "POST", requestUrl, input, options);
+        const httpResponse = await this.sendWithTracingAsync<OrganizationData>("Impexium.addOrganization", "Add-Organization", "POST", requestUrl, input, options, requestHeaders);
 
         return httpResponse.value as OrganizationData;
     }
@@ -3998,10 +4652,14 @@ export class ImpexiumClient extends ConnectorClientBase {
      * Update Organization
      * @remarks Update Organization.
      */
-    public async updateOrganization(input: UpdateOrganizationInput, id: string, options: ConnectorOperationOptions = {}): Promise<OrganizationData> {
+    public async updateOrganization(input: UpdateOrganizationInput, id: string, contentType: string, options: ConnectorOperationOptions = {}): Promise<OrganizationData> {
         const requestPath = `/api/v1/Organizations/${id}`;
+        const requestHeaders: Record<string, string> = {};
+        if (contentType !== undefined) {
+            requestHeaders["Content-Type"] = String(contentType);
+        }
         const requestUrl = this.resolveUrl(requestPath);
-        const httpResponse = await this.sendWithTracingAsync<OrganizationData>("Impexium.updateOrganization", "Update-Organization", "PUT", requestUrl, input, options);
+        const httpResponse = await this.sendWithTracingAsync<OrganizationData>("Impexium.updateOrganization", "Update-Organization", "PUT", requestUrl, input, options, requestHeaders);
 
         return httpResponse.value as OrganizationData;
     }
@@ -4010,14 +4668,18 @@ export class ImpexiumClient extends ConnectorClientBase {
      * Find Organization by Id or Record Number
      * @remarks Get organization's profile information by ID or Record Number
      */
-    public async getOrganizationProfile(idOrRecordnumber: string, pageNumber: string, includeDescription?: string, options: ConnectorOperationOptions = {}): Promise<OrganizationData> {
+    public async getOrganizationProfile(idOrRecordnumber: string, pageNumber: string, includeDescription: string, contentType: string, options: ConnectorOperationOptions = {}): Promise<OrganizationData> {
         const queryParams: string[] = [];
         if (includeDescription !== undefined) {
             queryParams.push(`includeDescription=${encodeURIComponent(String(includeDescription))}`);
         }
         const requestPath = `/api/v1/Organizations/Profile/${idOrRecordnumber}/${pageNumber}` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
+        const requestHeaders: Record<string, string> = {};
+        if (contentType !== undefined) {
+            requestHeaders["Content-Type"] = String(contentType);
+        }
         const requestUrl = this.resolveUrl(requestPath);
-        const httpResponse = await this.sendWithTracingAsync<OrganizationData>("Impexium.getOrganizationProfile", "Organization-Get-Profile", "GET", requestUrl, undefined, options);
+        const httpResponse = await this.sendWithTracingAsync<OrganizationData>("Impexium.getOrganizationProfile", "Organization-Get-Profile", "GET", requestUrl, undefined, options, requestHeaders);
 
         return httpResponse.value as OrganizationData;
     }
@@ -4026,17 +4688,21 @@ export class ImpexiumClient extends ConnectorClientBase {
      * Add Note to Organization
      * @remarks Add a Note to an Organization.
      */
-    public async addOrganizationNote(input: NoteData, id: string, options: ConnectorOperationOptions = {}): Promise<void> {
+    public async addOrganizationNote(input: NoteData, id: string, contentType: string, options: ConnectorOperationOptions = {}): Promise<void> {
         const requestPath = `/api/v1/Organizations/${id}/Notes`;
+        const requestHeaders: Record<string, string> = {};
+        if (contentType !== undefined) {
+            requestHeaders["Content-Type"] = String(contentType);
+        }
         const requestUrl = this.resolveUrl(requestPath);
-        await this.sendWithTracingAsync<void>("Impexium.addOrganizationNote", "Organization-AddNote", "POST", requestUrl, input, options);
+        await this.sendWithTracingAsync<void>("Impexium.addOrganizationNote", "Organization-AddNote", "POST", requestUrl, input, options, requestHeaders);
     }
 
     /**
      * Lookup Organizations
      * @remarks Lookup Organizations by Name or Acronym
      */
-    public async organizationLookupByName(pageNumber: string, name?: string, includeAddresses?: string, options: ConnectorOperationOptions = {}): Promise<OrganizationLookupByNameResponse> {
+    public async organizationLookupByName(pageNumber: string, name: string, includeAddresses: string, contentType: string, options: ConnectorOperationOptions = {}): Promise<OrganizationLookupByNameResponse> {
         const queryParams: string[] = [];
         if (name !== undefined) {
             queryParams.push(`name=${encodeURIComponent(String(name))}`);
@@ -4045,8 +4711,12 @@ export class ImpexiumClient extends ConnectorClientBase {
             queryParams.push(`includeAddresses=${encodeURIComponent(String(includeAddresses))}`);
         }
         const requestPath = `/api/v1/Organizations/Lookup/${pageNumber}` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
+        const requestHeaders: Record<string, string> = {};
+        if (contentType !== undefined) {
+            requestHeaders["Content-Type"] = String(contentType);
+        }
         const requestUrl = this.resolveUrl(requestPath);
-        const httpResponse = await this.sendWithTracingAsync<OrganizationLookupByNameResponse>("Impexium.organizationLookupByName", "Organization-LookupByName", "GET", requestUrl, undefined, options);
+        const httpResponse = await this.sendWithTracingAsync<OrganizationLookupByNameResponse>("Impexium.organizationLookupByName", "Organization-LookupByName", "GET", requestUrl, undefined, options, requestHeaders);
 
         return httpResponse.value as OrganizationLookupByNameResponse;
     }
@@ -4055,23 +4725,27 @@ export class ImpexiumClient extends ConnectorClientBase {
      * Get All Committees
      * @remarks Get All Committees
      */
-    public async getAllCommittees(pageNumber: string, code?: string, name?: string, term?: string, activeOnly?: string, options: ConnectorOperationOptions = {}): Promise<GetAllCommitteesResponse> {
+    public async getAllCommittees(pageNumber: string, contentType: string, options: GetAllCommitteesOptions = {}): Promise<GetAllCommitteesResponse> {
         const queryParams: string[] = [];
-        if (code !== undefined) {
-            queryParams.push(`Code=${encodeURIComponent(String(code))}`);
+        if (options.code !== undefined) {
+            queryParams.push(`Code=${encodeURIComponent(String(options.code))}`);
         }
-        if (name !== undefined) {
-            queryParams.push(`Name=${encodeURIComponent(String(name))}`);
+        if (options.name !== undefined) {
+            queryParams.push(`Name=${encodeURIComponent(String(options.name))}`);
         }
-        if (term !== undefined) {
-            queryParams.push(`Term=${encodeURIComponent(String(term))}`);
+        if (options.term !== undefined) {
+            queryParams.push(`Term=${encodeURIComponent(String(options.term))}`);
         }
-        if (activeOnly !== undefined) {
-            queryParams.push(`activeOnly=${encodeURIComponent(String(activeOnly))}`);
+        if (options.activeOnly !== undefined) {
+            queryParams.push(`activeOnly=${encodeURIComponent(String(options.activeOnly))}`);
         }
         const requestPath = `/api/v1/Committees/${pageNumber}` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
+        const requestHeaders: Record<string, string> = {};
+        if (contentType !== undefined) {
+            requestHeaders["Content-Type"] = String(contentType);
+        }
         const requestUrl = this.resolveUrl(requestPath);
-        const httpResponse = await this.sendWithTracingAsync<GetAllCommitteesResponse>("Impexium.getAllCommittees", "Get-All-Committees", "GET", requestUrl, undefined, options);
+        const httpResponse = await this.sendWithTracingAsync<GetAllCommitteesResponse>("Impexium.getAllCommittees", "Get-All-Committees", "GET", requestUrl, undefined, options, requestHeaders);
 
         return httpResponse.value as GetAllCommitteesResponse;
     }
@@ -4080,10 +4754,14 @@ export class ImpexiumClient extends ConnectorClientBase {
      * Get Positions by Committee
      * @remarks Get Positions by Committee
      */
-    public async getPositionsByCommittee(code: string, options: ConnectorOperationOptions = {}): Promise<GetPositionsByCommitteeResponse> {
+    public async getPositionsByCommittee(code: string, contentType: string, options: ConnectorOperationOptions = {}): Promise<GetPositionsByCommitteeResponse> {
         const requestPath = `/api/v1/Committees/${code}/Positions`;
+        const requestHeaders: Record<string, string> = {};
+        if (contentType !== undefined) {
+            requestHeaders["Content-Type"] = String(contentType);
+        }
         const requestUrl = this.resolveUrl(requestPath);
-        const httpResponse = await this.sendWithTracingAsync<GetPositionsByCommitteeResponse>("Impexium.getPositionsByCommittee", "Get-Positions-by-Committee", "GET", requestUrl, undefined, options);
+        const httpResponse = await this.sendWithTracingAsync<GetPositionsByCommitteeResponse>("Impexium.getPositionsByCommittee", "Get-Positions-by-Committee", "GET", requestUrl, undefined, options, requestHeaders);
 
         return httpResponse.value as GetPositionsByCommitteeResponse;
     }
@@ -4092,10 +4770,14 @@ export class ImpexiumClient extends ConnectorClientBase {
      * Get Sub-Committees
      * @remarks Get Sub-Committees
      */
-    public async getSubCommittees(code: string, pageNumber: string, options: ConnectorOperationOptions = {}): Promise<GetSubCommitteesResponse> {
+    public async getSubCommittees(code: string, pageNumber: string, contentType: string, options: ConnectorOperationOptions = {}): Promise<GetSubCommitteesResponse> {
         const requestPath = `/api/v1/Committees/${code}/subcommittees/${pageNumber}`;
+        const requestHeaders: Record<string, string> = {};
+        if (contentType !== undefined) {
+            requestHeaders["Content-Type"] = String(contentType);
+        }
         const requestUrl = this.resolveUrl(requestPath);
-        const httpResponse = await this.sendWithTracingAsync<GetSubCommitteesResponse>("Impexium.getSubCommittees", "Get-Sub-Committees", "GET", requestUrl, undefined, options);
+        const httpResponse = await this.sendWithTracingAsync<GetSubCommitteesResponse>("Impexium.getSubCommittees", "Get-Sub-Committees", "GET", requestUrl, undefined, options, requestHeaders);
 
         return httpResponse.value as GetSubCommitteesResponse;
     }
@@ -4104,10 +4786,14 @@ export class ImpexiumClient extends ConnectorClientBase {
      * Get Individual's Active Subscriptions
      * @remarks Get Individual's Active Subscriptions
      */
-    public async getIndividualsActiveSubscriptions(id: string, pageNumber: string, options: ConnectorOperationOptions = {}): Promise<GetIndividualsActiveSubscriptionsResponse> {
+    public async getIndividualsActiveSubscriptions(id: string, pageNumber: string, contentType: string, options: ConnectorOperationOptions = {}): Promise<GetIndividualsActiveSubscriptionsResponse> {
         const requestPath = `/api/v1/Individuals/${id}/Subscriptions/All/${pageNumber}`;
+        const requestHeaders: Record<string, string> = {};
+        if (contentType !== undefined) {
+            requestHeaders["Content-Type"] = String(contentType);
+        }
         const requestUrl = this.resolveUrl(requestPath);
-        const httpResponse = await this.sendWithTracingAsync<GetIndividualsActiveSubscriptionsResponse>("Impexium.getIndividualsActiveSubscriptions", "Get-Individuals-Active-Subscriptions", "GET", requestUrl, undefined, options);
+        const httpResponse = await this.sendWithTracingAsync<GetIndividualsActiveSubscriptionsResponse>("Impexium.getIndividualsActiveSubscriptions", "Get-Individuals-Active-Subscriptions", "GET", requestUrl, undefined, options, requestHeaders);
 
         return httpResponse.value as GetIndividualsActiveSubscriptionsResponse;
     }
@@ -4116,22 +4802,26 @@ export class ImpexiumClient extends ConnectorClientBase {
      * List all Individuals
      * @remarks List all Individuals
      */
-    public listAllIndividuals(pageNumber: string, name?: string, includeDetails?: string, oldId?: string, options: ConnectorOperationOptions = {}): ConnectorPagedAsyncIterableIterator<IndividualData> {
+    public listAllIndividuals(pageNumber: string, contentType: string, options: ListAllIndividualsOptions = {}): ConnectorPagedAsyncIterableIterator<IndividualData> {
         const queryParams: string[] = [];
-        if (name !== undefined) {
-            queryParams.push(`Name=${encodeURIComponent(String(name))}`);
+        if (options.name !== undefined) {
+            queryParams.push(`Name=${encodeURIComponent(String(options.name))}`);
         }
-        if (includeDetails !== undefined) {
-            queryParams.push(`includeDetails=${encodeURIComponent(String(includeDetails))}`);
+        if (options.includeDetails !== undefined) {
+            queryParams.push(`includeDetails=${encodeURIComponent(String(options.includeDetails))}`);
         }
-        if (oldId !== undefined) {
-            queryParams.push(`oldID=${encodeURIComponent(String(oldId))}`);
+        if (options.oldId !== undefined) {
+            queryParams.push(`oldID=${encodeURIComponent(String(options.oldId))}`);
         }
         const requestPath = `/api/v1/Individuals/${pageNumber}` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
+        const requestHeaders: Record<string, string> = {};
+        if (contentType !== undefined) {
+            requestHeaders["Content-Type"] = String(contentType);
+        }
         return this.createPageable<ListAllIndividualsResponse, IndividualData>(
             requestPath,
             async (requestUrl) => {
-                const httpResponse = await this.sendWithTracingAsync<ListAllIndividualsResponse>("Impexium.listAllIndividuals", "List-all-Individuals", "GET", requestUrl, undefined, options);
+                const httpResponse = await this.sendWithTracingAsync<ListAllIndividualsResponse>("Impexium.listAllIndividuals", "List-all-Individuals", "GET", requestUrl, undefined, options, requestHeaders);
 
                 return httpResponse.value as ListAllIndividualsResponse;
             },
@@ -4144,7 +4834,7 @@ export class ImpexiumClient extends ConnectorClientBase {
      * Find Customer by Phone Number
      * @remarks Find Customer by Phone Number.
      */
-    public async findCustomerPhone(pageNumber: string, phoneNumber?: string, includeAddress?: string, includePhone?: string, includeEmail?: string, options: ConnectorOperationOptions = {}): Promise<FindCustomerPhoneResponse> {
+    public async findCustomerPhone(pageNumber: string, phoneNumber: string, includeAddress: string, includePhone: string, includeEmail: string, contentType: string, options: ConnectorOperationOptions = {}): Promise<FindCustomerPhoneResponse> {
         const queryParams: string[] = [];
         if (phoneNumber !== undefined) {
             queryParams.push(`phoneNumber=${encodeURIComponent(String(phoneNumber))}`);
@@ -4159,8 +4849,12 @@ export class ImpexiumClient extends ConnectorClientBase {
             queryParams.push(`includeEmail=${encodeURIComponent(String(includeEmail))}`);
         }
         const requestPath = `/api/v1/Customers/${pageNumber}` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
+        const requestHeaders: Record<string, string> = {};
+        if (contentType !== undefined) {
+            requestHeaders["Content-Type"] = String(contentType);
+        }
         const requestUrl = this.resolveUrl(requestPath);
-        const httpResponse = await this.sendWithTracingAsync<FindCustomerPhoneResponse>("Impexium.findCustomerPhone", "Find-Customer-Phone", "GET", requestUrl, undefined, options);
+        const httpResponse = await this.sendWithTracingAsync<FindCustomerPhoneResponse>("Impexium.findCustomerPhone", "Find-Customer-Phone", "GET", requestUrl, undefined, options, requestHeaders);
 
         return httpResponse.value as FindCustomerPhoneResponse;
     }
@@ -4169,62 +4863,94 @@ export class ImpexiumClient extends ConnectorClientBase {
      * Mark Registrant as Attended
      * @remarks Mark the Registrant as Attended for the specified Events.
      */
-    public async markRegistrantAttended(input: MarkRegistrantAttendedInput, recordNumber: string, options: ConnectorOperationOptions = {}): Promise<void> {
+    public async markRegistrantAttended(input: MarkRegistrantAttendedInput, recordNumber: string, contentType: string, options: ConnectorOperationOptions = {}): Promise<void> {
         const requestPath = `/api/v1/Events/Registrants/${recordNumber}/Attended`;
+        const requestHeaders: Record<string, string> = {};
+        if (contentType !== undefined) {
+            requestHeaders["Content-Type"] = String(contentType);
+        }
         const requestUrl = this.resolveUrl(requestPath);
-        await this.sendWithTracingAsync<void>("Impexium.markRegistrantAttended", "Mark-Registrant-Attended", "PUT", requestUrl, input, options);
+        await this.sendWithTracingAsync<void>("Impexium.markRegistrantAttended", "Mark-Registrant-Attended", "PUT", requestUrl, input, options, requestHeaders);
     }
 
     /**
      * Add Award Nomination
      * @remarks Add a new Award Nomination.
      */
-    public async addAwardsAwardNomination(input: AwardNominationData, id: string, options: ConnectorOperationOptions = {}): Promise<void> {
+    public async addAwardsAwardNomination(input: AwardNominationData, id: string, contentType: string, options: ConnectorOperationOptions = {}): Promise<void> {
         const requestPath = `/api/v1/Awards/${id}/Nominations`;
+        const requestHeaders: Record<string, string> = {};
+        if (contentType !== undefined) {
+            requestHeaders["Content-Type"] = String(contentType);
+        }
         const requestUrl = this.resolveUrl(requestPath);
-        await this.sendWithTracingAsync<void>("Impexium.addAwardsAwardNomination", "Awards-AddAwardNomination", "POST", requestUrl, input, options);
+        await this.sendWithTracingAsync<void>("Impexium.addAwardsAwardNomination", "Awards-AddAwardNomination", "POST", requestUrl, input, options, requestHeaders);
     }
 
     /**
      * Update Award Nomination
      * @remarks Update an existing Award Nomination.
      */
-    public async updateAwardAwardNomination(input: UpdateAwardNominationData, id: string, nomineeRecordNumber: string, options: ConnectorOperationOptions = {}): Promise<void> {
+    public async updateAwardAwardNomination(input: UpdateAwardNominationData, id: string, nomineeRecordNumber: string, contentType: string, options: ConnectorOperationOptions = {}): Promise<void> {
         const requestPath = `/api/v1/Awards/${id}/Nominations/${nomineeRecordNumber}`;
+        const requestHeaders: Record<string, string> = {};
+        if (contentType !== undefined) {
+            requestHeaders["Content-Type"] = String(contentType);
+        }
         const requestUrl = this.resolveUrl(requestPath);
-        await this.sendWithTracingAsync<void>("Impexium.updateAwardAwardNomination", "Awards-UpdateAwardNomination", "PUT", requestUrl, input, options);
+        await this.sendWithTracingAsync<void>("Impexium.updateAwardAwardNomination", "Awards-UpdateAwardNomination", "PUT", requestUrl, input, options, requestHeaders);
     }
 
     /**
      * List Award Individual Recipients
      * @remarks List all Individuals that are Award Recipients.
      */
-    public async getAwardIndividualAwardRecipients(pageNumber: string, id: string, includeDetails?: string, options: ConnectorOperationOptions = {}): Promise<AwardsGetIndividualAwardRecipientsResponse> {
+    public getAwardIndividualAwardRecipients(pageNumber: string, id: string, includeDetails: string, contentType: string, options: ConnectorOperationOptions = {}): ConnectorPagedAsyncIterableIterator<AwardRecipientIndividualData> {
         const queryParams: string[] = [];
         if (includeDetails !== undefined) {
             queryParams.push(`includeDetails=${encodeURIComponent(String(includeDetails))}`);
         }
         const requestPath = `/api/v1/Awards/${id}/Recipients/Individuals/${pageNumber}` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
-        const requestUrl = this.resolveUrl(requestPath);
-        const httpResponse = await this.sendWithTracingAsync<AwardsGetIndividualAwardRecipientsResponse>("Impexium.getAwardIndividualAwardRecipients", "Awards-GetIndividualAwardRecipients", "GET", requestUrl, undefined, options);
+        const requestHeaders: Record<string, string> = {};
+        if (contentType !== undefined) {
+            requestHeaders["Content-Type"] = String(contentType);
+        }
+        return this.createPageable<AwardsGetIndividualAwardRecipientsResponse, AwardRecipientIndividualData>(
+            requestPath,
+            async (requestUrl) => {
+                const httpResponse = await this.sendWithTracingAsync<AwardsGetIndividualAwardRecipientsResponse>("Impexium.getAwardIndividualAwardRecipients", "Awards-GetIndividualAwardRecipients", "GET", requestUrl, undefined, options, requestHeaders);
 
-        return httpResponse.value as AwardsGetIndividualAwardRecipientsResponse;
+                return httpResponse.value as AwardsGetIndividualAwardRecipientsResponse;
+            },
+            "dataList",
+            undefined,
+        );
     }
 
     /**
      * List Award Organization Recipients
      * @remarks List all Organizations that are Award Recipients.
      */
-    public async getAwardOrganizationAwardRecipients(pageNumber: string, id: string, includeDetails?: string, options: ConnectorOperationOptions = {}): Promise<AwardsGetOrganizationAwardRecipientsResponse> {
+    public getAwardOrganizationAwardRecipients(pageNumber: string, id: string, includeDetails: string, contentType: string, options: ConnectorOperationOptions = {}): ConnectorPagedAsyncIterableIterator<AwardRecipientOrganizationData> {
         const queryParams: string[] = [];
         if (includeDetails !== undefined) {
             queryParams.push(`includeDetails=${encodeURIComponent(String(includeDetails))}`);
         }
         const requestPath = `/api/v1/Awards/${id}/Recipients/Organizations/${pageNumber}` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
-        const requestUrl = this.resolveUrl(requestPath);
-        const httpResponse = await this.sendWithTracingAsync<AwardsGetOrganizationAwardRecipientsResponse>("Impexium.getAwardOrganizationAwardRecipients", "Awards-GetOrganizationAwardRecipients", "GET", requestUrl, undefined, options);
+        const requestHeaders: Record<string, string> = {};
+        if (contentType !== undefined) {
+            requestHeaders["Content-Type"] = String(contentType);
+        }
+        return this.createPageable<AwardsGetOrganizationAwardRecipientsResponse, AwardRecipientOrganizationData>(
+            requestPath,
+            async (requestUrl) => {
+                const httpResponse = await this.sendWithTracingAsync<AwardsGetOrganizationAwardRecipientsResponse>("Impexium.getAwardOrganizationAwardRecipients", "Awards-GetOrganizationAwardRecipients", "GET", requestUrl, undefined, options, requestHeaders);
 
-        return httpResponse.value as AwardsGetOrganizationAwardRecipientsResponse;
+                return httpResponse.value as AwardsGetOrganizationAwardRecipientsResponse;
+            },
+            "dataList",
+            undefined,
+        );
     }
 
 }

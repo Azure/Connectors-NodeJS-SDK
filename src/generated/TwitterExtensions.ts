@@ -165,6 +165,80 @@ export interface TriggerBatchResponseTweetModel {
 }
 
 /**
+ * Options for the userTimeline operation.
+ */
+export interface UserTimelineOptions extends ConnectorOperationOptions {
+    /** Maximum number of tweets to return. */
+    maxResults?: string;
+}
+
+/**
+ * Options for the homeTimeline operation.
+ */
+export interface HomeTimelineOptions extends ConnectorOperationOptions {
+    /** Maximum number of tweets to return. */
+    maxResults?: string;
+}
+
+/**
+ * Options for the searchTweet operation.
+ */
+export interface SearchTweetOptions extends ConnectorOperationOptions {
+    /** Maximum number of tweets to return. */
+    maxResults?: string;
+    /** Return tweets after the specified tweet ID. */
+    sinceId?: string;
+}
+
+/**
+ * Options for the followers operation.
+ */
+export interface FollowersOptions extends ConnectorOperationOptions {
+    /** Maximum number of users to return. */
+    maxResults?: string;
+}
+
+/**
+ * Options for the myFollowers operation.
+ */
+export interface MyFollowersOptions extends ConnectorOperationOptions {
+    /** Maximum number of users to get. */
+    maxResults?: string;
+}
+
+/**
+ * Options for the following operation.
+ */
+export interface FollowingOptions extends ConnectorOperationOptions {
+    /** Maximum number of users to return. */
+    maxResults?: string;
+}
+
+/**
+ * Options for the myFollowing operation.
+ */
+export interface MyFollowingOptions extends ConnectorOperationOptions {
+    /** Maximum number of users to return. */
+    maxResults?: string;
+}
+
+/**
+ * Options for the tweet operation.
+ */
+export interface TweetOptions extends ConnectorOperationOptions {
+    /** Text to be posted. */
+    tweetText?: string;
+}
+
+/**
+ * Options for the retweet operation.
+ */
+export interface RetweetOptions extends ConnectorOperationOptions {
+    /** Boolean to indicate whether to trim user information. */
+    trimUser?: string;
+}
+
+/**
  * Typed callback payload for trigger operation 'OnNewTweet'.
  */
 export type TwitterOnNewTweetTriggerPayload = TriggerCallbackPayload<TweetModel>;
@@ -214,13 +288,13 @@ export class TwitterClient extends ConnectorClientBase {
      * Get user timeline
      * @remarks This operation gets a list of the most recent tweets posted by a given user.
      */
-    public async userTimeline(userName?: string, maxResults?: string, options: ConnectorOperationOptions = {}): Promise<Array<TweetModel>> {
+    public async userTimeline(userName: string, options: UserTimelineOptions = {}): Promise<Array<TweetModel>> {
         const queryParams: string[] = [];
         if (userName !== undefined) {
             queryParams.push(`userName=${encodeURIComponent(String(userName))}`);
         }
-        if (maxResults !== undefined) {
-            queryParams.push(`maxResults=${encodeURIComponent(String(maxResults))}`);
+        if (options.maxResults !== undefined) {
+            queryParams.push(`maxResults=${encodeURIComponent(String(options.maxResults))}`);
         }
         const requestPath = `/usertimeline` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
@@ -233,10 +307,10 @@ export class TwitterClient extends ConnectorClientBase {
      * Get home timeline
      * @remarks This operation gets the most recent tweets and re-tweets posted by me and my followers.
      */
-    public async homeTimeline(maxResults?: string, options: ConnectorOperationOptions = {}): Promise<Array<TweetModel>> {
+    public async homeTimeline(options: HomeTimelineOptions = {}): Promise<Array<TweetModel>> {
         const queryParams: string[] = [];
-        if (maxResults !== undefined) {
-            queryParams.push(`maxResults=${encodeURIComponent(String(maxResults))}`);
+        if (options.maxResults !== undefined) {
+            queryParams.push(`maxResults=${encodeURIComponent(String(options.maxResults))}`);
         }
         const requestPath = `/hometimeline` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
@@ -249,16 +323,16 @@ export class TwitterClient extends ConnectorClientBase {
      * Search tweets
      * @remarks This operation gets a list of relevant tweets matching the search query.
      */
-    public async searchTweet(searchQuery?: string, maxResults?: string, sinceId?: string, options: ConnectorOperationOptions = {}): Promise<Array<TweetModel>> {
+    public async searchTweet(searchQuery: string, options: SearchTweetOptions = {}): Promise<Array<TweetModel>> {
         const queryParams: string[] = [];
         if (searchQuery !== undefined) {
             queryParams.push(`searchQuery=${encodeURIComponent(String(searchQuery))}`);
         }
-        if (maxResults !== undefined) {
-            queryParams.push(`maxResults=${encodeURIComponent(String(maxResults))}`);
+        if (options.maxResults !== undefined) {
+            queryParams.push(`maxResults=${encodeURIComponent(String(options.maxResults))}`);
         }
-        if (sinceId !== undefined) {
-            queryParams.push(`sinceId=${encodeURIComponent(String(sinceId))}`);
+        if (options.sinceId !== undefined) {
+            queryParams.push(`sinceId=${encodeURIComponent(String(options.sinceId))}`);
         }
         const requestPath = `/searchtweets` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
@@ -271,13 +345,13 @@ export class TwitterClient extends ConnectorClientBase {
      * Get followers
      * @remarks This operation gets the list of users that follow a given user.
      */
-    public async followers(userName?: string, maxResults?: string, options: ConnectorOperationOptions = {}): Promise<Array<UserDetailsModel>> {
+    public async followers(userName: string, options: FollowersOptions = {}): Promise<Array<UserDetailsModel>> {
         const queryParams: string[] = [];
         if (userName !== undefined) {
             queryParams.push(`userName=${encodeURIComponent(String(userName))}`);
         }
-        if (maxResults !== undefined) {
-            queryParams.push(`maxResults=${encodeURIComponent(String(maxResults))}`);
+        if (options.maxResults !== undefined) {
+            queryParams.push(`maxResults=${encodeURIComponent(String(options.maxResults))}`);
         }
         const requestPath = `/followers` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
@@ -290,10 +364,10 @@ export class TwitterClient extends ConnectorClientBase {
      * Get my followers
      * @remarks This operation gets the list of users who are following me.
      */
-    public async myFollowers(maxResults?: string, options: ConnectorOperationOptions = {}): Promise<Array<UserDetailsModel>> {
+    public async myFollowers(options: MyFollowersOptions = {}): Promise<Array<UserDetailsModel>> {
         const queryParams: string[] = [];
-        if (maxResults !== undefined) {
-            queryParams.push(`maxResults=${encodeURIComponent(String(maxResults))}`);
+        if (options.maxResults !== undefined) {
+            queryParams.push(`maxResults=${encodeURIComponent(String(options.maxResults))}`);
         }
         const requestPath = `/myfollowers` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
@@ -306,13 +380,13 @@ export class TwitterClient extends ConnectorClientBase {
      * Get following
      * @remarks The operation gets the list of people the given user follows.
      */
-    public async following(userName?: string, maxResults?: string, options: ConnectorOperationOptions = {}): Promise<Array<UserDetailsModel>> {
+    public async following(userName: string, options: FollowingOptions = {}): Promise<Array<UserDetailsModel>> {
         const queryParams: string[] = [];
         if (userName !== undefined) {
             queryParams.push(`userName=${encodeURIComponent(String(userName))}`);
         }
-        if (maxResults !== undefined) {
-            queryParams.push(`maxResults=${encodeURIComponent(String(maxResults))}`);
+        if (options.maxResults !== undefined) {
+            queryParams.push(`maxResults=${encodeURIComponent(String(options.maxResults))}`);
         }
         const requestPath = `/friends` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
@@ -325,10 +399,10 @@ export class TwitterClient extends ConnectorClientBase {
      * Get my following
      * @remarks This operation gets the list of users that I am following.
      */
-    public async myFollowing(maxResults?: string, options: ConnectorOperationOptions = {}): Promise<Array<UserDetailsModel>> {
+    public async myFollowing(options: MyFollowingOptions = {}): Promise<Array<UserDetailsModel>> {
         const queryParams: string[] = [];
-        if (maxResults !== undefined) {
-            queryParams.push(`maxResults=${encodeURIComponent(String(maxResults))}`);
+        if (options.maxResults !== undefined) {
+            queryParams.push(`maxResults=${encodeURIComponent(String(options.maxResults))}`);
         }
         const requestPath = `/myfriends` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
@@ -341,7 +415,7 @@ export class TwitterClient extends ConnectorClientBase {
      * Get user
      * @remarks This operation gets the profile details for a given user, such as user name, description, followers count, and more.
      */
-    public async user(userName?: string, options: ConnectorOperationOptions = {}): Promise<UserDetailsModel> {
+    public async user(userName: string, options: ConnectorOperationOptions = {}): Promise<UserDetailsModel> {
         const queryParams: string[] = [];
         if (userName !== undefined) {
             queryParams.push(`userName=${encodeURIComponent(String(userName))}`);
@@ -357,10 +431,10 @@ export class TwitterClient extends ConnectorClientBase {
      * Post a tweet
      * @remarks This operation posts a new tweet.
      */
-    public async tweet(input: TweetInput, tweetText?: string, options: ConnectorOperationOptions = {}): Promise<TweetResponseModel> {
+    public async tweet(input: TweetInput, options: TweetOptions = {}): Promise<TweetResponseModel> {
         const queryParams: string[] = [];
-        if (tweetText !== undefined) {
-            queryParams.push(`tweetText=${encodeURIComponent(String(tweetText))}`);
+        if (options.tweetText !== undefined) {
+            queryParams.push(`tweetText=${encodeURIComponent(String(options.tweetText))}`);
         }
         const requestPath = `/posttweet` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
@@ -373,13 +447,13 @@ export class TwitterClient extends ConnectorClientBase {
      * Retweet
      * @remarks This operation retweets a tweet.
      */
-    public async retweet(tweetId?: string, trimUser?: string, options: ConnectorOperationOptions = {}): Promise<TweetResponseModel> {
+    public async retweet(tweetId: string, options: RetweetOptions = {}): Promise<TweetResponseModel> {
         const queryParams: string[] = [];
         if (tweetId !== undefined) {
             queryParams.push(`tweetId=${encodeURIComponent(String(tweetId))}`);
         }
-        if (trimUser !== undefined) {
-            queryParams.push(`trimUser=${encodeURIComponent(String(trimUser))}`);
+        if (options.trimUser !== undefined) {
+            queryParams.push(`trimUser=${encodeURIComponent(String(options.trimUser))}`);
         }
         const requestPath = `/retweet` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);

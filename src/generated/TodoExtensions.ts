@@ -234,6 +234,14 @@ export interface CreateToDoList {
 }
 
 /**
+ * Options for the listToDosByFolder operation.
+ */
+export interface ListToDosByFolderOptions extends ConnectorOperationOptions {
+    /** Total number of entries to retrieve (default = 10, maximum = 999). */
+    top?: string;
+}
+
+/**
  * Typed callback payload for trigger operation 'OnNewToDoInFolderV2'.
  */
 export type TodoOnNewToDoInFolderTriggerPayload = TriggerCallbackPayload<ToDo>;
@@ -356,12 +364,18 @@ export class TodoClient extends ConnectorClientBase {
      * List all to-do lists
      * @remarks Returns a list of all the to-do lists.
      */
-    public async getAllTodoLists(options: ConnectorOperationOptions = {}): Promise<Array<TodoList>> {
+    public getAllTodoLists(options: ConnectorOperationOptions = {}): ConnectorPagedAsyncIterableIterator<TodoList> {
         const requestPath = `/lists`;
-        const requestUrl = this.resolveUrl(requestPath);
-        const httpResponse = await this.sendWithTracingAsync<Array<TodoList>>("Todo.getAllTodoLists", "GetAllTodoListsV2", "GET", requestUrl, undefined, options);
+        return this.createPageable<Array<TodoList>, TodoList>(
+            requestPath,
+            async (requestUrl) => {
+                const httpResponse = await this.sendWithTracingAsync<Array<TodoList>>("Todo.getAllTodoLists", "GetAllTodoListsV2", "GET", requestUrl, undefined, options);
 
-        return httpResponse.value as Array<TodoList>;
+                return httpResponse.value as Array<TodoList>;
+            },
+            null,
+            undefined,
+        );
     }
 
     /**
@@ -392,10 +406,10 @@ export class TodoClient extends ConnectorClientBase {
      * List to-do's by folder
      * @remarks This operation is used to retrieve all to-do's from a specific list.
      */
-    public listToDosByFolder(folderId: string, top?: string, options: ConnectorOperationOptions = {}): ConnectorPagedAsyncIterableIterator<ToDo> {
+    public listToDosByFolder(folderId: string, options: ListToDosByFolderOptions = {}): ConnectorPagedAsyncIterableIterator<ToDo> {
         const queryParams: string[] = [];
-        if (top !== undefined) {
-            queryParams.push(`$top=${encodeURIComponent(String(top))}`);
+        if (options.top !== undefined) {
+            queryParams.push(`$top=${encodeURIComponent(String(options.top))}`);
         }
         const requestPath = `/lists/${folderId}/tasks` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         return this.createPageable<Array<ToDo>, ToDo>(

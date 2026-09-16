@@ -279,7 +279,7 @@ describe("KustoClient — mcpKustoQueryManagement", () => {
             method: "tools/call",
         };
 
-        await client.mcpKustoQueryManagement(input, "session-abc");
+        await client.mcpKustoQueryManagement(input, { sessionId: "session-abc" });
 
         const [url] = (global.fetch as jest.Mock).mock.calls[0];
         expect(url).toContain("?sessionId=session-abc");
@@ -291,7 +291,7 @@ describe("KustoClient — mcpKustoQueryManagement", () => {
         const client = new KustoClient(TestConnectionUrl, createMockCredential());
         await client.mcpKustoQueryManagement(
             { jsonrpc: "2.0", id: "3", method: "tools/call" },
-            "session with spaces",
+            { sessionId: "session with spaces" },
         );
 
         const [url] = (global.fetch as jest.Mock).mock.calls[0];

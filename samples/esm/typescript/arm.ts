@@ -28,6 +28,7 @@ import { ArmClient, Subscription, LocationListResult, ResourceGroup } from "@azu
 
 const CONNECTION_URL = process.env.ARM_CONNECTION_URL ?? "";
 const SUBSCRIPTION_ID = process.env.ARM_SUBSCRIPTION_ID ?? "";
+const API_VERSION = process.env.ARM_API_VERSION ?? "2021-04-01";
 
 if (!CONNECTION_URL) {
     console.error("Error: ARM_CONNECTION_URL environment variable is not set.");
@@ -45,7 +46,7 @@ async function main(): Promise<void> {
     console.log("\n--- List Subscriptions ---");
     try {
         const subscriptions: Subscription[] = [];
-        for await (const subscription of client.listSubscriptions()) {
+        for await (const subscription of client.listSubscriptions(API_VERSION)) {
             subscriptions.push(subscription);
         }
 
@@ -70,7 +71,7 @@ async function main(): Promise<void> {
         console.log("\n--- List Locations ---");
         try {
             let locationCount = 0;
-            for await (const loc of client.listSubscriptionsLocations(SUBSCRIPTION_ID)) {
+            for await (const loc of client.listSubscriptionsLocations(SUBSCRIPTION_ID, API_VERSION)) {
                 if (locationCount < 10) {
                     console.log(`  - ${loc.displayName ?? "Unknown"} (${loc.name})`);
                 }
@@ -95,7 +96,7 @@ async function main(): Promise<void> {
         console.log("\n--- List Resource Groups ---");
         try {
             const groups: ResourceGroup[] = [];
-            for await (const group of client.listResourceGroups(SUBSCRIPTION_ID)) {
+            for await (const group of client.listResourceGroups(SUBSCRIPTION_ID, API_VERSION)) {
                 groups.push(group);
             }
 

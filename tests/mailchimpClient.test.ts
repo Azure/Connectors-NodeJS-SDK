@@ -68,9 +68,9 @@ describe("MailchimpClient — getCampaigns", () => {
         mockFetchResponse(campaigns);
 
         const client = new MailchimpClient(TestConnectionUrl, createMockCredential());
-        const result = await client.getCampaigns();
+        const result = await client.getCampaigns().byPage().next();
 
-        expect(result).toEqual(campaigns);
+        expect(result.value).toEqual(campaigns.campaigns);
         expect(global.fetch).toHaveBeenCalledTimes(1);
         const [, init] = (global.fetch as jest.Mock).mock.calls[0];
         expect(init.method).toBe("GET");
@@ -82,7 +82,7 @@ describe("MailchimpClient — getCampaigns", () => {
 
         const client = new MailchimpClient(TestConnectionUrl, createMockCredential());
         try {
-            await client.getCampaigns();
+            await client.getCampaigns().byPage().next();
             throw new Error("Expected ConnectorError to be thrown.");
         } catch (error) {
             expect(error).toBeInstanceOf(ConnectorError);

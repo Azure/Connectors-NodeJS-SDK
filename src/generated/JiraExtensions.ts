@@ -451,6 +451,64 @@ export interface MCPQueryResponse {
 }
 
 /**
+ * Options for the listIssues operation.
+ */
+export interface ListIssuesOptions extends ConnectorOperationOptions {
+    /** The JQL query used to search for issues. If left blank, returns all issues created in the last 10 years. */
+    jql?: string;
+    /** The expand query parameter to consider. Default selects all. */
+    expand?: string;
+    /** The fields query parameter to consider. Default selects all. */
+    fields?: string;
+    /** The token for the next page of results. Copy the 'nextPageToken' from a previous response here to fetch the next page. */
+    nextPageToken?: string;
+}
+
+/**
+ * Options for the getCurrentUser operation.
+ */
+export interface GetCurrentUserOptions extends ConnectorOperationOptions {
+    /** Use expand to include additional information about users in the response. This parameter accepts a comma-separated list. Expand options include: *  `groups` includes all groups and nested groups to which the user belongs. *  `applicationRoles` includes details of all the applications to which the user has access. */
+    expand?: string;
+}
+
+/**
+ * Options for the mcpJiraIssueManagement operation.
+ */
+export interface McpJiraIssueManagementOptions extends ConnectorOperationOptions {
+    /** The 'sessionId' service parameter. */
+    sessionId?: string;
+}
+
+/**
+ * Options for the deleteProject operation.
+ */
+export interface DeleteProjectOptions extends ConnectorOperationOptions {
+    /** Whether this project is placed in the Jira recycle bin where it will be available for restoration. */
+    enableUndo?: string;
+}
+
+/**
+ * Options for the editIssue operation.
+ */
+export interface EditIssueOptions extends ConnectorOperationOptions {
+    /** Do you want to notify users? */
+    notifyUsers?: string;
+    /** Do you want to override the screen security? */
+    overrideScreenSecurity?: string;
+    /** Do you want to override the editable flag? */
+    overrideEditableFlag?: string;
+}
+
+/**
+ * Options for the getUser operation.
+ */
+export interface GetUserOptions extends ConnectorOperationOptions {
+    /** Use expand to include additional information about users in the response. This parameter accepts a comma-separated list. Expand options include: *  `groups` includes all groups and nested groups to which the user belongs. *  `applicationRoles` includes details of all the applications to which the user has access. */
+    expand?: string;
+}
+
+/**
  * Typed callback payload for trigger operation 'OnCloseIssue_V2'.
  */
 export type JiraOnCloseIssueTriggerPayload = TriggerCallbackPayload<FullIssue>;
@@ -647,25 +705,29 @@ export class JiraClient extends ConnectorClientBase {
      * Get list of issues
      * @remarks This operation returns a list of issues using JQL.
      */
-    public listIssues(jql?: string, expand?: string, fields?: string, nextPageToken?: string, options: ConnectorOperationOptions = {}): ConnectorPagedAsyncIterableIterator<FullIssue> {
+    public listIssues(xRequestJirainstance: string, options: ListIssuesOptions = {}): ConnectorPagedAsyncIterableIterator<FullIssue> {
         const queryParams: string[] = [];
-        if (jql !== undefined) {
-            queryParams.push(`jql=${encodeURIComponent(String(jql))}`);
+        if (options.jql !== undefined) {
+            queryParams.push(`jql=${encodeURIComponent(String(options.jql))}`);
         }
-        if (expand !== undefined) {
-            queryParams.push(`expand=${encodeURIComponent(String(expand))}`);
+        if (options.expand !== undefined) {
+            queryParams.push(`expand=${encodeURIComponent(String(options.expand))}`);
         }
-        if (fields !== undefined) {
-            queryParams.push(`fields=${encodeURIComponent(String(fields))}`);
+        if (options.fields !== undefined) {
+            queryParams.push(`fields=${encodeURIComponent(String(options.fields))}`);
         }
-        if (nextPageToken !== undefined) {
-            queryParams.push(`nextPageToken=${encodeURIComponent(String(nextPageToken))}`);
+        if (options.nextPageToken !== undefined) {
+            queryParams.push(`nextPageToken=${encodeURIComponent(String(options.nextPageToken))}`);
         }
         const requestPath = `/2/search` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
+        const requestHeaders: Record<string, string> = {};
+        if (xRequestJirainstance !== undefined) {
+            requestHeaders["X-Request-Jirainstance"] = String(xRequestJirainstance);
+        }
         return this.createPageable<ListIssuesResponse, FullIssue>(
             requestPath,
             async (requestUrl) => {
-                const httpResponse = await this.sendWithTracingAsync<ListIssuesResponse>("Jira.listIssues", "ListIssues", "GET", requestUrl, undefined, options);
+                const httpResponse = await this.sendWithTracingAsync<ListIssuesResponse>("Jira.listIssues", "ListIssues", "GET", requestUrl, undefined, options, requestHeaders);
 
                 return httpResponse.value as ListIssuesResponse;
             },
@@ -678,12 +740,16 @@ export class JiraClient extends ConnectorClientBase {
      * Get list of issues (Datacenter)
      * @remarks This operation returns a list of issues using JQL.
      */
-    public listIssuesDatacenter(options: ConnectorOperationOptions = {}): ConnectorPagedAsyncIterableIterator<FullIssue> {
+    public listIssuesDatacenter(xRequestJirainstance: string, options: ConnectorOperationOptions = {}): ConnectorPagedAsyncIterableIterator<FullIssue> {
         const requestPath = `/datacenter/search`;
+        const requestHeaders: Record<string, string> = {};
+        if (xRequestJirainstance !== undefined) {
+            requestHeaders["X-Request-Jirainstance"] = String(xRequestJirainstance);
+        }
         return this.createPageable<ListIssuesResponseDatacenter, FullIssue>(
             requestPath,
             async (requestUrl) => {
-                const httpResponse = await this.sendWithTracingAsync<ListIssuesResponseDatacenter>("Jira.listIssuesDatacenter", "ListIssues_Datacenter", "GET", requestUrl, undefined, options);
+                const httpResponse = await this.sendWithTracingAsync<ListIssuesResponseDatacenter>("Jira.listIssuesDatacenter", "ListIssues_Datacenter", "GET", requestUrl, undefined, options, requestHeaders);
 
                 return httpResponse.value as ListIssuesResponseDatacenter;
             },
@@ -696,12 +762,16 @@ export class JiraClient extends ConnectorClientBase {
      * Get list of Transitions
      * @remarks Returns a list of the transitions possible for this issue by the current user
      */
-    public listTransitions(issueIdOrKey: string, options: ConnectorOperationOptions = {}): ConnectorPagedAsyncIterableIterator<Transition> {
+    public listTransitions(issueIdOrKey: string, xRequestJirainstance: string, options: ConnectorOperationOptions = {}): ConnectorPagedAsyncIterableIterator<Transition> {
         const requestPath = `/3/issue/${issueIdOrKey}/transitions`;
+        const requestHeaders: Record<string, string> = {};
+        if (xRequestJirainstance !== undefined) {
+            requestHeaders["X-Request-Jirainstance"] = String(xRequestJirainstance);
+        }
         return this.createPageable<ListTransitionsResponse, Transition>(
             requestPath,
             async (requestUrl) => {
-                const httpResponse = await this.sendWithTracingAsync<ListTransitionsResponse>("Jira.listTransitions", "ListTransitions", "GET", requestUrl, undefined, options);
+                const httpResponse = await this.sendWithTracingAsync<ListTransitionsResponse>("Jira.listTransitions", "ListTransitions", "GET", requestUrl, undefined, options, requestHeaders);
 
                 return httpResponse.value as ListTransitionsResponse;
             },
@@ -714,10 +784,14 @@ export class JiraClient extends ConnectorClientBase {
      * Performs an issue transition
      * @remarks Transitions an issue to a new status.
      */
-    public async updateTransition(input: TransitionInput, issueIdOrKey: string, options: ConnectorOperationOptions = {}): Promise<UpdateTransitionResponse> {
+    public async updateTransition(input: TransitionInput, issueIdOrKey: string, xRequestJirainstance: string, options: ConnectorOperationOptions = {}): Promise<UpdateTransitionResponse> {
         const requestPath = `/3/issue/${issueIdOrKey}/transitions`;
+        const requestHeaders: Record<string, string> = {};
+        if (xRequestJirainstance !== undefined) {
+            requestHeaders["X-Request-Jirainstance"] = String(xRequestJirainstance);
+        }
         const requestUrl = this.resolveUrl(requestPath);
-        const httpResponse = await this.sendWithTracingAsync<UpdateTransitionResponse>("Jira.updateTransition", "UpdateTransition", "POST", requestUrl, input, options);
+        const httpResponse = await this.sendWithTracingAsync<UpdateTransitionResponse>("Jira.updateTransition", "UpdateTransition", "POST", requestUrl, input, options, requestHeaders);
 
         return httpResponse.value as UpdateTransitionResponse;
     }
@@ -726,14 +800,18 @@ export class JiraClient extends ConnectorClientBase {
      * Get current user
      * @remarks This operation returns details for the current user
      */
-    public async getCurrentUser(expand?: string, options: ConnectorOperationOptions = {}): Promise<GetCurrentUserResponse> {
+    public async getCurrentUser(xRequestJirainstance: string, options: GetCurrentUserOptions = {}): Promise<GetCurrentUserResponse> {
         const queryParams: string[] = [];
-        if (expand !== undefined) {
-            queryParams.push(`expand=${encodeURIComponent(String(expand))}`);
+        if (options.expand !== undefined) {
+            queryParams.push(`expand=${encodeURIComponent(String(options.expand))}`);
         }
         const requestPath = `/3/myself` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
+        const requestHeaders: Record<string, string> = {};
+        if (xRequestJirainstance !== undefined) {
+            requestHeaders["X-Request-Jirainstance"] = String(xRequestJirainstance);
+        }
         const requestUrl = this.resolveUrl(requestPath);
-        const httpResponse = await this.sendWithTracingAsync<GetCurrentUserResponse>("Jira.getCurrentUser", "GetCurrentUser", "GET", requestUrl, undefined, options);
+        const httpResponse = await this.sendWithTracingAsync<GetCurrentUserResponse>("Jira.getCurrentUser", "GetCurrentUser", "GET", requestUrl, undefined, options, requestHeaders);
 
         return httpResponse.value as GetCurrentUserResponse;
     }
@@ -742,10 +820,10 @@ export class JiraClient extends ConnectorClientBase {
      * Jira MCP Server
      * @remarks Jira MCP Server
      */
-    public async mcpJiraIssueManagement(input: MCPQueryRequest, sessionId?: string, options: ConnectorOperationOptions = {}): Promise<MCPQueryResponse> {
+    public async mcpJiraIssueManagement(input: MCPQueryRequest, options: McpJiraIssueManagementOptions = {}): Promise<MCPQueryResponse> {
         const queryParams: string[] = [];
-        if (sessionId !== undefined) {
-            queryParams.push(`sessionId=${encodeURIComponent(String(sessionId))}`);
+        if (options.sessionId !== undefined) {
+            queryParams.push(`sessionId=${encodeURIComponent(String(options.sessionId))}`);
         }
         const requestPath = `/mcp/JiraIssueManagement` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
@@ -758,10 +836,14 @@ export class JiraClient extends ConnectorClientBase {
      * Add comment
      * @remarks This operation is used to add a comment to an existing Jira issue.
      */
-    public async addComment(input: Comment, issueKey: string, options: ConnectorOperationOptions = {}): Promise<CommentResponse> {
+    public async addComment(input: Comment, issueKey: string, xRequestJirainstance: string, options: ConnectorOperationOptions = {}): Promise<CommentResponse> {
         const requestPath = `/v2/issue/${issueKey}/comment`;
+        const requestHeaders: Record<string, string> = {};
+        if (xRequestJirainstance !== undefined) {
+            requestHeaders["X-Request-Jirainstance"] = String(xRequestJirainstance);
+        }
         const requestUrl = this.resolveUrl(requestPath);
-        const httpResponse = await this.sendWithTracingAsync<CommentResponse>("Jira.addComment", "AddComment_V2", "POST", requestUrl, input, options);
+        const httpResponse = await this.sendWithTracingAsync<CommentResponse>("Jira.addComment", "AddComment_V2", "POST", requestUrl, input, options, requestHeaders);
 
         return httpResponse.value as CommentResponse;
     }
@@ -770,10 +852,17 @@ export class JiraClient extends ConnectorClientBase {
      * Cancel Task
      * @remarks Cancels a task. Permissions required: either of: Administer Jira or Creator of the task.
      */
-    public async cancelTask(taskId: string, options: ConnectorOperationOptions = {}): Promise<CancelTaskResponse> {
+    public async cancelTask(taskId: string, xRequestJirainstance: string, xAtlassianToken: string, options: ConnectorOperationOptions = {}): Promise<CancelTaskResponse> {
         const requestPath = `/v2/task/${taskId}/cancel`;
+        const requestHeaders: Record<string, string> = {};
+        if (xRequestJirainstance !== undefined) {
+            requestHeaders["X-Request-Jirainstance"] = String(xRequestJirainstance);
+        }
+        if (xAtlassianToken !== undefined) {
+            requestHeaders["X-Atlassian-Token"] = String(xAtlassianToken);
+        }
         const requestUrl = this.resolveUrl(requestPath);
-        const httpResponse = await this.sendWithTracingAsync<CancelTaskResponse>("Jira.cancelTask", "CancelTask_V2", "POST", requestUrl, undefined, options);
+        const httpResponse = await this.sendWithTracingAsync<CancelTaskResponse>("Jira.cancelTask", "CancelTask_V2", "POST", requestUrl, undefined, options, requestHeaders);
 
         return httpResponse.value as CancelTaskResponse;
     }
@@ -782,7 +871,7 @@ export class JiraClient extends ConnectorClientBase {
      * Create a new issue
      * @remarks This operation is used to create a new issue.
      */
-    public async createIssue(input: CreateIssueInput, projectKey?: string, issueTypeIds?: string, options: ConnectorOperationOptions = {}): Promise<CreateIssueResponse> {
+    public async createIssue(input: CreateIssueInput, projectKey: string, issueTypeIds: string, xRequestJirainstance: string, options: ConnectorOperationOptions = {}): Promise<CreateIssueResponse> {
         const queryParams: string[] = [];
         if (projectKey !== undefined) {
             queryParams.push(`projectKey=${encodeURIComponent(String(projectKey))}`);
@@ -791,8 +880,12 @@ export class JiraClient extends ConnectorClientBase {
             queryParams.push(`issueTypeIds=${encodeURIComponent(String(issueTypeIds))}`);
         }
         const requestPath = `/v3/issue` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
+        const requestHeaders: Record<string, string> = {};
+        if (xRequestJirainstance !== undefined) {
+            requestHeaders["X-Request-Jirainstance"] = String(xRequestJirainstance);
+        }
         const requestUrl = this.resolveUrl(requestPath);
-        const httpResponse = await this.sendWithTracingAsync<CreateIssueResponse>("Jira.createIssue", "CreateIssue_V3", "POST", requestUrl, input, options);
+        const httpResponse = await this.sendWithTracingAsync<CreateIssueResponse>("Jira.createIssue", "CreateIssue_V3", "POST", requestUrl, input, options, requestHeaders);
 
         return httpResponse.value as CreateIssueResponse;
     }
@@ -801,10 +894,14 @@ export class JiraClient extends ConnectorClientBase {
      * Create a new project
      * @remarks This operation is used to create a new Jira project.
      */
-    public async createProject(input: CreateProjectInput, options: ConnectorOperationOptions = {}): Promise<CreateProjectResponse> {
+    public async createProject(input: CreateProjectInput, xRequestJirainstance: string, options: ConnectorOperationOptions = {}): Promise<CreateProjectResponse> {
         const requestPath = `/v2/project`;
+        const requestHeaders: Record<string, string> = {};
+        if (xRequestJirainstance !== undefined) {
+            requestHeaders["X-Request-Jirainstance"] = String(xRequestJirainstance);
+        }
         const requestUrl = this.resolveUrl(requestPath);
-        const httpResponse = await this.sendWithTracingAsync<CreateProjectResponse>("Jira.createProject", "CreateProject_V2", "POST", requestUrl, input, options);
+        const httpResponse = await this.sendWithTracingAsync<CreateProjectResponse>("Jira.createProject", "CreateProject_V2", "POST", requestUrl, input, options, requestHeaders);
 
         return httpResponse.value as CreateProjectResponse;
     }
@@ -813,10 +910,14 @@ export class JiraClient extends ConnectorClientBase {
      * Create Project Category
      * @remarks Creates a project category. Permissions required: Administer Jira (global permissions)
      */
-    public async createProjectCategory(input: CreateProjectCategoryInput, options: ConnectorOperationOptions = {}): Promise<CreateProjectCategoryResponse> {
+    public async createProjectCategory(input: CreateProjectCategoryInput, xRequestJirainstance: string, options: ConnectorOperationOptions = {}): Promise<CreateProjectCategoryResponse> {
         const requestPath = `/v2/projectCategory`;
+        const requestHeaders: Record<string, string> = {};
+        if (xRequestJirainstance !== undefined) {
+            requestHeaders["X-Request-Jirainstance"] = String(xRequestJirainstance);
+        }
         const requestUrl = this.resolveUrl(requestPath);
-        const httpResponse = await this.sendWithTracingAsync<CreateProjectCategoryResponse>("Jira.createProjectCategory", "CreateProjectCategory_V2", "POST", requestUrl, input, options);
+        const httpResponse = await this.sendWithTracingAsync<CreateProjectCategoryResponse>("Jira.createProjectCategory", "CreateProjectCategory_V2", "POST", requestUrl, input, options, requestHeaders);
 
         return httpResponse.value as CreateProjectCategoryResponse;
     }
@@ -825,34 +926,42 @@ export class JiraClient extends ConnectorClientBase {
      * Delete Project
      * @remarks Deletes a project. Permissions required: Administer Jira (global permissions)
      */
-    public async deleteProject(projectIdOrKey: string, enableUndo?: string, options: ConnectorOperationOptions = {}): Promise<void> {
+    public async deleteProject(projectIdOrKey: string, xRequestJirainstance: string, options: DeleteProjectOptions = {}): Promise<void> {
         const queryParams: string[] = [];
-        if (enableUndo !== undefined) {
-            queryParams.push(`enableUndo=${encodeURIComponent(String(enableUndo))}`);
+        if (options.enableUndo !== undefined) {
+            queryParams.push(`enableUndo=${encodeURIComponent(String(options.enableUndo))}`);
         }
         const requestPath = `/v2/project/${projectIdOrKey}` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
+        const requestHeaders: Record<string, string> = {};
+        if (xRequestJirainstance !== undefined) {
+            requestHeaders["X-Request-Jirainstance"] = String(xRequestJirainstance);
+        }
         const requestUrl = this.resolveUrl(requestPath);
-        await this.sendWithTracingAsync<void>("Jira.deleteProject", "DeleteProject_V2", "DELETE", requestUrl, undefined, options);
+        await this.sendWithTracingAsync<void>("Jira.deleteProject", "DeleteProject_V2", "DELETE", requestUrl, undefined, options, requestHeaders);
     }
 
     /**
      * Edit Issue
      * @remarks Edits an issue. A transition may be applied and issue properties updated as part of the edit. The edits to the issue's fields are defined using update and fields.
      */
-    public async editIssue(input: EditIssueInput, issueIdOrKey: string, notifyUsers?: string, overrideScreenSecurity?: string, overrideEditableFlag?: string, options: ConnectorOperationOptions = {}): Promise<EditIssueResponse> {
+    public async editIssue(input: EditIssueInput, issueIdOrKey: string, xRequestJirainstance: string, options: EditIssueOptions = {}): Promise<EditIssueResponse> {
         const queryParams: string[] = [];
-        if (notifyUsers !== undefined) {
-            queryParams.push(`notifyUsers=${encodeURIComponent(String(notifyUsers))}`);
+        if (options.notifyUsers !== undefined) {
+            queryParams.push(`notifyUsers=${encodeURIComponent(String(options.notifyUsers))}`);
         }
-        if (overrideScreenSecurity !== undefined) {
-            queryParams.push(`overrideScreenSecurity=${encodeURIComponent(String(overrideScreenSecurity))}`);
+        if (options.overrideScreenSecurity !== undefined) {
+            queryParams.push(`overrideScreenSecurity=${encodeURIComponent(String(options.overrideScreenSecurity))}`);
         }
-        if (overrideEditableFlag !== undefined) {
-            queryParams.push(`overrideEditableFlag=${encodeURIComponent(String(overrideEditableFlag))}`);
+        if (options.overrideEditableFlag !== undefined) {
+            queryParams.push(`overrideEditableFlag=${encodeURIComponent(String(options.overrideEditableFlag))}`);
         }
         const requestPath = `/v2/3/issue/${issueIdOrKey}` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
+        const requestHeaders: Record<string, string> = {};
+        if (xRequestJirainstance !== undefined) {
+            requestHeaders["X-Request-Jirainstance"] = String(xRequestJirainstance);
+        }
         const requestUrl = this.resolveUrl(requestPath);
-        const httpResponse = await this.sendWithTracingAsync<EditIssueResponse>("Jira.editIssue", "EditIssue_V2", "PUT", requestUrl, input, options);
+        const httpResponse = await this.sendWithTracingAsync<EditIssueResponse>("Jira.editIssue", "EditIssue_V2", "PUT", requestUrl, input, options, requestHeaders);
 
         return httpResponse.value as EditIssueResponse;
     }
@@ -861,10 +970,14 @@ export class JiraClient extends ConnectorClientBase {
      * Get All Project Categories
      * @remarks Returns all project categories.
      */
-    public async getAllProjectCategories(options: ConnectorOperationOptions = {}): Promise<Array<Record<string, unknown>>> {
+    public async getAllProjectCategories(xRequestJirainstance: string, options: ConnectorOperationOptions = {}): Promise<Array<Record<string, unknown>>> {
         const requestPath = `/v2/projectCategory`;
+        const requestHeaders: Record<string, string> = {};
+        if (xRequestJirainstance !== undefined) {
+            requestHeaders["X-Request-Jirainstance"] = String(xRequestJirainstance);
+        }
         const requestUrl = this.resolveUrl(requestPath);
-        const httpResponse = await this.sendWithTracingAsync<Array<Record<string, unknown>>>("Jira.getAllProjectCategories", "GetAllProjectCategories_V2", "GET", requestUrl, undefined, options);
+        const httpResponse = await this.sendWithTracingAsync<Array<Record<string, unknown>>>("Jira.getAllProjectCategories", "GetAllProjectCategories_V2", "GET", requestUrl, undefined, options, requestHeaders);
 
         return httpResponse.value as Array<Record<string, unknown>>;
     }
@@ -873,10 +986,14 @@ export class JiraClient extends ConnectorClientBase {
      * Get issue by key
      * @remarks This operation is used to retrieve the issue object for a given issue Key.
      */
-    public async getIssue(issueKey: string, options: ConnectorOperationOptions = {}): Promise<FullIssue> {
+    public async getIssue(issueKey: string, xRequestJirainstance: string, options: ConnectorOperationOptions = {}): Promise<FullIssue> {
         const requestPath = `/v2/issue/${issueKey}`;
+        const requestHeaders: Record<string, string> = {};
+        if (xRequestJirainstance !== undefined) {
+            requestHeaders["X-Request-Jirainstance"] = String(xRequestJirainstance);
+        }
         const requestUrl = this.resolveUrl(requestPath);
-        const httpResponse = await this.sendWithTracingAsync<FullIssue>("Jira.getIssue", "GetIssue_V2", "GET", requestUrl, undefined, options);
+        const httpResponse = await this.sendWithTracingAsync<FullIssue>("Jira.getIssue", "GetIssue_V2", "GET", requestUrl, undefined, options, requestHeaders);
 
         return httpResponse.value as FullIssue;
     }
@@ -885,10 +1002,14 @@ export class JiraClient extends ConnectorClientBase {
      * Get Task
      * @remarks Returns the status of a long-running asynchronous task. When a task has finished, this operation returns the JSON blob applicable to the task.
      */
-    public async getTask(taskId: string, options: ConnectorOperationOptions = {}): Promise<GetTaskResponse> {
+    public async getTask(taskId: string, xRequestJirainstance: string, options: ConnectorOperationOptions = {}): Promise<GetTaskResponse> {
         const requestPath = `/v2/task/${taskId}`;
+        const requestHeaders: Record<string, string> = {};
+        if (xRequestJirainstance !== undefined) {
+            requestHeaders["X-Request-Jirainstance"] = String(xRequestJirainstance);
+        }
         const requestUrl = this.resolveUrl(requestPath);
-        const httpResponse = await this.sendWithTracingAsync<GetTaskResponse>("Jira.getTask", "GetTask_V2", "GET", requestUrl, undefined, options);
+        const httpResponse = await this.sendWithTracingAsync<GetTaskResponse>("Jira.getTask", "GetTask_V2", "GET", requestUrl, undefined, options, requestHeaders);
 
         return httpResponse.value as GetTaskResponse;
     }
@@ -897,17 +1018,21 @@ export class JiraClient extends ConnectorClientBase {
      * Get User
      * @remarks Returns a user. Permissions required: Browse users and groups.
      */
-    public async getUser(accountId?: string, expand?: string, options: ConnectorOperationOptions = {}): Promise<GetUserResponse> {
+    public async getUser(accountId: string, xRequestJirainstance: string, options: GetUserOptions = {}): Promise<GetUserResponse> {
         const queryParams: string[] = [];
         if (accountId !== undefined) {
             queryParams.push(`accountId=${encodeURIComponent(String(accountId))}`);
         }
-        if (expand !== undefined) {
-            queryParams.push(`expand=${encodeURIComponent(String(expand))}`);
+        if (options.expand !== undefined) {
+            queryParams.push(`expand=${encodeURIComponent(String(options.expand))}`);
         }
         const requestPath = `/v2/user` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
+        const requestHeaders: Record<string, string> = {};
+        if (xRequestJirainstance !== undefined) {
+            requestHeaders["X-Request-Jirainstance"] = String(xRequestJirainstance);
+        }
         const requestUrl = this.resolveUrl(requestPath);
-        const httpResponse = await this.sendWithTracingAsync<GetUserResponse>("Jira.getUser", "GetUser_V2", "GET", requestUrl, undefined, options);
+        const httpResponse = await this.sendWithTracingAsync<GetUserResponse>("Jira.getUser", "GetUser_V2", "GET", requestUrl, undefined, options, requestHeaders);
 
         return httpResponse.value as GetUserResponse;
     }
@@ -916,12 +1041,16 @@ export class JiraClient extends ConnectorClientBase {
      * Get list of Filters
      * @remarks This operation returns a list of Filters accessible to user.
      */
-    public listFilters(options: ConnectorOperationOptions = {}): ConnectorPagedAsyncIterableIterator<Record<string, unknown>> {
+    public listFilters(xRequestJirainstance: string, options: ConnectorOperationOptions = {}): ConnectorPagedAsyncIterableIterator<Record<string, unknown>> {
         const requestPath = `/v2/filter/search`;
+        const requestHeaders: Record<string, string> = {};
+        if (xRequestJirainstance !== undefined) {
+            requestHeaders["X-Request-Jirainstance"] = String(xRequestJirainstance);
+        }
         return this.createPageable<ListFiltersResponse, Record<string, unknown>>(
             requestPath,
             async (requestUrl) => {
-                const httpResponse = await this.sendWithTracingAsync<ListFiltersResponse>("Jira.listFilters", "ListFilters_V2", "GET", requestUrl, undefined, options);
+                const httpResponse = await this.sendWithTracingAsync<ListFiltersResponse>("Jira.listFilters", "ListFilters_V2", "GET", requestUrl, undefined, options, requestHeaders);
 
                 return httpResponse.value as ListFiltersResponse;
             },
@@ -934,12 +1063,16 @@ export class JiraClient extends ConnectorClientBase {
      * Get projects
      * @remarks This operation is used to retrieve a list of projects for your Jira instance.
      */
-    public listProjects(options: ConnectorOperationOptions = {}): ConnectorPagedAsyncIterableIterator<Record<string, unknown>> {
+    public listProjects(xRequestJirainstance: string, options: ConnectorOperationOptions = {}): ConnectorPagedAsyncIterableIterator<Record<string, unknown>> {
         const requestPath = `/v2/project/search`;
+        const requestHeaders: Record<string, string> = {};
+        if (xRequestJirainstance !== undefined) {
+            requestHeaders["X-Request-Jirainstance"] = String(xRequestJirainstance);
+        }
         return this.createPageable<ListProjectsResponse, Record<string, unknown>>(
             requestPath,
             async (requestUrl) => {
-                const httpResponse = await this.sendWithTracingAsync<ListProjectsResponse>("Jira.listProjects", "ListProjects_V3", "GET", requestUrl, undefined, options);
+                const httpResponse = await this.sendWithTracingAsync<ListProjectsResponse>("Jira.listProjects", "ListProjects_V3", "GET", requestUrl, undefined, options, requestHeaders);
 
                 return httpResponse.value as ListProjectsResponse;
             },
@@ -952,16 +1085,20 @@ export class JiraClient extends ConnectorClientBase {
      * List users by project
      * @remarks This operation is used to retrieve a list of all users associated with a project.
      */
-    public listProjectUsers(projectKey?: string, options: ConnectorOperationOptions = {}): ConnectorPagedAsyncIterableIterator<Record<string, unknown>> {
+    public listProjectUsers(projectKey: string, xRequestJirainstance: string, options: ConnectorOperationOptions = {}): ConnectorPagedAsyncIterableIterator<Record<string, unknown>> {
         const queryParams: string[] = [];
         if (projectKey !== undefined) {
             queryParams.push(`projectKey=${encodeURIComponent(String(projectKey))}`);
         }
         const requestPath = `/v2/user/permission/search` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
+        const requestHeaders: Record<string, string> = {};
+        if (xRequestJirainstance !== undefined) {
+            requestHeaders["X-Request-Jirainstance"] = String(xRequestJirainstance);
+        }
         return this.createPageable<Array<Record<string, unknown>>, Record<string, unknown>>(
             requestPath,
             async (requestUrl) => {
-                const httpResponse = await this.sendWithTracingAsync<Array<Record<string, unknown>>>("Jira.listProjectUsers", "ListProjectUsers_V2", "GET", requestUrl, undefined, options);
+                const httpResponse = await this.sendWithTracingAsync<Array<Record<string, unknown>>>("Jira.listProjectUsers", "ListProjectUsers_V2", "GET", requestUrl, undefined, options, requestHeaders);
 
                 return httpResponse.value as Array<Record<string, unknown>>;
             },
@@ -974,20 +1111,28 @@ export class JiraClient extends ConnectorClientBase {
      * Remove Project Category
      * @remarks Deletes a project category. Permissions required: Administer Jira (global permissions)
      */
-    public async removeProjectCategory(id: string, options: ConnectorOperationOptions = {}): Promise<void> {
+    public async removeProjectCategory(id: string, xRequestJirainstance: string, options: ConnectorOperationOptions = {}): Promise<void> {
         const requestPath = `/v2/projectCategory/${id}`;
+        const requestHeaders: Record<string, string> = {};
+        if (xRequestJirainstance !== undefined) {
+            requestHeaders["X-Request-Jirainstance"] = String(xRequestJirainstance);
+        }
         const requestUrl = this.resolveUrl(requestPath);
-        await this.sendWithTracingAsync<void>("Jira.removeProjectCategory", "RemoveProjectCategory_V2", "DELETE", requestUrl, undefined, options);
+        await this.sendWithTracingAsync<void>("Jira.removeProjectCategory", "RemoveProjectCategory_V2", "DELETE", requestUrl, undefined, options, requestHeaders);
     }
 
     /**
      * Update Project
      * @remarks Updates the project details of a project.
      */
-    public async updateProject(input: UpdateProjectInput, projectIdOrKey: string, options: ConnectorOperationOptions = {}): Promise<UpdateProjectResponse> {
+    public async updateProject(input: UpdateProjectInput, projectIdOrKey: string, xRequestJirainstance: string, options: ConnectorOperationOptions = {}): Promise<UpdateProjectResponse> {
         const requestPath = `/v2/project/${projectIdOrKey}`;
+        const requestHeaders: Record<string, string> = {};
+        if (xRequestJirainstance !== undefined) {
+            requestHeaders["X-Request-Jirainstance"] = String(xRequestJirainstance);
+        }
         const requestUrl = this.resolveUrl(requestPath);
-        const httpResponse = await this.sendWithTracingAsync<UpdateProjectResponse>("Jira.updateProject", "UpdateProject_V2", "PUT", requestUrl, input, options);
+        const httpResponse = await this.sendWithTracingAsync<UpdateProjectResponse>("Jira.updateProject", "UpdateProject_V2", "PUT", requestUrl, input, options, requestHeaders);
 
         return httpResponse.value as UpdateProjectResponse;
     }

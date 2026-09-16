@@ -23,7 +23,7 @@ export interface SendResponse {
 export interface ProcedureMetadata {
     name?: string;
     title?: string;
-    schema?: Record<string, unknown>;
+    schema?: ObjectEntity;
 }
 
 /**

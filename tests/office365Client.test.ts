@@ -202,7 +202,10 @@ describe("Office365Client — draftEmail", () => {
         const client = new Office365Client(TestConnectionUrl, createMockCredential());
         const input: DraftEmailInput = { To: "user@example.com", Subject: "Draft", Body: "<p>Hello</p>" };
 
-        const result = await client.draftEmail(input, "parent-msg-id", "reply");
+        const result = await client.draftEmail(input, {
+            messageId: "parent-msg-id",
+            draftType: "reply",
+        });
 
         expect(result).toEqual(draftedMessage);
         const [url] = (global.fetch as jest.Mock).mock.calls[0];
@@ -258,9 +261,10 @@ describe("Office365Client — getCalendarItems", () => {
         const client = new Office365Client(TestConnectionUrl, createMockCredential());
         const result = await client.getCalendarItems(
             "calendar-1",
-            undefined,
-            "start desc",
-            "5",
+            {
+                orderby: "start desc",
+                top: "5",
+            },
         );
 
         const [url] = (global.fetch as jest.Mock).mock.calls[0];

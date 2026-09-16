@@ -563,6 +563,98 @@ export interface TextingWebhookResponse {
     /** The webhook's associated trigger event */
     event?: string;
 }
+
+/**
+ * Options for the getContacts operation.
+ */
+export interface GetContactsOptions extends ConnectorOperationOptions {
+    /** Phone number to filter contacts by. */
+    contactPhoneNumber?: string;
+    /** Cutoff time for searching contacts by the last message sent or received. No contacts who sent messages after this time will be shown. */
+    lastMessageTimestampBeforeUtc?: string;
+    /** Cutoff time for searching contacts by the last message sent or received. No contacts whose last sent message is before this time will be shown. */
+    lastMessageTimestampAfterUtc?: string;
+    /** Cutoff time for searching contacts by when they were created. No contacts created after this time will be shown. */
+    contactCreatedBefore?: string;
+    /** Cutoff time for searching contacts by when they were created. No contacts created before this time will be shown. */
+    contactCreatedAfter?: string;
+    /** Whether to search for contacts whose conversations have been resolved. */
+    isResolved?: string;
+    /** Whether to search for contacts who have been blocked. */
+    isBlocked?: string;
+    /** Whether to search for contacts who have been archived. */
+    isArchived?: string;
+    /** Whether to search for contacts who have been suppressed. */
+    isSuppressed?: string;
+    /** Whether to search for contacts who have opted out of receiving texts. */
+    hasOptedOut?: string;
+    /** Cutoff time for searching contacts by when the last message was sent to the customer. No contacts who sent messages after this time will be shown. Uses timestamp as local time. To filter by time stamp in UTC time, use last_message_sent_before_utc */
+    lastMessageSentBefore?: string;
+    /** Cutoff time for searching contacts by when the last message was sent to the customer. No contacts whose last sent message is before this time will be shown. Uses timestamp as local time. To filter by time stamp in UTC time, use last_message_sent_after_utc */
+    lastMessageSentAfter?: string;
+    /** Cutoff time for searching contacts by the last message received from the customer. No contacts who received messages after this time will be shown. Uses timestamp as local time. To filter by time stamp in UTC time, use last_message_sent_before_utc */
+    lastMessageReceivedBefore?: string;
+    /** Cutoff time for searching contacts by the last message received from the customer. No contacts whose last sent message is before this time will be shown. Uses timestamp as local time. To filter by time stamp in UTC time, use last_message_sent_before_utc */
+    lastMessageReceivedAfter?: string;
+    /** Comma-separated list of guids referring to tags to filter contacts by. */
+    tags?: string;
+    /** Comma-separated list of integer ids referring to groups to filter contacts by. */
+    groups?: string;
+    /** Guid referring to custom field to filter contacts by. */
+    customFieldId1?: string;
+    /** Value referring to custom field to filter contacts by. */
+    customFieldValue1?: string;
+    /** Guid referring to second custom field to filter contacts by. */
+    customFieldId2?: string;
+    /** Value referring to second custom field to filter contacts by. */
+    customFieldValue2?: string;
+    /** Guid referring to third custom field to filter contacts by. */
+    customFieldId3?: string;
+    /** Value referring to third custom field to filter contacts by. */
+    customFieldValue3?: string;
+}
+
+/**
+ * Options for the getPayments operation.
+ */
+export interface GetPaymentsOptions extends ConnectorOperationOptions {
+    /** User-defined id defined when payments are created that can be used to quickly find payments. Reference numbers are not unique; many payments can have the same reference. */
+    referenceNumber?: string;
+    /** Phone number of the contact this payment was sent to. */
+    phoneNumber?: string;
+    /** Property to sort payments by. Can be "amount", "contact", "date", "status". */
+    sortType?: string;
+    /** Direction to sort payments in. Can be "desc" for greatest to smallest, or "asc" for smallest to greatest. */
+    sortDirection?: string;
+}
+
+/**
+ * Options for the getConversations operation.
+ */
+export interface GetConversationsOptions extends ConnectorOperationOptions {
+    /** Comma-separated list of guids referring to tags to filter conversations by. */
+    tags?: string;
+    /** Whether to only search for contacts whose conversations have been resolved. If this is false, both resolved and unresolved conversations will be shown. */
+    showUnresolvedOnly?: string;
+    /** Whether to include conversations with contacts that have been archived. */
+    includeArchived?: string;
+    /** Search term for filtering conversations by phone number or display name. If the search term is less than a full name or phone number, the search will return all conversations that partially match it. */
+    search?: string;
+    /** The page of entities to get. When getting values, there is a max size per page, defined by page_size. If page is greater than the last page, an empty array will be returned. */
+    page?: string;
+    /** The size of each page to get. When getting values, this is a max size per page, with accessing subsequent pages done by the page parameter. */
+    pageSize?: string;
+}
+
+/**
+ * Options for the getDashboards operation.
+ */
+export interface GetDashboardsOptions extends ConnectorOperationOptions {
+    /** The page of entities to get. When getting values, there is a max size per page, defined by page_size. If page is greater than the last page, an empty array will be returned. */
+    page?: string;
+    /** The size of each page to get. When getting values, this is a max size per page, with accessing subsequent pages done by the page parameter. */
+    pageSize?: string;
+}
 // #endregion Types
 
 export const TextrequestTriggerOperations = {
@@ -609,7 +701,7 @@ export class TextrequestClient extends ConnectorClientBase {
      * Get a conversation's messages by a contact's phone number
      * @remarks Get the conversation between the specified dashboard and phone number.
      */
-    public async getMessagesByContactPhone(dashboardId: string, phoneNumber: string, page?: string, pageSize?: string, options: ConnectorOperationOptions = {}): Promise<GetMessagesByContactPhoneResponse> {
+    public async getMessagesByContactPhone(dashboardId: string, phoneNumber: string, page: string, pageSize: string, options: ConnectorOperationOptions = {}): Promise<GetMessagesByContactPhoneResponse> {
         const queryParams: string[] = [];
         if (page !== undefined) {
             queryParams.push(`page=${encodeURIComponent(String(page))}`);
@@ -700,73 +792,73 @@ export class TextrequestClient extends ConnectorClientBase {
      * Get all contacts that match the specified filtering criterion
      * @remarks Gets all contacts that match the specified filtering criterion. Only the dashboard specified will be searched; there is no account level search for a number available.
      */
-    public async getContacts(dashboardId: string, contactPhoneNumber?: string, lastMessageTimestampBeforeUtc?: string, lastMessageTimestampAfterUtc?: string, contactCreatedBefore?: string, contactCreatedAfter?: string, isResolved?: string, isBlocked?: string, isArchived?: string, isSuppressed?: string, hasOptedOut?: string, lastMessageSentBefore?: string, lastMessageSentAfter?: string, lastMessageReceivedBefore?: string, lastMessageReceivedAfter?: string, tags?: string, groups?: string, customFieldId1?: string, customFieldValue1?: string, customFieldId2?: string, customFieldValue2?: string, customFieldId3?: string, customFieldValue3?: string, page?: string, pageSize?: string, options: ConnectorOperationOptions = {}): Promise<GetContactsResponse> {
+    public async getContacts(dashboardId: string, page: string, pageSize: string, options: GetContactsOptions = {}): Promise<GetContactsResponse> {
         const queryParams: string[] = [];
-        if (contactPhoneNumber !== undefined) {
-            queryParams.push(`contact_phone_number=${encodeURIComponent(String(contactPhoneNumber))}`);
+        if (options.contactPhoneNumber !== undefined) {
+            queryParams.push(`contact_phone_number=${encodeURIComponent(String(options.contactPhoneNumber))}`);
         }
-        if (lastMessageTimestampBeforeUtc !== undefined) {
-            queryParams.push(`last_message_timestamp_before_utc=${encodeURIComponent(String(lastMessageTimestampBeforeUtc))}`);
+        if (options.lastMessageTimestampBeforeUtc !== undefined) {
+            queryParams.push(`last_message_timestamp_before_utc=${encodeURIComponent(String(options.lastMessageTimestampBeforeUtc))}`);
         }
-        if (lastMessageTimestampAfterUtc !== undefined) {
-            queryParams.push(`last_message_timestamp_after_utc=${encodeURIComponent(String(lastMessageTimestampAfterUtc))}`);
+        if (options.lastMessageTimestampAfterUtc !== undefined) {
+            queryParams.push(`last_message_timestamp_after_utc=${encodeURIComponent(String(options.lastMessageTimestampAfterUtc))}`);
         }
-        if (contactCreatedBefore !== undefined) {
-            queryParams.push(`contact_created_before=${encodeURIComponent(String(contactCreatedBefore))}`);
+        if (options.contactCreatedBefore !== undefined) {
+            queryParams.push(`contact_created_before=${encodeURIComponent(String(options.contactCreatedBefore))}`);
         }
-        if (contactCreatedAfter !== undefined) {
-            queryParams.push(`contact_created_after=${encodeURIComponent(String(contactCreatedAfter))}`);
+        if (options.contactCreatedAfter !== undefined) {
+            queryParams.push(`contact_created_after=${encodeURIComponent(String(options.contactCreatedAfter))}`);
         }
-        if (isResolved !== undefined) {
-            queryParams.push(`is_resolved=${encodeURIComponent(String(isResolved))}`);
+        if (options.isResolved !== undefined) {
+            queryParams.push(`is_resolved=${encodeURIComponent(String(options.isResolved))}`);
         }
-        if (isBlocked !== undefined) {
-            queryParams.push(`is_blocked=${encodeURIComponent(String(isBlocked))}`);
+        if (options.isBlocked !== undefined) {
+            queryParams.push(`is_blocked=${encodeURIComponent(String(options.isBlocked))}`);
         }
-        if (isArchived !== undefined) {
-            queryParams.push(`is_archived=${encodeURIComponent(String(isArchived))}`);
+        if (options.isArchived !== undefined) {
+            queryParams.push(`is_archived=${encodeURIComponent(String(options.isArchived))}`);
         }
-        if (isSuppressed !== undefined) {
-            queryParams.push(`is_suppressed=${encodeURIComponent(String(isSuppressed))}`);
+        if (options.isSuppressed !== undefined) {
+            queryParams.push(`is_suppressed=${encodeURIComponent(String(options.isSuppressed))}`);
         }
-        if (hasOptedOut !== undefined) {
-            queryParams.push(`has_opted_out=${encodeURIComponent(String(hasOptedOut))}`);
+        if (options.hasOptedOut !== undefined) {
+            queryParams.push(`has_opted_out=${encodeURIComponent(String(options.hasOptedOut))}`);
         }
-        if (lastMessageSentBefore !== undefined) {
-            queryParams.push(`last_message_sent_before=${encodeURIComponent(String(lastMessageSentBefore))}`);
+        if (options.lastMessageSentBefore !== undefined) {
+            queryParams.push(`last_message_sent_before=${encodeURIComponent(String(options.lastMessageSentBefore))}`);
         }
-        if (lastMessageSentAfter !== undefined) {
-            queryParams.push(`last_message_sent_after=${encodeURIComponent(String(lastMessageSentAfter))}`);
+        if (options.lastMessageSentAfter !== undefined) {
+            queryParams.push(`last_message_sent_after=${encodeURIComponent(String(options.lastMessageSentAfter))}`);
         }
-        if (lastMessageReceivedBefore !== undefined) {
-            queryParams.push(`last_message_received_before=${encodeURIComponent(String(lastMessageReceivedBefore))}`);
+        if (options.lastMessageReceivedBefore !== undefined) {
+            queryParams.push(`last_message_received_before=${encodeURIComponent(String(options.lastMessageReceivedBefore))}`);
         }
-        if (lastMessageReceivedAfter !== undefined) {
-            queryParams.push(`last_message_received_after=${encodeURIComponent(String(lastMessageReceivedAfter))}`);
+        if (options.lastMessageReceivedAfter !== undefined) {
+            queryParams.push(`last_message_received_after=${encodeURIComponent(String(options.lastMessageReceivedAfter))}`);
         }
-        if (tags !== undefined) {
-            queryParams.push(`tags=${encodeURIComponent(String(tags))}`);
+        if (options.tags !== undefined) {
+            queryParams.push(`tags=${encodeURIComponent(String(options.tags))}`);
         }
-        if (groups !== undefined) {
-            queryParams.push(`groups=${encodeURIComponent(String(groups))}`);
+        if (options.groups !== undefined) {
+            queryParams.push(`groups=${encodeURIComponent(String(options.groups))}`);
         }
-        if (customFieldId1 !== undefined) {
-            queryParams.push(`custom_field_id_1=${encodeURIComponent(String(customFieldId1))}`);
+        if (options.customFieldId1 !== undefined) {
+            queryParams.push(`custom_field_id_1=${encodeURIComponent(String(options.customFieldId1))}`);
         }
-        if (customFieldValue1 !== undefined) {
-            queryParams.push(`custom_field_value_1=${encodeURIComponent(String(customFieldValue1))}`);
+        if (options.customFieldValue1 !== undefined) {
+            queryParams.push(`custom_field_value_1=${encodeURIComponent(String(options.customFieldValue1))}`);
         }
-        if (customFieldId2 !== undefined) {
-            queryParams.push(`custom_field_id_2=${encodeURIComponent(String(customFieldId2))}`);
+        if (options.customFieldId2 !== undefined) {
+            queryParams.push(`custom_field_id_2=${encodeURIComponent(String(options.customFieldId2))}`);
         }
-        if (customFieldValue2 !== undefined) {
-            queryParams.push(`custom_field_value_2=${encodeURIComponent(String(customFieldValue2))}`);
+        if (options.customFieldValue2 !== undefined) {
+            queryParams.push(`custom_field_value_2=${encodeURIComponent(String(options.customFieldValue2))}`);
         }
-        if (customFieldId3 !== undefined) {
-            queryParams.push(`custom_field_id_3=${encodeURIComponent(String(customFieldId3))}`);
+        if (options.customFieldId3 !== undefined) {
+            queryParams.push(`custom_field_id_3=${encodeURIComponent(String(options.customFieldId3))}`);
         }
-        if (customFieldValue3 !== undefined) {
-            queryParams.push(`custom_field_value_3=${encodeURIComponent(String(customFieldValue3))}`);
+        if (options.customFieldValue3 !== undefined) {
+            queryParams.push(`custom_field_value_3=${encodeURIComponent(String(options.customFieldValue3))}`);
         }
         if (page !== undefined) {
             queryParams.push(`page=${encodeURIComponent(String(page))}`);
@@ -833,7 +925,7 @@ export class TextrequestClient extends ConnectorClientBase {
      * Gets all groups
      * @remarks Gets all groups for the user's account.
      */
-    public async getGroups(dashboardId: string, page?: string, pageSize?: string, options: ConnectorOperationOptions = {}): Promise<GetGroupsResponse> {
+    public async getGroups(dashboardId: string, page: string, pageSize: string, options: ConnectorOperationOptions = {}): Promise<GetGroupsResponse> {
         const queryParams: string[] = [];
         if (page !== undefined) {
             queryParams.push(`page=${encodeURIComponent(String(page))}`);
@@ -864,7 +956,7 @@ export class TextrequestClient extends ConnectorClientBase {
      * Gets all tags
      * @remarks Gets all the tags for this dashboard. Tags are unique between dashboards.
      */
-    public async getTags(dashboardId: string, page?: string, pageSize?: string, options: ConnectorOperationOptions = {}): Promise<GetTagsResponse> {
+    public async getTags(dashboardId: string, page: string, pageSize: string, options: ConnectorOperationOptions = {}): Promise<GetTagsResponse> {
         const queryParams: string[] = [];
         if (page !== undefined) {
             queryParams.push(`page=${encodeURIComponent(String(page))}`);
@@ -943,19 +1035,19 @@ export class TextrequestClient extends ConnectorClientBase {
      * Gets all payments
      * @remarks Gets all payments, including canceled and paid payments. These can be filtered using the query parameters.
      */
-    public async getPayments(dashboardId: string, referenceNumber?: string, phoneNumber?: string, sortType?: string, sortDirection?: string, page?: string, pageSize?: string, options: ConnectorOperationOptions = {}): Promise<GetPaymentsResponse> {
+    public async getPayments(dashboardId: string, page: string, pageSize: string, options: GetPaymentsOptions = {}): Promise<GetPaymentsResponse> {
         const queryParams: string[] = [];
-        if (referenceNumber !== undefined) {
-            queryParams.push(`reference_number=${encodeURIComponent(String(referenceNumber))}`);
+        if (options.referenceNumber !== undefined) {
+            queryParams.push(`reference_number=${encodeURIComponent(String(options.referenceNumber))}`);
         }
-        if (phoneNumber !== undefined) {
-            queryParams.push(`phone_number=${encodeURIComponent(String(phoneNumber))}`);
+        if (options.phoneNumber !== undefined) {
+            queryParams.push(`phone_number=${encodeURIComponent(String(options.phoneNumber))}`);
         }
-        if (sortType !== undefined) {
-            queryParams.push(`sort_type=${encodeURIComponent(String(sortType))}`);
+        if (options.sortType !== undefined) {
+            queryParams.push(`sort_type=${encodeURIComponent(String(options.sortType))}`);
         }
-        if (sortDirection !== undefined) {
-            queryParams.push(`sort_direction=${encodeURIComponent(String(sortDirection))}`);
+        if (options.sortDirection !== undefined) {
+            queryParams.push(`sort_direction=${encodeURIComponent(String(options.sortDirection))}`);
         }
         if (page !== undefined) {
             queryParams.push(`page=${encodeURIComponent(String(page))}`);
@@ -1022,25 +1114,25 @@ export class TextrequestClient extends ConnectorClientBase {
      * Gets all conversations for this dashboard
      * @remarks Gets all conversations for this dashboard, and includes info on the last message for each conversation.
      */
-    public async getConversations(dashboardId: string, tags?: string, showUnresolvedOnly?: string, includeArchived?: string, search?: string, page?: string, pageSize?: string, options: ConnectorOperationOptions = {}): Promise<GetConversationsResponse> {
+    public async getConversations(dashboardId: string, options: GetConversationsOptions = {}): Promise<GetConversationsResponse> {
         const queryParams: string[] = [];
-        if (tags !== undefined) {
-            queryParams.push(`tags=${encodeURIComponent(String(tags))}`);
+        if (options.tags !== undefined) {
+            queryParams.push(`tags=${encodeURIComponent(String(options.tags))}`);
         }
-        if (showUnresolvedOnly !== undefined) {
-            queryParams.push(`show_unresolved_only=${encodeURIComponent(String(showUnresolvedOnly))}`);
+        if (options.showUnresolvedOnly !== undefined) {
+            queryParams.push(`show_unresolved_only=${encodeURIComponent(String(options.showUnresolvedOnly))}`);
         }
-        if (includeArchived !== undefined) {
-            queryParams.push(`include_archived=${encodeURIComponent(String(includeArchived))}`);
+        if (options.includeArchived !== undefined) {
+            queryParams.push(`include_archived=${encodeURIComponent(String(options.includeArchived))}`);
         }
-        if (search !== undefined) {
-            queryParams.push(`search=${encodeURIComponent(String(search))}`);
+        if (options.search !== undefined) {
+            queryParams.push(`search=${encodeURIComponent(String(options.search))}`);
         }
-        if (page !== undefined) {
-            queryParams.push(`page=${encodeURIComponent(String(page))}`);
+        if (options.page !== undefined) {
+            queryParams.push(`page=${encodeURIComponent(String(options.page))}`);
         }
-        if (pageSize !== undefined) {
-            queryParams.push(`page_size=${encodeURIComponent(String(pageSize))}`);
+        if (options.pageSize !== undefined) {
+            queryParams.push(`page_size=${encodeURIComponent(String(options.pageSize))}`);
         }
         const requestPath = `/dashboards/${dashboardId}/conversations` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
@@ -1053,13 +1145,13 @@ export class TextrequestClient extends ConnectorClientBase {
      * Get all dashboards in an account
      * @remarks Gets all dashboards in an account.
      */
-    public async getDashboards(page?: string, pageSize?: string, options: ConnectorOperationOptions = {}): Promise<GetDashboardsResponse> {
+    public async getDashboards(options: GetDashboardsOptions = {}): Promise<GetDashboardsResponse> {
         const queryParams: string[] = [];
-        if (page !== undefined) {
-            queryParams.push(`page=${encodeURIComponent(String(page))}`);
+        if (options.page !== undefined) {
+            queryParams.push(`page=${encodeURIComponent(String(options.page))}`);
         }
-        if (pageSize !== undefined) {
-            queryParams.push(`page_size=${encodeURIComponent(String(pageSize))}`);
+        if (options.pageSize !== undefined) {
+            queryParams.push(`page_size=${encodeURIComponent(String(options.pageSize))}`);
         }
         const requestPath = `/dashboards` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);

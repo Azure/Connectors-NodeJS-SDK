@@ -50,7 +50,7 @@ describe("ExcelonlineClient — constructor", () => {
     it("should strip trailing slashes from connection URL", async () => {
         mockFetchResponse([]);
         const client = new ExcelonlineClient(TestConnectionUrl + "///", createMockCredential());
-        await client.getTables("drive1", "file1");
+        await client.getTables("drive1", "file1", "SharePoint");
         const [url] = (global.fetch as jest.Mock).mock.calls[0];
         // NOTE: Confirms the trailing slashes were stripped by inspecting the
         //       outbound URL: after the scheme, no `//` should remain.
@@ -79,7 +79,7 @@ describe("ExcelonlineClient — getTables", () => {
         mockFetchResponse(tables);
 
         const client = new ExcelonlineClient(TestConnectionUrl, createMockCredential());
-        const result = await client.getTables("drive1", "file1");
+        const result = await client.getTables("drive1", "file1", "SharePoint");
 
         expect(result).toEqual(tables);
         expect(global.fetch).toHaveBeenCalledTimes(1);
@@ -95,7 +95,7 @@ describe("ExcelonlineClient — getTables", () => {
         mockFetchResponse({ value: [] });
 
         const client = new ExcelonlineClient(TestConnectionUrl, createMockCredential());
-        await client.getTables("drive1", "file1", undefined, "id");
+        await client.getTables("drive1", "file1", "SharePoint", { select: "id" });
 
         const [url] = (global.fetch as jest.Mock).mock.calls[0];
         expect(url).toContain("$select=id");
@@ -106,7 +106,7 @@ describe("ExcelonlineClient — getTables", () => {
 
         const client = new ExcelonlineClient(TestConnectionUrl, createMockCredential());
         try {
-            await client.getTables("drive1", "file1");
+            await client.getTables("drive1", "file1", "SharePoint");
             throw new Error("Expected ConnectorError to be thrown.");
         } catch (error) {
             expect(error).toBeInstanceOf(ConnectorError);

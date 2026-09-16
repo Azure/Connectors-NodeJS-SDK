@@ -116,7 +116,7 @@ async function main() {
     if (fileId) {
         console.log(`\n--- Get File Thumbnail ---`);
         try {
-            const thumbnail = await client.getFileThumbnail(fileId);
+            const thumbnail = await client.getFileThumbnail(fileId, "medium");
             console.log(`  Thumbnail URL: ${String(thumbnail.Url ?? "none").substring(0, 80)}...`);
         } catch (error) {
             if (error instanceof ConnectorError) {

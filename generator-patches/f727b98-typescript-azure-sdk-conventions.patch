@@ -68,7 +68,7 @@ index f88f2aecb6d..60b8e2017fb 100644
          }
  
 diff --git a/src/tools/CodefulSdkGenerator.Tests/DirectClientGeneratorTests.cs b/src/tools/CodefulSdkGenerator.Tests/DirectClientGeneratorTests.cs
-index f7465bc9360..c0832ae6afa 100644
+index f7465bc9360..0bc84f6856d 100644
 --- a/src/tools/CodefulSdkGenerator.Tests/DirectClientGeneratorTests.cs
 +++ b/src/tools/CodefulSdkGenerator.Tests/DirectClientGeneratorTests.cs
 @@ -2069,6 +2069,54 @@ namespace LogicApps.Tests
@@ -126,7 +126,38 @@ index f7465bc9360..c0832ae6afa 100644
          [TestMethod]
          [Owner("daviburg")]
          public void Generate_PaginatedSwagger_EmitsIPageableOnPageType()
-@@ -2152,6 +2200,105 @@ namespace LogicApps.Tests
+@@ -2101,6 +2149,30 @@ namespace LogicApps.Tests
+                 message: "Paginated method should return AsyncPageable<BlobMetadata>.");
+         }
+ 
++        /// <summary>
++        /// Verifies a TypeScript continuation operation annotation does not change canonical C# pagination.
++        /// </summary>
++        [TestMethod]
++        [Owner("swapnilnagar")]
++        public void Generate_PaginatedSwaggerWithMissingContinuationOperation_StillEmitsCSharpPageable()
++        {
++            var swagger = JsonObject.Parse(SwaggerWithPagination).AsObject();
++            swagger[SchemaPropertyNames.Paths]["/{connectionId}/datasets/default/foldersV2/{folder}"]["get"][SchemaPropertyNames.MsPageable] =
++                new JsonObject
++                {
++                    [SchemaPropertyNames.NextLinkName] = SchemaPropertyNames.PaginationNextLink,
++                    [SchemaPropertyNames.PageableOperationName] = "MissingContinuationOperation",
++                };
++            var generator = new DirectClientGenerator();
++            using var writer = new StringWriter();
++
++            generator.Generate(swagger, "paginatedconnector", writer);
++
++            Assert.IsTrue(
++                condition: writer.ToString().Contains("AsyncPageable<BlobMetadata> ListFolderAsync", StringComparison.Ordinal),
++                message: "TypeScript-only continuation validation must not remove a valid C# pageable method.");
++        }
++
+         [TestMethod]
+         [Owner("daviburg")]
+         public void Generate_PaginatedSwagger_NonPaginatedMethodRemainsAsync()
+@@ -2152,6 +2224,105 @@ namespace LogicApps.Tests
                  message: "OData paginated method should return AsyncPageable.");
          }
  
@@ -233,10 +264,10 @@ index f7465bc9360..c0832ae6afa 100644
          [Owner("daviburg")]
          public void Generate_PaginatedSwagger_PaginatedMethodIncludesCancellationToken()
 diff --git a/src/tools/CodefulSdkGenerator.Tests/DirectClientTypeScriptCodeGeneratorTests.cs b/src/tools/CodefulSdkGenerator.Tests/DirectClientTypeScriptCodeGeneratorTests.cs
-index 4e7a276f410..472143de311 100644
+index 4e7a276f410..5eb6be5af48 100644
 --- a/src/tools/CodefulSdkGenerator.Tests/DirectClientTypeScriptCodeGeneratorTests.cs
 +++ b/src/tools/CodefulSdkGenerator.Tests/DirectClientTypeScriptCodeGeneratorTests.cs
-@@ -101,6 +101,37 @@ namespace LogicApps.Tests
+@@ -101,6 +101,48 @@ namespace LogicApps.Tests
  
          // #endregion ToCamelCase
  
@@ -256,6 +287,17 @@ index 4e7a276f410..472143de311 100644
 +        [DataRow("AnalysisDelete", "/analysis/{id}", "deleteAnalysis")]
 +        [DataRow("List_Create", "/lists", "createList")]
 +        [DataRow("CreateOrUpdate", "/items/{itemId}", "createOrUpdate")]
++        [DataRow("Deployments_Validate", "/deployments/{deploymentName}/validate", "validateDeployments")]
++        [DataRow("Deployments_ExportTemplate", "/deployments/{deploymentName}/exportTemplate", "exportDeploymentsTemplate")]
++        [DataRow("Providers_Register", "/providers/{provider}/register", "registerProviders")]
++        [DataRow("Providers_Unregister", "/providers/{provider}/unregister", "unregisterProviders")]
++        [DataRow("ResourceGroups_Patch", "/resourceGroups/{resourceGroupName}", "patchResourceGroups")]
++        [DataRow("ResourceGroups_ExportTemplate", "/resourceGroups/{resourceGroupName}/exportTemplate", "exportResourceGroupsTemplate")]
++        [DataRow("CalendarPatchItem", "/calendar/{id}", "patchCalendarItem")]
++        [DataRow("ContactPatchItem", "/contacts/{id}", "patchContactItem")]
++        [DataRow("EditDocumentDocxReplace", "/documents/docx/replace", "replaceEditDocumentDocx")]
++        [DataRow("EditDocumentPptxReplace", "/documents/pptx/replace", "replaceEditDocumentPptx")]
++        [DataRow("FlowV1DocumentsJobsRegExpReplace", "/documents/jobs/regexp", "replaceFlowV1DocumentsJobsRegExp")]
 +        public void GetMethodName_OperationId_ReturnsVerbNounName(string operationId, string path, string expected)
 +        {
 +            var method = new DirectClientMethodInfo
@@ -783,10 +825,24 @@ index e43e1cbbf72..ee5b1bfc40e 100644
              var markerCount = Regex.Matches(
                  input: output,
 diff --git a/src/tools/CodefulSdkGenerator.Tests/DirectClientTypeScriptOutputFormatTests.cs b/src/tools/CodefulSdkGenerator.Tests/DirectClientTypeScriptOutputFormatTests.cs
-index 86e27397c5f..883c05dc2ad 100644
+index 86e27397c5f..a1643a05421 100644
 --- a/src/tools/CodefulSdkGenerator.Tests/DirectClientTypeScriptOutputFormatTests.cs
 +++ b/src/tools/CodefulSdkGenerator.Tests/DirectClientTypeScriptOutputFormatTests.cs
-@@ -132,6 +132,82 @@ namespace LogicApps.Tests
+@@ -51,6 +51,13 @@ namespace LogicApps.Tests
+                                 "required": false,
+                                 "type": "string",
+                                 "description": "Optional filter."
++                            },
++                            {
++                                "name": "x-ms-correlation-id",
++                                "in": "header",
++                                "required": false,
++                                "type": "string",
++                                "description": "Optional correlation identifier."
+                             }
+                         ],
+                         "responses": {
+@@ -132,6 +139,82 @@ namespace LogicApps.Tests
          }
          """;
  
@@ -869,7 +925,7 @@ index 86e27397c5f..883c05dc2ad 100644
          /// <summary>
          /// Swagger with a trigger operation and no callable actions.
          /// </summary>
-@@ -266,10 +342,10 @@ namespace LogicApps.Tests
+@@ -266,10 +349,10 @@ namespace LogicApps.Tests
                  message: "Import for ConnectorClientBase should include .ts extension.");
              Assert.IsTrue(
                  output.Contains("from \"../azureConnectors/options.ts\"", StringComparison.Ordinal),
@@ -884,7 +940,7 @@ index 86e27397c5f..883c05dc2ad 100644
              Assert.IsTrue(
                  output.Contains("import type { TokenCredential } from \"@azure/core-auth\";", StringComparison.Ordinal),
                  message: "TokenCredential should be type-imported from Azure Core.");
-@@ -345,7 +421,7 @@ namespace LogicApps.Tests
+@@ -345,7 +428,7 @@ namespace LogicApps.Tests
  
          [TestMethod]
          [Owner("swapnilnagar")]
@@ -893,7 +949,7 @@ index 86e27397c5f..883c05dc2ad 100644
          {
              var swagger = JsonObject.Parse(FormatTestSwagger).AsObject();
              var generator = new DirectClientTypeScriptGenerator();
-@@ -355,15 +431,19 @@ namespace LogicApps.Tests
+@@ -355,15 +438,19 @@ namespace LogicApps.Tests
  
              var output = writer.ToString();
  
@@ -913,11 +969,11 @@ index 86e27397c5f..883c05dc2ad 100644
          [TestMethod]
          [Owner("swapnilnagar")]
 -        public void Generate_AllMethodsHaveAbortSignalParameter()
-+        public void Generate_AllMethodsHaveOperationOptionsParameter()
++        public void Generate_OptionalServiceParametersUseMethodSpecificOptions()
          {
              var swagger = JsonObject.Parse(FormatTestSwagger).AsObject();
              var generator = new DirectClientTypeScriptGenerator();
-@@ -373,25 +453,19 @@ namespace LogicApps.Tests
+@@ -373,25 +460,26 @@ namespace LogicApps.Tests
  
              var output = writer.ToString();
  
@@ -940,17 +996,26 @@ index 86e27397c5f..883c05dc2ad 100644
 +                message: "Generated clients should type-import operation options.");
  
 -            var abortSignalCount = CountOccurrences(output, "abortSignal?: AbortSignalLike");
-+            var operationOptionsCount = CountOccurrences(output, "options: ConnectorOperationOptions = {}");
-             Assert.AreEqual(
-                 expected: 2,
+-            Assert.AreEqual(
+-                expected: 2,
 -                actual: abortSignalCount,
 -                message: "Every generated action method should have an abortSignal parameter.");
-+                actual: operationOptionsCount,
-+                message: "Every generated action method should have an operation options parameter.");
++            Assert.IsTrue(
++                condition: output.Contains("export interface ListItemsOptions extends ConnectorOperationOptions", StringComparison.Ordinal) &&
++                    output.Contains("filter?: string;", StringComparison.Ordinal) &&
++                    output.Contains("xMsCorrelationId?: string;", StringComparison.Ordinal) &&
++                    output.Contains("export interface UpdateItemOptions extends ConnectorOperationOptions", StringComparison.Ordinal) &&
++                    output.Contains("url?: string;", StringComparison.Ordinal),
++                message: "Optional query and header parameters should be emitted on method-specific options types.");
++            Assert.IsFalse(
++                condition: output.Contains("filter?: string,", StringComparison.Ordinal) ||
++                    output.Contains("xMsCorrelationId?: string,", StringComparison.Ordinal) ||
++                    output.Contains("url?: string,", StringComparison.Ordinal),
++                message: "Optional service parameters must not remain positional.");
          }
  
          /// <summary>
-@@ -409,32 +483,113 @@ namespace LogicApps.Tests
+@@ -409,32 +497,227 @@ namespace LogicApps.Tests
  
              var output = writer.ToString();
              Assert.IsTrue(
@@ -960,7 +1025,7 @@ index 86e27397c5f..883c05dc2ad 100644
 +                message: "Paginated clients should type-import the connector-specific paging surface.");
              Assert.IsTrue(
 -                output.Contains("public listItemsAsync(filter?: string, abortSignal?: AbortSignalLike): PagedAsyncIterableIterator<ItemModel>", StringComparison.Ordinal),
-+                output.Contains("public listItems(filter?: string, options: ConnectorOperationOptions = {}): ConnectorPagedAsyncIterableIterator<ItemModel>", StringComparison.Ordinal),
++                output.Contains("public listItems(options: ListItemsOptions = {}): ConnectorPagedAsyncIterableIterator<ItemModel>", StringComparison.Ordinal),
                  message: "Paginated methods should synchronously return a typed item iterator.");
              Assert.IsTrue(
                  output.Contains("return this.createPageable<ItemListResult, ItemModel>(", StringComparison.Ordinal),
@@ -968,12 +1033,16 @@ index 86e27397c5f..883c05dc2ad 100644
              Assert.IsTrue(
 -                output.Contains("sendAsync<ItemListResult>(\"GET\", requestUrl, undefined, undefined, abortSignal)", StringComparison.Ordinal),
 -                message: "Every paginated page request should forward the caller's abort signal.");
--            Assert.IsTrue(
++                output.Contains("sendWithTracingAsync<ItemListResult>(\"Formattest.listItems\", \"ListItems\", requestMethod, requestUrl, undefined, options, requestHeaders)", StringComparison.Ordinal),
++                message: "Every paginated page request should preserve operation options and tracing context.");
+             Assert.IsTrue(
 -                output.Contains("const operationPath = this.getOperationPath(requestUrl);", StringComparison.Ordinal) &&
 -                output.Contains("throw new ConnectorException(this.connectorName, `GET ${operationPath}`, httpResponse.statusCode, httpResponse.text);", StringComparison.Ordinal),
 -                message: "Paginated failures should identify the sanitized operation path of the page request that failed.");
-+                output.Contains("sendWithTracingAsync<ItemListResult>(\"Formattest.listItems\", \"ListItems\", requestMethod, requestUrl, undefined, options)", StringComparison.Ordinal),
-+                message: "Every paginated page request should preserve operation options and tracing context.");
++                condition: output.Contains("options.filter !== undefined", StringComparison.Ordinal) &&
++                    output.Contains("encodeURIComponent(String(options.filter))", StringComparison.Ordinal) &&
++                    output.Contains("requestHeaders[\"x-ms-correlation-id\"] = String(options.xMsCorrelationId);", StringComparison.Ordinal),
++                message: "Query and header service options should be serialized from the options bag.");
              Assert.IsTrue(
 -                output.Contains("public async updateItemAsync(", StringComparison.Ordinal),
 +                output.Contains("public async updateItem(", StringComparison.Ordinal),
@@ -998,10 +1067,36 @@ index 86e27397c5f..883c05dc2ad 100644
 +
 +            var output = writer.ToString();
 +            Assert.IsTrue(
-+                condition: output.Contains("public listItems(filter?: string, options: ConnectorOperationOptions = {}): ConnectorPagedAsyncIterableIterator<ItemModel>", StringComparison.Ordinal) &&
++                condition: output.Contains("public listItems(options: ListItemsOptions = {}): ConnectorPagedAsyncIterableIterator<ItemModel>", StringComparison.Ordinal) &&
 +                    output.Contains("            \"value\",", StringComparison.Ordinal) &&
 +                    output.Contains("            undefined,", StringComparison.Ordinal),
 +                message: "A non-paginated list envelope should use one iterator page without a continuation property.");
++        }
++
++        /// <summary>
++        /// Verifies a list summary is classified before the current operation name is considered.
++        /// </summary>
++        [TestMethod]
++        [Owner("swapnilnagar")]
++        public void Generate_GetNamedListEnvelope_EmitsSinglePageIterator()
++        {
++            var swagger = JsonObject.Parse(FormatTestSwagger).AsObject();
++            var operation = swagger[SchemaPropertyNames.Paths]["/{connectionId}/items"]["get"].AsObject();
++            operation[SchemaPropertyNames.OperationId] = "GetAllChannelsForTeam";
++            operation[SchemaPropertyNames.Summary] = "List all channels";
++            swagger[SchemaPropertyNames.Definitions]["ItemListResult"][SchemaPropertyNames.Properties]
++                .AsObject()
++                .Remove(SchemaPropertyNames.PaginationNextLink);
++            var generator = new DirectClientTypeScriptGenerator();
++            using var writer = new StringWriter();
++
++            generator.Generate(swagger, "formattest", writer);
++
++            Assert.IsTrue(
++                condition: writer.ToString().Contains(
++                    "public getAllChannelsForTeam(options: GetAllChannelsForTeamOptions = {}): ConnectorPagedAsyncIterableIterator<ItemModel>",
++                    StringComparison.Ordinal),
++                message: "A semantic list must use an iterator even when its current name starts with get.");
 +        }
 +
 +        /// <summary>
@@ -1028,10 +1123,93 @@ index 86e27397c5f..883c05dc2ad 100644
 +
 +            var output = writer.ToString();
 +            Assert.IsTrue(
-+                condition: output.Contains("public listItems(filter?: string, options: ConnectorOperationOptions = {}): ConnectorPagedAsyncIterableIterator<ItemModel>", StringComparison.Ordinal) &&
++                condition: output.Contains("public listItems(options: ListItemsOptions = {}): ConnectorPagedAsyncIterableIterator<ItemModel>", StringComparison.Ordinal) &&
 +                    output.Contains("return this.createPageable<", StringComparison.Ordinal) &&
 +                    output.Contains(", ItemModel>(", StringComparison.Ordinal),
 +                message: $"A root-array list response should use one iterator page. Output: {output}");
++        }
++
++        /// <summary>
++        /// Verifies anonymous object list items retain a list-local dynamic object fallback.
++        /// </summary>
++        [TestMethod]
++        [Owner("swapnilnagar")]
++        public void Generate_AnonymousObjectListItems_EmitRecordItemType()
++        {
++            var swagger = JsonObject.Parse(FormatTestSwagger).AsObject();
++            swagger[SchemaPropertyNames.Paths]["/{connectionId}/items"]["get"][SchemaPropertyNames.Responses]["200"][SchemaPropertyNames.Schema] =
++                new JsonObject
++                {
++                    [SchemaPropertyNames.Type] = SchemaTypeNames.Array,
++                    [SchemaPropertyNames.Items] = new JsonObject
++                    {
++                        [SchemaPropertyNames.Type] = SchemaTypeNames.Object,
++                    },
++                };
++            var generator = new DirectClientTypeScriptGenerator();
++            using var writer = new StringWriter();
++
++            generator.Generate(swagger, "formattest", writer);
++
++            Assert.IsTrue(
++                condition: writer.ToString().Contains(
++                    "ConnectorPagedAsyncIterableIterator<Record<string, unknown>>",
++                    StringComparison.Ordinal),
++                message: "An anonymous object item should use the dynamic record fallback locally.");
++        }
++
++        /// <summary>
++        /// Verifies named empty object references preserve their generated public model type.
++        /// </summary>
++        [TestMethod]
++        [Owner("swapnilnagar")]
++        public void Generate_NamedEmptyObjectProperty_PreservesNamedType()
++        {
++            var swagger = JsonObject.Parse(FormatTestSwagger).AsObject();
++            swagger[SchemaPropertyNames.Definitions]["DynamicPayload"] = new JsonObject
++            {
++                [SchemaPropertyNames.Type] = SchemaTypeNames.Object,
++                [SchemaPropertyNames.Properties] = new JsonObject(),
++            };
++            swagger[SchemaPropertyNames.Definitions]["ItemModel"][SchemaPropertyNames.Properties]["payload"] = new JsonObject
++            {
++                [SchemaPropertyNames.Ref] = "#/definitions/DynamicPayload",
++            };
++            var generator = new DirectClientTypeScriptGenerator();
++            using var writer = new StringWriter();
++
++            generator.Generate(swagger, "formattest", writer);
++
++            var output = writer.ToString();
++            Assert.IsTrue(
++                condition: output.Contains("payload?: DynamicPayload;", StringComparison.Ordinal) &&
++                    output.Contains("export interface DynamicPayload", StringComparison.Ordinal),
++                message: "A named empty object must remain a named model instead of becoming a record property.");
++        }
++
++        /// <summary>
++        /// Verifies an unresolved named reference emits a named dynamic interface instead of a dangling type.
++        /// </summary>
++        [TestMethod]
++        [Owner("swapnilnagar")]
++        public void Generate_UnresolvedNamedObjectProperty_EmitsNamedDynamicType()
++        {
++            var swagger = JsonObject.Parse(FormatTestSwagger).AsObject();
++            swagger[SchemaPropertyNames.Definitions]["ItemModel"][SchemaPropertyNames.Properties]["payload"] = new JsonObject
++            {
++                [SchemaPropertyNames.Ref] = "#/definitions/ObjectEntity",
++            };
++            var generator = new DirectClientTypeScriptGenerator();
++            using var writer = new StringWriter();
++
++            generator.Generate(swagger, "formattest", writer);
++
++            var output = writer.ToString();
++            Assert.IsTrue(
++                condition: output.Contains("payload?: ObjectEntity;", StringComparison.Ordinal) &&
++                    output.Contains("export interface ObjectEntity", StringComparison.Ordinal) &&
++                    output.Contains("[key: string]: unknown;", StringComparison.Ordinal),
++                message: $"An unresolved reference should retain a compilable named dynamic model. Output: {output}");
 +        }
 +
 +        /// <summary>
@@ -1061,7 +1239,7 @@ index 86e27397c5f..883c05dc2ad 100644
 +            generator.Generate(swagger, "formattest", writer);
 +
 +            Assert.IsTrue(
-+                condition: writer.ToString().Contains("public async listCreate(filter?: string, options: ConnectorOperationOptions = {}): Promise<ListCreateResponse>", StringComparison.Ordinal),
++                condition: writer.ToString().Contains("public async listCreate(options: ListCreateOptions = {}): Promise<ListCreateResponse>", StringComparison.Ordinal),
 +                message: "A List-noun operation without a collection response must remain an ordinary Promise method.");
 +        }
 +
@@ -1075,7 +1253,7 @@ index 86e27397c5f..883c05dc2ad 100644
          {
              var swagger = JsonObject.Parse(FormatTestSwagger).AsObject();
              swagger[SchemaPropertyNames.Definitions]["ItemListResult"][SchemaPropertyNames.Properties][SchemaPropertyNames.PaginationNextLink][SchemaPropertyNames.Type] = "integer";
-@@ -444,12 +599,83 @@ namespace LogicApps.Tests
+@@ -444,12 +727,83 @@ namespace LogicApps.Tests
              generator.Generate(swagger, "formattest", writer);
  
              var output = writer.ToString();
@@ -1085,7 +1263,7 @@ index 86e27397c5f..883c05dc2ad 100644
              Assert.IsTrue(
 -                output.Contains("public async listItemsAsync(filter?: string, abortSignal?: AbortSignalLike): Promise<ItemListResult>", StringComparison.Ordinal),
 -                message: "A response without a valid continuation link should retain its Promise return type.");
-+                output.Contains("public listItems(filter?: string, options: ConnectorOperationOptions = {}): ConnectorPagedAsyncIterableIterator<ItemModel>", StringComparison.Ordinal),
++                output.Contains("public listItems(options: ListItemsOptions = {}): ConnectorPagedAsyncIterableIterator<ItemModel>", StringComparison.Ordinal),
 +                message: "A list response with an invalid continuation link should still use a one-page iterator.");
 +        }
 +
@@ -1164,7 +1342,7 @@ index 86e27397c5f..883c05dc2ad 100644
          }
  
          /// <summary>
-@@ -593,7 +819,7 @@ namespace LogicApps.Tests
+@@ -593,7 +947,7 @@ namespace LogicApps.Tests
              var output = writer.ToString();
  
              // NOTE(swapnilnagar): The connectorName getter should return the raw connector name string,
@@ -1173,7 +1351,7 @@ index 86e27397c5f..883c05dc2ad 100644
              Assert.IsTrue(
                  output.Contains("return \"formattest\"", StringComparison.Ordinal),
                  message: "connectorName property should return the raw connector name.");
-@@ -620,7 +846,7 @@ namespace LogicApps.Tests
+@@ -620,7 +974,7 @@ namespace LogicApps.Tests
  
          [TestMethod]
          [Owner("swapnilnagar")]
@@ -1182,7 +1360,7 @@ index 86e27397c5f..883c05dc2ad 100644
          {
              var swagger = JsonObject.Parse(FormatTestSwagger).AsObject();
              var generator = new DirectClientTypeScriptGenerator();
-@@ -630,10 +856,9 @@ namespace LogicApps.Tests
+@@ -630,23 +984,9 @@ namespace LogicApps.Tests
  
              var output = writer.ToString();
  
@@ -1190,16 +1368,29 @@ index 86e27397c5f..883c05dc2ad 100644
              Assert.IsTrue(
 -                output.Contains("abortSignal)", StringComparison.Ordinal),
 -                message: "abortSignal should be passed as the last argument to sendAsync.");
-+                output.Contains("undefined, options)", StringComparison.Ordinal),
-+                message: "Operation options should be passed to the traced request helper.");
+-        }
+-
+-        private static int CountOccurrences(string text, string pattern)
+-        {
+-            var count = 0;
+-            var index = 0;
+-            while ((index = text.IndexOf(pattern, index, StringComparison.Ordinal)) >= 0)
+-            {
+-                count++;
+-                index += pattern.Length;
+-            }
+-
+-            return count;
++                output.Contains("undefined, options, requestHeaders)", StringComparison.Ordinal),
++                message: "Operation options and service headers should be passed to the traced request helper.");
          }
  
-         private static int CountOccurrences(string text, string pattern)
+         /// <summary>
 diff --git a/src/tools/CodefulSdkGenerator/DirectClient/DirectClientGeneratorBase.cs b/src/tools/CodefulSdkGenerator/DirectClient/DirectClientGeneratorBase.cs
-index ac967b657db..1fbce6a846c 100644
+index ac967b657db..eff6c0182bb 100644
 --- a/src/tools/CodefulSdkGenerator/DirectClient/DirectClientGeneratorBase.cs
 +++ b/src/tools/CodefulSdkGenerator/DirectClient/DirectClientGeneratorBase.cs
-@@ -372,49 +372,124 @@ namespace Microsoft.Azure.Workflows.CodefulSdkGenerator.DirectClient
+@@ -372,49 +372,127 @@ namespace Microsoft.Azure.Workflows.CodefulSdkGenerator.DirectClient
              if (result.ResponseTypeName != null && result.ResponseSchema != null)
              {
                  var resolvedSchema = SwaggerRefResolver.ResolveSchema(result.ResponseSchema, context.Document);
@@ -1246,10 +1437,13 @@ index ac967b657db..1fbce6a846c 100644
                      result.PageItemTypeName = pageItemTypeName;
 +                    result.PaginationItemName = itemName;
 +                    result.PaginationNextLinkName = nextLinkName;
-+                    result.PaginationContinuationHttpMethod = this.ResolvePaginationContinuationHttpMethod(
-+                        document: context.Document,
-+                        sourceOperationId: result.OperationId,
-+                        continuationOperationId: pageableAnnotation?[SchemaPropertyNames.PageableOperationName]?.GetValue<string>());
++                    if (this.SupportsPaginationContinuationOperations)
++                    {
++                        result.PaginationContinuationHttpMethod = this.ResolvePaginationContinuationHttpMethod(
++                            document: context.Document,
++                            sourceOperationId: result.OperationId,
++                            continuationOperationId: pageableAnnotation?[SchemaPropertyNames.PageableOperationName]?.GetValue<string>());
++                    }
                  }
              }
          }
@@ -1343,7 +1537,7 @@ index ac967b657db..1fbce6a846c 100644
                  valueNode is not JsonObject rawValueSchema)
              {
                  return false;
-@@ -449,6 +524,68 @@ namespace Microsoft.Azure.Workflows.CodefulSdkGenerator.DirectClient
+@@ -449,6 +527,68 @@ namespace Microsoft.Azure.Workflows.CodefulSdkGenerator.DirectClient
              return true;
          }
  
@@ -1412,7 +1606,7 @@ index ac967b657db..1fbce6a846c 100644
          /// <inheritdoc />
          protected override DirectClientMethodInfo ProcessMethod(SwaggerContext context, string path, string method, JsonObject methodInfo)
          {
-@@ -819,6 +956,17 @@ namespace Microsoft.Azure.Workflows.CodefulSdkGenerator.DirectClient
+@@ -819,6 +959,23 @@ namespace Microsoft.Azure.Workflows.CodefulSdkGenerator.DirectClient
          /// </remarks>
          protected virtual bool RetainsDiscoveryOperations => true;
  
@@ -1426,6 +1620,12 @@ index ac967b657db..1fbce6a846c 100644
 +        /// Gets a value indicating whether this target can map custom pagination wire property names.
 +        /// </summary>
 +        protected virtual bool SupportsCustomPaginationPropertyNames => false;
++
++        /// <summary>
++        /// Gets a value indicating whether this target resolves continuation operations declared through
++        /// <c>x-ms-pageable.operationName</c>.
++        /// </summary>
++        protected virtual bool SupportsPaginationContinuationOperations => false;
 +
          /// <summary>
          /// Gets the action method name this language target emits for an operation.
@@ -1471,18 +1671,23 @@ index b3c14ed22de..10cc8845cc6 100644
          /// Gets or sets a value indicating whether the operation's version affixes are kept in the
          /// generated method name instead of being simplified away.
 diff --git a/src/tools/CodefulSdkGenerator/DirectClient/DirectClientTypeScriptCodeGenerator.cs b/src/tools/CodefulSdkGenerator/DirectClient/DirectClientTypeScriptCodeGenerator.cs
-index 8e56776df8a..38021cb1cec 100644
+index 8e56776df8a..35fdc78918b 100644
 --- a/src/tools/CodefulSdkGenerator/DirectClient/DirectClientTypeScriptCodeGenerator.cs
 +++ b/src/tools/CodefulSdkGenerator/DirectClient/DirectClientTypeScriptCodeGenerator.cs
-@@ -19,6 +19,7 @@ namespace Microsoft.Azure.Workflows.CodefulSdkGenerator.DirectClient
+@@ -19,6 +19,12 @@ namespace Microsoft.Azure.Workflows.CodefulSdkGenerator.DirectClient
      internal class DirectClientTypeScriptCodeGenerator
      {
          private readonly HashSet<string> _generatedTypes = [];
 +        private readonly Dictionary<string, string> _paginationNextLinkNames = new(StringComparer.Ordinal);
++
++        /// <summary>
++        /// Definition names referenced by emitted TypeScript properties and parameters.
++        /// </summary>
++        private readonly HashSet<string> _referencedDefinitionNames = new(StringComparer.Ordinal);
          private string _connectorName;
  
          /// <summary>
-@@ -31,6 +32,29 @@ namespace Microsoft.Azure.Workflows.CodefulSdkGenerator.DirectClient
+@@ -31,6 +37,30 @@ namespace Microsoft.Azure.Workflows.CodefulSdkGenerator.DirectClient
          /// </summary>
          private static readonly Regex ConnectionIdPattern = new(@"/\{connectionId\}", RegexOptions.IgnoreCase | RegexOptions.Compiled, TimeSpan.FromSeconds(5));
  
@@ -1497,8 +1702,9 @@ index 8e56776df8a..38021cb1cec 100644
 +        private static readonly HashSet<string> TypeScriptActionVerbs = new(StringComparer.Ordinal)
 +        {
 +            "Add", "Approve", "Cancel", "Copy", "Create", "Decline", "Delete", "Disable", "Download", "Enable",
-+            "Execute", "Finish", "Forward", "Get", "List", "Move", "Reject", "Remove", "Rename", "Resume",
-+            "Rerun", "Run", "Search", "Send", "Set", "Start", "Stop", "Submit", "Test", "Update", "Upload",
++            "Execute", "Export", "Finish", "Forward", "Get", "List", "Move", "Patch", "Register", "Reject",
++            "Remove", "Rename", "Replace", "Resume", "Rerun", "Run", "Search", "Send", "Set", "Start", "Stop",
++            "Submit", "Test", "Unregister", "Update", "Upload", "Validate",
 +        };
 +
 +        /// <summary>
@@ -1512,11 +1718,12 @@ index 8e56776df8a..38021cb1cec 100644
          /// <summary>
          /// Generates the TypeScript client file for the specified connector.
          /// </summary>
-@@ -42,13 +66,20 @@ namespace Microsoft.Azure.Workflows.CodefulSdkGenerator.DirectClient
+@@ -42,13 +72,24 @@ namespace Microsoft.Azure.Workflows.CodefulSdkGenerator.DirectClient
          public void GenerateFile(string className, string connectorName, IReadOnlyList<DirectClientMethodInfo> methods, TextWriter writer, SwaggerContext context, RetainedTypeNameResolver retainedTypeNames = null)
          {
              this._generatedTypes.Clear();
 +            this._paginationNextLinkNames.Clear();
++            this._referencedDefinitionNames.Clear();
              this._connectorName = connectorName;
              this._retainedTypeNames = retainedTypeNames;
  
@@ -1524,6 +1731,9 @@ index 8e56776df8a..38021cb1cec 100644
              var actionMethods = filteredMethods.Where(method => !method.IsTrigger).ToList();
              var triggerMethods = DirectClientGeneratorBase.SelectCanonicalTriggerMethods(filteredMethods);
 -            var hasPaginatedActions = actionMethods.Any(method => method.IsPaginated && method.PageItemTypeName != null);
++            var resolvedMethodNames = DirectClientTypeScriptCodeGenerator.ResolveUniqueMethodNames(
++                connectorName: connectorName,
++                methods: actionMethods);
 +            var hasPaginatedActions = actionMethods.Any(method =>
 +                (method.IsPaginated || method.IsSinglePageList) && method.PageItemTypeName != null);
 +
@@ -1534,7 +1744,7 @@ index 8e56776df8a..38021cb1cec 100644
  
              // NOTE(swapnilnagar): Resolve each canonical trigger's item type once and reuse it for both the
              // import decision and payload emission. Canonical selection keeps all trigger surfaces aligned.
-@@ -69,20 +100,13 @@ namespace Microsoft.Azure.Workflows.CodefulSdkGenerator.DirectClient
+@@ -69,20 +110,13 @@ namespace Microsoft.Azure.Workflows.CodefulSdkGenerator.DirectClient
              stringBuilder.AppendLine($"// {className}Extensions.ts - Auto-generated DirectClient SDK for TypeScript");
              stringBuilder.AppendLine("// Do not edit this file directly.");
              stringBuilder.AppendLine();
@@ -1558,7 +1768,25 @@ index 8e56776df8a..38021cb1cec 100644
              if (shouldEmitTriggerPayloadContracts)
              {
                  stringBuilder.AppendLine("import { TriggerCallbackPayload } from \"../azureConnectors/triggerPayload.ts\";");
-@@ -187,16 +211,25 @@ namespace Microsoft.Azure.Workflows.CodefulSdkGenerator.DirectClient
+@@ -92,6 +126,8 @@ namespace Microsoft.Azure.Workflows.CodefulSdkGenerator.DirectClient
+             stringBuilder.AppendLine("// #region Types");
+ 
+             this.GenerateTypes(stringBuilder, connectorName, filteredMethods, context);
++            this.GenerateOperationOptionsTypes(stringBuilder, actionMethods, resolvedMethodNames);
++            this.GenerateUnresolvedDefinitionTypes(stringBuilder, context);
+             this.GenerateTriggerPayloadContracts(stringBuilder, className, triggerMethods, triggerItemTypesByMethod);
+ 
+             stringBuilder.AppendLine("// #endregion Types");
+@@ -102,7 +138,7 @@ namespace Microsoft.Azure.Workflows.CodefulSdkGenerator.DirectClient
+             stringBuilder.AppendLine("// #region Client");
+             stringBuilder.AppendLine();
+ 
+-            this.GenerateClient(stringBuilder, className, connectorName, actionMethods);
++            this.GenerateClient(stringBuilder, className, connectorName, actionMethods, resolvedMethodNames);
+ 
+             stringBuilder.AppendLine("// #endregion Client");
+ 
+@@ -187,16 +223,25 @@ namespace Microsoft.Azure.Workflows.CodefulSdkGenerator.DirectClient
              if (schema.TryGetPropertyValue(SchemaPropertyNames.Properties, out var propertiesNode))
              {
                  var properties = propertiesNode.AsObject();
@@ -1586,7 +1814,7 @@ index 8e56776df8a..38021cb1cec 100644
                      var requiredProperties = new HashSet<string>(StringComparer.Ordinal);
                      if (schema.TryGetPropertyValue(SchemaPropertyNames.Required, out var requiredNode) &&
                          requiredNode is JsonArray requiredArray)
-@@ -218,7 +251,6 @@ namespace Microsoft.Azure.Workflows.CodefulSdkGenerator.DirectClient
+@@ -218,7 +263,6 @@ namespace Microsoft.Azure.Workflows.CodefulSdkGenerator.DirectClient
                              stringBuilder.AppendLine($"    /** {DirectClientTypeScriptCodeGenerator.EscapeJsDoc(propDescription)} */");
                          }
  
@@ -1594,7 +1822,7 @@ index 8e56776df8a..38021cb1cec 100644
                          var safePropName = DirectClientTypeScriptCodeGenerator.NeedsQuoting(propName)
                              ? $"\"{propName}\""
                              : propName;
-@@ -233,19 +265,16 @@ namespace Microsoft.Azure.Workflows.CodefulSdkGenerator.DirectClient
+@@ -233,19 +277,16 @@ namespace Microsoft.Azure.Workflows.CodefulSdkGenerator.DirectClient
                       DirectClientTypeScriptCodeGenerator.IsPrimitiveJsonType((string)typeNode) &&
                       !schema.TryGetPropertyValue(SchemaPropertyNames.Enum, out _))
              {
@@ -1615,7 +1843,38 @@ index 8e56776df8a..38021cb1cec 100644
                  stringBuilder.AppendLine($"export interface {typeName} {{");
                  stringBuilder.AppendLine("    [key: string]: unknown;");
                  stringBuilder.AppendLine("}");
-@@ -334,7 +363,7 @@ namespace Microsoft.Azure.Workflows.CodefulSdkGenerator.DirectClient
+@@ -302,6 +343,30 @@ namespace Microsoft.Azure.Workflows.CodefulSdkGenerator.DirectClient
+             }
+         }
+ 
++        /// <summary>
++        /// Emits named dynamic interfaces for references absent from the connector document.
++        /// </summary>
++        /// <param name="stringBuilder">The output builder.</param>
++        /// <param name="context">The Swagger context.</param>
++        private void GenerateUnresolvedDefinitionTypes(StringBuilder stringBuilder, SwaggerContext context)
++        {
++            foreach (var referencedDefinitionName in this._referencedDefinitionNames
++                .OrderBy(definitionName => definitionName, StringComparer.Ordinal))
++            {
++                var normalizedName = this.ResolveDefinitionTypeName(referencedDefinitionName);
++                this.GenerateTypeFromSchema(
++                    stringBuilder: stringBuilder,
++                    typeName: normalizedName,
++                    schema: new JsonObject
++                    {
++                        [SchemaPropertyNames.Type] = SchemaTypeNames.Object,
++                        [SchemaPropertyNames.Properties] = new JsonObject(),
++                    },
++                    context: context,
++                    description: $"Unresolved definition: {referencedDefinitionName}");
++            }
++        }
++
+         /// <summary>
+         /// Returns the emitted type name for a swagger definition, honoring the retained-set decision.
+         /// </summary>
+@@ -334,12 +399,61 @@ namespace Microsoft.Azure.Workflows.CodefulSdkGenerator.DirectClient
  
              return pageItemTypeName switch
              {
@@ -1624,7 +1883,62 @@ index 8e56776df8a..38021cb1cec 100644
                  _ => this.ResolveDefinitionTypeName(pageItemTypeName),
              };
          }
-@@ -361,12 +390,9 @@ namespace Microsoft.Azure.Workflows.CodefulSdkGenerator.DirectClient
+ 
+-        private void GenerateClient(StringBuilder stringBuilder, string className, string connectorName, IReadOnlyList<DirectClientMethodInfo> methods)
++        /// <summary>
++        /// Emits method-specific option types for optional query and header service parameters.
++        /// </summary>
++        /// <param name="stringBuilder">The output builder.</param>
++        /// <param name="methods">The generated action methods.</param>
++        /// <param name="resolvedMethodNames">The stable emitted name for each action.</param>
++        private void GenerateOperationOptionsTypes(
++            StringBuilder stringBuilder,
++            IReadOnlyList<DirectClientMethodInfo> methods,
++            IReadOnlyDictionary<DirectClientMethodInfo, string> resolvedMethodNames)
++        {
++            foreach (var method in methods)
++            {
++                var optionalParameters = DirectClientTypeScriptCodeGenerator.GetOptionalServiceParameters(method);
++                if (optionalParameters.Count == 0)
++                {
++                    continue;
++                }
++
++                var methodName = resolvedMethodNames[method];
++                var optionsTypeName = DirectClientTypeScriptCodeGenerator.GetOperationOptionsTypeName(methodName);
++                if (!this._generatedTypes.Add(optionsTypeName))
++                {
++                    throw new InvalidOperationException(
++                        message: $"Connector '{this._connectorName}' operation '{method.OperationId}' generates options type '{optionsTypeName}', which collides with another public type.");
++                }
++
++                stringBuilder.AppendLine();
++                stringBuilder.AppendLine("/**");
++                stringBuilder.AppendLine($" * Options for the {methodName} operation.");
++                stringBuilder.AppendLine(" */");
++                stringBuilder.AppendLine($"export interface {optionsTypeName} extends ConnectorOperationOptions {{");
++                foreach (var parameter in optionalParameters)
++                {
++                    var description = parameter.Description
++                        ?? $"The '{parameter.Name}' service parameter.";
++                    stringBuilder.AppendLine($"    /** {DirectClientTypeScriptCodeGenerator.EscapeJsDoc(description)} */");
++                    stringBuilder.AppendLine($"    {parameter.NormalizedName}?: {this.GetTypeScriptTypeForParameter(parameter)};");
++                }
++
++                stringBuilder.AppendLine("}");
++            }
++        }
++
++        private void GenerateClient(
++            StringBuilder stringBuilder,
++            string className,
++            string connectorName,
++            IReadOnlyList<DirectClientMethodInfo> methods,
++            IReadOnlyDictionary<DirectClientMethodInfo, string> resolvedMethodNames)
+         {
+             stringBuilder.AppendLine("/**");
+             stringBuilder.AppendLine($" * Typed client for the {connectorName} connector.");
+@@ -361,12 +475,6 @@ namespace Microsoft.Azure.Workflows.CodefulSdkGenerator.DirectClient
              stringBuilder.AppendLine("    }");
              stringBuilder.AppendLine();
  
@@ -1634,13 +1948,10 @@ index 8e56776df8a..38021cb1cec 100644
 -            // operation, so every action the C# target exposes stays callable here too. Names are assigned in a
 -            // deterministic order so the plain name never depends on enumeration order (see ResolveUniqueMethodNames).
 -            var resolvedMethodNames = DirectClientTypeScriptCodeGenerator.ResolveUniqueMethodNames(methods);
-+            var resolvedMethodNames = DirectClientTypeScriptCodeGenerator.ResolveUniqueMethodNames(
-+                connectorName: connectorName,
-+                methods: methods);
              foreach (var method in methods)
              {
                  this.GenerateClientMethod(stringBuilder, className, method, resolvedMethodNames[method]);
-@@ -377,63 +403,50 @@ namespace Microsoft.Azure.Workflows.CodefulSdkGenerator.DirectClient
+@@ -377,63 +485,50 @@ namespace Microsoft.Azure.Workflows.CodefulSdkGenerator.DirectClient
          }
  
          /// <summary>
@@ -1735,11 +2046,34 @@ index 8e56776df8a..38021cb1cec 100644
          }
  
          /// <summary>
-@@ -472,11 +485,11 @@ namespace Microsoft.Azure.Workflows.CodefulSdkGenerator.DirectClient
-                 signatureParams.Add($"{param.NormalizedName}?: {paramType}");
+@@ -447,6 +542,8 @@ namespace Microsoft.Azure.Workflows.CodefulSdkGenerator.DirectClient
+         {
+             var hasBodyParam = method.HasBodyParameter;
+             var queryParams = method.QueryParameters.ToList();
++            var headerParams = method.HeaderParameters.ToList();
++            var optionalServiceParams = DirectClientTypeScriptCodeGenerator.GetOptionalServiceParameters(method);
+             var pathParams = method.PathParameters
+                 .Where(parameter => !string.Equals(parameter.Name, "connectionId", StringComparison.OrdinalIgnoreCase))
+                 .ToList();
+@@ -466,17 +563,23 @@ namespace Microsoft.Azure.Workflows.CodefulSdkGenerator.DirectClient
+                 signatureParams.Add($"{param.NormalizedName}: {paramType}");
+             }
+ 
+-            foreach (var param in queryParams)
++            foreach (var param in queryParams.Where(parameter => parameter.IsRequired))
+             {
+                 var paramType = this.GetTypeScriptTypeForParameter(param);
+-                signatureParams.Add($"{param.NormalizedName}?: {paramType}");
++                signatureParams.Add($"{param.NormalizedName}: {paramType}");
              }
  
 -            var pageItemTypeName = method.IsPaginated && method.PageItemTypeName != null
++            foreach (var param in headerParams.Where(parameter => parameter.IsRequired))
++            {
++                var paramType = this.GetTypeScriptTypeForParameter(param);
++                signatureParams.Add($"{param.NormalizedName}: {paramType}");
++            }
++
 +            var pageItemTypeName = (method.IsPaginated || method.IsSinglePageList) && method.PageItemTypeName != null
                  ? this.ResolvePageItemTypeName(method.PageItemTypeName)
                  : null;
@@ -1749,7 +2083,7 @@ index 8e56776df8a..38021cb1cec 100644
                  : method.HasResponse
                      ? $"Promise<{method.ResponseTypeName}>"
                      : "Promise<void>";
-@@ -492,17 +505,20 @@ namespace Microsoft.Azure.Workflows.CodefulSdkGenerator.DirectClient
+@@ -492,17 +595,23 @@ namespace Microsoft.Azure.Workflows.CodefulSdkGenerator.DirectClient
                  stringBuilder.AppendLine($"     * @remarks {DirectClientTypeScriptCodeGenerator.EscapeJsDoc(OperationNameSimplifier.AlignDescriptionVersionAffix(method.Description, method.Summary, methodName))}");
              }
  
@@ -1772,12 +2106,48 @@ index 8e56776df8a..38021cb1cec 100644
  
 -            // NOTE(swapnilnagar): Add optional abortSignal as the last parameter for caller-initiated cancellation.
 -            signatureParams.Add("abortSignal?: AbortSignalLike");
-+            signatureParams.Add("options: ConnectorOperationOptions = {}");
++            var optionsTypeName = optionalServiceParams.Count == 0
++                ? "ConnectorOperationOptions"
++                : DirectClientTypeScriptCodeGenerator.GetOperationOptionsTypeName(methodName);
++            signatureParams.Add($"options: {optionsTypeName} = {{}}");
  
              var parametersString = string.Join(", ", signatureParams);
              var asyncModifier = pageItemTypeName == null ? "async " : string.Empty;
-@@ -546,9 +562,9 @@ namespace Microsoft.Azure.Workflows.CodefulSdkGenerator.DirectClient
+@@ -532,8 +641,11 @@ namespace Microsoft.Azure.Workflows.CodefulSdkGenerator.DirectClient
+                 stringBuilder.AppendLine("        const queryParams: string[] = [];");
+                 foreach (var param in queryParams)
+                 {
+-                    stringBuilder.AppendLine($"        if ({param.NormalizedName} !== undefined) {{");
+-                    stringBuilder.AppendLine($"            queryParams.push(`{param.Name}=${{encodeURIComponent(String({param.NormalizedName}))}}`);");
++                    var parameterExpression = param.IsRequired
++                        ? param.NormalizedName
++                        : $"options.{param.NormalizedName}";
++                    stringBuilder.AppendLine($"        if ({parameterExpression} !== undefined) {{");
++                    stringBuilder.AppendLine($"            queryParams.push(`{param.Name}=${{encodeURIComponent(String({parameterExpression}))}}`);");
+                     stringBuilder.AppendLine("        }");
+                 }
  
+@@ -544,11 +656,28 @@ namespace Microsoft.Azure.Workflows.CodefulSdkGenerator.DirectClient
+                 stringBuilder.AppendLine($"        const requestPath = `{path}`;");
+             }
+ 
++            var requestHeadersArgument = string.Empty;
++            if (headerParams.Count > 0)
++            {
++                stringBuilder.AppendLine("        const requestHeaders: Record<string, string> = {};");
++                foreach (var param in headerParams)
++                {
++                    var parameterExpression = param.IsRequired
++                        ? param.NormalizedName
++                        : $"options.{param.NormalizedName}";
++                    stringBuilder.AppendLine($"        if ({parameterExpression} !== undefined) {{");
++                    stringBuilder.AppendLine($"            requestHeaders[\"{DirectClientTypeScriptCodeGenerator.EscapeTypeScriptString(param.Name)}\"] = String({parameterExpression});");
++                    stringBuilder.AppendLine("        }");
++                }
++
++                requestHeadersArgument = ", requestHeaders";
++            }
++
              var httpMethod = method.HttpMethod.ToUpperInvariant();
  
 -            // NOTE(swapnilnagar): sendAsync signature is (method, url, scopes?, body?, abortSignal?).
@@ -1789,7 +2159,7 @@ index 8e56776df8a..38021cb1cec 100644
  
              if (method.HasResponse)
              {
-@@ -556,26 +572,40 @@ namespace Microsoft.Azure.Workflows.CodefulSdkGenerator.DirectClient
+@@ -556,26 +685,40 @@ namespace Microsoft.Azure.Workflows.CodefulSdkGenerator.DirectClient
                  {
                      stringBuilder.AppendLine($"        return this.createPageable<{method.ResponseTypeName}, {pageItemTypeName}>(");
                      stringBuilder.AppendLine("            requestPath,");
@@ -1811,12 +2181,12 @@ index 8e56776df8a..38021cb1cec 100644
 +                        }
 +
 +                        var pageableBodyArgument = hasBodyParam ? "requestBody" : "undefined";
-+                        stringBuilder.AppendLine($"                const httpResponse = await this.sendWithTracingAsync<{method.ResponseTypeName}>(\"{spanName}\", \"{operationName}\", requestMethod, requestUrl, {pageableBodyArgument}, options);");
++                        stringBuilder.AppendLine($"                const httpResponse = await this.sendWithTracingAsync<{method.ResponseTypeName}>(\"{spanName}\", \"{operationName}\", requestMethod, requestUrl, {pageableBodyArgument}, options{requestHeadersArgument});");
 +                    }
 +                    else
 +                    {
 +                        stringBuilder.AppendLine("            async (requestUrl) => {");
-+                        stringBuilder.AppendLine($"                const httpResponse = await this.sendWithTracingAsync<{method.ResponseTypeName}>(\"{spanName}\", \"{operationName}\", \"{httpMethod}\", requestUrl, {bodyArgument}, options);");
++                        stringBuilder.AppendLine($"                const httpResponse = await this.sendWithTracingAsync<{method.ResponseTypeName}>(\"{spanName}\", \"{operationName}\", \"{httpMethod}\", requestUrl, {bodyArgument}, options{requestHeadersArgument});");
 +                    }
 +
                      stringBuilder.AppendLine();
@@ -1838,11 +2208,11 @@ index 8e56776df8a..38021cb1cec 100644
 -                    stringBuilder.AppendLine("        if (!httpResponse.isSuccessStatusCode) {");
 -                    stringBuilder.AppendLine($"            throw new ConnectorException(this.connectorName, `{httpMethod} ${{requestPath}}`, httpResponse.statusCode, httpResponse.text);");
 -                    stringBuilder.AppendLine("        }");
-+                    stringBuilder.AppendLine($"        const httpResponse = await this.sendWithTracingAsync<{method.ResponseTypeName}>(\"{spanName}\", \"{operationName}\", \"{httpMethod}\", requestUrl, {bodyArgument}, options);");
++                    stringBuilder.AppendLine($"        const httpResponse = await this.sendWithTracingAsync<{method.ResponseTypeName}>(\"{spanName}\", \"{operationName}\", \"{httpMethod}\", requestUrl, {bodyArgument}, options{requestHeadersArgument});");
                      stringBuilder.AppendLine();
                      stringBuilder.AppendLine($"        return httpResponse.value as {method.ResponseTypeName};");
                  }
-@@ -583,11 +613,7 @@ namespace Microsoft.Azure.Workflows.CodefulSdkGenerator.DirectClient
+@@ -583,17 +726,34 @@ namespace Microsoft.Azure.Workflows.CodefulSdkGenerator.DirectClient
              else
              {
                  stringBuilder.AppendLine($"        const requestUrl = this.resolveUrl(requestPath);");
@@ -1851,11 +2221,51 @@ index 8e56776df8a..38021cb1cec 100644
 -                stringBuilder.AppendLine("        if (!httpResponse.isSuccessStatusCode) {");
 -                stringBuilder.AppendLine($"            throw new ConnectorException(this.connectorName, `{httpMethod} ${{requestPath}}`, httpResponse.statusCode, httpResponse.text);");
 -                stringBuilder.AppendLine("        }");
-+                stringBuilder.AppendLine($"        await this.sendWithTracingAsync<void>(\"{spanName}\", \"{operationName}\", \"{httpMethod}\", requestUrl, {bodyArgument}, options);");
++                stringBuilder.AppendLine($"        await this.sendWithTracingAsync<void>(\"{spanName}\", \"{operationName}\", \"{httpMethod}\", requestUrl, {bodyArgument}, options{requestHeadersArgument});");
              }
  
              stringBuilder.AppendLine("    }");
-@@ -624,6 +650,23 @@ namespace Microsoft.Azure.Workflows.CodefulSdkGenerator.DirectClient
+             stringBuilder.AppendLine();
+         }
+ 
++        /// <summary>
++        /// Gets optional public query and header parameters that belong in a method-specific options bag.
++        /// </summary>
++        /// <param name="method">The operation whose optional parameters are returned.</param>
++        private static List<DirectClientParameter> GetOptionalServiceParameters(DirectClientMethodInfo method)
++        {
++            return method.QueryParameters
++                .Concat(method.HeaderParameters)
++                .Where(parameter => !parameter.IsRequired)
++                .ToList();
++        }
++
++        /// <summary>
++        /// Gets the public options type name for a generated method.
++        /// </summary>
++        /// <param name="methodName">The emitted camelCase method name.</param>
++        private static string GetOperationOptionsTypeName(string methodName)
++        {
++            return char.ToUpperInvariant(methodName[0]) + methodName.Substring(1) + "Options";
++        }
++
+         private string GetBodyTypeName(DirectClientMethodInfo method)
+         {
+             if (method.BodyParameter?.Schema == null)
+@@ -606,8 +766,11 @@ namespace Microsoft.Azure.Workflows.CodefulSdkGenerator.DirectClient
+                 var refStr = (string)refNode;
+                 if (refStr.StartsWith(SchemaPropertyNames.DefinitionsRefPrefix, StringComparison.Ordinal))
+                 {
++                    var definitionName = refStr.Substring(SchemaPropertyNames.DefinitionsRefPrefix.Length);
++                    this._referencedDefinitionNames.Add(definitionName);
++
+                     return this.ResolveDefinitionTypeName(
+-                        refStr.Substring(SchemaPropertyNames.DefinitionsRefPrefix.Length));
++                        definitionName);
+                 }
+             }
+ 
+@@ -624,6 +787,23 @@ namespace Microsoft.Azure.Workflows.CodefulSdkGenerator.DirectClient
                  ?? IdentifierNormalizer.Normalize($"{simplifiedName}Input", isVariableName: false);
          }
  
@@ -1879,44 +2289,20 @@ index 8e56776df8a..38021cb1cec 100644
          /// <summary>
          /// Generates typed callback payload aliases for triggers with resolvable item types.
          /// </summary>
-@@ -883,6 +926,12 @@ namespace Microsoft.Azure.Workflows.CodefulSdkGenerator.DirectClient
+@@ -883,8 +1063,11 @@ namespace Microsoft.Azure.Workflows.CodefulSdkGenerator.DirectClient
                  var refStr = (string)refNode;
                  if (refStr.StartsWith(SchemaPropertyNames.DefinitionsRefPrefix, StringComparison.Ordinal))
                  {
-+                    var resolvedSchema = SwaggerRefResolver.ResolveSchema(schema, context?.Document);
-+                    if (DirectClientTypeScriptCodeGenerator.IsDynamicObjectSchema(resolvedSchema))
-+                    {
-+                        return "Record<string, unknown>";
-+                    }
++                    var definitionName = refStr.Substring(SchemaPropertyNames.DefinitionsRefPrefix.Length);
++                    this._referencedDefinitionNames.Add(definitionName);
 +
                      return this.ResolveDefinitionTypeName(
-                         refStr.Substring(SchemaPropertyNames.DefinitionsRefPrefix.Length));
+-                        refStr.Substring(SchemaPropertyNames.DefinitionsRefPrefix.Length));
++                        definitionName);
                  }
-@@ -919,6 +968,23 @@ namespace Microsoft.Azure.Workflows.CodefulSdkGenerator.DirectClient
-             };
-         }
+             }
  
-+        /// <summary>
-+        /// Determines whether a schema represents an object with no declared shape.
-+        /// </summary>
-+        /// <param name="schema">The resolved Swagger schema.</param>
-+        private static bool IsDynamicObjectSchema(JsonObject schema)
-+        {
-+            if (schema == null ||
-+                !string.Equals((string)schema[SchemaPropertyNames.Type], SchemaTypeNames.Object, StringComparison.Ordinal) ||
-+                schema.ContainsKey(SchemaPropertyNames.AllOf))
-+            {
-+                return false;
-+            }
-+
-+            return !schema.TryGetPropertyValue(SchemaPropertyNames.Properties, out var propertiesNode) ||
-+                propertiesNode is JsonObject properties && properties.Count == 0;
-+        }
-+
-         private string GetTypeScriptTypeForParameter(DirectClientParameter parameter)
-         {
-             if (parameter.Schema == null)
-@@ -929,6 +995,139 @@ namespace Microsoft.Azure.Workflows.CodefulSdkGenerator.DirectClient
+@@ -929,6 +1112,139 @@ namespace Microsoft.Azure.Workflows.CodefulSdkGenerator.DirectClient
              return this.GetTypeScriptType(parameter.Schema, null);
          }
  
@@ -2057,7 +2443,7 @@ index 8e56776df8a..38021cb1cec 100644
          /// Converts a PascalCase method name to camelCase.
          /// </summary>
 diff --git a/src/tools/CodefulSdkGenerator/DirectClient/DirectClientTypeScriptGenerator.cs b/src/tools/CodefulSdkGenerator/DirectClient/DirectClientTypeScriptGenerator.cs
-index d1897f7b89c..851cdc0d72f 100644
+index d1897f7b89c..6e209a66a3b 100644
 --- a/src/tools/CodefulSdkGenerator/DirectClient/DirectClientTypeScriptGenerator.cs
 +++ b/src/tools/CodefulSdkGenerator/DirectClient/DirectClientTypeScriptGenerator.cs
 @@ -22,7 +22,7 @@ namespace Microsoft.Azure.Workflows.CodefulSdkGenerator.DirectClient
@@ -2069,7 +2455,7 @@ index d1897f7b89c..851cdc0d72f 100644
      /// </code>
      /// </summary>
      internal class DirectClientTypeScriptGenerator : DirectClientGeneratorBase
-@@ -40,6 +40,116 @@ namespace Microsoft.Azure.Workflows.CodefulSdkGenerator.DirectClient
+@@ -40,6 +40,131 @@ namespace Microsoft.Azure.Workflows.CodefulSdkGenerator.DirectClient
          /// </remarks>
          protected override bool RetainsDiscoveryOperations => false;
  
@@ -2080,13 +2466,15 @@ index d1897f7b89c..851cdc0d72f 100644
 +        protected override bool SupportsCustomPaginationPropertyNames => true;
 +
 +        /// <inheritdoc />
++        protected override bool SupportsPaginationContinuationOperations => true;
++
++        /// <inheritdoc />
 +        protected override void EnrichMethodInfo(DirectClientMethodInfo result, JsonObject methodInfo, SwaggerContext context)
 +        {
 +            base.EnrichMethodInfo(result, methodInfo, context);
 +            if (result.IsPaginated ||
 +                result.ResponseTypeName == null ||
-+                !DirectClientTypeScriptCodeGenerator.GetMethodName(result, preserveVersionSuffix: false)
-+                    .StartsWith("list", StringComparison.Ordinal))
++                !DirectClientTypeScriptGenerator.IsSemanticListOperation(result))
 +            {
 +                return;
 +            }
@@ -2116,6 +2504,19 @@ index d1897f7b89c..851cdc0d72f 100644
 +                result.PageItemTypeName = itemTypeName;
 +                result.PaginationItemName = itemPropertyName;
 +            }
++        }
++
++        /// <summary>
++        /// Determines whether an operation represents a list independently of its current projected name.
++        /// </summary>
++        /// <param name="method">The operation to classify.</param>
++        private static bool IsSemanticListOperation(DirectClientMethodInfo method)
++        {
++            return DirectClientTypeScriptCodeGenerator.GetMethodName(method, preserveVersionSuffix: false)
++                    .StartsWith("list", StringComparison.Ordinal) ||
++                !string.IsNullOrWhiteSpace(method.Summary) &&
++                (method.Summary.Equals("List", StringComparison.OrdinalIgnoreCase) ||
++                method.Summary.StartsWith("List ", StringComparison.OrdinalIgnoreCase));
 +        }
 +
 +        /// <summary>
@@ -2186,7 +2587,7 @@ index d1897f7b89c..851cdc0d72f 100644
          /// <inheritdoc />
          public override string GetFileName(string connectorName)
          {
-@@ -105,6 +215,7 @@ namespace Microsoft.Azure.Workflows.CodefulSdkGenerator.DirectClient
+@@ -105,6 +230,7 @@ namespace Microsoft.Azure.Workflows.CodefulSdkGenerator.DirectClient
                      Location = paramIn,
                      IsRequired = required,
                      Schema = schema,
@@ -2194,7 +2595,7 @@ index d1897f7b89c..851cdc0d72f 100644
                      Description = (string)param[SchemaPropertyNames.Description],
                  });
              }
-@@ -161,15 +272,17 @@ namespace Microsoft.Azure.Workflows.CodefulSdkGenerator.DirectClient
+@@ -161,15 +287,17 @@ namespace Microsoft.Azure.Workflows.CodefulSdkGenerator.DirectClient
              // NOTE(daviburg): ToCamelCase lowercases the whole leading run of upper-case characters, so it is
              // not injective: AbcDef and ABcDef both emit abcDef. Project through it rather than comparing the
              // PascalCase name, or a collision that TypeScript silently suppresses goes unreported.

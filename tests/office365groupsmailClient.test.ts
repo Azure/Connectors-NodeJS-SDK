@@ -158,7 +158,15 @@ describe("Office365groupsmailClient — forward", () => {
         };
 
         const client = new Office365groupsmailClient(TestConnectionUrl, createMockCredential());
-        await client.forward(input, "group1", "conversation1", "thread1", "post1");
+        await client.forward(
+            input,
+            "group1",
+            "conversation1",
+            "thread1",
+            "post1",
+            "return=representation",
+            "application/json",
+        );
 
         expect(global.fetch).toHaveBeenCalledTimes(1);
         const [url, init] = (global.fetch as jest.Mock).mock.calls[0];
@@ -167,6 +175,8 @@ describe("Office365groupsmailClient — forward", () => {
             `${TestConnectionUrl}/beta/groups/group1/conversations/conversation1/threads/thread1/posts/post1/forward`,
         );
         expect(init.method).toBe("POST");
+        expect(init.headers.Prefer).toBe("return=representation");
+        expect(init.headers["content-type"]).toBe("application/json");
         expect(requestBody).toEqual(input);
         expect(requestBody).toHaveProperty("Comment");
         expect(requestBody).toHaveProperty("ToRecipients");

@@ -482,7 +482,7 @@ export interface EmbeddedSigningResponse {
 export interface CombinedEmailBodyAndCustomFields {
     /** Body of the email. */
     emailBlurb?: string;
-    AccountCustomFields?: Record<string, unknown>;
+    AccountCustomFields?: AccountCustomFields;
 }
 
 /**
@@ -1027,6 +1027,170 @@ export interface EnvelopeDocumentField {
 export interface DeclineReasonWithoutType {
     [key: string]: unknown;
 }
+
+/**
+ * Options for the addReminders operation.
+ */
+export interface AddRemindersOptions extends ConnectorOperationOptions {
+    /** Add number of days before expiry. */
+    expireAfter?: string;
+}
+
+/**
+ * Options for the compositeTemplates operation.
+ */
+export interface CompositeTemplatesOptions extends ConnectorOperationOptions {
+    /** Body of the email. */
+    emailBody?: string;
+    /** Merge roles and delete empty recipients */
+    mergeRolesOnDraft?: string;
+}
+
+/**
+ * Options for the searchListEnvelopes operation.
+ */
+export interface SearchListEnvelopesOptions extends ConnectorOperationOptions {
+    /** This action lists envelopes based on recipient name */
+    recipientName?: string;
+    /** Filters envelopes by recipient email */
+    recipientEmailId?: string;
+    /** Filters envelopes by envelope subject */
+    envelopeTitle?: string;
+    /** This action lists envelopes based on a name of its custom fields */
+    customFieldName?: string;
+    /** Filters by custom field value */
+    customFieldValue?: string;
+    /** Enter one keyword to find matches in envelope subjects, recipients, and custom fields. */
+    searchText?: string;
+    /** This action lists envelopes based on status of the envelope */
+    envelopeStatus?: string;
+    /** Filters envelopes by the selected folder */
+    folderIds?: string;
+    /** Sorts envelopes in the selected order */
+    orderBy?: string;
+    /** Specify the number of envelopes to return (default is 10; maximum is 1,000) */
+    top?: string;
+    /** Specify the number of envelopes to skip from the start */
+    skip?: string;
+    /** Enter start date-time in UTC format: 2017-05-02T01:44z */
+    fromDate?: string;
+    /** Enter end date-time in UTC format: 2017-05-02T01:44z. */
+    toDate?: string;
+}
+
+/**
+ * Options for the sendEnvelope operation.
+ */
+export interface SendEnvelopeOptions extends ConnectorOperationOptions {
+    /** Email subject */
+    emailSubject?: string;
+    /** Email body */
+    emailBody?: string;
+}
+
+/**
+ * Options for the sendEnvelopeWithRecipientFields operation.
+ */
+export interface SendEnvelopeWithRecipientFieldsOptions extends ConnectorOperationOptions {
+    /** Merge roles and delete empty recipients */
+    mergeRolesOnDraft?: string;
+    /** Email subject */
+    emailSubject?: string;
+}
+
+/**
+ * Options for the getRecipientFields operation.
+ */
+export interface GetRecipientFieldsOptions extends ConnectorOperationOptions {
+    /** Recipient email */
+    recipientEmail?: string;
+    /** Area code of the recipient */
+    areaCode?: string;
+    /** Phone number of the recipient */
+    phoneNumber?: string;
+    /** Enter a recipient ID. */
+    recipientId?: string;
+}
+
+/**
+ * Options for the updateEnvelopeRecipient operation.
+ */
+export interface UpdateEnvelopeRecipientOptions extends ConnectorOperationOptions {
+    /** DocuSign standards-based-signature (SBS) types. */
+    signatureType?: string;
+    /** Client user ID for embedded signer */
+    clientUserId?: string;
+    /** A sender-provided URL string for redirecting an embedded recipient. */
+    embeddedRecipientStartURL?: string;
+    /** The signing order of the recipient. */
+    routingOrder?: string;
+    /** Language for the email notification. */
+    emailNotificationLanguage?: string;
+    /** Subject of the email notification. */
+    emailNotificationSubject?: string;
+    /** Body of the email notification. */
+    emailNotificationBody?: string;
+    /** Custom note for the recipient. */
+    note?: string;
+    /** Role name associated with the recipient. */
+    roleName?: string;
+    /** For SMS notifications, the country code, without leading + sign. */
+    countryCode?: string;
+    /** Signer email or SMS phone required. Exclude country code for phone number. */
+    phoneNumber?: string;
+    /** Signing Group */
+    signingGroupId?: string;
+}
+
+/**
+ * Options for the applyTemplatesToDocuments operation.
+ */
+export interface ApplyTemplatesToDocumentsOptions extends ConnectorOperationOptions {
+    /** False */
+    preserveTemplateRecipient?: string;
+}
+
+/**
+ * Options for the addRecipientToEnvelope operation.
+ */
+export interface AddRecipientToEnvelopeOptions extends ConnectorOperationOptions {
+    /** Client user ID for embedded signer */
+    clientUserId?: string;
+    /** Enter a recipient ID. */
+    recipientId?: string;
+    /** A sender-provided URL string for redirecting an embedded recipient. */
+    embeddedRecipientStartURL?: string;
+    /** The signing order of the recipient. */
+    routingOrder?: string;
+    /** Language for the email notification. */
+    emailNotificationLanguage?: string;
+    /** Subject of the email notification. */
+    emailNotificationSubject?: string;
+    /** Body of the email notification. */
+    emailNotificationBody?: string;
+    /** Custom note for the recipient. */
+    note?: string;
+    /** Role name associated with the recipient. */
+    roleName?: string;
+    /** For SMS notifications, the country code, without leading + sign. */
+    countryCode?: string;
+    /** Signer email or SMS phone required. Exclude country code for phone number. */
+    phoneNumber?: string;
+    /** Signing Group */
+    signingGroupId?: string;
+    /** DocuSign standards-based-signature (SBS) types. */
+    signatureType?: string;
+    /** IDV workflows with pen signature types must be selected here. */
+    workflowId?: string;
+}
+
+/**
+ * Options for the getDocuments operation.
+ */
+export interface GetDocumentsOptions extends ConnectorOperationOptions {
+    /** Select language */
+    language?: string;
+}
 // #endregion Types
 
 export const DocusignTriggerOperations = {
@@ -1096,7 +1260,7 @@ export class DocusignClient extends ConnectorClientBase {
      * Update document generation form fields from envelope
      * @remarks Update document generation form fields from envelope
      */
-    public async updateDocgenFormFields(input: UpdateDocgenFormFieldsInput, accountId: string, envelopeId: string, documentGuid?: string, options: ConnectorOperationOptions = {}): Promise<void> {
+    public async updateDocgenFormFields(input: UpdateDocgenFormFieldsInput, accountId: string, envelopeId: string, documentGuid: string, options: ConnectorOperationOptions = {}): Promise<void> {
         const queryParams: string[] = [];
         if (documentGuid !== undefined) {
             queryParams.push(`documentGuid=${encodeURIComponent(String(documentGuid))}`);
@@ -1122,7 +1286,7 @@ export class DocusignClient extends ConnectorClientBase {
      * Void the envelope
      * @remarks Void the envelope.
      */
-    public async voidEnvelope(accountId: string, envelopeId: string, voidedReason?: string, options: ConnectorOperationOptions = {}): Promise<EnvelopeVoidResponse> {
+    public async voidEnvelope(accountId: string, envelopeId: string, voidedReason: string, options: ConnectorOperationOptions = {}): Promise<EnvelopeVoidResponse> {
         const queryParams: string[] = [];
         if (voidedReason !== undefined) {
             queryParams.push(`voidedReason=${encodeURIComponent(String(voidedReason))}`);
@@ -1150,7 +1314,7 @@ export class DocusignClient extends ConnectorClientBase {
      * Add reminders for an envelope
      * @remarks Add reminders for an envelope
      */
-    public async addReminders(accountId: string, envelopeId: string, reminderEnabled?: string, reminderDelay?: string, reminderFrequency?: string, expireAfter?: string, options: ConnectorOperationOptions = {}): Promise<AddRemindersResponse> {
+    public async addReminders(accountId: string, envelopeId: string, reminderEnabled: string, reminderDelay: string, reminderFrequency: string, options: AddRemindersOptions = {}): Promise<AddRemindersResponse> {
         const queryParams: string[] = [];
         if (reminderEnabled !== undefined) {
             queryParams.push(`reminderEnabled=${encodeURIComponent(String(reminderEnabled))}`);
@@ -1161,8 +1325,8 @@ export class DocusignClient extends ConnectorClientBase {
         if (reminderFrequency !== undefined) {
             queryParams.push(`reminderFrequency=${encodeURIComponent(String(reminderFrequency))}`);
         }
-        if (expireAfter !== undefined) {
-            queryParams.push(`expireAfter=${encodeURIComponent(String(expireAfter))}`);
+        if (options.expireAfter !== undefined) {
+            queryParams.push(`expireAfter=${encodeURIComponent(String(options.expireAfter))}`);
         }
         const requestPath = `/accounts/${accountId}/envelopes/${envelopeId}/notification` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
@@ -1221,19 +1385,19 @@ export class DocusignClient extends ConnectorClientBase {
      * Create envelope using composite templates
      * @remarks Create envelope using composite templates
      */
-    public async compositeTemplates(input: CompositeTemplateSchema, accountId: string, emailSubject?: string, emailBody?: string, status?: string, mergeRolesOnDraft?: string, options: ConnectorOperationOptions = {}): Promise<CompositeTemplatesResponse> {
+    public async compositeTemplates(input: CompositeTemplateSchema, accountId: string, emailSubject: string, status: string, options: CompositeTemplatesOptions = {}): Promise<CompositeTemplatesResponse> {
         const queryParams: string[] = [];
         if (emailSubject !== undefined) {
             queryParams.push(`emailSubject=${encodeURIComponent(String(emailSubject))}`);
         }
-        if (emailBody !== undefined) {
-            queryParams.push(`emailBody=${encodeURIComponent(String(emailBody))}`);
+        if (options.emailBody !== undefined) {
+            queryParams.push(`emailBody=${encodeURIComponent(String(options.emailBody))}`);
         }
         if (status !== undefined) {
             queryParams.push(`status=${encodeURIComponent(String(status))}`);
         }
-        if (mergeRolesOnDraft !== undefined) {
-            queryParams.push(`merge_roles_on_draft=${encodeURIComponent(String(mergeRolesOnDraft))}`);
+        if (options.mergeRolesOnDraft !== undefined) {
+            queryParams.push(`merge_roles_on_draft=${encodeURIComponent(String(options.mergeRolesOnDraft))}`);
         }
         const requestPath = `/accounts/${accountId}/envelopes/compositeTemplates` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
@@ -1246,59 +1410,65 @@ export class DocusignClient extends ConnectorClientBase {
      * List envelopes
      * @remarks This action brings back relevant Docusign envelopes based on envelope status, date range, recipient name, recipient email address, envelope title, document name, or envelope custom field value. The output is the title, description, Envelope ID, document names, sender names, envelope status, status date, date sent, and a URL of the envelope which can be used as a link to view the envelope in Docusign.
      */
-    public async searchListEnvelopes(accountId: string, recipientName?: string, recipientEmailId?: string, envelopeTitle?: string, customFieldName?: string, customFieldValue?: string, searchText?: string, envelopeStatus?: string, folderIds?: string, orderBy?: string, top?: string, skip?: string, fromDate?: string, toDate?: string, options: ConnectorOperationOptions = {}): Promise<FilteredEnvelopeListResponse> {
+    public searchListEnvelopes(accountId: string, options: SearchListEnvelopesOptions = {}): ConnectorPagedAsyncIterableIterator<FilteredEnvelopes> {
         const queryParams: string[] = [];
-        if (recipientName !== undefined) {
-            queryParams.push(`recipientName=${encodeURIComponent(String(recipientName))}`);
+        if (options.recipientName !== undefined) {
+            queryParams.push(`recipientName=${encodeURIComponent(String(options.recipientName))}`);
         }
-        if (recipientEmailId !== undefined) {
-            queryParams.push(`recipientEmailId=${encodeURIComponent(String(recipientEmailId))}`);
+        if (options.recipientEmailId !== undefined) {
+            queryParams.push(`recipientEmailId=${encodeURIComponent(String(options.recipientEmailId))}`);
         }
-        if (envelopeTitle !== undefined) {
-            queryParams.push(`envelopeTitle=${encodeURIComponent(String(envelopeTitle))}`);
+        if (options.envelopeTitle !== undefined) {
+            queryParams.push(`envelopeTitle=${encodeURIComponent(String(options.envelopeTitle))}`);
         }
-        if (customFieldName !== undefined) {
-            queryParams.push(`customFieldName=${encodeURIComponent(String(customFieldName))}`);
+        if (options.customFieldName !== undefined) {
+            queryParams.push(`customFieldName=${encodeURIComponent(String(options.customFieldName))}`);
         }
-        if (customFieldValue !== undefined) {
-            queryParams.push(`customFieldValue=${encodeURIComponent(String(customFieldValue))}`);
+        if (options.customFieldValue !== undefined) {
+            queryParams.push(`customFieldValue=${encodeURIComponent(String(options.customFieldValue))}`);
         }
-        if (searchText !== undefined) {
-            queryParams.push(`search_text=${encodeURIComponent(String(searchText))}`);
+        if (options.searchText !== undefined) {
+            queryParams.push(`search_text=${encodeURIComponent(String(options.searchText))}`);
         }
-        if (envelopeStatus !== undefined) {
-            queryParams.push(`envelopeStatus=${encodeURIComponent(String(envelopeStatus))}`);
+        if (options.envelopeStatus !== undefined) {
+            queryParams.push(`envelopeStatus=${encodeURIComponent(String(options.envelopeStatus))}`);
         }
-        if (folderIds !== undefined) {
-            queryParams.push(`folder_ids=${encodeURIComponent(String(folderIds))}`);
+        if (options.folderIds !== undefined) {
+            queryParams.push(`folder_ids=${encodeURIComponent(String(options.folderIds))}`);
         }
-        if (orderBy !== undefined) {
-            queryParams.push(`order_by=${encodeURIComponent(String(orderBy))}`);
+        if (options.orderBy !== undefined) {
+            queryParams.push(`order_by=${encodeURIComponent(String(options.orderBy))}`);
         }
-        if (top !== undefined) {
-            queryParams.push(`top=${encodeURIComponent(String(top))}`);
+        if (options.top !== undefined) {
+            queryParams.push(`top=${encodeURIComponent(String(options.top))}`);
         }
-        if (skip !== undefined) {
-            queryParams.push(`skip=${encodeURIComponent(String(skip))}`);
+        if (options.skip !== undefined) {
+            queryParams.push(`skip=${encodeURIComponent(String(options.skip))}`);
         }
-        if (fromDate !== undefined) {
-            queryParams.push(`from_date=${encodeURIComponent(String(fromDate))}`);
+        if (options.fromDate !== undefined) {
+            queryParams.push(`from_date=${encodeURIComponent(String(options.fromDate))}`);
         }
-        if (toDate !== undefined) {
-            queryParams.push(`to_date=${encodeURIComponent(String(toDate))}`);
+        if (options.toDate !== undefined) {
+            queryParams.push(`to_date=${encodeURIComponent(String(options.toDate))}`);
         }
         const requestPath = `/accounts/${accountId}/envelopes/SearchListEnvelopes` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
-        const requestUrl = this.resolveUrl(requestPath);
-        const httpResponse = await this.sendWithTracingAsync<FilteredEnvelopeListResponse>("Docusign.searchListEnvelopes", "SearchListEnvelopes", "GET", requestUrl, undefined, options);
+        return this.createPageable<FilteredEnvelopeListResponse, FilteredEnvelopes>(
+            requestPath,
+            async (requestUrl) => {
+                const httpResponse = await this.sendWithTracingAsync<FilteredEnvelopeListResponse>("Docusign.searchListEnvelopes", "SearchListEnvelopes", "GET", requestUrl, undefined, options);
 
-        return httpResponse.value as FilteredEnvelopeListResponse;
+                return httpResponse.value as FilteredEnvelopeListResponse;
+            },
+            "value",
+            undefined,
+        );
     }
 
     /**
      * Create envelope using template
      * @remarks Create a new envelope using a specified template.
      */
-    public async createEnvelopeFromTemplateNoRecipients(accountId: string, templateId?: string, status?: string, options: ConnectorOperationOptions = {}): Promise<CreateEnvelopeResponse> {
+    public async createEnvelopeFromTemplateNoRecipients(accountId: string, templateId: string, status: string, options: ConnectorOperationOptions = {}): Promise<CreateEnvelopeResponse> {
         const queryParams: string[] = [];
         if (templateId !== undefined) {
             queryParams.push(`templateId=${encodeURIComponent(String(templateId))}`);
@@ -1317,7 +1487,7 @@ export class DocusignClient extends ConnectorClientBase {
      * Create envelope using template with recipients
      * @remarks Create a new envelope using a specified template and specify recipients.
      */
-    public async sendEnvelope(input: DynamicSigners, accountId: string, status?: string, templateId?: string, emailSubject?: string, emailBody?: string, options: ConnectorOperationOptions = {}): Promise<CreateEnvelopeResponse> {
+    public async sendEnvelope(input: DynamicSigners, accountId: string, status: string, templateId: string, options: SendEnvelopeOptions = {}): Promise<CreateEnvelopeResponse> {
         const queryParams: string[] = [];
         if (status !== undefined) {
             queryParams.push(`status=${encodeURIComponent(String(status))}`);
@@ -1325,11 +1495,11 @@ export class DocusignClient extends ConnectorClientBase {
         if (templateId !== undefined) {
             queryParams.push(`templateId=${encodeURIComponent(String(templateId))}`);
         }
-        if (emailSubject !== undefined) {
-            queryParams.push(`emailSubject=${encodeURIComponent(String(emailSubject))}`);
+        if (options.emailSubject !== undefined) {
+            queryParams.push(`emailSubject=${encodeURIComponent(String(options.emailSubject))}`);
         }
-        if (emailBody !== undefined) {
-            queryParams.push(`emailBody=${encodeURIComponent(String(emailBody))}`);
+        if (options.emailBody !== undefined) {
+            queryParams.push(`emailBody=${encodeURIComponent(String(options.emailBody))}`);
         }
         const requestPath = `/accounts/${accountId}/envelopes` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
@@ -1342,16 +1512,16 @@ export class DocusignClient extends ConnectorClientBase {
      * Create envelope using template with recipients and tabs
      * @remarks Create envelope using template with recipients and tabs
      */
-    public async sendEnvelopeWithRecipientFields(input: DynamicRecipients, accountId: string, templateId?: string, mergeRolesOnDraft?: string, emailSubject?: string, options: ConnectorOperationOptions = {}): Promise<CreateEnvelopeResponse> {
+    public async sendEnvelopeWithRecipientFields(input: DynamicRecipients, accountId: string, templateId: string, options: SendEnvelopeWithRecipientFieldsOptions = {}): Promise<CreateEnvelopeResponse> {
         const queryParams: string[] = [];
         if (templateId !== undefined) {
             queryParams.push(`templateId=${encodeURIComponent(String(templateId))}`);
         }
-        if (mergeRolesOnDraft !== undefined) {
-            queryParams.push(`merge_roles_on_draft=${encodeURIComponent(String(mergeRolesOnDraft))}`);
+        if (options.mergeRolesOnDraft !== undefined) {
+            queryParams.push(`merge_roles_on_draft=${encodeURIComponent(String(options.mergeRolesOnDraft))}`);
         }
-        if (emailSubject !== undefined) {
-            queryParams.push(`emailSubject=${encodeURIComponent(String(emailSubject))}`);
+        if (options.emailSubject !== undefined) {
+            queryParams.push(`emailSubject=${encodeURIComponent(String(options.emailSubject))}`);
         }
         const requestPath = `/accounts/${accountId}/envelopes/createWithRecipientFields` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
@@ -1376,7 +1546,7 @@ export class DocusignClient extends ConnectorClientBase {
      * Get envelope custom field info
      * @remarks Get envelope custom field info.
      */
-    public async getEnvelopeCustomField(accountId: string, envelopeId: string, fieldName?: string, options: ConnectorOperationOptions = {}): Promise<EnvelopeCustomFieldResponse> {
+    public async getEnvelopeCustomField(accountId: string, envelopeId: string, fieldName: string, options: ConnectorOperationOptions = {}): Promise<EnvelopeCustomFieldResponse> {
         const queryParams: string[] = [];
         if (fieldName !== undefined) {
             queryParams.push(`fieldName=${encodeURIComponent(String(fieldName))}`);
@@ -1392,7 +1562,7 @@ export class DocusignClient extends ConnectorClientBase {
      * Update envelope custom field
      * @remarks Update value for the specified envelope custom field
      */
-    public async updateEnvelopeCustomField(accountId: string, envelopeId: string, fieldId?: string, fieldType?: string, name?: string, value?: string, options: ConnectorOperationOptions = {}): Promise<UpdateEnvelopeCustomFieldResponse> {
+    public async updateEnvelopeCustomField(accountId: string, envelopeId: string, fieldId: string, fieldType: string, name: string, value: string, options: ConnectorOperationOptions = {}): Promise<UpdateEnvelopeCustomFieldResponse> {
         const queryParams: string[] = [];
         if (fieldId !== undefined) {
             queryParams.push(`fieldId=${encodeURIComponent(String(fieldId))}`);
@@ -1417,7 +1587,7 @@ export class DocusignClient extends ConnectorClientBase {
      * Generate Embedded Sender URL
      * @remarks Generate Embedded Sender URL
      */
-    public async generateEmbeddedSenderURL(input: AdditionalURLForSenderView, accountId: string, envelopeId: string, openIn?: string, returnUrl?: string, options: ConnectorOperationOptions = {}): Promise<EmbeddedSenderResponse> {
+    public async generateEmbeddedSenderURL(input: AdditionalURLForSenderView, accountId: string, envelopeId: string, openIn: string, returnUrl: string, options: ConnectorOperationOptions = {}): Promise<EmbeddedSenderResponse> {
         const queryParams: string[] = [];
         if (openIn !== undefined) {
             queryParams.push(`openIn=${encodeURIComponent(String(openIn))}`);
@@ -1436,19 +1606,25 @@ export class DocusignClient extends ConnectorClientBase {
      * List recipients from an envelope
      * @remarks List recipients from an envelope
      */
-    public async getRecipientStatus(accountId: string, envelopeId: string, options: ConnectorOperationOptions = {}): Promise<ListRecipientsResponse> {
+    public getRecipientStatus(accountId: string, envelopeId: string, options: ConnectorOperationOptions = {}): ConnectorPagedAsyncIterableIterator<Signer> {
         const requestPath = `/accounts/${accountId}/envelopes/${envelopeId}/recipients`;
-        const requestUrl = this.resolveUrl(requestPath);
-        const httpResponse = await this.sendWithTracingAsync<ListRecipientsResponse>("Docusign.getRecipientStatus", "GetRecipientStatus", "GET", requestUrl, undefined, options);
+        return this.createPageable<ListRecipientsResponse, Signer>(
+            requestPath,
+            async (requestUrl) => {
+                const httpResponse = await this.sendWithTracingAsync<ListRecipientsResponse>("Docusign.getRecipientStatus", "GetRecipientStatus", "GET", requestUrl, undefined, options);
 
-        return httpResponse.value as ListRecipientsResponse;
+                return httpResponse.value as ListRecipientsResponse;
+            },
+            "signers",
+            undefined,
+        );
     }
 
     /**
      * Remove recipient from an envelope
      * @remarks Remove recipient from an envelope
      */
-    public async removeRecipientFromEnvelope(accountId: string, envelopeId: string, folderId?: string, removeRecipientFromEnvelopeRecipientId?: string, options: ConnectorOperationOptions = {}): Promise<ListRecipientsResponse> {
+    public async removeRecipientFromEnvelope(accountId: string, envelopeId: string, folderId: string, removeRecipientFromEnvelopeRecipientId: string, options: ConnectorOperationOptions = {}): Promise<ListRecipientsResponse> {
         const queryParams: string[] = [];
         if (folderId !== undefined) {
             queryParams.push(`folderId=${encodeURIComponent(String(folderId))}`);
@@ -1467,19 +1643,19 @@ export class DocusignClient extends ConnectorClientBase {
      * Get recipient info from envelope
      * @remarks Get recipient info from envelope
      */
-    public async getRecipientFields(accountId: string, envelopeId: string, recipientEmail?: string, areaCode?: string, phoneNumber?: string, recipientId?: string, options: ConnectorOperationOptions = {}): Promise<Signer> {
+    public async getRecipientFields(accountId: string, envelopeId: string, options: GetRecipientFieldsOptions = {}): Promise<Signer> {
         const queryParams: string[] = [];
-        if (recipientEmail !== undefined) {
-            queryParams.push(`recipientEmail=${encodeURIComponent(String(recipientEmail))}`);
+        if (options.recipientEmail !== undefined) {
+            queryParams.push(`recipientEmail=${encodeURIComponent(String(options.recipientEmail))}`);
         }
-        if (areaCode !== undefined) {
-            queryParams.push(`areaCode=${encodeURIComponent(String(areaCode))}`);
+        if (options.areaCode !== undefined) {
+            queryParams.push(`areaCode=${encodeURIComponent(String(options.areaCode))}`);
         }
-        if (phoneNumber !== undefined) {
-            queryParams.push(`phoneNumber=${encodeURIComponent(String(phoneNumber))}`);
+        if (options.phoneNumber !== undefined) {
+            queryParams.push(`phoneNumber=${encodeURIComponent(String(options.phoneNumber))}`);
         }
-        if (recipientId !== undefined) {
-            queryParams.push(`recipientId=${encodeURIComponent(String(recipientId))}`);
+        if (options.recipientId !== undefined) {
+            queryParams.push(`recipientId=${encodeURIComponent(String(options.recipientId))}`);
         }
         const requestPath = `/accounts/${accountId}/envelopes/${envelopeId}/recipientFields` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
@@ -1504,7 +1680,7 @@ export class DocusignClient extends ConnectorClientBase {
      * Add verification type to a recipient
      * @remarks Add verification type to a recipient.
      */
-    public async addVerificationToRecipient(input: AdditionalRecipientData, accountId: string, envelopeId: string, recipientId?: string, recipientType?: string, verificationType?: string, options: ConnectorOperationOptions = {}): Promise<AddVerificationToRecipientResponse> {
+    public async addVerificationToRecipient(input: AdditionalRecipientData, accountId: string, envelopeId: string, recipientId: string, recipientType: string, verificationType: string, options: ConnectorOperationOptions = {}): Promise<AddVerificationToRecipientResponse> {
         const queryParams: string[] = [];
         if (recipientId !== undefined) {
             queryParams.push(`recipientId=${encodeURIComponent(String(recipientId))}`);
@@ -1526,49 +1702,49 @@ export class DocusignClient extends ConnectorClientBase {
      * Update recipient on an envelope
      * @remarks Update recipient on an envelope
      */
-    public async updateEnvelopeRecipient(input: AdditionalRecipientParamsSchema, accountId: string, envelopeId: string, recipientId?: string, signatureType?: string, recipientType?: string, clientUserId?: string, embeddedRecipientStartURL?: string, routingOrder?: string, emailNotificationLanguage?: string, emailNotificationSubject?: string, emailNotificationBody?: string, note?: string, roleName?: string, countryCode?: string, phoneNumber?: string, signingGroupId?: string, options: ConnectorOperationOptions = {}): Promise<Signer> {
+    public async updateEnvelopeRecipient(input: AdditionalRecipientParamsSchema, accountId: string, envelopeId: string, recipientId: string, recipientType: string, options: UpdateEnvelopeRecipientOptions = {}): Promise<Signer> {
         const queryParams: string[] = [];
         if (recipientId !== undefined) {
             queryParams.push(`recipientId=${encodeURIComponent(String(recipientId))}`);
         }
-        if (signatureType !== undefined) {
-            queryParams.push(`signatureType=${encodeURIComponent(String(signatureType))}`);
+        if (options.signatureType !== undefined) {
+            queryParams.push(`signatureType=${encodeURIComponent(String(options.signatureType))}`);
         }
         if (recipientType !== undefined) {
             queryParams.push(`recipientType=${encodeURIComponent(String(recipientType))}`);
         }
-        if (clientUserId !== undefined) {
-            queryParams.push(`clientUserId=${encodeURIComponent(String(clientUserId))}`);
+        if (options.clientUserId !== undefined) {
+            queryParams.push(`clientUserId=${encodeURIComponent(String(options.clientUserId))}`);
         }
-        if (embeddedRecipientStartURL !== undefined) {
-            queryParams.push(`embeddedRecipientStartURL=${encodeURIComponent(String(embeddedRecipientStartURL))}`);
+        if (options.embeddedRecipientStartURL !== undefined) {
+            queryParams.push(`embeddedRecipientStartURL=${encodeURIComponent(String(options.embeddedRecipientStartURL))}`);
         }
-        if (routingOrder !== undefined) {
-            queryParams.push(`routingOrder=${encodeURIComponent(String(routingOrder))}`);
+        if (options.routingOrder !== undefined) {
+            queryParams.push(`routingOrder=${encodeURIComponent(String(options.routingOrder))}`);
         }
-        if (emailNotificationLanguage !== undefined) {
-            queryParams.push(`emailNotificationLanguage=${encodeURIComponent(String(emailNotificationLanguage))}`);
+        if (options.emailNotificationLanguage !== undefined) {
+            queryParams.push(`emailNotificationLanguage=${encodeURIComponent(String(options.emailNotificationLanguage))}`);
         }
-        if (emailNotificationSubject !== undefined) {
-            queryParams.push(`emailNotificationSubject=${encodeURIComponent(String(emailNotificationSubject))}`);
+        if (options.emailNotificationSubject !== undefined) {
+            queryParams.push(`emailNotificationSubject=${encodeURIComponent(String(options.emailNotificationSubject))}`);
         }
-        if (emailNotificationBody !== undefined) {
-            queryParams.push(`emailNotificationBody=${encodeURIComponent(String(emailNotificationBody))}`);
+        if (options.emailNotificationBody !== undefined) {
+            queryParams.push(`emailNotificationBody=${encodeURIComponent(String(options.emailNotificationBody))}`);
         }
-        if (note !== undefined) {
-            queryParams.push(`note=${encodeURIComponent(String(note))}`);
+        if (options.note !== undefined) {
+            queryParams.push(`note=${encodeURIComponent(String(options.note))}`);
         }
-        if (roleName !== undefined) {
-            queryParams.push(`roleName=${encodeURIComponent(String(roleName))}`);
+        if (options.roleName !== undefined) {
+            queryParams.push(`roleName=${encodeURIComponent(String(options.roleName))}`);
         }
-        if (countryCode !== undefined) {
-            queryParams.push(`countryCode=${encodeURIComponent(String(countryCode))}`);
+        if (options.countryCode !== undefined) {
+            queryParams.push(`countryCode=${encodeURIComponent(String(options.countryCode))}`);
         }
-        if (phoneNumber !== undefined) {
-            queryParams.push(`phoneNumber=${encodeURIComponent(String(phoneNumber))}`);
+        if (options.phoneNumber !== undefined) {
+            queryParams.push(`phoneNumber=${encodeURIComponent(String(options.phoneNumber))}`);
         }
-        if (signingGroupId !== undefined) {
-            queryParams.push(`signingGroupId=${encodeURIComponent(String(signingGroupId))}`);
+        if (options.signingGroupId !== undefined) {
+            queryParams.push(`signingGroupId=${encodeURIComponent(String(options.signingGroupId))}`);
         }
         const requestPath = `/accounts/${accountId}/envelopes/${envelopeId}/recipients/updateRecipient` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
@@ -1581,13 +1757,13 @@ export class DocusignClient extends ConnectorClientBase {
      * Apply a template to documents
      * @remarks Apply a template to documents
      */
-    public async applyTemplatesToDocuments(input: ApplyTemplatesToDocumentsInput, accountId: string, envelopeId: string, templateId?: string, preserveTemplateRecipient?: string, options: ConnectorOperationOptions = {}): Promise<void> {
+    public async applyTemplatesToDocuments(input: ApplyTemplatesToDocumentsInput, accountId: string, envelopeId: string, templateId: string, options: ApplyTemplatesToDocumentsOptions = {}): Promise<void> {
         const queryParams: string[] = [];
         if (templateId !== undefined) {
             queryParams.push(`templateId=${encodeURIComponent(String(templateId))}`);
         }
-        if (preserveTemplateRecipient !== undefined) {
-            queryParams.push(`preserve_template_recipient=${encodeURIComponent(String(preserveTemplateRecipient))}`);
+        if (options.preserveTemplateRecipient !== undefined) {
+            queryParams.push(`preserve_template_recipient=${encodeURIComponent(String(options.preserveTemplateRecipient))}`);
         }
         const requestPath = `/accounts/${accountId}/envelopes/${envelopeId}/templates` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
@@ -1598,7 +1774,7 @@ export class DocusignClient extends ConnectorClientBase {
      * Create bulk send list
      * @remarks Create bulk send list
      */
-    public async createBulkSendList(input: CreateBulkSendListInput, accountId: string, name?: string, options: ConnectorOperationOptions = {}): Promise<BulkSendListGuid> {
+    public async createBulkSendList(input: CreateBulkSendListInput, accountId: string, name: string, options: ConnectorOperationOptions = {}): Promise<BulkSendListGuid> {
         const queryParams: string[] = [];
         if (name !== undefined) {
             queryParams.push(`name=${encodeURIComponent(String(name))}`);
@@ -1614,7 +1790,7 @@ export class DocusignClient extends ConnectorClientBase {
      * Bulk send envelope using template
      * @remarks Bulk send envelope using template
      */
-    public async sendBulk(accountId: string, bulkSendListId: string, envelopeOrTemplateId?: string, options: ConnectorOperationOptions = {}): Promise<BulkSendListGuid> {
+    public async sendBulk(accountId: string, bulkSendListId: string, envelopeOrTemplateId: string, options: ConnectorOperationOptions = {}): Promise<BulkSendListGuid> {
         const queryParams: string[] = [];
         if (envelopeOrTemplateId !== undefined) {
             queryParams.push(`envelopeOrTemplateId=${encodeURIComponent(String(envelopeOrTemplateId))}`);
@@ -1642,12 +1818,18 @@ export class DocusignClient extends ConnectorClientBase {
      * List templates
      * @remarks List templates for a specific account.
      */
-    public async getEnvelopeTemplates(accountId: string, options: ConnectorOperationOptions = {}): Promise<ListTemplatesResponse> {
+    public getEnvelopeTemplates(accountId: string, options: ConnectorOperationOptions = {}): ConnectorPagedAsyncIterableIterator<EnvelopeTemplate> {
         const requestPath = `/accounts/${accountId}/templates`;
-        const requestUrl = this.resolveUrl(requestPath);
-        const httpResponse = await this.sendWithTracingAsync<ListTemplatesResponse>("Docusign.getEnvelopeTemplates", "GetEnvelopeTemplates", "GET", requestUrl, undefined, options);
+        return this.createPageable<ListTemplatesResponse, EnvelopeTemplate>(
+            requestPath,
+            async (requestUrl) => {
+                const httpResponse = await this.sendWithTracingAsync<ListTemplatesResponse>("Docusign.getEnvelopeTemplates", "GetEnvelopeTemplates", "GET", requestUrl, undefined, options);
 
-        return httpResponse.value as ListTemplatesResponse;
+                return httpResponse.value as ListTemplatesResponse;
+            },
+            "envelopeTemplates",
+            undefined,
+        );
     }
 
     /**
@@ -1702,7 +1884,7 @@ export class DocusignClient extends ConnectorClientBase {
      * Get document info from envelope
      * @remarks Get document info from envelope
      */
-    public async getEnvelopeDocumentInfo(accountId: string, envelopeId: string, documentName?: string, options: ConnectorOperationOptions = {}): Promise<EnvelopeDocument> {
+    public async getEnvelopeDocumentInfo(accountId: string, envelopeId: string, documentName: string, options: ConnectorOperationOptions = {}): Promise<EnvelopeDocument> {
         const queryParams: string[] = [];
         if (documentName !== undefined) {
             queryParams.push(`documentName=${encodeURIComponent(String(documentName))}`);
@@ -1718,7 +1900,7 @@ export class DocusignClient extends ConnectorClientBase {
      * Get info for recipient tab
      * @remarks Returns the value of the tab for the given recipient
      */
-    public async getTabInfo(accountId: string, envelopeId: string, recipientId: string, tabLabel?: string, options: ConnectorOperationOptions = {}): Promise<Tab> {
+    public async getTabInfo(accountId: string, envelopeId: string, recipientId: string, tabLabel: string, options: ConnectorOperationOptions = {}): Promise<Tab> {
         const queryParams: string[] = [];
         if (tabLabel !== undefined) {
             queryParams.push(`tabLabel=${encodeURIComponent(String(tabLabel))}`);
@@ -1734,7 +1916,7 @@ export class DocusignClient extends ConnectorClientBase {
      * Add tabs for a recipient on an envelope
      * @remarks Add tabs for a recipient on an envelope
      */
-    public async addRecipientTabs(input: AnchorTabSchema, accountId: string, envelopeId: string, recipientId: string, tabType?: string, options: ConnectorOperationOptions = {}): Promise<AddRecipientTabsResponse> {
+    public async addRecipientTabs(input: AnchorTabSchema, accountId: string, envelopeId: string, recipientId: string, tabType: string, options: ConnectorOperationOptions = {}): Promise<AddRecipientTabsResponse> {
         const queryParams: string[] = [];
         if (tabType !== undefined) {
             queryParams.push(`tabType=${encodeURIComponent(String(tabType))}`);
@@ -1772,7 +1954,7 @@ export class DocusignClient extends ConnectorClientBase {
      * Start Docusign workflow
      * @remarks Start Docusign workflow
      */
-    public async triggerMaestroFlow(input: MaestroInputVariables, accountId: string, workflowId: string, instanceName?: string, options: ConnectorOperationOptions = {}): Promise<TriggerMaestroFlowResponse> {
+    public async triggerMaestroFlow(input: MaestroInputVariables, accountId: string, workflowId: string, instanceName: string, options: ConnectorOperationOptions = {}): Promise<TriggerMaestroFlowResponse> {
         const queryParams: string[] = [];
         if (instanceName !== undefined) {
             queryParams.push(`instanceName=${encodeURIComponent(String(instanceName))}`);
@@ -1800,52 +1982,52 @@ export class DocusignClient extends ConnectorClientBase {
      * Add recipient to an envelope
      * @remarks Add recipient to an envelope.
      */
-    public async addRecipientToEnvelope(input: AdditionalRecipientParamsSchema, accountId: string, envelopeId: string, recipientType?: string, clientUserId?: string, recipientId?: string, embeddedRecipientStartURL?: string, routingOrder?: string, emailNotificationLanguage?: string, emailNotificationSubject?: string, emailNotificationBody?: string, note?: string, roleName?: string, countryCode?: string, phoneNumber?: string, signingGroupId?: string, signatureType?: string, workflowId?: string, options: ConnectorOperationOptions = {}): Promise<Signer> {
+    public async addRecipientToEnvelope(input: AdditionalRecipientParamsSchema, accountId: string, envelopeId: string, recipientType: string, options: AddRecipientToEnvelopeOptions = {}): Promise<Signer> {
         const queryParams: string[] = [];
         if (recipientType !== undefined) {
             queryParams.push(`recipientType=${encodeURIComponent(String(recipientType))}`);
         }
-        if (clientUserId !== undefined) {
-            queryParams.push(`clientUserId=${encodeURIComponent(String(clientUserId))}`);
+        if (options.clientUserId !== undefined) {
+            queryParams.push(`clientUserId=${encodeURIComponent(String(options.clientUserId))}`);
         }
-        if (recipientId !== undefined) {
-            queryParams.push(`recipientId=${encodeURIComponent(String(recipientId))}`);
+        if (options.recipientId !== undefined) {
+            queryParams.push(`recipientId=${encodeURIComponent(String(options.recipientId))}`);
         }
-        if (embeddedRecipientStartURL !== undefined) {
-            queryParams.push(`embeddedRecipientStartURL=${encodeURIComponent(String(embeddedRecipientStartURL))}`);
+        if (options.embeddedRecipientStartURL !== undefined) {
+            queryParams.push(`embeddedRecipientStartURL=${encodeURIComponent(String(options.embeddedRecipientStartURL))}`);
         }
-        if (routingOrder !== undefined) {
-            queryParams.push(`routingOrder=${encodeURIComponent(String(routingOrder))}`);
+        if (options.routingOrder !== undefined) {
+            queryParams.push(`routingOrder=${encodeURIComponent(String(options.routingOrder))}`);
         }
-        if (emailNotificationLanguage !== undefined) {
-            queryParams.push(`emailNotificationLanguage=${encodeURIComponent(String(emailNotificationLanguage))}`);
+        if (options.emailNotificationLanguage !== undefined) {
+            queryParams.push(`emailNotificationLanguage=${encodeURIComponent(String(options.emailNotificationLanguage))}`);
         }
-        if (emailNotificationSubject !== undefined) {
-            queryParams.push(`emailNotificationSubject=${encodeURIComponent(String(emailNotificationSubject))}`);
+        if (options.emailNotificationSubject !== undefined) {
+            queryParams.push(`emailNotificationSubject=${encodeURIComponent(String(options.emailNotificationSubject))}`);
         }
-        if (emailNotificationBody !== undefined) {
-            queryParams.push(`emailNotificationBody=${encodeURIComponent(String(emailNotificationBody))}`);
+        if (options.emailNotificationBody !== undefined) {
+            queryParams.push(`emailNotificationBody=${encodeURIComponent(String(options.emailNotificationBody))}`);
         }
-        if (note !== undefined) {
-            queryParams.push(`note=${encodeURIComponent(String(note))}`);
+        if (options.note !== undefined) {
+            queryParams.push(`note=${encodeURIComponent(String(options.note))}`);
         }
-        if (roleName !== undefined) {
-            queryParams.push(`roleName=${encodeURIComponent(String(roleName))}`);
+        if (options.roleName !== undefined) {
+            queryParams.push(`roleName=${encodeURIComponent(String(options.roleName))}`);
         }
-        if (countryCode !== undefined) {
-            queryParams.push(`countryCode=${encodeURIComponent(String(countryCode))}`);
+        if (options.countryCode !== undefined) {
+            queryParams.push(`countryCode=${encodeURIComponent(String(options.countryCode))}`);
         }
-        if (phoneNumber !== undefined) {
-            queryParams.push(`phoneNumber=${encodeURIComponent(String(phoneNumber))}`);
+        if (options.phoneNumber !== undefined) {
+            queryParams.push(`phoneNumber=${encodeURIComponent(String(options.phoneNumber))}`);
         }
-        if (signingGroupId !== undefined) {
-            queryParams.push(`signingGroupId=${encodeURIComponent(String(signingGroupId))}`);
+        if (options.signingGroupId !== undefined) {
+            queryParams.push(`signingGroupId=${encodeURIComponent(String(options.signingGroupId))}`);
         }
-        if (signatureType !== undefined) {
-            queryParams.push(`signatureType=${encodeURIComponent(String(signatureType))}`);
+        if (options.signatureType !== undefined) {
+            queryParams.push(`signatureType=${encodeURIComponent(String(options.signatureType))}`);
         }
-        if (workflowId !== undefined) {
-            queryParams.push(`workflowId=${encodeURIComponent(String(workflowId))}`);
+        if (options.workflowId !== undefined) {
+            queryParams.push(`workflowId=${encodeURIComponent(String(options.workflowId))}`);
         }
         const requestPath = `/accounts/${accountId}/envelopes/${envelopeId}/recipients/addRecipientV2` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
@@ -1858,7 +2040,7 @@ export class DocusignClient extends ConnectorClientBase {
      * Create envelope
      * @remarks Create a new blank envelope.
      */
-    public async createBlankEnvelope(input: CombinedEmailBodyAndCustomFields, accountId: string, emailSubject?: string, options: ConnectorOperationOptions = {}): Promise<CreateEnvelopeResponse> {
+    public async createBlankEnvelope(input: CombinedEmailBodyAndCustomFields, accountId: string, emailSubject: string, options: ConnectorOperationOptions = {}): Promise<CreateEnvelopeResponse> {
         const queryParams: string[] = [];
         if (emailSubject !== undefined) {
             queryParams.push(`emailSubject=${encodeURIComponent(String(emailSubject))}`);
@@ -1874,7 +2056,7 @@ export class DocusignClient extends ConnectorClientBase {
      * Generate Embedded Signing URL
      * @remarks Generate Embedded Signing URL
      */
-    public async generateEmbeddedSigningURL(input: DynamicSigningUrlFields, accountId: string, envelopeId: string, isInPersonSigner?: string, authenticationMethod?: string, returnUrl?: string, options: ConnectorOperationOptions = {}): Promise<EmbeddedSigningResponse> {
+    public async generateEmbeddedSigningURL(input: DynamicSigningUrlFields, accountId: string, envelopeId: string, isInPersonSigner: string, authenticationMethod: string, returnUrl: string, options: ConnectorOperationOptions = {}): Promise<EmbeddedSigningResponse> {
         const queryParams: string[] = [];
         if (isInPersonSigner !== undefined) {
             queryParams.push(`isInPersonSigner=${encodeURIComponent(String(isInPersonSigner))}`);
@@ -1896,10 +2078,10 @@ export class DocusignClient extends ConnectorClientBase {
      * Get documents from an envelope
      * @remarks Get documents from an envelope
      */
-    public async getDocuments(accountId: string, envelopeId: string, documentId: string, language?: string, options: ConnectorOperationOptions = {}): Promise<Blob> {
+    public async getDocuments(accountId: string, envelopeId: string, documentId: string, options: GetDocumentsOptions = {}): Promise<Blob> {
         const queryParams: string[] = [];
-        if (language !== undefined) {
-            queryParams.push(`language=${encodeURIComponent(String(language))}`);
+        if (options.language !== undefined) {
+            queryParams.push(`language=${encodeURIComponent(String(options.language))}`);
         }
         const requestPath = `/accounts/${accountId}/envelopes/${envelopeId}/documents/${documentId}/documentsDownload` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);

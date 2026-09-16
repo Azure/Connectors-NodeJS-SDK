@@ -80,7 +80,11 @@ describe("ShiftsClient — listTimesOff", () => {
         mockFetchResponse(mockResponse);
 
         const client = new ShiftsClient(TestConnectionUrl, createMockCredential());
-    await client.listTimesOff("team-1", "2026-01-01", "2026-01-31", "10").byPage().next();
+        await client.listTimesOff("team-1", {
+            startTime: "2026-01-01",
+            endTime: "2026-01-31",
+            top: "10",
+        }).byPage().next();
 
         const [url] = (global.fetch as jest.Mock).mock.calls[0];
         expect(url).toContain("startTime=2026-01-01");

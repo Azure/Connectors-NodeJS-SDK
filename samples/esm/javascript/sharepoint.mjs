@@ -123,7 +123,7 @@ async function main() {
     // Example 4: Get root folder metadata
     console.log("\n--- Get Root Folder Metadata ---");
     try {
-        const rootFolder = await client.getFolderMetadataByPath(SITE_URL);
+        const rootFolder = await client.getFolderMetadataByPath(SITE_URL, "/");
 
         if (rootFolder) {
             console.log(`Root folder metadata:`);

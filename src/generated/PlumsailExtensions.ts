@@ -901,7 +901,7 @@ export class PlumsailClient extends ConnectorClientBase {
      * Split PDF
      * @remarks Split PDF takes PDF document and splits it. Documentation - https://plumsail.com/docs/documents/v1.x/flow/actions/document-processing.html#split-pdf
      */
-    public async flowV1DocumentsJobsSplitPdfV2(input: FlowV1DocumentsJobsSplitPdfV2Input, type?: string, options: ConnectorOperationOptions = {}): Promise<DocumentsWithFilenamesResponse> {
+    public async flowV1DocumentsJobsSplitPdfV2(input: FlowV1DocumentsJobsSplitPdfV2Input, type: string, options: ConnectorOperationOptions = {}): Promise<DocumentsWithFilenamesResponse> {
         const queryParams: string[] = [];
         if (type !== undefined) {
             queryParams.push(`type=${encodeURIComponent(String(type))}`);
@@ -1025,7 +1025,7 @@ export class PlumsailClient extends ConnectorClientBase {
      * Add a watermark to PDF
      * @remarks Add a watermark to PDF as text, an image, HTML, or PDF. Documentation - https://plumsail.com/docs/documents/v1.x/flow/actions/document-processing.html#add-watermark-to-pdf
      */
-    public async addFlowV1DocumentsJobsWatermarkToPdf(input: FlowV1DocumentsJobsAddWatermarkToPdfInput, type?: string, options: ConnectorOperationOptions = {}): Promise<DocumentProcessingResponse> {
+    public async addFlowV1DocumentsJobsWatermarkToPdf(input: FlowV1DocumentsJobsAddWatermarkToPdfInput, type: string, options: ConnectorOperationOptions = {}): Promise<DocumentProcessingResponse> {
         const queryParams: string[] = [];
         if (type !== undefined) {
             queryParams.push(`type=${encodeURIComponent(String(type))}`);
@@ -1113,10 +1113,10 @@ export class PlumsailClient extends ConnectorClientBase {
      * Regular Expression Replace
      * @remarks Regular Expression Replace replaces all strings that match a regular expression pattern with a specified replacement string  in a specified input string. We would recommend  to use Regex Hero to test your expressions. It supports the same syntax as actions. Documentation - https://plumsail.com/docs/documents/v1.x/flow/actions/document-processing.html#regular-expression-replace
      */
-    public async flowV1DocumentsJobsRegExpReplace(input: RegExpReplaceRequest, options: ConnectorOperationOptions = {}): Promise<StringResultResponse> {
+    public async replaceFlowV1DocumentsJobsRegExp(input: RegExpReplaceRequest, options: ConnectorOperationOptions = {}): Promise<StringResultResponse> {
         const requestPath = `/flow/v1/Documents/jobs/RegExpReplace`;
         const requestUrl = this.resolveUrl(requestPath);
-        const httpResponse = await this.sendWithTracingAsync<StringResultResponse>("Plumsail.flowV1DocumentsJobsRegExpReplace", "FlowV1DocumentsJobsRegExpReplacePost", "POST", requestUrl, input, options);
+        const httpResponse = await this.sendWithTracingAsync<StringResultResponse>("Plumsail.replaceFlowV1DocumentsJobsRegExp", "FlowV1DocumentsJobsRegExpReplacePost", "POST", requestUrl, input, options);
 
         return httpResponse.value as StringResultResponse;
     }
@@ -1173,7 +1173,7 @@ export class PlumsailClient extends ConnectorClientBase {
      * Start document generation process with json
      * @remarks Start document generation process fills a DOCX, XLSX, PPTX or PDF template related to the selected process with the JSON data. Documentation - https://plumsail.com/docs/documents/v1.x/flow/actions/document-processing.html##start-process-json
      */
-    public async executeFlowV1ProcessesFlowJobsProcess(input: FlowV1ProcessesFlowJobsExecuteProcessInput, processId?: string, options: ConnectorOperationOptions = {}): Promise<Blob> {
+    public async executeFlowV1ProcessesFlowJobsProcess(input: FlowV1ProcessesFlowJobsExecuteProcessInput, processId: string, options: ConnectorOperationOptions = {}): Promise<Blob> {
         const queryParams: string[] = [];
         if (processId !== undefined) {
             queryParams.push(`processId=${encodeURIComponent(String(processId))}`);
@@ -1189,7 +1189,7 @@ export class PlumsailClient extends ConnectorClientBase {
      * Start document generation process
      * @remarks Start document generation process fills a DOCX, XLSX, PPTX or PDF template related to the selected process with the JSON data. Documentation - https://plumsail.com/docs/documents/v1.x/flow/actions/document-processing.html#start-document-generation-process
      */
-    public async executeFlowV1ProcessesFlowJobsProcessWithGeneratedData(input: ProcessJsonData, processId?: string, options: ConnectorOperationOptions = {}): Promise<Blob> {
+    public async executeFlowV1ProcessesFlowJobsProcessWithGeneratedData(input: ProcessJsonData, processId: string, options: ConnectorOperationOptions = {}): Promise<Blob> {
         const queryParams: string[] = [];
         if (processId !== undefined) {
             queryParams.push(`processId=${encodeURIComponent(String(processId))}`);

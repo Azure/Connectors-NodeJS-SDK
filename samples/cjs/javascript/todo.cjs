@@ -21,8 +21,16 @@ async function main() {
     const client = new TodoClient(CONNECTION_URL, tokenProvider);
 
     try {
-        const result = await client.getAllTodoLists();
-        console.log(`To-do lists found: ${result.length}`);
+        let listCount = 0;
+        for await (const list of client.getAllTodoLists()) {
+            if (listCount < 10) {
+                console.log(`  - ${list.displayName ?? "Unknown"}`);
+            }
+
+            listCount++;
+        }
+
+        console.log(`To-do lists found: ${listCount}`);
     } catch (error) {
         if (error instanceof ConnectorError) {
             console.log(`Connector error (${error.statusCode}): ${error.message}`);

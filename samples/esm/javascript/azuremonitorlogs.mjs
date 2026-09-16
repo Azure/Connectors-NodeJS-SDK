@@ -26,6 +26,8 @@ import { AzuremonitorlogsClient } from "@azure/connectors/generated/Azuremonitor
 const CONNECTION_URL = process.env.AZUREMONITOR_CONNECTION_URL ?? "";
 const SUBSCRIPTIONS = process.env.AZUREMONITOR_SUBSCRIPTIONS ?? "";
 const RESOURCE_GROUPS = process.env.AZUREMONITOR_RESOURCE_GROUPS ?? "";
+const RESOURCE_TYPE = process.env.AZUREMONITOR_RESOURCE_TYPE ?? "";
+const RESOURCE_NAME = process.env.AZUREMONITOR_RESOURCE_NAME ?? "";
 
 if (!CONNECTION_URL) {
     console.error("Error: AZUREMONITOR_CONNECTION_URL environment variable is not set.");
@@ -52,8 +54,10 @@ async function main() {
 
         const result = await client.queryData(
             input,
-            SUBSCRIPTIONS || undefined,
-            RESOURCE_GROUPS || undefined,
+            SUBSCRIPTIONS,
+            RESOURCE_GROUPS,
+            RESOURCE_TYPE,
+            RESOURCE_NAME,
         );
 
         const rows = result.value ?? [];
@@ -84,10 +88,10 @@ async function main() {
 
         const visResult = await client.visualizeQuery(
             visInput,
-            SUBSCRIPTIONS || undefined,
-            RESOURCE_GROUPS || undefined,
-            undefined,
-            undefined,
+            SUBSCRIPTIONS,
+            RESOURCE_GROUPS,
+            RESOURCE_TYPE,
+            RESOURCE_NAME,
             "piechart",
         );
         const visRecord = visResult;

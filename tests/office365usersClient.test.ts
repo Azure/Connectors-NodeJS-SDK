@@ -118,7 +118,7 @@ describe("Office365usersClient — myProfile", () => {
         mockFetchResponse({});
 
         const client = new Office365usersClient(TestConnectionUrl, createMockCredential());
-        await client.myProfile("displayName,mail");
+        await client.myProfile({ select: "displayName,mail" });
 
         const [url] = (global.fetch as jest.Mock).mock.calls[0];
         expect(url).toContain("$select=");
@@ -137,7 +137,7 @@ describe("Office365usersClient — searchUser", () => {
         mockFetchResponse(mockResponse);
 
         const client = new Office365usersClient(TestConnectionUrl, createMockCredential());
-        const result = await client.searchUser("John").byPage().next();
+        const result = await client.searchUser({ searchTerm: "John" }).byPage().next();
 
         expect(result.value).toEqual(mockResponse.value);
         const [url] = (global.fetch as jest.Mock).mock.calls[0];

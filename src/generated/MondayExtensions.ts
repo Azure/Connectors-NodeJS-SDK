@@ -171,7 +171,7 @@ export interface CreateItemInput {
     groupId: string;
     /** Specify the name of the item you want to create. */
     itemName: string;
-    columnValues?: Record<string, unknown>;
+    columnValues?: DynamicResponseGetListSchema;
 }
 
 /**
@@ -275,7 +275,7 @@ export interface UpdateItemColumnInput {
     columnId: FieldColumnsToUpdateSingleColumn;
     /** Specify the ID of the item to update. */
     itemId: string;
-    columnValues: Record<string, unknown>;
+    columnValues: DynamicResponseGetSingleColumnSchema;
 }
 
 /**
@@ -297,7 +297,7 @@ export interface UpdateMultipleItemColumnsInput {
     itemId: string;
     /** Specify a new name for the item. Leave blank to keep the current name. */
     itemName?: string;
-    columnValues?: Record<string, unknown>;
+    columnValues?: DynamicResponseGetListSchema;
 }
 
 /**
@@ -357,7 +357,7 @@ export interface CreateSubitemInput {
     parentItemId: string;
     /** Specify a name for the subitem. */
     itemName: string;
-    columnValues?: Record<string, unknown>;
+    columnValues?: DynamicResponseGetListSchema;
 }
 
 /**
@@ -489,6 +489,36 @@ export type FieldBoard = string;
  * Definition: FieldColumnsToUpdateSingleColumn
  */
 export type FieldColumnsToUpdateSingleColumn = string;
+
+/**
+ * Options for the getItems operation.
+ */
+export interface GetItemsOptions extends ConnectorOperationOptions {
+    /** Select a column from the drop-down or specify a column ID. */
+    filter1Column?: string;
+    /** Select an operator from the drop-down. */
+    filter1Operator?: string;
+    /** Specify a value (if applicable). */
+    filter1Value?: string;
+    /** Select a column from the drop-down or specify a column ID. */
+    filter2Column?: string;
+    /** Select an operator from the drop-down. */
+    filter2Operator?: string;
+    /** Specify a value (if applicable). */
+    filter2Value?: string;
+    /** Select a column from the drop-down or specify a column ID. */
+    filter3Column?: string;
+    /** Select an operator from the drop-down. */
+    filter3Operator?: string;
+    /** Specify a value (if applicable). */
+    filter3Value?: string;
+    /** Select a column from the drop-down or specify a column ID. */
+    filter4Column?: string;
+    /** Select an operator from the drop-down. */
+    filter4Operator?: string;
+    /** Specify a value (if applicable). */
+    filter4Value?: string;
+}
 // #endregion Types
 
 export const MondayTriggerOperations = {
@@ -649,7 +679,7 @@ export class MondayClient extends ConnectorClientBase {
      * Get subitems
      * @remarks Gets subitems in monday.com for a specific item in a board.
      */
-    public async getSubitems(workspaceId?: string, boardId?: string, itemId?: string, options: ConnectorOperationOptions = {}): Promise<GetSubitemColumnNamesForGetSubitems> {
+    public async getSubitems(workspaceId: string, boardId: string, itemId: string, options: ConnectorOperationOptions = {}): Promise<GetSubitemColumnNamesForGetSubitems> {
         const queryParams: string[] = [];
         if (workspaceId !== undefined) {
             queryParams.push(`workspaceId=${encodeURIComponent(String(workspaceId))}`);
@@ -683,7 +713,7 @@ export class MondayClient extends ConnectorClientBase {
      * Get an item by ID
      * @remarks Gets a monday.com item using the specified item ID and board.
      */
-    public async getItemById(itemId?: string, workspaceId?: string, boardId?: string, options: ConnectorOperationOptions = {}): Promise<DynamicResponseGetListSchemaGet> {
+    public async getItemById(itemId: string, workspaceId: string, boardId: string, options: ConnectorOperationOptions = {}): Promise<DynamicResponseGetListSchemaGet> {
         const queryParams: string[] = [];
         if (itemId !== undefined) {
             queryParams.push(`itemId=${encodeURIComponent(String(itemId))}`);
@@ -717,7 +747,7 @@ export class MondayClient extends ConnectorClientBase {
      * Get items
      * @remarks Gets items in monday.com for a specific board and group. Filter items by column values using the filters found under advanced options. More info on filtering can be found here: https://plugingenie.com/docs/filtering-items.
      */
-    public async getItems(workspaceId?: string, boardId?: string, groupId?: string, filter1Column?: string, filter1Operator?: string, filter1Value?: string, filter2Column?: string, filter2Operator?: string, filter2Value?: string, filter3Column?: string, filter3Operator?: string, filter3Value?: string, filter4Column?: string, filter4Operator?: string, filter4Value?: string, options: ConnectorOperationOptions = {}): Promise<DynamicGetGetItemsSchema> {
+    public async getItems(workspaceId: string, boardId: string, groupId: string, options: GetItemsOptions = {}): Promise<DynamicGetGetItemsSchema> {
         const queryParams: string[] = [];
         if (workspaceId !== undefined) {
             queryParams.push(`workspaceId=${encodeURIComponent(String(workspaceId))}`);
@@ -728,41 +758,41 @@ export class MondayClient extends ConnectorClientBase {
         if (groupId !== undefined) {
             queryParams.push(`groupId=${encodeURIComponent(String(groupId))}`);
         }
-        if (filter1Column !== undefined) {
-            queryParams.push(`filter1Column=${encodeURIComponent(String(filter1Column))}`);
+        if (options.filter1Column !== undefined) {
+            queryParams.push(`filter1Column=${encodeURIComponent(String(options.filter1Column))}`);
         }
-        if (filter1Operator !== undefined) {
-            queryParams.push(`filter1Operator=${encodeURIComponent(String(filter1Operator))}`);
+        if (options.filter1Operator !== undefined) {
+            queryParams.push(`filter1Operator=${encodeURIComponent(String(options.filter1Operator))}`);
         }
-        if (filter1Value !== undefined) {
-            queryParams.push(`filter1Value=${encodeURIComponent(String(filter1Value))}`);
+        if (options.filter1Value !== undefined) {
+            queryParams.push(`filter1Value=${encodeURIComponent(String(options.filter1Value))}`);
         }
-        if (filter2Column !== undefined) {
-            queryParams.push(`filter2Column=${encodeURIComponent(String(filter2Column))}`);
+        if (options.filter2Column !== undefined) {
+            queryParams.push(`filter2Column=${encodeURIComponent(String(options.filter2Column))}`);
         }
-        if (filter2Operator !== undefined) {
-            queryParams.push(`filter2Operator=${encodeURIComponent(String(filter2Operator))}`);
+        if (options.filter2Operator !== undefined) {
+            queryParams.push(`filter2Operator=${encodeURIComponent(String(options.filter2Operator))}`);
         }
-        if (filter2Value !== undefined) {
-            queryParams.push(`filter2Value=${encodeURIComponent(String(filter2Value))}`);
+        if (options.filter2Value !== undefined) {
+            queryParams.push(`filter2Value=${encodeURIComponent(String(options.filter2Value))}`);
         }
-        if (filter3Column !== undefined) {
-            queryParams.push(`filter3Column=${encodeURIComponent(String(filter3Column))}`);
+        if (options.filter3Column !== undefined) {
+            queryParams.push(`filter3Column=${encodeURIComponent(String(options.filter3Column))}`);
         }
-        if (filter3Operator !== undefined) {
-            queryParams.push(`filter3Operator=${encodeURIComponent(String(filter3Operator))}`);
+        if (options.filter3Operator !== undefined) {
+            queryParams.push(`filter3Operator=${encodeURIComponent(String(options.filter3Operator))}`);
         }
-        if (filter3Value !== undefined) {
-            queryParams.push(`filter3Value=${encodeURIComponent(String(filter3Value))}`);
+        if (options.filter3Value !== undefined) {
+            queryParams.push(`filter3Value=${encodeURIComponent(String(options.filter3Value))}`);
         }
-        if (filter4Column !== undefined) {
-            queryParams.push(`filter4Column=${encodeURIComponent(String(filter4Column))}`);
+        if (options.filter4Column !== undefined) {
+            queryParams.push(`filter4Column=${encodeURIComponent(String(options.filter4Column))}`);
         }
-        if (filter4Operator !== undefined) {
-            queryParams.push(`filter4Operator=${encodeURIComponent(String(filter4Operator))}`);
+        if (options.filter4Operator !== undefined) {
+            queryParams.push(`filter4Operator=${encodeURIComponent(String(options.filter4Operator))}`);
         }
-        if (filter4Value !== undefined) {
-            queryParams.push(`filter4Value=${encodeURIComponent(String(filter4Value))}`);
+        if (options.filter4Value !== undefined) {
+            queryParams.push(`filter4Value=${encodeURIComponent(String(options.filter4Value))}`);
         }
         const requestPath = `/getData/getItemsV2` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);

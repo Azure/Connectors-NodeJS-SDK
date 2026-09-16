@@ -19,7 +19,7 @@ export interface ObjectEntity {
  * Definition: Table
  */
 export interface Table {
-    value?: Array<Record<string, unknown>>;
+    value?: Array<Row>;
 }
 
 /**
@@ -141,6 +141,14 @@ export interface MCPQueryResponse {
     result?: Record<string, unknown>;
     error?: Record<string, unknown>;
 }
+
+/**
+ * Options for the mcpKustoQueryManagement operation.
+ */
+export interface McpKustoQueryManagementOptions extends ConnectorOperationOptions {
+    /** The 'sessionId' service parameter. */
+    sessionId?: string;
+}
 // #endregion Types
 
 // #region Client
@@ -240,10 +248,10 @@ export class KustoClient extends ConnectorClientBase {
      * Kusto Query MCP Server
      * @remarks This MCP server runs Kusto queries and manages the results.
      */
-    public async mcpKustoQueryManagement(input: MCPQueryRequest, sessionId?: string, options: ConnectorOperationOptions = {}): Promise<MCPQueryResponse> {
+    public async mcpKustoQueryManagement(input: MCPQueryRequest, options: McpKustoQueryManagementOptions = {}): Promise<MCPQueryResponse> {
         const queryParams: string[] = [];
-        if (sessionId !== undefined) {
-            queryParams.push(`sessionId=${encodeURIComponent(String(sessionId))}`);
+        if (options.sessionId !== undefined) {
+            queryParams.push(`sessionId=${encodeURIComponent(String(options.sessionId))}`);
         }
         const requestPath = `/mcp/KustoQueryManagement` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);

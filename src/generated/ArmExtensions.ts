@@ -560,6 +560,92 @@ export interface ResourceGroupExportResult {
 export interface ObjectWithoutType {
     [key: string]: unknown;
 }
+
+/**
+ * Options for the getDeployment operation.
+ */
+export interface GetDeploymentOptions extends ConnectorOperationOptions {
+    /** If the action should wait until deployment is completed */
+    wait?: string;
+}
+
+/**
+ * Options for the createDeploymentOrUpdate operation.
+ */
+export interface CreateDeploymentOrUpdateOptions extends ConnectorOperationOptions {
+    /** If the action should wait until deployment is completed */
+    wait?: string;
+}
+
+/**
+ * Options for the listDeployments operation.
+ */
+export interface ListDeploymentsOptions extends ConnectorOperationOptions {
+    /** The filter to apply on the operation. */
+    filter?: string;
+    /** Query parameters. If nothing is passed returns all values. */
+    top?: string;
+}
+
+/**
+ * Options for the listDeploymentOperations operation.
+ */
+export interface ListDeploymentOperationsOptions extends ConnectorOperationOptions {
+    /** Query parameters. If nothing is passed returns all values. */
+    top?: string;
+}
+
+/**
+ * Options for the listProviders operation.
+ */
+export interface ListProvidersOptions extends ConnectorOperationOptions {
+    /** Query parameters. If nothing is passed returns all values. */
+    top?: string;
+    /** The $expand query parameter. */
+    expand?: string;
+}
+
+/**
+ * Options for the getProvider operation.
+ */
+export interface GetProviderOptions extends ConnectorOperationOptions {
+    /** The $expand query parameter. */
+    expand?: string;
+}
+
+/**
+ * Options for the listResourceGroupsResources operation.
+ */
+export interface ListResourceGroupsResourcesOptions extends ConnectorOperationOptions {
+    /** The filter to apply on the operation. */
+    filter?: string;
+    /** The $expand query parameter. */
+    expand?: string;
+    /** Query parameters. If nothing is passed returns all values. */
+    top?: string;
+}
+
+/**
+ * Options for the listResourceGroups operation.
+ */
+export interface ListResourceGroupsOptions extends ConnectorOperationOptions {
+    /** The filter to apply on the operation. */
+    filter?: string;
+    /** Query parameters. If nothing is passed returns all values. */
+    top?: string;
+}
+
+/**
+ * Options for the listResources operation.
+ */
+export interface ListResourcesOptions extends ConnectorOperationOptions {
+    /** The filter to apply on the operation. */
+    filter?: string;
+    /** The $expand query parameter. */
+    expand?: string;
+    /** Query parameters. If nothing is passed returns all values. */
+    top?: string;
+}
 // #endregion Types
 
 // #region Client
@@ -587,7 +673,7 @@ export class ArmClient extends ConnectorClientBase {
      * Lists the subscription locations
      * @remarks Lists the locations available for the subscription.
      */
-    public listSubscriptionsLocations(subscriptionId: string, xMsApiVersion?: string, options: ConnectorOperationOptions = {}): ConnectorPagedAsyncIterableIterator<Location> {
+    public listSubscriptionsLocations(subscriptionId: string, xMsApiVersion: string, options: ConnectorOperationOptions = {}): ConnectorPagedAsyncIterableIterator<Location> {
         const queryParams: string[] = [];
         if (xMsApiVersion !== undefined) {
             queryParams.push(`x-ms-api-version=${encodeURIComponent(String(xMsApiVersion))}`);
@@ -609,7 +695,7 @@ export class ArmClient extends ConnectorClientBase {
      * Read a subscription
      * @remarks Reads the details for a particular subscription.
      */
-    public async getSubscription(subscriptionId: string, xMsApiVersion?: string, options: ConnectorOperationOptions = {}): Promise<Subscription> {
+    public async getSubscription(subscriptionId: string, xMsApiVersion: string, options: ConnectorOperationOptions = {}): Promise<Subscription> {
         const queryParams: string[] = [];
         if (xMsApiVersion !== undefined) {
             queryParams.push(`x-ms-api-version=${encodeURIComponent(String(xMsApiVersion))}`);
@@ -625,7 +711,7 @@ export class ArmClient extends ConnectorClientBase {
      * List subscriptions
      * @remarks Gets a list of all the subscriptions to which the principal has access.
      */
-    public listSubscriptions(xMsApiVersion?: string, options: ConnectorOperationOptions = {}): ConnectorPagedAsyncIterableIterator<Subscription> {
+    public listSubscriptions(xMsApiVersion: string, options: ConnectorOperationOptions = {}): ConnectorPagedAsyncIterableIterator<Subscription> {
         const queryParams: string[] = [];
         if (xMsApiVersion !== undefined) {
             queryParams.push(`x-ms-api-version=${encodeURIComponent(String(xMsApiVersion))}`);
@@ -648,13 +734,13 @@ export class ArmClient extends ConnectorClientBase {
      * Read a template deployment
      * @remarks Reads a template deployment within a resource group.
      */
-    public async getDeployment(subscriptionId: string, resourceGroupName: string, deploymentName: string, xMsApiVersion?: string, wait?: string, options: ConnectorOperationOptions = {}): Promise<DeploymentExtended> {
+    public async getDeployment(subscriptionId: string, resourceGroupName: string, deploymentName: string, xMsApiVersion: string, options: GetDeploymentOptions = {}): Promise<DeploymentExtended> {
         const queryParams: string[] = [];
         if (xMsApiVersion !== undefined) {
             queryParams.push(`x-ms-api-version=${encodeURIComponent(String(xMsApiVersion))}`);
         }
-        if (wait !== undefined) {
-            queryParams.push(`wait=${encodeURIComponent(String(wait))}`);
+        if (options.wait !== undefined) {
+            queryParams.push(`wait=${encodeURIComponent(String(options.wait))}`);
         }
         const requestPath = `/subscriptions/${subscriptionId}/resourcegroups/${resourceGroupName}/providers/Microsoft.Resources/deployments/${deploymentName}` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
@@ -667,13 +753,13 @@ export class ArmClient extends ConnectorClientBase {
      * Create or update a template deployment
      * @remarks Create or update a named resource group template deployment. A template and parameters are expected for the request to succeed.
      */
-    public async createDeploymentOrUpdate(input: Deployment, subscriptionId: string, resourceGroupName: string, deploymentName: string, xMsApiVersion?: string, wait?: string, options: ConnectorOperationOptions = {}): Promise<DeploymentExtended> {
+    public async createDeploymentOrUpdate(input: Deployment, subscriptionId: string, resourceGroupName: string, deploymentName: string, xMsApiVersion: string, options: CreateDeploymentOrUpdateOptions = {}): Promise<DeploymentExtended> {
         const queryParams: string[] = [];
         if (xMsApiVersion !== undefined) {
             queryParams.push(`x-ms-api-version=${encodeURIComponent(String(xMsApiVersion))}`);
         }
-        if (wait !== undefined) {
-            queryParams.push(`wait=${encodeURIComponent(String(wait))}`);
+        if (options.wait !== undefined) {
+            queryParams.push(`wait=${encodeURIComponent(String(options.wait))}`);
         }
         const requestPath = `/subscriptions/${subscriptionId}/resourcegroups/${resourceGroupName}/providers/Microsoft.Resources/deployments/${deploymentName}` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
@@ -686,7 +772,7 @@ export class ArmClient extends ConnectorClientBase {
      * Delete template deployment
      * @remarks Deletes a resource group template deployment. The resources will not be deleted; only the metadata about the template deployment.
      */
-    public async deleteDeployment(subscriptionId: string, resourceGroupName: string, deploymentName: string, xMsApiVersion?: string, options: ConnectorOperationOptions = {}): Promise<void> {
+    public async deleteDeployment(subscriptionId: string, resourceGroupName: string, deploymentName: string, xMsApiVersion: string, options: ConnectorOperationOptions = {}): Promise<void> {
         const queryParams: string[] = [];
         if (xMsApiVersion !== undefined) {
             queryParams.push(`x-ms-api-version=${encodeURIComponent(String(xMsApiVersion))}`);
@@ -700,7 +786,7 @@ export class ArmClient extends ConnectorClientBase {
      * Cancel a template deployment
      * @remarks Cancel a currently running template deployment. All pending template operations will be suspended.
      */
-    public async cancelDeployments(subscriptionId: string, resourceGroupName: string, deploymentName: string, xMsApiVersion?: string, options: ConnectorOperationOptions = {}): Promise<void> {
+    public async cancelDeployments(subscriptionId: string, resourceGroupName: string, deploymentName: string, xMsApiVersion: string, options: ConnectorOperationOptions = {}): Promise<void> {
         const queryParams: string[] = [];
         if (xMsApiVersion !== undefined) {
             queryParams.push(`x-ms-api-version=${encodeURIComponent(String(xMsApiVersion))}`);
@@ -714,14 +800,14 @@ export class ArmClient extends ConnectorClientBase {
      * Validate a template deployment
      * @remarks Validates a deployment template. This operation does not have side effects and can be used to test a template deployment for syntax or logical errors.
      */
-    public async deploymentsValidate(input: Deployment, subscriptionId: string, resourceGroupName: string, deploymentName: string, xMsApiVersion?: string, options: ConnectorOperationOptions = {}): Promise<DeploymentValidateResult> {
+    public async validateDeployments(input: Deployment, subscriptionId: string, resourceGroupName: string, deploymentName: string, xMsApiVersion: string, options: ConnectorOperationOptions = {}): Promise<DeploymentValidateResult> {
         const queryParams: string[] = [];
         if (xMsApiVersion !== undefined) {
             queryParams.push(`x-ms-api-version=${encodeURIComponent(String(xMsApiVersion))}`);
         }
         const requestPath = `/subscriptions/${subscriptionId}/resourcegroups/${resourceGroupName}/providers/Microsoft.Resources/deployments/${deploymentName}/validate` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
-        const httpResponse = await this.sendWithTracingAsync<DeploymentValidateResult>("Arm.deploymentsValidate", "Deployments_Validate", "POST", requestUrl, input, options);
+        const httpResponse = await this.sendWithTracingAsync<DeploymentValidateResult>("Arm.validateDeployments", "Deployments_Validate", "POST", requestUrl, input, options);
 
         return httpResponse.value as DeploymentValidateResult;
     }
@@ -730,14 +816,14 @@ export class ArmClient extends ConnectorClientBase {
      * Export deployment template
      * @remarks Exports a template from a past resource group deployment.
      */
-    public async deploymentsExportTemplate(subscriptionId: string, resourceGroupName: string, deploymentName: string, xMsApiVersion?: string, options: ConnectorOperationOptions = {}): Promise<DeploymentExportResult> {
+    public async exportDeploymentsTemplate(subscriptionId: string, resourceGroupName: string, deploymentName: string, xMsApiVersion: string, options: ConnectorOperationOptions = {}): Promise<DeploymentExportResult> {
         const queryParams: string[] = [];
         if (xMsApiVersion !== undefined) {
             queryParams.push(`x-ms-api-version=${encodeURIComponent(String(xMsApiVersion))}`);
         }
         const requestPath = `/subscriptions/${subscriptionId}/resourcegroups/${resourceGroupName}/providers/Microsoft.Resources/deployments/${deploymentName}/exportTemplate` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
-        const httpResponse = await this.sendWithTracingAsync<DeploymentExportResult>("Arm.deploymentsExportTemplate", "Deployments_ExportTemplate", "POST", requestUrl, undefined, options);
+        const httpResponse = await this.sendWithTracingAsync<DeploymentExportResult>("Arm.exportDeploymentsTemplate", "Deployments_ExportTemplate", "POST", requestUrl, undefined, options);
 
         return httpResponse.value as DeploymentExportResult;
     }
@@ -746,13 +832,13 @@ export class ArmClient extends ConnectorClientBase {
      * List template deployments
      * @remarks Lists all the resource group template deployments. This operation is useful to know what has been provisioned thus far.
      */
-    public listDeployments(subscriptionId: string, resourceGroupName: string, filter?: string, top?: string, xMsApiVersion?: string, options: ConnectorOperationOptions = {}): ConnectorPagedAsyncIterableIterator<DeploymentExtended> {
+    public listDeployments(subscriptionId: string, resourceGroupName: string, xMsApiVersion: string, options: ListDeploymentsOptions = {}): ConnectorPagedAsyncIterableIterator<DeploymentExtended> {
         const queryParams: string[] = [];
-        if (filter !== undefined) {
-            queryParams.push(`$filter=${encodeURIComponent(String(filter))}`);
+        if (options.filter !== undefined) {
+            queryParams.push(`$filter=${encodeURIComponent(String(options.filter))}`);
         }
-        if (top !== undefined) {
-            queryParams.push(`$top=${encodeURIComponent(String(top))}`);
+        if (options.top !== undefined) {
+            queryParams.push(`$top=${encodeURIComponent(String(options.top))}`);
         }
         if (xMsApiVersion !== undefined) {
             queryParams.push(`x-ms-api-version=${encodeURIComponent(String(xMsApiVersion))}`);
@@ -775,7 +861,7 @@ export class ArmClient extends ConnectorClientBase {
      * Read a template deployment operation
      * @remarks Reads a particular resource group template deployment operation. This is useful for troubleshooting failed template deployments.
      */
-    public async getDeploymentOperation(subscriptionId: string, resourceGroupName: string, deploymentName: string, operationId: string, xMsApiVersion?: string, options: ConnectorOperationOptions = {}): Promise<DeploymentOperation> {
+    public async getDeploymentOperation(subscriptionId: string, resourceGroupName: string, deploymentName: string, operationId: string, xMsApiVersion: string, options: ConnectorOperationOptions = {}): Promise<DeploymentOperation> {
         const queryParams: string[] = [];
         if (xMsApiVersion !== undefined) {
             queryParams.push(`x-ms-api-version=${encodeURIComponent(String(xMsApiVersion))}`);
@@ -791,10 +877,10 @@ export class ArmClient extends ConnectorClientBase {
      * Lists template deployment operations
      * @remarks Lists all the template deployment operations. This is useful for troubleshooting failed template deployments.
      */
-    public listDeploymentOperations(subscriptionId: string, resourceGroupName: string, deploymentName: string, top?: string, xMsApiVersion?: string, options: ConnectorOperationOptions = {}): ConnectorPagedAsyncIterableIterator<DeploymentOperation> {
+    public listDeploymentOperations(subscriptionId: string, resourceGroupName: string, deploymentName: string, xMsApiVersion: string, options: ListDeploymentOperationsOptions = {}): ConnectorPagedAsyncIterableIterator<DeploymentOperation> {
         const queryParams: string[] = [];
-        if (top !== undefined) {
-            queryParams.push(`$top=${encodeURIComponent(String(top))}`);
+        if (options.top !== undefined) {
+            queryParams.push(`$top=${encodeURIComponent(String(options.top))}`);
         }
         if (xMsApiVersion !== undefined) {
             queryParams.push(`x-ms-api-version=${encodeURIComponent(String(xMsApiVersion))}`);
@@ -817,14 +903,14 @@ export class ArmClient extends ConnectorClientBase {
      * Unregister resource provider
      * @remarks Unregisters provider from a subscription. This operation will fail if there are any resources from that resource provider in the subscription.
      */
-    public async providersUnregister(subscriptionId: string, resourceProviderNamespace: string, xMsApiVersion?: string, options: ConnectorOperationOptions = {}): Promise<Provider> {
+    public async unregisterProviders(subscriptionId: string, resourceProviderNamespace: string, xMsApiVersion: string, options: ConnectorOperationOptions = {}): Promise<Provider> {
         const queryParams: string[] = [];
         if (xMsApiVersion !== undefined) {
             queryParams.push(`x-ms-api-version=${encodeURIComponent(String(xMsApiVersion))}`);
         }
         const requestPath = `/subscriptions/${subscriptionId}/providers/${resourceProviderNamespace}/unregister` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
-        const httpResponse = await this.sendWithTracingAsync<Provider>("Arm.providersUnregister", "Providers_Unregister", "POST", requestUrl, undefined, options);
+        const httpResponse = await this.sendWithTracingAsync<Provider>("Arm.unregisterProviders", "Providers_Unregister", "POST", requestUrl, undefined, options);
 
         return httpResponse.value as Provider;
     }
@@ -833,14 +919,14 @@ export class ArmClient extends ConnectorClientBase {
      * Register resource provider
      * @remarks Registers a resource provider to be used with a subscription. This will provision permissions for the service into your subscription.
      */
-    public async providersRegister(subscriptionId: string, resourceProviderNamespace: string, xMsApiVersion?: string, options: ConnectorOperationOptions = {}): Promise<Provider> {
+    public async registerProviders(subscriptionId: string, resourceProviderNamespace: string, xMsApiVersion: string, options: ConnectorOperationOptions = {}): Promise<Provider> {
         const queryParams: string[] = [];
         if (xMsApiVersion !== undefined) {
             queryParams.push(`x-ms-api-version=${encodeURIComponent(String(xMsApiVersion))}`);
         }
         const requestPath = `/subscriptions/${subscriptionId}/providers/${resourceProviderNamespace}/register` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
-        const httpResponse = await this.sendWithTracingAsync<Provider>("Arm.providersRegister", "Providers_Register", "POST", requestUrl, undefined, options);
+        const httpResponse = await this.sendWithTracingAsync<Provider>("Arm.registerProviders", "Providers_Register", "POST", requestUrl, undefined, options);
 
         return httpResponse.value as Provider;
     }
@@ -849,13 +935,13 @@ export class ArmClient extends ConnectorClientBase {
      * List resource providers
      * @remarks Lists the resource providers available for the subscription.
      */
-    public listProviders(subscriptionId: string, top?: string, expand?: string, xMsApiVersion?: string, options: ConnectorOperationOptions = {}): ConnectorPagedAsyncIterableIterator<Provider> {
+    public listProviders(subscriptionId: string, xMsApiVersion: string, options: ListProvidersOptions = {}): ConnectorPagedAsyncIterableIterator<Provider> {
         const queryParams: string[] = [];
-        if (top !== undefined) {
-            queryParams.push(`$top=${encodeURIComponent(String(top))}`);
+        if (options.top !== undefined) {
+            queryParams.push(`$top=${encodeURIComponent(String(options.top))}`);
         }
-        if (expand !== undefined) {
-            queryParams.push(`$expand=${encodeURIComponent(String(expand))}`);
+        if (options.expand !== undefined) {
+            queryParams.push(`$expand=${encodeURIComponent(String(options.expand))}`);
         }
         if (xMsApiVersion !== undefined) {
             queryParams.push(`x-ms-api-version=${encodeURIComponent(String(xMsApiVersion))}`);
@@ -878,10 +964,10 @@ export class ArmClient extends ConnectorClientBase {
      * Read resource provider
      * @remarks Reads a particular resource provider within the subscription.
      */
-    public async getProvider(subscriptionId: string, resourceProviderNamespace: string, expand?: string, xMsApiVersion?: string, options: ConnectorOperationOptions = {}): Promise<Provider> {
+    public async getProvider(subscriptionId: string, resourceProviderNamespace: string, xMsApiVersion: string, options: GetProviderOptions = {}): Promise<Provider> {
         const queryParams: string[] = [];
-        if (expand !== undefined) {
-            queryParams.push(`$expand=${encodeURIComponent(String(expand))}`);
+        if (options.expand !== undefined) {
+            queryParams.push(`$expand=${encodeURIComponent(String(options.expand))}`);
         }
         if (xMsApiVersion !== undefined) {
             queryParams.push(`x-ms-api-version=${encodeURIComponent(String(xMsApiVersion))}`);
@@ -897,19 +983,19 @@ export class ArmClient extends ConnectorClientBase {
      * List resources by resource group
      * @remarks Lists all the resources under a resource group.
      */
-    public listResourceGroupsResources(subscriptionId: string, resourceGroupName: string, xMsApiVersion?: string, filter?: string, expand?: string, top?: string, options: ConnectorOperationOptions = {}): ConnectorPagedAsyncIterableIterator<GenericResource> {
+    public listResourceGroupsResources(subscriptionId: string, resourceGroupName: string, xMsApiVersion: string, options: ListResourceGroupsResourcesOptions = {}): ConnectorPagedAsyncIterableIterator<GenericResource> {
         const queryParams: string[] = [];
         if (xMsApiVersion !== undefined) {
             queryParams.push(`x-ms-api-version=${encodeURIComponent(String(xMsApiVersion))}`);
         }
-        if (filter !== undefined) {
-            queryParams.push(`$filter=${encodeURIComponent(String(filter))}`);
+        if (options.filter !== undefined) {
+            queryParams.push(`$filter=${encodeURIComponent(String(options.filter))}`);
         }
-        if (expand !== undefined) {
-            queryParams.push(`$expand=${encodeURIComponent(String(expand))}`);
+        if (options.expand !== undefined) {
+            queryParams.push(`$expand=${encodeURIComponent(String(options.expand))}`);
         }
-        if (top !== undefined) {
-            queryParams.push(`$top=${encodeURIComponent(String(top))}`);
+        if (options.top !== undefined) {
+            queryParams.push(`$top=${encodeURIComponent(String(options.top))}`);
         }
         const requestPath = `/subscriptions/${subscriptionId}/resourceGroups/${resourceGroupName}/resources` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         return this.createPageable<ResourceListResult, GenericResource>(
@@ -929,7 +1015,7 @@ export class ArmClient extends ConnectorClientBase {
      * Read a resource group
      * @remarks Reads a particular resource group within the subscription.
      */
-    public async getResourceGroup(subscriptionId: string, resourceGroupName: string, xMsApiVersion?: string, options: ConnectorOperationOptions = {}): Promise<ResourceGroup> {
+    public async getResourceGroup(subscriptionId: string, resourceGroupName: string, xMsApiVersion: string, options: ConnectorOperationOptions = {}): Promise<ResourceGroup> {
         const queryParams: string[] = [];
         if (xMsApiVersion !== undefined) {
             queryParams.push(`x-ms-api-version=${encodeURIComponent(String(xMsApiVersion))}`);
@@ -945,7 +1031,7 @@ export class ArmClient extends ConnectorClientBase {
      * Create or update a resource group
      * @remarks Creates or updates a resource group. The response code can be used to distinguish between a create (201) or update (200).
      */
-    public async createResourceGroupOrUpdate(input: ResourceGroup, subscriptionId: string, resourceGroupName: string, xMsApiVersion?: string, options: ConnectorOperationOptions = {}): Promise<ResourceGroup> {
+    public async createResourceGroupOrUpdate(input: ResourceGroup, subscriptionId: string, resourceGroupName: string, xMsApiVersion: string, options: ConnectorOperationOptions = {}): Promise<ResourceGroup> {
         const queryParams: string[] = [];
         if (xMsApiVersion !== undefined) {
             queryParams.push(`x-ms-api-version=${encodeURIComponent(String(xMsApiVersion))}`);
@@ -961,7 +1047,7 @@ export class ArmClient extends ConnectorClientBase {
      * Delete a resource group
      * @remarks Delete a particular resource group within the subscription.
      */
-    public async deleteResourceGroup(subscriptionId: string, resourceGroupName: string, xMsApiVersion?: string, options: ConnectorOperationOptions = {}): Promise<void> {
+    public async deleteResourceGroup(subscriptionId: string, resourceGroupName: string, xMsApiVersion: string, options: ConnectorOperationOptions = {}): Promise<void> {
         const queryParams: string[] = [];
         if (xMsApiVersion !== undefined) {
             queryParams.push(`x-ms-api-version=${encodeURIComponent(String(xMsApiVersion))}`);
@@ -975,14 +1061,14 @@ export class ArmClient extends ConnectorClientBase {
      * Update an existing resource group
      * @remarks Updates an existing resource group. If the resource does not exist, this request will fail.
      */
-    public async resourceGroupsPatch(input: ResourceGroup, subscriptionId: string, resourceGroupName: string, xMsApiVersion?: string, options: ConnectorOperationOptions = {}): Promise<ResourceGroup> {
+    public async patchResourceGroups(input: ResourceGroup, subscriptionId: string, resourceGroupName: string, xMsApiVersion: string, options: ConnectorOperationOptions = {}): Promise<ResourceGroup> {
         const queryParams: string[] = [];
         if (xMsApiVersion !== undefined) {
             queryParams.push(`x-ms-api-version=${encodeURIComponent(String(xMsApiVersion))}`);
         }
         const requestPath = `/subscriptions/${subscriptionId}/resourcegroups/${resourceGroupName}` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
-        const httpResponse = await this.sendWithTracingAsync<ResourceGroup>("Arm.resourceGroupsPatch", "ResourceGroups_Patch", "PATCH", requestUrl, input, options);
+        const httpResponse = await this.sendWithTracingAsync<ResourceGroup>("Arm.patchResourceGroups", "ResourceGroups_Patch", "PATCH", requestUrl, input, options);
 
         return httpResponse.value as ResourceGroup;
     }
@@ -991,14 +1077,14 @@ export class ArmClient extends ConnectorClientBase {
      * Export a resource group template
      * @remarks Exports a deployment template from an existing resource group. This can only be successful if the underlying resources have a schema defined by Microsoft.
      */
-    public async resourceGroupsExportTemplate(input: ExportTemplateRequest, subscriptionId: string, resourceGroupName: string, xMsApiVersion?: string, options: ConnectorOperationOptions = {}): Promise<ResourceGroupExportResult> {
+    public async exportResourceGroupsTemplate(input: ExportTemplateRequest, subscriptionId: string, resourceGroupName: string, xMsApiVersion: string, options: ConnectorOperationOptions = {}): Promise<ResourceGroupExportResult> {
         const queryParams: string[] = [];
         if (xMsApiVersion !== undefined) {
             queryParams.push(`x-ms-api-version=${encodeURIComponent(String(xMsApiVersion))}`);
         }
         const requestPath = `/subscriptions/${subscriptionId}/resourcegroups/${resourceGroupName}/exportTemplate` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
-        const httpResponse = await this.sendWithTracingAsync<ResourceGroupExportResult>("Arm.resourceGroupsExportTemplate", "ResourceGroups_ExportTemplate", "POST", requestUrl, input, options);
+        const httpResponse = await this.sendWithTracingAsync<ResourceGroupExportResult>("Arm.exportResourceGroupsTemplate", "ResourceGroups_ExportTemplate", "POST", requestUrl, input, options);
 
         return httpResponse.value as ResourceGroupExportResult;
     }
@@ -1007,16 +1093,16 @@ export class ArmClient extends ConnectorClientBase {
      * List resource groups
      * @remarks Lists all the resource groups within the subscription. The results are paginated at 1,000+ records.
      */
-    public listResourceGroups(subscriptionId: string, xMsApiVersion?: string, filter?: string, top?: string, options: ConnectorOperationOptions = {}): ConnectorPagedAsyncIterableIterator<ResourceGroup> {
+    public listResourceGroups(subscriptionId: string, xMsApiVersion: string, options: ListResourceGroupsOptions = {}): ConnectorPagedAsyncIterableIterator<ResourceGroup> {
         const queryParams: string[] = [];
         if (xMsApiVersion !== undefined) {
             queryParams.push(`x-ms-api-version=${encodeURIComponent(String(xMsApiVersion))}`);
         }
-        if (filter !== undefined) {
-            queryParams.push(`$filter=${encodeURIComponent(String(filter))}`);
+        if (options.filter !== undefined) {
+            queryParams.push(`$filter=${encodeURIComponent(String(options.filter))}`);
         }
-        if (top !== undefined) {
-            queryParams.push(`$top=${encodeURIComponent(String(top))}`);
+        if (options.top !== undefined) {
+            queryParams.push(`$top=${encodeURIComponent(String(options.top))}`);
         }
         const requestPath = `/subscriptions/${subscriptionId}/resourcegroups` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         return this.createPageable<ResourceGroupListResult, ResourceGroup>(
@@ -1036,16 +1122,16 @@ export class ArmClient extends ConnectorClientBase {
      * List resources by subscription
      * @remarks Reads all of the resources under a particular subscription. The results are paginated at 1,000+ records.
      */
-    public listResources(subscriptionId: string, filter?: string, expand?: string, top?: string, xMsApiVersion?: string, options: ConnectorOperationOptions = {}): ConnectorPagedAsyncIterableIterator<GenericResource> {
+    public listResources(subscriptionId: string, xMsApiVersion: string, options: ListResourcesOptions = {}): ConnectorPagedAsyncIterableIterator<GenericResource> {
         const queryParams: string[] = [];
-        if (filter !== undefined) {
-            queryParams.push(`$filter=${encodeURIComponent(String(filter))}`);
+        if (options.filter !== undefined) {
+            queryParams.push(`$filter=${encodeURIComponent(String(options.filter))}`);
         }
-        if (expand !== undefined) {
-            queryParams.push(`$expand=${encodeURIComponent(String(expand))}`);
+        if (options.expand !== undefined) {
+            queryParams.push(`$expand=${encodeURIComponent(String(options.expand))}`);
         }
-        if (top !== undefined) {
-            queryParams.push(`$top=${encodeURIComponent(String(top))}`);
+        if (options.top !== undefined) {
+            queryParams.push(`$top=${encodeURIComponent(String(options.top))}`);
         }
         if (xMsApiVersion !== undefined) {
             queryParams.push(`x-ms-api-version=${encodeURIComponent(String(xMsApiVersion))}`);
@@ -1068,7 +1154,7 @@ export class ArmClient extends ConnectorClientBase {
      * Read a resource
      * @remarks Reads a resource object.
      */
-    public async getResourceById(subscriptionId: string, resourceGroupName: string, resourceProviderNamespace: string, shortResourceId: string, xMsApiVersion?: string, options: ConnectorOperationOptions = {}): Promise<GenericResource> {
+    public async getResourceById(subscriptionId: string, resourceGroupName: string, resourceProviderNamespace: string, shortResourceId: string, xMsApiVersion: string, options: ConnectorOperationOptions = {}): Promise<GenericResource> {
         const queryParams: string[] = [];
         if (xMsApiVersion !== undefined) {
             queryParams.push(`x-ms-api-version=${encodeURIComponent(String(xMsApiVersion))}`);
@@ -1084,7 +1170,7 @@ export class ArmClient extends ConnectorClientBase {
      * Create or update a resource
      * @remarks Creates or updates a resource. The response code can be used to distinguish between a create (201) or update (200).
      */
-    public async createResourceOrUpdateById(input: GenericResource, subscriptionId: string, resourceGroupName: string, resourceProviderNamespace: string, shortResourceId: string, xMsApiVersion?: string, options: ConnectorOperationOptions = {}): Promise<GenericResource> {
+    public async createResourceOrUpdateById(input: GenericResource, subscriptionId: string, resourceGroupName: string, resourceProviderNamespace: string, shortResourceId: string, xMsApiVersion: string, options: ConnectorOperationOptions = {}): Promise<GenericResource> {
         const queryParams: string[] = [];
         if (xMsApiVersion !== undefined) {
             queryParams.push(`x-ms-api-version=${encodeURIComponent(String(xMsApiVersion))}`);
@@ -1100,7 +1186,7 @@ export class ArmClient extends ConnectorClientBase {
      * Delete a resource
      * @remarks Deletes a resource.
      */
-    public async deleteResourceById(subscriptionId: string, resourceGroupName: string, resourceProviderNamespace: string, shortResourceId: string, xMsApiVersion?: string, options: ConnectorOperationOptions = {}): Promise<void> {
+    public async deleteResourceById(subscriptionId: string, resourceGroupName: string, resourceProviderNamespace: string, shortResourceId: string, xMsApiVersion: string, options: ConnectorOperationOptions = {}): Promise<void> {
         const queryParams: string[] = [];
         if (xMsApiVersion !== undefined) {
             queryParams.push(`x-ms-api-version=${encodeURIComponent(String(xMsApiVersion))}`);
@@ -1114,7 +1200,7 @@ export class ArmClient extends ConnectorClientBase {
      * Invoke resource operation
      * @remarks Invokes an operation on an Azure resource.
      */
-    public async resourcesInvoke(input: ResourcesInvokeInput, subscriptionId: string, resourceGroupName: string, resourceProviderNamespace: string, shortResourceId: string, actionName: string, xMsApiVersion?: string, options: ConnectorOperationOptions = {}): Promise<ResourcesInvokeResponse> {
+    public async resourcesInvoke(input: ResourcesInvokeInput, subscriptionId: string, resourceGroupName: string, resourceProviderNamespace: string, shortResourceId: string, actionName: string, xMsApiVersion: string, options: ConnectorOperationOptions = {}): Promise<ResourcesInvokeResponse> {
         const queryParams: string[] = [];
         if (xMsApiVersion !== undefined) {
             queryParams.push(`x-ms-api-version=${encodeURIComponent(String(xMsApiVersion))}`);
@@ -1130,7 +1216,7 @@ export class ArmClient extends ConnectorClientBase {
      * Read a resource in provider
      * @remarks Reads a resource object.
      */
-    public async getProviderResourceById(subscriptionId: string, resourceProviderNamespace: string, shortResourceId: string, xMsApiVersion?: string, options: ConnectorOperationOptions = {}): Promise<GenericResource> {
+    public async getProviderResourceById(subscriptionId: string, resourceProviderNamespace: string, shortResourceId: string, xMsApiVersion: string, options: ConnectorOperationOptions = {}): Promise<GenericResource> {
         const queryParams: string[] = [];
         if (xMsApiVersion !== undefined) {
             queryParams.push(`x-ms-api-version=${encodeURIComponent(String(xMsApiVersion))}`);
@@ -1146,7 +1232,7 @@ export class ArmClient extends ConnectorClientBase {
      * Invoke resource operation in provider
      * @remarks Invokes an operation on an Azure resource.
      */
-    public async providerResourcesInvoke(input: ProviderResourcesInvokeInput, subscriptionId: string, resourceProviderNamespace: string, shortResourceId: string, xMsApiVersion?: string, options: ConnectorOperationOptions = {}): Promise<ProviderResourcesInvokeResponse> {
+    public async providerResourcesInvoke(input: ProviderResourcesInvokeInput, subscriptionId: string, resourceProviderNamespace: string, shortResourceId: string, xMsApiVersion: string, options: ConnectorOperationOptions = {}): Promise<ProviderResourcesInvokeResponse> {
         const queryParams: string[] = [];
         if (xMsApiVersion !== undefined) {
             queryParams.push(`x-ms-api-version=${encodeURIComponent(String(xMsApiVersion))}`);
@@ -1162,7 +1248,7 @@ export class ArmClient extends ConnectorClientBase {
      * Create or update a subscription resource tag value
      * @remarks Create or update a subscription resource tag value.
      */
-    public async createTagOrUpdateValue(subscriptionId: string, tagName: string, tagValue: string, xMsApiVersion?: string, options: ConnectorOperationOptions = {}): Promise<TagValue> {
+    public async createTagOrUpdateValue(subscriptionId: string, tagName: string, tagValue: string, xMsApiVersion: string, options: ConnectorOperationOptions = {}): Promise<TagValue> {
         const queryParams: string[] = [];
         if (xMsApiVersion !== undefined) {
             queryParams.push(`x-ms-api-version=${encodeURIComponent(String(xMsApiVersion))}`);
@@ -1178,7 +1264,7 @@ export class ArmClient extends ConnectorClientBase {
      * Delete a subscription resource tag value
      * @remarks Delete a subscription resource tag value.
      */
-    public async deleteTagValue(subscriptionId: string, tagName: string, tagValue: string, xMsApiVersion?: string, options: ConnectorOperationOptions = {}): Promise<void> {
+    public async deleteTagValue(subscriptionId: string, tagName: string, tagValue: string, xMsApiVersion: string, options: ConnectorOperationOptions = {}): Promise<void> {
         const queryParams: string[] = [];
         if (xMsApiVersion !== undefined) {
             queryParams.push(`x-ms-api-version=${encodeURIComponent(String(xMsApiVersion))}`);
@@ -1192,7 +1278,7 @@ export class ArmClient extends ConnectorClientBase {
      * Create or update a subscription resource tag name
      * @remarks Create or update a subscription resource tag name.
      */
-    public async createTagOrUpdate(subscriptionId: string, tagName: string, xMsApiVersion?: string, options: ConnectorOperationOptions = {}): Promise<TagDetails> {
+    public async createTagOrUpdate(subscriptionId: string, tagName: string, xMsApiVersion: string, options: ConnectorOperationOptions = {}): Promise<TagDetails> {
         const queryParams: string[] = [];
         if (xMsApiVersion !== undefined) {
             queryParams.push(`x-ms-api-version=${encodeURIComponent(String(xMsApiVersion))}`);
@@ -1208,7 +1294,7 @@ export class ArmClient extends ConnectorClientBase {
      * Delete a subscription resource tag name
      * @remarks Delete a subscription resource tag name.
      */
-    public async deleteTag(subscriptionId: string, tagName: string, xMsApiVersion?: string, options: ConnectorOperationOptions = {}): Promise<void> {
+    public async deleteTag(subscriptionId: string, tagName: string, xMsApiVersion: string, options: ConnectorOperationOptions = {}): Promise<void> {
         const queryParams: string[] = [];
         if (xMsApiVersion !== undefined) {
             queryParams.push(`x-ms-api-version=${encodeURIComponent(String(xMsApiVersion))}`);
@@ -1222,7 +1308,7 @@ export class ArmClient extends ConnectorClientBase {
      * List subscription resource tags
      * @remarks Lists all the subscription resource tags.
      */
-    public listTags(subscriptionId: string, xMsApiVersion?: string, options: ConnectorOperationOptions = {}): ConnectorPagedAsyncIterableIterator<TagDetails> {
+    public listTags(subscriptionId: string, xMsApiVersion: string, options: ConnectorOperationOptions = {}): ConnectorPagedAsyncIterableIterator<TagDetails> {
         const queryParams: string[] = [];
         if (xMsApiVersion !== undefined) {
             queryParams.push(`x-ms-api-version=${encodeURIComponent(String(xMsApiVersion))}`);

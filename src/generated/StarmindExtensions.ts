@@ -342,6 +342,20 @@ export interface GraphQLError {
     message?: string;
     path?: Array<string>;
 }
+
+/**
+ * Options for the findQuestions operation.
+ */
+export interface FindQuestionsOptions extends ConnectorOperationOptions {
+    /** The question search query */
+    query?: string;
+    /** Limit the number of returned questions. Defaults to 10. */
+    limit?: string;
+    /** Filter the list of questions using a predefined filter. */
+    filter?: string;
+    /** Specify the criteria the result is sorted by */
+    sort?: string;
+}
 // #endregion Types
 
 // #region Client
@@ -381,19 +395,19 @@ export class StarmindClient extends ConnectorClientBase {
      * Find questions
      * @remarks Searches questions using optional `query`, `limit` (default 10), `filter`, and `sort`; returns a paginated collection with question `items`. By default, all published questions are returned, ordered by their last activity (descending). A combination of filters, search queries and ordering criteria can be applied to the result.
      */
-    public async findQuestions(query?: string, limit?: string, filter?: string, sort?: string, options: ConnectorOperationOptions = {}): Promise<FindQuestionsResponse> {
+    public async findQuestions(options: FindQuestionsOptions = {}): Promise<FindQuestionsResponse> {
         const queryParams: string[] = [];
-        if (query !== undefined) {
-            queryParams.push(`query=${encodeURIComponent(String(query))}`);
+        if (options.query !== undefined) {
+            queryParams.push(`query=${encodeURIComponent(String(options.query))}`);
         }
-        if (limit !== undefined) {
-            queryParams.push(`limit=${encodeURIComponent(String(limit))}`);
+        if (options.limit !== undefined) {
+            queryParams.push(`limit=${encodeURIComponent(String(options.limit))}`);
         }
-        if (filter !== undefined) {
-            queryParams.push(`filter=${encodeURIComponent(String(filter))}`);
+        if (options.filter !== undefined) {
+            queryParams.push(`filter=${encodeURIComponent(String(options.filter))}`);
         }
-        if (sort !== undefined) {
-            queryParams.push(`sort=${encodeURIComponent(String(sort))}`);
+        if (options.sort !== undefined) {
+            queryParams.push(`sort=${encodeURIComponent(String(options.sort))}`);
         }
         const requestPath = `/api/v3/questions` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);

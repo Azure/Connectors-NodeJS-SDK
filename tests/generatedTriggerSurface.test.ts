@@ -17,8 +17,9 @@ const TeamsConnectionUrl = "https://connection-runtime.azure.com/apim/teams/abc1
 const GeneratedDirectory = path.join(process.cwd(), "src", "generated");
 const StandardActionVerbs = new Set([
     "add", "approve", "cancel", "copy", "create", "decline", "delete", "disable", "download", "enable",
-    "execute", "finish", "forward", "get", "list", "move", "reject", "remove", "rename", "resume", "rerun",
-    "run", "search", "send", "set", "start", "stop", "submit", "test", "update", "upload",
+    "execute", "export", "finish", "forward", "get", "list", "move", "patch", "register", "reject",
+    "remove", "rename", "replace", "resume", "rerun", "run", "search", "send", "set", "start", "stop",
+    "submit", "test", "unregister", "update", "upload", "validate",
 ]);
 
 /**
@@ -62,7 +63,7 @@ function toClientMethodName(operationId: string): string {
  */
 function extractClientMethodNames(content: string): string[] {
     const methodNames: string[] = [];
-     const methodRegex = /public\s+(?:async\s+)?(\w+)\s*\(/g;
+    const methodRegex = /public\s+(?:async\s+)?(\w+)\s*\(/g;
     let match: RegExpExecArray | null;
     while ((match = methodRegex.exec(content)) !== null) {
         methodNames.push(match[1]);
@@ -201,6 +202,52 @@ describe("Generated clients — no trigger operation is invoked as a data-plane 
         }));
 
         expect(violations).toEqual([]);
+    });
+
+    it("should collect optional service parameters in method-specific options bags", () => {
+        const violations = generatedFiles.flatMap(file => {
+            const methodRegex = /public\s+(?:async\s+)?(\w+)\s*\(([^)]*)\)/g;
+            const fileViolations: string[] = [];
+            let match: RegExpExecArray | null;
+            while ((match = methodRegex.exec(file.content)) !== null) {
+                if (/\b\w+\?:/.test(match[2])) {
+                    fileViolations.push(`${file.connector}.${match[1]} has a positional optional parameter`);
+                }
+            }
+
+            return fileViolations;
+        });
+
+        expect(violations).toEqual([]);
+    });
+
+    it("should expose semantic Teams list operations as iterators", () => {
+        const teams = generatedFiles.find(file => file.connector === "Teams");
+        expect(teams).toBeDefined();
+        expect(teams!.content).toMatch(
+            /public getAllChannelsForTeam\([^)]*\): ConnectorPagedAsyncIterableIterator<ChannelWithOwnerTeamId>/,
+        );
+        expect(teams!.content).toMatch(
+            /public getChats\([^)]*\): ConnectorPagedAsyncIterableIterator<Record<string, unknown>>/,
+        );
+    });
+
+    it("should emit query and header service options without leaking transport types", () => {
+        const arm = generatedFiles.find(file => file.connector === "Arm");
+        const revai = generatedFiles.find(file => file.connector === "Revai");
+        expect(arm).toBeDefined();
+        expect(revai).toBeDefined();
+        expect(arm!.content).toContain("export interface ListResourceGroupsOptions extends ConnectorOperationOptions");
+        expect(arm!.content).toContain("options.filter");
+        expect(revai!.content).toContain("export interface GetCaptionsOptions extends ConnectorOperationOptions");
+        expect(revai!.content).toContain("requestHeaders[\"Accept\"] = String(options.accept);");
+    });
+
+    it("should preserve named empty-object model references", () => {
+        const commonDataService = generatedFiles.find(file => file.connector === "Commondataservice");
+        expect(commonDataService).toBeDefined();
+        expect(commonDataService!.content).toContain("schema?: ObjectEntity;");
+        expect(commonDataService!.content).toContain("export interface ObjectEntity");
     });
 
     it.each(generatedFiles)(

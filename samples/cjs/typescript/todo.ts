@@ -5,7 +5,7 @@
  */
 
 import { ManagedIdentityTokenProvider, ConnectorError } from "@azure/connectors";
-import { TodoClient, TodoList } from "@azure/connectors/generated/TodoExtensions";
+import { TodoClient } from "@azure/connectors/generated/TodoExtensions";
 
 const CONNECTION_URL = process.env.TODO_CONNECTION_URL ?? "";
 
@@ -19,8 +19,16 @@ async function main(): Promise<void> {
     const client = new TodoClient(CONNECTION_URL, tokenProvider);
 
     try {
-        const result: Array<TodoList> = await client.getAllTodoLists();
-        console.log(`To-do lists found: ${result.length}`);
+        let listCount = 0;
+        for await (const list of client.getAllTodoLists()) {
+            if (listCount < 10) {
+                console.log(`  - ${list.displayName ?? "Unknown"}`);
+            }
+
+            listCount++;
+        }
+
+        console.log(`To-do lists found: ${listCount}`);
     } catch (error) {
         if (error instanceof ConnectorError) {
             console.log(`Connector error (${error.statusCode}): ${error.message}`);

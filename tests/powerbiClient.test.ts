@@ -55,7 +55,7 @@ describe("PowerbiClient — getScorecards", () => {
         mockFetchResponse(mockResponse);
 
         const client = new PowerbiClient(TestConnectionUrl, createMockCredential());
-        const result = await client.getScorecards("group-1", "firstparty");
+        const result = await client.getScorecards("group-1", { pbiSource: "firstparty" });
 
         expect(result).toEqual(mockResponse);
         const [url, init] = (global.fetch as jest.Mock).mock.calls[0];

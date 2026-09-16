@@ -132,7 +132,7 @@ export class ZohosignClient extends ConnectorClientBase {
      * Invoke API
      * @remarks Invoke API
      */
-    public async invokeAPI(input: InvokeAPIInput, url: string, method?: string, options: ConnectorOperationOptions = {}): Promise<InvokeAPIResponse> {
+    public async invokeAPI(input: InvokeAPIInput, url: string, method: string, options: ConnectorOperationOptions = {}): Promise<InvokeAPIResponse> {
         const queryParams: string[] = [];
         if (method !== undefined) {
             queryParams.push(`method=${encodeURIComponent(String(method))}`);

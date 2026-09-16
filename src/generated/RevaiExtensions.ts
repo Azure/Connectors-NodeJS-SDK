@@ -356,6 +356,88 @@ export interface AlignmentGetResponse {
 export interface AlignmentTranscriptGetResponse {
     monologues?: Array<Record<string, unknown>>;
 }
+
+/**
+ * Options for the getTranscriptions operation.
+ */
+export interface GetTranscriptionsOptions extends ConnectorOperationOptions {
+    /** The limit. */
+    limit?: string;
+    /** The starting after. */
+    startingAfter?: string;
+}
+
+/**
+ * Options for the getCaptions operation.
+ */
+export interface GetCaptionsOptions extends ConnectorOperationOptions {
+    /** The response format. */
+    accept?: string;
+}
+
+/**
+ * Options for the getVocabularies operation.
+ */
+export interface GetVocabulariesOptions extends ConnectorOperationOptions {
+    /** The limit. */
+    limit?: string;
+}
+
+/**
+ * Options for the getExtractions operation.
+ */
+export interface GetExtractionsOptions extends ConnectorOperationOptions {
+    /** The limit. */
+    limit?: string;
+    /** The starting after. */
+    startingAfter?: string;
+}
+
+/**
+ * Options for the getExtractionResult operation.
+ */
+export interface GetExtractionResultOptions extends ConnectorOperationOptions {
+    /** The threshold. */
+    threshold?: string;
+}
+
+/**
+ * Options for the getAnalysises operation.
+ */
+export interface GetAnalysisesOptions extends ConnectorOperationOptions {
+    /** The limit. */
+    limit?: string;
+    /** The starting after. */
+    startingAfter?: string;
+}
+
+/**
+ * Options for the getAnalysisResult operation.
+ */
+export interface GetAnalysisResultOptions extends ConnectorOperationOptions {
+    /** The filter for. */
+    filterFor?: string;
+}
+
+/**
+ * Options for the getIdentifications operation.
+ */
+export interface GetIdentificationsOptions extends ConnectorOperationOptions {
+    /** The limit. */
+    limit?: string;
+    /** The starting after. */
+    startingAfter?: string;
+}
+
+/**
+ * Options for the getAlignments operation.
+ */
+export interface GetAlignmentsOptions extends ConnectorOperationOptions {
+    /** The limit. */
+    limit?: string;
+    /** The starting after. */
+    startingAfter?: string;
+}
 // #endregion Types
 
 // #region Client
@@ -407,13 +489,13 @@ export class RevaiClient extends ConnectorClientBase {
      * Get transcription job list
      * @remarks Retrieve a list of transcription jobs submitted within the last 30 days.
      */
-    public async getTranscriptions(limit?: string, startingAfter?: string, options: ConnectorOperationOptions = {}): Promise<Array<Record<string, unknown>>> {
+    public async getTranscriptions(options: GetTranscriptionsOptions = {}): Promise<Array<Record<string, unknown>>> {
         const queryParams: string[] = [];
-        if (limit !== undefined) {
-            queryParams.push(`limit=${encodeURIComponent(String(limit))}`);
+        if (options.limit !== undefined) {
+            queryParams.push(`limit=${encodeURIComponent(String(options.limit))}`);
         }
-        if (startingAfter !== undefined) {
-            queryParams.push(`starting_after=${encodeURIComponent(String(startingAfter))}`);
+        if (options.startingAfter !== undefined) {
+            queryParams.push(`starting_after=${encodeURIComponent(String(options.startingAfter))}`);
         }
         const requestPath = `/speechtotext/v1/jobs` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
@@ -450,10 +532,14 @@ export class RevaiClient extends ConnectorClientBase {
      * Get captions
      * @remarks Returns the caption output for a transcription job. We currently support the SubRip (SRT) format.
      */
-    public async getCaptions(id: string, options: ConnectorOperationOptions = {}): Promise<string> {
+    public async getCaptions(id: string, options: GetCaptionsOptions = {}): Promise<string> {
         const requestPath = `/speechtotext/v1/jobs/${id}/captions`;
+        const requestHeaders: Record<string, string> = {};
+        if (options.accept !== undefined) {
+            requestHeaders["Accept"] = String(options.accept);
+        }
         const requestUrl = this.resolveUrl(requestPath);
-        const httpResponse = await this.sendWithTracingAsync<string>("Revai.getCaptions", "CaptionsGet", "GET", requestUrl, undefined, options);
+        const httpResponse = await this.sendWithTracingAsync<string>("Revai.getCaptions", "CaptionsGet", "GET", requestUrl, undefined, options, requestHeaders);
 
         return httpResponse.value as string;
     }
@@ -474,10 +560,10 @@ export class RevaiClient extends ConnectorClientBase {
      * Get list of vocabularies
      * @remarks Retrieves a list of most recent custom vocabularies' processing information.
      */
-    public async getVocabularies(limit?: string, options: ConnectorOperationOptions = {}): Promise<Array<Record<string, unknown>>> {
+    public async getVocabularies(options: GetVocabulariesOptions = {}): Promise<Array<Record<string, unknown>>> {
         const queryParams: string[] = [];
-        if (limit !== undefined) {
-            queryParams.push(`limit=${encodeURIComponent(String(limit))}`);
+        if (options.limit !== undefined) {
+            queryParams.push(`limit=${encodeURIComponent(String(options.limit))}`);
         }
         const requestPath = `/speechtotext/v1/vocabularies` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
@@ -526,13 +612,13 @@ export class RevaiClient extends ConnectorClientBase {
      * Get topic extraction jobs
      * @remarks Retrieves a list of topic extraction jobs submitted within the last 30 days in reverse chronological order.
      */
-    public async getExtractions(limit?: string, startingAfter?: string, options: ConnectorOperationOptions = {}): Promise<Array<Record<string, unknown>>> {
+    public async getExtractions(options: GetExtractionsOptions = {}): Promise<Array<Record<string, unknown>>> {
         const queryParams: string[] = [];
-        if (limit !== undefined) {
-            queryParams.push(`limit=${encodeURIComponent(String(limit))}`);
+        if (options.limit !== undefined) {
+            queryParams.push(`limit=${encodeURIComponent(String(options.limit))}`);
         }
-        if (startingAfter !== undefined) {
-            queryParams.push(`starting_after=${encodeURIComponent(String(startingAfter))}`);
+        if (options.startingAfter !== undefined) {
+            queryParams.push(`starting_after=${encodeURIComponent(String(options.startingAfter))}`);
         }
         const requestPath = `/topic_extraction/v1/jobs` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
@@ -581,10 +667,10 @@ export class RevaiClient extends ConnectorClientBase {
      * Get topic extraction result
      * @remarks Returns the results for a completed topic extraction job.
      */
-    public async getExtractionResult(id: string, threshold?: string, options: ConnectorOperationOptions = {}): Promise<ExtractionResultGetResponse> {
+    public async getExtractionResult(id: string, options: GetExtractionResultOptions = {}): Promise<ExtractionResultGetResponse> {
         const queryParams: string[] = [];
-        if (threshold !== undefined) {
-            queryParams.push(`threshold=${encodeURIComponent(String(threshold))}`);
+        if (options.threshold !== undefined) {
+            queryParams.push(`threshold=${encodeURIComponent(String(options.threshold))}`);
         }
         const requestPath = `/topic_extraction/v1/jobs/${id}/result` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
@@ -597,13 +683,13 @@ export class RevaiClient extends ConnectorClientBase {
      * Get sentiment analysis jobs
      * @remarks Gets a list of sentiment analysis jobs submitted within the last 30 days in reverse chronological order.
      */
-    public async getAnalysises(limit?: string, startingAfter?: string, options: ConnectorOperationOptions = {}): Promise<void> {
+    public async getAnalysises(options: GetAnalysisesOptions = {}): Promise<void> {
         const queryParams: string[] = [];
-        if (limit !== undefined) {
-            queryParams.push(`limit=${encodeURIComponent(String(limit))}`);
+        if (options.limit !== undefined) {
+            queryParams.push(`limit=${encodeURIComponent(String(options.limit))}`);
         }
-        if (startingAfter !== undefined) {
-            queryParams.push(`starting_after=${encodeURIComponent(String(startingAfter))}`);
+        if (options.startingAfter !== undefined) {
+            queryParams.push(`starting_after=${encodeURIComponent(String(options.startingAfter))}`);
         }
         const requestPath = `/sentiment_analysis/v1/jobs` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
@@ -650,10 +736,10 @@ export class RevaiClient extends ConnectorClientBase {
      * Get sentiment analysis result
      * @remarks Returns the results for a completed sentiment analysis job.
      */
-    public async getAnalysisResult(id: string, filterFor?: string, options: ConnectorOperationOptions = {}): Promise<AnalysisResultGetResponse> {
+    public async getAnalysisResult(id: string, options: GetAnalysisResultOptions = {}): Promise<AnalysisResultGetResponse> {
         const queryParams: string[] = [];
-        if (filterFor !== undefined) {
-            queryParams.push(`filter_for=${encodeURIComponent(String(filterFor))}`);
+        if (options.filterFor !== undefined) {
+            queryParams.push(`filter_for=${encodeURIComponent(String(options.filterFor))}`);
         }
         const requestPath = `/sentiment_analysis/v1/jobs/${id}/result` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
@@ -666,13 +752,13 @@ export class RevaiClient extends ConnectorClientBase {
      * Get language identification jobs
      * @remarks Retrieves a list of language identification jobs submitted within the last 30 days in reverse chronological order.
      */
-    public async getIdentifications(limit?: string, startingAfter?: string, options: ConnectorOperationOptions = {}): Promise<Array<Record<string, unknown>>> {
+    public async getIdentifications(options: GetIdentificationsOptions = {}): Promise<Array<Record<string, unknown>>> {
         const queryParams: string[] = [];
-        if (limit !== undefined) {
-            queryParams.push(`limit=${encodeURIComponent(String(limit))}`);
+        if (options.limit !== undefined) {
+            queryParams.push(`limit=${encodeURIComponent(String(options.limit))}`);
         }
-        if (startingAfter !== undefined) {
-            queryParams.push(`starting_after=${encodeURIComponent(String(startingAfter))}`);
+        if (options.startingAfter !== undefined) {
+            queryParams.push(`starting_after=${encodeURIComponent(String(options.startingAfter))}`);
         }
         const requestPath = `/languageid/v1/jobs` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
@@ -733,13 +819,13 @@ export class RevaiClient extends ConnectorClientBase {
      * Get forced alignment jobs
      * @remarks Retrieve a list of alignment jobs submitted within the last 30 days in reverse chronological order.
      */
-    public async getAlignments(limit?: string, startingAfter?: string, options: ConnectorOperationOptions = {}): Promise<Array<Record<string, unknown>>> {
+    public async getAlignments(options: GetAlignmentsOptions = {}): Promise<Array<Record<string, unknown>>> {
         const queryParams: string[] = [];
-        if (limit !== undefined) {
-            queryParams.push(`limit=${encodeURIComponent(String(limit))}`);
+        if (options.limit !== undefined) {
+            queryParams.push(`limit=${encodeURIComponent(String(options.limit))}`);
         }
-        if (startingAfter !== undefined) {
-            queryParams.push(`starting_after=${encodeURIComponent(String(startingAfter))}`);
+        if (options.startingAfter !== undefined) {
+            queryParams.push(`starting_after=${encodeURIComponent(String(options.startingAfter))}`);
         }
         const requestPath = `/alignment/v1/jobs` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);

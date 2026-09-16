@@ -9,6 +9,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Breaking Changes
 
+- Generated optional query and header parameters now live in method-specific
+  `<MethodName>Options` interfaces that extend `ConnectorOperationOptions`.
+  Required service parameters remain explicit method arguments.
+- Additional semantic list operations, including Teams channel/chat APIs, now
+  return `ConnectorPagedAsyncIterableIterator<T>` even when the service returns
+  a single page.
+- Generated action names now consistently move supported action verbs such as
+  `export`, `patch`, `register`, `replace`, `unregister`, and `validate` before
+  resource nouns.
 - Seismic Planner `CustomPropertyValues.localizations` now exposes
   `Record<string, CustomPropertyDataDisplay>` instead of `Record<string, unknown>`.
   Callers can access typed localization values directly, such as
@@ -73,7 +82,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   methods by default; callers can explicitly enable retries for mutating
   connector operations with `retryUnsafeHttpMethods`.
 - Added `ConnectorOperationOptions` to generated actions for cancellation and
-  parent tracing context.
+  parent tracing context. Method-specific options extend this shared contract,
+  and generated service headers are forwarded through the request pipeline.
 - Updated generated registries and reproducibility metadata for all 74 connector
   clients. The Orderful input uses the checked-in AzureUX-BPM Swagger fixture
   because the retired connector is no longer returned by regional ARM catalogs.

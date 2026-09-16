@@ -526,6 +526,42 @@ export interface SpaceUpdatedResponse {
     /** status */
     status?: string;
 }
+
+/**
+ * Options for the getMessages operation.
+ */
+export interface GetMessagesOptions extends ConnectorOperationOptions {
+    /** List messages where the caller is mentioned by specifying "me" or the caller personId. */
+    mentionedPeople?: string;
+    /** List messages sent before a message, by ID. */
+    beforeMessage?: string;
+    /** List messages sent before a date and time, in ISO8601 format. */
+    before?: string;
+    /** Limit the maximum number of messages in the response. */
+    max?: string;
+}
+
+/**
+ * Options for the getPeople operation.
+ */
+export interface GetPeopleOptions extends ConnectorOperationOptions {
+    /** List people by ID. Accepts up to 85 person IDs separated by commas. */
+    id?: string;
+    /** List people with this email address */
+    email?: string;
+}
+
+/**
+ * Options for the getSpaces operation.
+ */
+export interface GetSpacesOptions extends ConnectorOperationOptions {
+    /** Maximum number of spaces to return */
+    max?: string;
+    /** (group) only include group spaces, (direct) only include 1 to 1 spaces, returns all if not specified */
+    type?: string;
+    /** (id) the space id, (lastactivity) the last activity timestamp, (created) space creation date */
+    sortBy?: string;
+}
 // #endregion Types
 
 export const WebexTriggerOperations = {
@@ -577,22 +613,22 @@ export class WebexClient extends ConnectorClientBase {
      * Get Messages
      * @remarks Get a list of recent messages for a space
      */
-    public async getMessages(roomId?: string, mentionedPeople?: string, beforeMessage?: string, before?: string, max?: string, options: ConnectorOperationOptions = {}): Promise<GetMessagesResponse> {
+    public async getMessages(roomId: string, options: GetMessagesOptions = {}): Promise<GetMessagesResponse> {
         const queryParams: string[] = [];
         if (roomId !== undefined) {
             queryParams.push(`roomId=${encodeURIComponent(String(roomId))}`);
         }
-        if (mentionedPeople !== undefined) {
-            queryParams.push(`mentionedPeople=${encodeURIComponent(String(mentionedPeople))}`);
+        if (options.mentionedPeople !== undefined) {
+            queryParams.push(`mentionedPeople=${encodeURIComponent(String(options.mentionedPeople))}`);
         }
-        if (beforeMessage !== undefined) {
-            queryParams.push(`beforeMessage=${encodeURIComponent(String(beforeMessage))}`);
+        if (options.beforeMessage !== undefined) {
+            queryParams.push(`beforeMessage=${encodeURIComponent(String(options.beforeMessage))}`);
         }
-        if (before !== undefined) {
-            queryParams.push(`before=${encodeURIComponent(String(before))}`);
+        if (options.before !== undefined) {
+            queryParams.push(`before=${encodeURIComponent(String(options.before))}`);
         }
-        if (max !== undefined) {
-            queryParams.push(`max=${encodeURIComponent(String(max))}`);
+        if (options.max !== undefined) {
+            queryParams.push(`max=${encodeURIComponent(String(options.max))}`);
         }
         const requestPath = `/v1/messages` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
@@ -629,13 +665,13 @@ export class WebexClient extends ConnectorClientBase {
      * Get People
      * @remarks Lookup details and presence information for people in your organization
      */
-    public async getPeople(id?: string, email?: string, options: ConnectorOperationOptions = {}): Promise<GetPeopleResponse> {
+    public async getPeople(options: GetPeopleOptions = {}): Promise<GetPeopleResponse> {
         const queryParams: string[] = [];
-        if (id !== undefined) {
-            queryParams.push(`id=${encodeURIComponent(String(id))}`);
+        if (options.id !== undefined) {
+            queryParams.push(`id=${encodeURIComponent(String(options.id))}`);
         }
-        if (email !== undefined) {
-            queryParams.push(`email=${encodeURIComponent(String(email))}`);
+        if (options.email !== undefined) {
+            queryParams.push(`email=${encodeURIComponent(String(options.email))}`);
         }
         const requestPath = `/v1/people` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
@@ -660,16 +696,16 @@ export class WebexClient extends ConnectorClientBase {
      * Get Spaces List
      * @remarks This action retrieves a list of spaces
      */
-    public async getSpaces(max?: string, type?: string, sortBy?: string, options: ConnectorOperationOptions = {}): Promise<GetSpacesResponse> {
+    public async getSpaces(options: GetSpacesOptions = {}): Promise<GetSpacesResponse> {
         const queryParams: string[] = [];
-        if (max !== undefined) {
-            queryParams.push(`max=${encodeURIComponent(String(max))}`);
+        if (options.max !== undefined) {
+            queryParams.push(`max=${encodeURIComponent(String(options.max))}`);
         }
-        if (type !== undefined) {
-            queryParams.push(`type=${encodeURIComponent(String(type))}`);
+        if (options.type !== undefined) {
+            queryParams.push(`type=${encodeURIComponent(String(options.type))}`);
         }
-        if (sortBy !== undefined) {
-            queryParams.push(`sortBy=${encodeURIComponent(String(sortBy))}`);
+        if (options.sortBy !== undefined) {
+            queryParams.push(`sortBy=${encodeURIComponent(String(options.sortBy))}`);
         }
         const requestPath = `/v1/rooms` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);

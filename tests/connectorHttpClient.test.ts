@@ -147,6 +147,28 @@ describe("ConnectorHttpClient", () => {
         expect(JSON.parse(request.body as string)).toEqual({ name: "test" });
     });
 
+    it("should apply service-specific request headers", async () => {
+        const httpClient = new MockHttpClient(async request => createMockResponse(request, 200));
+        const client = new ConnectorHttpClient(new MockTokenCredential(), { httpClient });
+
+        await client.sendAsync(
+            "GET",
+            "https://example.com/api/items",
+            undefined,
+            undefined,
+            undefined,
+            undefined,
+            {
+                Accept: "text/vtt",
+                "x-service-option": "service-value",
+            },
+        );
+
+        const request = httpClient.requests.at(0)!;
+        expect(request.headers.get("Accept")).toBe("text/vtt");
+        expect(request.headers.get("x-service-option")).toBe("service-value");
+    });
+
     it("should request a token for custom scopes", async () => {
         const credential = new MockTokenCredential();
         const httpClient = new MockHttpClient(async request => createMockResponse(request, 204));

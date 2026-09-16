@@ -307,7 +307,7 @@ export interface PassThroughNativeQueryMetadata {
     name?: string;
     /** Query title */
     title?: string;
-    schema?: Record<string, unknown>;
+    schema?: ObjectEntity;
 }
 
 /**
@@ -338,7 +338,7 @@ export interface ProcedureMetadata {
     name?: string;
     /** Procedure title */
     title?: string;
-    schema?: Record<string, unknown>;
+    schema?: ObjectEntity;
 }
 
 /**
@@ -489,8 +489,8 @@ export interface TableMetadata {
     /** Table permission */
     "x-ms-permission"?: string;
     "x-ms-capabilities"?: TableCapabilitiesMetadata;
-    schema?: Record<string, unknown>;
-    referencedEntities?: Record<string, unknown>;
+    schema?: ObjectEntity;
+    referencedEntities?: ObjectEntity;
     /** Url link */
     webUrl?: string;
 }
@@ -572,14 +572,14 @@ export interface PQMetadataValue {
     name?: string;
     /** Query title */
     title?: string;
-    schema?: Record<string, unknown>;
+    schema?: ObjectEntity;
 }
 
 /**
  * Definition: PassThroughPQResult
  */
 export interface PassThroughPQResult {
-    value?: Record<string, unknown>;
+    value?: PQRows;
 }
 
 /**
@@ -587,6 +587,40 @@ export interface PassThroughPQResult {
  */
 export interface PQRows {
     [key: string]: unknown;
+}
+
+/**
+ * Options for the getItems operation.
+ */
+export interface GetItemsOptions extends ConnectorOperationOptions {
+    /** A sequence of OData aggregation transformations */
+    apply?: string;
+    /** An ODATA filter query to restrict the entries returned (e.g. stringColumn eq 'string' OR numberColumn lt 123). */
+    filter?: string;
+    /** An ODATA orderBy query for specifying the order of entries. */
+    orderby?: string;
+    /** The number of entries to skip (default = 0). */
+    skip?: string;
+    /** Total number of entries to retrieve (default = all). */
+    top?: string;
+    /** Specific fields to retrieve from entries (default = all). */
+    select?: string;
+    /** Option to specify if only total entity count should be returned in the query (default = false). */
+    count?: string;
+    /** Specify whether to extract MIP labels. */
+    extractSensitivityLabel?: string;
+    /** Default collection will be queried unless specified. */
+    purviewAccountName?: string;
+}
+
+/**
+ * Options for the getTables operation.
+ */
+export interface GetTablesOptions extends ConnectorOperationOptions {
+    /** Specify whether to extract MIP labels. */
+    extractSensitivityLabel?: string;
+    /** Default collection will be queried unless specified. */
+    purviewAccountName?: string;
 }
 
 /**
@@ -797,34 +831,34 @@ export class SqlClient extends ConnectorClientBase {
      * Get rows
      * @remarks This operation gets rows from a table.
      */
-    public getItems(server: string, database: string, table: string, apply?: string, filter?: string, orderby?: string, skip?: string, top?: string, select?: string, count?: string, extractSensitivityLabel?: string, purviewAccountName?: string, options: ConnectorOperationOptions = {}): ConnectorPagedAsyncIterableIterator<SqlItem> {
+    public getItems(server: string, database: string, table: string, options: GetItemsOptions = {}): ConnectorPagedAsyncIterableIterator<SqlItem> {
         const queryParams: string[] = [];
-        if (apply !== undefined) {
-            queryParams.push(`$apply=${encodeURIComponent(String(apply))}`);
+        if (options.apply !== undefined) {
+            queryParams.push(`$apply=${encodeURIComponent(String(options.apply))}`);
         }
-        if (filter !== undefined) {
-            queryParams.push(`$filter=${encodeURIComponent(String(filter))}`);
+        if (options.filter !== undefined) {
+            queryParams.push(`$filter=${encodeURIComponent(String(options.filter))}`);
         }
-        if (orderby !== undefined) {
-            queryParams.push(`$orderby=${encodeURIComponent(String(orderby))}`);
+        if (options.orderby !== undefined) {
+            queryParams.push(`$orderby=${encodeURIComponent(String(options.orderby))}`);
         }
-        if (skip !== undefined) {
-            queryParams.push(`$skip=${encodeURIComponent(String(skip))}`);
+        if (options.skip !== undefined) {
+            queryParams.push(`$skip=${encodeURIComponent(String(options.skip))}`);
         }
-        if (top !== undefined) {
-            queryParams.push(`$top=${encodeURIComponent(String(top))}`);
+        if (options.top !== undefined) {
+            queryParams.push(`$top=${encodeURIComponent(String(options.top))}`);
         }
-        if (select !== undefined) {
-            queryParams.push(`$select=${encodeURIComponent(String(select))}`);
+        if (options.select !== undefined) {
+            queryParams.push(`$select=${encodeURIComponent(String(options.select))}`);
         }
-        if (count !== undefined) {
-            queryParams.push(`$count=${encodeURIComponent(String(count))}`);
+        if (options.count !== undefined) {
+            queryParams.push(`$count=${encodeURIComponent(String(options.count))}`);
         }
-        if (extractSensitivityLabel !== undefined) {
-            queryParams.push(`extractSensitivityLabel=${encodeURIComponent(String(extractSensitivityLabel))}`);
+        if (options.extractSensitivityLabel !== undefined) {
+            queryParams.push(`extractSensitivityLabel=${encodeURIComponent(String(options.extractSensitivityLabel))}`);
         }
-        if (purviewAccountName !== undefined) {
-            queryParams.push(`purviewAccountName=${encodeURIComponent(String(purviewAccountName))}`);
+        if (options.purviewAccountName !== undefined) {
+            queryParams.push(`purviewAccountName=${encodeURIComponent(String(options.purviewAccountName))}`);
         }
         const requestPath = `/v2/datasets/${server},${database}/tables/${table}/items` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         return this.createPageable<GetItemsResponse, SqlItem>(
@@ -844,13 +878,13 @@ export class SqlClient extends ConnectorClientBase {
      * Get tables
      * @remarks This operation gets tables from a database.
      */
-    public async getTables(server: string, database: string, extractSensitivityLabel?: string, purviewAccountName?: string, options: ConnectorOperationOptions = {}): Promise<GetTablesResponse> {
+    public async getTables(server: string, database: string, options: GetTablesOptions = {}): Promise<GetTablesResponse> {
         const queryParams: string[] = [];
-        if (extractSensitivityLabel !== undefined) {
-            queryParams.push(`extractSensitivityLabel=${encodeURIComponent(String(extractSensitivityLabel))}`);
+        if (options.extractSensitivityLabel !== undefined) {
+            queryParams.push(`extractSensitivityLabel=${encodeURIComponent(String(options.extractSensitivityLabel))}`);
         }
-        if (purviewAccountName !== undefined) {
-            queryParams.push(`purviewAccountName=${encodeURIComponent(String(purviewAccountName))}`);
+        if (options.purviewAccountName !== undefined) {
+            queryParams.push(`purviewAccountName=${encodeURIComponent(String(options.purviewAccountName))}`);
         }
         const requestPath = `/v2/datasets/${server},${database}/tables` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);

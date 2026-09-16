@@ -54,7 +54,7 @@ describe("GithubClient — getRepositoryById", () => {
         mockFetchResponse(mockResponse);
 
         const client = new GithubClient(TestConnectionUrl, createMockCredential());
-        const result = await client.getRepositoryById("123");
+        const result = await client.getRepositoryById("123", "application/vnd.github+json");
 
         expect(result).toEqual(mockResponse);
         const [url, init] = (global.fetch as jest.Mock).mock.calls[0];
@@ -66,7 +66,8 @@ describe("GithubClient — getRepositoryById", () => {
         mockFetchError(404, '{"error":"NotFound"}');
 
         const client = new GithubClient(TestConnectionUrl, createMockCredential());
-        await expect(client.getRepositoryById("123")).rejects.toThrow(ConnectorError);
+        await expect(client.getRepositoryById("123", "application/vnd.github+json"))
+            .rejects.toThrow(ConnectorError);
     });
 });
 
@@ -80,7 +81,7 @@ describe("GithubClient — getPullRequests", () => {
         mockFetchResponse(mockResponse);
 
         const client = new GithubClient(TestConnectionUrl, createMockCredential());
-        await client.getPullRequests("owner", "repo", "open");
+        await client.getPullRequests("owner", "repo", { state: "open" });
 
         const [url] = (global.fetch as jest.Mock).mock.calls[0];
         expect(url).toContain("/repos/owner/repo/pulls");

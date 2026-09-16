@@ -2670,10 +2670,10 @@ export class CloudmersiveconvertClient extends ConnectorClientBase {
      * Replace string in Word DOCX document
      * @remarks Replace all instances of a string in an Office Word Document (docx)
      */
-    public async editDocumentDocxReplace(input: ReplaceStringRequest, options: ConnectorOperationOptions = {}): Promise<Blob> {
+    public async replaceEditDocumentDocx(input: ReplaceStringRequest, options: ConnectorOperationOptions = {}): Promise<Blob> {
         const requestPath = `/convert/edit/docx/replace-all`;
         const requestUrl = this.resolveUrl(requestPath);
-        const httpResponse = await this.sendWithTracingAsync<Blob>("Cloudmersiveconvert.editDocumentDocxReplace", "EditDocument_DocxReplace", "POST", requestUrl, input, options);
+        const httpResponse = await this.sendWithTracingAsync<Blob>("Cloudmersiveconvert.replaceEditDocumentDocx", "EditDocument_DocxReplace", "POST", requestUrl, input, options);
 
         return httpResponse.value as Blob;
     }
@@ -2766,10 +2766,10 @@ export class CloudmersiveconvertClient extends ConnectorClientBase {
      * Replace string in PowerPoint PPTX presentation
      * @remarks Replace all instances of a string in an Office PowerPoint Document (pptx)
      */
-    public async editDocumentPptxReplace(input: ReplaceStringRequest, options: ConnectorOperationOptions = {}): Promise<Blob> {
+    public async replaceEditDocumentPptx(input: ReplaceStringRequest, options: ConnectorOperationOptions = {}): Promise<Blob> {
         const requestPath = `/convert/edit/pptx/replace-all`;
         const requestUrl = this.resolveUrl(requestPath);
-        const httpResponse = await this.sendWithTracingAsync<Blob>("Cloudmersiveconvert.editDocumentPptxReplace", "EditDocument_PptxReplace", "POST", requestUrl, input, options);
+        const httpResponse = await this.sendWithTracingAsync<Blob>("Cloudmersiveconvert.replaceEditDocumentPptx", "EditDocument_PptxReplace", "POST", requestUrl, input, options);
 
         return httpResponse.value as Blob;
     }

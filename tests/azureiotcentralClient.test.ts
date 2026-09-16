@@ -68,7 +68,7 @@ describe("AzureiotcentralClient — listDeviceGroups", () => {
         mockFetchResponse(deviceGroups);
 
         const client = new AzureiotcentralClient(TestConnectionUrl, createMockCredential());
-        const result = await client.listDeviceGroups().byPage().next();
+        const result = await client.listDeviceGroups("test-application").byPage().next();
 
         expect(result.value).toEqual(deviceGroups.value);
         expect(global.fetch).toHaveBeenCalledTimes(1);
@@ -82,7 +82,7 @@ describe("AzureiotcentralClient — listDeviceGroups", () => {
 
         const client = new AzureiotcentralClient(TestConnectionUrl, createMockCredential());
         try {
-            await client.listDeviceGroups().byPage().next();
+            await client.listDeviceGroups("test-application").byPage().next();
             throw new Error("Expected ConnectorError to be thrown.");
         } catch (error) {
             expect(error).toBeInstanceOf(ConnectorError);

@@ -511,6 +511,126 @@ export interface DynamicPowerBiButtonClickedTriggerResult {
 export interface PowerBiButtonClickedOutputs {
     PowerBiInputs?: Record<string, unknown>;
 }
+
+/**
+ * Options for the getScorecards operation.
+ */
+export interface GetScorecardsOptions extends ConnectorOperationOptions {
+    /** Source of the call for tracing */
+    pbiSource?: string;
+}
+
+/**
+ * Options for the createScorecard operation.
+ */
+export interface CreateScorecardOptions extends ConnectorOperationOptions {
+    /** Source of the call for tracing */
+    pbiSource?: string;
+}
+
+/**
+ * Options for the getMultipleGoals operation.
+ */
+export interface GetMultipleGoalsOptions extends ConnectorOperationOptions {
+    /** Source of the call for tracing */
+    pbiSource?: string;
+}
+
+/**
+ * Options for the createGoal operation.
+ */
+export interface CreateGoalOptions extends ConnectorOperationOptions {
+    /** Source of the call for tracing */
+    pbiSource?: string;
+}
+
+/**
+ * Options for the getGoal operation.
+ */
+export interface GetGoalOptions extends ConnectorOperationOptions {
+    /** Source of the call for tracing */
+    pbiSource?: string;
+}
+
+/**
+ * Options for the updateGoal operation.
+ */
+export interface UpdateGoalOptions extends ConnectorOperationOptions {
+    /** Source of the call for tracing */
+    pbiSource?: string;
+}
+
+/**
+ * Options for the executeDatasetQuery operation.
+ */
+export interface ExecuteDatasetQueryOptions extends ConnectorOperationOptions {
+    /** Source of the call for tracing */
+    pbiSource?: string;
+}
+
+/**
+ * Options for the executeDatasetQueriesJson operation.
+ */
+export interface ExecuteDatasetQueriesJsonOptions extends ConnectorOperationOptions {
+    /** Source of the call for tracing */
+    pbiSource?: string;
+}
+
+/**
+ * Options for the addRows operation.
+ */
+export interface AddRowsOptions extends ConnectorOperationOptions {
+    /** Source of the call for tracing */
+    pbiSource?: string;
+}
+
+/**
+ * Options for the goalValueCheckinNote operation.
+ */
+export interface GoalValueCheckinNoteOptions extends ConnectorOperationOptions {
+    /** Source of the call for tracing */
+    pbiSource?: string;
+}
+
+/**
+ * Options for the goalValueCheckin operation.
+ */
+export interface GoalValueCheckinOptions extends ConnectorOperationOptions {
+    /** Source of the call for tracing */
+    pbiSource?: string;
+}
+
+/**
+ * Options for the getGoalCheckins operation.
+ */
+export interface GetGoalCheckinsOptions extends ConnectorOperationOptions {
+    /** Source of the call for tracing */
+    pbiSource?: string;
+}
+
+/**
+ * Options for the updateGoalCheckin operation.
+ */
+export interface UpdateGoalCheckinOptions extends ConnectorOperationOptions {
+    /** Source of the call for tracing */
+    pbiSource?: string;
+}
+
+/**
+ * Options for the getGoalCheckin operation.
+ */
+export interface GetGoalCheckinOptions extends ConnectorOperationOptions {
+    /** Source of the call for tracing */
+    pbiSource?: string;
+}
+
+/**
+ * Options for the refreshDataset operation.
+ */
+export interface RefreshDatasetOptions extends ConnectorOperationOptions {
+    /** Source of the call for tracing */
+    pbiSource?: string;
+}
 // #endregion Types
 
 export const PowerbiTriggerOperations = {
@@ -840,10 +960,10 @@ export class PowerbiClient extends ConnectorClientBase {
      * Get scorecards
      * @remarks Gets a list of Power BI scorecards in the specified workspace.
      */
-    public async getScorecards(groupid: string, pbiSource?: string, options: ConnectorOperationOptions = {}): Promise<ListedScorecards> {
+    public async getScorecards(groupid: string, options: GetScorecardsOptions = {}): Promise<ListedScorecards> {
         const queryParams: string[] = [];
-        if (pbiSource !== undefined) {
-            queryParams.push(`pbi_source=${encodeURIComponent(String(pbiSource))}`);
+        if (options.pbiSource !== undefined) {
+            queryParams.push(`pbi_source=${encodeURIComponent(String(options.pbiSource))}`);
         }
         const requestPath = `/v1.0/myOrg/groups/${groupid}/internalScorecards` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
@@ -856,10 +976,10 @@ export class PowerbiClient extends ConnectorClientBase {
      * Create a scorecard
      * @remarks Creates a scorecard for Power BI goals.
      */
-    public async createScorecard(input: CreateScorecardRequest, groupid: string, pbiSource?: string, options: ConnectorOperationOptions = {}): Promise<CreatedScorecard> {
+    public async createScorecard(input: CreateScorecardRequest, groupid: string, options: CreateScorecardOptions = {}): Promise<CreatedScorecard> {
         const queryParams: string[] = [];
-        if (pbiSource !== undefined) {
-            queryParams.push(`pbi_source=${encodeURIComponent(String(pbiSource))}`);
+        if (options.pbiSource !== undefined) {
+            queryParams.push(`pbi_source=${encodeURIComponent(String(options.pbiSource))}`);
         }
         const requestPath = `/v1.0/myOrg/groups/${groupid}/internalScorecards` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
@@ -872,13 +992,13 @@ export class PowerbiClient extends ConnectorClientBase {
      * Get multiple goals
      * @remarks Get a list of Power BI goals in the specified scorecard.
      */
-    public async getMultipleGoals(groupid: string, scorecardId: string, expand?: string, pbiSource?: string, options: ConnectorOperationOptions = {}): Promise<FetchedGoals> {
+    public async getMultipleGoals(groupid: string, scorecardId: string, expand: string, options: GetMultipleGoalsOptions = {}): Promise<FetchedGoals> {
         const queryParams: string[] = [];
         if (expand !== undefined) {
             queryParams.push(`$expand=${encodeURIComponent(String(expand))}`);
         }
-        if (pbiSource !== undefined) {
-            queryParams.push(`pbi_source=${encodeURIComponent(String(pbiSource))}`);
+        if (options.pbiSource !== undefined) {
+            queryParams.push(`pbi_source=${encodeURIComponent(String(options.pbiSource))}`);
         }
         const requestPath = `/v1.0/myOrg/groups/${groupid}/internalScorecards(${scorecardId})/goals` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
@@ -891,10 +1011,10 @@ export class PowerbiClient extends ConnectorClientBase {
      * Create a goal
      * @remarks Creates a Power BI goal on the specified scorecard.
      */
-    public async createGoal(input: CreateGoalRequest, groupid: string, scorecardId: string, pbiSource?: string, options: ConnectorOperationOptions = {}): Promise<CreateGoalResponse> {
+    public async createGoal(input: CreateGoalRequest, groupid: string, scorecardId: string, options: CreateGoalOptions = {}): Promise<CreateGoalResponse> {
         const queryParams: string[] = [];
-        if (pbiSource !== undefined) {
-            queryParams.push(`pbi_source=${encodeURIComponent(String(pbiSource))}`);
+        if (options.pbiSource !== undefined) {
+            queryParams.push(`pbi_source=${encodeURIComponent(String(options.pbiSource))}`);
         }
         const requestPath = `/v1.0/myOrg/groups/${groupid}/internalScorecards(${scorecardId})/goals` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
@@ -907,10 +1027,10 @@ export class PowerbiClient extends ConnectorClientBase {
      * Get a goal
      * @remarks Gets the specified Power BI goal on a scorecard.
      */
-    public async getGoal(groupid: string, scorecardId: string, goalId: string, pbiSource?: string, expand?: string, options: ConnectorOperationOptions = {}): Promise<FetchedGoal> {
+    public async getGoal(groupid: string, scorecardId: string, goalId: string, expand: string, options: GetGoalOptions = {}): Promise<FetchedGoal> {
         const queryParams: string[] = [];
-        if (pbiSource !== undefined) {
-            queryParams.push(`pbi_source=${encodeURIComponent(String(pbiSource))}`);
+        if (options.pbiSource !== undefined) {
+            queryParams.push(`pbi_source=${encodeURIComponent(String(options.pbiSource))}`);
         }
         if (expand !== undefined) {
             queryParams.push(`$expand=${encodeURIComponent(String(expand))}`);
@@ -926,10 +1046,10 @@ export class PowerbiClient extends ConnectorClientBase {
      * Update a goal
      * @remarks Updates the Power BI goal's state.
      */
-    public async updateGoal(input: UpdateGoalRequest, groupid: string, scorecardId: string, goalId: string, pbiSource?: string, options: ConnectorOperationOptions = {}): Promise<void> {
+    public async updateGoal(input: UpdateGoalRequest, groupid: string, scorecardId: string, goalId: string, options: UpdateGoalOptions = {}): Promise<void> {
         const queryParams: string[] = [];
-        if (pbiSource !== undefined) {
-            queryParams.push(`pbi_source=${encodeURIComponent(String(pbiSource))}`);
+        if (options.pbiSource !== undefined) {
+            queryParams.push(`pbi_source=${encodeURIComponent(String(options.pbiSource))}`);
         }
         const requestPath = `/v1.0/myOrg/groups/${groupid}/internalScorecards(${scorecardId})/goals(${goalId})` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
@@ -940,10 +1060,10 @@ export class PowerbiClient extends ConnectorClientBase {
      * Run a query against a dataset
      * @remarks Use the Power BI REST API to run a query.
      */
-    public async executeDatasetQuery(input: QuerySpecification, groupid: string, datasetid: string, pbiSource?: string, options: ConnectorOperationOptions = {}): Promise<QueryExecutionResults> {
+    public async executeDatasetQuery(input: QuerySpecification, groupid: string, datasetid: string, options: ExecuteDatasetQueryOptions = {}): Promise<QueryExecutionResults> {
         const queryParams: string[] = [];
-        if (pbiSource !== undefined) {
-            queryParams.push(`pbi_source=${encodeURIComponent(String(pbiSource))}`);
+        if (options.pbiSource !== undefined) {
+            queryParams.push(`pbi_source=${encodeURIComponent(String(options.pbiSource))}`);
         }
         const requestPath = `/v1.0/myorg/groups/${groupid}/datasets/${datasetid}/executeQueries` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
@@ -956,10 +1076,10 @@ export class PowerbiClient extends ConnectorClientBase {
      * Run a json query against a dataset
      * @remarks Use the Power BI REST API to run a query in json format.
      */
-    public async executeDatasetQueriesJson(input: ExecuteDatasetQueriesJsonInput, groupid: string, datasetid: string, pbiSource?: string, options: ConnectorOperationOptions = {}): Promise<ExecuteDatasetQueriesJsonResponse> {
+    public async executeDatasetQueriesJson(input: ExecuteDatasetQueriesJsonInput, groupid: string, datasetid: string, options: ExecuteDatasetQueriesJsonOptions = {}): Promise<ExecuteDatasetQueriesJsonResponse> {
         const queryParams: string[] = [];
-        if (pbiSource !== undefined) {
-            queryParams.push(`pbi_source=${encodeURIComponent(String(pbiSource))}`);
+        if (options.pbiSource !== undefined) {
+            queryParams.push(`pbi_source=${encodeURIComponent(String(options.pbiSource))}`);
         }
         const requestPath = `/internalFlowActionOverloadAsJson/v1.0/myorg/groups/${groupid}/datasets/${datasetid}/executeQueries` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
@@ -972,10 +1092,10 @@ export class PowerbiClient extends ConnectorClientBase {
      * Add rows to a dataset
      * @remarks Use Power BI REST API to add rows to a dataset.
      */
-    public async addRows(input: Payload, groupid: string, datasetid: string, tablename: string, pbiSource?: string, options: ConnectorOperationOptions = {}): Promise<void> {
+    public async addRows(input: Payload, groupid: string, datasetid: string, tablename: string, options: AddRowsOptions = {}): Promise<void> {
         const queryParams: string[] = [];
-        if (pbiSource !== undefined) {
-            queryParams.push(`pbi_source=${encodeURIComponent(String(pbiSource))}`);
+        if (options.pbiSource !== undefined) {
+            queryParams.push(`pbi_source=${encodeURIComponent(String(options.pbiSource))}`);
         }
         const requestPath = `/v1.0/myorg/groups/${groupid}/datasets/${datasetid}/tables/${tablename}/rows` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
@@ -986,10 +1106,10 @@ export class PowerbiClient extends ConnectorClientBase {
      * Add a note to a check-in
      * @remarks Appends a new note to a check-in of a Power BI goal.
      */
-    public async goalValueCheckinNote(input: GoalValueCheckinNoteInput, groupid: string, scorecardId: string, goalId: string, goalCheckin: string, pbiSource?: string, options: ConnectorOperationOptions = {}): Promise<void> {
+    public async goalValueCheckinNote(input: GoalValueCheckinNoteInput, groupid: string, scorecardId: string, goalId: string, goalCheckin: string, options: GoalValueCheckinNoteOptions = {}): Promise<void> {
         const queryParams: string[] = [];
-        if (pbiSource !== undefined) {
-            queryParams.push(`pbi_source=${encodeURIComponent(String(pbiSource))}`);
+        if (options.pbiSource !== undefined) {
+            queryParams.push(`pbi_source=${encodeURIComponent(String(options.pbiSource))}`);
         }
         const requestPath = `/v1.0/myorg/groups/${groupid}/internalScorecards(${scorecardId})/goals(${goalId})/goalValues(${goalCheckin})/notes` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
@@ -1000,10 +1120,10 @@ export class PowerbiClient extends ConnectorClientBase {
      * Create a check-in
      * @remarks Creates a Power BI goal check-in.
      */
-    public async goalValueCheckin(input: GoalValueCheckinRequest, groupid: string, scorecardId: string, goalId: string, pbiSource?: string, options: ConnectorOperationOptions = {}): Promise<void> {
+    public async goalValueCheckin(input: GoalValueCheckinRequest, groupid: string, scorecardId: string, goalId: string, options: GoalValueCheckinOptions = {}): Promise<void> {
         const queryParams: string[] = [];
-        if (pbiSource !== undefined) {
-            queryParams.push(`pbi_source=${encodeURIComponent(String(pbiSource))}`);
+        if (options.pbiSource !== undefined) {
+            queryParams.push(`pbi_source=${encodeURIComponent(String(options.pbiSource))}`);
         }
         const requestPath = `/v1.0/myorg/groups/${groupid}/internalScorecards(${scorecardId})/goals(${goalId})/goalValues` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
@@ -1014,10 +1134,10 @@ export class PowerbiClient extends ConnectorClientBase {
      * Get goal check-ins
      * @remarks Get all check-ins on a Power BI goal.
      */
-    public async getGoalCheckins(groupid: string, scorecardId: string, goalId: string, pbiSource?: string, expand?: string, options: ConnectorOperationOptions = {}): Promise<GetGoalCheckinsResponse> {
+    public async getGoalCheckins(groupid: string, scorecardId: string, goalId: string, expand: string, options: GetGoalCheckinsOptions = {}): Promise<GetGoalCheckinsResponse> {
         const queryParams: string[] = [];
-        if (pbiSource !== undefined) {
-            queryParams.push(`pbi_source=${encodeURIComponent(String(pbiSource))}`);
+        if (options.pbiSource !== undefined) {
+            queryParams.push(`pbi_source=${encodeURIComponent(String(options.pbiSource))}`);
         }
         if (expand !== undefined) {
             queryParams.push(`$expand=${encodeURIComponent(String(expand))}`);
@@ -1033,10 +1153,10 @@ export class PowerbiClient extends ConnectorClientBase {
      * Update a check-in
      * @remarks Updates a Power BI goal check-in.
      */
-    public async updateGoalCheckin(input: GoalValueCheckinUpdateRequest, groupid: string, scorecardId: string, goalId: string, goalCheckin: string, pbiSource?: string, options: ConnectorOperationOptions = {}): Promise<void> {
+    public async updateGoalCheckin(input: GoalValueCheckinUpdateRequest, groupid: string, scorecardId: string, goalId: string, goalCheckin: string, options: UpdateGoalCheckinOptions = {}): Promise<void> {
         const queryParams: string[] = [];
-        if (pbiSource !== undefined) {
-            queryParams.push(`pbi_source=${encodeURIComponent(String(pbiSource))}`);
+        if (options.pbiSource !== undefined) {
+            queryParams.push(`pbi_source=${encodeURIComponent(String(options.pbiSource))}`);
         }
         const requestPath = `/v1.0/myorg/groups/${groupid}/internalScorecards(${scorecardId})/goals(${goalId})/goalValues(${goalCheckin})` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
@@ -1047,10 +1167,10 @@ export class PowerbiClient extends ConnectorClientBase {
      * Get a goal check-in
      * @remarks Get a check-in on a Power BI goal.
      */
-    public async getGoalCheckin(groupid: string, scorecardId: string, goalId: string, goalCheckin: string, pbiSource?: string, expand?: string, options: ConnectorOperationOptions = {}): Promise<GetGoalCheckinResponse> {
+    public async getGoalCheckin(groupid: string, scorecardId: string, goalId: string, goalCheckin: string, expand: string, options: GetGoalCheckinOptions = {}): Promise<GetGoalCheckinResponse> {
         const queryParams: string[] = [];
-        if (pbiSource !== undefined) {
-            queryParams.push(`pbi_source=${encodeURIComponent(String(pbiSource))}`);
+        if (options.pbiSource !== undefined) {
+            queryParams.push(`pbi_source=${encodeURIComponent(String(options.pbiSource))}`);
         }
         if (expand !== undefined) {
             queryParams.push(`$expand=${encodeURIComponent(String(expand))}`);
@@ -1066,10 +1186,10 @@ export class PowerbiClient extends ConnectorClientBase {
      * Refresh a dataset
      * @remarks Use Power BI REST API to refresh a powerbi dataset.
      */
-    public async refreshDataset(groupid: string, datasetid: string, pbiSource?: string, options: ConnectorOperationOptions = {}): Promise<void> {
+    public async refreshDataset(groupid: string, datasetid: string, options: RefreshDatasetOptions = {}): Promise<void> {
         const queryParams: string[] = [];
-        if (pbiSource !== undefined) {
-            queryParams.push(`pbi_source=${encodeURIComponent(String(pbiSource))}`);
+        if (options.pbiSource !== undefined) {
+            queryParams.push(`pbi_source=${encodeURIComponent(String(options.pbiSource))}`);
         }
         const requestPath = `/v1.0/myorg/groups/${groupid}/datasets/${datasetid}/refreshes` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
@@ -1080,10 +1200,10 @@ export class PowerbiClient extends ConnectorClientBase {
      * Export To File for Power BI Reports
      * @remarks Use Power BI Rest API to inititate export for Power BI reports
      */
-    public async initiateExportToFileForPbiReports(input: ExportPayloadPowerBIReport, groupid: string, reportid: string, options: ConnectorOperationOptions = {}): Promise<Blob> {
+    public async exportInitiateToFileForPbiReports(input: ExportPayloadPowerBIReport, groupid: string, reportid: string, options: ConnectorOperationOptions = {}): Promise<Blob> {
         const requestPath = `/v1.0/myorg/groups/${groupid}/reports/${reportid}/ExportTo`;
         const requestUrl = this.resolveUrl(requestPath);
-        const httpResponse = await this.sendWithTracingAsync<Blob>("Powerbi.initiateExportToFileForPbiReports", "InitiateExportToFileForPbiReports", "POST", requestUrl, input, options);
+        const httpResponse = await this.sendWithTracingAsync<Blob>("Powerbi.exportInitiateToFileForPbiReports", "InitiateExportToFileForPbiReports", "POST", requestUrl, input, options);
 
         return httpResponse.value as Blob;
     }
@@ -1092,10 +1212,10 @@ export class PowerbiClient extends ConnectorClientBase {
      * Export To File for Paginated Reports
      * @remarks Use Power BI Rest API to inititate export for paginated reports
      */
-    public async initiateExportToFileForPaginatedReports(input: ExportPayloadPaginatedReport, groupid: string, reportid: string, options: ConnectorOperationOptions = {}): Promise<Blob> {
+    public async exportInitiateToFileForPaginatedReports(input: ExportPayloadPaginatedReport, groupid: string, reportid: string, options: ConnectorOperationOptions = {}): Promise<Blob> {
         const requestPath = `/v1.0/myorg/groups/${groupid}/reports/${reportid}/ExportToPaginatedReports`;
         const requestUrl = this.resolveUrl(requestPath);
-        const httpResponse = await this.sendWithTracingAsync<Blob>("Powerbi.initiateExportToFileForPaginatedReports", "InitiateExportToFileForPaginatedReports", "POST", requestUrl, input, options);
+        const httpResponse = await this.sendWithTracingAsync<Blob>("Powerbi.exportInitiateToFileForPaginatedReports", "InitiateExportToFileForPaginatedReports", "POST", requestUrl, input, options);
 
         return httpResponse.value as Blob;
     }

@@ -124,10 +124,14 @@ export class InfusionsoftClient extends ConnectorClientBase {
      * Create a task
      * @remarks Create a new task.
      */
-    public async createTask(input: CreateTaskRequest, options: ConnectorOperationOptions = {}): Promise<TaskResponse> {
+    public async createTask(input: CreateTaskRequest, contentType: string, options: ConnectorOperationOptions = {}): Promise<TaskResponse> {
         const requestPath = `/crm/rest/v1/tasks/`;
+        const requestHeaders: Record<string, string> = {};
+        if (contentType !== undefined) {
+            requestHeaders["Content-Type"] = String(contentType);
+        }
         const requestUrl = this.resolveUrl(requestPath);
-        const httpResponse = await this.sendWithTracingAsync<TaskResponse>("Infusionsoft.createTask", "CreateTask", "POST", requestUrl, input, options);
+        const httpResponse = await this.sendWithTracingAsync<TaskResponse>("Infusionsoft.createTask", "CreateTask", "POST", requestUrl, input, options, requestHeaders);
 
         return httpResponse.value as TaskResponse;
     }
@@ -136,10 +140,14 @@ export class InfusionsoftClient extends ConnectorClientBase {
      * Update a task
      * @remarks Update an existing task.
      */
-    public async updateTask(input: CreateTaskRequest, id: string, options: ConnectorOperationOptions = {}): Promise<TaskResponse> {
+    public async updateTask(input: CreateTaskRequest, id: string, contentType: string, options: ConnectorOperationOptions = {}): Promise<TaskResponse> {
         const requestPath = `/crm/rest/v1/tasks/${id}`;
+        const requestHeaders: Record<string, string> = {};
+        if (contentType !== undefined) {
+            requestHeaders["Content-Type"] = String(contentType);
+        }
         const requestUrl = this.resolveUrl(requestPath);
-        const httpResponse = await this.sendWithTracingAsync<TaskResponse>("Infusionsoft.updateTask", "UpdateTask", "PUT", requestUrl, input, options);
+        const httpResponse = await this.sendWithTracingAsync<TaskResponse>("Infusionsoft.updateTask", "UpdateTask", "PUT", requestUrl, input, options, requestHeaders);
 
         return httpResponse.value as TaskResponse;
     }

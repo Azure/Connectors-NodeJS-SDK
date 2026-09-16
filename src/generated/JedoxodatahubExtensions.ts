@@ -332,6 +332,202 @@ export interface ViewCell {
 export interface ViewCellArray {
     [key: string]: unknown;
 }
+
+/**
+ * Options for the databases operation.
+ */
+export interface DatabasesOptions extends ConnectorOperationOptions {
+    /** Limits the number of items returned by the given number. The service returns the number of available items up to but not greater than the specified value n. */
+    top?: string;
+    /** Excludes the first n items of the queried collection from the result. The service returns items starting at position n+1. */
+    skip?: string;
+    /** The $filter system query option restricts the set of items returned. For a list of available operations and functions see the [OData Documentation](http://docs.oasis-open.org/odata/odata/v4.0/errata03/os/complete/part1-protocol/odata-v4.0-errata03-os-part1-protocol-complete.html#_Ref356810738). */
+    filter?: string;
+}
+
+/**
+ * Options for the cubes operation.
+ */
+export interface CubesOptions extends ConnectorOperationOptions {
+    /** Limits the number of items returned by the given number. The service returns the number of available items up to but not greater than the specified value n. */
+    top?: string;
+    /** Excludes the first n items of the queried collection from the result. The service returns items starting at position n+1. */
+    skip?: string;
+    /** The $filter system query option restricts the set of items returned. For a list of available operations and functions see the [OData Documentation](http://docs.oasis-open.org/odata/odata/v4.0/errata03/os/complete/part1-protocol/odata-v4.0-errata03-os-part1-protocol-complete.html#_Ref356810738). */
+    filter?: string;
+}
+
+/**
+ * Options for the cubeCells operation.
+ */
+export interface CubeCellsOptions extends ConnectorOperationOptions {
+    /** Limits the number of items returned by the given number. The service returns the number of available items up to but not greater than the specified value n. */
+    top?: string;
+    /** Excludes the first n items of the queried collection from the result. The service returns items starting at position n+1. */
+    skip?: string;
+    /** The $filter system query option restricts the set of items returned. For a list of available operations and functions see the [OData Documentation](http://docs.oasis-open.org/odata/odata/v4.0/errata03/os/complete/part1-protocol/odata-v4.0-errata03-os-part1-protocol-complete.html#_Ref356810738). > Currently the /Cells functions only support basic operations. Complex formulas might return an invalid result. For complex filtering, please use Views.  */
+    filter?: string;
+    /** If set to true, the result will only contain base elements. If set to false, it will also contain consolidated elements. */
+    baseonly?: string;
+    /** If set to true, rules will be applied to the resulting cells. */
+    userules?: string;
+    /** If set to true, numeric cells with a value of 0 and empty string cells will be removed from the result. */
+    zerosupression?: string;
+    /** If set to true, the service will return the entire result instead of a single page. With this option set to true, the response might take multiple minutes depending on the cube's size. */
+    disablepaging?: string;
+}
+
+/**
+ * Options for the dimensions operation.
+ */
+export interface DimensionsOptions extends ConnectorOperationOptions {
+    /** Limits the number of items returned by the given number. The service returns the number of available items up to but not greater than the specified value n. */
+    top?: string;
+    /** Excludes the first n items of the queried collection from the result. The service returns items starting at position n+1. */
+    skip?: string;
+    /** The $filter system query option restricts the set of items returned. For a list of available operations and functions see the [OData Documentation](http://docs.oasis-open.org/odata/odata/v4.0/errata03/os/complete/part1-protocol/odata-v4.0-errata03-os-part1-protocol-complete.html#_Ref356810738). */
+    filter?: string;
+}
+
+/**
+ * Options for the elements operation.
+ */
+export interface ElementsOptions extends ConnectorOperationOptions {
+    /** Limits the number of items returned by the given number. The service returns the number of available items up to but not greater than the specified value n. */
+    top?: string;
+    /** Excludes the first n items of the queried collection from the result. The service returns items starting at position n+1. */
+    skip?: string;
+    /** The $filter system query option restricts the set of items returned. For a list of available operations and functions see the [OData Documentation](http://docs.oasis-open.org/odata/odata/v4.0/errata03/os/complete/part1-protocol/odata-v4.0-errata03-os-part1-protocol-complete.html#_Ref356810738). */
+    filter?: string;
+}
+
+/**
+ * Options for the views operation.
+ */
+export interface ViewsOptions extends ConnectorOperationOptions {
+    /** Limits the number of items returned by the given number. The service returns the number of available items up to but not greater than the specified value n. */
+    top?: string;
+    /** Excludes the first n items of the queried collection from the result. The service returns items starting at position n+1. */
+    skip?: string;
+    /** The $filter system query option restricts the set of items returned. For a list of available operations and functions see the [OData Documentation](http://docs.oasis-open.org/odata/odata/v4.0/errata03/os/complete/part1-protocol/odata-v4.0-errata03-os-part1-protocol-complete.html#_Ref356810738). */
+    filter?: string;
+}
+
+/**
+ * Options for the viewCells operation.
+ */
+export interface ViewCellsOptions extends ConnectorOperationOptions {
+    /** Limits the number of items returned by the given number. The service returns the number of available items up to but not greater than the specified value n. */
+    top?: string;
+    /** Excludes the first n items of the queried collection from the result. The service returns items starting at position n+1. */
+    skip?: string;
+    /** The $filter system query option restricts the set of items returned. For a list of available operations and functions see the [OData Documentation](http://docs.oasis-open.org/odata/odata/v4.0/errata03/os/complete/part1-protocol/odata-v4.0-errata03-os-part1-protocol-complete.html#_Ref356810738). > Currently the /Cells functions only support basic operations. Complex formulas might return an invalid result.  */
+    filter?: string;
+    /** If set to true, the result will only contain base elements. If set to false, it will also contain consolidated elements. */
+    baseonly?: string;
+    /** If set to true, rules will be applied to the resulting cells. */
+    userules?: string;
+    /** If set to true, numeric cells with a value of 0 and empty string cells will be removed from the result. */
+    zerosupression?: string;
+    /** If set to true, the service will return the entire result instead of a single page. With this option set to true, the response might take multiple minutes depending on the view's size. */
+    disablepaging?: string;
+}
+
+/**
+ * Options for the integratorProjectGroups operation.
+ */
+export interface IntegratorProjectGroupsOptions extends ConnectorOperationOptions {
+    /** Limits the number of items returned by the given number. The service returns the number of available items up to but not greater than the specified value n. */
+    top?: string;
+    /** Excludes the first n items of the queried collection from the result. The service returns items starting at position n+1. */
+    skip?: string;
+    /** The $filter system query option restricts the set of items returned. For a list of available operations and functions see the [OData Documentation](http://docs.oasis-open.org/odata/odata/v4.0/errata03/os/complete/part1-protocol/odata-v4.0-errata03-os-part1-protocol-complete.html#_Ref356810738). */
+    filter?: string;
+}
+
+/**
+ * Options for the integratorProjects operation.
+ */
+export interface IntegratorProjectsOptions extends ConnectorOperationOptions {
+    /** Limits the number of items returned by the given number. The service returns the number of available items up to but not greater than the specified value n. */
+    top?: string;
+    /** Excludes the first n items of the queried collection from the result. The service returns items starting at position n+1. */
+    skip?: string;
+    /** The $filter system query option restricts the set of items returned. For a list of available operations and functions see the [OData Documentation](http://docs.oasis-open.org/odata/odata/v4.0/errata03/os/complete/part1-protocol/odata-v4.0-errata03-os-part1-protocol-complete.html#_Ref356810738). */
+    filter?: string;
+}
+
+/**
+ * Options for the extracts operation.
+ */
+export interface ExtractsOptions extends ConnectorOperationOptions {
+    /** Limits the number of items returned by the given number. The service returns the number of available items up to but not greater than the specified value n. */
+    top?: string;
+    /** Excludes the first n items of the queried collection from the result. The service returns items starting at position n+1. */
+    skip?: string;
+    /** The $filter system query option restricts the set of items returned. For a list of available operations and functions see the [OData Documentation](http://docs.oasis-open.org/odata/odata/v4.0/errata03/os/complete/part1-protocol/odata-v4.0-errata03-os-part1-protocol-complete.html#_Ref356810738). */
+    filter?: string;
+}
+
+/**
+ * Options for the extractRows operation.
+ */
+export interface ExtractRowsOptions extends ConnectorOperationOptions {
+    /** Limits the number of items returned by the given number. The service returns the number of available items up to but not greater than the specified value n. */
+    top?: string;
+    /** Excludes the first n items of the queried collection from the result. The service returns items starting at position n+1. */
+    skip?: string;
+    /** The $filter system query option restricts the set of items returned. For a list of available operations and functions see the [OData Documentation](http://docs.oasis-open.org/odata/odata/v4.0/errata03/os/complete/part1-protocol/odata-v4.0-errata03-os-part1-protocol-complete.html#_Ref356810738). */
+    filter?: string;
+}
+
+/**
+ * Options for the jobs operation.
+ */
+export interface JobsOptions extends ConnectorOperationOptions {
+    /** Limits the number of items returned by the given number. The service returns the number of available items up to but not greater than the specified value n. */
+    top?: string;
+    /** Excludes the first n items of the queried collection from the result. The service returns items starting at position n+1. */
+    skip?: string;
+    /** The $filter system query option restricts the set of items returned. For a list of available operations and functions see the [OData Documentation](http://docs.oasis-open.org/odata/odata/v4.0/errata03/os/complete/part1-protocol/odata-v4.0-errata03-os-part1-protocol-complete.html#_Ref356810738). */
+    filter?: string;
+}
+
+/**
+ * Options for the loads operation.
+ */
+export interface LoadsOptions extends ConnectorOperationOptions {
+    /** Limits the number of items returned by the given number. The service returns the number of available items up to but not greater than the specified value n. */
+    top?: string;
+    /** Excludes the first n items of the queried collection from the result. The service returns items starting at position n+1. */
+    skip?: string;
+    /** The $filter system query option restricts the set of items returned. For a list of available operations and functions see the [OData Documentation](http://docs.oasis-open.org/odata/odata/v4.0/errata03/os/complete/part1-protocol/odata-v4.0-errata03-os-part1-protocol-complete.html#_Ref356810738). */
+    filter?: string;
+}
+
+/**
+ * Options for the transforms operation.
+ */
+export interface TransformsOptions extends ConnectorOperationOptions {
+    /** Limits the number of items returned by the given number. The service returns the number of available items up to but not greater than the specified value n. */
+    top?: string;
+    /** Excludes the first n items of the queried collection from the result. The service returns items starting at position n+1. */
+    skip?: string;
+    /** The $filter system query option restricts the set of items returned. For a list of available operations and functions see the [OData Documentation](http://docs.oasis-open.org/odata/odata/v4.0/errata03/os/complete/part1-protocol/odata-v4.0-errata03-os-part1-protocol-complete.html#_Ref356810738). */
+    filter?: string;
+}
+
+/**
+ * Options for the transformRows operation.
+ */
+export interface TransformRowsOptions extends ConnectorOperationOptions {
+    /** Limits the number of items returned by the given number. The service returns the number of available items up to but not greater than the specified value n. */
+    top?: string;
+    /** Excludes the first n items of the queried collection from the result. The service returns items starting at position n+1. */
+    skip?: string;
+    /** The $filter system query option restricts the set of items returned. For a list of available operations and functions see the [OData Documentation](http://docs.oasis-open.org/odata/odata/v4.0/errata03/os/complete/part1-protocol/odata-v4.0-errata03-os-part1-protocol-complete.html#_Ref356810738). */
+    filter?: string;
+}
 // #endregion Types
 
 // #region Client
@@ -359,16 +555,16 @@ export class JedoxodatahubClient extends ConnectorClientBase {
      * Get databases
      * @remarks Get a list of databases found in the server. System and config databases are excluded from the list, but can be requested by providing the ID.
      */
-    public async databases(top?: string, skip?: string, filter?: string, options: ConnectorOperationOptions = {}): Promise<DatabasesResponse> {
+    public async databases(options: DatabasesOptions = {}): Promise<DatabasesResponse> {
         const queryParams: string[] = [];
-        if (top !== undefined) {
-            queryParams.push(`$top=${encodeURIComponent(String(top))}`);
+        if (options.top !== undefined) {
+            queryParams.push(`$top=${encodeURIComponent(String(options.top))}`);
         }
-        if (skip !== undefined) {
-            queryParams.push(`$skip=${encodeURIComponent(String(skip))}`);
+        if (options.skip !== undefined) {
+            queryParams.push(`$skip=${encodeURIComponent(String(options.skip))}`);
         }
-        if (filter !== undefined) {
-            queryParams.push(`$filter=${encodeURIComponent(String(filter))}`);
+        if (options.filter !== undefined) {
+            queryParams.push(`$filter=${encodeURIComponent(String(options.filter))}`);
         }
         const requestPath = `/Databases` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
@@ -393,16 +589,16 @@ export class JedoxodatahubClient extends ConnectorClientBase {
      * Get cubes
      * @remarks Get a list of cubes in the given database. To prevent issues with the URL encodings, Attribute cubes will be renamed, e.g. \#_Years to ATT_Years.
      */
-    public async cubes(databaseId: string, top?: string, skip?: string, filter?: string, options: ConnectorOperationOptions = {}): Promise<CubesResponse> {
+    public async cubes(databaseId: string, options: CubesOptions = {}): Promise<CubesResponse> {
         const queryParams: string[] = [];
-        if (top !== undefined) {
-            queryParams.push(`$top=${encodeURIComponent(String(top))}`);
+        if (options.top !== undefined) {
+            queryParams.push(`$top=${encodeURIComponent(String(options.top))}`);
         }
-        if (skip !== undefined) {
-            queryParams.push(`$skip=${encodeURIComponent(String(skip))}`);
+        if (options.skip !== undefined) {
+            queryParams.push(`$skip=${encodeURIComponent(String(options.skip))}`);
         }
-        if (filter !== undefined) {
-            queryParams.push(`$filter=${encodeURIComponent(String(filter))}`);
+        if (options.filter !== undefined) {
+            queryParams.push(`$filter=${encodeURIComponent(String(options.filter))}`);
         }
         const requestPath = `/Databases(${databaseId})/Cubes` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
@@ -427,28 +623,28 @@ export class JedoxodatahubClient extends ConnectorClientBase {
      * Get cube cells
      * @remarks Get the cells from a cube. This returns the cells' values and element names. If the cell has a string value, the value is instead stored in the stringValue field. Element names are stored in dynamic properties.
      */
-    public async cubeCells(databaseId: string, cubeId: string, top?: string, skip?: string, filter?: string, baseonly?: string, userules?: string, zerosupression?: string, disablepaging?: string, options: ConnectorOperationOptions = {}): Promise<CubeCellsResponse> {
+    public async cubeCells(databaseId: string, cubeId: string, options: CubeCellsOptions = {}): Promise<CubeCellsResponse> {
         const queryParams: string[] = [];
-        if (top !== undefined) {
-            queryParams.push(`$top=${encodeURIComponent(String(top))}`);
+        if (options.top !== undefined) {
+            queryParams.push(`$top=${encodeURIComponent(String(options.top))}`);
         }
-        if (skip !== undefined) {
-            queryParams.push(`$skip=${encodeURIComponent(String(skip))}`);
+        if (options.skip !== undefined) {
+            queryParams.push(`$skip=${encodeURIComponent(String(options.skip))}`);
         }
-        if (filter !== undefined) {
-            queryParams.push(`$filter=${encodeURIComponent(String(filter))}`);
+        if (options.filter !== undefined) {
+            queryParams.push(`$filter=${encodeURIComponent(String(options.filter))}`);
         }
-        if (baseonly !== undefined) {
-            queryParams.push(`baseonly=${encodeURIComponent(String(baseonly))}`);
+        if (options.baseonly !== undefined) {
+            queryParams.push(`baseonly=${encodeURIComponent(String(options.baseonly))}`);
         }
-        if (userules !== undefined) {
-            queryParams.push(`userules=${encodeURIComponent(String(userules))}`);
+        if (options.userules !== undefined) {
+            queryParams.push(`userules=${encodeURIComponent(String(options.userules))}`);
         }
-        if (zerosupression !== undefined) {
-            queryParams.push(`zerosupression=${encodeURIComponent(String(zerosupression))}`);
+        if (options.zerosupression !== undefined) {
+            queryParams.push(`zerosupression=${encodeURIComponent(String(options.zerosupression))}`);
         }
-        if (disablepaging !== undefined) {
-            queryParams.push(`disablepaging=${encodeURIComponent(String(disablepaging))}`);
+        if (options.disablepaging !== undefined) {
+            queryParams.push(`disablepaging=${encodeURIComponent(String(options.disablepaging))}`);
         }
         const requestPath = `/Databases(${databaseId})/Cubes(${cubeId})/Cells` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
@@ -461,16 +657,16 @@ export class JedoxodatahubClient extends ConnectorClientBase {
      * Get dimensions
      * @remarks Get a list of dimensions in the given database.
      */
-    public async dimensions(databaseId: string, top?: string, skip?: string, filter?: string, options: ConnectorOperationOptions = {}): Promise<DimensionsResponse> {
+    public async dimensions(databaseId: string, options: DimensionsOptions = {}): Promise<DimensionsResponse> {
         const queryParams: string[] = [];
-        if (top !== undefined) {
-            queryParams.push(`$top=${encodeURIComponent(String(top))}`);
+        if (options.top !== undefined) {
+            queryParams.push(`$top=${encodeURIComponent(String(options.top))}`);
         }
-        if (skip !== undefined) {
-            queryParams.push(`$skip=${encodeURIComponent(String(skip))}`);
+        if (options.skip !== undefined) {
+            queryParams.push(`$skip=${encodeURIComponent(String(options.skip))}`);
         }
-        if (filter !== undefined) {
-            queryParams.push(`$filter=${encodeURIComponent(String(filter))}`);
+        if (options.filter !== undefined) {
+            queryParams.push(`$filter=${encodeURIComponent(String(options.filter))}`);
         }
         const requestPath = `/Databases(${databaseId})/Dimensions` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
@@ -495,16 +691,16 @@ export class JedoxodatahubClient extends ConnectorClientBase {
      * Get elements
      * @remarks Get a list of elements in the given dimension.
      */
-    public async elements(databaseId: string, dimensionId: string, top?: string, skip?: string, filter?: string, options: ConnectorOperationOptions = {}): Promise<ElementsResponse> {
+    public async elements(databaseId: string, dimensionId: string, options: ElementsOptions = {}): Promise<ElementsResponse> {
         const queryParams: string[] = [];
-        if (top !== undefined) {
-            queryParams.push(`$top=${encodeURIComponent(String(top))}`);
+        if (options.top !== undefined) {
+            queryParams.push(`$top=${encodeURIComponent(String(options.top))}`);
         }
-        if (skip !== undefined) {
-            queryParams.push(`$skip=${encodeURIComponent(String(skip))}`);
+        if (options.skip !== undefined) {
+            queryParams.push(`$skip=${encodeURIComponent(String(options.skip))}`);
         }
-        if (filter !== undefined) {
-            queryParams.push(`$filter=${encodeURIComponent(String(filter))}`);
+        if (options.filter !== undefined) {
+            queryParams.push(`$filter=${encodeURIComponent(String(options.filter))}`);
         }
         const requestPath = `/Databases(${databaseId})/Dimensions(${dimensionId})/Elements` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
@@ -529,16 +725,16 @@ export class JedoxodatahubClient extends ConnectorClientBase {
      * Get stored views
      * @remarks Get a list of stored views in the given database.
      */
-    public async views(databaseId: string, top?: string, skip?: string, filter?: string, options: ConnectorOperationOptions = {}): Promise<ViewsResponse> {
+    public async views(databaseId: string, options: ViewsOptions = {}): Promise<ViewsResponse> {
         const queryParams: string[] = [];
-        if (top !== undefined) {
-            queryParams.push(`$top=${encodeURIComponent(String(top))}`);
+        if (options.top !== undefined) {
+            queryParams.push(`$top=${encodeURIComponent(String(options.top))}`);
         }
-        if (skip !== undefined) {
-            queryParams.push(`$skip=${encodeURIComponent(String(skip))}`);
+        if (options.skip !== undefined) {
+            queryParams.push(`$skip=${encodeURIComponent(String(options.skip))}`);
         }
-        if (filter !== undefined) {
-            queryParams.push(`$filter=${encodeURIComponent(String(filter))}`);
+        if (options.filter !== undefined) {
+            queryParams.push(`$filter=${encodeURIComponent(String(options.filter))}`);
         }
         const requestPath = `/Databases(${databaseId})/Views` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
@@ -563,28 +759,28 @@ export class JedoxodatahubClient extends ConnectorClientBase {
      * Get stored view cells
      * @remarks Get all cells from a view. This returns the cells' values and element names. If the cell has a string value, the value is instead stored in the stringValue field. Element names are stored in dynamic properties.
      */
-    public async viewCells(databaseId: string, viewId: string, top?: string, skip?: string, filter?: string, baseonly?: string, userules?: string, zerosupression?: string, disablepaging?: string, options: ConnectorOperationOptions = {}): Promise<ViewCellsResponse> {
+    public async viewCells(databaseId: string, viewId: string, options: ViewCellsOptions = {}): Promise<ViewCellsResponse> {
         const queryParams: string[] = [];
-        if (top !== undefined) {
-            queryParams.push(`$top=${encodeURIComponent(String(top))}`);
+        if (options.top !== undefined) {
+            queryParams.push(`$top=${encodeURIComponent(String(options.top))}`);
         }
-        if (skip !== undefined) {
-            queryParams.push(`$skip=${encodeURIComponent(String(skip))}`);
+        if (options.skip !== undefined) {
+            queryParams.push(`$skip=${encodeURIComponent(String(options.skip))}`);
         }
-        if (filter !== undefined) {
-            queryParams.push(`$filter=${encodeURIComponent(String(filter))}`);
+        if (options.filter !== undefined) {
+            queryParams.push(`$filter=${encodeURIComponent(String(options.filter))}`);
         }
-        if (baseonly !== undefined) {
-            queryParams.push(`baseonly=${encodeURIComponent(String(baseonly))}`);
+        if (options.baseonly !== undefined) {
+            queryParams.push(`baseonly=${encodeURIComponent(String(options.baseonly))}`);
         }
-        if (userules !== undefined) {
-            queryParams.push(`userules=${encodeURIComponent(String(userules))}`);
+        if (options.userules !== undefined) {
+            queryParams.push(`userules=${encodeURIComponent(String(options.userules))}`);
         }
-        if (zerosupression !== undefined) {
-            queryParams.push(`zerosupression=${encodeURIComponent(String(zerosupression))}`);
+        if (options.zerosupression !== undefined) {
+            queryParams.push(`zerosupression=${encodeURIComponent(String(options.zerosupression))}`);
         }
-        if (disablepaging !== undefined) {
-            queryParams.push(`disablepaging=${encodeURIComponent(String(disablepaging))}`);
+        if (options.disablepaging !== undefined) {
+            queryParams.push(`disablepaging=${encodeURIComponent(String(options.disablepaging))}`);
         }
         const requestPath = `/Databases(${databaseId})/Views(${viewId})/Cells` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
@@ -597,16 +793,16 @@ export class JedoxodatahubClient extends ConnectorClientBase {
      * Get Integrator project groups
      * @remarks Get a list of integrator project groups found in the server.
      */
-    public async integratorProjectGroups(top?: string, skip?: string, filter?: string, options: ConnectorOperationOptions = {}): Promise<IntegratorProjectGroupsResponse> {
+    public async integratorProjectGroups(options: IntegratorProjectGroupsOptions = {}): Promise<IntegratorProjectGroupsResponse> {
         const queryParams: string[] = [];
-        if (top !== undefined) {
-            queryParams.push(`$top=${encodeURIComponent(String(top))}`);
+        if (options.top !== undefined) {
+            queryParams.push(`$top=${encodeURIComponent(String(options.top))}`);
         }
-        if (skip !== undefined) {
-            queryParams.push(`$skip=${encodeURIComponent(String(skip))}`);
+        if (options.skip !== undefined) {
+            queryParams.push(`$skip=${encodeURIComponent(String(options.skip))}`);
         }
-        if (filter !== undefined) {
-            queryParams.push(`$filter=${encodeURIComponent(String(filter))}`);
+        if (options.filter !== undefined) {
+            queryParams.push(`$filter=${encodeURIComponent(String(options.filter))}`);
         }
         const requestPath = `/Integrator` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
@@ -631,16 +827,16 @@ export class JedoxodatahubClient extends ConnectorClientBase {
      * Get Integrator projects
      * @remarks Get a list of integrator projects found in the server.
      */
-    public async integratorProjects(groupIdentifier: string, top?: string, skip?: string, filter?: string, options: ConnectorOperationOptions = {}): Promise<IntegratorProjectsResponse> {
+    public async integratorProjects(groupIdentifier: string, options: IntegratorProjectsOptions = {}): Promise<IntegratorProjectsResponse> {
         const queryParams: string[] = [];
-        if (top !== undefined) {
-            queryParams.push(`$top=${encodeURIComponent(String(top))}`);
+        if (options.top !== undefined) {
+            queryParams.push(`$top=${encodeURIComponent(String(options.top))}`);
         }
-        if (skip !== undefined) {
-            queryParams.push(`$skip=${encodeURIComponent(String(skip))}`);
+        if (options.skip !== undefined) {
+            queryParams.push(`$skip=${encodeURIComponent(String(options.skip))}`);
         }
-        if (filter !== undefined) {
-            queryParams.push(`$filter=${encodeURIComponent(String(filter))}`);
+        if (options.filter !== undefined) {
+            queryParams.push(`$filter=${encodeURIComponent(String(options.filter))}`);
         }
         const requestPath = `/Integrator('${groupIdentifier}')/Projects` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
@@ -665,16 +861,16 @@ export class JedoxodatahubClient extends ConnectorClientBase {
      * Get extracts
      * @remarks Get a list of extracts in the given integrator project.
      */
-    public async extracts(groupIdentifier: string, projectName: string, top?: string, skip?: string, filter?: string, options: ConnectorOperationOptions = {}): Promise<ExtractsResponse> {
+    public async extracts(groupIdentifier: string, projectName: string, options: ExtractsOptions = {}): Promise<ExtractsResponse> {
         const queryParams: string[] = [];
-        if (top !== undefined) {
-            queryParams.push(`$top=${encodeURIComponent(String(top))}`);
+        if (options.top !== undefined) {
+            queryParams.push(`$top=${encodeURIComponent(String(options.top))}`);
         }
-        if (skip !== undefined) {
-            queryParams.push(`$skip=${encodeURIComponent(String(skip))}`);
+        if (options.skip !== undefined) {
+            queryParams.push(`$skip=${encodeURIComponent(String(options.skip))}`);
         }
-        if (filter !== undefined) {
-            queryParams.push(`$filter=${encodeURIComponent(String(filter))}`);
+        if (options.filter !== undefined) {
+            queryParams.push(`$filter=${encodeURIComponent(String(options.filter))}`);
         }
         const requestPath = `/Integrator('${groupIdentifier}')/Projects('${projectName}')/Extracts` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
@@ -699,16 +895,16 @@ export class JedoxodatahubClient extends ConnectorClientBase {
      * Get extract rows
      * @remarks Stream the rows of the extract with the given name in the given integrator project.
      */
-    public async extractRows(groupIdentifier: string, projectName: string, extractName: string, top?: string, skip?: string, filter?: string, options: ConnectorOperationOptions = {}): Promise<ExtractRowsResponse> {
+    public async extractRows(groupIdentifier: string, projectName: string, extractName: string, options: ExtractRowsOptions = {}): Promise<ExtractRowsResponse> {
         const queryParams: string[] = [];
-        if (top !== undefined) {
-            queryParams.push(`$top=${encodeURIComponent(String(top))}`);
+        if (options.top !== undefined) {
+            queryParams.push(`$top=${encodeURIComponent(String(options.top))}`);
         }
-        if (skip !== undefined) {
-            queryParams.push(`$skip=${encodeURIComponent(String(skip))}`);
+        if (options.skip !== undefined) {
+            queryParams.push(`$skip=${encodeURIComponent(String(options.skip))}`);
         }
-        if (filter !== undefined) {
-            queryParams.push(`$filter=${encodeURIComponent(String(filter))}`);
+        if (options.filter !== undefined) {
+            queryParams.push(`$filter=${encodeURIComponent(String(options.filter))}`);
         }
         const requestPath = `/Integrator('${groupIdentifier}')/Projects('${projectName}')/Extracts('${extractName}')/Rows` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
@@ -721,16 +917,16 @@ export class JedoxodatahubClient extends ConnectorClientBase {
      * Get jobs
      * @remarks Get a list of jobs in the given integrator project.
      */
-    public async jobs(groupIdentifier: string, projectName: string, top?: string, skip?: string, filter?: string, options: ConnectorOperationOptions = {}): Promise<JobsResponse> {
+    public async jobs(groupIdentifier: string, projectName: string, options: JobsOptions = {}): Promise<JobsResponse> {
         const queryParams: string[] = [];
-        if (top !== undefined) {
-            queryParams.push(`$top=${encodeURIComponent(String(top))}`);
+        if (options.top !== undefined) {
+            queryParams.push(`$top=${encodeURIComponent(String(options.top))}`);
         }
-        if (skip !== undefined) {
-            queryParams.push(`$skip=${encodeURIComponent(String(skip))}`);
+        if (options.skip !== undefined) {
+            queryParams.push(`$skip=${encodeURIComponent(String(options.skip))}`);
         }
-        if (filter !== undefined) {
-            queryParams.push(`$filter=${encodeURIComponent(String(filter))}`);
+        if (options.filter !== undefined) {
+            queryParams.push(`$filter=${encodeURIComponent(String(options.filter))}`);
         }
         const requestPath = `/Integrator('${groupIdentifier}')/Projects('${projectName}')/Jobs` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
@@ -779,16 +975,16 @@ export class JedoxodatahubClient extends ConnectorClientBase {
      * Get loads
      * @remarks Get a list of loads in the given integrator project.
      */
-    public async loads(groupIdentifier: string, projectName: string, top?: string, skip?: string, filter?: string, options: ConnectorOperationOptions = {}): Promise<LoadsResponse> {
+    public async loads(groupIdentifier: string, projectName: string, options: LoadsOptions = {}): Promise<LoadsResponse> {
         const queryParams: string[] = [];
-        if (top !== undefined) {
-            queryParams.push(`$top=${encodeURIComponent(String(top))}`);
+        if (options.top !== undefined) {
+            queryParams.push(`$top=${encodeURIComponent(String(options.top))}`);
         }
-        if (skip !== undefined) {
-            queryParams.push(`$skip=${encodeURIComponent(String(skip))}`);
+        if (options.skip !== undefined) {
+            queryParams.push(`$skip=${encodeURIComponent(String(options.skip))}`);
         }
-        if (filter !== undefined) {
-            queryParams.push(`$filter=${encodeURIComponent(String(filter))}`);
+        if (options.filter !== undefined) {
+            queryParams.push(`$filter=${encodeURIComponent(String(options.filter))}`);
         }
         const requestPath = `/Integrator('${groupIdentifier}')/Projects('${projectName}')/Loads` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
@@ -837,16 +1033,16 @@ export class JedoxodatahubClient extends ConnectorClientBase {
      * Get transforms
      * @remarks Get a list of transforms in the given integrator project.
      */
-    public async transforms(groupIdentifier: string, projectName: string, top?: string, skip?: string, filter?: string, options: ConnectorOperationOptions = {}): Promise<TransformsResponse> {
+    public async transforms(groupIdentifier: string, projectName: string, options: TransformsOptions = {}): Promise<TransformsResponse> {
         const queryParams: string[] = [];
-        if (top !== undefined) {
-            queryParams.push(`$top=${encodeURIComponent(String(top))}`);
+        if (options.top !== undefined) {
+            queryParams.push(`$top=${encodeURIComponent(String(options.top))}`);
         }
-        if (skip !== undefined) {
-            queryParams.push(`$skip=${encodeURIComponent(String(skip))}`);
+        if (options.skip !== undefined) {
+            queryParams.push(`$skip=${encodeURIComponent(String(options.skip))}`);
         }
-        if (filter !== undefined) {
-            queryParams.push(`$filter=${encodeURIComponent(String(filter))}`);
+        if (options.filter !== undefined) {
+            queryParams.push(`$filter=${encodeURIComponent(String(options.filter))}`);
         }
         const requestPath = `/Integrator('${groupIdentifier}')/Projects('${projectName}')/Transforms` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
@@ -871,16 +1067,16 @@ export class JedoxodatahubClient extends ConnectorClientBase {
      * Get transform Rows
      * @remarks Stream the rows of the transform with the given name in the given integrator project.
      */
-    public async transformRows(groupIdentifier: string, projectName: string, transformName: string, top?: string, skip?: string, filter?: string, options: ConnectorOperationOptions = {}): Promise<TransformRowsResponse> {
+    public async transformRows(groupIdentifier: string, projectName: string, transformName: string, options: TransformRowsOptions = {}): Promise<TransformRowsResponse> {
         const queryParams: string[] = [];
-        if (top !== undefined) {
-            queryParams.push(`$top=${encodeURIComponent(String(top))}`);
+        if (options.top !== undefined) {
+            queryParams.push(`$top=${encodeURIComponent(String(options.top))}`);
         }
-        if (skip !== undefined) {
-            queryParams.push(`$skip=${encodeURIComponent(String(skip))}`);
+        if (options.skip !== undefined) {
+            queryParams.push(`$skip=${encodeURIComponent(String(options.skip))}`);
         }
-        if (filter !== undefined) {
-            queryParams.push(`$filter=${encodeURIComponent(String(filter))}`);
+        if (options.filter !== undefined) {
+            queryParams.push(`$filter=${encodeURIComponent(String(options.filter))}`);
         }
         const requestPath = `/Integrator('${groupIdentifier}')/Projects('${projectName}')/Transforms('${transformName}')/Rows` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);

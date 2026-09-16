@@ -45,8 +45,8 @@ export interface TableMetadata {
     title?: string;
     "x-ms-permission"?: string;
     "x-ms-capabilities"?: TableCapabilitiesMetadata;
-    schema?: Record<string, unknown>;
-    referencedEntities?: Record<string, unknown>;
+    schema?: ObjectEntity;
+    referencedEntities?: ObjectEntity;
 }
 
 /**
@@ -158,6 +158,40 @@ export interface ItemsList {
  */
 export interface GetCurrentUserInfoResponse {
     [key: string]: unknown;
+}
+
+/**
+ * Options for the getItems operation.
+ */
+export interface GetItemsOptions extends ConnectorOperationOptions {
+    /** An ODATA filter query to restrict the entries returned (e.g. stringColumn eq 'string' OR numberColumn lt 123). */
+    filter?: string;
+    /** An ODATA orderBy query for specifying the order of entries */
+    orderby?: string;
+    /** Number of entries to skip (default = 0) */
+    skip?: string;
+    /** Maximum number of entries to retrieve (default = 512) */
+    top?: string;
+    /** Specific fields to retrieve from entries (default = all). */
+    select?: string;
+}
+
+/**
+ * Options for the searchArticles operation.
+ */
+export interface SearchArticlesOptions extends ConnectorOperationOptions {
+    /** The locale the item is displayed in */
+    locale?: string;
+    /** Search for articles in the specified brand. */
+    brandId?: string;
+    /** Limit the search to this category id. */
+    category?: string;
+    /** Limit the search to this section id */
+    section?: string;
+    /** A comma-separated list of label names. */
+    labelNames?: string;
+    /** Enable search across all brands if true. */
+    multibrand?: string;
 }
 
 /**
@@ -295,22 +329,22 @@ export class ZendeskClient extends ConnectorClientBase {
      * Get items
      * @remarks Retrieves Zendesk items of a certain Zendesk type (example: 'Ticket')
      */
-    public getItems(table: string, filter?: string, orderby?: string, skip?: string, top?: string, select?: string, options: ConnectorOperationOptions = {}): ConnectorPagedAsyncIterableIterator<Item> {
+    public getItems(table: string, options: GetItemsOptions = {}): ConnectorPagedAsyncIterableIterator<Item> {
         const queryParams: string[] = [];
-        if (filter !== undefined) {
-            queryParams.push(`$filter=${encodeURIComponent(String(filter))}`);
+        if (options.filter !== undefined) {
+            queryParams.push(`$filter=${encodeURIComponent(String(options.filter))}`);
         }
-        if (orderby !== undefined) {
-            queryParams.push(`$orderby=${encodeURIComponent(String(orderby))}`);
+        if (options.orderby !== undefined) {
+            queryParams.push(`$orderby=${encodeURIComponent(String(options.orderby))}`);
         }
-        if (skip !== undefined) {
-            queryParams.push(`$skip=${encodeURIComponent(String(skip))}`);
+        if (options.skip !== undefined) {
+            queryParams.push(`$skip=${encodeURIComponent(String(options.skip))}`);
         }
-        if (top !== undefined) {
-            queryParams.push(`$top=${encodeURIComponent(String(top))}`);
+        if (options.top !== undefined) {
+            queryParams.push(`$top=${encodeURIComponent(String(options.top))}`);
         }
-        if (select !== undefined) {
-            queryParams.push(`$select=${encodeURIComponent(String(select))}`);
+        if (options.select !== undefined) {
+            queryParams.push(`$select=${encodeURIComponent(String(options.select))}`);
         }
         const requestPath = `/datasets/default/tables/${table}/items` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         return this.createPageable<ItemsList, Item>(
@@ -376,28 +410,28 @@ export class ZendeskClient extends ConnectorClientBase {
      * Search Articles
      * @remarks Returns a default number of 25 articles per page, up to a maximum of 1000 results.
      */
-    public async searchArticles(query?: string, locale?: string, brandId?: string, category?: string, section?: string, labelNames?: string, multibrand?: string, options: ConnectorOperationOptions = {}): Promise<SearchResult> {
+    public async searchArticles(query: string, options: SearchArticlesOptions = {}): Promise<SearchResult> {
         const queryParams: string[] = [];
         if (query !== undefined) {
             queryParams.push(`query=${encodeURIComponent(String(query))}`);
         }
-        if (locale !== undefined) {
-            queryParams.push(`locale=${encodeURIComponent(String(locale))}`);
+        if (options.locale !== undefined) {
+            queryParams.push(`locale=${encodeURIComponent(String(options.locale))}`);
         }
-        if (brandId !== undefined) {
-            queryParams.push(`brand_id=${encodeURIComponent(String(brandId))}`);
+        if (options.brandId !== undefined) {
+            queryParams.push(`brand_id=${encodeURIComponent(String(options.brandId))}`);
         }
-        if (category !== undefined) {
-            queryParams.push(`category=${encodeURIComponent(String(category))}`);
+        if (options.category !== undefined) {
+            queryParams.push(`category=${encodeURIComponent(String(options.category))}`);
         }
-        if (section !== undefined) {
-            queryParams.push(`section=${encodeURIComponent(String(section))}`);
+        if (options.section !== undefined) {
+            queryParams.push(`section=${encodeURIComponent(String(options.section))}`);
         }
-        if (labelNames !== undefined) {
-            queryParams.push(`label_names=${encodeURIComponent(String(labelNames))}`);
+        if (options.labelNames !== undefined) {
+            queryParams.push(`label_names=${encodeURIComponent(String(options.labelNames))}`);
         }
-        if (multibrand !== undefined) {
-            queryParams.push(`multibrand=${encodeURIComponent(String(multibrand))}`);
+        if (options.multibrand !== undefined) {
+            queryParams.push(`multibrand=${encodeURIComponent(String(options.multibrand))}`);
         }
         const requestPath = `/api/v2/help_center/articles/search` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
