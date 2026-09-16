@@ -137,7 +137,7 @@ export class ZohosignClient extends ConnectorClientBase {
         if (method !== undefined) {
             queryParams.push(`method=${encodeURIComponent(String(method))}`);
         }
-        const requestPath = `/${url}` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
+        const requestPath = `/${encodeURIComponent(String(url))}` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.sendWithTracingAsync<InvokeAPIResponse>("Zohosign.invokeAPI", "InvokeAPI", "POST", requestUrl, input, options);
 
@@ -148,8 +148,8 @@ export class ZohosignClient extends ConnectorClientBase {
      * Download Completion Certificate
      * @remarks Downloads the completion certificate of a specific envelope
      */
-    public async downloadCompletionCertificate(requestId: string, options: ConnectorOperationOptions = {}): Promise<Blob> {
-        const requestPath = `/requests/${requestId}/completioncertificate`;
+    public async downloadCompletionCertificate(requestId: number, options: ConnectorOperationOptions = {}): Promise<Blob> {
+        const requestPath = `/requests/${encodeURIComponent(String(requestId))}/completioncertificate`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.sendWithTracingAsync<Blob>("Zohosign.downloadCompletionCertificate", "download-completion-certificate", "GET", requestUrl, undefined, options);
 
@@ -160,8 +160,8 @@ export class ZohosignClient extends ConnectorClientBase {
      * Download Document
      * @remarks Downloads a specific envelope
      */
-    public async downloadDocument(requestId: string, options: ConnectorOperationOptions = {}): Promise<Blob> {
-        const requestPath = `/requests/${requestId}/pdf`;
+    public async downloadDocument(requestId: number, options: ConnectorOperationOptions = {}): Promise<Blob> {
+        const requestPath = `/requests/${encodeURIComponent(String(requestId))}/pdf`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.sendWithTracingAsync<Blob>("Zohosign.downloadDocument", "download-document", "GET", requestUrl, undefined, options);
 
@@ -172,8 +172,8 @@ export class ZohosignClient extends ConnectorClientBase {
      * Download File
      * @remarks Downloads a specific document or file
      */
-    public async downloadFile(requestId: string, documentId: string, options: ConnectorOperationOptions = {}): Promise<Blob> {
-        const requestPath = `/requests/${requestId}/documents/${documentId}/pdf`;
+    public async downloadFile(requestId: number, documentId: number, options: ConnectorOperationOptions = {}): Promise<Blob> {
+        const requestPath = `/requests/${encodeURIComponent(String(requestId))}/documents/${encodeURIComponent(String(documentId))}/pdf`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.sendWithTracingAsync<Blob>("Zohosign.downloadFile", "download-file", "GET", requestUrl, undefined, options);
 
@@ -184,8 +184,8 @@ export class ZohosignClient extends ConnectorClientBase {
      * Get data of completed request
      * @remarks Shows the details of a signed envelope
      */
-    public async getFormData(requestId: string, options: ConnectorOperationOptions = {}): Promise<GetFormDataResponse> {
-        const requestPath = `/requests/${requestId}/fielddata`;
+    public async getFormData(requestId: number, options: ConnectorOperationOptions = {}): Promise<GetFormDataResponse> {
+        const requestPath = `/requests/${encodeURIComponent(String(requestId))}/fielddata`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.sendWithTracingAsync<GetFormDataResponse>("Zohosign.getFormData", "get-form-data", "GET", requestUrl, undefined, options);
 
@@ -196,8 +196,8 @@ export class ZohosignClient extends ConnectorClientBase {
      * Recall a particular document
      * @remarks Recall a particular document
      */
-    public async recallDocument(requestId: string, options: ConnectorOperationOptions = {}): Promise<void> {
-        const requestPath = `/requests/${requestId}/recall`;
+    public async recallDocument(requestId: number, options: ConnectorOperationOptions = {}): Promise<void> {
+        const requestPath = `/requests/${encodeURIComponent(String(requestId))}/recall`;
         const requestUrl = this.resolveUrl(requestPath);
         await this.sendWithTracingAsync<void>("Zohosign.recallDocument", "recall-document", "POST", requestUrl, undefined, options);
     }
@@ -206,8 +206,8 @@ export class ZohosignClient extends ConnectorClientBase {
      * Reminder for recipients
      * @remarks Send a reminder to recipients of a particular document.
      */
-    public async remindDocumentRecipients(requestId: string, options: ConnectorOperationOptions = {}): Promise<void> {
-        const requestPath = `/requests/${requestId}/remind`;
+    public async remindDocumentRecipients(requestId: number, options: ConnectorOperationOptions = {}): Promise<void> {
+        const requestPath = `/requests/${encodeURIComponent(String(requestId))}/remind`;
         const requestUrl = this.resolveUrl(requestPath);
         await this.sendWithTracingAsync<void>("Zohosign.remindDocumentRecipients", "remind-document-recipients", "POST", requestUrl, undefined, options);
     }
@@ -216,8 +216,8 @@ export class ZohosignClient extends ConnectorClientBase {
      * Delete Document
      * @remarks Delete a particular document
      */
-    public async deleteDocument(requestId: string, options: ConnectorOperationOptions = {}): Promise<void> {
-        const requestPath = `/requests/${requestId}/delete`;
+    public async deleteDocument(requestId: number, options: ConnectorOperationOptions = {}): Promise<void> {
+        const requestPath = `/requests/${encodeURIComponent(String(requestId))}/delete`;
         const requestUrl = this.resolveUrl(requestPath);
         await this.sendWithTracingAsync<void>("Zohosign.deleteDocument", "delete-document", "PUT", requestUrl, undefined, options);
     }
@@ -226,8 +226,8 @@ export class ZohosignClient extends ConnectorClientBase {
      * Get a document
      * @remarks Shows the details of a specific envelope
      */
-    public async getDocument(requestId: string, options: ConnectorOperationOptions = {}): Promise<GetDocumentResponse> {
-        const requestPath = `/requests/${requestId}`;
+    public async getDocument(requestId: number, options: ConnectorOperationOptions = {}): Promise<GetDocumentResponse> {
+        const requestPath = `/requests/${encodeURIComponent(String(requestId))}`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.sendWithTracingAsync<GetDocumentResponse>("Zohosign.getDocument", "get-document", "GET", requestUrl, undefined, options);
 
@@ -239,7 +239,7 @@ export class ZohosignClient extends ConnectorClientBase {
      * @remarks Update the properties of a created request
      */
     public async updateDocument(input: UpdateDocumentInput, requestId: string, options: ConnectorOperationOptions = {}): Promise<UpdateDocumentResponse> {
-        const requestPath = `/requests/${requestId}`;
+        const requestPath = `/requests/${encodeURIComponent(String(requestId))}`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.sendWithTracingAsync<UpdateDocumentResponse>("Zohosign.updateDocument", "UpdateDocument", "PUT", requestUrl, input, options);
 
@@ -251,7 +251,7 @@ export class ZohosignClient extends ConnectorClientBase {
      * @remarks Send the uploaded document out for signature
      */
     public async sendSignRequest(requestId: string, options: ConnectorOperationOptions = {}): Promise<SendSignRequestResponse> {
-        const requestPath = `/requests/${requestId}/submit`;
+        const requestPath = `/requests/${encodeURIComponent(String(requestId))}/submit`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.sendWithTracingAsync<SendSignRequestResponse>("Zohosign.sendSignRequest", "SendSignRequest", "POST", requestUrl, undefined, options);
 
@@ -263,7 +263,7 @@ export class ZohosignClient extends ConnectorClientBase {
      * @remarks Shows the details of a specific document template
      */
     public async getTemplateDetails(templateId: string, options: ConnectorOperationOptions = {}): Promise<void> {
-        const requestPath = `/templates/${templateId}`;
+        const requestPath = `/templates/${encodeURIComponent(String(templateId))}`;
         const requestUrl = this.resolveUrl(requestPath);
         await this.sendWithTracingAsync<void>("Zohosign.getTemplateDetails", "get-template-details", "GET", requestUrl, undefined, options);
     }

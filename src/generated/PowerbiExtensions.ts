@@ -965,7 +965,7 @@ export class PowerbiClient extends ConnectorClientBase {
         if (options.pbiSource !== undefined) {
             queryParams.push(`pbi_source=${encodeURIComponent(String(options.pbiSource))}`);
         }
-        const requestPath = `/v1.0/myOrg/groups/${groupid}/internalScorecards` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
+        const requestPath = `/v1.0/myOrg/groups/${encodeURIComponent(String(groupid))}/internalScorecards` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.sendWithTracingAsync<ListedScorecards>("Powerbi.getScorecards", "GetScorecards", "GET", requestUrl, undefined, options);
 
@@ -981,7 +981,7 @@ export class PowerbiClient extends ConnectorClientBase {
         if (options.pbiSource !== undefined) {
             queryParams.push(`pbi_source=${encodeURIComponent(String(options.pbiSource))}`);
         }
-        const requestPath = `/v1.0/myOrg/groups/${groupid}/internalScorecards` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
+        const requestPath = `/v1.0/myOrg/groups/${encodeURIComponent(String(groupid))}/internalScorecards` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.sendWithTracingAsync<CreatedScorecard>("Powerbi.createScorecard", "CreateScorecard", "POST", requestUrl, input, options);
 
@@ -1000,7 +1000,7 @@ export class PowerbiClient extends ConnectorClientBase {
         if (options.pbiSource !== undefined) {
             queryParams.push(`pbi_source=${encodeURIComponent(String(options.pbiSource))}`);
         }
-        const requestPath = `/v1.0/myOrg/groups/${groupid}/internalScorecards(${scorecardId})/goals` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
+        const requestPath = `/v1.0/myOrg/groups/${encodeURIComponent(String(groupid))}/internalScorecards(${encodeURIComponent(String(scorecardId))})/goals` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.sendWithTracingAsync<FetchedGoals>("Powerbi.getMultipleGoals", "GetMultipleGoals", "GET", requestUrl, undefined, options);
 
@@ -1016,7 +1016,7 @@ export class PowerbiClient extends ConnectorClientBase {
         if (options.pbiSource !== undefined) {
             queryParams.push(`pbi_source=${encodeURIComponent(String(options.pbiSource))}`);
         }
-        const requestPath = `/v1.0/myOrg/groups/${groupid}/internalScorecards(${scorecardId})/goals` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
+        const requestPath = `/v1.0/myOrg/groups/${encodeURIComponent(String(groupid))}/internalScorecards(${encodeURIComponent(String(scorecardId))})/goals` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.sendWithTracingAsync<CreateGoalResponse>("Powerbi.createGoal", "CreateGoal", "POST", requestUrl, input, options);
 
@@ -1035,7 +1035,7 @@ export class PowerbiClient extends ConnectorClientBase {
         if (expand !== undefined) {
             queryParams.push(`$expand=${encodeURIComponent(String(expand))}`);
         }
-        const requestPath = `/v1.0/myOrg/groups/${groupid}/internalScorecards(${scorecardId})/goals(${goalId})` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
+        const requestPath = `/v1.0/myOrg/groups/${encodeURIComponent(String(groupid))}/internalScorecards(${encodeURIComponent(String(scorecardId))})/goals(${encodeURIComponent(String(goalId))})` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.sendWithTracingAsync<FetchedGoal>("Powerbi.getGoal", "GetGoal", "GET", requestUrl, undefined, options);
 
@@ -1051,7 +1051,7 @@ export class PowerbiClient extends ConnectorClientBase {
         if (options.pbiSource !== undefined) {
             queryParams.push(`pbi_source=${encodeURIComponent(String(options.pbiSource))}`);
         }
-        const requestPath = `/v1.0/myOrg/groups/${groupid}/internalScorecards(${scorecardId})/goals(${goalId})` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
+        const requestPath = `/v1.0/myOrg/groups/${encodeURIComponent(String(groupid))}/internalScorecards(${encodeURIComponent(String(scorecardId))})/goals(${encodeURIComponent(String(goalId))})` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
         await this.sendWithTracingAsync<void>("Powerbi.updateGoal", "UpdateGoal", "PATCH", requestUrl, input, options);
     }
@@ -1065,7 +1065,7 @@ export class PowerbiClient extends ConnectorClientBase {
         if (options.pbiSource !== undefined) {
             queryParams.push(`pbi_source=${encodeURIComponent(String(options.pbiSource))}`);
         }
-        const requestPath = `/v1.0/myorg/groups/${groupid}/datasets/${datasetid}/executeQueries` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
+        const requestPath = `/v1.0/myorg/groups/${encodeURIComponent(String(groupid))}/datasets/${encodeURIComponent(String(datasetid))}/executeQueries` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.sendWithTracingAsync<QueryExecutionResults>("Powerbi.executeDatasetQuery", "ExecuteDatasetQuery", "POST", requestUrl, input, options);
 
@@ -1081,7 +1081,7 @@ export class PowerbiClient extends ConnectorClientBase {
         if (options.pbiSource !== undefined) {
             queryParams.push(`pbi_source=${encodeURIComponent(String(options.pbiSource))}`);
         }
-        const requestPath = `/internalFlowActionOverloadAsJson/v1.0/myorg/groups/${groupid}/datasets/${datasetid}/executeQueries` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
+        const requestPath = `/internalFlowActionOverloadAsJson/v1.0/myorg/groups/${encodeURIComponent(String(groupid))}/datasets/${encodeURIComponent(String(datasetid))}/executeQueries` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.sendWithTracingAsync<ExecuteDatasetQueriesJsonResponse>("Powerbi.executeDatasetQueriesJson", "ExecuteDatasetQueriesJson", "POST", requestUrl, input, options);
 
@@ -1097,7 +1097,7 @@ export class PowerbiClient extends ConnectorClientBase {
         if (options.pbiSource !== undefined) {
             queryParams.push(`pbi_source=${encodeURIComponent(String(options.pbiSource))}`);
         }
-        const requestPath = `/v1.0/myorg/groups/${groupid}/datasets/${datasetid}/tables/${tablename}/rows` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
+        const requestPath = `/v1.0/myorg/groups/${encodeURIComponent(String(groupid))}/datasets/${encodeURIComponent(String(datasetid))}/tables/${encodeURIComponent(String(tablename))}/rows` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
         await this.sendWithTracingAsync<void>("Powerbi.addRows", "AddRows", "POST", requestUrl, input, options);
     }
@@ -1111,7 +1111,7 @@ export class PowerbiClient extends ConnectorClientBase {
         if (options.pbiSource !== undefined) {
             queryParams.push(`pbi_source=${encodeURIComponent(String(options.pbiSource))}`);
         }
-        const requestPath = `/v1.0/myorg/groups/${groupid}/internalScorecards(${scorecardId})/goals(${goalId})/goalValues(${goalCheckin})/notes` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
+        const requestPath = `/v1.0/myorg/groups/${encodeURIComponent(String(groupid))}/internalScorecards(${encodeURIComponent(String(scorecardId))})/goals(${encodeURIComponent(String(goalId))})/goalValues(${encodeURIComponent(String(goalCheckin))})/notes` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
         await this.sendWithTracingAsync<void>("Powerbi.goalValueCheckinNote", "GoalValueCheckinNote", "POST", requestUrl, input, options);
     }
@@ -1125,7 +1125,7 @@ export class PowerbiClient extends ConnectorClientBase {
         if (options.pbiSource !== undefined) {
             queryParams.push(`pbi_source=${encodeURIComponent(String(options.pbiSource))}`);
         }
-        const requestPath = `/v1.0/myorg/groups/${groupid}/internalScorecards(${scorecardId})/goals(${goalId})/goalValues` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
+        const requestPath = `/v1.0/myorg/groups/${encodeURIComponent(String(groupid))}/internalScorecards(${encodeURIComponent(String(scorecardId))})/goals(${encodeURIComponent(String(goalId))})/goalValues` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
         await this.sendWithTracingAsync<void>("Powerbi.goalValueCheckin", "GoalValueCheckin", "POST", requestUrl, input, options);
     }
@@ -1142,7 +1142,7 @@ export class PowerbiClient extends ConnectorClientBase {
         if (expand !== undefined) {
             queryParams.push(`$expand=${encodeURIComponent(String(expand))}`);
         }
-        const requestPath = `/v1.0/myorg/groups/${groupid}/internalScorecards(${scorecardId})/goals(${goalId})/goalValues` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
+        const requestPath = `/v1.0/myorg/groups/${encodeURIComponent(String(groupid))}/internalScorecards(${encodeURIComponent(String(scorecardId))})/goals(${encodeURIComponent(String(goalId))})/goalValues` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.sendWithTracingAsync<GetGoalCheckinsResponse>("Powerbi.getGoalCheckins", "GetGoalCheckins", "GET", requestUrl, undefined, options);
 
@@ -1158,7 +1158,7 @@ export class PowerbiClient extends ConnectorClientBase {
         if (options.pbiSource !== undefined) {
             queryParams.push(`pbi_source=${encodeURIComponent(String(options.pbiSource))}`);
         }
-        const requestPath = `/v1.0/myorg/groups/${groupid}/internalScorecards(${scorecardId})/goals(${goalId})/goalValues(${goalCheckin})` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
+        const requestPath = `/v1.0/myorg/groups/${encodeURIComponent(String(groupid))}/internalScorecards(${encodeURIComponent(String(scorecardId))})/goals(${encodeURIComponent(String(goalId))})/goalValues(${encodeURIComponent(String(goalCheckin))})` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
         await this.sendWithTracingAsync<void>("Powerbi.updateGoalCheckin", "UpdateGoalCheckin", "PATCH", requestUrl, input, options);
     }
@@ -1175,7 +1175,7 @@ export class PowerbiClient extends ConnectorClientBase {
         if (expand !== undefined) {
             queryParams.push(`$expand=${encodeURIComponent(String(expand))}`);
         }
-        const requestPath = `/v1.0/myorg/groups/${groupid}/internalScorecards(${scorecardId})/goals(${goalId})/goalValues(${goalCheckin})` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
+        const requestPath = `/v1.0/myorg/groups/${encodeURIComponent(String(groupid))}/internalScorecards(${encodeURIComponent(String(scorecardId))})/goals(${encodeURIComponent(String(goalId))})/goalValues(${encodeURIComponent(String(goalCheckin))})` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.sendWithTracingAsync<GetGoalCheckinResponse>("Powerbi.getGoalCheckin", "GetGoalCheckin", "GET", requestUrl, undefined, options);
 
@@ -1191,7 +1191,7 @@ export class PowerbiClient extends ConnectorClientBase {
         if (options.pbiSource !== undefined) {
             queryParams.push(`pbi_source=${encodeURIComponent(String(options.pbiSource))}`);
         }
-        const requestPath = `/v1.0/myorg/groups/${groupid}/datasets/${datasetid}/refreshes` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
+        const requestPath = `/v1.0/myorg/groups/${encodeURIComponent(String(groupid))}/datasets/${encodeURIComponent(String(datasetid))}/refreshes` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
         await this.sendWithTracingAsync<void>("Powerbi.refreshDataset", "RefreshDataset", "POST", requestUrl, undefined, options);
     }
@@ -1201,7 +1201,7 @@ export class PowerbiClient extends ConnectorClientBase {
      * @remarks Use Power BI Rest API to inititate export for Power BI reports
      */
     public async exportInitiateToFileForPbiReports(input: ExportPayloadPowerBIReport, groupid: string, reportid: string, options: ConnectorOperationOptions = {}): Promise<Blob> {
-        const requestPath = `/v1.0/myorg/groups/${groupid}/reports/${reportid}/ExportTo`;
+        const requestPath = `/v1.0/myorg/groups/${encodeURIComponent(String(groupid))}/reports/${encodeURIComponent(String(reportid))}/ExportTo`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.sendWithTracingAsync<Blob>("Powerbi.exportInitiateToFileForPbiReports", "InitiateExportToFileForPbiReports", "POST", requestUrl, input, options);
 
@@ -1213,7 +1213,7 @@ export class PowerbiClient extends ConnectorClientBase {
      * @remarks Use Power BI Rest API to inititate export for paginated reports
      */
     public async exportInitiateToFileForPaginatedReports(input: ExportPayloadPaginatedReport, groupid: string, reportid: string, options: ConnectorOperationOptions = {}): Promise<Blob> {
-        const requestPath = `/v1.0/myorg/groups/${groupid}/reports/${reportid}/ExportToPaginatedReports`;
+        const requestPath = `/v1.0/myorg/groups/${encodeURIComponent(String(groupid))}/reports/${encodeURIComponent(String(reportid))}/ExportToPaginatedReports`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.sendWithTracingAsync<Blob>("Powerbi.exportInitiateToFileForPaginatedReports", "InitiateExportToFileForPaginatedReports", "POST", requestUrl, input, options);
 

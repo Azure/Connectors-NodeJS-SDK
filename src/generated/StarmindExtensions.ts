@@ -101,7 +101,48 @@ export interface Question {
  * Definition: QuestionComplete
  */
 export interface QuestionComplete {
-    [key: string]: unknown;
+    /** The unique knowledge space id to which the question belongs. */
+    knowledge_space_id?: number;
+    /** The total number of upvotes the question has received. */
+    upvote_count?: number;
+    /** The number of times the question has been viewed by users. */
+    view_count?: number;
+    /** Timestamp indicating when the question was published (yyyy-MM-ddTHH:mm:ss.fffZ) */
+    published?: string;
+    /** Indicates if the question is deleted. Deleted questions are not visible to users, but can still be accessed by the administrators. */
+    is_deleted?: boolean;
+    /** The question title */
+    title?: string;
+    /** Timestamp indicating the last activity with the question (yyyy-MM-ddTHH:mm:ss.fffZ) */
+    last_activity?: string;
+    /** The question is_published flag indicates whether the question is published or not. A published solution is visible to all users, while an unpublished solution is in draft state only visible to the author. */
+    is_published?: boolean;
+    /** Timestamp indicating when the question was created (yyyy-MM-ddTHH:mm:ss.fffZ) */
+    created?: string;
+    /** Question description providing detailed context and information about the question */
+    description?: string;
+    /** This is the number of solutions that have been provided for this question. */
+    solution_count?: number;
+    /** Timestamp indicating when the question's content or attachments were last updated (yyyy-MM-ddTHH:mm:ss.fffZ) */
+    content_updated?: string;
+    /** The unique question id */
+    id?: number;
+    /** Last time the resource has been updated in the DB. This date does not reflect content updates but any update to any fields of the record. Use content_updated for information about content updates. */
+    updated?: string;
+    /** The question language */
+    language?: string;
+    /** source */
+    source?: string;
+    /** The assigned question concepts */
+    concepts?: Array<ConceptLabelMatch>;
+    /** The assigned question knowledge space */
+    knowledge_space?: KnowledgeSpace;
+    /** The question solutions */
+    solutions?: Array<Solution>;
+    /** The question attachments */
+    attachments?: Array<Attachment>;
+    /** The question comments */
+    comments?: Array<Comment>;
 }
 
 /**
@@ -350,7 +391,7 @@ export interface FindQuestionsOptions extends ConnectorOperationOptions {
     /** The question search query */
     query?: string;
     /** Limit the number of returned questions. Defaults to 10. */
-    limit?: string;
+    limit?: number;
     /** Filter the list of questions using a predefined filter. */
     filter?: string;
     /** Specify the criteria the result is sorted by */
@@ -421,7 +462,7 @@ export class StarmindClient extends ConnectorClientBase {
      * @remarks Retrieves user information based on the provided user id.
      */
     public async getUserById(id: string, options: ConnectorOperationOptions = {}): Promise<GraphQLUserResponse> {
-        const requestPath = `/api/v3/users/${id}`;
+        const requestPath = `/api/v3/users/${encodeURIComponent(String(id))}`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.sendWithTracingAsync<GraphQLUserResponse>("Starmind.getUserById", "GetUserById_V3", "GET", requestUrl, undefined, options);
 
@@ -444,8 +485,8 @@ export class StarmindClient extends ConnectorClientBase {
      * Publish a question
      * @remarks Publishes a question draft. Publishing the question triggers expert search, makes the question discoverable, and allows other users to answer it. Questions are always published anonymously.
      */
-    public async publishQuestionDraft(questionId: string, options: ConnectorOperationOptions = {}): Promise<PublishQuestionDraftResponse> {
-        const requestPath = `/api/v3/questions/${questionId}/publish`;
+    public async publishQuestionDraft(questionId: number, options: ConnectorOperationOptions = {}): Promise<PublishQuestionDraftResponse> {
+        const requestPath = `/api/v3/questions/${encodeURIComponent(String(questionId))}/publish`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.sendWithTracingAsync<PublishQuestionDraftResponse>("Starmind.publishQuestionDraft", "PublishQuestionDraft_V3", "PUT", requestUrl, undefined, options);
 

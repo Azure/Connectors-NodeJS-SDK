@@ -68,7 +68,7 @@ describe("ProjectplaceClient — createCard", () => {
         mockFetchResponse(response);
 
         const client = new ProjectplaceClient(TestConnectionUrl, createMockCredential());
-        const result = await client.createCard({ title: "Design review" }, "123");
+        const result = await client.createCard({ title: "Design review" }, 123);
 
         expect(result).toEqual(response);
         expect(global.fetch).toHaveBeenCalledTimes(1);
@@ -82,7 +82,7 @@ describe("ProjectplaceClient — createCard", () => {
 
         const client = new ProjectplaceClient(TestConnectionUrl, createMockCredential());
         try {
-            await client.createCard({ title: "Design review" }, "123");
+            await client.createCard({ title: "Design review" }, 123);
             throw new Error("Expected ConnectorError to be thrown.");
         } catch (error) {
             expect(error).toBeInstanceOf(ConnectorError);

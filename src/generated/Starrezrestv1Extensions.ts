@@ -3950,8 +3950,8 @@ export class Starrezrestv1Client extends ConnectorClientBase {
      * Update Entry
      * @remarks Updates an existing record in the Entry table.
      */
-    public async updateEntry(input: UpdateEntryInput, entryId: string, options: ConnectorOperationOptions = {}): Promise<UpdateEntryResponse> {
-        const requestPath = `/update/entry.json/${entryId}`;
+    public async updateEntry(input: UpdateEntryInput, entryId: number, options: ConnectorOperationOptions = {}): Promise<UpdateEntryResponse> {
+        const requestPath = `/update/entry.json/${encodeURIComponent(String(entryId))}`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.sendWithTracingAsync<UpdateEntryResponse>("Starrezrestv1.updateEntry", "UpdateEntry", "POST", requestUrl, input, options);
 
@@ -3962,8 +3962,8 @@ export class Starrezrestv1Client extends ConnectorClientBase {
      * Delete
      * @remarks Deletes a record from the specified table.
      */
-    public async delete(tableName: string, rowId: string, options: ConnectorOperationOptions = {}): Promise<DeleteResponse> {
-        const requestPath = `/delete/${tableName}.json/${rowId}`;
+    public async delete(tableName: string, rowId: number, options: ConnectorOperationOptions = {}): Promise<DeleteResponse> {
+        const requestPath = `/delete/${encodeURIComponent(String(tableName))}.json/${encodeURIComponent(String(rowId))}`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.sendWithTracingAsync<DeleteResponse>("Starrezrestv1.delete", "Delete", "POST", requestUrl, undefined, options);
 
@@ -3986,8 +3986,8 @@ export class Starrezrestv1Client extends ConnectorClientBase {
      * Update Entry Custom Field
      * @remarks Updates an existing record in the Entry Custom Field table.
      */
-    public async updateEntryCustomField(input: UpdateEntryCustomFieldInput, entryCustomFieldId: string, options: ConnectorOperationOptions = {}): Promise<UpdateEntryCustomFieldResponse> {
-        const requestPath = `/update/entryCustomField.json/${entryCustomFieldId}`;
+    public async updateEntryCustomField(input: UpdateEntryCustomFieldInput, entryCustomFieldId: number, options: ConnectorOperationOptions = {}): Promise<UpdateEntryCustomFieldResponse> {
+        const requestPath = `/update/entryCustomField.json/${encodeURIComponent(String(entryCustomFieldId))}`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.sendWithTracingAsync<UpdateEntryCustomFieldResponse>("Starrezrestv1.updateEntryCustomField", "UpdateEntryCustomField", "POST", requestUrl, input, options);
 
@@ -4022,8 +4022,8 @@ export class Starrezrestv1Client extends ConnectorClientBase {
      * Update Entry Address
      * @remarks Updates an existing record in the Entry Address table.
      */
-    public async updateEntryAddress(input: UpdateEntryAddressInput, entryAddressId: string, options: ConnectorOperationOptions = {}): Promise<UpdateEntryAddressResponse> {
-        const requestPath = `/update/entryAddress.json/${entryAddressId}`;
+    public async updateEntryAddress(input: UpdateEntryAddressInput, entryAddressId: number, options: ConnectorOperationOptions = {}): Promise<UpdateEntryAddressResponse> {
+        const requestPath = `/update/entryAddress.json/${encodeURIComponent(String(entryAddressId))}`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.sendWithTracingAsync<UpdateEntryAddressResponse>("Starrezrestv1.updateEntryAddress", "UpdateEntryAddress", "POST", requestUrl, input, options);
 
@@ -4058,8 +4058,8 @@ export class Starrezrestv1Client extends ConnectorClientBase {
      * Update Entry Application
      * @remarks Updates an existing record in the Entry Application table.
      */
-    public async updateEntryApplication(input: UpdateEntryApplicationInput, entryApplicationId: string, options: ConnectorOperationOptions = {}): Promise<UpdateEntryApplicationResponse> {
-        const requestPath = `/update/entryapplication.json/${entryApplicationId}`;
+    public async updateEntryApplication(input: UpdateEntryApplicationInput, entryApplicationId: number, options: ConnectorOperationOptions = {}): Promise<UpdateEntryApplicationResponse> {
+        const requestPath = `/update/entryapplication.json/${encodeURIComponent(String(entryApplicationId))}`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.sendWithTracingAsync<UpdateEntryApplicationResponse>("Starrezrestv1.updateEntryApplication", "UpdateEntryApplication", "POST", requestUrl, input, options);
 
@@ -4094,8 +4094,8 @@ export class Starrezrestv1Client extends ConnectorClientBase {
      * Update Entry Detail
      * @remarks Updates an existing record in the Entry Detail table.
      */
-    public async updateEntryDetail(input: UpdateEntryDetailInput, entryDetailId: string, options: ConnectorOperationOptions = {}): Promise<UpdateEntryDetailResponse> {
-        const requestPath = `/update/entrydetail.json/${entryDetailId}`;
+    public async updateEntryDetail(input: UpdateEntryDetailInput, entryDetailId: number, options: ConnectorOperationOptions = {}): Promise<UpdateEntryDetailResponse> {
+        const requestPath = `/update/entrydetail.json/${encodeURIComponent(String(entryDetailId))}`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.sendWithTracingAsync<UpdateEntryDetailResponse>("Starrezrestv1.updateEntryDetail", "UpdateEntryDetail", "POST", requestUrl, input, options);
 
@@ -4130,8 +4130,8 @@ export class Starrezrestv1Client extends ConnectorClientBase {
      * Update Entry Enrollment
      * @remarks Updates an existing record in the Entry Enrollment table.
      */
-    public async updateEntryEnrollment(input: UpdateEntryEnrollmentInput, entryEnrollmentId: string, options: ConnectorOperationOptions = {}): Promise<UpdateEntryEnrollmentResponse> {
-        const requestPath = `/update/entryenrollment.json/${entryEnrollmentId}`;
+    public async updateEntryEnrollment(input: UpdateEntryEnrollmentInput, entryEnrollmentId: number, options: ConnectorOperationOptions = {}): Promise<UpdateEntryEnrollmentResponse> {
+        const requestPath = `/update/entryenrollment.json/${encodeURIComponent(String(entryEnrollmentId))}`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.sendWithTracingAsync<UpdateEntryEnrollmentResponse>("Starrezrestv1.updateEntryEnrollment", "UpdateEntryEnrollment", "POST", requestUrl, input, options);
 
@@ -4166,8 +4166,8 @@ export class Starrezrestv1Client extends ConnectorClientBase {
      * Update Booking
      * @remarks Updates an existing record in the Booking table.
      */
-    public async updateBooking(input: UpdateBookingInput, bookingId: string, options: ConnectorOperationOptions = {}): Promise<UpdateBookingResponse> {
-        const requestPath = `/update/booking.json/${bookingId}`;
+    public async updateBooking(input: UpdateBookingInput, bookingId: number, options: ConnectorOperationOptions = {}): Promise<UpdateBookingResponse> {
+        const requestPath = `/update/booking.json/${encodeURIComponent(String(bookingId))}`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.sendWithTracingAsync<UpdateBookingResponse>("Starrezrestv1.updateBooking", "UpdateBooking", "POST", requestUrl, input, options);
 
@@ -4262,8 +4262,8 @@ export class Starrezrestv1Client extends ConnectorClientBase {
      * Update Room Space Maintenance
      * @remarks Updates an existing record in the Room Space Maintenance table.
      */
-    public async updateRoomSpaceMaintenance(input: UpdateRoomSpaceMaintenanceInput, roomSpaceMaintenanceId: string, options: ConnectorOperationOptions = {}): Promise<UpdateRoomSpaceMaintenanceResponse> {
-        const requestPath = `/update/roomspacemaintenance.json/${roomSpaceMaintenanceId}`;
+    public async updateRoomSpaceMaintenance(input: UpdateRoomSpaceMaintenanceInput, roomSpaceMaintenanceId: number, options: ConnectorOperationOptions = {}): Promise<UpdateRoomSpaceMaintenanceResponse> {
+        const requestPath = `/update/roomspacemaintenance.json/${encodeURIComponent(String(roomSpaceMaintenanceId))}`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.sendWithTracingAsync<UpdateRoomSpaceMaintenanceResponse>("Starrezrestv1.updateRoomSpaceMaintenance", "UpdateRoomSpaceMaintenance", "POST", requestUrl, input, options);
 

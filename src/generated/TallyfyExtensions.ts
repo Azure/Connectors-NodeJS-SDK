@@ -1195,9 +1195,9 @@ export interface GetUserTasksOptions extends ConnectorOperationOptions {
     /** Search Tasks by Tag name */
     tag?: string;
     /** Which results page to retrieve. Default is 1 */
-    page?: string;
+    page?: number;
     /** How many Tasks per page. Default is 10 */
-    perPage?: string;
+    perPage?: number;
 }
 // #endregion Types
 
@@ -1226,7 +1226,7 @@ export class TallyfyClient extends ConnectorClientBase {
      * Get a member's tasks
      * @remarks Get all tasks that belong to a specific member
      */
-    public async getUserTasks(org: string, userId: string, options: GetUserTasksOptions = {}): Promise<GetUserTasksResponse> {
+    public async getUserTasks(org: string, userId: number, options: GetUserTasksOptions = {}): Promise<GetUserTasksResponse> {
         const queryParams: string[] = [];
         if (options.q !== undefined) {
             queryParams.push(`q=${encodeURIComponent(String(options.q))}`);
@@ -1249,7 +1249,7 @@ export class TallyfyClient extends ConnectorClientBase {
         if (options.perPage !== undefined) {
             queryParams.push(`per_page=${encodeURIComponent(String(options.perPage))}`);
         }
-        const requestPath = `/organizations/${org}/users/${userId}/tasks` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
+        const requestPath = `/organizations/${encodeURIComponent(String(org))}/users/${encodeURIComponent(String(userId))}/tasks` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.sendWithTracingAsync<GetUserTasksResponse>("Tallyfy.getUserTasks", "Get_User_Tasks", "GET", requestUrl, undefined, options);
 
@@ -1261,7 +1261,7 @@ export class TallyfyClient extends ConnectorClientBase {
      * @remarks Invite a new member to your organization
      */
     public async inviteUserToOrganization(input: InviteUserToOrganizationInput, org: string, options: ConnectorOperationOptions = {}): Promise<InviteUserToOrganizationResponse> {
-        const requestPath = `/organizations/${org}/users/invite`;
+        const requestPath = `/organizations/${encodeURIComponent(String(org))}/users/invite`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.sendWithTracingAsync<InviteUserToOrganizationResponse>("Tallyfy.inviteUserToOrganization", "Invite_User_To_Organization", "POST", requestUrl, input, options);
 
@@ -1273,7 +1273,7 @@ export class TallyfyClient extends ConnectorClientBase {
      * @remarks Launch a process using a blueprint
      */
     public async runCreate(input: CreateRunInput, org: string, options: ConnectorOperationOptions = {}): Promise<CreateRunResponse> {
-        const requestPath = `/organizations/${org}/runs`;
+        const requestPath = `/organizations/${encodeURIComponent(String(org))}/runs`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.sendWithTracingAsync<CreateRunResponse>("Tallyfy.runCreate", "Create_Run", "POST", requestUrl, input, options);
 
@@ -1285,7 +1285,7 @@ export class TallyfyClient extends ConnectorClientBase {
      * @remarks Complete one off task
      */
     public async completedOneOffTask(input: CompletedOneOffTaskInput, org: string, options: ConnectorOperationOptions = {}): Promise<CompletedOneOffTaskResponse> {
-        const requestPath = `/organizations/${org}/completed-tasks`;
+        const requestPath = `/organizations/${encodeURIComponent(String(org))}/completed-tasks`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.sendWithTracingAsync<CompletedOneOffTaskResponse>("Tallyfy.completedOneOffTask", "Completed_One_Off_Task", "POST", requestUrl, input, options);
 
@@ -1297,7 +1297,7 @@ export class TallyfyClient extends ConnectorClientBase {
      * @remarks Reopen one off task
      */
     public async reopenOneOffTask(org: string, task: string, options: ConnectorOperationOptions = {}): Promise<ReopenOneOffTaskResponse> {
-        const requestPath = `/organizations/${org}/completed-tasks/${task}`;
+        const requestPath = `/organizations/${encodeURIComponent(String(org))}/completed-tasks/${encodeURIComponent(String(task))}`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.sendWithTracingAsync<ReopenOneOffTaskResponse>("Tallyfy.reopenOneOffTask", "Reopen_One_Off_Task", "DELETE", requestUrl, undefined, options);
 
@@ -1309,7 +1309,7 @@ export class TallyfyClient extends ConnectorClientBase {
      * @remarks Complete process task
      */
     public async completedProcessTask(input: CompletedProcessTaskInput, org: string, run: string, options: ConnectorOperationOptions = {}): Promise<CompletedProcessTaskResponse> {
-        const requestPath = `/organizations/${org}/runs/${run}/completed-tasks`;
+        const requestPath = `/organizations/${encodeURIComponent(String(org))}/runs/${encodeURIComponent(String(run))}/completed-tasks`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.sendWithTracingAsync<CompletedProcessTaskResponse>("Tallyfy.completedProcessTask", "Completed_Process_Task", "POST", requestUrl, input, options);
 
@@ -1321,7 +1321,7 @@ export class TallyfyClient extends ConnectorClientBase {
      * @remarks Reopen process task
      */
     public async reopenProcessTask(org: string, run: string, task: string, options: ConnectorOperationOptions = {}): Promise<ReopenProcessTaskResponse> {
-        const requestPath = `/organizations/${org}/runs/${run}/completed-tasks/${task}`;
+        const requestPath = `/organizations/${encodeURIComponent(String(org))}/runs/${encodeURIComponent(String(run))}/completed-tasks/${encodeURIComponent(String(task))}`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.sendWithTracingAsync<ReopenProcessTaskResponse>("Tallyfy.reopenProcessTask", "Reopen_Process_Task", "POST", requestUrl, undefined, options);
 
@@ -1333,7 +1333,7 @@ export class TallyfyClient extends ConnectorClientBase {
      * @remarks task deadline, in date-time format
      */
     public async commentTask(input: CommentTaskInput, org: string, task: string, options: ConnectorOperationOptions = {}): Promise<CommentTaskResponse> {
-        const requestPath = `/organizations/${org}/tasks/${task}/comment`;
+        const requestPath = `/organizations/${encodeURIComponent(String(org))}/tasks/${encodeURIComponent(String(task))}/comment`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.sendWithTracingAsync<CommentTaskResponse>("Tallyfy.commentTask", "Comment_Task", "POST", requestUrl, input, options);
 
@@ -1345,7 +1345,7 @@ export class TallyfyClient extends ConnectorClientBase {
      * @remarks Create Task
      */
     public async createTask(input: CreateTaskInput, org: string, options: ConnectorOperationOptions = {}): Promise<CreateTaskResponse> {
-        const requestPath = `/processes/micro-functions/organizations/${org}/tasks`;
+        const requestPath = `/processes/micro-functions/organizations/${encodeURIComponent(String(org))}/tasks`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.sendWithTracingAsync<CreateTaskResponse>("Tallyfy.createTask", "Create_Task", "POST", requestUrl, input, options);
 
@@ -1357,7 +1357,7 @@ export class TallyfyClient extends ConnectorClientBase {
      * @remarks Edit deadline of a task
      */
     public async editTaskDeadline(input: EditTaskDeadlineInput, org: string, task: string, options: ConnectorOperationOptions = {}): Promise<EditTaskDeadlineResponse> {
-        const requestPath = `/processes/micro-functions/organizations/${org}/tasks/${task}/edit-deadline`;
+        const requestPath = `/processes/micro-functions/organizations/${encodeURIComponent(String(org))}/tasks/${encodeURIComponent(String(task))}/edit-deadline`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.sendWithTracingAsync<EditTaskDeadlineResponse>("Tallyfy.editTaskDeadline", "Edit_Task_Deadline", "PUT", requestUrl, input, options);
 
@@ -1369,7 +1369,7 @@ export class TallyfyClient extends ConnectorClientBase {
      * @remarks Remove guest of a task
      */
     public async removeGuest(org: string, task: string, guest: string, options: ConnectorOperationOptions = {}): Promise<RemoveGuestResponse> {
-        const requestPath = `/processes/micro-functions/organizations/${org}/tasks/${task}/remove-guest/${guest}`;
+        const requestPath = `/processes/micro-functions/organizations/${encodeURIComponent(String(org))}/tasks/${encodeURIComponent(String(task))}/remove-guest/${encodeURIComponent(String(guest))}`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.sendWithTracingAsync<RemoveGuestResponse>("Tallyfy.removeGuest", "Remove_Guest", "PUT", requestUrl, undefined, options);
 
@@ -1381,7 +1381,7 @@ export class TallyfyClient extends ConnectorClientBase {
      * @remarks Remove assignee of a task
      */
     public async removeAssignee(org: string, task: string, member: string, options: ConnectorOperationOptions = {}): Promise<RemoveAssigneeResponse> {
-        const requestPath = `/processes/micro-functions/organizations/${org}/tasks/${task}/remove-assignee/${member}`;
+        const requestPath = `/processes/micro-functions/organizations/${encodeURIComponent(String(org))}/tasks/${encodeURIComponent(String(task))}/remove-assignee/${encodeURIComponent(String(member))}`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.sendWithTracingAsync<RemoveAssigneeResponse>("Tallyfy.removeAssignee", "Remove_Assignee", "PUT", requestUrl, undefined, options);
 
@@ -1393,7 +1393,7 @@ export class TallyfyClient extends ConnectorClientBase {
      * @remarks Edit step type
      */
     public async editStepType(input: EditStepTypeInput, org: string, blueprint: string, step: string, options: ConnectorOperationOptions = {}): Promise<EditStepTypeResponse> {
-        const requestPath = `/processes/micro-functions/organizations/${org}/blueprints/${blueprint}/steps/${step}/edit-step-type`;
+        const requestPath = `/processes/micro-functions/organizations/${encodeURIComponent(String(org))}/blueprints/${encodeURIComponent(String(blueprint))}/steps/${encodeURIComponent(String(step))}/edit-step-type`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.sendWithTracingAsync<EditStepTypeResponse>("Tallyfy.editStepType", "Edit_Step_Type", "PUT", requestUrl, input, options);
 

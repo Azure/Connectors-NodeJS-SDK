@@ -263,7 +263,7 @@ describe("Office365Client — getCalendarItems", () => {
             "calendar-1",
             {
                 orderby: "start desc",
-                top: "5",
+                top: 5,
             },
         );
 

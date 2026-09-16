@@ -538,7 +538,7 @@ export interface GetMessagesOptions extends ConnectorOperationOptions {
     /** List messages sent before a date and time, in ISO8601 format. */
     before?: string;
     /** Limit the maximum number of messages in the response. */
-    max?: string;
+    max?: number;
 }
 
 /**
@@ -556,7 +556,7 @@ export interface GetPeopleOptions extends ConnectorOperationOptions {
  */
 export interface GetSpacesOptions extends ConnectorOperationOptions {
     /** Maximum number of spaces to return */
-    max?: string;
+    max?: number;
     /** (group) only include group spaces, (direct) only include 1 to 1 spaces, returns all if not specified */
     type?: string;
     /** (id) the space id, (lastactivity) the last activity timestamp, (created) space creation date */
@@ -654,7 +654,7 @@ export class WebexClient extends ConnectorClientBase {
      * @remarks Shows details for a message, by message ID.
      */
     public async getMessageDetails(messageId: string, options: ConnectorOperationOptions = {}): Promise<GetMessageDetailsResponse> {
-        const requestPath = `/v1/messages/${messageId}`;
+        const requestPath = `/v1/messages/${encodeURIComponent(String(messageId))}`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.sendWithTracingAsync<GetMessageDetailsResponse>("Webex.getMessageDetails", "GetMessageDetails", "GET", requestUrl, undefined, options);
 
@@ -731,7 +731,7 @@ export class WebexClient extends ConnectorClientBase {
      * @remarks Return details of a given space
      */
     public async getSpaceDetail(roomId: string, options: ConnectorOperationOptions = {}): Promise<GetSpaceDetailResponse> {
-        const requestPath = `/v1/rooms/${roomId}`;
+        const requestPath = `/v1/rooms/${encodeURIComponent(String(roomId))}`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.sendWithTracingAsync<GetSpaceDetailResponse>("Webex.getSpaceDetail", "GetSpaceDetail", "GET", requestUrl, undefined, options);
 

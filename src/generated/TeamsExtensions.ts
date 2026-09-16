@@ -809,7 +809,26 @@ export interface GetChannelResponse {
  * Definition: ChannelWithOwnerTeamId
  */
 export interface ChannelWithOwnerTeamId {
-    [key: string]: unknown;
+    /** The unique identifier of the channel */
+    id?: string;
+    /** The name of the channel */
+    displayName?: string;
+    /** The description of the channel, optional */
+    description?: string;
+    /** The email address for sending messages to the channel */
+    email?: string;
+    /** The ID of the Microsoft Entra tenant. */
+    tenantId?: string;
+    /** A hyperlink for the channel in Microsoft Teams */
+    webUrl?: string;
+    /** The SharePoint folder URL of the channel */
+    filesFolderWebUrl?: string;
+    /** Timestamp at which the channel was created. Read only */
+    createdDateTime?: string;
+    /** The channel membership type */
+    membershipType?: string;
+    /** The ID of the team that owns the channel */
+    ownerTeamId?: string;
 }
 
 /**
@@ -1288,7 +1307,7 @@ export interface NewMeeting {
 }
 
 /**
- * Definition: NewMeetingRespone
+ * Definition: NewMeetingResponse
  */
 export interface NewMeetingResponse {
     /** Unique identifier for the event */
@@ -1705,7 +1724,7 @@ export interface GetAllChannelsForTeamOptions extends ConnectorOperationOptions 
  */
 export interface ListRepliesToMessageOptions extends ConnectorOperationOptions {
     /** The number of latest replies to return. The default value is 20. The supported value is between 1 and 50. */
-    top?: string;
+    top?: number;
 }
 
 /**
@@ -1743,7 +1762,7 @@ export interface ListTeamMembersOptions extends ConnectorOperationOptions {
  */
 export interface PostMessageToConversationOptions extends ConnectorOperationOptions {
     /** The 'customizationModifiedTime' service parameter. */
-    customizationModifiedTime?: string;
+    customizationModifiedTime?: number;
 }
 
 /**
@@ -1751,7 +1770,7 @@ export interface PostMessageToConversationOptions extends ConnectorOperationOpti
  */
 export interface ReplyWithMessageToConversationOptions extends ConnectorOperationOptions {
     /** The 'customizationModifiedTime' service parameter. */
-    customizationModifiedTime?: string;
+    customizationModifiedTime?: number;
 }
 
 /**
@@ -1759,7 +1778,7 @@ export interface ReplyWithMessageToConversationOptions extends ConnectorOperatio
  */
 export interface PostCardToConversationOptions extends ConnectorOperationOptions {
     /** The 'customizationModifiedTime' service parameter. */
-    customizationModifiedTime?: string;
+    customizationModifiedTime?: number;
 }
 
 /**
@@ -1767,7 +1786,7 @@ export interface PostCardToConversationOptions extends ConnectorOperationOptions
  */
 export interface PostCardAndWaitForResponseOptions extends ConnectorOperationOptions {
     /** The 'customizationModifiedTime' service parameter. */
-    customizationModifiedTime?: string;
+    customizationModifiedTime?: number;
 }
 
 /**
@@ -1775,7 +1794,7 @@ export interface PostCardAndWaitForResponseOptions extends ConnectorOperationOpt
  */
 export interface ReplyWithCardToConversationOptions extends ConnectorOperationOptions {
     /** The 'customizationModifiedTime' service parameter. */
-    customizationModifiedTime?: string;
+    customizationModifiedTime?: number;
 }
 
 /**
@@ -1783,7 +1802,7 @@ export interface ReplyWithCardToConversationOptions extends ConnectorOperationOp
  */
 export interface UpdateCardInConversationOptions extends ConnectorOperationOptions {
     /** The 'customizationModifiedTime' service parameter. */
-    customizationModifiedTime?: string;
+    customizationModifiedTime?: number;
 }
 
 /**
@@ -1813,7 +1832,7 @@ export interface GetAllAdhocCallRecordingsOptions extends ConnectorOperationOpti
     /** The end date and time to filter recordings */
     endDateTime?: string;
     /** The number of recordings to return */
-    top?: string;
+    top?: number;
     /** The skip token for pagination */
     skiptoken?: string;
     /** The delta token for tracking changes */
@@ -1829,7 +1848,7 @@ export interface GetAllAdhocCallTranscriptsOptions extends ConnectorOperationOpt
     /** The end date and time to filter transcripts */
     endDateTime?: string;
     /** The number of transcripts to return */
-    top?: string;
+    top?: number;
     /** The skip token for pagination */
     skiptoken?: string;
     /** The delta token for tracking changes */
@@ -2077,7 +2096,7 @@ export class TeamsClient extends ConnectorClientBase {
      * @remarks Create a meeting with a link at the bottom of the invite to join the meeting online on Microsoft Teams.
      */
     public async createTeamsMeeting(input: NewMeeting, calendarid: string, options: ConnectorOperationOptions = {}): Promise<NewMeetingResponse> {
-        const requestPath = `/v1.0/me/calendars/${calendarid}/events`;
+        const requestPath = `/v1.0/me/calendars/${encodeURIComponent(String(calendarid))}/events`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.sendWithTracingAsync<NewMeetingResponse>("Teams.createTeamsMeeting", "CreateTeamsMeeting", "POST", requestUrl, input, options);
 
@@ -2132,7 +2151,7 @@ export class TeamsClient extends ConnectorClientBase {
         if (options.orderby !== undefined) {
             queryParams.push(`$orderby=${encodeURIComponent(String(options.orderby))}`);
         }
-        const requestPath = `/beta/groups/${groupId}/channels` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
+        const requestPath = `/beta/groups/${encodeURIComponent(String(groupId))}/channels` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         return this.createPageable<GetChannelsForGroupResponse, GetChannelResponse>(
             requestPath,
             async (requestUrl) => {
@@ -2150,7 +2169,7 @@ export class TeamsClient extends ConnectorClientBase {
      * @remarks Create a new channel within a specified team
      */
     public async createChannel(input: CreateChannelInput, groupId: string, options: ConnectorOperationOptions = {}): Promise<CreateChannelResponse> {
-        const requestPath = `/beta/groups/${groupId}/channels`;
+        const requestPath = `/beta/groups/${encodeURIComponent(String(groupId))}/channels`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.sendWithTracingAsync<CreateChannelResponse>("Teams.createChannel", "CreateChannel", "POST", requestUrl, input, options);
 
@@ -2162,7 +2181,7 @@ export class TeamsClient extends ConnectorClientBase {
      * @remarks Get the channel details
      */
     public async getChannel(groupId: string, channelId: string, options: ConnectorOperationOptions = {}): Promise<GetChannelResponse> {
-        const requestPath = `/beta/teams/${groupId}/channels/${channelId}`;
+        const requestPath = `/beta/teams/${encodeURIComponent(String(groupId))}/channels/${encodeURIComponent(String(channelId))}`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.sendWithTracingAsync<GetChannelResponse>("Teams.getChannel", "GetChannel", "GET", requestUrl, undefined, options);
 
@@ -2174,7 +2193,7 @@ export class TeamsClient extends ConnectorClientBase {
      * @remarks Updates the properties of a channel in a specific team. Only the properties you provide are changed; omitted properties are left unchanged. For shared channels, the team ID must refer to the host team, which is the team that owns the shared channel.
      */
     public async updateChannelProperties(input: UpdateChannelPropertiesInput, groupId: string, channelId: string, options: ConnectorOperationOptions = {}): Promise<void> {
-        const requestPath = `/beta/teams/${groupId}/channels/${channelId}`;
+        const requestPath = `/beta/teams/${encodeURIComponent(String(groupId))}/channels/${encodeURIComponent(String(channelId))}`;
         const requestUrl = this.resolveUrl(requestPath);
         await this.sendWithTracingAsync<void>("Teams.updateChannelProperties", "UpdateChannelProperties", "PATCH", requestUrl, input, options);
     }
@@ -2184,7 +2203,7 @@ export class TeamsClient extends ConnectorClientBase {
      * @remarks Archive a channel in a team. When a channel is archived, users can't send new messages or react to existing messages in the channel, edit the channel settings, or make other changes to the channel. Archiving is an asynchronous operation.
      */
     public async archiveChannel(input: ArchiveChannelInput, groupId: string, channelId: string, options: ConnectorOperationOptions = {}): Promise<AsyncOperationResponse> {
-        const requestPath = `/v1.0/teams/${groupId}/channels/${channelId}/archive`;
+        const requestPath = `/v1.0/teams/${encodeURIComponent(String(groupId))}/channels/${encodeURIComponent(String(channelId))}/archive`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.sendWithTracingAsync<AsyncOperationResponse>("Teams.archiveChannel", "ArchiveChannel", "POST", requestUrl, input, options);
 
@@ -2203,7 +2222,7 @@ export class TeamsClient extends ConnectorClientBase {
         if (options.orderby !== undefined) {
             queryParams.push(`$orderby=${encodeURIComponent(String(options.orderby))}`);
         }
-        const requestPath = `/beta/teams/${groupId}/allChannels` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
+        const requestPath = `/beta/teams/${encodeURIComponent(String(groupId))}/allChannels` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         return this.createPageable<GetAllChannelsForTeamResponse, ChannelWithOwnerTeamId>(
             requestPath,
             async (requestUrl) => {
@@ -2221,7 +2240,7 @@ export class TeamsClient extends ConnectorClientBase {
      * @remarks Lists recent chats you are a part of
      */
     public getChats(chatType: string, topic: string, options: ConnectorOperationOptions = {}): ConnectorPagedAsyncIterableIterator<Record<string, unknown>> {
-        const requestPath = `/flowbot/actions/listchats/chattypes/${chatType}/topic/${topic}/expandmembers/false`;
+        const requestPath = `/flowbot/actions/listchats/chattypes/${encodeURIComponent(String(chatType))}/topic/${encodeURIComponent(String(topic))}/expandmembers/false`;
         return this.createPageable<GetChatsResponse, Record<string, unknown>>(
             requestPath,
             async (requestUrl) => {
@@ -2239,7 +2258,7 @@ export class TeamsClient extends ConnectorClientBase {
      * @remarks Posts a notification to a user's activity feed linking to a chat or team.
      */
     public async postFeedNotification(input: DynamicPostFeedNotificationRequest, poster: string, notificationType: string, options: ConnectorOperationOptions = {}): Promise<void> {
-        const requestPath = `/flowbot/feednotification/poster/${poster}/notificationType/${notificationType}`;
+        const requestPath = `/flowbot/feednotification/poster/${encodeURIComponent(String(poster))}/notificationType/${encodeURIComponent(String(notificationType))}`;
         const requestUrl = this.resolveUrl(requestPath);
         await this.sendWithTracingAsync<void>("Teams.postFeedNotification", "PostFeedNotification", "POST", requestUrl, input, options);
     }
@@ -2249,7 +2268,7 @@ export class TeamsClient extends ConnectorClientBase {
      * @remarks Creates a token that can be inserted into a message or adaptive card sent as a user in a channel to @mention a team tag.
      */
     public async atMentionTag(groupId: string, tagId: string, options: ConnectorOperationOptions = {}): Promise<AtMentionTagResponse> {
-        const requestPath = `/beta/teams/${groupId}/tags/${tagId}`;
+        const requestPath = `/beta/teams/${encodeURIComponent(String(groupId))}/tags/${encodeURIComponent(String(tagId))}`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.sendWithTracingAsync<AtMentionTagResponse>("Teams.atMentionTag", "AtMentionTag", "GET", requestUrl, undefined, options);
 
@@ -2261,7 +2280,7 @@ export class TeamsClient extends ConnectorClientBase {
      * @remarks Gets messages from a channel in a specific team. For shared channels, the team ID must refer to the host team, which is the team that owns the shared channel.
      */
     public getMessagesFromChannel(groupId: string, channelId: string, options: ConnectorOperationOptions = {}): ConnectorPagedAsyncIterableIterator<ChatMessage> {
-        const requestPath = `/beta/teams/${groupId}/channels/${channelId}/messages`;
+        const requestPath = `/beta/teams/${encodeURIComponent(String(groupId))}/channels/${encodeURIComponent(String(channelId))}/messages`;
         return this.createPageable<GetMessagesFromConversationResponse, ChatMessage>(
             requestPath,
             async (requestUrl, isFirstPage) => {
@@ -2280,7 +2299,7 @@ export class TeamsClient extends ConnectorClientBase {
      * @remarks Gets the details of a message in a chat or a channel.
      */
     public async getMessageDetails(input: DynamicGetMessageDetailsSchema, messageId: string, threadType: string, options: ConnectorOperationOptions = {}): Promise<DynamicGetMessageDetailsResponseSchema> {
-        const requestPath = `/beta/teams/messages/${messageId}/messageType/${threadType}`;
+        const requestPath = `/beta/teams/messages/${encodeURIComponent(String(messageId))}/messageType/${encodeURIComponent(String(threadType))}`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.sendWithTracingAsync<DynamicGetMessageDetailsResponseSchema>("Teams.getMessageDetails", "GetMessageDetails", "POST", requestUrl, input, options);
 
@@ -2296,7 +2315,7 @@ export class TeamsClient extends ConnectorClientBase {
         if (options.top !== undefined) {
             queryParams.push(`$top=${encodeURIComponent(String(options.top))}`);
         }
-        const requestPath = `/v1.0/teams/${groupId}/channels/${channelId}/messages/${messageId}/replies` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
+        const requestPath = `/v1.0/teams/${encodeURIComponent(String(groupId))}/channels/${encodeURIComponent(String(channelId))}/messages/${encodeURIComponent(String(messageId))}/replies` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         return this.createPageable<ListRepliesResponseSchema, Record<string, unknown>>(
             requestPath,
             async (requestUrl) => {
@@ -2318,7 +2337,7 @@ export class TeamsClient extends ConnectorClientBase {
         if (options.filter !== undefined) {
             queryParams.push(`$filter=${encodeURIComponent(String(options.filter))}`);
         }
-        const requestPath = `/v1.0/teams/listmembers/threadType/${threadType}` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
+        const requestPath = `/v1.0/teams/listmembers/threadType/${encodeURIComponent(String(threadType))}` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         return this.createPageable<ListMembersResponseSchema, Record<string, unknown>>(
             requestPath,
             async (requestUrl) => {
@@ -2346,7 +2365,7 @@ export class TeamsClient extends ConnectorClientBase {
      * @remarks Gets the details for a team in Microsoft Teams.
      */
     public async getTeam(teamId: string, options: ConnectorOperationOptions = {}): Promise<GetTeamResponse> {
-        const requestPath = `/beta/teams/${teamId}`;
+        const requestPath = `/beta/teams/${encodeURIComponent(String(teamId))}`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.sendWithTracingAsync<GetTeamResponse>("Teams.getTeam", "GetTeam", "GET", requestUrl, undefined, options);
 
@@ -2358,7 +2377,7 @@ export class TeamsClient extends ConnectorClientBase {
      * @remarks Creates a token that can be inserted into a message or adaptive card to @mention a user.
      */
     public async atMentionUser(userId: string, options: ConnectorOperationOptions = {}): Promise<AtMentionUser> {
-        const requestPath = `/v1.0/users/${userId}`;
+        const requestPath = `/v1.0/users/${encodeURIComponent(String(userId))}`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.sendWithTracingAsync<AtMentionUser>("Teams.atMentionUser", "AtMentionUser", "GET", requestUrl, undefined, options);
 
@@ -2392,7 +2411,7 @@ export class TeamsClient extends ConnectorClientBase {
         if (options.top !== undefined) {
             queryParams.push(`$top=${encodeURIComponent(String(options.top))}`);
         }
-        const requestPath = `/beta/chats/${chatId}/messages` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
+        const requestPath = `/beta/chats/${encodeURIComponent(String(chatId))}/messages` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         return this.createPageable<GetMessagesFromConversationResponse, ChatMessage>(
             requestPath,
             async (requestUrl, isFirstPage) => {
@@ -2442,7 +2461,7 @@ export class TeamsClient extends ConnectorClientBase {
         if (options.top !== undefined) {
             queryParams.push(`$top=${encodeURIComponent(String(options.top))}`);
         }
-        const requestPath = `/v1.0/teams/${teamId}/members` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
+        const requestPath = `/v1.0/teams/${encodeURIComponent(String(teamId))}/members` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         return this.createPageable<ListMembersResponseSchema, Record<string, unknown>>(
             requestPath,
             async (requestUrl) => {
@@ -2460,7 +2479,7 @@ export class TeamsClient extends ConnectorClientBase {
      * @remarks Adds a member to a team in Microsoft Teams
      */
     public async addMemberToTeam(input: AddMemberToTeamInput, teamId: string, options: ConnectorOperationOptions = {}): Promise<void> {
-        const requestPath = `/v1.0/teams/${teamId}/members`;
+        const requestPath = `/v1.0/teams/${encodeURIComponent(String(teamId))}/members`;
         const requestUrl = this.resolveUrl(requestPath);
         await this.sendWithTracingAsync<void>("Teams.addMemberToTeam", "AddMemberToTeam", "POST", requestUrl, input, options);
     }
@@ -2470,7 +2489,7 @@ export class TeamsClient extends ConnectorClientBase {
      * @remarks Removes a member from a team in Microsoft Teams
      */
     public async removeMemberFromTeam(teamId: string, membershipId: string, options: ConnectorOperationOptions = {}): Promise<void> {
-        const requestPath = `/v1.0/teams/${teamId}/members/${membershipId}`;
+        const requestPath = `/v1.0/teams/${encodeURIComponent(String(teamId))}/members/${encodeURIComponent(String(membershipId))}`;
         const requestUrl = this.resolveUrl(requestPath);
         await this.sendWithTracingAsync<void>("Teams.removeMemberFromTeam", "RemoveMemberFromTeam", "DELETE", requestUrl, undefined, options);
     }
@@ -2480,7 +2499,7 @@ export class TeamsClient extends ConnectorClientBase {
      * @remarks Adds a member to a channel in Microsoft Teams. The channel must be a private or shared channel.
      */
     public async addMemberToChannel(input: AddMemberToChannelInput, groupId: string, channelId: string, options: ConnectorOperationOptions = {}): Promise<void> {
-        const requestPath = `/v1.0/teams/${groupId}/channels/${channelId}/members`;
+        const requestPath = `/v1.0/teams/${encodeURIComponent(String(groupId))}/channels/${encodeURIComponent(String(channelId))}/members`;
         const requestUrl = this.resolveUrl(requestPath);
         await this.sendWithTracingAsync<void>("Teams.addMemberToChannel", "AddMemberToChannel", "POST", requestUrl, input, options);
     }
@@ -2490,7 +2509,7 @@ export class TeamsClient extends ConnectorClientBase {
      * @remarks Removes a direct member from a channel in Microsoft Teams. The channel must be a private or shared channel.
      */
     public async removeMemberFromChannel(groupId: string, channelId: string, membershipId: string, options: ConnectorOperationOptions = {}): Promise<void> {
-        const requestPath = `/v1.0/teams/${groupId}/channels/${channelId}/members/${membershipId}`;
+        const requestPath = `/v1.0/teams/${encodeURIComponent(String(groupId))}/channels/${encodeURIComponent(String(channelId))}/members/${encodeURIComponent(String(membershipId))}`;
         const requestUrl = this.resolveUrl(requestPath);
         await this.sendWithTracingAsync<void>("Teams.removeMemberFromChannel", "RemoveMemberFromChannel", "DELETE", requestUrl, undefined, options);
     }
@@ -2504,7 +2523,7 @@ export class TeamsClient extends ConnectorClientBase {
         if (options.customizationModifiedTime !== undefined) {
             queryParams.push(`customizationModifiedTime=${encodeURIComponent(String(options.customizationModifiedTime))}`);
         }
-        const requestPath = `/beta/teams/conversation/message/poster/${poster}/location/${location}` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
+        const requestPath = `/beta/teams/conversation/message/poster/${encodeURIComponent(String(poster))}/location/${encodeURIComponent(String(location))}` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.sendWithTracingAsync<PostToConversationResponse>("Teams.postMessageToConversation", "PostMessageToConversation", "POST", requestUrl, input, options);
 
@@ -2520,7 +2539,7 @@ export class TeamsClient extends ConnectorClientBase {
         if (options.customizationModifiedTime !== undefined) {
             queryParams.push(`customizationModifiedTime=${encodeURIComponent(String(options.customizationModifiedTime))}`);
         }
-        const requestPath = `/v1.0/teams/conversation/replyWithMessage/poster/${poster}/location/${location}` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
+        const requestPath = `/v1.0/teams/conversation/replyWithMessage/poster/${encodeURIComponent(String(poster))}/location/${encodeURIComponent(String(location))}` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.sendWithTracingAsync<PostToConversationResponse>("Teams.replyWithMessageToConversation", "ReplyWithMessageToConversation", "POST", requestUrl, input, options);
 
@@ -2536,7 +2555,7 @@ export class TeamsClient extends ConnectorClientBase {
         if (options.customizationModifiedTime !== undefined) {
             queryParams.push(`customizationModifiedTime=${encodeURIComponent(String(options.customizationModifiedTime))}`);
         }
-        const requestPath = `/v1.0/teams/conversation/adaptivecard/poster/${poster}/location/${location}` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
+        const requestPath = `/v1.0/teams/conversation/adaptivecard/poster/${encodeURIComponent(String(poster))}/location/${encodeURIComponent(String(location))}` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.sendWithTracingAsync<PostToConversationResponse>("Teams.postCardToConversation", "PostCardToConversation", "POST", requestUrl, input, options);
 
@@ -2552,7 +2571,7 @@ export class TeamsClient extends ConnectorClientBase {
         if (options.customizationModifiedTime !== undefined) {
             queryParams.push(`customizationModifiedTime=${encodeURIComponent(String(options.customizationModifiedTime))}`);
         }
-        const requestPath = `/v1.0/teams/conversation/gatherinput/poster/${poster}/location/${location}/$subscriptions` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
+        const requestPath = `/v1.0/teams/conversation/gatherinput/poster/${encodeURIComponent(String(poster))}/location/${encodeURIComponent(String(location))}/$subscriptions` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.sendWithTracingAsync<DynamicPostGatherInputToConversationResponse>("Teams.postCardAndWaitForResponse", "PostCardAndWaitForResponse", "POST", requestUrl, input, options);
 
@@ -2568,7 +2587,7 @@ export class TeamsClient extends ConnectorClientBase {
         if (options.customizationModifiedTime !== undefined) {
             queryParams.push(`customizationModifiedTime=${encodeURIComponent(String(options.customizationModifiedTime))}`);
         }
-        const requestPath = `/v1.0/teams/conversation/replyWithAdaptivecard/poster/${poster}/location/${location}` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
+        const requestPath = `/v1.0/teams/conversation/replyWithAdaptivecard/poster/${encodeURIComponent(String(poster))}/location/${encodeURIComponent(String(location))}` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.sendWithTracingAsync<PostToConversationResponse>("Teams.replyWithCardToConversation", "ReplyWithCardToConversation", "POST", requestUrl, input, options);
 
@@ -2584,7 +2603,7 @@ export class TeamsClient extends ConnectorClientBase {
         if (options.customizationModifiedTime !== undefined) {
             queryParams.push(`customizationModifiedTime=${encodeURIComponent(String(options.customizationModifiedTime))}`);
         }
-        const requestPath = `/v1.0/teams/conversation/updateAdaptivecard/poster/${poster}/location/${location}` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
+        const requestPath = `/v1.0/teams/conversation/updateAdaptivecard/poster/${encodeURIComponent(String(poster))}/location/${encodeURIComponent(String(location))}` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.sendWithTracingAsync<PostToConversationResponse>("Teams.updateCardInConversation", "UpdateCardInConversation", "POST", requestUrl, input, options);
 
@@ -2633,7 +2652,7 @@ export class TeamsClient extends ConnectorClientBase {
      * @remarks Adds a user to a chat in Microsoft Teams.
      */
     public async addMemberToChat(input: AddMemberToChatInput, chatId: string, options: ConnectorOperationOptions = {}): Promise<void> {
-        const requestPath = `/v1.0/chats/${chatId}/members`;
+        const requestPath = `/v1.0/chats/${encodeURIComponent(String(chatId))}/members`;
         const requestUrl = this.resolveUrl(requestPath);
         await this.sendWithTracingAsync<void>("Teams.addMemberToChat", "AddMemberToChat", "POST", requestUrl, input, options);
     }
@@ -2643,7 +2662,7 @@ export class TeamsClient extends ConnectorClientBase {
      * @remarks Removes a member from a chat in Microsoft Teams. Only group chats support member removal.
      */
     public async removeMemberFromChat(chatId: string, membershipId: string, options: ConnectorOperationOptions = {}): Promise<void> {
-        const requestPath = `/v1.0/chats/${chatId}/members/${membershipId}`;
+        const requestPath = `/v1.0/chats/${encodeURIComponent(String(chatId))}/members/${encodeURIComponent(String(membershipId))}`;
         const requestUrl = this.resolveUrl(requestPath);
         await this.sendWithTracingAsync<void>("Teams.removeMemberFromChat", "RemoveMemberFromChat", "DELETE", requestUrl, undefined, options);
     }
@@ -2672,7 +2691,7 @@ export class TeamsClient extends ConnectorClientBase {
      * @remarks Lists all transcripts for an online meeting
      */
     public listMeetingTranscripts(meetingId: string, options: ConnectorOperationOptions = {}): ConnectorPagedAsyncIterableIterator<CallTranscriptResponse> {
-        const requestPath = `/v1.0/me/onlineMeetings/${meetingId}/transcripts`;
+        const requestPath = `/v1.0/me/onlineMeetings/${encodeURIComponent(String(meetingId))}/transcripts`;
         return this.createPageable<CallTranscriptCollectionResponse, CallTranscriptResponse>(
             requestPath,
             async (requestUrl) => {
@@ -2690,7 +2709,7 @@ export class TeamsClient extends ConnectorClientBase {
      * @remarks Gets a specific transcript for an online meeting
      */
     public async getMeetingTranscript(meetingId: string, transcriptId: string, options: ConnectorOperationOptions = {}): Promise<CallTranscriptResponse> {
-        const requestPath = `/v1.0/me/onlineMeetings/${meetingId}/transcripts/${transcriptId}`;
+        const requestPath = `/v1.0/me/onlineMeetings/${encodeURIComponent(String(meetingId))}/transcripts/${encodeURIComponent(String(transcriptId))}`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.sendWithTracingAsync<CallTranscriptResponse>("Teams.getMeetingTranscript", "GetMeetingTranscript", "GET", requestUrl, undefined, options);
 
@@ -2702,7 +2721,7 @@ export class TeamsClient extends ConnectorClientBase {
      * @remarks Gets the content of a meeting transcript
      */
     public async getMeetingTranscriptContent(meetingId: string, transcriptId: string, options: ConnectorOperationOptions = {}): Promise<string> {
-        const requestPath = `/v1.0/me/onlineMeetings/${meetingId}/transcripts/${transcriptId}/content`;
+        const requestPath = `/v1.0/me/onlineMeetings/${encodeURIComponent(String(meetingId))}/transcripts/${encodeURIComponent(String(transcriptId))}/content`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.sendWithTracingAsync<string>("Teams.getMeetingTranscriptContent", "GetMeetingTranscriptContent", "GET", requestUrl, undefined, options);
 
@@ -2714,7 +2733,7 @@ export class TeamsClient extends ConnectorClientBase {
      * @remarks Lists all recordings for an online meeting
      */
     public listMeetingRecordings(meetingId: string, options: ConnectorOperationOptions = {}): ConnectorPagedAsyncIterableIterator<CallRecordingResponse> {
-        const requestPath = `/v1.0/me/onlineMeetings/${meetingId}/recordings`;
+        const requestPath = `/v1.0/me/onlineMeetings/${encodeURIComponent(String(meetingId))}/recordings`;
         return this.createPageable<CallRecordingCollectionResponse, CallRecordingResponse>(
             requestPath,
             async (requestUrl) => {
@@ -2732,7 +2751,7 @@ export class TeamsClient extends ConnectorClientBase {
      * @remarks Gets a specific recording for an online meeting
      */
     public async getMeetingRecording(meetingId: string, recordingId: string, options: ConnectorOperationOptions = {}): Promise<CallRecordingResponse> {
-        const requestPath = `/v1.0/me/onlineMeetings/${meetingId}/recordings/${recordingId}`;
+        const requestPath = `/v1.0/me/onlineMeetings/${encodeURIComponent(String(meetingId))}/recordings/${encodeURIComponent(String(recordingId))}`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.sendWithTracingAsync<CallRecordingResponse>("Teams.getMeetingRecording", "GetMeetingRecording", "GET", requestUrl, undefined, options);
 
@@ -2744,7 +2763,7 @@ export class TeamsClient extends ConnectorClientBase {
      * @remarks Gets the content stream of a meeting recording
      */
     public async getMeetingRecordingContent(meetingId: string, recordingId: string, options: ConnectorOperationOptions = {}): Promise<Blob> {
-        const requestPath = `/v1.0/me/onlineMeetings/${meetingId}/recordings/${recordingId}/content`;
+        const requestPath = `/v1.0/me/onlineMeetings/${encodeURIComponent(String(meetingId))}/recordings/${encodeURIComponent(String(recordingId))}/content`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.sendWithTracingAsync<Blob>("Teams.getMeetingRecordingContent", "GetMeetingRecordingContent", "GET", requestUrl, undefined, options);
 
@@ -2790,7 +2809,7 @@ export class TeamsClient extends ConnectorClientBase {
      * @remarks Gets a specific teamwork section by ID
      */
     public async getSection(sectionId: string, options: ConnectorOperationOptions = {}): Promise<SectionResponse> {
-        const requestPath = `/beta/me/teamwork/sections/${sectionId}`;
+        const requestPath = `/beta/me/teamwork/sections/${encodeURIComponent(String(sectionId))}`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.sendWithTracingAsync<SectionResponse>("Teams.getSection", "GetSection", "GET", requestUrl, undefined, options);
 
@@ -2802,7 +2821,7 @@ export class TeamsClient extends ConnectorClientBase {
      * @remarks Updates a teamwork section for the current user
      */
     public async updateSection(input: UpdateSectionInput, sectionId: string, ifMatch: string, options: ConnectorOperationOptions = {}): Promise<SectionResponse> {
-        const requestPath = `/beta/me/teamwork/sections/${sectionId}`;
+        const requestPath = `/beta/me/teamwork/sections/${encodeURIComponent(String(sectionId))}`;
         const requestHeaders: Record<string, string> = {};
         if (ifMatch !== undefined) {
             requestHeaders["If-Match"] = String(ifMatch);
@@ -2818,7 +2837,7 @@ export class TeamsClient extends ConnectorClientBase {
      * @remarks Deletes a teamwork section for the current user
      */
     public async deleteSection(sectionId: string, ifMatch: string, options: ConnectorOperationOptions = {}): Promise<void> {
-        const requestPath = `/beta/me/teamwork/sections/${sectionId}`;
+        const requestPath = `/beta/me/teamwork/sections/${encodeURIComponent(String(sectionId))}`;
         const requestHeaders: Record<string, string> = {};
         if (ifMatch !== undefined) {
             requestHeaders["If-Match"] = String(ifMatch);
@@ -2832,7 +2851,7 @@ export class TeamsClient extends ConnectorClientBase {
      * @remarks Lists the items (chats, channels, meetings, communities) in a teamwork section. Each item belongs to exactly one section at a time.
      */
     public listSectionItems(sectionId: string, options: ConnectorOperationOptions = {}): ConnectorPagedAsyncIterableIterator<SectionItemResponse> {
-        const requestPath = `/beta/me/teamwork/sections/${sectionId}/items`;
+        const requestPath = `/beta/me/teamwork/sections/${encodeURIComponent(String(sectionId))}/items`;
         return this.createPageable<ListSectionItemsResponse, SectionItemResponse>(
             requestPath,
             async (requestUrl) => {
@@ -2850,7 +2869,7 @@ export class TeamsClient extends ConnectorClientBase {
      * @remarks Adds an item (chat, channel, meeting, or community) currently in a system-defined section to a user-defined teamwork section. Use Move Section Item to relocate items already in another user-defined section.
      */
     public async addSectionItem(input: AddSectionItemInput, sectionId: string, ifMatch: string, options: ConnectorOperationOptions = {}): Promise<SectionItemResponse> {
-        const requestPath = `/beta/me/teamwork/sections/${sectionId}/items`;
+        const requestPath = `/beta/me/teamwork/sections/${encodeURIComponent(String(sectionId))}/items`;
         const requestHeaders: Record<string, string> = {};
         if (ifMatch !== undefined) {
             requestHeaders["If-Match"] = String(ifMatch);
@@ -2866,7 +2885,7 @@ export class TeamsClient extends ConnectorClientBase {
      * @remarks Removes an item from a user-defined teamwork section. The underlying chat, channel, meeting, or community is not deleted; the item returns to its default system-defined section.
      */
     public async removeSectionItem(sectionId: string, sectionItemId: string, ifMatch: string, options: ConnectorOperationOptions = {}): Promise<void> {
-        const requestPath = `/beta/me/teamwork/sections/${sectionId}/items/${sectionItemId}`;
+        const requestPath = `/beta/me/teamwork/sections/${encodeURIComponent(String(sectionId))}/items/${encodeURIComponent(String(sectionItemId))}`;
         const requestHeaders: Record<string, string> = {};
         if (ifMatch !== undefined) {
             requestHeaders["If-Match"] = String(ifMatch);
@@ -2880,7 +2899,7 @@ export class TeamsClient extends ConnectorClientBase {
      * @remarks Atomically moves an item from one user-defined teamwork section to another user-defined section. Each item can belong to only one section at a time. This action removes the item from its current section and adds it to the target section.
      */
     public async moveSectionItem(input: MoveSectionItemInput, sectionId: string, sectionItemId: string, ifMatch: string, options: ConnectorOperationOptions = {}): Promise<SectionItemResponse> {
-        const requestPath = `/beta/me/teamwork/sections/${sectionId}/items/${sectionItemId}/move`;
+        const requestPath = `/beta/me/teamwork/sections/${encodeURIComponent(String(sectionId))}/items/${encodeURIComponent(String(sectionItemId))}/move`;
         const requestHeaders: Record<string, string> = {};
         if (ifMatch !== undefined) {
             requestHeaders["If-Match"] = String(ifMatch);
@@ -2896,7 +2915,7 @@ export class TeamsClient extends ConnectorClientBase {
      * @remarks Lists the team's tags
      */
     public getTags(groupId: string, options: ConnectorOperationOptions = {}): ConnectorPagedAsyncIterableIterator<Record<string, unknown>> {
-        const requestPath = `/v1.0/teams/${groupId}/tags`;
+        const requestPath = `/v1.0/teams/${encodeURIComponent(String(groupId))}/tags`;
         return this.createPageable<GetTagsResponseSchema, Record<string, unknown>>(
             requestPath,
             async (requestUrl) => {
@@ -2914,7 +2933,7 @@ export class TeamsClient extends ConnectorClientBase {
      * @remarks Creates a tag in a team
      */
     public async createTag(input: CreateTagInput, groupId: string, options: ConnectorOperationOptions = {}): Promise<CreateTagResponseSchema> {
-        const requestPath = `/v1.0/teams/${groupId}/tags`;
+        const requestPath = `/v1.0/teams/${encodeURIComponent(String(groupId))}/tags`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.sendWithTracingAsync<CreateTagResponseSchema>("Teams.createTag", "CreateTag", "POST", requestUrl, input, options);
 
@@ -2926,7 +2945,7 @@ export class TeamsClient extends ConnectorClientBase {
      * @remarks Gets a specific tag by ID from a team
      */
     public async getTag(groupId: string, tagId: string, options: ConnectorOperationOptions = {}): Promise<CreateTagResponseSchema> {
-        const requestPath = `/v1.0/teams/${groupId}/tags/${tagId}`;
+        const requestPath = `/v1.0/teams/${encodeURIComponent(String(groupId))}/tags/${encodeURIComponent(String(tagId))}`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.sendWithTracingAsync<CreateTagResponseSchema>("Teams.getTag", "GetTag", "GET", requestUrl, undefined, options);
 
@@ -2938,7 +2957,7 @@ export class TeamsClient extends ConnectorClientBase {
      * @remarks Updates the display name of a tag in a team
      */
     public async updateTag(input: UpdateTagInput, groupId: string, tagId: string, options: ConnectorOperationOptions = {}): Promise<CreateTagResponseSchema> {
-        const requestPath = `/v1.0/teams/${groupId}/tags/${tagId}`;
+        const requestPath = `/v1.0/teams/${encodeURIComponent(String(groupId))}/tags/${encodeURIComponent(String(tagId))}`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.sendWithTracingAsync<CreateTagResponseSchema>("Teams.updateTag", "UpdateTag", "PATCH", requestUrl, input, options);
 
@@ -2950,7 +2969,7 @@ export class TeamsClient extends ConnectorClientBase {
      * @remarks Deletes a tag from a team
      */
     public async deleteTag(groupId: string, tagId: string, options: ConnectorOperationOptions = {}): Promise<void> {
-        const requestPath = `/v1.0/teams/${groupId}/tags/${tagId}`;
+        const requestPath = `/v1.0/teams/${encodeURIComponent(String(groupId))}/tags/${encodeURIComponent(String(tagId))}`;
         const requestUrl = this.resolveUrl(requestPath);
         await this.sendWithTracingAsync<void>("Teams.deleteTag", "DeleteTag", "DELETE", requestUrl, undefined, options);
     }
@@ -2960,7 +2979,7 @@ export class TeamsClient extends ConnectorClientBase {
      * @remarks Adds a user to a team tag
      */
     public async addMemberToTag(input: AddMemberToTagInput, groupId: string, tagId: string, options: ConnectorOperationOptions = {}): Promise<AddMemberToTagResponseSchema> {
-        const requestPath = `/v1.0/teams/${groupId}/tags/${tagId}/members`;
+        const requestPath = `/v1.0/teams/${encodeURIComponent(String(groupId))}/tags/${encodeURIComponent(String(tagId))}/members`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.sendWithTracingAsync<AddMemberToTagResponseSchema>("Teams.addMemberToTag", "AddMemberToTag", "POST", requestUrl, input, options);
 
@@ -2972,7 +2991,7 @@ export class TeamsClient extends ConnectorClientBase {
      * @remarks Lists the members of a team tag
      */
     public getTagMembers(groupId: string, tagId: string, options: ConnectorOperationOptions = {}): ConnectorPagedAsyncIterableIterator<Record<string, unknown>> {
-        const requestPath = `/v1.0/teams/${groupId}/tags/${tagId}/members`;
+        const requestPath = `/v1.0/teams/${encodeURIComponent(String(groupId))}/tags/${encodeURIComponent(String(tagId))}/members`;
         return this.createPageable<GetTagMembersResponseSchema, Record<string, unknown>>(
             requestPath,
             async (requestUrl) => {
@@ -2990,7 +3009,7 @@ export class TeamsClient extends ConnectorClientBase {
      * @remarks Deletes a member from a team tag
      */
     public async deleteTagMember(groupId: string, tagId: string, tagMemberId: string, options: ConnectorOperationOptions = {}): Promise<void> {
-        const requestPath = `/v1.0/teams/${groupId}/tags/${tagId}/members/${tagMemberId}`;
+        const requestPath = `/v1.0/teams/${encodeURIComponent(String(groupId))}/tags/${encodeURIComponent(String(tagId))}/members/${encodeURIComponent(String(tagMemberId))}`;
         const requestUrl = this.resolveUrl(requestPath);
         await this.sendWithTracingAsync<void>("Teams.deleteTagMember", "DeleteTagMember", "DELETE", requestUrl, undefined, options);
     }
@@ -3000,7 +3019,7 @@ export class TeamsClient extends ConnectorClientBase {
      * @remarks Lists all recordings for an ad-hoc call
      */
     public listCallRecordings(callId: string, options: ConnectorOperationOptions = {}): ConnectorPagedAsyncIterableIterator<CallRecordingResponse> {
-        const requestPath = `/v1.0/me/adhocCalls/${callId}/recordings`;
+        const requestPath = `/v1.0/me/adhocCalls/${encodeURIComponent(String(callId))}/recordings`;
         return this.createPageable<CallRecordingCollectionResponse, CallRecordingResponse>(
             requestPath,
             async (requestUrl) => {
@@ -3018,7 +3037,7 @@ export class TeamsClient extends ConnectorClientBase {
      * @remarks Gets a specific recording for an ad-hoc call
      */
     public async getCallRecording(callId: string, recordingId: string, options: ConnectorOperationOptions = {}): Promise<CallRecordingResponse> {
-        const requestPath = `/v1.0/me/adhocCalls/${callId}/recordings/${recordingId}`;
+        const requestPath = `/v1.0/me/adhocCalls/${encodeURIComponent(String(callId))}/recordings/${encodeURIComponent(String(recordingId))}`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.sendWithTracingAsync<CallRecordingResponse>("Teams.getCallRecording", "GetCallRecording", "GET", requestUrl, undefined, options);
 
@@ -3030,7 +3049,7 @@ export class TeamsClient extends ConnectorClientBase {
      * @remarks Gets the content of a call recording
      */
     public async getCallRecordingContent(callId: string, recordingId: string, options: ConnectorOperationOptions = {}): Promise<Blob> {
-        const requestPath = `/v1.0/me/adhocCalls/${callId}/recordings/${recordingId}/content`;
+        const requestPath = `/v1.0/me/adhocCalls/${encodeURIComponent(String(callId))}/recordings/${encodeURIComponent(String(recordingId))}/content`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.sendWithTracingAsync<Blob>("Teams.getCallRecordingContent", "GetCallRecordingContent", "GET", requestUrl, undefined, options);
 
@@ -3042,7 +3061,7 @@ export class TeamsClient extends ConnectorClientBase {
      * @remarks Lists all transcripts for an ad-hoc call
      */
     public listCallTranscripts(callId: string, options: ConnectorOperationOptions = {}): ConnectorPagedAsyncIterableIterator<CallTranscriptResponse> {
-        const requestPath = `/v1.0/me/adhocCalls/${callId}/transcripts`;
+        const requestPath = `/v1.0/me/adhocCalls/${encodeURIComponent(String(callId))}/transcripts`;
         return this.createPageable<CallTranscriptCollectionResponse, CallTranscriptResponse>(
             requestPath,
             async (requestUrl) => {
@@ -3060,7 +3079,7 @@ export class TeamsClient extends ConnectorClientBase {
      * @remarks Gets a specific transcript for an ad-hoc call
      */
     public async getCallTranscript(callId: string, transcriptId: string, options: ConnectorOperationOptions = {}): Promise<CallTranscriptResponse> {
-        const requestPath = `/v1.0/me/adhocCalls/${callId}/transcripts/${transcriptId}`;
+        const requestPath = `/v1.0/me/adhocCalls/${encodeURIComponent(String(callId))}/transcripts/${encodeURIComponent(String(transcriptId))}`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.sendWithTracingAsync<CallTranscriptResponse>("Teams.getCallTranscript", "GetCallTranscript", "GET", requestUrl, undefined, options);
 
@@ -3072,7 +3091,7 @@ export class TeamsClient extends ConnectorClientBase {
      * @remarks Gets the content of a call transcript
      */
     public async getCallTranscriptContent(callId: string, transcriptId: string, options: ConnectorOperationOptions = {}): Promise<string> {
-        const requestPath = `/v1.0/me/adhocCalls/${callId}/transcripts/${transcriptId}/content`;
+        const requestPath = `/v1.0/me/adhocCalls/${encodeURIComponent(String(callId))}/transcripts/${encodeURIComponent(String(transcriptId))}/content`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.sendWithTracingAsync<string>("Teams.getCallTranscriptContent", "GetCallTranscriptContent", "GET", requestUrl, undefined, options);
 
@@ -3140,7 +3159,7 @@ export class TeamsClient extends ConnectorClientBase {
      * @remarks Lists AI-generated insights for an online meeting. Requires Microsoft 365 Copilot license.
      */
     public listAiInsights(meetingId: string, options: ConnectorOperationOptions = {}): ConnectorPagedAsyncIterableIterator<AiInsightResponse> {
-        const requestPath = `/v1.0/copilot/me/onlineMeetings/${meetingId}/aiInsights`;
+        const requestPath = `/v1.0/copilot/me/onlineMeetings/${encodeURIComponent(String(meetingId))}/aiInsights`;
         return this.createPageable<AiInsightCollectionResponse, AiInsightResponse>(
             requestPath,
             async (requestUrl) => {
@@ -3158,7 +3177,7 @@ export class TeamsClient extends ConnectorClientBase {
      * @remarks Gets a specific AI-generated insight for an online meeting. Requires Microsoft 365 Copilot license.
      */
     public async getAiInsight(meetingId: string, aiInsightId: string, options: ConnectorOperationOptions = {}): Promise<AiInsightResponse> {
-        const requestPath = `/v1.0/copilot/me/onlineMeetings/${meetingId}/aiInsights/${aiInsightId}`;
+        const requestPath = `/v1.0/copilot/me/onlineMeetings/${encodeURIComponent(String(meetingId))}/aiInsights/${encodeURIComponent(String(aiInsightId))}`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.sendWithTracingAsync<AiInsightResponse>("Teams.getAiInsight", "GetAiInsight", "GET", requestUrl, undefined, options);
 

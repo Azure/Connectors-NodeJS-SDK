@@ -75,7 +75,7 @@ describe("SharepointonlineClient — getTables", () => {
 
         expect(result).toEqual(mockTables);
         const [url, init] = (global.fetch as jest.Mock).mock.calls[0];
-        expect(url).toContain(encodeURIComponent("https://contoso.sharepoint.com/sites/team"));
+        expect(url).toContain(encodeURIComponent(encodeURIComponent("https://contoso.sharepoint.com/sites/team")));
         expect(init.method).toBe("GET");
         expect(init.headers["Authorization"]).toBe("Bearer mock-bearer-token");
     });
@@ -94,7 +94,7 @@ describe("SharepointonlineClient — getAllTables", () => {
         expect(result).toEqual(mockTables);
         const [url] = (global.fetch as jest.Mock).mock.calls[0];
         expect(url).toContain("/datasets/");
-        expect(url).toContain(encodeURIComponent("https://contoso.sharepoint.com/sites/team"));
+        expect(url).toContain(encodeURIComponent(encodeURIComponent("https://contoso.sharepoint.com/sites/team")));
         expect(url).toContain("/alltables");
     });
 });
@@ -107,7 +107,7 @@ describe("SharepointonlineClient — getItem", () => {
         mockFetchResponse(mockItem);
 
         const client = new SharepointonlineClient(TestConnectionUrl, createMockCredential());
-        const result = await client.getItem("https://contoso.sharepoint.com", "Documents", "42");
+        const result = await client.getItem("https://contoso.sharepoint.com", "Documents", 42);
 
         expect(result).toEqual(mockItem);
         const [url, init] = (global.fetch as jest.Mock).mock.calls[0];
@@ -142,7 +142,7 @@ describe("SharepointonlineClient — deleteItem", () => {
         mockFetchResponse(null);
 
         const client = new SharepointonlineClient(TestConnectionUrl, createMockCredential());
-        await client.deleteItem("https://contoso.sharepoint.com", "Tasks", "42");
+        await client.deleteItem("https://contoso.sharepoint.com", "Tasks", 42);
 
         const [, init] = (global.fetch as jest.Mock).mock.calls[0];
         expect(init.method).toBe("DELETE");

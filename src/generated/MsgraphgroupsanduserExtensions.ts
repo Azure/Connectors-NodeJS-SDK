@@ -280,7 +280,7 @@ export class MsgraphgroupsanduserClient extends ConnectorClientBase {
         if (count !== undefined) {
             queryParams.push(`$count=${encodeURIComponent(String(count))}`);
         }
-        const requestPath = `/v1.0/groups/${groupId}/members` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
+        const requestPath = `/v1.0/groups/${encodeURIComponent(String(groupId))}/members` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestHeaders: Record<string, string> = {};
         if (consistencyLevel !== undefined) {
             requestHeaders["ConsistencyLevel"] = String(consistencyLevel);
@@ -306,7 +306,7 @@ export class MsgraphgroupsanduserClient extends ConnectorClientBase {
         if (options.select !== undefined) {
             queryParams.push(`$select=${encodeURIComponent(String(options.select))}`);
         }
-        const requestPath = `/v1.0/users/${id}/licenseDetails` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
+        const requestPath = `/v1.0/users/${encodeURIComponent(String(id))}/licenseDetails` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.sendWithTracingAsync<GetMemberLicenseDetailsResponse>("Msgraphgroupsanduser.getMemberLicenseDetails", "GetMemberLicenseDetails", "GET", requestUrl, undefined, options);
 
@@ -318,7 +318,7 @@ export class MsgraphgroupsanduserClient extends ConnectorClientBase {
      * @remarks Retrieve properties and relationships of an Microsoft Entra ID group
      */
     public async getGroupProperties(groupId: string, options: ConnectorOperationOptions = {}): Promise<GetGroupPropertiesResponse> {
-        const requestPath = `/v1.0/groups/${groupId}`;
+        const requestPath = `/v1.0/groups/${encodeURIComponent(String(groupId))}`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.sendWithTracingAsync<GetGroupPropertiesResponse>("Msgraphgroupsanduser.getGroupProperties", "GetGroupProperties", "GET", requestUrl, undefined, options);
 
@@ -330,7 +330,7 @@ export class MsgraphgroupsanduserClient extends ConnectorClientBase {
      * @remarks Group memberships for a user (member)
      */
     public async getMemberGroups(input: GetMemberGroupsInput, memberId: string, options: ConnectorOperationOptions = {}): Promise<GetMemberGroupsResponse> {
-        const requestPath = `/v1.0/users/${memberId}/getMemberGroups`;
+        const requestPath = `/v1.0/users/${encodeURIComponent(String(memberId))}/getMemberGroups`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.sendWithTracingAsync<GetMemberGroupsResponse>("Msgraphgroupsanduser.getMemberGroups", "GetMemberGroups", "POST", requestUrl, input, options);
 

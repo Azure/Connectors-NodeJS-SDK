@@ -157,7 +157,10 @@ async function main(): Promise<void> {
                 SITE_URL,
                 crudListName,
             );
-            const itemId = String(created.ID);
+            const itemId = Number(created.ID);
+            if (!Number.isInteger(itemId)) {
+                throw new Error("The created item response did not include a numeric ID.");
+            }
             console.log(`  Created item ${itemId}: ${created.Title}`);
 
             // READ

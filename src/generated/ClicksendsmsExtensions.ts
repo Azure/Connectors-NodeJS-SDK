@@ -345,9 +345,9 @@ export interface SmsInboundAutomationInput {
  */
 export interface GetContactListsOptions extends ConnectorOperationOptions {
     /** Page number */
-    page?: string;
+    page?: number;
     /** Number of records per page */
-    limit?: string;
+    limit?: number;
 }
 // #endregion Types
 
@@ -437,8 +437,8 @@ export class ClicksendsmsClient extends ConnectorClientBase {
      * Delete List
      * @remarks Delete a specific contact list
      */
-    public async listDelete(listId: string, options: ConnectorOperationOptions = {}): Promise<DeleteListResponse> {
-        const requestPath = `/lists/${listId}`;
+    public async listDelete(listId: number, options: ConnectorOperationOptions = {}): Promise<DeleteListResponse> {
+        const requestPath = `/lists/${encodeURIComponent(String(listId))}`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.sendWithTracingAsync<DeleteListResponse>("Clicksendsms.listDelete", "delete_list", "DELETE", requestUrl, undefined, options);
 
@@ -449,8 +449,8 @@ export class ClicksendsmsClient extends ConnectorClientBase {
      * Create New Contact
      * @remarks Create New Contact
      */
-    public async listCreateContact(input: CreateListContactInput, listId: string, options: ConnectorOperationOptions = {}): Promise<CreateListContactResponse> {
-        const requestPath = `/lists/${listId}/contacts`;
+    public async listCreateContact(input: CreateListContactInput, listId: number, options: ConnectorOperationOptions = {}): Promise<CreateListContactResponse> {
+        const requestPath = `/lists/${encodeURIComponent(String(listId))}/contacts`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.sendWithTracingAsync<CreateListContactResponse>("Clicksendsms.listCreateContact", "create_list_contact", "POST", requestUrl, input, options);
 
@@ -461,8 +461,8 @@ export class ClicksendsmsClient extends ConnectorClientBase {
      * Get Contacts in a List
      * @remarks Get all Contacts in a List
      */
-    public async listViewContacts(listId: string, options: ConnectorOperationOptions = {}): Promise<ViewListContactsResponse> {
-        const requestPath = `/lists/${listId}/contacts`;
+    public async listViewContacts(listId: number, options: ConnectorOperationOptions = {}): Promise<ViewListContactsResponse> {
+        const requestPath = `/lists/${encodeURIComponent(String(listId))}/contacts`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.sendWithTracingAsync<ViewListContactsResponse>("Clicksendsms.listViewContacts", "view_list_contacts", "GET", requestUrl, undefined, options);
 
@@ -473,8 +473,8 @@ export class ClicksendsmsClient extends ConnectorClientBase {
      * Delete a Contact
      * @remarks Delete a Contact
      */
-    public async listDeleteContact(listId: string, contactId: string, options: ConnectorOperationOptions = {}): Promise<DeleteListContactResponse> {
-        const requestPath = `/lists/${listId}/contacts/${contactId}`;
+    public async listDeleteContact(listId: number, contactId: number, options: ConnectorOperationOptions = {}): Promise<DeleteListContactResponse> {
+        const requestPath = `/lists/${encodeURIComponent(String(listId))}/contacts/${encodeURIComponent(String(contactId))}`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.sendWithTracingAsync<DeleteListContactResponse>("Clicksendsms.listDeleteContact", "delete_list_contact", "DELETE", requestUrl, undefined, options);
 

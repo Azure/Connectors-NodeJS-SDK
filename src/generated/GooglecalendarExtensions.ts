@@ -318,7 +318,7 @@ export class GooglecalendarClient extends ConnectorClientBase {
         if (options.q !== undefined) {
             queryParams.push(`q=${encodeURIComponent(String(options.q))}`);
         }
-        const requestPath = `/calendars/${calendarId}/events` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
+        const requestPath = `/calendars/${encodeURIComponent(String(calendarId))}/events` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         return this.createPageable<CalendarEventList, ResponseEvent>(
             requestPath,
             async (requestUrl) => {
@@ -336,7 +336,7 @@ export class GooglecalendarClient extends ConnectorClientBase {
      * @remarks This operation is used to create an event on a specific calendar.
      */
     public async createEvent(input: RequestEvent, calendarId: string, options: ConnectorOperationOptions = {}): Promise<ResponseEvent> {
-        const requestPath = `/calendars/${calendarId}/events`;
+        const requestPath = `/calendars/${encodeURIComponent(String(calendarId))}/events`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.sendWithTracingAsync<ResponseEvent>("Googlecalendar.createEvent", "CreateEvent", "POST", requestUrl, input, options);
 
@@ -348,7 +348,7 @@ export class GooglecalendarClient extends ConnectorClientBase {
      * @remarks This operation is used to get the details of a specific event from a calendar.
      */
     public async getEvent(calendarId: string, eventId: string, options: ConnectorOperationOptions = {}): Promise<ResponseEvent> {
-        const requestPath = `/calendars/${calendarId}/events/${eventId}`;
+        const requestPath = `/calendars/${encodeURIComponent(String(calendarId))}/events/${encodeURIComponent(String(eventId))}`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.sendWithTracingAsync<ResponseEvent>("Googlecalendar.getEvent", "GetEvent", "GET", requestUrl, undefined, options);
 
@@ -360,7 +360,7 @@ export class GooglecalendarClient extends ConnectorClientBase {
      * @remarks This operation is used to delete an event from a calendar.
      */
     public async deleteEvent(calendarId: string, eventId: string, options: ConnectorOperationOptions = {}): Promise<ObjectEntity> {
-        const requestPath = `/calendars/${calendarId}/events/${eventId}`;
+        const requestPath = `/calendars/${encodeURIComponent(String(calendarId))}/events/${encodeURIComponent(String(eventId))}`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.sendWithTracingAsync<ObjectEntity>("Googlecalendar.deleteEvent", "DeleteEvent", "DELETE", requestUrl, undefined, options);
 
@@ -372,7 +372,7 @@ export class GooglecalendarClient extends ConnectorClientBase {
      * @remarks This operation is used to update an existing event on a calendar.
      */
     public async updateEvent(input: PatchEvent, calendarId: string, eventId: string, options: ConnectorOperationOptions = {}): Promise<ResponseEvent> {
-        const requestPath = `/calendars/${calendarId}/events/${eventId}`;
+        const requestPath = `/calendars/${encodeURIComponent(String(calendarId))}/events/${encodeURIComponent(String(eventId))}`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.sendWithTracingAsync<ResponseEvent>("Googlecalendar.updateEvent", "UpdateEvent", "PATCH", requestUrl, input, options);
 

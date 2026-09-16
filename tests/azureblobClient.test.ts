@@ -190,7 +190,7 @@ describe("AzureblobClient — copyFile", () => {
             TestDataset,
             "/source/file.txt",
             "/dest/file.txt",
-            { overwrite: "true" },
+            { overwrite: true },
         );
 
         expect(result).toEqual(mockResult);

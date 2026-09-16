@@ -362,7 +362,7 @@ export interface AlignmentTranscriptGetResponse {
  */
 export interface GetTranscriptionsOptions extends ConnectorOperationOptions {
     /** The limit. */
-    limit?: string;
+    limit?: number;
     /** The starting after. */
     startingAfter?: string;
 }
@@ -380,7 +380,7 @@ export interface GetCaptionsOptions extends ConnectorOperationOptions {
  */
 export interface GetVocabulariesOptions extends ConnectorOperationOptions {
     /** The limit. */
-    limit?: string;
+    limit?: number;
 }
 
 /**
@@ -388,7 +388,7 @@ export interface GetVocabulariesOptions extends ConnectorOperationOptions {
  */
 export interface GetExtractionsOptions extends ConnectorOperationOptions {
     /** The limit. */
-    limit?: string;
+    limit?: number;
     /** The starting after. */
     startingAfter?: string;
 }
@@ -398,7 +398,7 @@ export interface GetExtractionsOptions extends ConnectorOperationOptions {
  */
 export interface GetExtractionResultOptions extends ConnectorOperationOptions {
     /** The threshold. */
-    threshold?: string;
+    threshold?: number;
 }
 
 /**
@@ -406,7 +406,7 @@ export interface GetExtractionResultOptions extends ConnectorOperationOptions {
  */
 export interface GetAnalysisesOptions extends ConnectorOperationOptions {
     /** The limit. */
-    limit?: string;
+    limit?: number;
     /** The starting after. */
     startingAfter?: string;
 }
@@ -424,7 +424,7 @@ export interface GetAnalysisResultOptions extends ConnectorOperationOptions {
  */
 export interface GetIdentificationsOptions extends ConnectorOperationOptions {
     /** The limit. */
-    limit?: string;
+    limit?: number;
     /** The starting after. */
     startingAfter?: string;
 }
@@ -434,7 +434,7 @@ export interface GetIdentificationsOptions extends ConnectorOperationOptions {
  */
 export interface GetAlignmentsOptions extends ConnectorOperationOptions {
     /** The limit. */
-    limit?: string;
+    limit?: number;
     /** The starting after. */
     startingAfter?: string;
 }
@@ -466,7 +466,7 @@ export class RevaiClient extends ConnectorClientBase {
      * @remarks Returns information about a transcription job.
      */
     public async getTranscription(id: string, options: ConnectorOperationOptions = {}): Promise<TranscriptionGetResponse> {
-        const requestPath = `/speechtotext/v1/jobs/${id}`;
+        const requestPath = `/speechtotext/v1/jobs/${encodeURIComponent(String(id))}`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.sendWithTracingAsync<TranscriptionGetResponse>("Revai.getTranscription", "TranscriptionGet", "GET", requestUrl, undefined, options);
 
@@ -478,7 +478,7 @@ export class RevaiClient extends ConnectorClientBase {
      * @remarks Deletes a transcription job. All data related to the job, such as input media and transcript, will be permanently deleted. A job can only be deleted once it's completed (either with success or failure).
      */
     public async deleteTranscription(id: string, options: ConnectorOperationOptions = {}): Promise<string> {
-        const requestPath = `/speechtotext/v1/jobs/${id}`;
+        const requestPath = `/speechtotext/v1/jobs/${encodeURIComponent(String(id))}`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.sendWithTracingAsync<string>("Revai.deleteTranscription", "TranscriptionDelete", "DELETE", requestUrl, undefined, options);
 
@@ -521,7 +521,7 @@ export class RevaiClient extends ConnectorClientBase {
      * @remarks Returns the transcript for a completed transcription job.
      */
     public async getTranscript(id: string, options: ConnectorOperationOptions = {}): Promise<TranscriptGetResponse> {
-        const requestPath = `/speechtotext/v1/jobs/${id}/transcript`;
+        const requestPath = `/speechtotext/v1/jobs/${encodeURIComponent(String(id))}/transcript`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.sendWithTracingAsync<TranscriptGetResponse>("Revai.getTranscript", "TranscriptGet", "GET", requestUrl, undefined, options);
 
@@ -533,7 +533,7 @@ export class RevaiClient extends ConnectorClientBase {
      * @remarks Returns the caption output for a transcription job. We currently support the SubRip (SRT) format.
      */
     public async getCaptions(id: string, options: GetCaptionsOptions = {}): Promise<string> {
-        const requestPath = `/speechtotext/v1/jobs/${id}/captions`;
+        const requestPath = `/speechtotext/v1/jobs/${encodeURIComponent(String(id))}/captions`;
         const requestHeaders: Record<string, string> = {};
         if (options.accept !== undefined) {
             requestHeaders["Accept"] = String(options.accept);
@@ -589,7 +589,7 @@ export class RevaiClient extends ConnectorClientBase {
      * @remarks Retrieve a custom vocabulary processing information.
      */
     public async getVocabulary(id: string, options: ConnectorOperationOptions = {}): Promise<VocabularyGetResponse> {
-        const requestPath = `/speechtotext/v1/vocabularies/${id}`;
+        const requestPath = `/speechtotext/v1/vocabularies/${encodeURIComponent(String(id))}`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.sendWithTracingAsync<VocabularyGetResponse>("Revai.getVocabulary", "VocabularyGet", "GET", requestUrl, undefined, options);
 
@@ -601,7 +601,7 @@ export class RevaiClient extends ConnectorClientBase {
      * @remarks Deletes a custom vocabulary. All data related to the custom vocabulary, such as webhooks and metadata, will be permanently deleted.
      */
     public async deleteVocabulary(id: string, options: ConnectorOperationOptions = {}): Promise<string> {
-        const requestPath = `/speechtotext/v1/vocabularies/${id}`;
+        const requestPath = `/speechtotext/v1/vocabularies/${encodeURIComponent(String(id))}`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.sendWithTracingAsync<string>("Revai.deleteVocabulary", "VocabularyDelete", "DELETE", requestUrl, undefined, options);
 
@@ -644,7 +644,7 @@ export class RevaiClient extends ConnectorClientBase {
      * @remarks Returns information about a topic extraction job.
      */
     public async getExtraction(id: string, options: ConnectorOperationOptions = {}): Promise<ExtractionGetResponse> {
-        const requestPath = `/topic_extraction/v1/jobs/${id}`;
+        const requestPath = `/topic_extraction/v1/jobs/${encodeURIComponent(String(id))}`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.sendWithTracingAsync<ExtractionGetResponse>("Revai.getExtraction", "ExtractionGet", "GET", requestUrl, undefined, options);
 
@@ -656,7 +656,7 @@ export class RevaiClient extends ConnectorClientBase {
      * @remarks Deletes a topic extraction job. All data related to the job will be permanently deleted.
      */
     public async deleteExtraction(id: string, options: ConnectorOperationOptions = {}): Promise<string> {
-        const requestPath = `/topic_extraction/v1/jobs/${id}`;
+        const requestPath = `/topic_extraction/v1/jobs/${encodeURIComponent(String(id))}`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.sendWithTracingAsync<string>("Revai.deleteExtraction", "ExtractionDelete", "DELETE", requestUrl, undefined, options);
 
@@ -672,7 +672,7 @@ export class RevaiClient extends ConnectorClientBase {
         if (options.threshold !== undefined) {
             queryParams.push(`threshold=${encodeURIComponent(String(options.threshold))}`);
         }
-        const requestPath = `/topic_extraction/v1/jobs/${id}/result` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
+        const requestPath = `/topic_extraction/v1/jobs/${encodeURIComponent(String(id))}/result` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.sendWithTracingAsync<ExtractionResultGetResponse>("Revai.getExtractionResult", "ExtractionResultGet", "GET", requestUrl, undefined, options);
 
@@ -713,7 +713,7 @@ export class RevaiClient extends ConnectorClientBase {
      * @remarks Returns information about a sentiment analysis job.
      */
     public async getAnalysis(id: string, options: ConnectorOperationOptions = {}): Promise<AnalysisGetResponse> {
-        const requestPath = `/sentiment_analysis/v1/jobs/${id}`;
+        const requestPath = `/sentiment_analysis/v1/jobs/${encodeURIComponent(String(id))}`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.sendWithTracingAsync<AnalysisGetResponse>("Revai.getAnalysis", "AnalysisGet", "GET", requestUrl, undefined, options);
 
@@ -725,7 +725,7 @@ export class RevaiClient extends ConnectorClientBase {
      * @remarks Deletes a sentiment analysis job. All data related to the job will be permanently deleted.
      */
     public async deleteAnalysis(id: string, options: ConnectorOperationOptions = {}): Promise<string> {
-        const requestPath = `/sentiment_analysis/v1/jobs/${id}`;
+        const requestPath = `/sentiment_analysis/v1/jobs/${encodeURIComponent(String(id))}`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.sendWithTracingAsync<string>("Revai.deleteAnalysis", "AnalysisDelete", "DELETE", requestUrl, undefined, options);
 
@@ -741,7 +741,7 @@ export class RevaiClient extends ConnectorClientBase {
         if (options.filterFor !== undefined) {
             queryParams.push(`filter_for=${encodeURIComponent(String(options.filterFor))}`);
         }
-        const requestPath = `/sentiment_analysis/v1/jobs/${id}/result` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
+        const requestPath = `/sentiment_analysis/v1/jobs/${encodeURIComponent(String(id))}/result` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.sendWithTracingAsync<AnalysisResultGetResponse>("Revai.getAnalysisResult", "AnalysisResultGet", "GET", requestUrl, undefined, options);
 
@@ -784,7 +784,7 @@ export class RevaiClient extends ConnectorClientBase {
      * @remarks Returns information about a language identification job.
      */
     public async getIdentification(id: string, options: ConnectorOperationOptions = {}): Promise<IdentificationGetResponse> {
-        const requestPath = `/languageid/v1/jobs/${id}`;
+        const requestPath = `/languageid/v1/jobs/${encodeURIComponent(String(id))}`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.sendWithTracingAsync<IdentificationGetResponse>("Revai.getIdentification", "IdentificationGet", "GET", requestUrl, undefined, options);
 
@@ -796,7 +796,7 @@ export class RevaiClient extends ConnectorClientBase {
      * @remarks Deletes a language identification job. All data related to the job will be permanently deleted.
      */
     public async deleteIdentification(id: string, options: ConnectorOperationOptions = {}): Promise<string> {
-        const requestPath = `/languageid/v1/jobs/${id}`;
+        const requestPath = `/languageid/v1/jobs/${encodeURIComponent(String(id))}`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.sendWithTracingAsync<string>("Revai.deleteIdentification", "IdentificationDelete", "DELETE", requestUrl, undefined, options);
 
@@ -808,7 +808,7 @@ export class RevaiClient extends ConnectorClientBase {
      * @remarks Returns the results for a completed language identification job.
      */
     public async getIdentificationResult(id: string, options: ConnectorOperationOptions = {}): Promise<IdentificationResultGetResponse> {
-        const requestPath = `/languageid/v1/jobs/${id}/result`;
+        const requestPath = `/languageid/v1/jobs/${encodeURIComponent(String(id))}/result`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.sendWithTracingAsync<IdentificationResultGetResponse>("Revai.getIdentificationResult", "IdentificationResultGet", "GET", requestUrl, undefined, options);
 
@@ -851,7 +851,7 @@ export class RevaiClient extends ConnectorClientBase {
      * @remarks Returns information about a forced alignment job.
      */
     public async getAlignment(id: string, options: ConnectorOperationOptions = {}): Promise<AlignmentGetResponse> {
-        const requestPath = `/alignment/v1/jobs/${id}`;
+        const requestPath = `/alignment/v1/jobs/${encodeURIComponent(String(id))}`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.sendWithTracingAsync<AlignmentGetResponse>("Revai.getAlignment", "AlignmentGet", "GET", requestUrl, undefined, options);
 
@@ -863,7 +863,7 @@ export class RevaiClient extends ConnectorClientBase {
      * @remarks Deletes a forced alignment job. All data related to the job will be permanently deleted.
      */
     public async deleteAlignment(id: string, options: ConnectorOperationOptions = {}): Promise<string> {
-        const requestPath = `/alignment/v1/jobs/${id}`;
+        const requestPath = `/alignment/v1/jobs/${encodeURIComponent(String(id))}`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.sendWithTracingAsync<string>("Revai.deleteAlignment", "AlignmentDelete", "DELETE", requestUrl, undefined, options);
 
@@ -875,7 +875,7 @@ export class RevaiClient extends ConnectorClientBase {
      * @remarks Returns the results for a completed forced alignment job.
      */
     public async getAlignmentTranscript(id: string, options: ConnectorOperationOptions = {}): Promise<AlignmentTranscriptGetResponse> {
-        const requestPath = `/alignment/v1/jobs/${id}/transcript`;
+        const requestPath = `/alignment/v1/jobs/${encodeURIComponent(String(id))}/transcript`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.sendWithTracingAsync<AlignmentTranscriptGetResponse>("Revai.getAlignmentTranscript", "AlignmentTranscriptGet", "GET", requestUrl, undefined, options);
 

@@ -485,7 +485,7 @@ export interface McpJiraIssueManagementOptions extends ConnectorOperationOptions
  */
 export interface DeleteProjectOptions extends ConnectorOperationOptions {
     /** Whether this project is placed in the Jira recycle bin where it will be available for restoration. */
-    enableUndo?: string;
+    enableUndo?: boolean;
 }
 
 /**
@@ -493,11 +493,11 @@ export interface DeleteProjectOptions extends ConnectorOperationOptions {
  */
 export interface EditIssueOptions extends ConnectorOperationOptions {
     /** Do you want to notify users? */
-    notifyUsers?: string;
+    notifyUsers?: boolean;
     /** Do you want to override the screen security? */
-    overrideScreenSecurity?: string;
+    overrideScreenSecurity?: boolean;
     /** Do you want to override the editable flag? */
-    overrideEditableFlag?: string;
+    overrideEditableFlag?: boolean;
 }
 
 /**
@@ -763,7 +763,7 @@ export class JiraClient extends ConnectorClientBase {
      * @remarks Returns a list of the transitions possible for this issue by the current user
      */
     public listTransitions(issueIdOrKey: string, xRequestJirainstance: string, options: ConnectorOperationOptions = {}): ConnectorPagedAsyncIterableIterator<Transition> {
-        const requestPath = `/3/issue/${issueIdOrKey}/transitions`;
+        const requestPath = `/3/issue/${encodeURIComponent(String(issueIdOrKey))}/transitions`;
         const requestHeaders: Record<string, string> = {};
         if (xRequestJirainstance !== undefined) {
             requestHeaders["X-Request-Jirainstance"] = String(xRequestJirainstance);
@@ -785,7 +785,7 @@ export class JiraClient extends ConnectorClientBase {
      * @remarks Transitions an issue to a new status.
      */
     public async updateTransition(input: TransitionInput, issueIdOrKey: string, xRequestJirainstance: string, options: ConnectorOperationOptions = {}): Promise<UpdateTransitionResponse> {
-        const requestPath = `/3/issue/${issueIdOrKey}/transitions`;
+        const requestPath = `/3/issue/${encodeURIComponent(String(issueIdOrKey))}/transitions`;
         const requestHeaders: Record<string, string> = {};
         if (xRequestJirainstance !== undefined) {
             requestHeaders["X-Request-Jirainstance"] = String(xRequestJirainstance);
@@ -837,7 +837,7 @@ export class JiraClient extends ConnectorClientBase {
      * @remarks This operation is used to add a comment to an existing Jira issue.
      */
     public async addComment(input: Comment, issueKey: string, xRequestJirainstance: string, options: ConnectorOperationOptions = {}): Promise<CommentResponse> {
-        const requestPath = `/v2/issue/${issueKey}/comment`;
+        const requestPath = `/v2/issue/${encodeURIComponent(String(issueKey))}/comment`;
         const requestHeaders: Record<string, string> = {};
         if (xRequestJirainstance !== undefined) {
             requestHeaders["X-Request-Jirainstance"] = String(xRequestJirainstance);
@@ -853,7 +853,7 @@ export class JiraClient extends ConnectorClientBase {
      * @remarks Cancels a task. Permissions required: either of: Administer Jira or Creator of the task.
      */
     public async cancelTask(taskId: string, xRequestJirainstance: string, xAtlassianToken: string, options: ConnectorOperationOptions = {}): Promise<CancelTaskResponse> {
-        const requestPath = `/v2/task/${taskId}/cancel`;
+        const requestPath = `/v2/task/${encodeURIComponent(String(taskId))}/cancel`;
         const requestHeaders: Record<string, string> = {};
         if (xRequestJirainstance !== undefined) {
             requestHeaders["X-Request-Jirainstance"] = String(xRequestJirainstance);
@@ -931,7 +931,7 @@ export class JiraClient extends ConnectorClientBase {
         if (options.enableUndo !== undefined) {
             queryParams.push(`enableUndo=${encodeURIComponent(String(options.enableUndo))}`);
         }
-        const requestPath = `/v2/project/${projectIdOrKey}` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
+        const requestPath = `/v2/project/${encodeURIComponent(String(projectIdOrKey))}` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestHeaders: Record<string, string> = {};
         if (xRequestJirainstance !== undefined) {
             requestHeaders["X-Request-Jirainstance"] = String(xRequestJirainstance);
@@ -955,7 +955,7 @@ export class JiraClient extends ConnectorClientBase {
         if (options.overrideEditableFlag !== undefined) {
             queryParams.push(`overrideEditableFlag=${encodeURIComponent(String(options.overrideEditableFlag))}`);
         }
-        const requestPath = `/v2/3/issue/${issueIdOrKey}` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
+        const requestPath = `/v2/3/issue/${encodeURIComponent(String(issueIdOrKey))}` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestHeaders: Record<string, string> = {};
         if (xRequestJirainstance !== undefined) {
             requestHeaders["X-Request-Jirainstance"] = String(xRequestJirainstance);
@@ -987,7 +987,7 @@ export class JiraClient extends ConnectorClientBase {
      * @remarks This operation is used to retrieve the issue object for a given issue Key.
      */
     public async getIssue(issueKey: string, xRequestJirainstance: string, options: ConnectorOperationOptions = {}): Promise<FullIssue> {
-        const requestPath = `/v2/issue/${issueKey}`;
+        const requestPath = `/v2/issue/${encodeURIComponent(String(issueKey))}`;
         const requestHeaders: Record<string, string> = {};
         if (xRequestJirainstance !== undefined) {
             requestHeaders["X-Request-Jirainstance"] = String(xRequestJirainstance);
@@ -1003,7 +1003,7 @@ export class JiraClient extends ConnectorClientBase {
      * @remarks Returns the status of a long-running asynchronous task. When a task has finished, this operation returns the JSON blob applicable to the task.
      */
     public async getTask(taskId: string, xRequestJirainstance: string, options: ConnectorOperationOptions = {}): Promise<GetTaskResponse> {
-        const requestPath = `/v2/task/${taskId}`;
+        const requestPath = `/v2/task/${encodeURIComponent(String(taskId))}`;
         const requestHeaders: Record<string, string> = {};
         if (xRequestJirainstance !== undefined) {
             requestHeaders["X-Request-Jirainstance"] = String(xRequestJirainstance);
@@ -1111,8 +1111,8 @@ export class JiraClient extends ConnectorClientBase {
      * Remove Project Category
      * @remarks Deletes a project category. Permissions required: Administer Jira (global permissions)
      */
-    public async removeProjectCategory(id: string, xRequestJirainstance: string, options: ConnectorOperationOptions = {}): Promise<void> {
-        const requestPath = `/v2/projectCategory/${id}`;
+    public async removeProjectCategory(id: number, xRequestJirainstance: string, options: ConnectorOperationOptions = {}): Promise<void> {
+        const requestPath = `/v2/projectCategory/${encodeURIComponent(String(id))}`;
         const requestHeaders: Record<string, string> = {};
         if (xRequestJirainstance !== undefined) {
             requestHeaders["X-Request-Jirainstance"] = String(xRequestJirainstance);
@@ -1126,7 +1126,7 @@ export class JiraClient extends ConnectorClientBase {
      * @remarks Updates the project details of a project.
      */
     public async updateProject(input: UpdateProjectInput, projectIdOrKey: string, xRequestJirainstance: string, options: ConnectorOperationOptions = {}): Promise<UpdateProjectResponse> {
-        const requestPath = `/v2/project/${projectIdOrKey}`;
+        const requestPath = `/v2/project/${encodeURIComponent(String(projectIdOrKey))}`;
         const requestHeaders: Record<string, string> = {};
         if (xRequestJirainstance !== undefined) {
             requestHeaders["X-Request-Jirainstance"] = String(xRequestJirainstance);

@@ -38,7 +38,7 @@ async function main() {
 
     // Example 1: Create a card on a board.
     try {
-        const card = await client.createCard({ title: "Design review" }, BOARD_ID);
+        const card = await client.createCard({ title: "Design review" }, Number(BOARD_ID));
         console.log("Card:", JSON.stringify(card, null, 2));
     } catch (error) {
         if (error instanceof ConnectorError) {

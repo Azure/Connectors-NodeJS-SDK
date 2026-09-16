@@ -345,9 +345,9 @@ export interface MyTrendingDocumentsOptions extends ConnectorOperationOptions {
     /** An OData filter to filter the resources selected. Filter selected resources on ResourceVisualization/Type or ResourceVisualization/containerType */
     filter?: string;
     /** Select if you want to extract Sensitivity label ( false, true). */
-    extractSensitivityLabel?: string;
+    extractSensitivityLabel?: boolean;
     /** A boolean whether to fetch sensitivity label Metadata for associated LabelId. */
-    fetchSensitivityLabelMetadata?: string;
+    fetchSensitivityLabelMetadata?: boolean;
 }
 
 /**
@@ -357,9 +357,9 @@ export interface TrendingDocumentsOptions extends ConnectorOperationOptions {
     /** An OData filter to filter the resources selected. Filter selected resources on ResourceVisualization/Type or ResourceVisualization/containerType */
     filter?: string;
     /** Select if you want to extract Sensitivity label ( false, true). */
-    extractSensitivityLabel?: string;
+    extractSensitivityLabel?: boolean;
     /** A boolean whether to fetch sensitivity label Metadata for associated LabelId. */
-    fetchSensitivityLabelMetadata?: string;
+    fetchSensitivityLabelMetadata?: boolean;
 }
 
 /**
@@ -387,7 +387,7 @@ export interface DirectReportsOptions extends ConnectorOperationOptions {
     /** Comma separated list of fields to select. Example: surname, department, jobTitle */
     select?: string;
     /** Limit on the number of results to return. By default returns all entries. */
-    top?: string;
+    top?: number;
 }
 
 /**
@@ -413,9 +413,9 @@ export interface SearchUserOptions extends ConnectorOperationOptions {
     /** Search string (applies to: display name, given name, surname, mail, mail nickname and user principal name). */
     searchTerm?: string;
     /** Limit on the number of results to return. Minimum value is 1. Default value is 1000. */
-    top?: string;
+    top?: number;
     /** If set to 'Yes' then no user profiles will be returned when the search term is empty. If set to 'No' then no filtering will be applied when the search term is empty. */
-    isSearchTermRequired?: string;
+    isSearchTermRequired?: boolean;
     /** Skip token to get next users. */
     skipToken?: string;
 }
@@ -501,7 +501,7 @@ export class Office365usersClient extends ConnectorClientBase {
      * @remarks Get relevant people.
      */
     public async relevantPeople(userId: string, options: ConnectorOperationOptions = {}): Promise<LinklessEntityListResponseListPerson> {
-        const requestPath = `/users/${userId}/relevantpeople`;
+        const requestPath = `/users/${encodeURIComponent(String(userId))}/relevantpeople`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.sendWithTracingAsync<LinklessEntityListResponseListPerson>("Office365users.relevantPeople", "RelevantPeople", "GET", requestUrl, undefined, options);
 
@@ -539,7 +539,7 @@ export class Office365usersClient extends ConnectorClientBase {
         if (options.fetchSensitivityLabelMetadata !== undefined) {
             queryParams.push(`fetchSensitivityLabelMetadata=${encodeURIComponent(String(options.fetchSensitivityLabelMetadata))}`);
         }
-        const requestPath = `/codeless/beta/users/${id}/insights/trending` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
+        const requestPath = `/codeless/beta/users/${encodeURIComponent(String(id))}/insights/trending` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.sendWithTracingAsync<TrendingDocumentsResponse>("Office365users.trendingDocuments", "TrendingDocuments", "GET", requestUrl, undefined, options);
 
@@ -595,7 +595,7 @@ export class Office365usersClient extends ConnectorClientBase {
         if (options.top !== undefined) {
             queryParams.push(`$top=${encodeURIComponent(String(options.top))}`);
         }
-        const requestPath = `/codeless/v1.0/users/${id}/directReports` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
+        const requestPath = `/codeless/v1.0/users/${encodeURIComponent(String(id))}/directReports` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.sendWithTracingAsync<DirectReportsResponse>("Office365users.directReports", "DirectReports_V2", "GET", requestUrl, undefined, options);
 
@@ -611,7 +611,7 @@ export class Office365usersClient extends ConnectorClientBase {
         if (options.select !== undefined) {
             queryParams.push(`$select=${encodeURIComponent(String(options.select))}`);
         }
-        const requestPath = `/codeless/v1.0/users/${id}/manager` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
+        const requestPath = `/codeless/v1.0/users/${encodeURIComponent(String(id))}/manager` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.sendWithTracingAsync<GraphUser>("Office365users.manager", "Manager_V2", "GET", requestUrl, undefined, options);
 
@@ -671,7 +671,7 @@ export class Office365usersClient extends ConnectorClientBase {
      * @remarks Retrieves the photo of the specified user if they have one
      */
     public async userPhoto(id: string, options: ConnectorOperationOptions = {}): Promise<Blob> {
-        const requestPath = `/codeless/v1.0/users/${id}/photo/$value`;
+        const requestPath = `/codeless/v1.0/users/${encodeURIComponent(String(id))}/photo/$value`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.sendWithTracingAsync<Blob>("Office365users.userPhoto", "UserPhoto_V2", "GET", requestUrl, undefined, options);
 
@@ -687,7 +687,7 @@ export class Office365usersClient extends ConnectorClientBase {
         if (options.select !== undefined) {
             queryParams.push(`$select=${encodeURIComponent(String(options.select))}`);
         }
-        const requestPath = `/codeless/v1.0/users/${id}` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
+        const requestPath = `/codeless/v1.0/users/${encodeURIComponent(String(id))}` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.sendWithTracingAsync<GraphUser>("Office365users.userProfile", "UserProfile_V2", "GET", requestUrl, undefined, options);
 

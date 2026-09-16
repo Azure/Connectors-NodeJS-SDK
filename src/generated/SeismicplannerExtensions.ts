@@ -805,13 +805,13 @@ export interface ValueSchemaPropertyDefinition {
  */
 export interface GetCommentsOptions extends ConnectorOperationOptions {
     /** List of user IDs to query by creator */
-    creatorIds?: string;
+    creatorIds?: Array<string>;
     /** Cursor used for pagination */
     cursor?: string;
     /** Number to limit records */
-    limit?: string;
+    limit?: number;
     /** Sort by query */
-    sort?: string;
+    sort?: Array<string>;
 }
 
 /**
@@ -827,27 +827,27 @@ export interface GetProjectsOptions extends ConnectorOperationOptions {
     /** Filter to a planned start date */
     plannedStartDateTo?: string;
     /** List of project IDs to query by */
-    ids?: string;
+    ids?: Array<string>;
     /** Project title to query by */
     title?: string;
     /** List of user IDs to query by manager */
-    managerIds?: string;
+    managerIds?: Array<string>;
     /** List of user IDs to query by creator */
-    creatorIds?: string;
+    creatorIds?: Array<string>;
     /** List of association IDs to query by */
-    associatedNodeIds?: string;
+    associatedNodeIds?: Array<string>;
     /** Cursor used for pagination */
     cursor?: string;
     /** Number to limit records returned */
-    limit?: string;
+    limit?: number;
     /** Sort query */
-    sort?: string;
+    sort?: Array<string>;
     /** List of custom properties to query by */
     customProperties?: string;
     /** List of user IDs to query by follower */
-    followerIds?: string;
+    followerIds?: Array<string>;
     /** Indicator to allow for inclusion of association data */
-    includeAssociations?: string;
+    includeAssociations?: boolean;
 }
 
 /**
@@ -855,7 +855,7 @@ export interface GetProjectsOptions extends ConnectorOperationOptions {
  */
 export interface DeleteProjectsOptions extends ConnectorOperationOptions {
     /** Also delete associated tasks */
-    deleteTasks?: string;
+    deleteTasks?: boolean;
 }
 
 /**
@@ -863,9 +863,9 @@ export interface DeleteProjectsOptions extends ConnectorOperationOptions {
  */
 export interface GetProjectOptions extends ConnectorOperationOptions {
     /** Number to indicate depth of associated node data returned */
-    associatedNodesDepth?: string;
+    associatedNodesDepth?: number;
     /** Indicator to include associated tasks data */
-    includeWorks?: string;
+    includeWorks?: boolean;
 }
 
 /**
@@ -873,7 +873,7 @@ export interface GetProjectOptions extends ConnectorOperationOptions {
  */
 export interface DeleteProjectOptions extends ConnectorOperationOptions {
     /** Also delete associated tasks */
-    deleteTasks?: string;
+    deleteTasks?: boolean;
 }
 
 /**
@@ -897,43 +897,43 @@ export interface GetRequestsOptions extends ConnectorOperationOptions {
     /** filter by request updated date (exclusive) */
     updatedAtTo?: string;
     /** A list of request IDs */
-    ids?: string;
+    ids?: Array<string>;
     /** Keyword values to search for on request titles */
     title?: string;
     /** A list of assignees' user IDs to filter by */
-    assigneeIds?: string;
+    assigneeIds?: Array<string>;
     /** A list of priority values, Available values : critical, high, medium, low */
-    priorities?: string;
+    priorities?: Array<string>;
     /** Keyword values to search */
     keywords?: string;
     /** A list of assigner' user Ids to filter by */
-    assignerIds?: string;
+    assignerIds?: Array<string>;
     /** A list of creators' user IDs to filter by */
-    creatorIds?: string;
+    creatorIds?: Array<string>;
     /** A list of step IDs to filter by */
-    stepIds?: string;
+    stepIds?: Array<number>;
     /** Status schema ID to filter by */
     statusSchemaId?: string;
     /** A token used to guide the next page window */
     cursor?: string;
     /** Number of items to return per page, default: 50 */
-    limit?: string;
+    limit?: number;
     /** Sort by requests */
-    sort?: string;
+    sort?: Array<string>;
     /** The project ID a request is associated to */
     projectId?: string;
     /** Filter by if requests are associated with a project */
-    hasProject?: string;
+    hasProject?: boolean;
     /** Filter by custom properties */
     customProperties?: string;
     /** A list of followers' user id */
-    followerIds?: string;
+    followerIds?: Array<string>;
     /** A list of Associated node IDs to filter by */
-    associatedNodeIds?: string;
+    associatedNodeIds?: Array<string>;
     /** List of content reference objects */
-    contentRefs?: string;
+    contentRefs?: Array<string>;
     /** whether to include request form custom properties, default false */
-    includeRequestFormCustomProperties?: string;
+    includeRequestFormCustomProperties?: boolean;
 }
 
 /**
@@ -949,17 +949,17 @@ export interface DeleteRequestsOptions extends ConnectorOperationOptions {
  */
 export interface GetStatusSchemasOptions extends ConnectorOperationOptions {
     /** Get default status schema */
-    isDefault?: string;
+    isDefault?: boolean;
     /** Query by node type */
     type?: string;
     /** List of status schemas IDs */
-    ids?: string;
+    ids?: Array<string>;
     /** List of user IDs to query by creator */
-    creatorIds?: string;
+    creatorIds?: Array<string>;
     /** Cursor used for pagination */
     cursor?: string;
     /** Number to limit returned records */
-    limit?: string;
+    limit?: number;
 }
 
 /**
@@ -983,45 +983,45 @@ export interface GetTasksOptions extends ConnectorOperationOptions {
     /** Filter by task updated date (exclusive) */
     updatedAtTo?: string;
     /** Filter by a list of task IDs */
-    ids?: string;
+    ids?: Array<string>;
     /** Filter by task title */
     title?: string;
     /** Filter by task description */
     description?: string;
     /** List of user IDs to filter by assignee */
-    assigneeIds?: string;
+    assigneeIds?: Array<string>;
     /** Filter by list of priorities */
-    priorities?: string;
+    priorities?: Array<string>;
     /** Filter by keywords */
     keywords?: string;
     /** List of user IDs to filter by user that assigned the task */
-    assignerIds?: string;
+    assignerIds?: Array<string>;
     /** Filter by status value IDs */
-    stepIds?: string;
+    stepIds?: Array<number>;
     /** Filter by status schema IDs */
     statusSchemaId?: string;
     /** Cursor used for pagination */
     cursor?: string;
     /** Number to limit returned records */
-    limit?: string;
+    limit?: number;
     /** Sort by query */
-    sort?: string;
+    sort?: Array<string>;
     /** Include subtasks within the returned list */
-    recursive?: string;
+    recursive?: boolean;
     /** Filter by project ID */
     projectId?: string;
     /** Filter by tasks that are associated with a project */
-    hasProject?: string;
+    hasProject?: boolean;
     /** Filter by custom property values */
     customProperties?: string;
     /** List of user IDs to filter by followers */
-    followerIds?: string;
+    followerIds?: Array<string>;
     /** List of association IDs to filter by */
-    associatedNodeIds?: string;
+    associatedNodeIds?: Array<string>;
     /** List of user IDs to filter by creator */
-    creatorIds?: string;
+    creatorIds?: Array<string>;
     /** Include association data in the response */
-    includeAssociations?: string;
+    includeAssociations?: boolean;
     /** List of task IDs to filter by */
     parentId?: string;
 }
@@ -1066,7 +1066,7 @@ export class SeismicplannerClient extends ConnectorClientBase {
         if (options.sort !== undefined) {
             queryParams.push(`sort=${encodeURIComponent(String(options.sort))}`);
         }
-        const requestPath = `/planner/v2/spaces/${spaceId}/nodes/${nodeId}/comments` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
+        const requestPath = `/planner/v2/spaces/${encodeURIComponent(String(spaceId))}/nodes/${encodeURIComponent(String(nodeId))}/comments` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.sendWithTracingAsync<CommentQueryResponse>("Seismicplanner.getComments", "GetComments", "GET", requestUrl, undefined, options);
 
@@ -1078,7 +1078,7 @@ export class SeismicplannerClient extends ConnectorClientBase {
      * @remarks Create a comment on a given project, task, or request. Requires node (project, task, or request) ID.
      */
     public async createComment(input: CreateCommentModel, spaceId: string, nodeId: string, options: ConnectorOperationOptions = {}): Promise<Comment> {
-        const requestPath = `/planner/v2/spaces/${spaceId}/nodes/${nodeId}/comments`;
+        const requestPath = `/planner/v2/spaces/${encodeURIComponent(String(spaceId))}/nodes/${encodeURIComponent(String(nodeId))}/comments`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.sendWithTracingAsync<Comment>("Seismicplanner.createComment", "CreateComment", "POST", requestUrl, input, options);
 
@@ -1090,7 +1090,7 @@ export class SeismicplannerClient extends ConnectorClientBase {
      * @remarks Get a single comment. Requires node (project, task, or request) and comment ID.
      */
     public async getComment(spaceId: string, nodeId: string, commentId: string, options: ConnectorOperationOptions = {}): Promise<Comment> {
-        const requestPath = `/planner/v2/spaces/${spaceId}/nodes/${nodeId}/comments/${commentId}`;
+        const requestPath = `/planner/v2/spaces/${encodeURIComponent(String(spaceId))}/nodes/${encodeURIComponent(String(nodeId))}/comments/${encodeURIComponent(String(commentId))}`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.sendWithTracingAsync<Comment>("Seismicplanner.getComment", "GetComment", "GET", requestUrl, undefined, options);
 
@@ -1102,7 +1102,7 @@ export class SeismicplannerClient extends ConnectorClientBase {
      * @remarks Delete a comment. Requires node (project, task, or request) and comment ID.
      */
     public async deleteComment(spaceId: string, nodeId: string, commentId: string, options: ConnectorOperationOptions = {}): Promise<void> {
-        const requestPath = `/planner/v2/spaces/${spaceId}/nodes/${nodeId}/comments/${commentId}`;
+        const requestPath = `/planner/v2/spaces/${encodeURIComponent(String(spaceId))}/nodes/${encodeURIComponent(String(nodeId))}/comments/${encodeURIComponent(String(commentId))}`;
         const requestUrl = this.resolveUrl(requestPath);
         await this.sendWithTracingAsync<void>("Seismicplanner.deleteComment", "DeleteComment", "DELETE", requestUrl, undefined, options);
     }
@@ -1112,7 +1112,7 @@ export class SeismicplannerClient extends ConnectorClientBase {
      * @remarks Update an existing comment. Requires node (project, task, or request) and comment ID.
      */
     public async updateComment(input: UpdateCommentModel, spaceId: string, nodeId: string, commentId: string, options: ConnectorOperationOptions = {}): Promise<Comment> {
-        const requestPath = `/planner/v2/spaces/${spaceId}/nodes/${nodeId}/comments/${commentId}`;
+        const requestPath = `/planner/v2/spaces/${encodeURIComponent(String(spaceId))}/nodes/${encodeURIComponent(String(nodeId))}/comments/${encodeURIComponent(String(commentId))}`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.sendWithTracingAsync<Comment>("Seismicplanner.updateComment", "UpdateComment", "PUT", requestUrl, input, options);
 
@@ -1170,7 +1170,7 @@ export class SeismicplannerClient extends ConnectorClientBase {
         if (options.includeAssociations !== undefined) {
             queryParams.push(`includeAssociations=${encodeURIComponent(String(options.includeAssociations))}`);
         }
-        const requestPath = `/planner/v2/spaces/${spaceId}/projects` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
+        const requestPath = `/planner/v2/spaces/${encodeURIComponent(String(spaceId))}/projects` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.sendWithTracingAsync<PlannerProjectQueryResponse>("Seismicplanner.getProjects", "GetProjects", "GET", requestUrl, undefined, options);
 
@@ -1181,7 +1181,7 @@ export class SeismicplannerClient extends ConnectorClientBase {
      * Delete projects
      * @remarks Delete one or more projects.
      */
-    public async deleteProjects(spaceId: string, ids: string, options: DeleteProjectsOptions = {}): Promise<AsyncOperationResponse> {
+    public async deleteProjects(spaceId: string, ids: Array<string>, options: DeleteProjectsOptions = {}): Promise<AsyncOperationResponse> {
         const queryParams: string[] = [];
         if (ids !== undefined) {
             queryParams.push(`ids=${encodeURIComponent(String(ids))}`);
@@ -1189,7 +1189,7 @@ export class SeismicplannerClient extends ConnectorClientBase {
         if (options.deleteTasks !== undefined) {
             queryParams.push(`deleteTasks=${encodeURIComponent(String(options.deleteTasks))}`);
         }
-        const requestPath = `/planner/v2/spaces/${spaceId}/projects` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
+        const requestPath = `/planner/v2/spaces/${encodeURIComponent(String(spaceId))}/projects` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.sendWithTracingAsync<AsyncOperationResponse>("Seismicplanner.deleteProjects", "DeleteProjects", "DELETE", requestUrl, undefined, options);
 
@@ -1201,7 +1201,7 @@ export class SeismicplannerClient extends ConnectorClientBase {
      * @remarks Create a project.
      */
     public async createProject(input: CreateProject, spaceId: string, options: ConnectorOperationOptions = {}): Promise<PlannerProject> {
-        const requestPath = `/planner/v2/spaces/${spaceId}/projects`;
+        const requestPath = `/planner/v2/spaces/${encodeURIComponent(String(spaceId))}/projects`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.sendWithTracingAsync<PlannerProject>("Seismicplanner.createProject", "CreateProject", "POST", requestUrl, input, options);
 
@@ -1220,7 +1220,7 @@ export class SeismicplannerClient extends ConnectorClientBase {
         if (options.includeWorks !== undefined) {
             queryParams.push(`includeWorks=${encodeURIComponent(String(options.includeWorks))}`);
         }
-        const requestPath = `/planner/v2/spaces/${spaceId}/projects/${projectId}` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
+        const requestPath = `/planner/v2/spaces/${encodeURIComponent(String(spaceId))}/projects/${encodeURIComponent(String(projectId))}` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.sendWithTracingAsync<PlannerProject>("Seismicplanner.getProject", "GetProject", "GET", requestUrl, undefined, options);
 
@@ -1236,7 +1236,7 @@ export class SeismicplannerClient extends ConnectorClientBase {
         if (options.deleteTasks !== undefined) {
             queryParams.push(`deleteTasks=${encodeURIComponent(String(options.deleteTasks))}`);
         }
-        const requestPath = `/planner/v2/spaces/${spaceId}/projects/${projectId}` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
+        const requestPath = `/planner/v2/spaces/${encodeURIComponent(String(spaceId))}/projects/${encodeURIComponent(String(projectId))}` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.sendWithTracingAsync<AsyncOperationResponse>("Seismicplanner.deleteProject", "DeleteProject", "DELETE", requestUrl, undefined, options);
 
@@ -1248,7 +1248,7 @@ export class SeismicplannerClient extends ConnectorClientBase {
      * @remarks Update and return a project.
      */
     public async updateProject(input: UpdateProject, spaceId: string, projectId: string, options: ConnectorOperationOptions = {}): Promise<PlannerProject> {
-        const requestPath = `/planner/v2/spaces/${spaceId}/projects/${projectId}`;
+        const requestPath = `/planner/v2/spaces/${encodeURIComponent(String(spaceId))}/projects/${encodeURIComponent(String(projectId))}`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.sendWithTracingAsync<PlannerProject>("Seismicplanner.updateProject", "UpdateProject", "PUT", requestUrl, input, options);
 
@@ -1342,7 +1342,7 @@ export class SeismicplannerClient extends ConnectorClientBase {
         if (options.includeRequestFormCustomProperties !== undefined) {
             queryParams.push(`includeRequestFormCustomProperties=${encodeURIComponent(String(options.includeRequestFormCustomProperties))}`);
         }
-        const requestPath = `/planner/v2/spaces/${spaceId}/requests` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
+        const requestPath = `/planner/v2/spaces/${encodeURIComponent(String(spaceId))}/requests` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.sendWithTracingAsync<PlannerRequestQueryResponse>("Seismicplanner.getRequests", "GetRequests", "GET", requestUrl, undefined, options);
 
@@ -1354,7 +1354,7 @@ export class SeismicplannerClient extends ConnectorClientBase {
      * @remarks Bulk delete requests.
      */
     public async deleteRequests(input: DeleteRequest, spaceId: string, options: DeleteRequestsOptions = {}): Promise<AsyncOperationResponse> {
-        const requestPath = `/planner/v2/spaces/${spaceId}/requests`;
+        const requestPath = `/planner/v2/spaces/${encodeURIComponent(String(spaceId))}/requests`;
         const requestHeaders: Record<string, string> = {};
         if (options.contentType !== undefined) {
             requestHeaders["Content-Type"] = String(options.contentType);
@@ -1370,7 +1370,7 @@ export class SeismicplannerClient extends ConnectorClientBase {
      * @remarks Create a request.
      */
     public async createRequest(input: CreateRequest, spaceId: string, options: ConnectorOperationOptions = {}): Promise<PlannerRequest> {
-        const requestPath = `/planner/v2/spaces/${spaceId}/requests`;
+        const requestPath = `/planner/v2/spaces/${encodeURIComponent(String(spaceId))}/requests`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.sendWithTracingAsync<PlannerRequest>("Seismicplanner.createRequest", "CreateRequest", "POST", requestUrl, input, options);
 
@@ -1382,7 +1382,7 @@ export class SeismicplannerClient extends ConnectorClientBase {
      * @remarks Get a single request.
      */
     public async getRequest(spaceId: string, requestId: string, options: ConnectorOperationOptions = {}): Promise<PlannerRequest> {
-        const requestPath = `/planner/v2/spaces/${spaceId}/requests/${requestId}`;
+        const requestPath = `/planner/v2/spaces/${encodeURIComponent(String(spaceId))}/requests/${encodeURIComponent(String(requestId))}`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.sendWithTracingAsync<PlannerRequest>("Seismicplanner.getRequest", "GetRequest", "GET", requestUrl, undefined, options);
 
@@ -1394,7 +1394,7 @@ export class SeismicplannerClient extends ConnectorClientBase {
      * @remarks Delete a request.
      */
     public async deleteRequest(spaceId: string, requestId: string, options: ConnectorOperationOptions = {}): Promise<void> {
-        const requestPath = `/planner/v2/spaces/${spaceId}/requests/${requestId}`;
+        const requestPath = `/planner/v2/spaces/${encodeURIComponent(String(spaceId))}/requests/${encodeURIComponent(String(requestId))}`;
         const requestUrl = this.resolveUrl(requestPath);
         await this.sendWithTracingAsync<void>("Seismicplanner.deleteRequest", "DeleteRequest", "DELETE", requestUrl, undefined, options);
     }
@@ -1404,7 +1404,7 @@ export class SeismicplannerClient extends ConnectorClientBase {
      * @remarks Update a request.
      */
     public async updateRequest(input: UpdateRequest, spaceId: string, requestId: string, options: ConnectorOperationOptions = {}): Promise<PlannerRequest> {
-        const requestPath = `/planner/v2/spaces/${spaceId}/requests/${requestId}`;
+        const requestPath = `/planner/v2/spaces/${encodeURIComponent(String(spaceId))}/requests/${encodeURIComponent(String(requestId))}`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.sendWithTracingAsync<PlannerRequest>("Seismicplanner.updateRequest", "UpdateRequest", "PUT", requestUrl, input, options);
 
@@ -1435,7 +1435,7 @@ export class SeismicplannerClient extends ConnectorClientBase {
         if (options.limit !== undefined) {
             queryParams.push(`limit=${encodeURIComponent(String(options.limit))}`);
         }
-        const requestPath = `/planner/v2/spaces/${spaceId}/statusschema` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
+        const requestPath = `/planner/v2/spaces/${encodeURIComponent(String(spaceId))}/statusschema` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.sendWithTracingAsync<StatusSchemaQueryResponse>("Seismicplanner.getStatusSchemas", "GetStatusSchemas", "GET", requestUrl, undefined, options);
 
@@ -1447,7 +1447,7 @@ export class SeismicplannerClient extends ConnectorClientBase {
      * @remarks Get a single status schema by ID. These schemas hold the data for set statuses for specific work.  Example: `(Not started, In progress, Complete)`
      */
     public async getStatusSchema(spaceId: string, statusSchemaId: string, options: ConnectorOperationOptions = {}): Promise<StatusSchema> {
-        const requestPath = `/planner/v2/spaces/${spaceId}/statusschema/${statusSchemaId}`;
+        const requestPath = `/planner/v2/spaces/${encodeURIComponent(String(spaceId))}/statusschema/${encodeURIComponent(String(statusSchemaId))}`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.sendWithTracingAsync<StatusSchema>("Seismicplanner.getStatusSchema", "GetStatusSchema", "GET", requestUrl, undefined, options);
 
@@ -1547,7 +1547,7 @@ export class SeismicplannerClient extends ConnectorClientBase {
         if (options.parentId !== undefined) {
             queryParams.push(`parentId=${encodeURIComponent(String(options.parentId))}`);
         }
-        const requestPath = `/planner/v2/spaces/${spaceId}/tasks` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
+        const requestPath = `/planner/v2/spaces/${encodeURIComponent(String(spaceId))}/tasks` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.sendWithTracingAsync<PlannerTaskQueryResponse>("Seismicplanner.getTasks", "GetTasks", "GET", requestUrl, undefined, options);
 
@@ -1559,7 +1559,7 @@ export class SeismicplannerClient extends ConnectorClientBase {
      * @remarks Create a task.
      */
     public async createTask(input: CreateTask, spaceId: string, options: ConnectorOperationOptions = {}): Promise<PlannerTask> {
-        const requestPath = `/planner/v2/spaces/${spaceId}/tasks`;
+        const requestPath = `/planner/v2/spaces/${encodeURIComponent(String(spaceId))}/tasks`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.sendWithTracingAsync<PlannerTask>("Seismicplanner.createTask", "CreateTask", "POST", requestUrl, input, options);
 
@@ -1571,7 +1571,7 @@ export class SeismicplannerClient extends ConnectorClientBase {
      * @remarks Get a single task by ID.
      */
     public async getTask(spaceId: string, taskId: string, options: ConnectorOperationOptions = {}): Promise<PlannerTask> {
-        const requestPath = `/planner/v2/spaces/${spaceId}/tasks/${taskId}`;
+        const requestPath = `/planner/v2/spaces/${encodeURIComponent(String(spaceId))}/tasks/${encodeURIComponent(String(taskId))}`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.sendWithTracingAsync<PlannerTask>("Seismicplanner.getTask", "GetTask", "GET", requestUrl, undefined, options);
 
@@ -1583,7 +1583,7 @@ export class SeismicplannerClient extends ConnectorClientBase {
      * @remarks Delete a task.
      */
     public async deleteTask(spaceId: string, taskId: string, options: ConnectorOperationOptions = {}): Promise<AsyncOperationResponse> {
-        const requestPath = `/planner/v2/spaces/${spaceId}/tasks/${taskId}`;
+        const requestPath = `/planner/v2/spaces/${encodeURIComponent(String(spaceId))}/tasks/${encodeURIComponent(String(taskId))}`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.sendWithTracingAsync<AsyncOperationResponse>("Seismicplanner.deleteTask", "DeleteTask", "DELETE", requestUrl, undefined, options);
 
@@ -1595,7 +1595,7 @@ export class SeismicplannerClient extends ConnectorClientBase {
      * @remarks Update an existing task.
      */
     public async updateTask(input: UpdateTask, spaceId: string, taskId: string, options: ConnectorOperationOptions = {}): Promise<PlannerTask> {
-        const requestPath = `/planner/v2/spaces/${spaceId}/tasks/${taskId}`;
+        const requestPath = `/planner/v2/spaces/${encodeURIComponent(String(spaceId))}/tasks/${encodeURIComponent(String(taskId))}`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.sendWithTracingAsync<PlannerTask>("Seismicplanner.updateTask", "UpdateTask", "PUT", requestUrl, input, options);
 

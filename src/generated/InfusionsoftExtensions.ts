@@ -140,8 +140,8 @@ export class InfusionsoftClient extends ConnectorClientBase {
      * Update a task
      * @remarks Update an existing task.
      */
-    public async updateTask(input: CreateTaskRequest, id: string, contentType: string, options: ConnectorOperationOptions = {}): Promise<TaskResponse> {
-        const requestPath = `/crm/rest/v1/tasks/${id}`;
+    public async updateTask(input: CreateTaskRequest, id: number, contentType: string, options: ConnectorOperationOptions = {}): Promise<TaskResponse> {
+        const requestPath = `/crm/rest/v1/tasks/${encodeURIComponent(String(id))}`;
         const requestHeaders: Record<string, string> = {};
         if (contentType !== undefined) {
             requestHeaders["Content-Type"] = String(contentType);

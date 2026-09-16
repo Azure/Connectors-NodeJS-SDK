@@ -58,7 +58,14 @@ export interface ItemsList {
  * Definition: Item
  */
 export interface Item {
-    dynamicProperties?: Record<string, unknown>;
+    dynamicProperties?: Record<string, ObjectEntity>;
+}
+
+/**
+ * Definition: Object
+ */
+export interface ObjectEntity {
+    [key: string]: unknown;
 }
 
 /**
@@ -175,7 +182,7 @@ export interface EntityItemList {
  * Definition: EntityItem
  */
 export interface EntityItem {
-    dynamicProperties?: Record<string, unknown>;
+    dynamicProperties?: Record<string, ObjectEntity>;
 }
 
 /**
@@ -321,18 +328,11 @@ export interface GetItemsOptions extends ConnectorOperationOptions {
     /** An ODATA orderBy query for specifying the order of entries. */
     orderby?: string;
     /** Total number of entries to retrieve (default = all). */
-    top?: string;
+    top?: number;
     /** The number of entries to skip (default = 0). */
-    skip?: string;
+    skip?: number;
     /** Related entries to include with requested entries (default = none) */
     expand?: string;
-}
-
-/**
- * Unresolved definition: Object
- */
-export interface ObjectEntity {
-    [key: string]: unknown;
 }
 
 /**
@@ -475,7 +475,7 @@ export class CommondataserviceClient extends ConnectorClientBase {
      * @remarks This operation retrieves the specified row for a table
      */
     public async getItem(dataset: string, table: string, id: string, options: ConnectorOperationOptions = {}): Promise<GetItemResponse> {
-        const requestPath = `/v2/datasets/${encodeURIComponent(String(dataset))}/tables/${table}/items/${id}`;
+        const requestPath = `/v2/datasets/${encodeURIComponent(encodeURIComponent(String(dataset)))}/tables/${encodeURIComponent(encodeURIComponent(String(table)))}/items/${encodeURIComponent(encodeURIComponent(String(id)))}`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.sendWithTracingAsync<GetItemResponse>("Commondataservice.getItem", "GetItem_V2", "GET", requestUrl, undefined, options);
 
@@ -506,7 +506,7 @@ export class CommondataserviceClient extends ConnectorClientBase {
         if (options.expand !== undefined) {
             queryParams.push(`$expand=${encodeURIComponent(String(options.expand))}`);
         }
-        const requestPath = `/v2/datasets/${encodeURIComponent(String(dataset))}/tables/${table}/items` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
+        const requestPath = `/v2/datasets/${encodeURIComponent(encodeURIComponent(String(dataset)))}/tables/${encodeURIComponent(encodeURIComponent(String(table)))}/items` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         return this.createPageable<ItemsList, Item>(
             requestPath,
             async (requestUrl, isFirstPage) => {
@@ -525,7 +525,7 @@ export class CommondataserviceClient extends ConnectorClientBase {
      * @remarks This operation updates an existing row for a table
      */
     public async patchItem(input: PatchItemInput, dataset: string, table: string, id: string, options: ConnectorOperationOptions = {}): Promise<PatchItemResponse> {
-        const requestPath = `/v2/datasets/${encodeURIComponent(String(dataset))}/tables/${table}/items/${id}`;
+        const requestPath = `/v2/datasets/${encodeURIComponent(encodeURIComponent(String(dataset)))}/tables/${encodeURIComponent(encodeURIComponent(String(table)))}/items/${encodeURIComponent(encodeURIComponent(String(id)))}`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.sendWithTracingAsync<PatchItemResponse>("Commondataservice.patchItem", "PatchItem_V2", "PATCH", requestUrl, input, options);
 
@@ -537,7 +537,7 @@ export class CommondataserviceClient extends ConnectorClientBase {
      * @remarks This operation adds a new row of a table
      */
     public async postItem(input: PostItemInput, dataset: string, table: string, options: ConnectorOperationOptions = {}): Promise<PostItemResponse> {
-        const requestPath = `/v2/datasets/${encodeURIComponent(String(dataset))}/tables/${table}/items`;
+        const requestPath = `/v2/datasets/${encodeURIComponent(encodeURIComponent(String(dataset)))}/tables/${encodeURIComponent(encodeURIComponent(String(table)))}/items`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.sendWithTracingAsync<PostItemResponse>("Commondataservice.postItem", "PostItem_V2", "POST", requestUrl, input, options);
 

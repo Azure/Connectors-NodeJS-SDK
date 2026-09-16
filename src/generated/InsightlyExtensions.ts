@@ -852,8 +852,8 @@ export class InsightlyClient extends ConnectorClientBase {
      * Delete task
      * @remarks Delete task
      */
-    public async deleteTask(taskId: string, options: ConnectorOperationOptions = {}): Promise<ObjectEntity> {
-        const requestPath = `/Tasks/${taskId}`;
+    public async deleteTask(taskId: number, options: ConnectorOperationOptions = {}): Promise<ObjectEntity> {
+        const requestPath = `/Tasks/${encodeURIComponent(String(taskId))}`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.sendWithTracingAsync<ObjectEntity>("Insightly.deleteTask", "DeleteTask", "DELETE", requestUrl, undefined, options);
 
@@ -864,8 +864,8 @@ export class InsightlyClient extends ConnectorClientBase {
      * Follow a task
      * @remarks Follow a task
      */
-    public async followTask(taskId: string, options: ConnectorOperationOptions = {}): Promise<ObjectEntity> {
-        const requestPath = `/Tasks/${taskId}/Follow`;
+    public async followTask(taskId: number, options: ConnectorOperationOptions = {}): Promise<ObjectEntity> {
+        const requestPath = `/Tasks/${encodeURIComponent(String(taskId))}/Follow`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.sendWithTracingAsync<ObjectEntity>("Insightly.followTask", "FollowTask", "POST", requestUrl, undefined, options);
 
@@ -876,8 +876,8 @@ export class InsightlyClient extends ConnectorClientBase {
      * Delete project
      * @remarks Delete project
      */
-    public async deleteProject(projectId: string, options: ConnectorOperationOptions = {}): Promise<ObjectEntity> {
-        const requestPath = `/Projects/${projectId}`;
+    public async deleteProject(projectId: number, options: ConnectorOperationOptions = {}): Promise<ObjectEntity> {
+        const requestPath = `/Projects/${encodeURIComponent(String(projectId))}`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.sendWithTracingAsync<ObjectEntity>("Insightly.deleteProject", "DeleteProject", "DELETE", requestUrl, undefined, options);
 
@@ -888,8 +888,8 @@ export class InsightlyClient extends ConnectorClientBase {
      * Delete lead
      * @remarks Delete lead
      */
-    public async deleteLead(leadId: string, options: ConnectorOperationOptions = {}): Promise<ObjectEntity> {
-        const requestPath = `/Leads/${leadId}`;
+    public async deleteLead(leadId: number, options: ConnectorOperationOptions = {}): Promise<ObjectEntity> {
+        const requestPath = `/Leads/${encodeURIComponent(String(leadId))}`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.sendWithTracingAsync<ObjectEntity>("Insightly.deleteLead", "DeleteLead", "DELETE", requestUrl, undefined, options);
 
@@ -900,8 +900,8 @@ export class InsightlyClient extends ConnectorClientBase {
      * Delete contact
      * @remarks Delete contact
      */
-    public async deleteContact(contactId: string, options: ConnectorOperationOptions = {}): Promise<ObjectEntity> {
-        const requestPath = `/Contacts/${contactId}`;
+    public async deleteContact(contactId: number, options: ConnectorOperationOptions = {}): Promise<ObjectEntity> {
+        const requestPath = `/Contacts/${encodeURIComponent(String(contactId))}`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.sendWithTracingAsync<ObjectEntity>("Insightly.deleteContact", "DeleteContact", "DELETE", requestUrl, undefined, options);
 

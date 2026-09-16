@@ -1164,7 +1164,7 @@ export class AzureiotcentralClient extends ConnectorClientBase {
         if (application !== undefined) {
             queryParams.push(`application=${encodeURIComponent(String(application))}`);
         }
-        const requestPath = `/api/ga_2022_07_31/deviceGroups/${deviceGroupId}` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
+        const requestPath = `/api/ga_2022_07_31/deviceGroups/${encodeURIComponent(String(deviceGroupId))}` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.sendWithTracingAsync<DeviceGroup>("Azureiotcentral.getDeviceGroup", "DeviceGroups_Get", "GET", requestUrl, undefined, options);
 
@@ -1180,7 +1180,7 @@ export class AzureiotcentralClient extends ConnectorClientBase {
         if (application !== undefined) {
             queryParams.push(`application=${encodeURIComponent(String(application))}`);
         }
-        const requestPath = `/api/ga_2022_07_31/deviceGroups/${deviceGroupId}` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
+        const requestPath = `/api/ga_2022_07_31/deviceGroups/${encodeURIComponent(String(deviceGroupId))}` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.sendWithTracingAsync<DeviceGroup>("Azureiotcentral.setDeviceGroups", "DeviceGroups_Set", "PUT", requestUrl, input, options);
 
@@ -1196,7 +1196,7 @@ export class AzureiotcentralClient extends ConnectorClientBase {
         if (application !== undefined) {
             queryParams.push(`application=${encodeURIComponent(String(application))}`);
         }
-        const requestPath = `/api/ga_2022_07_31/deviceGroups/${deviceGroupId}` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
+        const requestPath = `/api/ga_2022_07_31/deviceGroups/${encodeURIComponent(String(deviceGroupId))}` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
         await this.sendWithTracingAsync<void>("Azureiotcentral.removeDeviceGroups", "DeviceGroups_Remove", "DELETE", requestUrl, undefined, options);
     }
@@ -1210,7 +1210,7 @@ export class AzureiotcentralClient extends ConnectorClientBase {
         if (application !== undefined) {
             queryParams.push(`application=${encodeURIComponent(String(application))}`);
         }
-        const requestPath = `/api/ga_2022_07_31/deviceGroups/${deviceGroupId}/devices` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
+        const requestPath = `/api/ga_2022_07_31/deviceGroups/${encodeURIComponent(String(deviceGroupId))}/devices` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         return this.createPageable<DeviceGroupDeviceCollection, DeviceV1>(
             requestPath,
             async (requestUrl, isFirstPage) => {
@@ -1236,7 +1236,7 @@ export class AzureiotcentralClient extends ConnectorClientBase {
         if (options.instanceOf !== undefined) {
             queryParams.push(`instanceOf=${encodeURIComponent(String(options.instanceOf))}`);
         }
-        const requestPath = `/api/preview/devices/${deviceId}/cloudProperties` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
+        const requestPath = `/api/preview/devices/${encodeURIComponent(String(deviceId))}/cloudProperties` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.sendWithTracingAsync<DeviceCloudProperties>("Azureiotcentral.getDevicesCloudProperties", "Devices_GetCloudProperties", "GET", requestUrl, undefined, options);
 
@@ -1255,7 +1255,7 @@ export class AzureiotcentralClient extends ConnectorClientBase {
         if (options.instanceOf !== undefined) {
             queryParams.push(`instanceOf=${encodeURIComponent(String(options.instanceOf))}`);
         }
-        const requestPath = `/api/preview/devices/${deviceId}/cloudProperties` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
+        const requestPath = `/api/preview/devices/${encodeURIComponent(String(deviceId))}/cloudProperties` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.sendWithTracingAsync<DeviceCloudProperties>("Azureiotcentral.updateDevicesCloudProperties", "Devices_UpdateCloudProperties", "PUT", requestUrl, input, options);
 
@@ -1274,7 +1274,7 @@ export class AzureiotcentralClient extends ConnectorClientBase {
         if (options.instanceOf !== undefined) {
             queryParams.push(`instanceOf=${encodeURIComponent(String(options.instanceOf))}`);
         }
-        const requestPath = `/api/preview/devices/${deviceId}/components/${componentName}/commands/${commandName}` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
+        const requestPath = `/api/preview/devices/${encodeURIComponent(String(deviceId))}/components/${encodeURIComponent(String(componentName))}/commands/${encodeURIComponent(String(commandName))}` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.sendWithTracingAsync<DeviceCommand>("Azureiotcentral.executeDevicesComponentCommand", "Devices_ExecuteComponentCommand", "POST", requestUrl, input, options);
 
@@ -1290,7 +1290,7 @@ export class AzureiotcentralClient extends ConnectorClientBase {
         if (application !== undefined) {
             queryParams.push(`application=${encodeURIComponent(String(application))}`);
         }
-        const requestPath = `/api/ga_2022_07_31/devices/${deviceId}/relationships` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
+        const requestPath = `/api/ga_2022_07_31/devices/${encodeURIComponent(String(deviceId))}/relationships` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         return this.createPageable<DeviceRelationshipCollection, DeviceRelationshipStatic>(
             requestPath,
             async (requestUrl, isFirstPage) => {
@@ -1313,7 +1313,7 @@ export class AzureiotcentralClient extends ConnectorClientBase {
         if (application !== undefined) {
             queryParams.push(`application=${encodeURIComponent(String(application))}`);
         }
-        const requestPath = `/api/ga_2022_07_31/devices/${deviceId}/relationships/${relationshipId}` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
+        const requestPath = `/api/ga_2022_07_31/devices/${encodeURIComponent(String(deviceId))}/relationships/${encodeURIComponent(String(relationshipId))}` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.sendWithTracingAsync<DeviceRelationshipStatic>("Azureiotcentral.getDeviceRelationship", "DeviceRelationships_Get", "GET", requestUrl, undefined, options);
 
@@ -1329,7 +1329,7 @@ export class AzureiotcentralClient extends ConnectorClientBase {
         if (application !== undefined) {
             queryParams.push(`application=${encodeURIComponent(String(application))}`);
         }
-        const requestPath = `/api/ga_2022_07_31/devices/${deviceId}/relationships/${relationshipId}` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
+        const requestPath = `/api/ga_2022_07_31/devices/${encodeURIComponent(String(deviceId))}/relationships/${encodeURIComponent(String(relationshipId))}` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.sendWithTracingAsync<DeviceRelationshipStatic>("Azureiotcentral.setDeviceRelationships", "DeviceRelationships_Set", "PUT", requestUrl, input, options);
 
@@ -1345,7 +1345,7 @@ export class AzureiotcentralClient extends ConnectorClientBase {
         if (application !== undefined) {
             queryParams.push(`application=${encodeURIComponent(String(application))}`);
         }
-        const requestPath = `/api/ga_2022_07_31/devices/${deviceId}/relationships/${relationshipId}` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
+        const requestPath = `/api/ga_2022_07_31/devices/${encodeURIComponent(String(deviceId))}/relationships/${encodeURIComponent(String(relationshipId))}` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.sendWithTracingAsync<DeviceRelationshipStatic>("Azureiotcentral.updateDeviceRelationship", "DeviceRelationships_Update", "PATCH", requestUrl, input, options);
 
@@ -1361,7 +1361,7 @@ export class AzureiotcentralClient extends ConnectorClientBase {
         if (application !== undefined) {
             queryParams.push(`application=${encodeURIComponent(String(application))}`);
         }
-        const requestPath = `/api/ga_2022_07_31/devices/${deviceId}/relationships/${relationshipId}` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
+        const requestPath = `/api/ga_2022_07_31/devices/${encodeURIComponent(String(deviceId))}/relationships/${encodeURIComponent(String(relationshipId))}` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
         await this.sendWithTracingAsync<void>("Azureiotcentral.removeDeviceRelationships", "DeviceRelationships_Remove", "DELETE", requestUrl, undefined, options);
     }
@@ -1398,7 +1398,7 @@ export class AzureiotcentralClient extends ConnectorClientBase {
         if (application !== undefined) {
             queryParams.push(`application=${encodeURIComponent(String(application))}`);
         }
-        const requestPath = `/api/ga_2022_07_31/jobs/${jobId}` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
+        const requestPath = `/api/ga_2022_07_31/jobs/${encodeURIComponent(String(jobId))}` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.sendWithTracingAsync<JobStatic>("Azureiotcentral.getJob", "Jobs_Get", "GET", requestUrl, undefined, options);
 
@@ -1417,7 +1417,7 @@ export class AzureiotcentralClient extends ConnectorClientBase {
         if (options.jobType !== undefined) {
             queryParams.push(`job_type=${encodeURIComponent(String(options.jobType))}`);
         }
-        const requestPath = `/api/ga_2022_07_31/jobs/${jobId}` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
+        const requestPath = `/api/ga_2022_07_31/jobs/${encodeURIComponent(String(jobId))}` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.sendWithTracingAsync<Job>("Azureiotcentral.setJobs", "Jobs_Set", "PUT", requestUrl, input, options);
 
@@ -1433,7 +1433,7 @@ export class AzureiotcentralClient extends ConnectorClientBase {
         if (application !== undefined) {
             queryParams.push(`application=${encodeURIComponent(String(application))}`);
         }
-        const requestPath = `/api/ga_2022_07_31/jobs/${jobId}/devices` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
+        const requestPath = `/api/ga_2022_07_31/jobs/${encodeURIComponent(String(jobId))}/devices` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         return this.createPageable<JobDeviceStatusCollection, JobDeviceStatus>(
             requestPath,
             async (requestUrl, isFirstPage) => {
@@ -1456,7 +1456,7 @@ export class AzureiotcentralClient extends ConnectorClientBase {
         if (application !== undefined) {
             queryParams.push(`application=${encodeURIComponent(String(application))}`);
         }
-        const requestPath = `/api/ga_2022_07_31/jobs/${jobId}/stop` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
+        const requestPath = `/api/ga_2022_07_31/jobs/${encodeURIComponent(String(jobId))}/stop` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
         await this.sendWithTracingAsync<void>("Azureiotcentral.stopJobs", "Jobs_Stop", "POST", requestUrl, undefined, options);
     }
@@ -1470,7 +1470,7 @@ export class AzureiotcentralClient extends ConnectorClientBase {
         if (application !== undefined) {
             queryParams.push(`application=${encodeURIComponent(String(application))}`);
         }
-        const requestPath = `/api/ga_2022_07_31/jobs/${jobId}/resume` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
+        const requestPath = `/api/ga_2022_07_31/jobs/${encodeURIComponent(String(jobId))}/resume` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
         await this.sendWithTracingAsync<void>("Azureiotcentral.resumeJobs", "Jobs_Resume", "POST", requestUrl, undefined, options);
     }
@@ -1484,7 +1484,7 @@ export class AzureiotcentralClient extends ConnectorClientBase {
         if (application !== undefined) {
             queryParams.push(`application=${encodeURIComponent(String(application))}`);
         }
-        const requestPath = `/api/ga_2022_07_31/jobs/${jobId}/rerun/${rerunId}` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
+        const requestPath = `/api/ga_2022_07_31/jobs/${encodeURIComponent(String(jobId))}/rerun/${encodeURIComponent(String(rerunId))}` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.sendWithTracingAsync<JobStatic>("Azureiotcentral.rerunJobs", "Jobs_Rerun", "PUT", requestUrl, undefined, options);
 
@@ -1523,7 +1523,7 @@ export class AzureiotcentralClient extends ConnectorClientBase {
         if (application !== undefined) {
             queryParams.push(`application=${encodeURIComponent(String(application))}`);
         }
-        const requestPath = `/api/ga_2022_07_31/organizations/${organizationId}` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
+        const requestPath = `/api/ga_2022_07_31/organizations/${encodeURIComponent(String(organizationId))}` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.sendWithTracingAsync<Organization>("Azureiotcentral.getOrganization", "Organizations_Get", "GET", requestUrl, undefined, options);
 
@@ -1539,7 +1539,7 @@ export class AzureiotcentralClient extends ConnectorClientBase {
         if (application !== undefined) {
             queryParams.push(`application=${encodeURIComponent(String(application))}`);
         }
-        const requestPath = `/api/ga_2022_07_31/organizations/${organizationId}` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
+        const requestPath = `/api/ga_2022_07_31/organizations/${encodeURIComponent(String(organizationId))}` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.sendWithTracingAsync<Organization>("Azureiotcentral.setOrganizations", "Organizations_Set", "PUT", requestUrl, input, options);
 
@@ -1555,7 +1555,7 @@ export class AzureiotcentralClient extends ConnectorClientBase {
         if (application !== undefined) {
             queryParams.push(`application=${encodeURIComponent(String(application))}`);
         }
-        const requestPath = `/api/ga_2022_07_31/organizations/${organizationId}` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
+        const requestPath = `/api/ga_2022_07_31/organizations/${encodeURIComponent(String(organizationId))}` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
         await this.sendWithTracingAsync<void>("Azureiotcentral.removeOrganizations", "Organizations_Remove", "DELETE", requestUrl, undefined, options);
     }
@@ -1592,7 +1592,7 @@ export class AzureiotcentralClient extends ConnectorClientBase {
         if (application !== undefined) {
             queryParams.push(`application=${encodeURIComponent(String(application))}`);
         }
-        const requestPath = `/api/ga_2022_07_31/scheduledJobs/${scheduledJobId}` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
+        const requestPath = `/api/ga_2022_07_31/scheduledJobs/${encodeURIComponent(String(scheduledJobId))}` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.sendWithTracingAsync<ScheduledJob>("Azureiotcentral.getScheduledJob", "ScheduledJobs_Get", "GET", requestUrl, undefined, options);
 
@@ -1614,7 +1614,7 @@ export class AzureiotcentralClient extends ConnectorClientBase {
         if (options.scheduledJobEndType !== undefined) {
             queryParams.push(`scheduled_job_end_type=${encodeURIComponent(String(options.scheduledJobEndType))}`);
         }
-        const requestPath = `/api/ga_2022_07_31/scheduledJobs/${scheduledJobId}` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
+        const requestPath = `/api/ga_2022_07_31/scheduledJobs/${encodeURIComponent(String(scheduledJobId))}` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.sendWithTracingAsync<ScheduledJob>("Azureiotcentral.setScheduledJobs", "ScheduledJobs_Set", "PUT", requestUrl, input, options);
 
@@ -1633,7 +1633,7 @@ export class AzureiotcentralClient extends ConnectorClientBase {
         if (options.scheduledJobEndType !== undefined) {
             queryParams.push(`scheduled_job_end_type=${encodeURIComponent(String(options.scheduledJobEndType))}`);
         }
-        const requestPath = `/api/ga_2022_07_31/scheduledJobs/${scheduledJobId}` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
+        const requestPath = `/api/ga_2022_07_31/scheduledJobs/${encodeURIComponent(String(scheduledJobId))}` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.sendWithTracingAsync<ScheduledJobStatic>("Azureiotcentral.updateScheduledJob", "ScheduledJobs_Update", "PATCH", requestUrl, input, options);
 
@@ -1649,7 +1649,7 @@ export class AzureiotcentralClient extends ConnectorClientBase {
         if (application !== undefined) {
             queryParams.push(`application=${encodeURIComponent(String(application))}`);
         }
-        const requestPath = `/api/ga_2022_07_31/scheduledJobs/${scheduledJobId}` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
+        const requestPath = `/api/ga_2022_07_31/scheduledJobs/${encodeURIComponent(String(scheduledJobId))}` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
         await this.sendWithTracingAsync<void>("Azureiotcentral.removeScheduledJobs", "ScheduledJobs_Remove", "DELETE", requestUrl, undefined, options);
     }
@@ -1663,7 +1663,7 @@ export class AzureiotcentralClient extends ConnectorClientBase {
         if (application !== undefined) {
             queryParams.push(`application=${encodeURIComponent(String(application))}`);
         }
-        const requestPath = `/api/ga_2022_07_31/scheduledJobs/${scheduledJobId}/jobs` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
+        const requestPath = `/api/ga_2022_07_31/scheduledJobs/${encodeURIComponent(String(scheduledJobId))}/jobs` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         return this.createPageable<ScheduledJobJobCollection, JobStatic>(
             requestPath,
             async (requestUrl, isFirstPage) => {
@@ -1686,7 +1686,7 @@ export class AzureiotcentralClient extends ConnectorClientBase {
         if (application !== undefined) {
             queryParams.push(`application=${encodeURIComponent(String(application))}`);
         }
-        const requestPath = `/api/v1/devices/${deviceId}` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
+        const requestPath = `/api/v1/devices/${encodeURIComponent(String(deviceId))}` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.sendWithTracingAsync<DeviceV1>("Azureiotcentral.getDevice", "Devices_Get_V1", "GET", requestUrl, undefined, options);
 
@@ -1705,7 +1705,7 @@ export class AzureiotcentralClient extends ConnectorClientBase {
         if (options.template !== undefined) {
             queryParams.push(`template=${encodeURIComponent(String(options.template))}`);
         }
-        const requestPath = `/api/v1/devices/${deviceId}/commands/${commandName}` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
+        const requestPath = `/api/v1/devices/${encodeURIComponent(String(deviceId))}/commands/${encodeURIComponent(String(commandName))}` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.sendWithTracingAsync<DeviceCommandV1>("Azureiotcentral.getDeviceCommandResponse", "Devices_GetCommandResponse_V1", "GET", requestUrl, undefined, options);
 
@@ -1724,7 +1724,7 @@ export class AzureiotcentralClient extends ConnectorClientBase {
         if (options.template !== undefined) {
             queryParams.push(`template=${encodeURIComponent(String(options.template))}`);
         }
-        const requestPath = `/api/v1/devices/${deviceId}/components/${componentName}/commands/${commandName}` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
+        const requestPath = `/api/v1/devices/${encodeURIComponent(String(deviceId))}/components/${encodeURIComponent(String(componentName))}/commands/${encodeURIComponent(String(commandName))}` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.sendWithTracingAsync<DeviceComponentCommand>("Azureiotcentral.getDeviceComponentCommandResponse", "Devices_GetComponentCommandResponse_V1", "GET", requestUrl, undefined, options);
 
@@ -1743,7 +1743,7 @@ export class AzureiotcentralClient extends ConnectorClientBase {
         if (options.template !== undefined) {
             queryParams.push(`template=${encodeURIComponent(String(options.template))}`);
         }
-        const requestPath = `/api/v1/devices/${deviceId}/components/${componentName}/telemetry/${telemetryName}` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
+        const requestPath = `/api/v1/devices/${encodeURIComponent(String(deviceId))}/components/${encodeURIComponent(String(componentName))}/telemetry/${encodeURIComponent(String(telemetryName))}` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.sendWithTracingAsync<DeviceComponentTelemetry>("Azureiotcentral.getDeviceComponentTelemetryValue", "Devices_GetComponentTelemetryValue_V1", "GET", requestUrl, undefined, options);
 
@@ -1762,7 +1762,7 @@ export class AzureiotcentralClient extends ConnectorClientBase {
         if (options.template !== undefined) {
             queryParams.push(`template=${encodeURIComponent(String(options.template))}`);
         }
-        const requestPath = `/api/v1/devices/${deviceId}/modules/${module}/commands/${commandName}` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
+        const requestPath = `/api/v1/devices/${encodeURIComponent(String(deviceId))}/modules/${encodeURIComponent(String(module))}/commands/${encodeURIComponent(String(commandName))}` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.sendWithTracingAsync<DeviceModuleCommand>("Azureiotcentral.getDeviceModuleCommandResponse", "Devices_GetModuleCommandResponse_V1", "GET", requestUrl, undefined, options);
 
@@ -1781,7 +1781,7 @@ export class AzureiotcentralClient extends ConnectorClientBase {
         if (options.template !== undefined) {
             queryParams.push(`template=${encodeURIComponent(String(options.template))}`);
         }
-        const requestPath = `/api/v1/devices/${deviceId}/modules/${module}/components/${componentName}/commands/${commandName}` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
+        const requestPath = `/api/v1/devices/${encodeURIComponent(String(deviceId))}/modules/${encodeURIComponent(String(module))}/components/${encodeURIComponent(String(componentName))}/commands/${encodeURIComponent(String(commandName))}` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.sendWithTracingAsync<DeviceModuleComponentCommand>("Azureiotcentral.getDeviceModuleComponentCommandResponse", "Devices_GetModuleComponentCommandResponse_V1", "GET", requestUrl, undefined, options);
 
@@ -1800,7 +1800,7 @@ export class AzureiotcentralClient extends ConnectorClientBase {
         if (options.template !== undefined) {
             queryParams.push(`template=${encodeURIComponent(String(options.template))}`);
         }
-        const requestPath = `/api/v1/devices/${deviceId}/modules/${module}/components/${componentName}/telemetry/${telemetryName}` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
+        const requestPath = `/api/v1/devices/${encodeURIComponent(String(deviceId))}/modules/${encodeURIComponent(String(module))}/components/${encodeURIComponent(String(componentName))}/telemetry/${encodeURIComponent(String(telemetryName))}` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.sendWithTracingAsync<DeviceModuleComponentTelemetry>("Azureiotcentral.getDeviceModuleComponentTelemetryValue", "Devices_GetModuleComponentTelemetryValue_V1", "GET", requestUrl, undefined, options);
 
@@ -1819,7 +1819,7 @@ export class AzureiotcentralClient extends ConnectorClientBase {
         if (options.template !== undefined) {
             queryParams.push(`template=${encodeURIComponent(String(options.template))}`);
         }
-        const requestPath = `/api/v1/devices/${deviceId}/modules/${module}/properties` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
+        const requestPath = `/api/v1/devices/${encodeURIComponent(String(deviceId))}/modules/${encodeURIComponent(String(module))}/properties` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.sendWithTracingAsync<ModuleProperties>("Azureiotcentral.getDevicesModuleProperties", "Devices_GetModuleProperties_V1", "GET", requestUrl, undefined, options);
 
@@ -1838,7 +1838,7 @@ export class AzureiotcentralClient extends ConnectorClientBase {
         if (options.template !== undefined) {
             queryParams.push(`template=${encodeURIComponent(String(options.template))}`);
         }
-        const requestPath = `/api/v1/devices/${deviceId}/modules/${module}/telemetry/${telemetryName}` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
+        const requestPath = `/api/v1/devices/${encodeURIComponent(String(deviceId))}/modules/${encodeURIComponent(String(module))}/telemetry/${encodeURIComponent(String(telemetryName))}` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.sendWithTracingAsync<DeviceModuleTelemetry>("Azureiotcentral.getDeviceModuleTelemetryValue", "Devices_GetModuleTelemetryValue_V1", "GET", requestUrl, undefined, options);
 
@@ -1857,7 +1857,7 @@ export class AzureiotcentralClient extends ConnectorClientBase {
         if (options.template !== undefined) {
             queryParams.push(`template=${encodeURIComponent(String(options.template))}`);
         }
-        const requestPath = `/api/v1/devices/${deviceId}/properties` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
+        const requestPath = `/api/v1/devices/${encodeURIComponent(String(deviceId))}/properties` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.sendWithTracingAsync<DeviceProperties>("Azureiotcentral.getDevicesProperties", "Devices_GetProperties_V1", "GET", requestUrl, undefined, options);
 
@@ -1876,7 +1876,7 @@ export class AzureiotcentralClient extends ConnectorClientBase {
         if (options.template !== undefined) {
             queryParams.push(`template=${encodeURIComponent(String(options.template))}`);
         }
-        const requestPath = `/api/v1/devices/${deviceId}/telemetry/${telemetryName}` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
+        const requestPath = `/api/v1/devices/${encodeURIComponent(String(deviceId))}/telemetry/${encodeURIComponent(String(telemetryName))}` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.sendWithTracingAsync<DeviceTelemetry>("Azureiotcentral.getDeviceTelemetryValue", "Devices_GetTelemetryValue_V1", "GET", requestUrl, undefined, options);
 
@@ -1915,7 +1915,7 @@ export class AzureiotcentralClient extends ConnectorClientBase {
         if (application !== undefined) {
             queryParams.push(`application=${encodeURIComponent(String(application))}`);
         }
-        const requestPath = `/api/v1/devices/${deviceId}` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
+        const requestPath = `/api/v1/devices/${encodeURIComponent(String(deviceId))}` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
         await this.sendWithTracingAsync<void>("Azureiotcentral.removeDevices", "Devices_Remove_V1", "DELETE", requestUrl, undefined, options);
     }
@@ -1932,7 +1932,7 @@ export class AzureiotcentralClient extends ConnectorClientBase {
         if (options.template !== undefined) {
             queryParams.push(`template=${encodeURIComponent(String(options.template))}`);
         }
-        const requestPath = `/api/v1/devices/${deviceId}/commands/${commandName}` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
+        const requestPath = `/api/v1/devices/${encodeURIComponent(String(deviceId))}/commands/${encodeURIComponent(String(commandName))}` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.sendWithTracingAsync<DeviceCommandV1>("Azureiotcentral.runDevicesCommand", "Devices_RunCommand_V1", "POST", requestUrl, input, options);
 
@@ -1951,7 +1951,7 @@ export class AzureiotcentralClient extends ConnectorClientBase {
         if (options.template !== undefined) {
             queryParams.push(`template=${encodeURIComponent(String(options.template))}`);
         }
-        const requestPath = `/api/v1/devices/${deviceId}/components/${componentName}/commands/${commandName}` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
+        const requestPath = `/api/v1/devices/${encodeURIComponent(String(deviceId))}/components/${encodeURIComponent(String(componentName))}/commands/${encodeURIComponent(String(commandName))}` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.sendWithTracingAsync<DeviceComponentCommand>("Azureiotcentral.runDevicesComponentCommand", "Devices_RunComponentCommand_V1", "POST", requestUrl, input, options);
 
@@ -1970,7 +1970,7 @@ export class AzureiotcentralClient extends ConnectorClientBase {
         if (options.template !== undefined) {
             queryParams.push(`template=${encodeURIComponent(String(options.template))}`);
         }
-        const requestPath = `/api/v1/devices/${deviceId}/modules/${module}/commands/${commandName}` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
+        const requestPath = `/api/v1/devices/${encodeURIComponent(String(deviceId))}/modules/${encodeURIComponent(String(module))}/commands/${encodeURIComponent(String(commandName))}` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.sendWithTracingAsync<DeviceModuleCommand>("Azureiotcentral.runDevicesModuleCommand", "Devices_RunModuleCommand_V1", "POST", requestUrl, input, options);
 
@@ -1989,7 +1989,7 @@ export class AzureiotcentralClient extends ConnectorClientBase {
         if (options.template !== undefined) {
             queryParams.push(`template=${encodeURIComponent(String(options.template))}`);
         }
-        const requestPath = `/api/v1/devices/${deviceId}/modules/${module}/components/${componentName}/commands/${commandName}` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
+        const requestPath = `/api/v1/devices/${encodeURIComponent(String(deviceId))}/modules/${encodeURIComponent(String(module))}/components/${encodeURIComponent(String(componentName))}/commands/${encodeURIComponent(String(commandName))}` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.sendWithTracingAsync<DeviceModuleComponentCommand>("Azureiotcentral.runDevicesModuleComponentCommand", "Devices_RunModuleComponentCommand_V1", "POST", requestUrl, input, options);
 
@@ -2005,7 +2005,7 @@ export class AzureiotcentralClient extends ConnectorClientBase {
         if (application !== undefined) {
             queryParams.push(`application=${encodeURIComponent(String(application))}`);
         }
-        const requestPath = `/api/ga_2022_07_31/devices/${deviceId}` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
+        const requestPath = `/api/ga_2022_07_31/devices/${encodeURIComponent(String(deviceId))}` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.sendWithTracingAsync<DeviceV2>("Azureiotcentral.setDevices", "Devices_Set_V2", "PUT", requestUrl, input, options);
 
@@ -2024,7 +2024,7 @@ export class AzureiotcentralClient extends ConnectorClientBase {
         if (options.template !== undefined) {
             queryParams.push(`template=${encodeURIComponent(String(options.template))}`);
         }
-        const requestPath = `/api/v1/devices/${deviceId}/modules/${module}/properties` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
+        const requestPath = `/api/v1/devices/${encodeURIComponent(String(deviceId))}/modules/${encodeURIComponent(String(module))}/properties` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.sendWithTracingAsync<ModuleProperties>("Azureiotcentral.updateDevicesModuleProperties", "Devices_UpdateModuleProperties_V1", "PATCH", requestUrl, input, options);
 
@@ -2043,7 +2043,7 @@ export class AzureiotcentralClient extends ConnectorClientBase {
         if (options.template !== undefined) {
             queryParams.push(`template=${encodeURIComponent(String(options.template))}`);
         }
-        const requestPath = `/api/v1/devices/${deviceId}/properties` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
+        const requestPath = `/api/v1/devices/${encodeURIComponent(String(deviceId))}/properties` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.sendWithTracingAsync<DeviceProperties>("Azureiotcentral.updateDevicesProperties", "Devices_UpdateProperties_V1", "PATCH", requestUrl, input, options);
 
@@ -2059,7 +2059,7 @@ export class AzureiotcentralClient extends ConnectorClientBase {
         if (application !== undefined) {
             queryParams.push(`application=${encodeURIComponent(String(application))}`);
         }
-        const requestPath = `/api/v1/deviceTemplates/${templateId}` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
+        const requestPath = `/api/v1/deviceTemplates/${encodeURIComponent(String(templateId))}` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.sendWithTracingAsync<DeviceTemplate>("Azureiotcentral.getDeviceTemplate", "DeviceTemplates_Get_V1", "GET", requestUrl, undefined, options);
 
@@ -2098,7 +2098,7 @@ export class AzureiotcentralClient extends ConnectorClientBase {
         if (application !== undefined) {
             queryParams.push(`application=${encodeURIComponent(String(application))}`);
         }
-        const requestPath = `/api/v1/deviceTemplates/${templateId}` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
+        const requestPath = `/api/v1/deviceTemplates/${encodeURIComponent(String(templateId))}` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
         await this.sendWithTracingAsync<void>("Azureiotcentral.removeDeviceTemplates", "DeviceTemplates_Remove_V1", "DELETE", requestUrl, undefined, options);
     }
@@ -2112,7 +2112,7 @@ export class AzureiotcentralClient extends ConnectorClientBase {
         if (application !== undefined) {
             queryParams.push(`application=${encodeURIComponent(String(application))}`);
         }
-        const requestPath = `/api/v1/roles/${roleId}` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
+        const requestPath = `/api/v1/roles/${encodeURIComponent(String(roleId))}` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.sendWithTracingAsync<Role>("Azureiotcentral.getRole", "Roles_Get_V1", "GET", requestUrl, undefined, options);
 
@@ -2153,7 +2153,7 @@ export class AzureiotcentralClient extends ConnectorClientBase {
         if (options.userType !== undefined) {
             queryParams.push(`user_type=${encodeURIComponent(String(options.userType))}`);
         }
-        const requestPath = `/api/v1/users/${userId}` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
+        const requestPath = `/api/v1/users/${encodeURIComponent(String(userId))}` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.sendWithTracingAsync<User>("Azureiotcentral.createUser", "Users_Create_V1", "PUT", requestUrl, input, options);
 
@@ -2169,7 +2169,7 @@ export class AzureiotcentralClient extends ConnectorClientBase {
         if (application !== undefined) {
             queryParams.push(`application=${encodeURIComponent(String(application))}`);
         }
-        const requestPath = `/api/v1/users/${userId}` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
+        const requestPath = `/api/v1/users/${encodeURIComponent(String(userId))}` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.sendWithTracingAsync<UserStatic>("Azureiotcentral.getUser", "Users_Get_V1", "GET", requestUrl, undefined, options);
 
@@ -2207,7 +2207,7 @@ export class AzureiotcentralClient extends ConnectorClientBase {
         if (application !== undefined) {
             queryParams.push(`application=${encodeURIComponent(String(application))}`);
         }
-        const requestPath = `/api/v1/users/${userId}` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
+        const requestPath = `/api/v1/users/${encodeURIComponent(String(userId))}` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
         await this.sendWithTracingAsync<void>("Azureiotcentral.removeUsers", "Users_Remove_V1", "DELETE", requestUrl, undefined, options);
     }
@@ -2224,7 +2224,7 @@ export class AzureiotcentralClient extends ConnectorClientBase {
         if (options.userType !== undefined) {
             queryParams.push(`user_type=${encodeURIComponent(String(options.userType))}`);
         }
-        const requestPath = `/api/v1/users/${userId}` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
+        const requestPath = `/api/v1/users/${encodeURIComponent(String(userId))}` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.sendWithTracingAsync<UserPatch>("Azureiotcentral.updateUser", "Users_Update_V1", "PATCH", requestUrl, input, options);
 

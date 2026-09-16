@@ -53,9 +53,9 @@ async function main() {
     // Example 1: Download a document attachment.
     try {
         const attachment = await client.downloadAttachmentAttachment(
-            PACKAGE_ID,
-            DOCUMENT_ID,
-            ATTACHMENT_ID,
+            Number(PACKAGE_ID),
+            Number(DOCUMENT_ID),
+            Number(ATTACHMENT_ID),
             "application/json",
             "application/octet-stream",
         );

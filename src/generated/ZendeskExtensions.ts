@@ -134,7 +134,7 @@ export interface SearchResult {
  * Definition: Item
  */
 export interface Item {
-    dynamicProperties?: Record<string, unknown>;
+    dynamicProperties?: Record<string, ObjectEntity>;
 }
 
 /**
@@ -169,9 +169,9 @@ export interface GetItemsOptions extends ConnectorOperationOptions {
     /** An ODATA orderBy query for specifying the order of entries */
     orderby?: string;
     /** Number of entries to skip (default = 0) */
-    skip?: string;
+    skip?: number;
     /** Maximum number of entries to retrieve (default = 512) */
-    top?: string;
+    top?: number;
     /** Specific fields to retrieve from entries (default = all). */
     select?: string;
 }
@@ -183,15 +183,15 @@ export interface SearchArticlesOptions extends ConnectorOperationOptions {
     /** The locale the item is displayed in */
     locale?: string;
     /** Search for articles in the specified brand. */
-    brandId?: string;
+    brandId?: number;
     /** Limit the search to this category id. */
-    category?: string;
+    category?: number;
     /** Limit the search to this section id */
-    section?: string;
+    section?: number;
     /** A comma-separated list of label names. */
     labelNames?: string;
     /** Enable search across all brands if true. */
-    multibrand?: string;
+    multibrand?: boolean;
 }
 
 /**
@@ -346,7 +346,7 @@ export class ZendeskClient extends ConnectorClientBase {
         if (options.select !== undefined) {
             queryParams.push(`$select=${encodeURIComponent(String(options.select))}`);
         }
-        const requestPath = `/datasets/default/tables/${table}/items` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
+        const requestPath = `/datasets/default/tables/${encodeURIComponent(encodeURIComponent(String(table)))}/items` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         return this.createPageable<ItemsList, Item>(
             requestPath,
             async (requestUrl, isFirstPage) => {
@@ -365,7 +365,7 @@ export class ZendeskClient extends ConnectorClientBase {
      * @remarks Creates a Zendesk item
      */
     public async postItem(input: Item, table: string, options: ConnectorOperationOptions = {}): Promise<Item> {
-        const requestPath = `/datasets/default/tables/${table}/items`;
+        const requestPath = `/datasets/default/tables/${encodeURIComponent(encodeURIComponent(String(table)))}/items`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.sendWithTracingAsync<Item>("Zendesk.postItem", "PostItem", "POST", requestUrl, input, options);
 
@@ -377,7 +377,7 @@ export class ZendeskClient extends ConnectorClientBase {
      * @remarks Retrieves a Zendesk item
      */
     public async getItem(table: string, id: string, options: ConnectorOperationOptions = {}): Promise<Item> {
-        const requestPath = `/datasets/default/tables/${table}/items/${id}`;
+        const requestPath = `/datasets/default/tables/${encodeURIComponent(encodeURIComponent(String(table)))}/items/${encodeURIComponent(encodeURIComponent(String(id)))}`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.sendWithTracingAsync<Item>("Zendesk.getItem", "GetItem", "GET", requestUrl, undefined, options);
 
@@ -389,7 +389,7 @@ export class ZendeskClient extends ConnectorClientBase {
      * @remarks Deletes a Zendesk item
      */
     public async deleteItem(table: string, id: string, options: ConnectorOperationOptions = {}): Promise<void> {
-        const requestPath = `/datasets/default/tables/${table}/items/${id}`;
+        const requestPath = `/datasets/default/tables/${encodeURIComponent(encodeURIComponent(String(table)))}/items/${encodeURIComponent(encodeURIComponent(String(id)))}`;
         const requestUrl = this.resolveUrl(requestPath);
         await this.sendWithTracingAsync<void>("Zendesk.deleteItem", "DeleteItem", "DELETE", requestUrl, undefined, options);
     }
@@ -399,7 +399,7 @@ export class ZendeskClient extends ConnectorClientBase {
      * @remarks Updates an existing Zendesk item
      */
     public async patchItem(input: Item, table: string, id: string, options: ConnectorOperationOptions = {}): Promise<Item> {
-        const requestPath = `/datasets/default/tables/${table}/items/${id}`;
+        const requestPath = `/datasets/default/tables/${encodeURIComponent(encodeURIComponent(String(table)))}/items/${encodeURIComponent(encodeURIComponent(String(id)))}`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.sendWithTracingAsync<Item>("Zendesk.patchItem", "PatchItem", "PATCH", requestUrl, input, options);
 

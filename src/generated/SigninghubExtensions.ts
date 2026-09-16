@@ -3381,7 +3381,7 @@ export interface GetContactOptions extends ConnectorOperationOptions {
     /** Sort the result by possible values are mentioned above. */
     sortBy?: string;
     /** Order the result set by ascending or descending. */
-    asc?: string;
+    asc?: boolean;
     /** Search text if required. This is optional and without it the entire list is returned.</br>Furthermore, recommended value for search text parameter is in Base64 encoded format. */
     xSearchText?: string;
     /** When set as "true" only enterprise contacts list will be returned. In case of "false"only the user's contacts list will be returned.If you do not set the header, then both enterprise and user's contacts lists will be returned. */
@@ -3495,7 +3495,7 @@ export interface DeclinePackageOptions extends ConnectorOperationOptions {
  */
 export interface DownloadPackagePackageBytesOptions extends ConnectorOperationOptions {
     /** The Document IDs parameter is optional. If x-combine-files is set to true, the documents will be merged based on the mentioned documents of the package. */
-    documentIds?: string;
+    documentIds?: Array<number>;
     /** The password set by the document owner for accessing the document, if any. If the password has not been set, then the value shall be null. */
     xPassword?: string;
     /** The One-Time Password (OTP) set by the document owner for accessing the document, if any. If the OTP has not been set, then the value shall be null. */
@@ -3531,37 +3531,37 @@ export interface GetPackageAllPackagesOptions extends ConnectorOperationOptions 
     /** Package Name */
     packageName?: string;
     /** Package Id */
-    packageId?: string;
+    packageId?: number;
     /** From */
     recipientFrom?: string;
     /** To */
     recipientTo?: string;
     /** Document Id */
-    documentId?: string;
+    documentId?: number;
     /** Expiry (Days) */
-    expiry?: string;
+    expiry?: number;
     /** From Modified Date */
     modifiedFrom?: string;
     /** To Modified Date */
     modifiedTo?: string;
     /** From Size (KB) */
-    sizeFrom?: string;
+    sizeFrom?: number;
     /** To Size (KB) */
-    sizeTo?: string;
+    sizeTo?: number;
     /** Only certified signed documents */
-    certifiedDocuments?: string;
+    certifiedDocuments?: boolean;
     /** Only documents that have form fields */
-    formFields?: string;
+    formFields?: boolean;
     /** Only documents that have attachments */
-    attachments?: string;
+    attachments?: boolean;
     /** Document Type like XML, PDF, DOCX etc */
     documentType?: string;
     /** Sort the resultant records as per your choice */
     sortBy?: string;
     /** Sorted the resultant records by ascending or descending order */
-    asc?: string;
+    asc?: boolean;
     /** Document Type */
-    documentStatuses?: string;
+    documentStatuses?: Array<string>;
     /** Owned By filter possible values are ME_OTHERS, ME, OTHERS. */
     ownedBy?: string;
     /** Smart form name */
@@ -3597,7 +3597,7 @@ export interface GetSettingTemplatesOptions extends ConnectorOperationOptions {
     /** Sort by column. Possible Values are CREATED_ON and NAME. Default is sort by CREATED_ON */
     sortBy?: string;
     /** The resulting list order. Default resulting list will be descending */
-    asc?: string;
+    asc?: boolean;
     /** Search text if required.  This is optional and without it the entire list is returned.</br>Furthermore, recommended value for search text parameter is in Base64 encoded format. */
     xSearchText?: string;
     /** When set as "true" only enterprise templates list will be returned. In case of "false"only the user's templates list will be returned.If you do not set the header, then both enterprise and user's templates lists will be returned. */
@@ -3649,9 +3649,9 @@ export interface GetTemplateEnterpriseTemplatesOptions extends ConnectorOperatio
     /** Sort the result by possible values are mentioned above. */
     sortBy?: string;
     /** Order the result set by ascending or descending. */
-    asc?: string;
+    asc?: boolean;
     /** Search by template ids. */
-    id?: string;
+    id?: Array<number>;
     /** Search text if required.  This is optional and without it the entire list is returned.</br>Furthermore, recommended value for search text parameter is in Base64 encoded format. */
     xSearchText?: string;
     /** The total number of records found with the provided search criteria. */
@@ -3740,8 +3740,8 @@ export class SigninghubClient extends ConnectorClientBase {
      * Delete Attachment
      * @remarks Business applications can use this service API to delete the attachment of a document.
      */
-    public async deleteAttachmentAttachment(packageId: string, documentId: string, attachmentId: string, contentType: string, accept: string, options: DeleteAttachmentAttachmentOptions = {}): Promise<EmptyResponse> {
-        const requestPath = `/v4/packages/${packageId}/documents/${documentId}/attachments/${attachmentId}`;
+    public async deleteAttachmentAttachment(packageId: number, documentId: number, attachmentId: number, contentType: string, accept: string, options: DeleteAttachmentAttachmentOptions = {}): Promise<EmptyResponse> {
+        const requestPath = `/v4/packages/${encodeURIComponent(String(packageId))}/documents/${encodeURIComponent(String(documentId))}/attachments/${encodeURIComponent(String(attachmentId))}`;
         const requestHeaders: Record<string, string> = {};
         if (contentType !== undefined) {
             requestHeaders["Content-Type"] = String(contentType);
@@ -3762,8 +3762,8 @@ export class SigninghubClient extends ConnectorClientBase {
      * Download Attachment
      * @remarks Business applications can use this service API to download the attachment of a document.
      */
-    public async downloadAttachmentAttachment(packageId: string, documentId: string, attachmentId: string, contentType: string, accept: string, options: DownloadAttachmentAttachmentOptions = {}): Promise<AttachmentDownloadAttachmentResponse> {
-        const requestPath = `/v4/packages/${packageId}/documents/${documentId}/attachments/${attachmentId}`;
+    public async downloadAttachmentAttachment(packageId: number, documentId: number, attachmentId: number, contentType: string, accept: string, options: DownloadAttachmentAttachmentOptions = {}): Promise<AttachmentDownloadAttachmentResponse> {
+        const requestPath = `/v4/packages/${encodeURIComponent(String(packageId))}/documents/${encodeURIComponent(String(documentId))}/attachments/${encodeURIComponent(String(attachmentId))}`;
         const requestHeaders: Record<string, string> = {};
         if (contentType !== undefined) {
             requestHeaders["Content-Type"] = String(contentType);
@@ -3784,8 +3784,8 @@ export class SigninghubClient extends ConnectorClientBase {
      * Get Attachments
      * @remarks Business applications can use this service API to get the attachments of a document.
      */
-    public async getAttachmentAttachments(packageId: string, documentId: string, contentType: string, accept: string, options: GetAttachmentAttachmentsOptions = {}): Promise<Array<GetAttachmentResponse>> {
-        const requestPath = `/v4/packages/${packageId}/documents/${documentId}/attachments`;
+    public async getAttachmentAttachments(packageId: number, documentId: number, contentType: string, accept: string, options: GetAttachmentAttachmentsOptions = {}): Promise<Array<GetAttachmentResponse>> {
+        const requestPath = `/v4/packages/${encodeURIComponent(String(packageId))}/documents/${encodeURIComponent(String(documentId))}/attachments`;
         const requestHeaders: Record<string, string> = {};
         if (contentType !== undefined) {
             requestHeaders["Content-Type"] = String(contentType);
@@ -3806,8 +3806,8 @@ export class SigninghubClient extends ConnectorClientBase {
      * Upload Attachment
      * @remarks Business applications can use this service API to upload a attachment in a document.
      */
-    public async uploadAttachmentAttachment(input: AttachmentUploadAttachmentInput, packageId: string, documentId: string, contentType: string, accept: string, xFileName: string, options: UploadAttachmentAttachmentOptions = {}): Promise<AddAttachmentResponse> {
-        const requestPath = `/v4/packages/${packageId}/documents/${documentId}/attachments`;
+    public async uploadAttachmentAttachment(input: AttachmentUploadAttachmentInput, packageId: number, documentId: number, contentType: string, accept: string, xFileName: string, options: UploadAttachmentAttachmentOptions = {}): Promise<AddAttachmentResponse> {
+        const requestPath = `/v4/packages/${encodeURIComponent(String(packageId))}/documents/${encodeURIComponent(String(documentId))}/attachments`;
         const requestHeaders: Record<string, string> = {};
         if (contentType !== undefined) {
             requestHeaders["Content-Type"] = String(contentType);
@@ -3840,8 +3840,8 @@ export class SigninghubClient extends ConnectorClientBase {
      * Add CheckBox Field
      * @remarks Business applications can use this service API to add a checkbox to a document in a package.               At least one user must exist in a workflow before fields(input and signature) can be added to the document in this way.The order number corresponds to the recipient in the workflow.Therefore, this number must be equal or less than the total number of users in the workflow.  The below example assigns this new signature field to the first person in the workflow.               See [Add Users to Workflow](#operation/Workflow_WorkflowAddUser) for more information.  Note if you have a document with a template applied, or have applied one using the APIs, then the workflow will already contain users.               If width and height parameters are not provided, a default size of 10x10 will be assigned. If either width or height (or both) is provided, the system will compare these provided values with each other. The larger value between width and height will be assigned to both dimensions.
      */
-    public async addCheckboxCheckBox(input: CheckBoxFieldRequest, packageId: string, documentId: string, contentType: string, accept: string, options: ConnectorOperationOptions = {}): Promise<AddFieldResponse> {
-        const requestPath = `/v4/packages/${packageId}/documents/${documentId}/fields/checkbox`;
+    public async addCheckboxCheckBox(input: CheckBoxFieldRequest, packageId: number, documentId: number, contentType: string, accept: string, options: ConnectorOperationOptions = {}): Promise<AddFieldResponse> {
+        const requestPath = `/v4/packages/${encodeURIComponent(String(packageId))}/documents/${encodeURIComponent(String(documentId))}/fields/checkbox`;
         const requestHeaders: Record<string, string> = {};
         if (contentType !== undefined) {
             requestHeaders["Content-Type"] = String(contentType);
@@ -3859,8 +3859,8 @@ export class SigninghubClient extends ConnectorClientBase {
      * Update CheckBox Field
      * @remarks Business applications can use this service API to update a checkbox field of a document in a package.               Note all of the input parameters can be changed.Where you wish to retain the current setting submit it in the call unchanged.You can therefore use the same parameters as when you added the input field, or the information as returned by [Get Document Fields](#operation/Documents_GetDocumentFields).The latter can be used when a template was applied or the document was created using the GUI interface.               It's width and height cannot be updated. They will remain the same as when they were added.
      */
-    public async updateCheckboxCheckBox(input: UpdateCheckBoxFieldRequest, packageId: string, documentId: string, contentType: string, accept: string, options: UpdateCheckboxCheckBoxOptions = {}): Promise<EmptyResponse> {
-        const requestPath = `/v4/packages/${packageId}/documents/${documentId}/fields/checkbox`;
+    public async updateCheckboxCheckBox(input: UpdateCheckBoxFieldRequest, packageId: number, documentId: number, contentType: string, accept: string, options: UpdateCheckboxCheckBoxOptions = {}): Promise<EmptyResponse> {
+        const requestPath = `/v4/packages/${encodeURIComponent(String(packageId))}/documents/${encodeURIComponent(String(documentId))}/fields/checkbox`;
         const requestHeaders: Record<string, string> = {};
         if (contentType !== undefined) {
             requestHeaders["Content-Type"] = String(contentType);
@@ -3881,7 +3881,7 @@ export class SigninghubClient extends ConnectorClientBase {
      * Get Contacts
      * @remarks Business applications can use this service API to retieve contacts from both personal and enterprise contacts for the current user.               It is possible to search based upon the criterion supplied under the "x-search-text" header.Furthermore, it is possible to search a user's specific contacts or that of the enterprise to which the user belongs.               The search response information contains the user email address and respective user name.
      */
-    public async getContact(recordPerPage: string, pageNo: string, contentType: string, accept: string, options: GetContactOptions = {}): Promise<Array<ContactResponse>> {
+    public async getContact(recordPerPage: number, pageNo: number, contentType: string, accept: string, options: GetContactOptions = {}): Promise<Array<ContactResponse>> {
         const queryParams: string[] = [];
         if (options.sortBy !== undefined) {
             queryParams.push(`sort-by=${encodeURIComponent(String(options.sortBy))}`);
@@ -3889,7 +3889,7 @@ export class SigninghubClient extends ConnectorClientBase {
         if (options.asc !== undefined) {
             queryParams.push(`asc=${encodeURIComponent(String(options.asc))}`);
         }
-        const requestPath = `/v4/settings/contacts/${recordPerPage}/${pageNo}` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
+        const requestPath = `/v4/settings/contacts/${encodeURIComponent(String(recordPerPage))}/${encodeURIComponent(String(pageNo))}` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestHeaders: Record<string, string> = {};
         if (contentType !== undefined) {
             requestHeaders["Content-Type"] = String(contentType);
@@ -3916,8 +3916,8 @@ export class SigninghubClient extends ConnectorClientBase {
      * Delete Document
      * @remarks Business applications can use this service API to delete a document in a package.
      */
-    public async deleteDocumentDocument(packageId: string, documentId: string, contentType: string, accept: string, options: ConnectorOperationOptions = {}): Promise<DocumentResponse> {
-        const requestPath = `/v4/packages/${packageId}/documents/${documentId}`;
+    public async deleteDocumentDocument(packageId: number, documentId: number, contentType: string, accept: string, options: ConnectorOperationOptions = {}): Promise<DocumentResponse> {
+        const requestPath = `/v4/packages/${encodeURIComponent(String(packageId))}/documents/${encodeURIComponent(String(documentId))}`;
         const requestHeaders: Record<string, string> = {};
         if (contentType !== undefined) {
             requestHeaders["Content-Type"] = String(contentType);
@@ -3935,8 +3935,8 @@ export class SigninghubClient extends ConnectorClientBase {
      * Download Document
      * @remarks Business applications can use this service API to download the document bytes. The package ID and document ID is provided in the resource URL.
      */
-    public async downloadDocumentsDocumentBytes(packageId: string, documentId: string, contentType: string, accept: string, options: DownloadDocumentsDocumentBytesOptions = {}): Promise<DocumentsDownloadDocumentBytesResponse> {
-        const requestPath = `/v4/packages/${packageId}/documents/${documentId}`;
+    public async downloadDocumentsDocumentBytes(packageId: number, documentId: number, contentType: string, accept: string, options: DownloadDocumentsDocumentBytesOptions = {}): Promise<DocumentsDownloadDocumentBytesResponse> {
+        const requestPath = `/v4/packages/${encodeURIComponent(String(packageId))}/documents/${encodeURIComponent(String(documentId))}`;
         const requestHeaders: Record<string, string> = {};
         if (contentType !== undefined) {
             requestHeaders["Content-Type"] = String(contentType);
@@ -3963,8 +3963,8 @@ export class SigninghubClient extends ConnectorClientBase {
      * Get Certify Policy for a document
      * @remarks Business applications can use this service API to get certify signature settings of a document in a package.
      */
-    public async getDocumentsCertifyPolicy(packageId: string, documentId: string, contentType: string, accept: string, options: ConnectorOperationOptions = {}): Promise<CertifyPolicyResponse> {
-        const requestPath = `/v4/packages/${packageId}/documents/${documentId}/certify`;
+    public async getDocumentsCertifyPolicy(packageId: number, documentId: number, contentType: string, accept: string, options: ConnectorOperationOptions = {}): Promise<CertifyPolicyResponse> {
+        const requestPath = `/v4/packages/${encodeURIComponent(String(packageId))}/documents/${encodeURIComponent(String(documentId))}/certify`;
         const requestHeaders: Record<string, string> = {};
         if (contentType !== undefined) {
             requestHeaders["Content-Type"] = String(contentType);
@@ -3982,8 +3982,8 @@ export class SigninghubClient extends ConnectorClientBase {
      * Get Document Details
      * @remarks Business applications can use this service API to get the document details. The document ID is provided in the URL as “{document_id}”.
      */
-    public async getDocumentsDocumentDetails(packageId: string, documentId: string, contentType: string, accept: string, options: GetDocumentsDocumentDetailsOptions = {}): Promise<DocumentDetailsResponse> {
-        const requestPath = `/v4/packages/${packageId}/documents/${documentId}/details`;
+    public async getDocumentsDocumentDetails(packageId: number, documentId: number, contentType: string, accept: string, options: GetDocumentsDocumentDetailsOptions = {}): Promise<DocumentDetailsResponse> {
+        const requestPath = `/v4/packages/${encodeURIComponent(String(packageId))}/documents/${encodeURIComponent(String(documentId))}/details`;
         const requestHeaders: Record<string, string> = {};
         if (contentType !== undefined) {
             requestHeaders["Content-Type"] = String(contentType);
@@ -4010,8 +4010,8 @@ export class SigninghubClient extends ConnectorClientBase {
      * Rename Document
      * @remarks Business applications can use this service API to rename a document in a package.
      */
-    public async renameDocumentsDocument(input: RenameDocumentRequest, packageId: string, documentId: string, contentType: string, accept: string, options: ConnectorOperationOptions = {}): Promise<DocumentResponse> {
-        const requestPath = `/v4/packages/${packageId}/documents/${documentId}`;
+    public async renameDocumentsDocument(input: RenameDocumentRequest, packageId: number, documentId: number, contentType: string, accept: string, options: ConnectorOperationOptions = {}): Promise<DocumentResponse> {
+        const requestPath = `/v4/packages/${encodeURIComponent(String(packageId))}/documents/${encodeURIComponent(String(documentId))}`;
         const requestHeaders: Record<string, string> = {};
         if (contentType !== undefined) {
             requestHeaders["Content-Type"] = String(contentType);
@@ -4029,8 +4029,8 @@ export class SigninghubClient extends ConnectorClientBase {
      * Update Certify Policy for a document
      * @remarks Business applications can use this service API to update certify signature settings for a document in a package.
      */
-    public async updateDocumentsCertifyPolicy(input: UpdateCertifyPolicyRequest, packageId: string, documentId: string, contentType: string, accept: string, options: ConnectorOperationOptions = {}): Promise<EmptyResponse> {
-        const requestPath = `/v4/packages/${packageId}/documents/${documentId}/certify`;
+    public async updateDocumentsCertifyPolicy(input: UpdateCertifyPolicyRequest, packageId: number, documentId: number, contentType: string, accept: string, options: ConnectorOperationOptions = {}): Promise<EmptyResponse> {
+        const requestPath = `/v4/packages/${encodeURIComponent(String(packageId))}/documents/${encodeURIComponent(String(documentId))}/certify`;
         const requestHeaders: Record<string, string> = {};
         if (contentType !== undefined) {
             requestHeaders["Content-Type"] = String(contentType);
@@ -4048,8 +4048,8 @@ export class SigninghubClient extends ConnectorClientBase {
      * Add or Update Document from Library
      * @remarks Business applications can use this service API to add a document from the user’s library to a package. Package ID is provided in the URL, the ID of the document should also be provided as “document_id” in the resource URL to identify the library document to be copied.               Note a package must already exist before you can add a document using this call.
      */
-    public async uploadDocumentsFromLibrary(packageId: string, documentId: string, contentType: string, accept: string, options: UploadDocumentsFromLibraryOptions = {}): Promise<UploadDocumentLibraryResponse> {
-        const requestPath = `/v4/packages/${packageId}/documents/library/${documentId}`;
+    public async uploadDocumentsFromLibrary(packageId: number, documentId: number, contentType: string, accept: string, options: UploadDocumentsFromLibraryOptions = {}): Promise<UploadDocumentLibraryResponse> {
+        const requestPath = `/v4/packages/${encodeURIComponent(String(packageId))}/documents/library/${encodeURIComponent(String(documentId))}`;
         const requestHeaders: Record<string, string> = {};
         if (contentType !== undefined) {
             requestHeaders["Content-Type"] = String(contentType);
@@ -4070,8 +4070,8 @@ export class SigninghubClient extends ConnectorClientBase {
      * Upload Document
      * @remarks Business applications can use this service API to add a document to a document package linked to an enterprise user’s account. The document information is sent in the HTTP request header and document bytes are sent in the HTTP request body.  Note SigningHub will convert supported document formats to PDF if the header "x-convert-document" is set to a value of "true".  The only case supported where this value is set to "false" is to retain Word format and XML documents.                SigningHub supports a wide variety of document formats, each of which can be converted to PDF format upon upload.Click here for the full list.                Note PDF documents are not altered upon upload to the system.                Note a package must already exist before you can add a document using this call.
      */
-    public async uploadDocumentsStream(input: DocumentsUploadStreamInput, packageId: string, accept: string, contentType: string, options: UploadDocumentsStreamOptions = {}): Promise<UploadDocument> {
-        const requestPath = `/v4/packages/${packageId}/documents`;
+    public async uploadDocumentsStream(input: DocumentsUploadStreamInput, packageId: number, accept: string, contentType: string, options: UploadDocumentsStreamOptions = {}): Promise<UploadDocument> {
+        const requestPath = `/v4/packages/${encodeURIComponent(String(packageId))}/documents`;
         const requestHeaders: Record<string, string> = {};
         if (accept !== undefined) {
             requestHeaders["Accept"] = String(accept);
@@ -4098,8 +4098,8 @@ export class SigninghubClient extends ConnectorClientBase {
      * Get Workflow User Authentication (Document Opening)  of Enterprise Package
      * @remarks Business applications can use this service API to get the access security settings enabled for the package. Recipients for whom the security is configured are identified by the order in the URL. Package ID is also identified in the request URL. Recipients will not be able to access document package outside the scope of this duration if the access security is enabled. Document owner can also configure authentication based security of the package for a recipient.
      */
-    public async getEnterpriseDocumentsEnterpriseWorkflowAccess(packageId: string, order: string, contentType: string, accept: string, options: ConnectorOperationOptions = {}): Promise<EnterpriseAccessResponse> {
-        const requestPath = `/v4/enterprise/packages/${packageId}/workflow/${order}/authentication`;
+    public async getEnterpriseDocumentsEnterpriseWorkflowAccess(packageId: number, order: number, contentType: string, accept: string, options: ConnectorOperationOptions = {}): Promise<EnterpriseAccessResponse> {
+        const requestPath = `/v4/enterprise/packages/${encodeURIComponent(String(packageId))}/workflow/${encodeURIComponent(String(order))}/authentication`;
         const requestHeaders: Record<string, string> = {};
         if (contentType !== undefined) {
             requestHeaders["Content-Type"] = String(contentType);
@@ -4117,8 +4117,8 @@ export class SigninghubClient extends ConnectorClientBase {
      * Update Workflow User Authentication (Document Opening) of Enterprise Package
      * @remarks Business applications can use this service API to update the package authentications and access duration for the recipients. This API can also be used by the enterprise administrator or the enterprise user if the "scope" variable was used in the authentication request
      */
-    public async updateEnterpriseDocumentsEnterpriseWorkflowAccess(input: AccessUpdateRequest, packageId: string, order: string, contentType: string, accept: string, options: ConnectorOperationOptions = {}): Promise<EmptyResponse> {
-        const requestPath = `/v4/enterprise/packages/${packageId}/workflow/${order}/authentication`;
+    public async updateEnterpriseDocumentsEnterpriseWorkflowAccess(input: AccessUpdateRequest, packageId: number, order: number, contentType: string, accept: string, options: ConnectorOperationOptions = {}): Promise<EmptyResponse> {
+        const requestPath = `/v4/enterprise/packages/${encodeURIComponent(String(packageId))}/workflow/${encodeURIComponent(String(order))}/authentication`;
         const requestHeaders: Record<string, string> = {};
         if (contentType !== undefined) {
             requestHeaders["Content-Type"] = String(contentType);
@@ -4136,8 +4136,8 @@ export class SigninghubClient extends ConnectorClientBase {
      * Assign Document Field
      * @remarks Business applications can use this service API to assign users to input fields, e.g. signature fields, and hence define the signing order.  The fields must already be present in the document and the users must be present in the workflow. The ID of the workflow document is provided in the resource URL, along with the package identifier.               When recipients are in a workflow they are numbered, beginning at one and counting up for each extra one.Therefore, if there are three users in a workflow they are numbered "1", "2", and "3" respectfully.This API call allows you to assign a user by their workflow order number, to an input field on the document.
      */
-    public async fieldsAutoAssignField(input: FieldsAutoAssignFieldInput, packageId: string, documentId: string, contentType: string, accept: string, options: ConnectorOperationOptions = {}): Promise<EmptyResponse> {
-        const requestPath = `/v4/packages/${packageId}/documents/${documentId}/fields/assign`;
+    public async fieldsAutoAssignField(input: FieldsAutoAssignFieldInput, packageId: number, documentId: number, contentType: string, accept: string, options: ConnectorOperationOptions = {}): Promise<EmptyResponse> {
+        const requestPath = `/v4/packages/${encodeURIComponent(String(packageId))}/documents/${encodeURIComponent(String(documentId))}/fields/assign`;
         const requestHeaders: Record<string, string> = {};
         if (contentType !== undefined) {
             requestHeaders["Content-Type"] = String(contentType);
@@ -4155,8 +4155,8 @@ export class SigninghubClient extends ConnectorClientBase {
      * AutoPlace Fields
      * @remarks Business applications can call this API to add signature or user defined form fields to a document based upon the search criterion supplied. The placement options are: to the left, to the right, top and bottom.  The document is search and all instances of the search criteria met are processed.  This allows you to add multiple fields with one call.  For example, upload a document and automatically place a signature field to the right of all instances of the word "Sign here:".  This saves time and ensures no signatures are missed from the workflow.               The API call supports all types of fields; namely electronic, digital, in-person, initials, and text field etc.               In addition, the API call supports the "order" variable.This means you can assign a set of signature fields automatically to a single user.Hence, the call can be repeated to place and assign signature fields to more than one user in the workflow.               At least one user must exist in a workflow before signature fields can be added to the document in this way.The order number corresponds to the recipient in the workflow.  Therefore, this number must be equal or less than the total number of users in the workflow.  The below example assigns this new signature field to the first person in the workflow.               This API call can be used multiple times on the same document.The reason for doing so is to cater for multiple signatories on a document.The recipient or signatory is identified by the "order" variable passed in the call.               See [Add Users to Workflow](#operation/Workflow_WorkflowAddUser) for more information.  Note if you have a document with a template applied, or have applied one using the APIs, then the workflow will already contain users.
      */
-    public async fieldsAutoPlace(input: AutoPlaceFieldRequest, packageId: string, documentId: string, contentType: string, accept: string, options: ConnectorOperationOptions = {}): Promise<Array<AutoPlaceFieldsResponse>> {
-        const requestPath = `/v4/packages/${packageId}/documents/${documentId}/fields/autoplace`;
+    public async fieldsAutoPlace(input: AutoPlaceFieldRequest, packageId: number, documentId: number, contentType: string, accept: string, options: ConnectorOperationOptions = {}): Promise<Array<AutoPlaceFieldsResponse>> {
+        const requestPath = `/v4/packages/${encodeURIComponent(String(packageId))}/documents/${encodeURIComponent(String(documentId))}/fields/autoplace`;
         const requestHeaders: Record<string, string> = {};
         if (contentType !== undefined) {
             requestHeaders["Content-Type"] = String(contentType);
@@ -4174,8 +4174,8 @@ export class SigninghubClient extends ConnectorClientBase {
      * Delete Document Field
      * @remarks Business applications can use this service API to delete a field of document in a package.
      */
-    public async deleteFieldsDocumentField(input: DeleteDocumentFieldRequest, packageId: string, documentId: string, contentType: string, accept: string, options: ConnectorOperationOptions = {}): Promise<EmptyResponse> {
-        const requestPath = `/v4/packages/${packageId}/documents/${documentId}/fields`;
+    public async deleteFieldsDocumentField(input: DeleteDocumentFieldRequest, packageId: number, documentId: number, contentType: string, accept: string, options: ConnectorOperationOptions = {}): Promise<EmptyResponse> {
+        const requestPath = `/v4/packages/${encodeURIComponent(String(packageId))}/documents/${encodeURIComponent(String(documentId))}/fields`;
         const requestHeaders: Record<string, string> = {};
         if (contentType !== undefined) {
             requestHeaders["Content-Type"] = String(contentType);
@@ -4193,8 +4193,8 @@ export class SigninghubClient extends ConnectorClientBase {
      * Fill Form Fields
      * @remarks Business applications can use this service API to fill one or more form fields in a document by a specified user in the order.
      */
-    public async fieldsFillFormFields(input: FormFillingRequest, packageId: string, documentId: string, contentType: string, accept: string, options: FieldsFillFormFieldsOptions = {}): Promise<EmptyResponse> {
-        const requestPath = `/v4/packages/${packageId}/documents/${documentId}/fields`;
+    public async fieldsFillFormFields(input: FormFillingRequest, packageId: number, documentId: number, contentType: string, accept: string, options: FieldsFillFormFieldsOptions = {}): Promise<EmptyResponse> {
+        const requestPath = `/v4/packages/${encodeURIComponent(String(packageId))}/documents/${encodeURIComponent(String(documentId))}/fields`;
         const requestHeaders: Record<string, string> = {};
         if (contentType !== undefined) {
             requestHeaders["Content-Type"] = String(contentType);
@@ -4221,8 +4221,8 @@ export class SigninghubClient extends ConnectorClientBase {
      * Get Document Fields
      * @remarks Business applications can use this service API to get document fields i.e., initials, in-persons, signature fields or form fields.
      */
-    public async getFieldAllDocumentFields(packageId: string, documentId: string, pageNo: string, contentType: string, accept: string, options: GetFieldAllDocumentFieldsOptions = {}): Promise<FieldsResponse> {
-        const requestPath = `/v4/packages/${packageId}/documents/${documentId}/fields/${pageNo}`;
+    public async getFieldAllDocumentFields(packageId: number, documentId: number, pageNo: number, contentType: string, accept: string, options: GetFieldAllDocumentFieldsOptions = {}): Promise<FieldsResponse> {
+        const requestPath = `/v4/packages/${encodeURIComponent(String(packageId))}/documents/${encodeURIComponent(String(documentId))}/fields/${encodeURIComponent(String(pageNo))}`;
         const requestHeaders: Record<string, string> = {};
         if (contentType !== undefined) {
             requestHeaders["Content-Type"] = String(contentType);
@@ -4243,8 +4243,8 @@ export class SigninghubClient extends ConnectorClientBase {
      * Move Package to Custom or Shared Space folder
      * @remarks Business applications can use this service API to move the document package to a shared space or user's custom folder.
      */
-    public async moveFolderPackage(input: MoveToRequest, packageId: string, contentType: string, accept: string, options: ConnectorOperationOptions = {}): Promise<EmptyResponse> {
-        const requestPath = `/v4/packages/${packageId}/move_to`;
+    public async moveFolderPackage(input: MoveToRequest, packageId: number, contentType: string, accept: string, options: ConnectorOperationOptions = {}): Promise<EmptyResponse> {
+        const requestPath = `/v4/packages/${encodeURIComponent(String(packageId))}/move_to`;
         const requestHeaders: Record<string, string> = {};
         if (contentType !== undefined) {
             requestHeaders["Content-Type"] = String(contentType);
@@ -4262,8 +4262,8 @@ export class SigninghubClient extends ConnectorClientBase {
      * Add Initial Field
      * @remarks Business applications can use this service API to add an initials field to a document in a package.               At least one user must exist in a workflow before fields(input and signature) can be added to the document in this way.The order number corresponds to the recipient in the workflow.Therefore, this number must be equal or less than the total number of users in the workflow.  The below example assigns this new signature field to the first person in the workflow.               See [Add Users to Workflow](#operation/Workflow_WorkflowAddUser) for more information.  Note if you have a document with a template applied, or have applied one using the APIs, then the workflow will already contain users.
      */
-    public async addInitialsInitial(input: InitialFieldRequest, packageId: string, documentId: string, contentType: string, accept: string, options: ConnectorOperationOptions = {}): Promise<AddFieldResponse> {
-        const requestPath = `/v4/packages/${packageId}/documents/${documentId}/fields/initials`;
+    public async addInitialsInitial(input: InitialFieldRequest, packageId: number, documentId: number, contentType: string, accept: string, options: ConnectorOperationOptions = {}): Promise<AddFieldResponse> {
+        const requestPath = `/v4/packages/${encodeURIComponent(String(packageId))}/documents/${encodeURIComponent(String(documentId))}/fields/initials`;
         const requestHeaders: Record<string, string> = {};
         if (contentType !== undefined) {
             requestHeaders["Content-Type"] = String(contentType);
@@ -4281,8 +4281,8 @@ export class SigninghubClient extends ConnectorClientBase {
      * Fill Initials
      * @remarks Business applications can use this service API to fill an initials field in a document by a specified user in the order.
      */
-    public async initialsFill(input: InitialFillingRequest, packageId: string, documentId: string, contentType: string, accept: string, options: InitialsFillOptions = {}): Promise<EmptyResponse> {
-        const requestPath = `/v4/packages/${packageId}/documents/${documentId}/initial`;
+    public async initialsFill(input: InitialFillingRequest, packageId: number, documentId: number, contentType: string, accept: string, options: InitialsFillOptions = {}): Promise<EmptyResponse> {
+        const requestPath = `/v4/packages/${encodeURIComponent(String(packageId))}/documents/${encodeURIComponent(String(documentId))}/initial`;
         const requestHeaders: Record<string, string> = {};
         if (contentType !== undefined) {
             requestHeaders["Content-Type"] = String(contentType);
@@ -4303,8 +4303,8 @@ export class SigninghubClient extends ConnectorClientBase {
      * Update Initial Field
      * @remarks Business applications can use this service API to update an initials field of a document in a package.               Note all of the input parameters can be changed.Where you wish to retain the current setting submit it in the call unchanged.               You can therefore use the same parameters as when you added the input field, or the information as returned by [Get Document Fields](#operation/Documents_GetDocumentFields).The latter can be used when a template was applied or the document was created using the GUI interface.
      */
-    public async updateInitialsInitial(input: UpdateInitialFieldRequest, packageId: string, documentId: string, contentType: string, accept: string, options: ConnectorOperationOptions = {}): Promise<EmptyResponse> {
-        const requestPath = `/v4/packages/${packageId}/documents/${documentId}/fields/initials`;
+    public async updateInitialsInitial(input: UpdateInitialFieldRequest, packageId: number, documentId: number, contentType: string, accept: string, options: ConnectorOperationOptions = {}): Promise<EmptyResponse> {
+        const requestPath = `/v4/packages/${encodeURIComponent(String(packageId))}/documents/${encodeURIComponent(String(documentId))}/fields/initials`;
         const requestHeaders: Record<string, string> = {};
         if (contentType !== undefined) {
             requestHeaders["Content-Type"] = String(contentType);
@@ -4322,8 +4322,8 @@ export class SigninghubClient extends ConnectorClientBase {
      * Add In-person Field
      * @remarks Business applications can use this service API to an add in-person signature field to a document in a package.               At least one user must exist in a workflow before fields(input and signature) can be added to the document in this way.The order number corresponds to the recipient in the workflow.Therefore, this number must be equal or less than the total number of users in the workflow.  The below example assigns this new signature field to the first person in the workflow.               See [Add Users to Workflow](#operation/Workflow_WorkflowAddUser) for more information.  Note if you have a document with a template applied, or have applied one using the APIs, then the workflow will already contain users.               In order to host an in-person meeting a SigningHub user must be part of the workflow.They must either be added with Role "INPERSON_HOST" or "SIGNER".  For the host option they do not require a signature or input field on the document, and the in-person signature field can be signed by the non-SigningHub registered user.               Note this is a special workflow scenario whereby it is expected that the SigningHub user and recipient would be in the same location.This type of signature is not intended for use whereby a document is shared with recipients over email link in the normal loose integration method.
      */
-    public async addInPersonInPerson(input: InPersonFieldRequest, packageId: string, documentId: string, contentType: string, accept: string, options: ConnectorOperationOptions = {}): Promise<AddFieldResponse> {
-        const requestPath = `/v4/packages/${packageId}/documents/${documentId}/fields/in_person_signature`;
+    public async addInPersonInPerson(input: InPersonFieldRequest, packageId: number, documentId: number, contentType: string, accept: string, options: ConnectorOperationOptions = {}): Promise<AddFieldResponse> {
+        const requestPath = `/v4/packages/${encodeURIComponent(String(packageId))}/documents/${encodeURIComponent(String(documentId))}/fields/in_person_signature`;
         const requestHeaders: Record<string, string> = {};
         if (contentType !== undefined) {
             requestHeaders["Content-Type"] = String(contentType);
@@ -4341,8 +4341,8 @@ export class SigninghubClient extends ConnectorClientBase {
      * Update In-person Field
      * @remarks Business applications can use this service API to update an in-person signature field of a document in a package.               Note all of the input parameters can be changed.Where you wish to retain the current setting submit it in the call unchanged.You can therefore use the same parameters as when you added the input field, or the information as returned by [Get Document Fields](#operation/Documents_GetDocumentFields).The latter can be used when a template was applied or the document was created using the GUI interface.
      */
-    public async updateInPersonInPerson(input: UpdateInPersonFieldRequest, packageId: string, documentId: string, contentType: string, accept: string, options: UpdateInPersonInPersonOptions = {}): Promise<EmptyResponse> {
-        const requestPath = `/v4/packages/${packageId}/documents/${documentId}/fields/in_person_signature`;
+    public async updateInPersonInPerson(input: UpdateInPersonFieldRequest, packageId: number, documentId: number, contentType: string, accept: string, options: UpdateInPersonInPersonOptions = {}): Promise<EmptyResponse> {
+        const requestPath = `/v4/packages/${encodeURIComponent(String(packageId))}/documents/${encodeURIComponent(String(documentId))}/fields/in_person_signature`;
         const requestHeaders: Record<string, string> = {};
         if (contentType !== undefined) {
             requestHeaders["Content-Type"] = String(contentType);
@@ -4382,8 +4382,8 @@ export class SigninghubClient extends ConnectorClientBase {
      * Approve Document
      * @remarks Business applications can use this service API to approve a document by a specified user in the order.
      */
-    public async approvePackage(input: ApproveRequest, packageId: string, contentType: string, accept: string, options: ApprovePackageOptions = {}): Promise<EmptyResponse> {
-        const requestPath = `/v4/packages/${packageId}/approve`;
+    public async approvePackage(input: ApproveRequest, packageId: number, contentType: string, accept: string, options: ApprovePackageOptions = {}): Promise<EmptyResponse> {
+        const requestPath = `/v4/packages/${encodeURIComponent(String(packageId))}/approve`;
         const requestHeaders: Record<string, string> = {};
         if (contentType !== undefined) {
             requestHeaders["Content-Type"] = String(contentType);
@@ -4410,8 +4410,8 @@ export class SigninghubClient extends ConnectorClientBase {
      * Decline Document
      * @remarks Business applications can use this service API to decline a document by a specified user in the order.
      */
-    public async declinePackage(input: DeclineRequest, packageId: string, contentType: string, accept: string, options: DeclinePackageOptions = {}): Promise<EmptyResponse> {
-        const requestPath = `/v4/packages/${packageId}/decline`;
+    public async declinePackage(input: DeclineRequest, packageId: number, contentType: string, accept: string, options: DeclinePackageOptions = {}): Promise<EmptyResponse> {
+        const requestPath = `/v4/packages/${encodeURIComponent(String(packageId))}/decline`;
         const requestHeaders: Record<string, string> = {};
         if (contentType !== undefined) {
             requestHeaders["Content-Type"] = String(contentType);
@@ -4432,8 +4432,8 @@ export class SigninghubClient extends ConnectorClientBase {
      * Delete Package
      * @remarks Business applications can use this service API to delete a document from the user inbox. The package ID is provided in the resource URL as "{package_id}". If the document status is PENDING, then it is automatically declined as result of delete operation. If the document status is SHARED, then the document is automatically recalled and workflow is stopped before the document is deleted.
      */
-    public async deletePackagePackage(packageIdBulkAction: string, contentType: string, accept: string, options: ConnectorOperationOptions = {}): Promise<EmptyResponse> {
-        const requestPath = `/v4/packages/${packageIdBulkAction}`;
+    public async deletePackagePackage(packageIdBulkAction: number, contentType: string, accept: string, options: ConnectorOperationOptions = {}): Promise<EmptyResponse> {
+        const requestPath = `/v4/packages/${encodeURIComponent(String(packageIdBulkAction))}`;
         const requestHeaders: Record<string, string> = {};
         if (contentType !== undefined) {
             requestHeaders["Content-Type"] = String(contentType);
@@ -4451,12 +4451,12 @@ export class SigninghubClient extends ConnectorClientBase {
      * Download Package
      * @remarks Business applications can use this service API to download the document package in binary format.               The package ID is provided in the resource URL.               If the package contains only one document, the download is the binary PDF document.               Alternatively, if the package has more than one document, the download is the binary zip file of all documents.               The x-password and x-otp headers are optional.  They are required if the document owner set them during the workflow creation phase.
      */
-    public async downloadPackagePackageBytes(packageIdBulkAction: string, contentType: string, accept: string, options: DownloadPackagePackageBytesOptions = {}): Promise<PackageDownloadPackageBytesResponse> {
+    public async downloadPackagePackageBytes(packageIdBulkAction: number, contentType: string, accept: string, options: DownloadPackagePackageBytesOptions = {}): Promise<PackageDownloadPackageBytesResponse> {
         const queryParams: string[] = [];
         if (options.documentIds !== undefined) {
             queryParams.push(`document-ids=${encodeURIComponent(String(options.documentIds))}`);
         }
-        const requestPath = `/v4/packages/${packageIdBulkAction}` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
+        const requestPath = `/v4/packages/${encodeURIComponent(String(packageIdBulkAction))}` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestHeaders: Record<string, string> = {};
         if (contentType !== undefined) {
             requestHeaders["Content-Type"] = String(contentType);
@@ -4486,8 +4486,8 @@ export class SigninghubClient extends ConnectorClientBase {
      * Finish Processing
      * @remarks Business applications can use this service API to finish the document processing after signing all the signature fields.  This method is primarily used by native SigningHub mobile apps for iOS and Android, and mobile web use cases.  General business applications employing tight integration into their respective portal do not need to call this method.  However, when using the Sign Document API (and hence the user is not presented with a visual representation of the document they are requested to sign) calling this API is required in order to ensure the respective workflow continues or completes.  For example, once all signatures have been applied using the "blind" Sign Document API call the document will not show as status "Completed" to the owner until this API is invoked.  The document owner will see a status of "In Progress" until this API is called.               Within native SigningHub mobile apps and mobile web use cases, this call is necessary to ensure that each user completes their respective actions with respect to SigningHub.For example, after a signatory has signed a document in SigningHub App, this method is invoked by the application to ensure the workflow continues to process and the next signatory is notified, and the document status is available via the configured call-back URL.
      */
-    public async finishPackage(packageId: string, contentType: string, accept: string, options: FinishPackageOptions = {}): Promise<EmptyResponse> {
-        const requestPath = `/v4/packages/${packageId}/finish`;
+    public async finishPackage(packageId: number, contentType: string, accept: string, options: FinishPackageOptions = {}): Promise<EmptyResponse> {
+        const requestPath = `/v4/packages/${encodeURIComponent(String(packageId))}/finish`;
         const requestHeaders: Record<string, string> = {};
         if (contentType !== undefined) {
             requestHeaders["Content-Type"] = String(contentType);
@@ -4508,8 +4508,8 @@ export class SigninghubClient extends ConnectorClientBase {
      * Gatekeeper Approve Document
      * @remarks Business applications can use this service API to gatekeeper approve a document by a specified user in the order.
      */
-    public async approvePackageGatekeeper(input: ApproveRequest, packageId: string, contentType: string, accept: string, options: ApprovePackageGatekeeperOptions = {}): Promise<EmptyResponse> {
-        const requestPath = `/v4/packages/${packageId}/gatekeeper/approve`;
+    public async approvePackageGatekeeper(input: ApproveRequest, packageId: number, contentType: string, accept: string, options: ApprovePackageGatekeeperOptions = {}): Promise<EmptyResponse> {
+        const requestPath = `/v4/packages/${encodeURIComponent(String(packageId))}/gatekeeper/approve`;
         const requestHeaders: Record<string, string> = {};
         if (contentType !== undefined) {
             requestHeaders["Content-Type"] = String(contentType);
@@ -4533,8 +4533,8 @@ export class SigninghubClient extends ConnectorClientBase {
      * Gatekeeper Decline Document
      * @remarks Business applications can use this service API to gatekeeper decline a document by a specified user in the order.
      */
-    public async declinePackageGatekeeper(input: DeclineRequest, packageId: string, contentType: string, accept: string, options: ConnectorOperationOptions = {}): Promise<EmptyResponse> {
-        const requestPath = `/v4/packages/${packageId}/gatekeeper/decline`;
+    public async declinePackageGatekeeper(input: DeclineRequest, packageId: number, contentType: string, accept: string, options: ConnectorOperationOptions = {}): Promise<EmptyResponse> {
+        const requestPath = `/v4/packages/${encodeURIComponent(String(packageId))}/gatekeeper/decline`;
         const requestHeaders: Record<string, string> = {};
         if (contentType !== undefined) {
             requestHeaders["Content-Type"] = String(contentType);
@@ -4552,7 +4552,7 @@ export class SigninghubClient extends ConnectorClientBase {
      * Get Packages
      * @remarks Business applications can use this service API to get a list of documents filtered by different statuses. Users can divide the records into pages by providing a number of records per page.
      */
-    public async getPackageAllPackages(documentStatus: string, pageNo: string, recordPerPage: string, contentType: string, accept: string, options: GetPackageAllPackagesOptions = {}): Promise<Array<GetPackagesResponse>> {
+    public async getPackageAllPackages(documentStatus: string, pageNo: number, recordPerPage: number, contentType: string, accept: string, options: GetPackageAllPackagesOptions = {}): Promise<Array<GetPackagesResponse>> {
         const queryParams: string[] = [];
         if (options.packageName !== undefined) {
             queryParams.push(`package-name=${encodeURIComponent(String(options.packageName))}`);
@@ -4611,7 +4611,7 @@ export class SigninghubClient extends ConnectorClientBase {
         if (options.smartForm !== undefined) {
             queryParams.push(`smart-form=${encodeURIComponent(String(options.smartForm))}`);
         }
-        const requestPath = `/v4/packages/${documentStatus}/${pageNo}/${recordPerPage}` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
+        const requestPath = `/v4/packages/${encodeURIComponent(String(documentStatus))}/${encodeURIComponent(String(pageNo))}/${encodeURIComponent(String(recordPerPage))}` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestHeaders: Record<string, string> = {};
         if (contentType !== undefined) {
             requestHeaders["Content-Type"] = String(contentType);
@@ -4644,8 +4644,8 @@ export class SigninghubClient extends ConnectorClientBase {
      * Get Package Details
      * @remarks Business applications can use this service API to get the details of an package. This API can also be used by the business application to perform action on behalf of the enterprise user via "Scope Authentication".
      */
-    public async getPackagePackageDetails(packageId: string, contentType: string, accept: string, options: ConnectorOperationOptions = {}): Promise<GetPackageDetailsResponse> {
-        const requestPath = `/v4/packages/${packageId}/details`;
+    public async getPackagePackageDetails(packageId: number, contentType: string, accept: string, options: ConnectorOperationOptions = {}): Promise<GetPackageDetailsResponse> {
+        const requestPath = `/v4/packages/${encodeURIComponent(String(packageId))}/details`;
         const requestHeaders: Record<string, string> = {};
         if (contentType !== undefined) {
             requestHeaders["Content-Type"] = String(contentType);
@@ -4663,8 +4663,8 @@ export class SigninghubClient extends ConnectorClientBase {
      * Rename Package
      * @remarks This service API is used to rename a document package.               The document package is identified by its unique identifier in the URL of the call.
      */
-    public async renamePackagePackage(input: RenameDocumentPackageRequest, packageIdBulkAction: string, contentType: string, accept: string, options: ConnectorOperationOptions = {}): Promise<EmptyResponse> {
-        const requestPath = `/v4/packages/${packageIdBulkAction}`;
+    public async renamePackagePackage(input: RenameDocumentPackageRequest, packageIdBulkAction: number, contentType: string, accept: string, options: ConnectorOperationOptions = {}): Promise<EmptyResponse> {
+        const requestPath = `/v4/packages/${encodeURIComponent(String(packageIdBulkAction))}`;
         const requestHeaders: Record<string, string> = {};
         if (contentType !== undefined) {
             requestHeaders["Content-Type"] = String(contentType);
@@ -4682,8 +4682,8 @@ export class SigninghubClient extends ConnectorClientBase {
      * Submit Document
      * @remarks One of the SigningHub roles is called "Editor".  This allows a recipient to edit input fields on a document, but does not require a signature.  Once completed the recipient submits their changes.  The button used in the GUI is called "Submit".               This is the equivalent operation for an editor to submit their changes via an API call.               Click [SigningHub Roles](http://manuals.ascertia.com/SigningHubv7/default.aspx#pageid=1056) for a description of all available workflow recipient roles.
      */
-    public async submitPackage(packageId: string, contentType: string, accept: string, options: SubmitPackageOptions = {}): Promise<EmptyResponse> {
-        const requestPath = `/v4/packages/${packageId}/submit`;
+    public async submitPackage(packageId: number, contentType: string, accept: string, options: SubmitPackageOptions = {}): Promise<EmptyResponse> {
+        const requestPath = `/v4/packages/${encodeURIComponent(String(packageId))}/submit`;
         const requestHeaders: Record<string, string> = {};
         if (contentType !== undefined) {
             requestHeaders["Content-Type"] = String(contentType);
@@ -4710,8 +4710,8 @@ export class SigninghubClient extends ConnectorClientBase {
      * Add QR Code
      * @remarks Business applications can use this service API to add a QR Code to a document in a package.
      */
-    public async addQRQRCode(input: QrCodeRequest, packageId: string, documentId: string, contentType: string, accept: string, options: ConnectorOperationOptions = {}): Promise<AddQrCodeResponse> {
-        const requestPath = `/v4/packages/${packageId}/documents/${documentId}/fields/qrcode`;
+    public async addQRQRCode(input: QrCodeRequest, packageId: number, documentId: number, contentType: string, accept: string, options: ConnectorOperationOptions = {}): Promise<AddQrCodeResponse> {
+        const requestPath = `/v4/packages/${encodeURIComponent(String(packageId))}/documents/${encodeURIComponent(String(documentId))}/fields/qrcode`;
         const requestHeaders: Record<string, string> = {};
         if (contentType !== undefined) {
             requestHeaders["Content-Type"] = String(contentType);
@@ -4729,8 +4729,8 @@ export class SigninghubClient extends ConnectorClientBase {
      * Update QR Code
      * @remarks Business applications can use this service API to update a QR Code of a document in a package.
      */
-    public async updateQRQRCode(input: UpdateQrCodeRequest, packageId: string, documentId: string, contentType: string, accept: string, options: ConnectorOperationOptions = {}): Promise<UpdateQrCodeResponse> {
-        const requestPath = `/v4/packages/${packageId}/documents/${documentId}/fields/qrcode`;
+    public async updateQRQRCode(input: UpdateQrCodeRequest, packageId: number, documentId: number, contentType: string, accept: string, options: ConnectorOperationOptions = {}): Promise<UpdateQrCodeResponse> {
+        const requestPath = `/v4/packages/${encodeURIComponent(String(packageId))}/documents/${encodeURIComponent(String(documentId))}/fields/qrcode`;
         const requestHeaders: Record<string, string> = {};
         if (contentType !== undefined) {
             requestHeaders["Content-Type"] = String(contentType);
@@ -4748,8 +4748,8 @@ export class SigninghubClient extends ConnectorClientBase {
      * Add RadioBox Field
      * @remarks Business applications can use this service API to add a checkbox to a document in a package.               At least one user must exist in a workflow before fields(input and signature) can be added to the document in this way.The order number corresponds to the recipient in the workflow.Therefore, this number must be equal or less than the total number of users in the workflow.  The below example assigns this new signature field to the first person in the workflow.               See [Add Users to Workflow](#operation/Workflow_WorkflowAddUser) for more information.  Note if you have a document with a template applied, or have applied one using the APIs, then the workflow will already contain users.               If width and height parameters are not provided, a default size of 10x10 will be assigned. If either width or height (or both) is provided, the system will compare these provided values with each other. The larger value between width and height will be assigned to both dimensions.
      */
-    public async addRadioRadioBox(input: RadioBoxFieldRequest, packageId: string, documentId: string, contentType: string, accept: string, options: ConnectorOperationOptions = {}): Promise<AddFieldResponse> {
-        const requestPath = `/v4/packages/${packageId}/documents/${documentId}/fields/radio`;
+    public async addRadioRadioBox(input: RadioBoxFieldRequest, packageId: number, documentId: number, contentType: string, accept: string, options: ConnectorOperationOptions = {}): Promise<AddFieldResponse> {
+        const requestPath = `/v4/packages/${encodeURIComponent(String(packageId))}/documents/${encodeURIComponent(String(documentId))}/fields/radio`;
         const requestHeaders: Record<string, string> = {};
         if (contentType !== undefined) {
             requestHeaders["Content-Type"] = String(contentType);
@@ -4767,8 +4767,8 @@ export class SigninghubClient extends ConnectorClientBase {
      * Update RadioBox Field
      * @remarks Business applications can use this service API to update a radio button of a document in a package.               Note all of the input parameters can be changed.Where you wish to retain the current setting submit it in the call unchanged.You can therefore use the same parameters as when you added the input field, or the information as returned by [Get Document Fields](#operation/Documents_GetDocumentFields).The latter can be used when a template was applied or the document was created using the GUI interface.               It's width and height cannot be updated. They will remain the same as when they were added.
      */
-    public async updateRadioRadioBox(input: UpdateRadioBoxFieldRequest, packageId: string, documentId: string, contentType: string, accept: string, options: ConnectorOperationOptions = {}): Promise<EmptyResponse> {
-        const requestPath = `/v4/packages/${packageId}/documents/${documentId}/fields/radio`;
+    public async updateRadioRadioBox(input: UpdateRadioBoxFieldRequest, packageId: number, documentId: number, contentType: string, accept: string, options: ConnectorOperationOptions = {}): Promise<EmptyResponse> {
+        const requestPath = `/v4/packages/${encodeURIComponent(String(packageId))}/documents/${encodeURIComponent(String(documentId))}/fields/radio`;
         const requestHeaders: Record<string, string> = {};
         if (contentType !== undefined) {
             requestHeaders["Content-Type"] = String(contentType);
@@ -4786,7 +4786,7 @@ export class SigninghubClient extends ConnectorClientBase {
      * Get Templates
      * @remarks Business applications can use this service API to get list of templates for the current user.               It is possible to search based upon the criterion supplied under the "x-search-text" header.Furthermore, it is possible to search a user's personal templates or the enterprise templates as allowed against their user role by their enterprise admin.
      */
-    public async getSettingTemplates(recordPerPage: string, pageNo: string, contentType: string, accept: string, options: GetSettingTemplatesOptions = {}): Promise<Array<TemplateResponse>> {
+    public async getSettingTemplates(recordPerPage: number, pageNo: number, contentType: string, accept: string, options: GetSettingTemplatesOptions = {}): Promise<Array<TemplateResponse>> {
         const queryParams: string[] = [];
         if (options.sortBy !== undefined) {
             queryParams.push(`sort-by=${encodeURIComponent(String(options.sortBy))}`);
@@ -4794,7 +4794,7 @@ export class SigninghubClient extends ConnectorClientBase {
         if (options.asc !== undefined) {
             queryParams.push(`asc=${encodeURIComponent(String(options.asc))}`);
         }
-        const requestPath = `/v4/settings/templates/${recordPerPage}/${pageNo}` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
+        const requestPath = `/v4/settings/templates/${encodeURIComponent(String(recordPerPage))}/${encodeURIComponent(String(pageNo))}` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestHeaders: Record<string, string> = {};
         if (contentType !== undefined) {
             requestHeaders["Content-Type"] = String(contentType);
@@ -4821,8 +4821,8 @@ export class SigninghubClient extends ConnectorClientBase {
      * Add Digital Signature Field
      * @remarks Business applications can use this service API to add a digital signature field to a document in a package.               At least one user must exist in a workflow before fields(input and signature) can be added to the document in this way.The order number corresponds to the recipient in the workflow.Therefore, this number must be equal or less than the total number of users in the workflow.  The below example assigns this new signature field to the first person in the workflow.               See [Add Users to Workflow](#operation/Workflow_WorkflowAddUser) for more information.Note if you have a document with a template applied, or have applied one using the APIs, then the workflow will already contain users.
      */
-    public async addSignatureSignature(input: DigitalSignatureFieldRequest, packageId: string, documentId: string, contentType: string, accept: string, options: ConnectorOperationOptions = {}): Promise<SignatureFieldResponse> {
-        const requestPath = `/v4/packages/${packageId}/documents/${documentId}/fields/signature`;
+    public async addSignatureSignature(input: DigitalSignatureFieldRequest, packageId: number, documentId: number, contentType: string, accept: string, options: ConnectorOperationOptions = {}): Promise<SignatureFieldResponse> {
+        const requestPath = `/v4/packages/${encodeURIComponent(String(packageId))}/documents/${encodeURIComponent(String(documentId))}/fields/signature`;
         const requestHeaders: Record<string, string> = {};
         if (contentType !== undefined) {
             requestHeaders["Content-Type"] = String(contentType);
@@ -4840,8 +4840,8 @@ export class SigninghubClient extends ConnectorClientBase {
      * Update Digital Signature Field
      * @remarks Business applications can use this service API to update a digital signature field of a document in a package.               Note all of the input parameters can be changed.Where you wish to retain the current setting submit it in the call unchanged.You can therefore use the same parameters as when you added the input field, or the information as returned by [Get Document Fields](#operation/Documents_GetDocumentFields).The latter can be used when a template was applied or the document was created using the GUI interface.
      */
-    public async updateSignatureSignature(input: UpdateDigitalSignatureFieldRequest, packageId: string, documentId: string, contentType: string, accept: string, options: UpdateSignatureSignatureOptions = {}): Promise<EmptyResponse> {
-        const requestPath = `/v4/packages/${packageId}/documents/${documentId}/fields/signature`;
+    public async updateSignatureSignature(input: UpdateDigitalSignatureFieldRequest, packageId: number, documentId: number, contentType: string, accept: string, options: UpdateSignatureSignatureOptions = {}): Promise<EmptyResponse> {
+        const requestPath = `/v4/packages/${encodeURIComponent(String(packageId))}/documents/${encodeURIComponent(String(documentId))}/fields/signature`;
         const requestHeaders: Record<string, string> = {};
         if (contentType !== undefined) {
             requestHeaders["Content-Type"] = String(contentType);
@@ -4863,7 +4863,7 @@ export class SigninghubClient extends ConnectorClientBase {
      * @remarks Business applications can use this API to sign/share/sign and share multiple documents (both electronic and digital) without displaying the documents to the end user. This API needs information from the business application about document packages and the details of signatures, in-person and initials fields. On the successful completion of bulk signing transaction, the API will return the statuses and transaction ids of the document packages.               Unlike the Sign Document API, this API not only signs a document package but also marks it as approved and reviewed based on whether the recipient is a Signer, Editor or Reviewer. Any document package for which the status returns as COMPLETED has been signed, approved or reviewed by this API.               Bulk Signing works with all the signing-time authentication methods.               If SIGN is passed as bulk_action and package is in Draft state, Sign and Share will be performed automatically.               You must call this API after the [Pre Bulk Sign Documents](#operation/V4_Documents_ValidateBulkSignPackages) API.               In case you need to make changes in any of the document before signing, the [Fill Form Fields](#operation/V4_Documents_FillFormFields) API should be called before calling the Pre Bulk Sign Document API.  Remember, any mandatory input fields on a document require completing before this API will successfully complete; whereas, the auto-populated fields (like Name, Email, Date, Job Title, etc.) will be automatically filled.               The signatory is identified by the access token presented in the call.  Therefore, [authentication](#tag/Authentication) of the signatory is required prior to making this call.  You cannot authenticate as an Enterprise Admin with the scope variable, and sign a document on behalf of a user.  The access token must be issued to the signatory as a result of direct authentication.               Once document is signed, the verification response can be seen from the [Bulk Signing Status](#operation/V4_Documents_BulkSignStatus) API.               First or Second Factor OTP Usage for Authentication               In case OTP authentication is turned on for the server side signing operation, the client applications will need to generate an OTP for the mobile number using the [Bulk Sign Authentication via OTP](#operation/V4_Documents_SendsOTP) API call.  Respective business applications must retrieve the OTP from the use and submit it when making the API call.  This is done using the "x-otp" header in the request.
      */
     public async signingBulkSignDocuments(input: BulkSignRequest, packageIdBulkAction: string, contentType: string, accept: string, options: SigningBulkSignDocumentsOptions = {}): Promise<BulkSignResponse> {
-        const requestPath = `/v4/packages/${packageIdBulkAction}`;
+        const requestPath = `/v4/packages/${encodeURIComponent(String(packageIdBulkAction))}`;
         const requestHeaders: Record<string, string> = {};
         if (contentType !== undefined) {
             requestHeaders["Content-Type"] = String(contentType);
@@ -4897,7 +4897,7 @@ export class SigninghubClient extends ConnectorClientBase {
      * @remarks Business applications can use this API to get the status of a specific bulk signing transaction along with the details of document packages that were processed by the [Bulk Signing Packages](#operation/V4_Documents_BulkSignDocuments) API.               You must call this API after the Bulk Signing Packages API.               The signatory is identified by the access token presented in the call.  Therefore, [authentication](#tag/Authentication) of the signatory is required prior to making this call.  You cannot authenticate as an Enterprise Admin with the scope variable, and sign a document on behalf of a user.  The access token must be issued to the signatory as a result of direct authentication.               For RAS signing, the ACTION property will be REMOTE_AUTHORIZATION_REQURIED and the STATUS property will be PENDING, indicating that the request needs to be authorized using the mobile device. If the signing process fails in some document due to different levels of assurance configured and the user wants to re-initiate the signing process to complete the signing process on failed documents, the ACTION property will be REINITIATE_SIGNING_PROCESS, and the STATUS property will be PENDING.
      */
     public async signingBulkSignStatus(input: BulkSignStatusRequest, bulkAction: string, contentType: string, accept: string, options: ConnectorOperationOptions = {}): Promise<BulkSignStatusResponse> {
-        const requestPath = `/v4/packages/${bulkAction}/status`;
+        const requestPath = `/v4/packages/${encodeURIComponent(String(bulkAction))}/status`;
         const requestHeaders: Record<string, string> = {};
         if (contentType !== undefined) {
             requestHeaders["Content-Type"] = String(contentType);
@@ -4915,8 +4915,8 @@ export class SigninghubClient extends ConnectorClientBase {
      * Sign Document
      * @remarks Business applications can use this service API to sign a document (both electronic and digital) without displaying the document to the end user using SigningHub.  For example, a business application may have another method to display the document to the user, and only the signing functionality of SigningHub is required, or for bulk operations it may be justified to sign without requiring the user to view and approve every document individually.  If there are changes to be saved in the document before signing, [Fill Form Fields](#operation/Documents_FillFormFields) API should be called before calling the Sign Document API.  Note any mandatory input fields on a document require completing before this API will successfully complete.               The signatory is identified by the access token presented in the call.Therefore, [authentication](#tag/Authentication) of the signatory is required prior to making this call.You cannot authenticate as an Enterprise Admin with the scope variable, and sign a document on behalf of a user.The access token must be issued to the signatory as a result of direct authentication.               When this call completes it is important that if the signatory was the last signer for a document that the [Finish Document](#operation/Documents_Finish) API call is invoked.The reason is because without calling that API the document will remain in a status of "In Progress" to the document owner.  Once the API has been called, the status will change to "Completed" for the document owner.               Once document is signed, the verification response can be seen from [Get Document Verification](#operation/Documents_GetDocumentPackageVerification) API.               First or Second Factor OTP Usage for Authentication               If OTP authentication is turned on for the server side signing operation, client applications will need to generate a OTP for the mobile number using [Signer Authentication via OTP](#operation/Documents_SendOtpForField) API call.  Respective business applications must retrieve the OTP from the use and submit it when making the API call.  This is done using the "x-otp" header in the request.
      */
-    public async signingSignDocument(input: SignDocumentRequest, packageId: string, documentId: string, contentType: string, accept: string, options: SigningSignDocumentOptions = {}): Promise<SignDocumentResponse> {
-        const requestPath = `/v4/packages/${packageId}/documents/${documentId}/sign`;
+    public async signingSignDocument(input: SignDocumentRequest, packageId: number, documentId: number, contentType: string, accept: string, options: SigningSignDocumentOptions = {}): Promise<SignDocumentResponse> {
+        const requestPath = `/v4/packages/${encodeURIComponent(String(packageId))}/documents/${encodeURIComponent(String(documentId))}/sign`;
         const requestHeaders: Record<string, string> = {};
         if (contentType !== undefined) {
             requestHeaders["Content-Type"] = String(contentType);
@@ -4943,7 +4943,7 @@ export class SigninghubClient extends ConnectorClientBase {
      * Get Enterprise Templates
      * @remarks Business applications can use this service API to get list of enterprise templates of the current user. This means the enterprise administrator or the enterprise user if the "scope" variable was used in the authentication request.               It is possible to search based upon the criterion supplied under the "x-search-text" header.
      */
-    public async getTemplateEnterpriseTemplates(recordPerPage: string, pageNo: string, contentType: string, accept: string, options: GetTemplateEnterpriseTemplatesOptions = {}): Promise<Array<EnterpriseTemplateResponse>> {
+    public async getTemplateEnterpriseTemplates(recordPerPage: number, pageNo: number, contentType: string, accept: string, options: GetTemplateEnterpriseTemplatesOptions = {}): Promise<Array<EnterpriseTemplateResponse>> {
         const queryParams: string[] = [];
         if (options.sortBy !== undefined) {
             queryParams.push(`sort-by=${encodeURIComponent(String(options.sortBy))}`);
@@ -4954,7 +4954,7 @@ export class SigninghubClient extends ConnectorClientBase {
         if (options.id !== undefined) {
             queryParams.push(`id=${encodeURIComponent(String(options.id))}`);
         }
-        const requestPath = `/v4/enterprise/templates/${recordPerPage}/${pageNo}` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
+        const requestPath = `/v4/enterprise/templates/${encodeURIComponent(String(recordPerPage))}/${encodeURIComponent(String(pageNo))}` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestHeaders: Record<string, string> = {};
         if (contentType !== undefined) {
             requestHeaders["Content-Type"] = String(contentType);
@@ -4978,8 +4978,8 @@ export class SigninghubClient extends ConnectorClientBase {
      * Add TextBox Field
      * @remarks Business applications can use this service API to add a text input field to a document in a package.               At least one user must exist in a workflow before fields(input and signature) can be added to the document in this way.The order number corresponds to the recipient in the workflow.Therefore, this number must be equal or less than the total number of users in the workflow.  The below example assigns this new signature field to the first person in the workflow.               See [Add Users to Workflow](#operation/Workflow_WorkflowAddUser) for more information.  Note if you have a document with a template applied, or have applied one using the APIs, then the workflow will already contain users.
      */
-    public async addTextBoxTextBox(input: TextBoxFieldRequest, packageId: string, documentId: string, contentType: string, accept: string, options: ConnectorOperationOptions = {}): Promise<AddFieldResponse> {
-        const requestPath = `/v4/packages/${packageId}/documents/${documentId}/fields/text`;
+    public async addTextBoxTextBox(input: TextBoxFieldRequest, packageId: number, documentId: number, contentType: string, accept: string, options: ConnectorOperationOptions = {}): Promise<AddFieldResponse> {
+        const requestPath = `/v4/packages/${encodeURIComponent(String(packageId))}/documents/${encodeURIComponent(String(documentId))}/fields/text`;
         const requestHeaders: Record<string, string> = {};
         if (contentType !== undefined) {
             requestHeaders["Content-Type"] = String(contentType);
@@ -4997,8 +4997,8 @@ export class SigninghubClient extends ConnectorClientBase {
      * Update TextBox Field
      * @remarks Business applications can use this service API to update a text box of a document in a package.               Note all of the input parameters can be changed.Where you wish to retain the current setting submit it in the call unchanged.             You can therefore use the same parameters as when you added the input field, or the information as returned by [Get Document Fields](#operation/Documents_GetDocumentFields).             The latter can be used when a template was applied or the document was created using the GUI interface.
      */
-    public async updateTextBoxTextBox(input: UpdateTextBoxFieldRequest, packageId: string, documentId: string, contentType: string, accept: string, options: ConnectorOperationOptions = {}): Promise<EmptyResponse> {
-        const requestPath = `/v4/packages/${packageId}/documents/${documentId}/fields/text`;
+    public async updateTextBoxTextBox(input: UpdateTextBoxFieldRequest, packageId: number, documentId: number, contentType: string, accept: string, options: ConnectorOperationOptions = {}): Promise<EmptyResponse> {
+        const requestPath = `/v4/packages/${encodeURIComponent(String(packageId))}/documents/${encodeURIComponent(String(documentId))}/fields/text`;
         const requestHeaders: Record<string, string> = {};
         if (contentType !== undefined) {
             requestHeaders["Content-Type"] = String(contentType);
@@ -5016,8 +5016,8 @@ export class SigninghubClient extends ConnectorClientBase {
      * Apply Workflow Template
      * @remarks Business applications can use this service API to apply a workflow template to a document. The document ID on which template has to be applied is provided in the resource URL. When document ID is set to 0 then template will be applied to to all of the doucments in a pacakge.               While applying the template it is important to remember these two important points:               Point 1 - If the template being applied is created using a PDF which already contained form fields then ensure that the document on which this template is now being applied must contain these form fields in advance and SigningHub will NOT create those form fields via the template rather only apply the form data and assign to the respective users.               Point 2 - If the template being applied is created where form fields are manually added (hence not present in the PDF originally) via SigningHub e.g. signature field, initial, in-person signature, check boxes, radio buttons, text fields etc. then on applying such a template, these form fields will be created on the target document even if these form fields were already present in the document.
      */
-    public async workflowApplyTemplate(input: ApplyTemplateRequest, packageId: string, documentId: string, contentType: string, accept: string, options: ConnectorOperationOptions = {}): Promise<DocumentDetailsResponse> {
-        const requestPath = `/v4/packages/${packageId}/documents/${documentId}/template`;
+    public async workflowApplyTemplate(input: ApplyTemplateRequest, packageId: number, documentId: number, contentType: string, accept: string, options: ConnectorOperationOptions = {}): Promise<DocumentDetailsResponse> {
+        const requestPath = `/v4/packages/${encodeURIComponent(String(packageId))}/documents/${encodeURIComponent(String(documentId))}/template`;
         const requestHeaders: Record<string, string> = {};
         if (contentType !== undefined) {
             requestHeaders["Content-Type"] = String(contentType);
@@ -5035,8 +5035,8 @@ export class SigninghubClient extends ConnectorClientBase {
      * Get Process Evidence Report
      * @remarks Business applications can use this service API to download the workflow process evidence report of a document.
      */
-    public async downloadWorkflowEvidenceReportBytes(packageId: string, contentType: string, accept: string, options: DownloadWorkflowEvidenceReportBytesOptions = {}): Promise<WorkflowEvidenceReportDownloadBytesResponse> {
-        const requestPath = `/v4/packages/${packageId}/report`;
+    public async downloadWorkflowEvidenceReportBytes(packageId: number, contentType: string, accept: string, options: DownloadWorkflowEvidenceReportBytesOptions = {}): Promise<WorkflowEvidenceReportDownloadBytesResponse> {
+        const requestPath = `/v4/packages/${encodeURIComponent(String(packageId))}/report`;
         const requestHeaders: Record<string, string> = {};
         if (contentType !== undefined) {
             requestHeaders["Content-Type"] = String(contentType);
@@ -5057,8 +5057,8 @@ export class SigninghubClient extends ConnectorClientBase {
      * Get Workflow Details
      * @remarks Business applications can use this service API to get workflow details for the package.
      */
-    public async getWorkflowWorkflowDetail(packageId: string, contentType: string, accept: string, options: GetWorkflowWorkflowDetailOptions = {}): Promise<WorkflowDetailsResponse> {
-        const requestPath = `/v4/packages/${packageId}/workflow`;
+    public async getWorkflowWorkflowDetail(packageId: number, contentType: string, accept: string, options: GetWorkflowWorkflowDetailOptions = {}): Promise<WorkflowDetailsResponse> {
+        const requestPath = `/v4/packages/${encodeURIComponent(String(packageId))}/workflow`;
         const requestHeaders: Record<string, string> = {};
         if (contentType !== undefined) {
             requestHeaders["Content-Type"] = String(contentType);
@@ -5079,8 +5079,8 @@ export class SigninghubClient extends ConnectorClientBase {
      * Get Workflow History
      * @remarks Business applications can utilize this service API to retrieve the list of actions performed on a document. The package ID is provided in the resource URL. The search field (x-search-text header) is intended for email, document name, action, infokey, and infovalue.
      */
-    public async getWorkflowWorkflowHistory(packageId: string, pageNo: string, recordsPerPage: string, contentType: string, accept: string, options: GetWorkflowWorkflowHistoryOptions = {}): Promise<WorkflowHistoryResponse> {
-        const requestPath = `/v4/packages/${packageId}/log/${pageNo}/${recordsPerPage}`;
+    public async getWorkflowWorkflowHistory(packageId: number, pageNo: number, recordsPerPage: number, contentType: string, accept: string, options: GetWorkflowWorkflowHistoryOptions = {}): Promise<WorkflowHistoryResponse> {
+        const requestPath = `/v4/packages/${encodeURIComponent(String(packageId))}/log/${encodeURIComponent(String(pageNo))}/${encodeURIComponent(String(recordsPerPage))}`;
         const requestHeaders: Record<string, string> = {};
         if (contentType !== undefined) {
             requestHeaders["Content-Type"] = String(contentType);
@@ -5101,8 +5101,8 @@ export class SigninghubClient extends ConnectorClientBase {
      * Get Workflow Reminder
      * @remarks Business applications can use this service API to update the reminders for the recipients that has already been added to a workflow. Normally this call is useful after a template has been applied to a document and business applications want to override the reminders settings within the workflow. The ID of the workflow document is provided in the resource URL, and the workflow recipient is identified by the order at which it is added to the workflow.
      */
-    public async getWorkflowWorkflowReminder(packageId: string, order: string, contentType: string, accept: string, options: ConnectorOperationOptions = {}): Promise<ReminderResponse> {
-        const requestPath = `/v4/packages/${packageId}/workflow/${order}/reminders`;
+    public async getWorkflowWorkflowReminder(packageId: number, order: number, contentType: string, accept: string, options: ConnectorOperationOptions = {}): Promise<ReminderResponse> {
+        const requestPath = `/v4/packages/${encodeURIComponent(String(packageId))}/workflow/${encodeURIComponent(String(order))}/reminders`;
         const requestHeaders: Record<string, string> = {};
         if (contentType !== undefined) {
             requestHeaders["Content-Type"] = String(contentType);
@@ -5120,8 +5120,8 @@ export class SigninghubClient extends ConnectorClientBase {
      * Get Workflow Users
      * @remarks Business applications can use this service API to get workflow details for the package.
      */
-    public async getWorkflowWorkflowUsers(packageId: string, contentType: string, accept: string, options: GetWorkflowWorkflowUsersOptions = {}): Promise<Array<WorkflowRecipient>> {
-        const requestPath = `/v4/packages/${packageId}/workflow/users`;
+    public async getWorkflowWorkflowUsers(packageId: number, contentType: string, accept: string, options: GetWorkflowWorkflowUsersOptions = {}): Promise<Array<WorkflowRecipient>> {
+        const requestPath = `/v4/packages/${encodeURIComponent(String(packageId))}/workflow/users`;
         const requestHeaders: Record<string, string> = {};
         if (contentType !== undefined) {
             requestHeaders["Content-Type"] = String(contentType);
@@ -5142,8 +5142,8 @@ export class SigninghubClient extends ConnectorClientBase {
      * Complete Workflow in the Middle (Terminate Workflow)
      * @remarks Business applications can mark the workflow completed even in the middle of the workflow. Use this service API to change the status of the workflow to completed. If there are recipients who have not signed the document yet. Their signature will not be required any more and they will not be able to see the document in their inbox any further.             Bearer token should belong to document owner or enterprise admin can use scope variable to get the access token on behalf of document owner to perform this action.
      */
-    public async workflowMarkWorkflowCompleted(packageId: string, contentType: string, accept: string, options: WorkflowMarkWorkflowCompletedOptions = {}): Promise<EmptyResponse> {
-        const requestPath = `/v4/packages/${packageId}/complete`;
+    public async workflowMarkWorkflowCompleted(packageId: number, contentType: string, accept: string, options: WorkflowMarkWorkflowCompletedOptions = {}): Promise<EmptyResponse> {
+        const requestPath = `/v4/packages/${encodeURIComponent(String(packageId))}/complete`;
         const requestHeaders: Record<string, string> = {};
         if (contentType !== undefined) {
             requestHeaders["Content-Type"] = String(contentType);
@@ -5164,8 +5164,8 @@ export class SigninghubClient extends ConnectorClientBase {
      * Get Workflow User Permissions
      * @remarks Business applications can use this service API to get document permissions for a recipient. Recipient is identified by the order in the workflow. The ID of the package is provided in the resource URL.
      */
-    public async getWorkflowPermissionWorkflowPermissions(packageId: string, order: string, contentType: string, accept: string, options: ConnectorOperationOptions = {}): Promise<WorkflowPermissionResponse> {
-        const requestPath = `/v4/packages/${packageId}/workflow/${order}/permissions`;
+    public async getWorkflowPermissionWorkflowPermissions(packageId: number, order: number, contentType: string, accept: string, options: ConnectorOperationOptions = {}): Promise<WorkflowPermissionResponse> {
+        const requestPath = `/v4/packages/${encodeURIComponent(String(packageId))}/workflow/${encodeURIComponent(String(order))}/permissions`;
         const requestHeaders: Record<string, string> = {};
         if (contentType !== undefined) {
             requestHeaders["Content-Type"] = String(contentType);
@@ -5183,8 +5183,8 @@ export class SigninghubClient extends ConnectorClientBase {
      * Update Workflow User Permissions
      * @remarks Business applications can use this service API to update the workflow permissions for a user that has already been added to a workflow. Normally this call is useful after a template has been applied to a document and business applications want to override the permissions within the workflow. The ID of the document package is provided in the resource URL, and the workflow user is identified by the order at which it is added to the workflow.
      */
-    public async updateWorkflowPermissionWorkflowPermissions(input: WorkflowPermissionsUpdateRequest, packageId: string, order: string, contentType: string, accept: string, options: UpdateWorkflowPermissionWorkflowPermissionsOptions = {}): Promise<EmptyResponse> {
-        const requestPath = `/v4/packages/${packageId}/workflow/${order}/permissions`;
+    public async updateWorkflowPermissionWorkflowPermissions(input: WorkflowPermissionsUpdateRequest, packageId: number, order: number, contentType: string, accept: string, options: UpdateWorkflowPermissionWorkflowPermissionsOptions = {}): Promise<EmptyResponse> {
+        const requestPath = `/v4/packages/${encodeURIComponent(String(packageId))}/workflow/${encodeURIComponent(String(order))}/permissions`;
         const requestHeaders: Record<string, string> = {};
         if (contentType !== undefined) {
             requestHeaders["Content-Type"] = String(contentType);
@@ -5205,8 +5205,8 @@ export class SigninghubClient extends ConnectorClientBase {
      * Recall Document
      * @remarks Business applications can use this service API to stop a workflow in progress. The document ID is provided in the resource URL. After recall the document status automatically changes to “DRAFT”.
      */
-    public async workflowRecallWorkflow(packageId: string, contentType: string, accept: string, options: ConnectorOperationOptions = {}): Promise<EmptyResponse> {
-        const requestPath = `/v4/packages/${packageId}/workflow`;
+    public async workflowRecallWorkflow(packageId: number, contentType: string, accept: string, options: ConnectorOperationOptions = {}): Promise<EmptyResponse> {
+        const requestPath = `/v4/packages/${encodeURIComponent(String(packageId))}/workflow`;
         const requestHeaders: Record<string, string> = {};
         if (contentType !== undefined) {
             requestHeaders["Content-Type"] = String(contentType);
@@ -5224,8 +5224,8 @@ export class SigninghubClient extends ConnectorClientBase {
      * Share Document Package
      * @remarks Business applications can use this service API to share a document package with the signers and start a new workflow. The document should already have been prepared by applying a template and optionally updating the users and actions defined in template. The package ID to be shared is provided in the resource URL.
      */
-    public async startWorkflowWorkflow(packageId: string, contentType: string, accept: string, options: ConnectorOperationOptions = {}): Promise<Array<StartWorkflowResponse>> {
-        const requestPath = `/v4/packages/${packageId}/workflow`;
+    public async startWorkflowWorkflow(packageId: number, contentType: string, accept: string, options: ConnectorOperationOptions = {}): Promise<Array<StartWorkflowResponse>> {
+        const requestPath = `/v4/packages/${encodeURIComponent(String(packageId))}/workflow`;
         const requestHeaders: Record<string, string> = {};
         if (contentType !== undefined) {
             requestHeaders["Content-Type"] = String(contentType);
@@ -5243,8 +5243,8 @@ export class SigninghubClient extends ConnectorClientBase {
      * Update Workflow Details
      * @remarks Business applications can use this service API to update the workflow details. Normally this call is useful after a template has been applied to a document, but business applications wants to override the certify permission or post processing details. The package ID is provided in the resource URL.
      */
-    public async updateWorkflowWorkflow(input: WorkflowDetailUpdateRequest, packageId: string, contentType: string, accept: string, options: ConnectorOperationOptions = {}): Promise<EmptyResponse> {
-        const requestPath = `/v4/packages/${packageId}/workflow`;
+    public async updateWorkflowWorkflow(input: WorkflowDetailUpdateRequest, packageId: number, contentType: string, accept: string, options: ConnectorOperationOptions = {}): Promise<EmptyResponse> {
+        const requestPath = `/v4/packages/${encodeURIComponent(String(packageId))}/workflow`;
         const requestHeaders: Record<string, string> = {};
         if (contentType !== undefined) {
             requestHeaders["Content-Type"] = String(contentType);
@@ -5262,8 +5262,8 @@ export class SigninghubClient extends ConnectorClientBase {
      * Update Post Processing
      * @remarks Business applications can use this service API to add placeholder to a workflow a document in a package.
      */
-    public async updateWorkflowWorkflowPostProcess(input: PostProcessUpdateRequest, packageId: string, contentType: string, accept: string, options: ConnectorOperationOptions = {}): Promise<EmptyResponse> {
-        const requestPath = `/v4/packages/${packageId}/workflow/post_process`;
+    public async updateWorkflowWorkflowPostProcess(input: PostProcessUpdateRequest, packageId: number, contentType: string, accept: string, options: ConnectorOperationOptions = {}): Promise<EmptyResponse> {
+        const requestPath = `/v4/packages/${encodeURIComponent(String(packageId))}/workflow/post_process`;
         const requestHeaders: Record<string, string> = {};
         if (contentType !== undefined) {
             requestHeaders["Content-Type"] = String(contentType);
@@ -5281,8 +5281,8 @@ export class SigninghubClient extends ConnectorClientBase {
      * Update Workflow Reminders
      * @remarks Business applications can use this service API to update the workflow reminders for a recipient that has already been added to a workflow. Normally this call is useful after a template has been applied to a document and business applications want to override the reminders settings within the workflow. The ID of the workflow document is provided in the resource URL, and the workflow recipient is identified by the order at which it is added to the workflow.
      */
-    public async updateWorkflowWorkflowReminder(input: UpdateReminderRequest, packageId: string, order: string, contentType: string, accept: string, options: ConnectorOperationOptions = {}): Promise<EmptyResponse> {
-        const requestPath = `/v4/packages/${packageId}/workflow/${order}/reminders`;
+    public async updateWorkflowWorkflowReminder(input: UpdateReminderRequest, packageId: number, order: number, contentType: string, accept: string, options: ConnectorOperationOptions = {}): Promise<EmptyResponse> {
+        const requestPath = `/v4/packages/${encodeURIComponent(String(packageId))}/workflow/${encodeURIComponent(String(order))}/reminders`;
         const requestHeaders: Record<string, string> = {};
         if (contentType !== undefined) {
             requestHeaders["Content-Type"] = String(contentType);
@@ -5300,8 +5300,8 @@ export class SigninghubClient extends ConnectorClientBase {
      * Add Groups to Workflow
      * @remarks Business applications can use this service API to add groups as a recipient to a workflow.  A SigningHub group means any member of the group can perform the action, i.e. sign, on behalf of all members of the group.               Note the group will be added as the last user/group in the workflow.Hence further work may be required to remove a current user/group, already present in the workflow. While XML type document preparation, only supported role types are "SIGNER", "REVIEWER" and "CARBON_COPY"
      */
-    public async addWorkflowWorkflowGroup(input: WorkflowWorkflowAddGroupInput, packageId: string, contentType: string, accept: string, options: ConnectorOperationOptions = {}): Promise<Array<CollaboratorGroupResponse>> {
-        const requestPath = `/v4/packages/${packageId}/workflow/groups`;
+    public async addWorkflowWorkflowGroup(input: WorkflowWorkflowAddGroupInput, packageId: number, contentType: string, accept: string, options: ConnectorOperationOptions = {}): Promise<Array<CollaboratorGroupResponse>> {
+        const requestPath = `/v4/packages/${encodeURIComponent(String(packageId))}/workflow/groups`;
         const requestHeaders: Record<string, string> = {};
         if (contentType !== undefined) {
             requestHeaders["Content-Type"] = String(contentType);
@@ -5319,8 +5319,8 @@ export class SigninghubClient extends ConnectorClientBase {
      * Add Placeholder to Workflow
      * @remarks Business applications can use this service API to add placeholder to a workflow in a package.  A place holder is required when you do not know the identity of the intended recipient in a workflow.               Note the placeholder will be added as the last user in the workflow.Hence further work may be required to remove a current user/group, already present in the workflow.               Adding a place holder allows you to proceed and add signature and/or input fields to the document, which can then be assigned to individual users at a later stage. While XML type document preparation, only supported role types are "SIGNER", "REVIEWER" and "CARBON_COPY"
      */
-    public async addWorkflowWorkflowPlaceholder(input: WorkflowWorkflowAddPlaceholderInput, packageId: string, contentType: string, accept: string, options: ConnectorOperationOptions = {}): Promise<Array<CollaboratorPlaceholderResponse>> {
-        const requestPath = `/v4/packages/${packageId}/workflow/placeholder`;
+    public async addWorkflowWorkflowPlaceholder(input: WorkflowWorkflowAddPlaceholderInput, packageId: number, contentType: string, accept: string, options: ConnectorOperationOptions = {}): Promise<Array<CollaboratorPlaceholderResponse>> {
+        const requestPath = `/v4/packages/${encodeURIComponent(String(packageId))}/workflow/placeholder`;
         const requestHeaders: Record<string, string> = {};
         if (contentType !== undefined) {
             requestHeaders["Content-Type"] = String(contentType);
@@ -5338,8 +5338,8 @@ export class SigninghubClient extends ConnectorClientBase {
      * Add Users to Workflow
      * @remarks Business applications can use this service API to add recipients to a workflow. This call will only add a recipient to the workflow.  That is, no fields currently on the document will be automatically assigned to the new recipient(s), nor will this create any new fields.               Note the recipient(s) will be added as the last person in the workflow.Hence further work may be required to remove a current recipient(s) already present in the workflow.               At least one user must exist in a workflow before fields (input and signature) can be added to the document.               Note the input accepts one or more users in a single call.               In this specific call the user is a known natural person.  However, the same rules apply to Groups and Placeholders.  In either of these cases the  recipient becomes a Group of users whereby any member of the group can sign the document, or a Placeholder.The latter case is used when you do not know the identity of the intended signatory.               Note SigningHub workflow signing order starts at "1".  Hence, adding a user to workflow with no current recipient(s) begins a new signing order count.The "signing_order" parameter is mandatory if the workflow type is "custom".               Important, using this API call may affect the workflow type.If there are current recipients in a sequential workflow and a new one is added with the same signing order as a current recipient, then that part of the workflow changes automatically from sequential to parallel.Hence, the workflow overall is now of type custom as opposed to purely sequential.  Adding a recipient with the same signing order as two or parallel recipients does not change the workflow.There are merely, three or more recipients at that particular point of the workflow; all in parallel order.               Note, while XML type document preparation, only supported role types are "SIGNER", "REVIEWER" and "CARBON_COPY"
      */
-    public async addWorkflowWorkflowUser(input: WorkflowWorkflowAddUserInput, packageId: string, contentType: string, accept: string, options: ConnectorOperationOptions = {}): Promise<Array<CollaboratorResponse>> {
-        const requestPath = `/v4/packages/${packageId}/workflow/users`;
+    public async addWorkflowWorkflowUser(input: WorkflowWorkflowAddUserInput, packageId: number, contentType: string, accept: string, options: ConnectorOperationOptions = {}): Promise<Array<CollaboratorResponse>> {
+        const requestPath = `/v4/packages/${encodeURIComponent(String(packageId))}/workflow/users`;
         const requestHeaders: Record<string, string> = {};
         if (contentType !== undefined) {
             requestHeaders["Content-Type"] = String(contentType);
@@ -5357,8 +5357,8 @@ export class SigninghubClient extends ConnectorClientBase {
      * Delete Workflow User
      * @remarks Business applications can use this service API to delete workflow recipient.
      */
-    public async deleteWorkflowWorkflowUser(packageId: string, order: string, contentType: string, accept: string, options: ConnectorOperationOptions = {}): Promise<EmptyResponse> {
-        const requestPath = `/v4/packages/${packageId}/workflow/${order}`;
+    public async deleteWorkflowWorkflowUser(packageId: number, order: number, contentType: string, accept: string, options: ConnectorOperationOptions = {}): Promise<EmptyResponse> {
+        const requestPath = `/v4/packages/${encodeURIComponent(String(packageId))}/workflow/${encodeURIComponent(String(order))}`;
         const requestHeaders: Record<string, string> = {};
         if (contentType !== undefined) {
             requestHeaders["Content-Type"] = String(contentType);
@@ -5376,8 +5376,8 @@ export class SigninghubClient extends ConnectorClientBase {
      * Update Placeholder
      * @remarks Business applications can use this service API to update a placeholder in the workflow.  Normally this call is useful after a template has been applied to a document and business applications wants to override the details of a specific place holder within the workflow. The ID of the workflow document is provided in the resource URL, and the workflow place holder is identified by the order at which it is added to the workflow. While XML type document preparation, only supported role types are "SIGNER", "REVIEWER" and "CARBON_COPY"
      */
-    public async updateWorkflowWorkflowPlaceholder(input: WorkflowPlaceholderUpdateRequest, packageId: string, order: string, contentType: string, accept: string, options: ConnectorOperationOptions = {}): Promise<EmptyResponse> {
-        const requestPath = `/v4/packages/${packageId}/workflow/${order}/placeholder`;
+    public async updateWorkflowWorkflowPlaceholder(input: WorkflowPlaceholderUpdateRequest, packageId: number, order: number, contentType: string, accept: string, options: ConnectorOperationOptions = {}): Promise<EmptyResponse> {
+        const requestPath = `/v4/packages/${encodeURIComponent(String(packageId))}/workflow/${encodeURIComponent(String(order))}/placeholder`;
         const requestHeaders: Record<string, string> = {};
         if (contentType !== undefined) {
             requestHeaders["Content-Type"] = String(contentType);
@@ -5395,8 +5395,8 @@ export class SigninghubClient extends ConnectorClientBase {
      * Update Workflow User
      * @remarks Business applications can use this service API to update the details of a recipient, group or place holder who has already been added to a workflow. Normally this call is useful after a template has been applied to a document and business applications wants to override the details of a specific user within the workflow. The ID of the workflow document is provided in the resource URL, and the workflow recipient is identified by the order at which it is added to the workflow. Note, while XML type document preparation, only supports role types "SIGNER", "REVIEWER" and "CARBON_COPY".
      */
-    public async updateWorkflowWorkflowUser(input: WorkflowUserUpdateRequest, packageId: string, order: string, contentType: string, accept: string, options: UpdateWorkflowWorkflowUserOptions = {}): Promise<UpdateCollaboratorResponse> {
-        const requestPath = `/v4/packages/${packageId}/workflow/${order}/user`;
+    public async updateWorkflowWorkflowUser(input: WorkflowUserUpdateRequest, packageId: number, order: number, contentType: string, accept: string, options: UpdateWorkflowWorkflowUserOptions = {}): Promise<UpdateCollaboratorResponse> {
+        const requestPath = `/v4/packages/${encodeURIComponent(String(packageId))}/workflow/${encodeURIComponent(String(order))}/user`;
         const requestHeaders: Record<string, string> = {};
         if (contentType !== undefined) {
             requestHeaders["Content-Type"] = String(contentType);
@@ -5417,8 +5417,8 @@ export class SigninghubClient extends ConnectorClientBase {
      * Update Workflow Users Order
      * @remarks Business applications can use this service API to update order of the recipient in the workflow.
      */
-    public async updateWorkflowWorkflowUserOrder(input: WorkflowUserReorderRequest, packageId: string, order: string, contentType: string, accept: string, options: ConnectorOperationOptions = {}): Promise<EmptyResponse> {
-        const requestPath = `/v4/packages/${packageId}/workflow/${order}/reorder`;
+    public async updateWorkflowWorkflowUserOrder(input: WorkflowUserReorderRequest, packageId: number, order: number, contentType: string, accept: string, options: ConnectorOperationOptions = {}): Promise<EmptyResponse> {
+        const requestPath = `/v4/packages/${encodeURIComponent(String(packageId))}/workflow/${encodeURIComponent(String(order))}/reorder`;
         const requestHeaders: Record<string, string> = {};
         if (contentType !== undefined) {
             requestHeaders["Content-Type"] = String(contentType);
@@ -5436,8 +5436,8 @@ export class SigninghubClient extends ConnectorClientBase {
      * Delete Shared Space
      * @remarks Business applications can use this service API to delete shared space. The availability of deleting shared spaces is subject to the assigned enterprise user role. To allow this provision Enterprise Admin will enable the ‘Manage Shared Space’ option in Roles>Document Settings.
      */
-    public async deleteWorkSpaceSharedSpace(id: string, contentType: string, accept: string, options: ConnectorOperationOptions = {}): Promise<EmptyResponse> {
-        const requestPath = `/v4/shared_spaces/${id}`;
+    public async deleteWorkSpaceSharedSpace(id: number, contentType: string, accept: string, options: ConnectorOperationOptions = {}): Promise<EmptyResponse> {
+        const requestPath = `/v4/shared_spaces/${encodeURIComponent(String(id))}`;
         const requestHeaders: Record<string, string> = {};
         if (contentType !== undefined) {
             requestHeaders["Content-Type"] = String(contentType);
@@ -5455,8 +5455,8 @@ export class SigninghubClient extends ConnectorClientBase {
      * Get Shared Space
      * @remarks Business applications can use this service API to get a specific shared space. This API returns information about shared space, its owner and collaborator.
      */
-    public async getWorkSpaceSharedSpace(id: string, contentType: string, accept: string, options: ConnectorOperationOptions = {}): Promise<WorkSpaceResponse> {
-        const requestPath = `/v4/shared_spaces/${id}`;
+    public async getWorkSpaceSharedSpace(id: number, contentType: string, accept: string, options: ConnectorOperationOptions = {}): Promise<WorkSpaceResponse> {
+        const requestPath = `/v4/shared_spaces/${encodeURIComponent(String(id))}`;
         const requestHeaders: Record<string, string> = {};
         if (contentType !== undefined) {
             requestHeaders["Content-Type"] = String(contentType);
@@ -5474,8 +5474,8 @@ export class SigninghubClient extends ConnectorClientBase {
      * Update Shared Space
      * @remarks Business applications can use this service API to update shared space. The availability of updating shared spaces is subject to the assigned enterprise user role. To allow this provision Enterprise Admin will enable the ‘Manage Shared Space’ option in Roles>Document Settings.
      */
-    public async updateWorkSpaceSharedSpace(input: UpdateWorkSpaceRequest, id: string, contentType: string, accept: string, options: ConnectorOperationOptions = {}): Promise<EmptyResponse> {
-        const requestPath = `/v4/shared_spaces/${id}`;
+    public async updateWorkSpaceSharedSpace(input: UpdateWorkSpaceRequest, id: number, contentType: string, accept: string, options: ConnectorOperationOptions = {}): Promise<EmptyResponse> {
+        const requestPath = `/v4/shared_spaces/${encodeURIComponent(String(id))}`;
         const requestHeaders: Record<string, string> = {};
         if (contentType !== undefined) {
             requestHeaders["Content-Type"] = String(contentType);

@@ -107,19 +107,19 @@ export interface CreateEventOptions extends ConnectorOperationOptions {
     /** Set specific capacity (if omitted, sums ticket capacities). */
     eventCapacity?: string;
     /** If users can share the event on social media. */
-    eventShareable?: string;
+    eventShareable?: boolean;
     /** Only invited users can see the event page. */
-    eventInviteOnly?: string;
+    eventInviteOnly?: boolean;
     /** Whether the event is online-only (no venue). */
-    eventOnlineEvent?: string;
+    eventOnlineEvent?: boolean;
     /** If the event is publicly listed and searchable. */
-    eventListed?: string;
+    eventListed?: boolean;
     /** Whether the start date should be hidden. */
-    eventHideStartDate?: string;
+    eventHideStartDate?: boolean;
     /** Whether the end date should be hidden. */
-    eventHideEndDate?: string;
+    eventHideEndDate?: boolean;
     /** If the remaining number of tickets is publicly visible on the event page. */
-    eventShowRemaining?: string;
+    eventShowRemaining?: boolean;
 }
 
 /**
@@ -145,19 +145,19 @@ export interface UpdateEventOptions extends ConnectorOperationOptions {
     /** Set specific capacity (if omitted, sums ticket capacities). */
     eventCapacity?: string;
     /** Set specific capacity (if omitted, sums ticket capacities). */
-    eventShareable?: string;
+    eventShareable?: boolean;
     /** Only invited users can see the event page. */
-    eventInviteOnly?: string;
+    eventInviteOnly?: boolean;
     /** Whether the event is online-only (no venue). */
-    eventOnlineEvent?: string;
+    eventOnlineEvent?: boolean;
     /** If the event is publicly listed and searchable. */
-    eventListed?: string;
+    eventListed?: boolean;
     /** Whether the start date should be hidden. */
-    eventHideStartDate?: string;
+    eventHideStartDate?: boolean;
     /** Whether the start date should be hidden. */
-    eventHideEndDate?: string;
+    eventHideEndDate?: boolean;
     /** If the remaining number of tickets is publicly visible on the event page. */
-    eventShowRemaining?: string;
+    eventShowRemaining?: boolean;
 }
 
 /**
@@ -310,7 +310,7 @@ export class EventbriteClient extends ConnectorClientBase {
         if (options.eventShowRemaining !== undefined) {
             queryParams.push(`event.show_remaining=${encodeURIComponent(String(options.eventShowRemaining))}`);
         }
-        const requestPath = `/v3/organizations/${organizationId}/events/` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
+        const requestPath = `/v3/organizations/${encodeURIComponent(String(organizationId))}/events/` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.sendWithTracingAsync<CreateEventResponse>("Eventbrite.createEvent", "CreateEventV2", "POST", requestUrl, undefined, options);
 
@@ -383,7 +383,7 @@ export class EventbriteClient extends ConnectorClientBase {
         if (options.eventShowRemaining !== undefined) {
             queryParams.push(`event.show_remaining=${encodeURIComponent(String(options.eventShowRemaining))}`);
         }
-        const requestPath = `/v2/v3/events/${id}/` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
+        const requestPath = `/v2/v3/events/${encodeURIComponent(String(id))}/` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.sendWithTracingAsync<CreateEventResponse>("Eventbrite.updateEvent", "UpdateEventV2", "POST", requestUrl, undefined, options);
 

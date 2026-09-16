@@ -107,8 +107,8 @@ export class OrderfulClient extends ConnectorClientBase {
      * Get Transaction by ID
      * @remarks Get transaction by ID.
      */
-    public async getTransactionById(transactionId: string, options: ConnectorOperationOptions = {}): Promise<void> {
-        const requestPath = `/v2/transactions/${transactionId}`;
+    public async getTransactionById(transactionId: number, options: ConnectorOperationOptions = {}): Promise<void> {
+        const requestPath = `/v2/transactions/${encodeURIComponent(String(transactionId))}`;
         const requestUrl = this.resolveUrl(requestPath);
         await this.sendWithTracingAsync<void>("Orderful.getTransactionById", "GetTransactionById", "GET", requestUrl, undefined, options);
     }

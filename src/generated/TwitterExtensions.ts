@@ -169,7 +169,7 @@ export interface TriggerBatchResponseTweetModel {
  */
 export interface UserTimelineOptions extends ConnectorOperationOptions {
     /** Maximum number of tweets to return. */
-    maxResults?: string;
+    maxResults?: number;
 }
 
 /**
@@ -177,7 +177,7 @@ export interface UserTimelineOptions extends ConnectorOperationOptions {
  */
 export interface HomeTimelineOptions extends ConnectorOperationOptions {
     /** Maximum number of tweets to return. */
-    maxResults?: string;
+    maxResults?: number;
 }
 
 /**
@@ -185,7 +185,7 @@ export interface HomeTimelineOptions extends ConnectorOperationOptions {
  */
 export interface SearchTweetOptions extends ConnectorOperationOptions {
     /** Maximum number of tweets to return. */
-    maxResults?: string;
+    maxResults?: number;
     /** Return tweets after the specified tweet ID. */
     sinceId?: string;
 }
@@ -195,7 +195,7 @@ export interface SearchTweetOptions extends ConnectorOperationOptions {
  */
 export interface FollowersOptions extends ConnectorOperationOptions {
     /** Maximum number of users to return. */
-    maxResults?: string;
+    maxResults?: number;
 }
 
 /**
@@ -203,7 +203,7 @@ export interface FollowersOptions extends ConnectorOperationOptions {
  */
 export interface MyFollowersOptions extends ConnectorOperationOptions {
     /** Maximum number of users to get. */
-    maxResults?: string;
+    maxResults?: number;
 }
 
 /**
@@ -211,7 +211,7 @@ export interface MyFollowersOptions extends ConnectorOperationOptions {
  */
 export interface FollowingOptions extends ConnectorOperationOptions {
     /** Maximum number of users to return. */
-    maxResults?: string;
+    maxResults?: number;
 }
 
 /**
@@ -219,7 +219,7 @@ export interface FollowingOptions extends ConnectorOperationOptions {
  */
 export interface MyFollowingOptions extends ConnectorOperationOptions {
     /** Maximum number of users to return. */
-    maxResults?: string;
+    maxResults?: number;
 }
 
 /**
@@ -235,7 +235,7 @@ export interface TweetOptions extends ConnectorOperationOptions {
  */
 export interface RetweetOptions extends ConnectorOperationOptions {
     /** Boolean to indicate whether to trim user information. */
-    trimUser?: string;
+    trimUser?: boolean;
 }
 
 /**

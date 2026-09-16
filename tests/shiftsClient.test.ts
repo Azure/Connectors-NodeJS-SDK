@@ -83,7 +83,7 @@ describe("ShiftsClient — listTimesOff", () => {
         await client.listTimesOff("team-1", {
             startTime: "2026-01-01",
             endTime: "2026-01-31",
-            top: "10",
+            top: 10,
         }).byPage().next();
 
         const [url] = (global.fetch as jest.Mock).mock.calls[0];

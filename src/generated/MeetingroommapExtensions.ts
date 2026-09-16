@@ -100,7 +100,7 @@ export interface SearchLocationsOptions extends ConnectorOperationOptions {
  */
 export interface GetCustomLocationImageOptions extends ConnectorOperationOptions {
     /** Large image returned */
-    large?: string;
+    large?: boolean;
 }
 
 /**
@@ -108,7 +108,7 @@ export interface GetCustomLocationImageOptions extends ConnectorOperationOptions
  */
 export interface GetMeetingRoomImageOptions extends ConnectorOperationOptions {
     /** Large image. */
-    large?: string;
+    large?: boolean;
 }
 
 /**
@@ -116,7 +116,7 @@ export interface GetMeetingRoomImageOptions extends ConnectorOperationOptions {
  */
 export interface GetRoomWithPersonsDetailsOptions extends ConnectorOperationOptions {
     /** Flag to indicate if user info should be included */
-    inludeUserInfo?: string;
+    inludeUserInfo?: boolean;
 }
 
 /**
@@ -124,7 +124,7 @@ export interface GetRoomWithPersonsDetailsOptions extends ConnectorOperationOpti
  */
 export interface GetOfficeLocationImageOptions extends ConnectorOperationOptions {
     /** Image size. */
-    large?: string;
+    large?: boolean;
 }
 // #endregion Types
 
@@ -188,7 +188,7 @@ export class MeetingroommapClient extends ConnectorClientBase {
      * @remarks Get location details including image url by the location id
      */
     public async locationDetails(locationId: string, options: ConnectorOperationOptions = {}): Promise<void> {
-        const requestPath = `/api/CustomLocations/${locationId}`;
+        const requestPath = `/api/CustomLocations/${encodeURIComponent(String(locationId))}`;
         const requestUrl = this.resolveUrl(requestPath);
         await this.sendWithTracingAsync<void>("Meetingroommap.locationDetails", "LocationDetails", "GET", requestUrl, undefined, options);
     }
@@ -202,7 +202,7 @@ export class MeetingroommapClient extends ConnectorClientBase {
         if (options.category !== undefined) {
             queryParams.push(`Category=${encodeURIComponent(String(options.category))}`);
         }
-        const requestPath = `/api/CustomLocations/findbyname/${locationName}` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
+        const requestPath = `/api/CustomLocations/findbyname/${encodeURIComponent(String(locationName))}` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.sendWithTracingAsync<Array<Record<string, unknown>>>("Meetingroommap.searchLocations", "SearchLocations", "GET", requestUrl, undefined, options);
 
@@ -218,7 +218,7 @@ export class MeetingroommapClient extends ConnectorClientBase {
         if (options.large !== undefined) {
             queryParams.push(`Large=${encodeURIComponent(String(options.large))}`);
         }
-        const requestPath = `/api/CustomLocations/createimage/${locationId}` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
+        const requestPath = `/api/CustomLocations/createimage/${encodeURIComponent(String(locationId))}` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.sendWithTracingAsync<Blob>("Meetingroommap.getCustomLocationImage", "GetCustomLocationImage", "GET", requestUrl, undefined, options);
 
@@ -246,7 +246,7 @@ export class MeetingroommapClient extends ConnectorClientBase {
         if (options.large !== undefined) {
             queryParams.push(`Large=${encodeURIComponent(String(options.large))}`);
         }
-        const requestPath = `/api/MapImage/create/${roomName}` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
+        const requestPath = `/api/MapImage/create/${encodeURIComponent(String(roomName))}` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.sendWithTracingAsync<Blob>("Meetingroommap.getMeetingRoomImage", "GetMeetingRoomImage", "GET", requestUrl, undefined, options);
 
@@ -257,8 +257,8 @@ export class MeetingroommapClient extends ConnectorClientBase {
      * Get next meetings
      * @remarks Get the next meetings for the current user
      */
-    public async nextMeetings(meetingCount: string, options: ConnectorOperationOptions = {}): Promise<void> {
-        const requestPath = `/api/MapImage/meetings/${meetingCount}/roomdetails`;
+    public async nextMeetings(meetingCount: number, options: ConnectorOperationOptions = {}): Promise<void> {
+        const requestPath = `/api/MapImage/meetings/${encodeURIComponent(String(meetingCount))}/roomdetails`;
         const requestUrl = this.resolveUrl(requestPath);
         await this.sendWithTracingAsync<void>("Meetingroommap.nextMeetings", "NextMeetings", "GET", requestUrl, undefined, options);
     }
@@ -268,7 +268,7 @@ export class MeetingroommapClient extends ConnectorClientBase {
      * @remarks Get meetingroom details
      */
     public async getMeetingRoomDetails(roomName: string, options: ConnectorOperationOptions = {}): Promise<void> {
-        const requestPath = `/api/MapImage/roomdetails_v2/${roomName}`;
+        const requestPath = `/api/MapImage/roomdetails_v2/${encodeURIComponent(String(roomName))}`;
         const requestUrl = this.resolveUrl(requestPath);
         await this.sendWithTracingAsync<void>("Meetingroommap.getMeetingRoomDetails", "GetMeetingRoomDetails", "GET", requestUrl, undefined, options);
     }
@@ -288,7 +288,7 @@ export class MeetingroommapClient extends ConnectorClientBase {
      * @remarks Search coworker by name/email
      */
     public async searchCoworkers(personSearch: string, options: ConnectorOperationOptions = {}): Promise<Array<Record<string, unknown>>> {
-        const requestPath = `/api/officelocations/searchCoworkers/${personSearch}`;
+        const requestPath = `/api/officelocations/searchCoworkers/${encodeURIComponent(String(personSearch))}`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.sendWithTracingAsync<Array<Record<string, unknown>>>("Meetingroommap.searchCoworkers", "SearchCoworkers", "GET", requestUrl, undefined, options);
 
@@ -300,7 +300,7 @@ export class MeetingroommapClient extends ConnectorClientBase {
      * @remarks Get all office locations mapped to a specific image
      */
     public async getOfficeLocationsByImage(imageName: string, options: ConnectorOperationOptions = {}): Promise<GetOfficeLocationsByImageResponse> {
-        const requestPath = `/api/officelocations/bymapimage/${imageName}`;
+        const requestPath = `/api/officelocations/bymapimage/${encodeURIComponent(String(imageName))}`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.sendWithTracingAsync<GetOfficeLocationsByImageResponse>("Meetingroommap.getOfficeLocationsByImage", "GetOfficeLocationsByImage", "GET", requestUrl, undefined, options);
 
@@ -316,7 +316,7 @@ export class MeetingroommapClient extends ConnectorClientBase {
         if (options.inludeUserInfo !== undefined) {
             queryParams.push(`InludeUserInfo=${encodeURIComponent(String(options.inludeUserInfo))}`);
         }
-        const requestPath = `/api/officelocations/mapimagewithpersoninfo/${officeLocationName}` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
+        const requestPath = `/api/officelocations/mapimagewithpersoninfo/${encodeURIComponent(String(officeLocationName))}` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.sendWithTracingAsync<GetRoomWithPersonsDetailsResponse>("Meetingroommap.getRoomWithPersonsDetails", "GetRoomWithPersonsDetails", "GET", requestUrl, undefined, options);
 
@@ -332,7 +332,7 @@ export class MeetingroommapClient extends ConnectorClientBase {
         if (options.large !== undefined) {
             queryParams.push(`Large=${encodeURIComponent(String(options.large))}`);
         }
-        const requestPath = `/api/officelocationimage/create/${officeLocationName}` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
+        const requestPath = `/api/officelocationimage/create/${encodeURIComponent(String(officeLocationName))}` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.sendWithTracingAsync<Blob>("Meetingroommap.getOfficeLocationImage", "GetOfficeLocationImage", "GET", requestUrl, undefined, options);
 
@@ -356,7 +356,7 @@ export class MeetingroommapClient extends ConnectorClientBase {
      * @remarks Get rooms by name search (from Azure AD meeting rooms)
      */
     public async searchMeetingRooms(name: string, options: ConnectorOperationOptions = {}): Promise<AADMeetingRoomCollection> {
-        const requestPath = `/api/rooms/findbyname/${name}`;
+        const requestPath = `/api/rooms/findbyname/${encodeURIComponent(String(name))}`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.sendWithTracingAsync<AADMeetingRoomCollection>("Meetingroommap.searchMeetingRooms", "SearchMeetingRooms", "GET", requestUrl, undefined, options);
 
@@ -380,7 +380,7 @@ export class MeetingroommapClient extends ConnectorClientBase {
      * @remarks Get all meeting rooms from specific list name
      */
     public listRoomsByAddress(meetingRoomListAddress: string, options: ConnectorOperationOptions = {}): ConnectorPagedAsyncIterableIterator<AADMeetingRoom> {
-        const requestPath = `/api/rooms/${meetingRoomListAddress}`;
+        const requestPath = `/api/rooms/${encodeURIComponent(String(meetingRoomListAddress))}`;
         return this.createPageable<AADMeetingRoomCollection, AADMeetingRoom>(
             requestPath,
             async (requestUrl) => {
@@ -398,7 +398,7 @@ export class MeetingroommapClient extends ConnectorClientBase {
      * @remarks Get all meeting rooms mapped to a specific image
      */
     public async getRoomsByImageName(imageName: string, options: ConnectorOperationOptions = {}): Promise<GetRoomsByImageNameResponse> {
-        const requestPath = `/api/rooms/GetRoomsByImageName/${imageName}`;
+        const requestPath = `/api/rooms/GetRoomsByImageName/${encodeURIComponent(String(imageName))}`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.sendWithTracingAsync<GetRoomsByImageNameResponse>("Meetingroommap.getRoomsByImageName", "GetRoomsByImageName", "GET", requestUrl, undefined, options);
 

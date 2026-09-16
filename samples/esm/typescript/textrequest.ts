@@ -38,7 +38,7 @@ async function main(): Promise<void> {
     // Example 1: List messages exchanged with a contact phone number.
     const phoneNumber = process.env.TEXTREQUEST_PHONE ?? "+15555550100";
     try {
-        const messages = await client.getMessagesByContactPhone(DASHBOARD_ID, phoneNumber, "0", "50");
+        const messages = await client.getMessagesByContactPhone(Number(DASHBOARD_ID), phoneNumber, 0, 50);
         console.log("Messages:", JSON.stringify(messages, null, 2));
     } catch (error) {
         if (error instanceof ConnectorError) {

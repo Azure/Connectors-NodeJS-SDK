@@ -248,8 +248,8 @@ export class FreshserviceClient extends ConnectorClientBase {
      * Add a note to a ticket
      * @remarks Add a private or public note to a ticket.
      */
-    public async addNote(input: AddNoteRequest, ticketId: string, options: ConnectorOperationOptions = {}): Promise<AddNoteResponse> {
-        const requestPath = `/api/v2/tickets/${ticketId}/notes`;
+    public async addNote(input: AddNoteRequest, ticketId: number, options: ConnectorOperationOptions = {}): Promise<AddNoteResponse> {
+        const requestPath = `/api/v2/tickets/${encodeURIComponent(String(ticketId))}/notes`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.sendWithTracingAsync<AddNoteResponse>("Freshservice.addNote", "AddNoteV2", "POST", requestUrl, input, options);
 
@@ -272,8 +272,8 @@ export class FreshserviceClient extends ConnectorClientBase {
      * Update a ticket
      * @remarks Update a ticket (only specified values will be updated).
      */
-    public async updateTicket(input: UpdateTicketRequest, ticketId: string, options: ConnectorOperationOptions = {}): Promise<CreateUpdateTicketResponse> {
-        const requestPath = `/api/v2/tickets/${ticketId}`;
+    public async updateTicket(input: UpdateTicketRequest, ticketId: number, options: ConnectorOperationOptions = {}): Promise<CreateUpdateTicketResponse> {
+        const requestPath = `/api/v2/tickets/${encodeURIComponent(String(ticketId))}`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.sendWithTracingAsync<CreateUpdateTicketResponse>("Freshservice.updateTicket", "UpdateTicketV2", "PUT", requestUrl, input, options);
 

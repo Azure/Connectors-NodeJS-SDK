@@ -127,9 +127,9 @@ export interface BlobMetadataPage {
  */
 export interface CreateFileOptions extends ConnectorOperationOptions {
     /** The 'queryParametersSingleEncoded' service parameter. */
-    queryParametersSingleEncoded?: string;
+    queryParametersSingleEncoded?: boolean;
     /** Get all file metadata from the SFTP server after file creation is complete. If this is false, some metadata properties may not be returned such as last modified time, etc. */
-    readFileMetadataFromServer?: string;
+    readFileMetadataFromServer?: boolean;
 }
 
 /**
@@ -137,7 +137,7 @@ export interface CreateFileOptions extends ConnectorOperationOptions {
  */
 export interface UpdateFileOptions extends ConnectorOperationOptions {
     /** Get all file metadata from the server after file is updated. If this is false, some metadata properties may not be returned such as last modified time, etc. */
-    readFileMetadataFromServer?: string;
+    readFileMetadataFromServer?: boolean;
 }
 
 /**
@@ -145,7 +145,7 @@ export interface UpdateFileOptions extends ConnectorOperationOptions {
  */
 export interface DeleteFileOptions extends ConnectorOperationOptions {
     /** Skips the deletion if a file is not found on the server. */
-    skipDeleteIfFileNotFoundOnServer?: string;
+    skipDeleteIfFileNotFoundOnServer?: boolean;
 }
 
 /**
@@ -153,11 +153,11 @@ export interface DeleteFileOptions extends ConnectorOperationOptions {
  */
 export interface CopyFileOptions extends ConnectorOperationOptions {
     /** Overwrites the destination file if set to 'true' */
-    overwrite?: string;
+    overwrite?: boolean;
     /** The 'queryParametersSingleEncoded' service parameter. */
-    queryParametersSingleEncoded?: string;
+    queryParametersSingleEncoded?: boolean;
     /** Get all file metadata from the server after file is copied. If this is false, some metadata properties may not be returned such as last modified time, etc. */
-    readFileMetadataFromServer?: string;
+    readFileMetadataFromServer?: boolean;
 }
 
 /**
@@ -165,7 +165,7 @@ export interface CopyFileOptions extends ConnectorOperationOptions {
  */
 export interface GetFileMetadataByPathOptions extends ConnectorOperationOptions {
     /** The 'queryParametersSingleEncoded' service parameter. */
-    queryParametersSingleEncoded?: string;
+    queryParametersSingleEncoded?: boolean;
 }
 
 /**
@@ -173,9 +173,9 @@ export interface GetFileMetadataByPathOptions extends ConnectorOperationOptions 
  */
 export interface GetFileContentByPathOptions extends ConnectorOperationOptions {
     /** Infer content-type based on extension */
-    inferContentType?: string;
+    inferContentType?: boolean;
     /** The 'queryParametersSingleEncoded' service parameter. */
-    queryParametersSingleEncoded?: string;
+    queryParametersSingleEncoded?: boolean;
 }
 
 /**
@@ -183,7 +183,7 @@ export interface GetFileContentByPathOptions extends ConnectorOperationOptions {
  */
 export interface GetFileContentOptions extends ConnectorOperationOptions {
     /** Infer content-type based on extension */
-    inferContentType?: string;
+    inferContentType?: boolean;
 }
 
 /**
@@ -191,11 +191,11 @@ export interface GetFileContentOptions extends ConnectorOperationOptions {
  */
 export interface ExtractFolderOptions extends ConnectorOperationOptions {
     /** Overwrites the destination files if set to 'true' */
-    overwrite?: string;
+    overwrite?: boolean;
     /** Extracts folders from archive if set to 'true' */
-    createFolders?: string;
+    createFolders?: boolean;
     /** The 'queryParametersSingleEncoded' service parameter. */
-    queryParametersSingleEncoded?: string;
+    queryParametersSingleEncoded?: boolean;
 }
 
 /**
@@ -291,7 +291,7 @@ export class FtpClient extends ConnectorClientBase {
      * @remarks This operation gets the metadata for a file.
      */
     public async getFileMetadata(id: string, options: ConnectorOperationOptions = {}): Promise<BlobMetadata> {
-        const requestPath = `/datasets/default/files/${id}`;
+        const requestPath = `/datasets/default/files/${encodeURIComponent(encodeURIComponent(String(id)))}`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.sendWithTracingAsync<BlobMetadata>("Ftp.getFileMetadata", "GetFileMetadata", "GET", requestUrl, undefined, options);
 
@@ -303,7 +303,7 @@ export class FtpClient extends ConnectorClientBase {
      * @remarks This operation updates a file. If a file is being deleted/renamed on server right after it was updated, connector may return HTTP 404 error by it's design. Please use a delay for 1 minute before deleting or renaming recently updated file.
      */
     public async updateFile(input: UpdateFileInput, id: string, options: UpdateFileOptions = {}): Promise<BlobMetadata> {
-        const requestPath = `/datasets/default/files/${id}`;
+        const requestPath = `/datasets/default/files/${encodeURIComponent(encodeURIComponent(String(id)))}`;
         const requestHeaders: Record<string, string> = {};
         if (options.readFileMetadataFromServer !== undefined) {
             requestHeaders["ReadFileMetadataFromServer"] = String(options.readFileMetadataFromServer);
@@ -319,7 +319,7 @@ export class FtpClient extends ConnectorClientBase {
      * @remarks This operation deletes a file.
      */
     public async deleteFile(id: string, options: DeleteFileOptions = {}): Promise<void> {
-        const requestPath = `/datasets/default/files/${id}`;
+        const requestPath = `/datasets/default/files/${encodeURIComponent(encodeURIComponent(String(id)))}`;
         const requestHeaders: Record<string, string> = {};
         if (options.skipDeleteIfFileNotFoundOnServer !== undefined) {
             requestHeaders["SkipDeleteIfFileNotFoundOnServer"] = String(options.skipDeleteIfFileNotFoundOnServer);
@@ -407,7 +407,7 @@ export class FtpClient extends ConnectorClientBase {
         if (options.inferContentType !== undefined) {
             queryParams.push(`inferContentType=${encodeURIComponent(String(options.inferContentType))}`);
         }
-        const requestPath = `/datasets/default/files/${id}/content` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
+        const requestPath = `/datasets/default/files/${encodeURIComponent(encodeURIComponent(String(id)))}/content` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.sendWithTracingAsync<Blob>("Ftp.getFileContent", "GetFileContent", "GET", requestUrl, undefined, options);
 
@@ -419,7 +419,7 @@ export class FtpClient extends ConnectorClientBase {
      * @remarks This operation gets the list of files and subfolders in a folder.
      */
     public listFolder(id: string, options: ConnectorOperationOptions = {}): ConnectorPagedAsyncIterableIterator<BlobMetadata> {
-        const requestPath = `/datasets/default/folders/${id}`;
+        const requestPath = `/datasets/default/folders/${encodeURIComponent(encodeURIComponent(String(id)))}`;
         return this.createPageable<Array<BlobMetadata>, BlobMetadata>(
             requestPath,
             async (requestUrl) => {

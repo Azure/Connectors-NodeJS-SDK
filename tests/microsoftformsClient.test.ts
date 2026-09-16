@@ -81,11 +81,11 @@ describe("MicrosoftformsClient — getFormResponseById", () => {
         mockFetchResponse(mockResponse);
 
         const client = new MicrosoftformsClient(TestConnectionUrl, createMockCredential());
-        await client.getFormResponseById("form-1", "resp-2");
+        await client.getFormResponseById("form-1", 2);
 
         const [url] = (global.fetch as jest.Mock).mock.calls[0];
         expect(url).toContain("/responses");
-        expect(url).toContain("response_id=resp-2");
+        expect(url).toContain("response_id=2");
     });
 });
 

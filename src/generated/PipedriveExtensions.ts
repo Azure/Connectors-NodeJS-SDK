@@ -421,8 +421,8 @@ export class PipedriveClient extends ConnectorClientBase {
      * Get deal by id
      * @remarks This operation retrieves all details of an existing deal, given its id.
      */
-    public async getDeal(dealId: string, options: ConnectorOperationOptions = {}): Promise<DealResponse> {
-        const requestPath = `/v1/deals/${dealId}`;
+    public async getDeal(dealId: number, options: ConnectorOperationOptions = {}): Promise<DealResponse> {
+        const requestPath = `/v1/deals/${encodeURIComponent(String(dealId))}`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.sendWithTracingAsync<DealResponse>("Pipedrive.getDeal", "GetDeal", "GET", requestUrl, undefined, options);
 
@@ -433,8 +433,8 @@ export class PipedriveClient extends ConnectorClientBase {
      * Update deal status
      * @remarks This operation is used to update the status associated with a deal, given its id.
      */
-    public async updateDealStatus(input: UpdateDealStatusRequest, dealId: string, options: ConnectorOperationOptions = {}): Promise<DealResponse> {
-        const requestPath = `/update_status_deal/v1/deals/${dealId}`;
+    public async updateDealStatus(input: UpdateDealStatusRequest, dealId: number, options: ConnectorOperationOptions = {}): Promise<DealResponse> {
+        const requestPath = `/update_status_deal/v1/deals/${encodeURIComponent(String(dealId))}`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.sendWithTracingAsync<DealResponse>("Pipedrive.updateDealStatus", "UpdateDealStatus", "PUT", requestUrl, input, options);
 
@@ -457,8 +457,8 @@ export class PipedriveClient extends ConnectorClientBase {
      * Get stage by id
      * @remarks This operation returns data about a specific stage.
      */
-    public async getStage(stageId: string, options: ConnectorOperationOptions = {}): Promise<StageResponse> {
-        const requestPath = `/v1/stages/${stageId}`;
+    public async getStage(stageId: number, options: ConnectorOperationOptions = {}): Promise<StageResponse> {
+        const requestPath = `/v1/stages/${encodeURIComponent(String(stageId))}`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.sendWithTracingAsync<StageResponse>("Pipedrive.getStage", "GetStage", "GET", requestUrl, undefined, options);
 
@@ -481,8 +481,8 @@ export class PipedriveClient extends ConnectorClientBase {
      * Update deal stage
      * @remarks This operation is used to update the stage associated with a deal, given its id.
      */
-    public async updateDealStage(input: UpdateDealStageRequest, dealId: string, options: ConnectorOperationOptions = {}): Promise<DealResponseV2> {
-        const requestPath = `/connector-v2/update_stage_deal/v1/deals/${dealId}`;
+    public async updateDealStage(input: UpdateDealStageRequest, dealId: number, options: ConnectorOperationOptions = {}): Promise<DealResponseV2> {
+        const requestPath = `/connector-v2/update_stage_deal/v1/deals/${encodeURIComponent(String(dealId))}`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.sendWithTracingAsync<DealResponseV2>("Pipedrive.updateDealStage", "UpdateDealStageV2", "PUT", requestUrl, input, options);
 

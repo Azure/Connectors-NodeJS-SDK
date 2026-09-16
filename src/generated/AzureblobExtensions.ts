@@ -244,11 +244,11 @@ export interface BlobDataSetsMetadata {
  */
 export interface CopyFileOptions extends ConnectorOperationOptions {
     /** Should the destination blob be overwritten (true/false)?. */
-    overwrite?: string;
+    overwrite?: boolean;
     /** The 'queryParametersSingleEncoded' service parameter. */
-    queryParametersSingleEncoded?: string;
+    queryParametersSingleEncoded?: boolean;
     /** Get all file metadata from the server after file creation is complete. If this is false, some metadata properties may not be returned such as last modified time, etc. */
-    readFileMetadataFromServer?: string;
+    readFileMetadataFromServer?: boolean;
 }
 
 /**
@@ -264,11 +264,11 @@ export interface CreateBlockBlobOptions extends ConnectorOperationOptions {
  */
 export interface CreateFileOptions extends ConnectorOperationOptions {
     /** The 'queryParametersSingleEncoded' service parameter. */
-    queryParametersSingleEncoded?: string;
+    queryParametersSingleEncoded?: boolean;
     /** Specify content-type of the blob to upload. */
     contentType?: string;
     /** Get all file metadata from the server after file creation is complete. If this is false, some metadata properties may not be returned such as last modified time, etc. */
-    readFileMetadataFromServer?: string;
+    readFileMetadataFromServer?: boolean;
 }
 
 /**
@@ -276,7 +276,7 @@ export interface CreateFileOptions extends ConnectorOperationOptions {
  */
 export interface DeleteFileOptions extends ConnectorOperationOptions {
     /** Skips the deletion if a file is not found on the server. */
-    skipDeleteIfFileNotFoundOnServer?: string;
+    skipDeleteIfFileNotFoundOnServer?: boolean;
 }
 
 /**
@@ -284,9 +284,9 @@ export interface DeleteFileOptions extends ConnectorOperationOptions {
  */
 export interface ExtractFolderOptions extends ConnectorOperationOptions {
     /** Should destination blob be overwritten (true/false)?. */
-    overwrite?: string;
+    overwrite?: boolean;
     /** The 'queryParametersSingleEncoded' service parameter. */
-    queryParametersSingleEncoded?: string;
+    queryParametersSingleEncoded?: boolean;
 }
 
 /**
@@ -294,9 +294,9 @@ export interface ExtractFolderOptions extends ConnectorOperationOptions {
  */
 export interface GetFileContentOptions extends ConnectorOperationOptions {
     /** Infer content-type based on extension. */
-    inferContentType?: string;
+    inferContentType?: boolean;
     /** Specify whether to extract MIP labels. */
-    extractSensitivityLabel?: string;
+    extractSensitivityLabel?: boolean;
     /** Default collection will be queried unless specified. */
     purviewAccountName?: string;
 }
@@ -306,11 +306,11 @@ export interface GetFileContentOptions extends ConnectorOperationOptions {
  */
 export interface GetFileContentByPathOptions extends ConnectorOperationOptions {
     /** Infer content-type based on extension. */
-    inferContentType?: string;
+    inferContentType?: boolean;
     /** The 'queryParametersSingleEncoded' service parameter. */
-    queryParametersSingleEncoded?: string;
+    queryParametersSingleEncoded?: boolean;
     /** Specify whether to extract MIP labels. */
-    extractSensitivityLabel?: string;
+    extractSensitivityLabel?: boolean;
     /** Default collection will be queried unless specified. */
     purviewAccountName?: string;
 }
@@ -320,7 +320,7 @@ export interface GetFileContentByPathOptions extends ConnectorOperationOptions {
  */
 export interface GetFileMetadataOptions extends ConnectorOperationOptions {
     /** Specify whether to extract MIP labels. */
-    extractSensitivityLabel?: string;
+    extractSensitivityLabel?: boolean;
     /** Default collection will be queried unless specified. */
     purviewAccountName?: string;
 }
@@ -330,9 +330,9 @@ export interface GetFileMetadataOptions extends ConnectorOperationOptions {
  */
 export interface GetFileMetadataByPathOptions extends ConnectorOperationOptions {
     /** The 'queryParametersSingleEncoded' service parameter. */
-    queryParametersSingleEncoded?: string;
+    queryParametersSingleEncoded?: boolean;
     /** Specify whether to extract MIP labels. */
-    extractSensitivityLabel?: string;
+    extractSensitivityLabel?: boolean;
     /** Default collection will be queried unless specified. */
     purviewAccountName?: string;
 }
@@ -344,9 +344,9 @@ export interface ListFolderOptions extends ConnectorOperationOptions {
     /** A marker that identifies the portion of the list to be returned with the list operation". */
     nextPageMarker?: string;
     /** Whether or not to list blobs in flat listing". */
-    useFlatListing?: string;
+    useFlatListing?: boolean;
     /** Specify whether to extract MIP labels. */
-    extractSensitivityLabel?: string;
+    extractSensitivityLabel?: boolean;
     /** Default collection will be queried unless specified. */
     purviewAccountName?: string;
 }
@@ -358,7 +358,7 @@ export interface ListRootFolderOptions extends ConnectorOperationOptions {
     /** A marker that identifies the portion of the list to be returned with the list operation. */
     nextPageMarker?: string;
     /** Whether or not to list blobs in flat listing. */
-    useFlatListing?: string;
+    useFlatListing?: boolean;
 }
 
 /**
@@ -368,7 +368,7 @@ export interface UpdateFileOptions extends ConnectorOperationOptions {
     /** Specify content-type of the blob to upload. */
     contentType?: string;
     /** Get all file metadata from the server after file is updated. If this is false, some metadata properties may not be returned such as last modified time, etc. */
-    readFileMetadataFromServer?: string;
+    readFileMetadataFromServer?: boolean;
 }
 
 /**
@@ -459,7 +459,7 @@ export class AzureblobClient extends ConnectorClientBase {
         if (options.queryParametersSingleEncoded !== undefined) {
             queryParams.push(`queryParametersSingleEncoded=${encodeURIComponent(String(options.queryParametersSingleEncoded))}`);
         }
-        const requestPath = `/v2/datasets/${encodeURIComponent(String(dataset))}/copyFile` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
+        const requestPath = `/v2/datasets/${encodeURIComponent(encodeURIComponent(String(dataset)))}/copyFile` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestHeaders: Record<string, string> = {};
         if (options.readFileMetadataFromServer !== undefined) {
             requestHeaders["ReadFileMetadataFromServer"] = String(options.readFileMetadataFromServer);
@@ -482,7 +482,7 @@ export class AzureblobClient extends ConnectorClientBase {
         if (name !== undefined) {
             queryParams.push(`name=${encodeURIComponent(String(name))}`);
         }
-        const requestPath = `/v2/codeless/datasets/${storageAccountName}/CreateBlockBlob` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
+        const requestPath = `/v2/codeless/datasets/${encodeURIComponent(String(storageAccountName))}/CreateBlockBlob` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestHeaders: Record<string, string> = {};
         if (options.contentType !== undefined) {
             requestHeaders["Content-Type"] = String(options.contentType);
@@ -506,7 +506,7 @@ export class AzureblobClient extends ConnectorClientBase {
         if (options.queryParametersSingleEncoded !== undefined) {
             queryParams.push(`queryParametersSingleEncoded=${encodeURIComponent(String(options.queryParametersSingleEncoded))}`);
         }
-        const requestPath = `/v2/datasets/${encodeURIComponent(String(dataset))}/files` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
+        const requestPath = `/v2/datasets/${encodeURIComponent(encodeURIComponent(String(dataset)))}/files` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestHeaders: Record<string, string> = {};
         if (options.contentType !== undefined) {
             requestHeaders["Content-Type"] = String(options.contentType);
@@ -529,7 +529,7 @@ export class AzureblobClient extends ConnectorClientBase {
         if (path !== undefined) {
             queryParams.push(`path=${encodeURIComponent(String(path))}`);
         }
-        const requestPath = `/v2/datasets/${storageAccountName}/CreateSharedLinkByPath` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
+        const requestPath = `/v2/datasets/${encodeURIComponent(String(storageAccountName))}/CreateSharedLinkByPath` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.sendWithTracingAsync<SharedAccessSignature>("Azureblob.createShareLinkByPath", "CreateShareLinkByPath_V2", "POST", requestUrl, input, options);
 
@@ -541,7 +541,7 @@ export class AzureblobClient extends ConnectorClientBase {
      * @remarks This operation deletes a blob.
      */
     public async deleteFile(dataset: string, id: string, options: DeleteFileOptions = {}): Promise<void> {
-        const requestPath = `/v2/datasets/${encodeURIComponent(String(dataset))}/files/${id}`;
+        const requestPath = `/v2/datasets/${encodeURIComponent(encodeURIComponent(String(dataset)))}/files/${encodeURIComponent(encodeURIComponent(String(id)))}`;
         const requestHeaders: Record<string, string> = {};
         if (options.skipDeleteIfFileNotFoundOnServer !== undefined) {
             requestHeaders["SkipDeleteIfFileNotFoundOnServer"] = String(options.skipDeleteIfFileNotFoundOnServer);
@@ -568,7 +568,7 @@ export class AzureblobClient extends ConnectorClientBase {
         if (options.queryParametersSingleEncoded !== undefined) {
             queryParams.push(`queryParametersSingleEncoded=${encodeURIComponent(String(options.queryParametersSingleEncoded))}`);
         }
-        const requestPath = `/v2/datasets/${encodeURIComponent(String(dataset))}/extractFolderV2` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
+        const requestPath = `/v2/datasets/${encodeURIComponent(encodeURIComponent(String(dataset)))}/extractFolderV2` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.sendWithTracingAsync<Array<BlobMetadata>>("Azureblob.extractFolder", "ExtractFolder_V3", "POST", requestUrl, undefined, options);
 
@@ -584,7 +584,7 @@ export class AzureblobClient extends ConnectorClientBase {
         if (path !== undefined) {
             queryParams.push(`path=${encodeURIComponent(String(path))}`);
         }
-        const requestPath = `/v2/datasets/${storageAccountName}/policies` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
+        const requestPath = `/v2/datasets/${encodeURIComponent(String(storageAccountName))}/policies` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.sendWithTracingAsync<Array<SharedAccessSignatureBlobPolicy>>("Azureblob.getAccessPolicies", "GetAccessPolicies_V2", "GET", requestUrl, undefined, options);
 
@@ -606,7 +606,7 @@ export class AzureblobClient extends ConnectorClientBase {
         if (options.purviewAccountName !== undefined) {
             queryParams.push(`purviewAccountName=${encodeURIComponent(String(options.purviewAccountName))}`);
         }
-        const requestPath = `/v2/datasets/${encodeURIComponent(String(dataset))}/files/${id}/content` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
+        const requestPath = `/v2/datasets/${encodeURIComponent(encodeURIComponent(String(dataset)))}/files/${encodeURIComponent(encodeURIComponent(String(id)))}/content` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.sendWithTracingAsync<Blob>("Azureblob.getFileContent", "GetFileContent_V2", "GET", requestUrl, undefined, options);
 
@@ -634,7 +634,7 @@ export class AzureblobClient extends ConnectorClientBase {
         if (options.purviewAccountName !== undefined) {
             queryParams.push(`purviewAccountName=${encodeURIComponent(String(options.purviewAccountName))}`);
         }
-        const requestPath = `/v2/datasets/${encodeURIComponent(String(dataset))}/GetFileContentByPath` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
+        const requestPath = `/v2/datasets/${encodeURIComponent(encodeURIComponent(String(dataset)))}/GetFileContentByPath` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.sendWithTracingAsync<Blob>("Azureblob.getFileContentByPath", "GetFileContentByPath_V2", "GET", requestUrl, undefined, options);
 
@@ -653,7 +653,7 @@ export class AzureblobClient extends ConnectorClientBase {
         if (options.purviewAccountName !== undefined) {
             queryParams.push(`purviewAccountName=${encodeURIComponent(String(options.purviewAccountName))}`);
         }
-        const requestPath = `/v2/datasets/${encodeURIComponent(String(dataset))}/files/${id}` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
+        const requestPath = `/v2/datasets/${encodeURIComponent(encodeURIComponent(String(dataset)))}/files/${encodeURIComponent(encodeURIComponent(String(id)))}` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.sendWithTracingAsync<DataWithSensitivityLabelInfo>("Azureblob.getFileMetadata", "GetFileMetadata_V2", "GET", requestUrl, undefined, options);
 
@@ -678,7 +678,7 @@ export class AzureblobClient extends ConnectorClientBase {
         if (options.purviewAccountName !== undefined) {
             queryParams.push(`purviewAccountName=${encodeURIComponent(String(options.purviewAccountName))}`);
         }
-        const requestPath = `/v2/datasets/${encodeURIComponent(String(dataset))}/GetFileByPath` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
+        const requestPath = `/v2/datasets/${encodeURIComponent(encodeURIComponent(String(dataset)))}/GetFileByPath` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.sendWithTracingAsync<DataWithSensitivityLabelInfo>("Azureblob.getFileMetadataByPath", "GetFileMetadataByPath_V2", "GET", requestUrl, undefined, options);
 
@@ -703,7 +703,7 @@ export class AzureblobClient extends ConnectorClientBase {
         if (options.purviewAccountName !== undefined) {
             queryParams.push(`purviewAccountName=${encodeURIComponent(String(options.purviewAccountName))}`);
         }
-        const requestPath = `/v2/datasets/${encodeURIComponent(String(dataset))}/foldersV2/${id}` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
+        const requestPath = `/v2/datasets/${encodeURIComponent(encodeURIComponent(String(dataset)))}/foldersV2/${encodeURIComponent(encodeURIComponent(String(id)))}` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         return this.createPageable<ListOfBlobsWithSensitivityLabels, DataWithSensitivityLabelInfo>(
             requestPath,
             async (requestUrl, isFirstPage) => {
@@ -729,7 +729,7 @@ export class AzureblobClient extends ConnectorClientBase {
         if (options.useFlatListing !== undefined) {
             queryParams.push(`useFlatListing=${encodeURIComponent(String(options.useFlatListing))}`);
         }
-        const requestPath = `/v2/datasets/${encodeURIComponent(String(dataset))}/foldersV2` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
+        const requestPath = `/v2/datasets/${encodeURIComponent(encodeURIComponent(String(dataset)))}/foldersV2` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         return this.createPageable<BlobMetadataPage, BlobMetadata>(
             requestPath,
             async (requestUrl, isFirstPage) => {
@@ -755,7 +755,7 @@ export class AzureblobClient extends ConnectorClientBase {
         if (newTier !== undefined) {
             queryParams.push(`newTier=${encodeURIComponent(String(newTier))}`);
         }
-        const requestPath = `/v2/datasets/${storageAccountName}/SetBlobTierByPath` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
+        const requestPath = `/v2/datasets/${encodeURIComponent(String(storageAccountName))}/SetBlobTierByPath` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
         await this.sendWithTracingAsync<void>("Azureblob.setBlobTierByPath", "SetBlobTierByPath_V2", "POST", requestUrl, undefined, options);
     }
@@ -765,7 +765,7 @@ export class AzureblobClient extends ConnectorClientBase {
      * @remarks This operation updates a blob in Azure Blob Storage.
      */
     public async updateFile(input: UpdateFileInput, dataset: string, id: string, options: UpdateFileOptions = {}): Promise<BlobMetadata> {
-        const requestPath = `/v2/datasets/${encodeURIComponent(String(dataset))}/files/${id}`;
+        const requestPath = `/v2/datasets/${encodeURIComponent(encodeURIComponent(String(dataset)))}/files/${encodeURIComponent(encodeURIComponent(String(id)))}`;
         const requestHeaders: Record<string, string> = {};
         if (options.contentType !== undefined) {
             requestHeaders["Content-Type"] = String(options.contentType);

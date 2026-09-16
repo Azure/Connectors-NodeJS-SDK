@@ -205,8 +205,8 @@ export class ProjectplaceClient extends ConnectorClientBase {
      * Create Card
      * @remarks Creates a new card with the parameters provided
      */
-    public async createCard(input: CreateCardInput, boardId: string, options: ConnectorOperationOptions = {}): Promise<CreateCardResponse> {
-        const requestPath = `/v1/external_notifications/${boardId}/create_card`;
+    public async createCard(input: CreateCardInput, boardId: number, options: ConnectorOperationOptions = {}): Promise<CreateCardResponse> {
+        const requestPath = `/v1/external_notifications/${encodeURIComponent(String(boardId))}/create_card`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.sendWithTracingAsync<CreateCardResponse>("Projectplace.createCard", "create_card", "POST", requestUrl, input, options);
 
@@ -217,8 +217,8 @@ export class ProjectplaceClient extends ConnectorClientBase {
      * Move card to another column
      * @remarks Move a card on the selected board
      */
-    public async moveCard(input: MoveCardInput, boardId: string, options: ConnectorOperationOptions = {}): Promise<MoveCardResponse> {
-        const requestPath = `/v1/external_notifications/${boardId}/move_card`;
+    public async moveCard(input: MoveCardInput, boardId: number, options: ConnectorOperationOptions = {}): Promise<MoveCardResponse> {
+        const requestPath = `/v1/external_notifications/${encodeURIComponent(String(boardId))}/move_card`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.sendWithTracingAsync<MoveCardResponse>("Projectplace.moveCard", "move_card", "POST", requestUrl, input, options);
 

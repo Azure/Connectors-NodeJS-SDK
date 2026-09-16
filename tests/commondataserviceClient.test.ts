@@ -43,8 +43,8 @@ describe("CommondataserviceClient — getItems", () => {
     });
 
     it("should return items from every page and request the absolute same-host next link", async () => {
-        const firstItem: Item = { dynamicProperties: { accountid: "account-1" } };
-        const secondItem: Item = { dynamicProperties: { accountid: "account-2" } };
+        const firstItem: Item = { dynamicProperties: { accountid: { value: "account-1" } } };
+        const secondItem: Item = { dynamicProperties: { accountid: { value: "account-2" } } };
         const nextLink = `${TestConnectionUrl}/v2/datasets/default/tables/accounts/items?$skiptoken=page-2`;
         global.fetch = jest.fn()
             .mockResolvedValueOnce(createFetchResponse({
@@ -68,8 +68,8 @@ describe("CommondataserviceClient — getItems", () => {
         ["?$skiptoken=page-2", `${TestConnectionUrl}/v2/datasets/default/tables/accounts/items?$skiptoken=page-2`],
         ["items?$skiptoken=page-2", `${TestConnectionUrl}/v2/datasets/default/tables/accounts/items?$skiptoken=page-2`],
     ])("should resolve relative continuation '%s' against the current page", async (nextLink, expectedUrl) => {
-        const firstItem: Item = { dynamicProperties: { accountid: "account-1" } };
-        const secondItem: Item = { dynamicProperties: { accountid: "account-2" } };
+        const firstItem: Item = { dynamicProperties: { accountid: { value: "account-1" } } };
+        const secondItem: Item = { dynamicProperties: { accountid: { value: "account-2" } } };
         global.fetch = jest.fn()
             .mockResolvedValueOnce(createFetchResponse({
                 value: [firstItem],
@@ -88,7 +88,7 @@ describe("CommondataserviceClient — getItems", () => {
     });
 
     it("should reject with ConnectorError when a continuation page fails", async () => {
-        const firstItem: Item = { dynamicProperties: { accountid: "account-1" } };
+        const firstItem: Item = { dynamicProperties: { accountid: { value: "account-1" } } };
         const nextLink = `${TestConnectionUrl}/v2/datasets/default/tables/accounts/items?$skiptoken=page-2`;
         global.fetch = jest.fn()
             .mockResolvedValueOnce(createFetchResponse({

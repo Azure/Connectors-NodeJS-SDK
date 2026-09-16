@@ -42,7 +42,7 @@ async function main() {
 
     // Example 1: Retrieve a user by id.
     try {
-        const user = await client.getUser(USER_ID, ACCOUNT_ID);
+        const user = await client.getUser(Number(USER_ID), ACCOUNT_ID);
         console.log("User:", JSON.stringify(user, null, 2));
     } catch (error) {
         if (error instanceof ConnectorError) {

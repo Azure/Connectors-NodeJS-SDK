@@ -239,7 +239,7 @@ export class WordpressClient extends ConnectorClientBase {
         if (options.fields !== undefined) {
             queryParams.push(`fields=${encodeURIComponent(String(options.fields))}`);
         }
-        const requestPath = `/sites/${siteId}/stats` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
+        const requestPath = `/sites/${encodeURIComponent(String(siteId))}/stats` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.sendWithTracingAsync<SiteStatsModel>("Wordpress.siteStats", "SiteStats", "GET", requestUrl, undefined, options);
 
@@ -251,7 +251,7 @@ export class WordpressClient extends ConnectorClientBase {
      * @remarks Get post
      */
     public async get(siteId: string, postId: string, options: ConnectorOperationOptions = {}): Promise<PostModel> {
-        const requestPath = `/sites/${siteId}/posts/${postId}`;
+        const requestPath = `/sites/${encodeURIComponent(String(siteId))}/posts/${encodeURIComponent(String(postId))}`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.sendWithTracingAsync<PostModel>("Wordpress.get", "GetPost", "GET", requestUrl, undefined, options);
 
@@ -263,7 +263,7 @@ export class WordpressClient extends ConnectorClientBase {
      * @remarks Create post
      */
     public async create(input: CreatePostModel, siteId: string, options: ConnectorOperationOptions = {}): Promise<PostModel> {
-        const requestPath = `/sites/${siteId}/posts/new`;
+        const requestPath = `/sites/${encodeURIComponent(String(siteId))}/posts/new`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.sendWithTracingAsync<PostModel>("Wordpress.create", "CreatePost", "POST", requestUrl, input, options);
 

@@ -8,7 +8,7 @@ const REQUEST_ID = process.env.ZOHOSIGN_REQUEST_ID ?? "";
 if (!CONNECTION_URL || !REQUEST_ID) throw new Error("ZOHOSIGN_CONNECTION_URL and ZOHOSIGN_REQUEST_ID are required.");
 async function main(): Promise<void> {
     try {
-        const certificate = await new ZohosignClient(CONNECTION_URL, new ManagedIdentityTokenProvider()).downloadCompletionCertificate(REQUEST_ID);
+        const certificate = await new ZohosignClient(CONNECTION_URL, new ManagedIdentityTokenProvider()).downloadCompletionCertificate(Number(REQUEST_ID));
         console.log("Certificate size:", certificate.size);
     } catch (error) {
         if (error instanceof ConnectorError) console.error(`Connector error (${error.statusCode}): ${error.message}`);

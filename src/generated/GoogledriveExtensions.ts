@@ -174,14 +174,14 @@ export interface Table {
     /** The display name of the table. */
     DisplayName?: string;
     /** Additional table properties provided by the connector to the clients. */
-    DynamicProperties?: Record<string, unknown>;
+    DynamicProperties?: Record<string, string>;
 }
 
 /**
  * Definition: Item
  */
 export interface Item {
-    dynamicProperties?: Record<string, unknown>;
+    dynamicProperties?: Record<string, ObjectEntity>;
 }
 
 /**
@@ -235,7 +235,7 @@ export interface PassThroughNativeQuery {
  */
 export interface GetFileMetadataByPathOptions extends ConnectorOperationOptions {
     /** The 'queryParametersSingleEncoded' service parameter. */
-    queryParametersSingleEncoded?: string;
+    queryParametersSingleEncoded?: boolean;
 }
 
 /**
@@ -243,9 +243,9 @@ export interface GetFileMetadataByPathOptions extends ConnectorOperationOptions 
  */
 export interface GetFileContentByPathOptions extends ConnectorOperationOptions {
     /** Infer content-type based on extension */
-    inferContentType?: string;
+    inferContentType?: boolean;
     /** The 'queryParametersSingleEncoded' service parameter. */
-    queryParametersSingleEncoded?: string;
+    queryParametersSingleEncoded?: boolean;
 }
 
 /**
@@ -253,7 +253,7 @@ export interface GetFileContentByPathOptions extends ConnectorOperationOptions {
  */
 export interface GetFileContentOptions extends ConnectorOperationOptions {
     /** Infer content-type based on extension */
-    inferContentType?: string;
+    inferContentType?: boolean;
 }
 
 /**
@@ -261,9 +261,9 @@ export interface GetFileContentOptions extends ConnectorOperationOptions {
  */
 export interface CopyFileOptions extends ConnectorOperationOptions {
     /** Overwrites the destination file if set to 'true' */
-    overwrite?: string;
+    overwrite?: boolean;
     /** The 'queryParametersSingleEncoded' service parameter. */
-    queryParametersSingleEncoded?: string;
+    queryParametersSingleEncoded?: boolean;
 }
 
 /**
@@ -271,7 +271,7 @@ export interface CopyFileOptions extends ConnectorOperationOptions {
  */
 export interface CreateFileOptions extends ConnectorOperationOptions {
     /** The 'queryParametersSingleEncoded' service parameter. */
-    queryParametersSingleEncoded?: string;
+    queryParametersSingleEncoded?: boolean;
 }
 
 /**
@@ -279,9 +279,9 @@ export interface CreateFileOptions extends ConnectorOperationOptions {
  */
 export interface ExtractFolderOptions extends ConnectorOperationOptions {
     /** Overwrites the destination files if set to 'true' */
-    overwrite?: string;
+    overwrite?: boolean;
     /** The 'queryParametersSingleEncoded' service parameter. */
-    queryParametersSingleEncoded?: string;
+    queryParametersSingleEncoded?: boolean;
 }
 // #endregion Types
 
@@ -311,7 +311,7 @@ export class GoogledriveClient extends ConnectorClientBase {
      * @remarks Retrieves file metadata from Google Drive using id
      */
     public async getFileMetadata(id: string, options: ConnectorOperationOptions = {}): Promise<BlobMetadata> {
-        const requestPath = `/datasets/default/files/${id}`;
+        const requestPath = `/datasets/default/files/${encodeURIComponent(encodeURIComponent(String(id)))}`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.sendWithTracingAsync<BlobMetadata>("Googledrive.getFileMetadata", "GetFileMetadata", "GET", requestUrl, undefined, options);
 
@@ -323,7 +323,7 @@ export class GoogledriveClient extends ConnectorClientBase {
      * @remarks Updates a file in Google Drive
      */
     public async updateFile(input: UpdateFileInput, id: string, options: ConnectorOperationOptions = {}): Promise<BlobMetadata> {
-        const requestPath = `/datasets/default/files/${id}`;
+        const requestPath = `/datasets/default/files/${encodeURIComponent(encodeURIComponent(String(id)))}`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.sendWithTracingAsync<BlobMetadata>("Googledrive.updateFile", "UpdateFile", "PUT", requestUrl, input, options);
 
@@ -335,7 +335,7 @@ export class GoogledriveClient extends ConnectorClientBase {
      * @remarks Deletes a file from Google Drive
      */
     public async deleteFile(id: string, options: ConnectorOperationOptions = {}): Promise<void> {
-        const requestPath = `/datasets/default/files/${id}`;
+        const requestPath = `/datasets/default/files/${encodeURIComponent(encodeURIComponent(String(id)))}`;
         const requestUrl = this.resolveUrl(requestPath);
         await this.sendWithTracingAsync<void>("Googledrive.deleteFile", "DeleteFile", "DELETE", requestUrl, undefined, options);
     }
@@ -390,7 +390,7 @@ export class GoogledriveClient extends ConnectorClientBase {
         if (options.inferContentType !== undefined) {
             queryParams.push(`inferContentType=${encodeURIComponent(String(options.inferContentType))}`);
         }
-        const requestPath = `/datasets/default/files/${id}/content` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
+        const requestPath = `/datasets/default/files/${encodeURIComponent(encodeURIComponent(String(id)))}/content` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.sendWithTracingAsync<Blob>("Googledrive.getFileContent", "GetFileContent", "GET", requestUrl, undefined, options);
 
@@ -427,7 +427,7 @@ export class GoogledriveClient extends ConnectorClientBase {
      * @remarks List files in a Google Drive folder
      */
     public listFolder(id: string, options: ConnectorOperationOptions = {}): ConnectorPagedAsyncIterableIterator<BlobMetadata> {
-        const requestPath = `/datasets/default/folders/${id}`;
+        const requestPath = `/datasets/default/folders/${encodeURIComponent(encodeURIComponent(String(id)))}`;
         return this.createPageable<Array<BlobMetadata>, BlobMetadata>(
             requestPath,
             async (requestUrl) => {

@@ -2507,13 +2507,13 @@ export interface ListOfExamsOptions extends ConnectorOperationOptions {
     /** A specific Exam Category name. */
     categoryName?: string;
     /** When set to true, only public Exams will be displayed; If it's not specified will display all. */
-    isPublic?: string;
+    isPublic?: boolean;
     /** When a date (yyyy-MM-ddTHH:mm:ss (UTC)) is specified, only Exams modified after this date will be displayed. */
     changedSince?: string;
     /** Tag */
     tag?: string;
     /** When set to true, add the active price list for every product. */
-    includePrices?: string;
+    includePrices?: boolean;
 }
 
 /**
@@ -2523,7 +2523,7 @@ export interface ListRegistrantsOptions extends ConnectorOperationOptions {
     /** Session Code. */
     sessionCode?: string;
     /** Include Details */
-    includeDetails?: string;
+    includeDetails?: boolean;
     /** Registered Since */
     registeredSince?: string;
 }
@@ -2545,7 +2545,7 @@ export interface GetPurchasesForAnIndividualOptions extends ConnectorOperationOp
  */
 export interface ListAllEventCancellationsByEventOptions extends ConnectorOperationOptions {
     /** Indicates if additional information should be returned. */
-    includeDetails?: string;
+    includeDetails?: boolean;
     /** The initial date to search cancellations (yyyy-MM-ddTHH:mm:ss) */
     cancelledSince?: string;
 }
@@ -2555,7 +2555,7 @@ export interface ListAllEventCancellationsByEventOptions extends ConnectorOperat
  */
 export interface GetAllOpenOrdersForAnIndividualOptions extends ConnectorOperationOptions {
     /** Include Line Items. */
-    includeLineItems?: string;
+    includeLineItems?: boolean;
     /** From Date. */
     fromDate?: string;
     /** To Date. */
@@ -2567,7 +2567,7 @@ export interface GetAllOpenOrdersForAnIndividualOptions extends ConnectorOperati
  */
 export interface FindMembersOrIndividualsByFirstNameOptions extends ConnectorOperationOptions {
     /** Include Email Data */
-    includeEmail?: string;
+    includeEmail?: boolean;
 }
 
 /**
@@ -2575,7 +2575,7 @@ export interface FindMembersOrIndividualsByFirstNameOptions extends ConnectorOpe
  */
 export interface FindMembersOrIndividualsByLastNameOptions extends ConnectorOperationOptions {
     /** Include Email Data. */
-    includeEmail?: string;
+    includeEmail?: boolean;
 }
 
 /**
@@ -2585,11 +2585,11 @@ export interface ListOfAllOrganizationMembersOptions extends ConnectorOperationO
     /** Zip Code */
     zipCode?: string;
     /** Radius in Miles */
-    radius?: string;
+    radius?: number;
     /** State Abbreviation */
     stateAbbreviation?: string;
     /** Congressional District */
-    congressionalDistrict?: string;
+    congressionalDistrict?: number;
     /** A valid code for a Membership Type */
     membershipTypeCode?: string;
     /** A valid Membership Type Category name */
@@ -2601,21 +2601,21 @@ export interface ListOfAllOrganizationMembersOptions extends ConnectorOperationO
     /** Tag */
     tag?: string;
     /** Latitude */
-    latitude?: string;
+    latitude?: number;
     /** Longitude */
-    longitude?: string;
+    longitude?: number;
     /** Domain */
     domain?: string;
     /** Include Membership Data */
-    includeMembership?: string;
+    includeMembership?: boolean;
     /** Include Address Data */
-    includeAddress?: string;
+    includeAddress?: boolean;
     /** Include Phone Data */
-    includePhone?: string;
+    includePhone?: boolean;
     /** Include Email Data */
-    includeEmail?: string;
+    includeEmail?: boolean;
     /** Include Custom Field Data */
-    includeCustomFields?: string;
+    includeCustomFields?: boolean;
     /** Expire Date - From */
     expiringFrom?: string;
     /** Expire Date - To */
@@ -2629,7 +2629,7 @@ export interface ListOfAllIndividualMembersOptions extends ConnectorOperationOpt
     /** Zip Code */
     zipCode?: string;
     /** Radius in Miles */
-    radius?: string;
+    radius?: number;
     /** A valid code for a Membership Type */
     membershipTypeCode?: string;
     /** A valid Membership Type Category name */
@@ -2637,21 +2637,21 @@ export interface ListOfAllIndividualMembersOptions extends ConnectorOperationOpt
     /** Tag */
     tag?: string;
     /** Include Membership Data */
-    includeMembership?: string;
+    includeMembership?: boolean;
     /** Include Address Data */
-    includeAddress?: string;
+    includeAddress?: boolean;
     /** Include Phone Data */
-    includePhone?: string;
+    includePhone?: boolean;
     /** Include Email Data */
-    includeEmail?: string;
+    includeEmail?: boolean;
     /** Include Link Data */
-    includeLink?: string;
+    includeLink?: boolean;
     /** Include Custom Field Data */
-    includeCustomFields?: string;
+    includeCustomFields?: boolean;
     /** Include Categories Data */
-    includeCategories?: string;
+    includeCategories?: boolean;
     /** Include Membership Renewal URLs */
-    includeMembershipRenewalUrl?: string;
+    includeMembershipRenewalUrl?: boolean;
     /** Expire Date - From */
     expiringFrom?: string;
     /** Expire Date - To */
@@ -2671,7 +2671,7 @@ export interface RegisterAnIndividualForAFreeSessionOptions extends ConnectorOpe
  */
 export interface ListAllAwardsOptions extends ConnectorOperationOptions {
     /** Year. */
-    year?: string;
+    year?: number;
 }
 
 /**
@@ -2679,7 +2679,7 @@ export interface ListAllAwardsOptions extends ConnectorOperationOptions {
  */
 export interface FindMembersOrIndividualsByNameOptions extends ConnectorOperationOptions {
     /** Include Email Data. */
-    includeEmail?: string;
+    includeEmail?: boolean;
 }
 
 /**
@@ -2697,7 +2697,7 @@ export interface GetOrganizationsRelationshipsOptions extends ConnectorOperation
     /** Name of the Relationship. */
     relationshipName?: string;
     /** Includes Details. */
-    includesDetails?: string;
+    includesDetails?: boolean;
 }
 
 /**
@@ -2705,7 +2705,7 @@ export interface GetOrganizationsRelationshipsOptions extends ConnectorOperation
  */
 export interface GetCommitteeInformationForAnIndividualOptions extends ConnectorOperationOptions {
     /** Include Inactive */
-    includeInactive?: string;
+    includeInactive?: boolean;
 }
 
 /**
@@ -2735,7 +2735,7 @@ export interface GetIndividualsRelationshipsOptions extends ConnectorOperationOp
     /** Name of the Relationship. */
     relationshipName?: string;
     /** Include Details. */
-    includeDetails?: string;
+    includeDetails?: boolean;
 }
 
 /**
@@ -2743,7 +2743,7 @@ export interface GetIndividualsRelationshipsOptions extends ConnectorOperationOp
  */
 export interface AddIndividualOptions extends ConnectorOperationOptions {
     /** Choose True if a user account should be created when the individual is created. */
-    createUser?: string;
+    createUser?: boolean;
 }
 
 /**
@@ -2751,7 +2751,7 @@ export interface AddIndividualOptions extends ConnectorOperationOptions {
  */
 export interface FindMembersOrIndividualsByFirstAndLastNameOptions extends ConnectorOperationOptions {
     /** Include Email Data. */
-    includeEmail?: string;
+    includeEmail?: boolean;
 }
 
 /**
@@ -2759,7 +2759,7 @@ export interface FindMembersOrIndividualsByFirstAndLastNameOptions extends Conne
  */
 export interface GetCommitteeMembersByCommitteeIdOrCodeOptions extends ConnectorOperationOptions {
     /** Term */
-    term?: string;
+    term?: number;
     /** Position Codes */
     positionCodes?: string;
 }
@@ -2773,9 +2773,9 @@ export interface GetAllCommitteesOptions extends ConnectorOperationOptions {
     /** Committee Name. */
     name?: string;
     /** Term. */
-    term?: string;
+    term?: number;
     /** Active Only. */
-    activeOnly?: string;
+    activeOnly?: boolean;
 }
 
 /**
@@ -2785,7 +2785,7 @@ export interface ListAllIndividualsOptions extends ConnectorOperationOptions {
     /** Individual Name. */
     name?: string;
     /** Include Details. */
-    includeDetails?: string;
+    includeDetails?: boolean;
     /** Individual Old ID. */
     oldId?: string;
 }
@@ -2968,7 +2968,7 @@ export class ImpexiumClient extends ConnectorClientBase {
      * Get Abandoned Checkouts
      * @remarks Get Abandoned Checkouts
      */
-    public async getAbandonedCheckouts(pageNumber: string, abandonedFrom: string, contentType: string, options: GetAbandonedCheckoutsOptions = {}): Promise<GetAbandonedCheckoutsResponse> {
+    public async getAbandonedCheckouts(pageNumber: number, abandonedFrom: string, contentType: string, options: GetAbandonedCheckoutsOptions = {}): Promise<GetAbandonedCheckoutsResponse> {
         const queryParams: string[] = [];
         if (abandonedFrom !== undefined) {
             queryParams.push(`abandonedFrom=${encodeURIComponent(String(abandonedFrom))}`);
@@ -2979,7 +2979,7 @@ export class ImpexiumClient extends ConnectorClientBase {
         if (options.customerRecordNumber !== undefined) {
             queryParams.push(`customerRecordNumber=${encodeURIComponent(String(options.customerRecordNumber))}`);
         }
-        const requestPath = `/api/v1/Shopping/AbandonedCheckOuts/${pageNumber}` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
+        const requestPath = `/api/v1/Shopping/AbandonedCheckOuts/${encodeURIComponent(String(pageNumber))}` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestHeaders: Record<string, string> = {};
         if (contentType !== undefined) {
             requestHeaders["Content-Type"] = String(contentType);
@@ -2994,8 +2994,8 @@ export class ImpexiumClient extends ConnectorClientBase {
      * List All Exhibitors
      * @remarks List All Exhibitors
      */
-    public listAllExhibitors(exhibitCode: string, pageNumber: string, contentType: string, options: ConnectorOperationOptions = {}): ConnectorPagedAsyncIterableIterator<ExhibitorData> {
-        const requestPath = `/api/v1/Exhibits/${exhibitCode}/Exhibitors/${pageNumber}`;
+    public listAllExhibitors(exhibitCode: string, pageNumber: number, contentType: string, options: ConnectorOperationOptions = {}): ConnectorPagedAsyncIterableIterator<ExhibitorData> {
+        const requestPath = `/api/v1/Exhibits/${encodeURIComponent(String(exhibitCode))}/Exhibitors/${encodeURIComponent(String(pageNumber))}`;
         const requestHeaders: Record<string, string> = {};
         if (contentType !== undefined) {
             requestHeaders["Content-Type"] = String(contentType);
@@ -3016,7 +3016,7 @@ export class ImpexiumClient extends ConnectorClientBase {
      * List of Exams
      * @remarks List of Exams
      */
-    public listOfExams(pageNumber: string, contentType: string, options: ListOfExamsOptions = {}): ConnectorPagedAsyncIterableIterator<ExamData> {
+    public listOfExams(pageNumber: number, contentType: string, options: ListOfExamsOptions = {}): ConnectorPagedAsyncIterableIterator<ExamData> {
         const queryParams: string[] = [];
         if (options.code !== undefined) {
             queryParams.push(`Code=${encodeURIComponent(String(options.code))}`);
@@ -3036,7 +3036,7 @@ export class ImpexiumClient extends ConnectorClientBase {
         if (options.includePrices !== undefined) {
             queryParams.push(`includePrices=${encodeURIComponent(String(options.includePrices))}`);
         }
-        const requestPath = `/api/v1/Products/Exams/${pageNumber}` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
+        const requestPath = `/api/v1/Products/Exams/${encodeURIComponent(String(pageNumber))}` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestHeaders: Record<string, string> = {};
         if (contentType !== undefined) {
             requestHeaders["Content-Type"] = String(contentType);
@@ -3057,7 +3057,7 @@ export class ImpexiumClient extends ConnectorClientBase {
      * List Registrants
      * @remarks List Registrants
      */
-    public listRegistrants(eventCode: string, pageNumber: string, contentType: string, options: ListRegistrantsOptions = {}): ConnectorPagedAsyncIterableIterator<RegistrantData> {
+    public listRegistrants(eventCode: string, pageNumber: number, contentType: string, options: ListRegistrantsOptions = {}): ConnectorPagedAsyncIterableIterator<RegistrantData> {
         const queryParams: string[] = [];
         if (options.sessionCode !== undefined) {
             queryParams.push(`sessionCode=${encodeURIComponent(String(options.sessionCode))}`);
@@ -3068,7 +3068,7 @@ export class ImpexiumClient extends ConnectorClientBase {
         if (options.registeredSince !== undefined) {
             queryParams.push(`registeredSince=${encodeURIComponent(String(options.registeredSince))}`);
         }
-        const requestPath = `/api/v1/Events/${eventCode}/Registrations/${pageNumber}` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
+        const requestPath = `/api/v1/Events/${encodeURIComponent(String(eventCode))}/Registrations/${encodeURIComponent(String(pageNumber))}` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestHeaders: Record<string, string> = {};
         if (contentType !== undefined) {
             requestHeaders["Content-Type"] = String(contentType);
@@ -3089,8 +3089,8 @@ export class ImpexiumClient extends ConnectorClientBase {
      * Get Course Attendees
      * @remarks Get Course Attendees
      */
-    public async getCourseAttendees(code: string, pageNumber: string, contentType: string, options: ConnectorOperationOptions = {}): Promise<GetCourseAttendeesResponse> {
-        const requestPath = `/api/v1/Courses/${code}/Attendees/${pageNumber}`;
+    public async getCourseAttendees(code: string, pageNumber: number, contentType: string, options: ConnectorOperationOptions = {}): Promise<GetCourseAttendeesResponse> {
+        const requestPath = `/api/v1/Courses/${encodeURIComponent(String(code))}/Attendees/${encodeURIComponent(String(pageNumber))}`;
         const requestHeaders: Record<string, string> = {};
         if (contentType !== undefined) {
             requestHeaders["Content-Type"] = String(contentType);
@@ -3106,7 +3106,7 @@ export class ImpexiumClient extends ConnectorClientBase {
      * @remarks Add Exam Scores
      */
     public async addExamScores(input: AddExamScoresInput, examCode: string, contentType: string, options: ConnectorOperationOptions = {}): Promise<Array<ExamScoreResultData>> {
-        const requestPath = `/api/v1/Exams/${examCode}/Scores`;
+        const requestPath = `/api/v1/Exams/${encodeURIComponent(String(examCode))}/Scores`;
         const requestHeaders: Record<string, string> = {};
         if (contentType !== undefined) {
             requestHeaders["Content-Type"] = String(contentType);
@@ -3121,8 +3121,8 @@ export class ImpexiumClient extends ConnectorClientBase {
      * Find Members by Name
      * @remarks Find Members by Name
      */
-    public async findMembersByName(name: string, pageNumber: string, contentType: string, options: ConnectorOperationOptions = {}): Promise<FindMembersByNameResponse> {
-        const requestPath = `/api/v1/Customers/Members/FindByName/${name}/${pageNumber}`;
+    public async findMembersByName(name: string, pageNumber: number, contentType: string, options: ConnectorOperationOptions = {}): Promise<FindMembersByNameResponse> {
+        const requestPath = `/api/v1/Customers/Members/FindByName/${encodeURIComponent(String(name))}/${encodeURIComponent(String(pageNumber))}`;
         const requestHeaders: Record<string, string> = {};
         if (contentType !== undefined) {
             requestHeaders["Content-Type"] = String(contentType);
@@ -3137,7 +3137,7 @@ export class ImpexiumClient extends ConnectorClientBase {
      * Get Purchases for an Individual
      * @remarks Get Purchases for an Individual
      */
-    public async getPurchasesForAnIndividual(idOrRecordNumber: string, pageNumber: string, contentType: string, options: GetPurchasesForAnIndividualOptions = {}): Promise<GetPurchasesForAnIndividualResponse> {
+    public async getPurchasesForAnIndividual(idOrRecordNumber: string, pageNumber: number, contentType: string, options: GetPurchasesForAnIndividualOptions = {}): Promise<GetPurchasesForAnIndividualResponse> {
         const queryParams: string[] = [];
         if (options.productCode !== undefined) {
             queryParams.push(`productCode=${encodeURIComponent(String(options.productCode))}`);
@@ -3148,7 +3148,7 @@ export class ImpexiumClient extends ConnectorClientBase {
         if (options.productCategoryCode !== undefined) {
             queryParams.push(`productCategoryCode=${encodeURIComponent(String(options.productCategoryCode))}`);
         }
-        const requestPath = `/api/v1/Individuals/${idOrRecordNumber}/Purchases/${pageNumber}` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
+        const requestPath = `/api/v1/Individuals/${encodeURIComponent(String(idOrRecordNumber))}/Purchases/${encodeURIComponent(String(pageNumber))}` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestHeaders: Record<string, string> = {};
         if (contentType !== undefined) {
             requestHeaders["Content-Type"] = String(contentType);
@@ -3164,7 +3164,7 @@ export class ImpexiumClient extends ConnectorClientBase {
      * @remarks Add or Update a List of Custom Fields Per Organization
      */
     public async addOrUpdateAListOfCustomFieldsPerOrganization(input: AddOrUpdateAListOfCustomFieldsPerOrganizationInput, idOrRecordNumber: string, contentType: string, options: ConnectorOperationOptions = {}): Promise<Array<CustomFieldResultData>> {
-        const requestPath = `/api/v1/Organizations/${idOrRecordNumber}/CustomFieldsList`;
+        const requestPath = `/api/v1/Organizations/${encodeURIComponent(String(idOrRecordNumber))}/CustomFieldsList`;
         const requestHeaders: Record<string, string> = {};
         if (contentType !== undefined) {
             requestHeaders["Content-Type"] = String(contentType);
@@ -3180,7 +3180,7 @@ export class ImpexiumClient extends ConnectorClientBase {
      * @remarks Add Nominee
      */
     public async addNominee(input: CommitteeNomineeSaveData, code: string, contentType: string, options: ConnectorOperationOptions = {}): Promise<void> {
-        const requestPath = `/api/v1/Committees/${code}/Nominations`;
+        const requestPath = `/api/v1/Committees/${encodeURIComponent(String(code))}/Nominations`;
         const requestHeaders: Record<string, string> = {};
         if (contentType !== undefined) {
             requestHeaders["Content-Type"] = String(contentType);
@@ -3194,7 +3194,7 @@ export class ImpexiumClient extends ConnectorClientBase {
      * @remarks Get Individual Custom Field Values
      */
     public async getIndividualCustomFieldValues(id: string, contentType: string, options: ConnectorOperationOptions = {}): Promise<Array<CustomFieldData>> {
-        const requestPath = `/api/v1/Individuals/${id}/CustomFields`;
+        const requestPath = `/api/v1/Individuals/${encodeURIComponent(String(id))}/CustomFields`;
         const requestHeaders: Record<string, string> = {};
         if (contentType !== undefined) {
             requestHeaders["Content-Type"] = String(contentType);
@@ -3210,7 +3210,7 @@ export class ImpexiumClient extends ConnectorClientBase {
      * @remarks Update Individual Custom Field Values.
      */
     public async updateCustomFieldValue(input: CustomFieldData, id: string, contentType: string, options: ConnectorOperationOptions = {}): Promise<void> {
-        const requestPath = `/api/v1/Individuals/${id}/CustomFields`;
+        const requestPath = `/api/v1/Individuals/${encodeURIComponent(String(id))}/CustomFields`;
         const requestHeaders: Record<string, string> = {};
         if (contentType !== undefined) {
             requestHeaders["Content-Type"] = String(contentType);
@@ -3223,7 +3223,7 @@ export class ImpexiumClient extends ConnectorClientBase {
      * List All Event Cancellations by Event
      * @remarks List All Event Cancellations by Event
      */
-    public listAllEventCancellationsByEvent(eventCode: string, pageNumber: string, contentType: string, options: ListAllEventCancellationsByEventOptions = {}): ConnectorPagedAsyncIterableIterator<RegistrantCancellationData> {
+    public listAllEventCancellationsByEvent(eventCode: string, pageNumber: number, contentType: string, options: ListAllEventCancellationsByEventOptions = {}): ConnectorPagedAsyncIterableIterator<RegistrantCancellationData> {
         const queryParams: string[] = [];
         if (options.includeDetails !== undefined) {
             queryParams.push(`includeDetails=${encodeURIComponent(String(options.includeDetails))}`);
@@ -3231,7 +3231,7 @@ export class ImpexiumClient extends ConnectorClientBase {
         if (options.cancelledSince !== undefined) {
             queryParams.push(`cancelledSince=${encodeURIComponent(String(options.cancelledSince))}`);
         }
-        const requestPath = `/api/v1/Events/${eventCode}/Cancellations/${pageNumber}` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
+        const requestPath = `/api/v1/Events/${encodeURIComponent(String(eventCode))}/Cancellations/${encodeURIComponent(String(pageNumber))}` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestHeaders: Record<string, string> = {};
         if (contentType !== undefined) {
             requestHeaders["Content-Type"] = String(contentType);
@@ -3252,7 +3252,7 @@ export class ImpexiumClient extends ConnectorClientBase {
      * Get All Open Orders for an Individual
      * @remarks Get All Open Orders for an Individual
      */
-    public async getAllOpenOrdersForAnIndividual(idOrRecordNumber: string, pageNumber: string, contentType: string, options: GetAllOpenOrdersForAnIndividualOptions = {}): Promise<GetAllOpenOrdersForAnIndividualResponse> {
+    public async getAllOpenOrdersForAnIndividual(idOrRecordNumber: string, pageNumber: number, contentType: string, options: GetAllOpenOrdersForAnIndividualOptions = {}): Promise<GetAllOpenOrdersForAnIndividualResponse> {
         const queryParams: string[] = [];
         if (options.includeLineItems !== undefined) {
             queryParams.push(`includeLineItems=${encodeURIComponent(String(options.includeLineItems))}`);
@@ -3263,7 +3263,7 @@ export class ImpexiumClient extends ConnectorClientBase {
         if (options.toDate !== undefined) {
             queryParams.push(`toDate=${encodeURIComponent(String(options.toDate))}`);
         }
-        const requestPath = `/api/v1/Individuals/${idOrRecordNumber}/Orders/Open/${pageNumber}` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
+        const requestPath = `/api/v1/Individuals/${encodeURIComponent(String(idOrRecordNumber))}/Orders/Open/${encodeURIComponent(String(pageNumber))}` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestHeaders: Record<string, string> = {};
         if (contentType !== undefined) {
             requestHeaders["Content-Type"] = String(contentType);
@@ -3278,8 +3278,8 @@ export class ImpexiumClient extends ConnectorClientBase {
      * List Completed User Tasks by User ID or Email
      * @remarks List Completed User Tasks by User ID or Email
      */
-    public listCompletedUserTasksByUserIdOrEmail(userIdOrEmail: string, pageNumber: string, contentType: string, options: ConnectorOperationOptions = {}): ConnectorPagedAsyncIterableIterator<UserTaskData> {
-        const requestPath = `/api/v1/tasks/Users/${userIdOrEmail}/Completed/${pageNumber}`;
+    public listCompletedUserTasksByUserIdOrEmail(userIdOrEmail: string, pageNumber: number, contentType: string, options: ConnectorOperationOptions = {}): ConnectorPagedAsyncIterableIterator<UserTaskData> {
+        const requestPath = `/api/v1/tasks/Users/${encodeURIComponent(String(userIdOrEmail))}/Completed/${encodeURIComponent(String(pageNumber))}`;
         const requestHeaders: Record<string, string> = {};
         if (contentType !== undefined) {
             requestHeaders["Content-Type"] = String(contentType);
@@ -3300,8 +3300,8 @@ export class ImpexiumClient extends ConnectorClientBase {
      * List Pending User Tasks by User ID or Email
      * @remarks List Pending User Tasks by User ID or Email
      */
-    public listPendingUserTasksByUserIdOrEmail(userIdOrEmail: string, pageNumber: string, contentType: string, options: ConnectorOperationOptions = {}): ConnectorPagedAsyncIterableIterator<UserTaskData> {
-        const requestPath = `/api/v1/tasks/Users/${userIdOrEmail}/Pending/${pageNumber}`;
+    public listPendingUserTasksByUserIdOrEmail(userIdOrEmail: string, pageNumber: number, contentType: string, options: ConnectorOperationOptions = {}): ConnectorPagedAsyncIterableIterator<UserTaskData> {
+        const requestPath = `/api/v1/tasks/Users/${encodeURIComponent(String(userIdOrEmail))}/Pending/${encodeURIComponent(String(pageNumber))}`;
         const requestHeaders: Record<string, string> = {};
         if (contentType !== undefined) {
             requestHeaders["Content-Type"] = String(contentType);
@@ -3323,7 +3323,7 @@ export class ImpexiumClient extends ConnectorClientBase {
      * @remarks Add Note to Sales Opportunity
      */
     public async addNoteToSalesOpportunity(input: BaseNoteData, id: string, contentType: string, options: ConnectorOperationOptions = {}): Promise<void> {
-        const requestPath = `/api/v1/Sales/Opportunities/${id}/Notes`;
+        const requestPath = `/api/v1/Sales/Opportunities/${encodeURIComponent(String(id))}/Notes`;
         const requestHeaders: Record<string, string> = {};
         if (contentType !== undefined) {
             requestHeaders["Content-Type"] = String(contentType);
@@ -3337,7 +3337,7 @@ export class ImpexiumClient extends ConnectorClientBase {
      * @remarks Add Activity to Sales Opportunity
      */
     public async addActivityToSalesOpportunity(input: ActivityData, id: string, contentType: string, options: ConnectorOperationOptions = {}): Promise<void> {
-        const requestPath = `/api/v1/Sales/Opportunities/${id}/Activities`;
+        const requestPath = `/api/v1/Sales/Opportunities/${encodeURIComponent(String(id))}/Activities`;
         const requestHeaders: Record<string, string> = {};
         if (contentType !== undefined) {
             requestHeaders["Content-Type"] = String(contentType);
@@ -3351,7 +3351,7 @@ export class ImpexiumClient extends ConnectorClientBase {
      * @remarks Update Task by Task Number
      */
     public async updateTaskByTaskNumber(input: TaskSaveData, taskNumber: string, contentType: string, options: ConnectorOperationOptions = {}): Promise<TaskData> {
-        const requestPath = `/api/v1/tasks/${taskNumber}`;
+        const requestPath = `/api/v1/tasks/${encodeURIComponent(String(taskNumber))}`;
         const requestHeaders: Record<string, string> = {};
         if (contentType !== undefined) {
             requestHeaders["Content-Type"] = String(contentType);
@@ -3366,8 +3366,8 @@ export class ImpexiumClient extends ConnectorClientBase {
      * List All Countries
      * @remarks List All Countries
      */
-    public listAllCountries(pageNumber: string, contentType: string, options: ConnectorOperationOptions = {}): ConnectorPagedAsyncIterableIterator<CountryData> {
-        const requestPath = `/api/v1/Countries/All/${pageNumber}`;
+    public listAllCountries(pageNumber: number, contentType: string, options: ConnectorOperationOptions = {}): ConnectorPagedAsyncIterableIterator<CountryData> {
+        const requestPath = `/api/v1/Countries/All/${encodeURIComponent(String(pageNumber))}`;
         const requestHeaders: Record<string, string> = {};
         if (contentType !== undefined) {
             requestHeaders["Content-Type"] = String(contentType);
@@ -3388,8 +3388,8 @@ export class ImpexiumClient extends ConnectorClientBase {
      * Get All States by Country
      * @remarks Get All States by Country
      */
-    public async getAllStatesByCountry(countryId: string, pageNumber: string, contentType: string, options: ConnectorOperationOptions = {}): Promise<GetAllStatesByCountryResponse> {
-        const requestPath = `/api/v1/Countries/${countryId}/States/All/${pageNumber}`;
+    public async getAllStatesByCountry(countryId: string, pageNumber: number, contentType: string, options: ConnectorOperationOptions = {}): Promise<GetAllStatesByCountryResponse> {
+        const requestPath = `/api/v1/Countries/${encodeURIComponent(String(countryId))}/States/All/${encodeURIComponent(String(pageNumber))}`;
         const requestHeaders: Record<string, string> = {};
         if (contentType !== undefined) {
             requestHeaders["Content-Type"] = String(contentType);
@@ -3404,8 +3404,8 @@ export class ImpexiumClient extends ConnectorClientBase {
      * List All Exhibits
      * @remarks List All Exhibits
      */
-    public listAllExhibits(pageNumber: string, contentType: string, options: ConnectorOperationOptions = {}): ConnectorPagedAsyncIterableIterator<ExhibitData> {
-        const requestPath = `/api/v1/Exhibits/${pageNumber}`;
+    public listAllExhibits(pageNumber: number, contentType: string, options: ConnectorOperationOptions = {}): ConnectorPagedAsyncIterableIterator<ExhibitData> {
+        const requestPath = `/api/v1/Exhibits/${encodeURIComponent(String(pageNumber))}`;
         const requestHeaders: Record<string, string> = {};
         if (contentType !== undefined) {
             requestHeaders["Content-Type"] = String(contentType);
@@ -3427,7 +3427,7 @@ export class ImpexiumClient extends ConnectorClientBase {
      * @remarks Delete a Category for an Organization
      */
     public async deleteACategoryForAnOrganization(recordNumber: string, categoryCode: string, contentType: string, options: ConnectorOperationOptions = {}): Promise<void> {
-        const requestPath = `/api/v1/Organizations/${recordNumber}/Categories/${categoryCode}`;
+        const requestPath = `/api/v1/Organizations/${encodeURIComponent(String(recordNumber))}/Categories/${encodeURIComponent(String(categoryCode))}`;
         const requestHeaders: Record<string, string> = {};
         if (contentType !== undefined) {
             requestHeaders["Content-Type"] = String(contentType);
@@ -3471,7 +3471,7 @@ export class ImpexiumClient extends ConnectorClientBase {
      * @remarks Add Categories for an Organization
      */
     public async addCategoriesForAnOrganization(input: AddCategoriesForAnOrganizationInput, recordNumber: string, contentType: string, options: ConnectorOperationOptions = {}): Promise<void> {
-        const requestPath = `/api/v1/Organizations/${recordNumber}/Categories`;
+        const requestPath = `/api/v1/Organizations/${encodeURIComponent(String(recordNumber))}/Categories`;
         const requestHeaders: Record<string, string> = {};
         if (contentType !== undefined) {
             requestHeaders["Content-Type"] = String(contentType);
@@ -3484,8 +3484,8 @@ export class ImpexiumClient extends ConnectorClientBase {
      * List of Customer Relationships
      * @remarks List of Customer Relationships
      */
-    public listOfCustomerRelationships(pageNumber: string, contentType: string, options: ConnectorOperationOptions = {}): ConnectorPagedAsyncIterableIterator<RelationshipTypeData> {
-        const requestPath = `/api/v1/Customers/RelationshipTypes/${pageNumber}`;
+    public listOfCustomerRelationships(pageNumber: number, contentType: string, options: ConnectorOperationOptions = {}): ConnectorPagedAsyncIterableIterator<RelationshipTypeData> {
+        const requestPath = `/api/v1/Customers/RelationshipTypes/${encodeURIComponent(String(pageNumber))}`;
         const requestHeaders: Record<string, string> = {};
         if (contentType !== undefined) {
             requestHeaders["Content-Type"] = String(contentType);
@@ -3506,8 +3506,8 @@ export class ImpexiumClient extends ConnectorClientBase {
      * List All Open Customer Request
      * @remarks List All Open Customer Request
      */
-    public listAllOpenCustomerRequest(pageNumber: string, contentType: string, options: ConnectorOperationOptions = {}): ConnectorPagedAsyncIterableIterator<RequestData> {
-        const requestPath = `/api/v1/Requests/Open/${pageNumber}`;
+    public listAllOpenCustomerRequest(pageNumber: number, contentType: string, options: ConnectorOperationOptions = {}): ConnectorPagedAsyncIterableIterator<RequestData> {
+        const requestPath = `/api/v1/Requests/Open/${encodeURIComponent(String(pageNumber))}`;
         const requestHeaders: Record<string, string> = {};
         if (contentType !== undefined) {
             requestHeaders["Content-Type"] = String(contentType);
@@ -3529,7 +3529,7 @@ export class ImpexiumClient extends ConnectorClientBase {
      * @remarks Get Organization Inactive Memberships
      */
     public async getOrganizationInactiveMemberships(id: string, contentType: string, options: ConnectorOperationOptions = {}): Promise<MembershipData> {
-        const requestPath = `/api/v1/Organizations/${id}/Memberships/Inactive`;
+        const requestPath = `/api/v1/Organizations/${encodeURIComponent(String(id))}/Memberships/Inactive`;
         const requestHeaders: Record<string, string> = {};
         if (contentType !== undefined) {
             requestHeaders["Content-Type"] = String(contentType);
@@ -3545,7 +3545,7 @@ export class ImpexiumClient extends ConnectorClientBase {
      * @remarks Delete Record From Custom Data Table
      */
     public async deleteRecordFromCustomDataTable(tableName: string, id: string, contentType: string, options: ConnectorOperationOptions = {}): Promise<void> {
-        const requestPath = `/api/v1/CustomData/${tableName}/${id}`;
+        const requestPath = `/api/v1/CustomData/${encodeURIComponent(String(tableName))}/${encodeURIComponent(String(id))}`;
         const requestHeaders: Record<string, string> = {};
         if (contentType !== undefined) {
             requestHeaders["Content-Type"] = String(contentType);
@@ -3559,7 +3559,7 @@ export class ImpexiumClient extends ConnectorClientBase {
      * @remarks Update User Task Progress or Mark as Completed
      */
     public async updateUserTaskProgressOrMarkAsCompleted(input: UserTaskData, userIdOrEmail: string, contentType: string, options: ConnectorOperationOptions = {}): Promise<UserTaskData> {
-        const requestPath = `/api/v1/tasks/Users/${userIdOrEmail}`;
+        const requestPath = `/api/v1/tasks/Users/${encodeURIComponent(String(userIdOrEmail))}`;
         const requestHeaders: Record<string, string> = {};
         if (contentType !== undefined) {
             requestHeaders["Content-Type"] = String(contentType);
@@ -3574,12 +3574,12 @@ export class ImpexiumClient extends ConnectorClientBase {
      * Find Members (Individuals) by First Name
      * @remarks Find Members (Individuals) by First Name
      */
-    public async findMembersOrIndividualsByFirstName(firstName: string, pageNumber: string, contentType: string, options: FindMembersOrIndividualsByFirstNameOptions = {}): Promise<IndividualData> {
+    public async findMembersOrIndividualsByFirstName(firstName: string, pageNumber: number, contentType: string, options: FindMembersOrIndividualsByFirstNameOptions = {}): Promise<IndividualData> {
         const queryParams: string[] = [];
         if (options.includeEmail !== undefined) {
             queryParams.push(`includeEmail=${encodeURIComponent(String(options.includeEmail))}`);
         }
-        const requestPath = `/api/v1/Individuals/Members/FindByFirstName/${firstName}/${pageNumber}` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
+        const requestPath = `/api/v1/Individuals/Members/FindByFirstName/${encodeURIComponent(String(firstName))}/${encodeURIComponent(String(pageNumber))}` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestHeaders: Record<string, string> = {};
         if (contentType !== undefined) {
             requestHeaders["Content-Type"] = String(contentType);
@@ -3594,12 +3594,12 @@ export class ImpexiumClient extends ConnectorClientBase {
      * Find Members (Individuals) by Last Name
      * @remarks Find Members (Individuals) by Last Name
      */
-    public async findMembersOrIndividualsByLastName(lastName: string, pageNumber: string, contentType: string, options: FindMembersOrIndividualsByLastNameOptions = {}): Promise<IndividualData> {
+    public async findMembersOrIndividualsByLastName(lastName: string, pageNumber: number, contentType: string, options: FindMembersOrIndividualsByLastNameOptions = {}): Promise<IndividualData> {
         const queryParams: string[] = [];
         if (options.includeEmail !== undefined) {
             queryParams.push(`includeEmail=${encodeURIComponent(String(options.includeEmail))}`);
         }
-        const requestPath = `/api/v1/Individuals/Members/FindByLastName/${lastName}/${pageNumber}` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
+        const requestPath = `/api/v1/Individuals/Members/FindByLastName/${encodeURIComponent(String(lastName))}/${encodeURIComponent(String(pageNumber))}` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestHeaders: Record<string, string> = {};
         if (contentType !== undefined) {
             requestHeaders["Content-Type"] = String(contentType);
@@ -3615,7 +3615,7 @@ export class ImpexiumClient extends ConnectorClientBase {
      * @remarks Create a new task or Assign Task to a User
      */
     public async assignTaskToAUser(input: UserTaskData, userIdOrEmail: string, contentType: string, options: ConnectorOperationOptions = {}): Promise<void> {
-        const requestPath = `/api/v1/tasks/Users/${userIdOrEmail}/Task`;
+        const requestPath = `/api/v1/tasks/Users/${encodeURIComponent(String(userIdOrEmail))}/Task`;
         const requestHeaders: Record<string, string> = {};
         if (contentType !== undefined) {
             requestHeaders["Content-Type"] = String(contentType);
@@ -3629,7 +3629,7 @@ export class ImpexiumClient extends ConnectorClientBase {
      * @remarks Delete a Category for an Individual
      */
     public async deleteACategoryForAnIndividual(recordNumber: string, categoryCode: string, contentType: string, options: ConnectorOperationOptions = {}): Promise<void> {
-        const requestPath = `/api/v1/Individuals/${recordNumber}/Categories/${categoryCode}`;
+        const requestPath = `/api/v1/Individuals/${encodeURIComponent(String(recordNumber))}/Categories/${encodeURIComponent(String(categoryCode))}`;
         const requestHeaders: Record<string, string> = {};
         if (contentType !== undefined) {
             requestHeaders["Content-Type"] = String(contentType);
@@ -3643,7 +3643,7 @@ export class ImpexiumClient extends ConnectorClientBase {
      * @remarks Add Notification to Individual
      */
     public async addNotificationToIndividual(input: NotificationData, id: string, contentType: string, options: ConnectorOperationOptions = {}): Promise<void> {
-        const requestPath = `/api/v1/Individuals/${id}/Notifications`;
+        const requestPath = `/api/v1/Individuals/${encodeURIComponent(String(id))}/Notifications`;
         const requestHeaders: Record<string, string> = {};
         if (contentType !== undefined) {
             requestHeaders["Content-Type"] = String(contentType);
@@ -3657,7 +3657,7 @@ export class ImpexiumClient extends ConnectorClientBase {
      * @remarks Add Categories for an Individual
      */
     public async addCategoriesForAnIndividual(input: AddCategoriesForAnIndividualInput, recordNumber: string, contentType: string, options: ConnectorOperationOptions = {}): Promise<void> {
-        const requestPath = `/api/v1/Individuals/${recordNumber}/Categories`;
+        const requestPath = `/api/v1/Individuals/${encodeURIComponent(String(recordNumber))}/Categories`;
         const requestHeaders: Record<string, string> = {};
         if (contentType !== undefined) {
             requestHeaders["Content-Type"] = String(contentType);
@@ -3686,7 +3686,7 @@ export class ImpexiumClient extends ConnectorClientBase {
      * List of All Organization Members
      * @remarks List of All Organization Members
      */
-    public listOfAllOrganizationMembers(pageNumber: string, contentType: string, options: ListOfAllOrganizationMembersOptions = {}): ConnectorPagedAsyncIterableIterator<OrganizationData> {
+    public listOfAllOrganizationMembers(pageNumber: number, contentType: string, options: ListOfAllOrganizationMembersOptions = {}): ConnectorPagedAsyncIterableIterator<OrganizationData> {
         const queryParams: string[] = [];
         if (options.zipCode !== undefined) {
             queryParams.push(`zipCode=${encodeURIComponent(String(options.zipCode))}`);
@@ -3745,7 +3745,7 @@ export class ImpexiumClient extends ConnectorClientBase {
         if (options.expiringTo !== undefined) {
             queryParams.push(`expiringTo=${encodeURIComponent(String(options.expiringTo))}`);
         }
-        const requestPath = `/api/v1/Organizations/Members/All/${pageNumber}` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
+        const requestPath = `/api/v1/Organizations/Members/All/${encodeURIComponent(String(pageNumber))}` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestHeaders: Record<string, string> = {};
         if (contentType !== undefined) {
             requestHeaders["Content-Type"] = String(contentType);
@@ -3766,7 +3766,7 @@ export class ImpexiumClient extends ConnectorClientBase {
      * List of All Individual Members
      * @remarks List of All Individual Members
      */
-    public listOfAllIndividualMembers(pageNumber: string, contentType: string, options: ListOfAllIndividualMembersOptions = {}): ConnectorPagedAsyncIterableIterator<IndividualData> {
+    public listOfAllIndividualMembers(pageNumber: number, contentType: string, options: ListOfAllIndividualMembersOptions = {}): ConnectorPagedAsyncIterableIterator<IndividualData> {
         const queryParams: string[] = [];
         if (options.zipCode !== undefined) {
             queryParams.push(`zipCode=${encodeURIComponent(String(options.zipCode))}`);
@@ -3813,7 +3813,7 @@ export class ImpexiumClient extends ConnectorClientBase {
         if (options.expiringTo !== undefined) {
             queryParams.push(`expiringTo=${encodeURIComponent(String(options.expiringTo))}`);
         }
-        const requestPath = `/api/v1/Individuals/Members/All/${pageNumber}` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
+        const requestPath = `/api/v1/Individuals/Members/All/${encodeURIComponent(String(pageNumber))}` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestHeaders: Record<string, string> = {};
         if (contentType !== undefined) {
             requestHeaders["Content-Type"] = String(contentType);
@@ -3834,8 +3834,8 @@ export class ImpexiumClient extends ConnectorClientBase {
      * Get List of Active Certifications for an Organization
      * @remarks Get List of Active Certifications for an Organization
      */
-    public async getListOfActiveCertificationsForAnOrganization(idOrRecordNumber: string, pageNumber: string, contentType: string, options: ConnectorOperationOptions = {}): Promise<GetListOfActiveCertificationsForAnOrganizationResponse> {
-        const requestPath = `/api/v1/Organizations/${idOrRecordNumber}/Certifications/${pageNumber}`;
+    public async getListOfActiveCertificationsForAnOrganization(idOrRecordNumber: string, pageNumber: number, contentType: string, options: ConnectorOperationOptions = {}): Promise<GetListOfActiveCertificationsForAnOrganizationResponse> {
+        const requestPath = `/api/v1/Organizations/${encodeURIComponent(String(idOrRecordNumber))}/Certifications/${encodeURIComponent(String(pageNumber))}`;
         const requestHeaders: Record<string, string> = {};
         if (contentType !== undefined) {
             requestHeaders["Content-Type"] = String(contentType);
@@ -3850,8 +3850,8 @@ export class ImpexiumClient extends ConnectorClientBase {
      * Get List of Active Certifications for an Individual
      * @remarks Get List of Active Certifications for an Individual
      */
-    public async getListOfActiveCertificationsForAnIndividual(idOrRecordNumber: string, pageNumber: string, contentType: string, options: ConnectorOperationOptions = {}): Promise<GetListOfActiveCertificationsForAnIndividualResponse> {
-        const requestPath = `/api/v1/Individuals/${idOrRecordNumber}/Certifications/${pageNumber}`;
+    public async getListOfActiveCertificationsForAnIndividual(idOrRecordNumber: string, pageNumber: number, contentType: string, options: ConnectorOperationOptions = {}): Promise<GetListOfActiveCertificationsForAnIndividualResponse> {
+        const requestPath = `/api/v1/Individuals/${encodeURIComponent(String(idOrRecordNumber))}/Certifications/${encodeURIComponent(String(pageNumber))}`;
         const requestHeaders: Record<string, string> = {};
         if (contentType !== undefined) {
             requestHeaders["Content-Type"] = String(contentType);
@@ -3867,7 +3867,7 @@ export class ImpexiumClient extends ConnectorClientBase {
      * @remarks Get Individual Inactive Memberships
      */
     public async getIndividualInactiveMemberships(id: string, contentType: string, options: ConnectorOperationOptions = {}): Promise<MembershipData> {
-        const requestPath = `/api/v1/Individuals/${id}/Memberships/Inactive`;
+        const requestPath = `/api/v1/Individuals/${encodeURIComponent(String(id))}/Memberships/Inactive`;
         const requestHeaders: Record<string, string> = {};
         if (contentType !== undefined) {
             requestHeaders["Content-Type"] = String(contentType);
@@ -3883,7 +3883,7 @@ export class ImpexiumClient extends ConnectorClientBase {
      * @remarks Add Activity to Organization
      */
     public async addActivityToOrganization(input: ActivityData, id: string, contentType: string, options: ConnectorOperationOptions = {}): Promise<void> {
-        const requestPath = `/api/v1/Organizations/${id}/Activities`;
+        const requestPath = `/api/v1/Organizations/${encodeURIComponent(String(id))}/Activities`;
         const requestHeaders: Record<string, string> = {};
         if (contentType !== undefined) {
             requestHeaders["Content-Type"] = String(contentType);
@@ -3901,7 +3901,7 @@ export class ImpexiumClient extends ConnectorClientBase {
         if (options.registrationNumber !== undefined) {
             queryParams.push(`registrationNumber=${encodeURIComponent(String(options.registrationNumber))}`);
         }
-        const requestPath = `/api/v1/Events/${eventCode}/Sessions/Register/${customerIdOrRecordNumber}` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
+        const requestPath = `/api/v1/Events/${encodeURIComponent(String(eventCode))}/Sessions/Register/${encodeURIComponent(String(customerIdOrRecordNumber))}` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestHeaders: Record<string, string> = {};
         if (contentType !== undefined) {
             requestHeaders["Content-Type"] = String(contentType);
@@ -3914,8 +3914,8 @@ export class ImpexiumClient extends ConnectorClientBase {
      * Get a List of Licenses
      * @remarks Get a List of Licenses
      */
-    public async getAListOfLicenses(id: string, pageNumber: string, contentType: string, options: ConnectorOperationOptions = {}): Promise<GetAListOfLicensesResponse> {
-        const requestPath = `/api/v1/Individuals/${id}/Licenses/${pageNumber}`;
+    public async getAListOfLicenses(id: string, pageNumber: number, contentType: string, options: ConnectorOperationOptions = {}): Promise<GetAListOfLicensesResponse> {
+        const requestPath = `/api/v1/Individuals/${encodeURIComponent(String(id))}/Licenses/${encodeURIComponent(String(pageNumber))}`;
         const requestHeaders: Record<string, string> = {};
         if (contentType !== undefined) {
             requestHeaders["Content-Type"] = String(contentType);
@@ -3930,12 +3930,12 @@ export class ImpexiumClient extends ConnectorClientBase {
      * List All Awards
      * @remarks List All Awards
      */
-    public listAllAwards(pageNumber: string, contentType: string, options: ListAllAwardsOptions = {}): ConnectorPagedAsyncIterableIterator<AwardData> {
+    public listAllAwards(pageNumber: number, contentType: string, options: ListAllAwardsOptions = {}): ConnectorPagedAsyncIterableIterator<AwardData> {
         const queryParams: string[] = [];
         if (options.year !== undefined) {
             queryParams.push(`Year=${encodeURIComponent(String(options.year))}`);
         }
-        const requestPath = `/api/v1/Awards/${pageNumber}` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
+        const requestPath = `/api/v1/Awards/${encodeURIComponent(String(pageNumber))}` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestHeaders: Record<string, string> = {};
         if (contentType !== undefined) {
             requestHeaders["Content-Type"] = String(contentType);
@@ -3956,12 +3956,12 @@ export class ImpexiumClient extends ConnectorClientBase {
      * Find Members (Individuals) by Name
      * @remarks Find Members (Individuals) by Name
      */
-    public async findMembersOrIndividualsByName(name: string, pageNumber: string, contentType: string, options: FindMembersOrIndividualsByNameOptions = {}): Promise<FindMembersOrIndividualsByNameResponse> {
+    public async findMembersOrIndividualsByName(name: string, pageNumber: number, contentType: string, options: FindMembersOrIndividualsByNameOptions = {}): Promise<FindMembersOrIndividualsByNameResponse> {
         const queryParams: string[] = [];
         if (options.includeEmail !== undefined) {
             queryParams.push(`includeEmail=${encodeURIComponent(String(options.includeEmail))}`);
         }
-        const requestPath = `/api/v1/Individuals/Members/FindByName/${name}/${pageNumber}` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
+        const requestPath = `/api/v1/Individuals/Members/FindByName/${encodeURIComponent(String(name))}/${encodeURIComponent(String(pageNumber))}` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestHeaders: Record<string, string> = {};
         if (contentType !== undefined) {
             requestHeaders["Content-Type"] = String(contentType);
@@ -3977,7 +3977,7 @@ export class ImpexiumClient extends ConnectorClientBase {
      * @remarks Get a List of All Services of an Organization
      */
     public async getAListOfAllServicesOfAnOrganization(id: string, contentType: string, options: ConnectorOperationOptions = {}): Promise<GetAListOfAllServicesOfAnOrganizationResponse> {
-        const requestPath = `/api/v1/Organizations/${id}/Services`;
+        const requestPath = `/api/v1/Organizations/${encodeURIComponent(String(id))}/Services`;
         const requestHeaders: Record<string, string> = {};
         if (contentType !== undefined) {
             requestHeaders["Content-Type"] = String(contentType);
@@ -3993,7 +3993,7 @@ export class ImpexiumClient extends ConnectorClientBase {
      * @remarks Add a Service to an Organization
      */
     public async addAServiceToAnOrganization(input: ServiceData, id: string, contentType: string, options: ConnectorOperationOptions = {}): Promise<ServiceData> {
-        const requestPath = `/api/v1/Organizations/${id}/Services`;
+        const requestPath = `/api/v1/Organizations/${encodeURIComponent(String(id))}/Services`;
         const requestHeaders: Record<string, string> = {};
         if (contentType !== undefined) {
             requestHeaders["Content-Type"] = String(contentType);
@@ -4009,7 +4009,7 @@ export class ImpexiumClient extends ConnectorClientBase {
      * @remarks Update Phone for an Individual
      */
     public async updatePhoneForAnIndividual(input: PhoneSaveData, idOrRecordNumber: string, id: string, contentType: string, options: ConnectorOperationOptions = {}): Promise<PhoneDataSet> {
-        const requestPath = `/api/v1/Individuals/${idOrRecordNumber}/Phones/${id}`;
+        const requestPath = `/api/v1/Individuals/${encodeURIComponent(String(idOrRecordNumber))}/Phones/${encodeURIComponent(String(id))}`;
         const requestHeaders: Record<string, string> = {};
         if (contentType !== undefined) {
             requestHeaders["Content-Type"] = String(contentType);
@@ -4025,7 +4025,7 @@ export class ImpexiumClient extends ConnectorClientBase {
      * @remarks Update Phone for an Organization
      */
     public async updatePhoneForAnOrganization(input: PhoneSaveData, idOrRecordNumber: string, id: string, contentType: string, options: ConnectorOperationOptions = {}): Promise<PhoneDataSet> {
-        const requestPath = `/api/v1/Organizations/${idOrRecordNumber}/Phones/${id}`;
+        const requestPath = `/api/v1/Organizations/${encodeURIComponent(String(idOrRecordNumber))}/Phones/${encodeURIComponent(String(id))}`;
         const requestHeaders: Record<string, string> = {};
         if (contentType !== undefined) {
             requestHeaders["Content-Type"] = String(contentType);
@@ -4041,7 +4041,7 @@ export class ImpexiumClient extends ConnectorClientBase {
      * @remarks Delete an Individual Web Link
      */
     public async deleteAnIndividualWebLink(input: DeleteAnIndividualWebLinkInput, idOrRecordNumber: string, contentType: string, options: ConnectorOperationOptions = {}): Promise<void> {
-        const requestPath = `/api/v1/Individuals/${idOrRecordNumber}/Links`;
+        const requestPath = `/api/v1/Individuals/${encodeURIComponent(String(idOrRecordNumber))}/Links`;
         const requestHeaders: Record<string, string> = {};
         if (contentType !== undefined) {
             requestHeaders["Content-Type"] = String(contentType);
@@ -4055,7 +4055,7 @@ export class ImpexiumClient extends ConnectorClientBase {
      * @remarks Add Web Link for Individual
      */
     public async addWebLinkForIndividual(input: AddWebLinkForIndividualInput, idOrRecordNumber: string, contentType: string, options: ConnectorOperationOptions = {}): Promise<void> {
-        const requestPath = `/api/v1/Individuals/${idOrRecordNumber}/Links`;
+        const requestPath = `/api/v1/Individuals/${encodeURIComponent(String(idOrRecordNumber))}/Links`;
         const requestHeaders: Record<string, string> = {};
         if (contentType !== undefined) {
             requestHeaders["Content-Type"] = String(contentType);
@@ -4069,7 +4069,7 @@ export class ImpexiumClient extends ConnectorClientBase {
      * @remarks Add Phone to Organization
      */
     public async addPhoneToOrganization(input: PhoneSaveData, idOrRecordNumber: string, contentType: string, options: ConnectorOperationOptions = {}): Promise<PhoneDataSet> {
-        const requestPath = `/api/v1/Organizations/${idOrRecordNumber}/Phones`;
+        const requestPath = `/api/v1/Organizations/${encodeURIComponent(String(idOrRecordNumber))}/Phones`;
         const requestHeaders: Record<string, string> = {};
         if (contentType !== undefined) {
             requestHeaders["Content-Type"] = String(contentType);
@@ -4084,12 +4084,12 @@ export class ImpexiumClient extends ConnectorClientBase {
      * Get Nominees by Committee
      * @remarks Get Nominees by Committee
      */
-    public async getNomineesByCommittee(code: string, pageNumber: string, contentType: string, options: GetNomineesByCommitteeOptions = {}): Promise<GetNomineesByCommitteeResponse> {
+    public async getNomineesByCommittee(code: string, pageNumber: number, contentType: string, options: GetNomineesByCommitteeOptions = {}): Promise<GetNomineesByCommitteeResponse> {
         const queryParams: string[] = [];
         if (options.term !== undefined) {
             queryParams.push(`Term=${encodeURIComponent(String(options.term))}`);
         }
-        const requestPath = `/api/v1/Committees/${code}/Nominations/${pageNumber}` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
+        const requestPath = `/api/v1/Committees/${encodeURIComponent(String(code))}/Nominations/${encodeURIComponent(String(pageNumber))}` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestHeaders: Record<string, string> = {};
         if (contentType !== undefined) {
             requestHeaders["Content-Type"] = String(contentType);
@@ -4104,8 +4104,8 @@ export class ImpexiumClient extends ConnectorClientBase {
      * Get Organization's Active Subscriptions
      * @remarks Get Organization's Active Subscriptions
      */
-    public async getOrganizationsActiveSubscriptions(id: string, pageNumber: string, contentType: string, options: ConnectorOperationOptions = {}): Promise<GetOrganizationsActiveSubscriptionsResponse> {
-        const requestPath = `/api/v1/Organizations/${id}/Subscriptions/${pageNumber}`;
+    public async getOrganizationsActiveSubscriptions(id: string, pageNumber: number, contentType: string, options: ConnectorOperationOptions = {}): Promise<GetOrganizationsActiveSubscriptionsResponse> {
+        const requestPath = `/api/v1/Organizations/${encodeURIComponent(String(id))}/Subscriptions/${encodeURIComponent(String(pageNumber))}`;
         const requestHeaders: Record<string, string> = {};
         if (contentType !== undefined) {
             requestHeaders["Content-Type"] = String(contentType);
@@ -4121,7 +4121,7 @@ export class ImpexiumClient extends ConnectorClientBase {
      * @remarks Delete an Organization Web Link
      */
     public async deleteAnOrganizationWebLink(input: DeleteAnOrganizationWebLinkInput, idOrRecordNumber: string, contentType: string, options: ConnectorOperationOptions = {}): Promise<void> {
-        const requestPath = `/api/v1/Organizations/${idOrRecordNumber}/Links`;
+        const requestPath = `/api/v1/Organizations/${encodeURIComponent(String(idOrRecordNumber))}/Links`;
         const requestHeaders: Record<string, string> = {};
         if (contentType !== undefined) {
             requestHeaders["Content-Type"] = String(contentType);
@@ -4135,7 +4135,7 @@ export class ImpexiumClient extends ConnectorClientBase {
      * @remarks Add Web Link for Organization
      */
     public async addWebLinkForOrganization(input: AddWebLinkForOrganizationInput, idOrRecordNumber: string, contentType: string, options: ConnectorOperationOptions = {}): Promise<void> {
-        const requestPath = `/api/v1/Organizations/${idOrRecordNumber}/Links`;
+        const requestPath = `/api/v1/Organizations/${encodeURIComponent(String(idOrRecordNumber))}/Links`;
         const requestHeaders: Record<string, string> = {};
         if (contentType !== undefined) {
             requestHeaders["Content-Type"] = String(contentType);
@@ -4149,7 +4149,7 @@ export class ImpexiumClient extends ConnectorClientBase {
      * @remarks Add Email to Organization
      */
     public async addEmailToOrganization(input: EmailData, id: string, contentType: string, options: ConnectorOperationOptions = {}): Promise<void> {
-        const requestPath = `/api/v1/Organizations/${id}/Emails`;
+        const requestPath = `/api/v1/Organizations/${encodeURIComponent(String(id))}/Emails`;
         const requestHeaders: Record<string, string> = {};
         if (contentType !== undefined) {
             requestHeaders["Content-Type"] = String(contentType);
@@ -4162,7 +4162,7 @@ export class ImpexiumClient extends ConnectorClientBase {
      * Get Organization's Relationships
      * @remarks Get Organization's Relationships
      */
-    public async getOrganizationsRelationships(id: string, pageNumber: string, contentType: string, options: GetOrganizationsRelationshipsOptions = {}): Promise<GetOrganizationsRelationshipsResponse> {
+    public async getOrganizationsRelationships(id: string, pageNumber: number, contentType: string, options: GetOrganizationsRelationshipsOptions = {}): Promise<GetOrganizationsRelationshipsResponse> {
         const queryParams: string[] = [];
         if (options.relationshipName !== undefined) {
             queryParams.push(`relationshipName.=${encodeURIComponent(String(options.relationshipName))}`);
@@ -4170,7 +4170,7 @@ export class ImpexiumClient extends ConnectorClientBase {
         if (options.includesDetails !== undefined) {
             queryParams.push(`includesDetails=${encodeURIComponent(String(options.includesDetails))}`);
         }
-        const requestPath = `/api/v1/Organizations/${id}/Relationships/${pageNumber}` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
+        const requestPath = `/api/v1/Organizations/${encodeURIComponent(String(id))}/Relationships/${encodeURIComponent(String(pageNumber))}` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestHeaders: Record<string, string> = {};
         if (contentType !== undefined) {
             requestHeaders["Content-Type"] = String(contentType);
@@ -4186,7 +4186,7 @@ export class ImpexiumClient extends ConnectorClientBase {
      * @remarks Add or Update Address to Organization
      */
     public async addOrUpdateAddressToOrganization(input: AddressSaveData, idOrRecordNumber: string, contentType: string, options: ConnectorOperationOptions = {}): Promise<AddressSaveData> {
-        const requestPath = `/api/v1/Organizations/${idOrRecordNumber}/Addresses`;
+        const requestPath = `/api/v1/Organizations/${encodeURIComponent(String(idOrRecordNumber))}/Addresses`;
         const requestHeaders: Record<string, string> = {};
         if (contentType !== undefined) {
             requestHeaders["Content-Type"] = String(contentType);
@@ -4202,7 +4202,7 @@ export class ImpexiumClient extends ConnectorClientBase {
      * @remarks Add or Update a List of Custom Fields Per Individual
      */
     public async addOrUpdateAListOfCustomFieldsPerIndividual(input: AddOrUpdateAListOfCustomFieldsPerIndividualInput, idOrRecordNumber: string, contentType: string, options: ConnectorOperationOptions = {}): Promise<Array<CustomFieldResultData>> {
-        const requestPath = `/api/v1/Individuals/${idOrRecordNumber}/CustomFieldsList`;
+        const requestPath = `/api/v1/Individuals/${encodeURIComponent(String(idOrRecordNumber))}/CustomFieldsList`;
         const requestHeaders: Record<string, string> = {};
         if (contentType !== undefined) {
             requestHeaders["Content-Type"] = String(contentType);
@@ -4217,8 +4217,8 @@ export class ImpexiumClient extends ConnectorClientBase {
      * Get Upcoming Events
      * @remarks Get Upcoming Events
      */
-    public async getUpcomingEvents(pageNumber: string, contentType: string, options: ConnectorOperationOptions = {}): Promise<GetUpcomingEventsResponse> {
-        const requestPath = `/api/v1/Events/Upcoming/${pageNumber}`;
+    public async getUpcomingEvents(pageNumber: number, contentType: string, options: ConnectorOperationOptions = {}): Promise<GetUpcomingEventsResponse> {
+        const requestPath = `/api/v1/Events/Upcoming/${encodeURIComponent(String(pageNumber))}`;
         const requestHeaders: Record<string, string> = {};
         if (contentType !== undefined) {
             requestHeaders["Content-Type"] = String(contentType);
@@ -4234,7 +4234,7 @@ export class ImpexiumClient extends ConnectorClientBase {
      * @remarks Add Phone to Individual
      */
     public async addPhoneToIndividual(input: PhoneSaveData, idOrRecordNumber: string, contentType: string, options: ConnectorOperationOptions = {}): Promise<PhoneDataSet> {
-        const requestPath = `/api/v1/Individuals/${idOrRecordNumber}/Phones`;
+        const requestPath = `/api/v1/Individuals/${encodeURIComponent(String(idOrRecordNumber))}/Phones`;
         const requestHeaders: Record<string, string> = {};
         if (contentType !== undefined) {
             requestHeaders["Content-Type"] = String(contentType);
@@ -4249,12 +4249,12 @@ export class ImpexiumClient extends ConnectorClientBase {
      * Get Committee Information for an Individual
      * @remarks Get Committee Information for an Individual
      */
-    public async getCommitteeInformationForAnIndividual(id: string, pageNumber: string, contentType: string, options: GetCommitteeInformationForAnIndividualOptions = {}): Promise<GetCommitteeInformationForAnIndividualResponse> {
+    public async getCommitteeInformationForAnIndividual(id: string, pageNumber: number, contentType: string, options: GetCommitteeInformationForAnIndividualOptions = {}): Promise<GetCommitteeInformationForAnIndividualResponse> {
         const queryParams: string[] = [];
         if (options.includeInactive !== undefined) {
             queryParams.push(`includeInactive=${encodeURIComponent(String(options.includeInactive))}`);
         }
-        const requestPath = `/api/v1/Individuals/${id}/Committees/${pageNumber}` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
+        const requestPath = `/api/v1/Individuals/${encodeURIComponent(String(id))}/Committees/${encodeURIComponent(String(pageNumber))}` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestHeaders: Record<string, string> = {};
         if (contentType !== undefined) {
             requestHeaders["Content-Type"] = String(contentType);
@@ -4270,7 +4270,7 @@ export class ImpexiumClient extends ConnectorClientBase {
      * @remarks Get Organization Custom Field Values
      */
     public async getOrganizationCustomFieldValues(id: string, contentType: string, options: ConnectorOperationOptions = {}): Promise<Array<CustomFieldData>> {
-        const requestPath = `/api/v1/Organizations/${id}/CustomFields`;
+        const requestPath = `/api/v1/Organizations/${encodeURIComponent(String(id))}/CustomFields`;
         const requestHeaders: Record<string, string> = {};
         if (contentType !== undefined) {
             requestHeaders["Content-Type"] = String(contentType);
@@ -4286,7 +4286,7 @@ export class ImpexiumClient extends ConnectorClientBase {
      * @remarks Get Organization Active Memberships
      */
     public async getOrganizationActiveMemberships(id: string, contentType: string, options: ConnectorOperationOptions = {}): Promise<Array<MembershipData>> {
-        const requestPath = `/api/v1/Organizations/${id}/Memberships/Active`;
+        const requestPath = `/api/v1/Organizations/${encodeURIComponent(String(id))}/Memberships/Active`;
         const requestHeaders: Record<string, string> = {};
         if (contentType !== undefined) {
             requestHeaders["Content-Type"] = String(contentType);
@@ -4301,7 +4301,7 @@ export class ImpexiumClient extends ConnectorClientBase {
      * Get All Events
      * @remarks Get All Events
      */
-    public async getAllEvents(pageNumber: string, contentType: string, options: GetAllEventsOptions = {}): Promise<GetAllEventsResponse> {
+    public async getAllEvents(pageNumber: number, contentType: string, options: GetAllEventsOptions = {}): Promise<GetAllEventsResponse> {
         const queryParams: string[] = [];
         if (options.code !== undefined) {
             queryParams.push(`Code=${encodeURIComponent(String(options.code))}`);
@@ -4312,7 +4312,7 @@ export class ImpexiumClient extends ConnectorClientBase {
         if (options.tag !== undefined) {
             queryParams.push(`Tag=${encodeURIComponent(String(options.tag))}`);
         }
-        const requestPath = `/api/v1/Events/All/${pageNumber}` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
+        const requestPath = `/api/v1/Events/All/${encodeURIComponent(String(pageNumber))}` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestHeaders: Record<string, string> = {};
         if (contentType !== undefined) {
             requestHeaders["Content-Type"] = String(contentType);
@@ -4328,7 +4328,7 @@ export class ImpexiumClient extends ConnectorClientBase {
      * @remarks Get Individual Active Memberships
      */
     public async getIndividualActiveMemberships(id: string, contentType: string, options: ConnectorOperationOptions = {}): Promise<Array<MembershipData>> {
-        const requestPath = `/api/v1/Individuals/${id}/Memberships/Active`;
+        const requestPath = `/api/v1/Individuals/${encodeURIComponent(String(id))}/Memberships/Active`;
         const requestHeaders: Record<string, string> = {};
         if (contentType !== undefined) {
             requestHeaders["Content-Type"] = String(contentType);
@@ -4343,12 +4343,12 @@ export class ImpexiumClient extends ConnectorClientBase {
      * Get All Event Registrations Information for an Individual
      * @remarks Get All Event Registrations Information for an Individual
      */
-    public async getAllEventRegistrationsInformationForAnIndividual(idOrRecordNumber: string, pageNumber: string, contentType: string, options: GetAllEventRegistrationsInformationForAnIndividualOptions = {}): Promise<GetAllEventRegistrationsInformationForAnIndividualResponse> {
+    public async getAllEventRegistrationsInformationForAnIndividual(idOrRecordNumber: string, pageNumber: number, contentType: string, options: GetAllEventRegistrationsInformationForAnIndividualOptions = {}): Promise<GetAllEventRegistrationsInformationForAnIndividualResponse> {
         const queryParams: string[] = [];
         if (options.eventCode !== undefined) {
             queryParams.push(`eventCode=${encodeURIComponent(String(options.eventCode))}`);
         }
-        const requestPath = `/api/v1/Individuals/${idOrRecordNumber}/Registrations/${pageNumber}` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
+        const requestPath = `/api/v1/Individuals/${encodeURIComponent(String(idOrRecordNumber))}/Registrations/${encodeURIComponent(String(pageNumber))}` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestHeaders: Record<string, string> = {};
         if (contentType !== undefined) {
             requestHeaders["Content-Type"] = String(contentType);
@@ -4363,7 +4363,7 @@ export class ImpexiumClient extends ConnectorClientBase {
      * Get Individual's Relationships
      * @remarks Get Individual's Relationships
      */
-    public async getIndividualsRelationships(id: string, pageNumber: string, contentType: string, options: GetIndividualsRelationshipsOptions = {}): Promise<GetIndividualsRelationshipsResponse> {
+    public async getIndividualsRelationships(id: string, pageNumber: number, contentType: string, options: GetIndividualsRelationshipsOptions = {}): Promise<GetIndividualsRelationshipsResponse> {
         const queryParams: string[] = [];
         if (options.relationshipName !== undefined) {
             queryParams.push(`relationshipName=${encodeURIComponent(String(options.relationshipName))}`);
@@ -4371,7 +4371,7 @@ export class ImpexiumClient extends ConnectorClientBase {
         if (options.includeDetails !== undefined) {
             queryParams.push(`includeDetails=${encodeURIComponent(String(options.includeDetails))}`);
         }
-        const requestPath = `/api/v1/Individuals/${id}/Relationships/${pageNumber}` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
+        const requestPath = `/api/v1/Individuals/${encodeURIComponent(String(id))}/Relationships/${encodeURIComponent(String(pageNumber))}` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestHeaders: Record<string, string> = {};
         if (contentType !== undefined) {
             requestHeaders["Content-Type"] = String(contentType);
@@ -4387,7 +4387,7 @@ export class ImpexiumClient extends ConnectorClientBase {
      * @remarks Update an Individual Email
      */
     public async updateAnIndividualEmail(input: UpdateAnIndividualEmailInput, idOrRecordNumber: string, currentEmailAddress: string, contentType: string, options: ConnectorOperationOptions = {}): Promise<void> {
-        const requestPath = `/api/v1/Individuals/${idOrRecordNumber}/Emails/${currentEmailAddress}`;
+        const requestPath = `/api/v1/Individuals/${encodeURIComponent(String(idOrRecordNumber))}/Emails/${encodeURIComponent(String(currentEmailAddress))}`;
         const requestHeaders: Record<string, string> = {};
         if (contentType !== undefined) {
             requestHeaders["Content-Type"] = String(contentType);
@@ -4401,7 +4401,7 @@ export class ImpexiumClient extends ConnectorClientBase {
      * @remarks Save Relationship for Organization
      */
     public async saveRelationshipForOrganization(input: SaveRelationshipForOrganizationInput, id: string, contentType: string, options: ConnectorOperationOptions = {}): Promise<void> {
-        const requestPath = `/api/v1/Organizations/${id}/Relationships`;
+        const requestPath = `/api/v1/Organizations/${encodeURIComponent(String(id))}/Relationships`;
         const requestHeaders: Record<string, string> = {};
         if (contentType !== undefined) {
             requestHeaders["Content-Type"] = String(contentType);
@@ -4435,7 +4435,7 @@ export class ImpexiumClient extends ConnectorClientBase {
      * @remarks Add Email to Individual
      */
     public async addEmailToIndividual(input: AddEmailToIndividualInput, idOrRecordNumber: string, contentType: string, options: ConnectorOperationOptions = {}): Promise<EmailData> {
-        const requestPath = `/api/v1/Individuals/${idOrRecordNumber}/Emails`;
+        const requestPath = `/api/v1/Individuals/${encodeURIComponent(String(idOrRecordNumber))}/Emails`;
         const requestHeaders: Record<string, string> = {};
         if (contentType !== undefined) {
             requestHeaders["Content-Type"] = String(contentType);
@@ -4451,7 +4451,7 @@ export class ImpexiumClient extends ConnectorClientBase {
      * @remarks Add or Update Address to Individual
      */
     public async addOrUpdateAddressToIndividual(input: AddressSaveData, idOrRecordNumber: string, contentType: string, options: ConnectorOperationOptions = {}): Promise<AddressSaveData> {
-        const requestPath = `/api/v1/Individuals/${idOrRecordNumber}/Addresses`;
+        const requestPath = `/api/v1/Individuals/${encodeURIComponent(String(idOrRecordNumber))}/Addresses`;
         const requestHeaders: Record<string, string> = {};
         if (contentType !== undefined) {
             requestHeaders["Content-Type"] = String(contentType);
@@ -4466,12 +4466,12 @@ export class ImpexiumClient extends ConnectorClientBase {
      * Find Members (Individuals) by First Name and Last Name
      * @remarks Find Members (Individuals) by First Name and Last Name
      */
-    public async findMembersOrIndividualsByFirstAndLastName(firstName: string, lastName: string, pageNumber: string, contentType: string, options: FindMembersOrIndividualsByFirstAndLastNameOptions = {}): Promise<FindMembersOrIndividualsByFirstAndLastNameResponse> {
+    public async findMembersOrIndividualsByFirstAndLastName(firstName: string, lastName: string, pageNumber: number, contentType: string, options: FindMembersOrIndividualsByFirstAndLastNameOptions = {}): Promise<FindMembersOrIndividualsByFirstAndLastNameResponse> {
         const queryParams: string[] = [];
         if (options.includeEmail !== undefined) {
             queryParams.push(`includeEmail=${encodeURIComponent(String(options.includeEmail))}`);
         }
-        const requestPath = `/api/v1/Individuals/Members/FindByName/${firstName}/${lastName}/${pageNumber}` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
+        const requestPath = `/api/v1/Individuals/Members/FindByName/${encodeURIComponent(String(firstName))}/${encodeURIComponent(String(lastName))}/${encodeURIComponent(String(pageNumber))}` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestHeaders: Record<string, string> = {};
         if (contentType !== undefined) {
             requestHeaders["Content-Type"] = String(contentType);
@@ -4486,7 +4486,7 @@ export class ImpexiumClient extends ConnectorClientBase {
      * Get Committee Members by committee ID or code
      * @remarks Get Committee Members by Committee ID or Code
      */
-    public async getCommitteeMembersByCommitteeIdOrCode(idOrCode: string, pageNumber: string, contentType: string, options: GetCommitteeMembersByCommitteeIdOrCodeOptions = {}): Promise<void> {
+    public async getCommitteeMembersByCommitteeIdOrCode(idOrCode: string, pageNumber: number, contentType: string, options: GetCommitteeMembersByCommitteeIdOrCodeOptions = {}): Promise<void> {
         const queryParams: string[] = [];
         if (options.term !== undefined) {
             queryParams.push(`Term=${encodeURIComponent(String(options.term))}`);
@@ -4494,7 +4494,7 @@ export class ImpexiumClient extends ConnectorClientBase {
         if (options.positionCodes !== undefined) {
             queryParams.push(`positionCodes=${encodeURIComponent(String(options.positionCodes))}`);
         }
-        const requestPath = `/api/v1/Committees/${idOrCode}/Members/${pageNumber}` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
+        const requestPath = `/api/v1/Committees/${encodeURIComponent(String(idOrCode))}/Members/${encodeURIComponent(String(pageNumber))}` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestHeaders: Record<string, string> = {};
         if (contentType !== undefined) {
             requestHeaders["Content-Type"] = String(contentType);
@@ -4508,7 +4508,7 @@ export class ImpexiumClient extends ConnectorClientBase {
      * @remarks Add Activity.
      */
     public async addActivity(input: AddActivityInput, id: string, contentType: string, options: ConnectorOperationOptions = {}): Promise<void> {
-        const requestPath = `/api/v1/Individuals/${id}/Activities`;
+        const requestPath = `/api/v1/Individuals/${encodeURIComponent(String(id))}/Activities`;
         const requestHeaders: Record<string, string> = {};
         if (contentType !== undefined) {
             requestHeaders["Content-Type"] = String(contentType);
@@ -4521,12 +4521,12 @@ export class ImpexiumClient extends ConnectorClientBase {
      * Find Individual by Id or Email or Record Number
      * @remarks Find Individual by Id or Email.
      */
-    public async findIndividualIdOrEmail(idOrRecordNumberOrEmail: string, pageNumber: string, includeDetails: string, contentType: string, options: ConnectorOperationOptions = {}): Promise<FindIndividualIdOrEmailResponse> {
+    public async findIndividualIdOrEmail(idOrRecordNumberOrEmail: string, pageNumber: number, includeDetails: boolean, contentType: string, options: ConnectorOperationOptions = {}): Promise<FindIndividualIdOrEmailResponse> {
         const queryParams: string[] = [];
         if (includeDetails !== undefined) {
             queryParams.push(`IncludeDetails=${encodeURIComponent(String(includeDetails))}`);
         }
-        const requestPath = `/api/v1/Individuals/Profile/${idOrRecordNumberOrEmail}/${pageNumber}/` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
+        const requestPath = `/api/v1/Individuals/Profile/${encodeURIComponent(String(idOrRecordNumberOrEmail))}/${encodeURIComponent(String(pageNumber))}/` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestHeaders: Record<string, string> = {};
         if (contentType !== undefined) {
             requestHeaders["Content-Type"] = String(contentType);
@@ -4542,7 +4542,7 @@ export class ImpexiumClient extends ConnectorClientBase {
      * @remarks Add Relationship to Individual.
      */
     public async addRelationshipToIndividual(input: AddRelationshipToIndividualInput, id: string, contentType: string, options: ConnectorOperationOptions = {}): Promise<void> {
-        const requestPath = `/api/v1/Individuals/${id}/Relationships`;
+        const requestPath = `/api/v1/Individuals/${encodeURIComponent(String(id))}/Relationships`;
         const requestHeaders: Record<string, string> = {};
         if (contentType !== undefined) {
             requestHeaders["Content-Type"] = String(contentType);
@@ -4556,7 +4556,7 @@ export class ImpexiumClient extends ConnectorClientBase {
      * @remarks Add a new Education Credit to an Individual.
      */
     public async addIndividualEducationCredit(input: EducationCreditData, idOrRecordNumber: string, contentType: string, options: ConnectorOperationOptions = {}): Promise<void> {
-        const requestPath = `/api/v1/Individuals/${idOrRecordNumber}/EducationCredits`;
+        const requestPath = `/api/v1/Individuals/${encodeURIComponent(String(idOrRecordNumber))}/EducationCredits`;
         const requestHeaders: Record<string, string> = {};
         if (contentType !== undefined) {
             requestHeaders["Content-Type"] = String(contentType);
@@ -4570,7 +4570,7 @@ export class ImpexiumClient extends ConnectorClientBase {
      * @remarks Add a Note to an Individual.
      */
     public async addIndividualNote(input: NoteData, id: string, contentType: string, options: ConnectorOperationOptions = {}): Promise<void> {
-        const requestPath = `/api/v1/Individuals/${id}/Notes`;
+        const requestPath = `/api/v1/Individuals/${encodeURIComponent(String(id))}/Notes`;
         const requestHeaders: Record<string, string> = {};
         if (contentType !== undefined) {
             requestHeaders["Content-Type"] = String(contentType);
@@ -4583,7 +4583,7 @@ export class ImpexiumClient extends ConnectorClientBase {
      * Lookup Individuals
      * @remarks Lookup Individuals by Name
      */
-    public async individualsLookupByName(pageNumber: string, name: string, includeOrgAddresses: string, contentType: string, options: ConnectorOperationOptions = {}): Promise<IndividualsLookupByNameResponse> {
+    public async individualsLookupByName(pageNumber: number, name: string, includeOrgAddresses: boolean, contentType: string, options: ConnectorOperationOptions = {}): Promise<IndividualsLookupByNameResponse> {
         const queryParams: string[] = [];
         if (name !== undefined) {
             queryParams.push(`name=${encodeURIComponent(String(name))}`);
@@ -4591,7 +4591,7 @@ export class ImpexiumClient extends ConnectorClientBase {
         if (includeOrgAddresses !== undefined) {
             queryParams.push(`includeOrgAddresses=${encodeURIComponent(String(includeOrgAddresses))}`);
         }
-        const requestPath = `/api/v1/Individuals/Lookup/${pageNumber}` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
+        const requestPath = `/api/v1/Individuals/Lookup/${encodeURIComponent(String(pageNumber))}` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestHeaders: Record<string, string> = {};
         if (contentType !== undefined) {
             requestHeaders["Content-Type"] = String(contentType);
@@ -4607,7 +4607,7 @@ export class ImpexiumClient extends ConnectorClientBase {
      * @remarks Add Individual to Committee.
      */
     public async addToCommittee(input: CommitteeMemberCreateData, code: string, contentType: string, options: ConnectorOperationOptions = {}): Promise<AddToCommitteeResponse> {
-        const requestPath = `/api/v1/Committees/${code}/Members`;
+        const requestPath = `/api/v1/Committees/${encodeURIComponent(String(code))}/Members`;
         const requestHeaders: Record<string, string> = {};
         if (contentType !== undefined) {
             requestHeaders["Content-Type"] = String(contentType);
@@ -4623,7 +4623,7 @@ export class ImpexiumClient extends ConnectorClientBase {
      * @remarks Update Committee Member.
      */
     public async updateCommitteeMember(input: CommitteeMemberUpdateData, code: string, memberRecordNumber: string, currentPositionCode: string, contentType: string, options: ConnectorOperationOptions = {}): Promise<void> {
-        const requestPath = `/api/v1/Committees/${code}/Members/${memberRecordNumber}/${currentPositionCode}`;
+        const requestPath = `/api/v1/Committees/${encodeURIComponent(String(code))}/Members/${encodeURIComponent(String(memberRecordNumber))}/${encodeURIComponent(String(currentPositionCode))}`;
         const requestHeaders: Record<string, string> = {};
         if (contentType !== undefined) {
             requestHeaders["Content-Type"] = String(contentType);
@@ -4653,7 +4653,7 @@ export class ImpexiumClient extends ConnectorClientBase {
      * @remarks Update Organization.
      */
     public async updateOrganization(input: UpdateOrganizationInput, id: string, contentType: string, options: ConnectorOperationOptions = {}): Promise<OrganizationData> {
-        const requestPath = `/api/v1/Organizations/${id}`;
+        const requestPath = `/api/v1/Organizations/${encodeURIComponent(String(id))}`;
         const requestHeaders: Record<string, string> = {};
         if (contentType !== undefined) {
             requestHeaders["Content-Type"] = String(contentType);
@@ -4668,12 +4668,12 @@ export class ImpexiumClient extends ConnectorClientBase {
      * Find Organization by Id or Record Number
      * @remarks Get organization's profile information by ID or Record Number
      */
-    public async getOrganizationProfile(idOrRecordnumber: string, pageNumber: string, includeDescription: string, contentType: string, options: ConnectorOperationOptions = {}): Promise<OrganizationData> {
+    public async getOrganizationProfile(idOrRecordnumber: string, pageNumber: number, includeDescription: boolean, contentType: string, options: ConnectorOperationOptions = {}): Promise<OrganizationData> {
         const queryParams: string[] = [];
         if (includeDescription !== undefined) {
             queryParams.push(`includeDescription=${encodeURIComponent(String(includeDescription))}`);
         }
-        const requestPath = `/api/v1/Organizations/Profile/${idOrRecordnumber}/${pageNumber}` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
+        const requestPath = `/api/v1/Organizations/Profile/${encodeURIComponent(String(idOrRecordnumber))}/${encodeURIComponent(String(pageNumber))}` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestHeaders: Record<string, string> = {};
         if (contentType !== undefined) {
             requestHeaders["Content-Type"] = String(contentType);
@@ -4689,7 +4689,7 @@ export class ImpexiumClient extends ConnectorClientBase {
      * @remarks Add a Note to an Organization.
      */
     public async addOrganizationNote(input: NoteData, id: string, contentType: string, options: ConnectorOperationOptions = {}): Promise<void> {
-        const requestPath = `/api/v1/Organizations/${id}/Notes`;
+        const requestPath = `/api/v1/Organizations/${encodeURIComponent(String(id))}/Notes`;
         const requestHeaders: Record<string, string> = {};
         if (contentType !== undefined) {
             requestHeaders["Content-Type"] = String(contentType);
@@ -4702,7 +4702,7 @@ export class ImpexiumClient extends ConnectorClientBase {
      * Lookup Organizations
      * @remarks Lookup Organizations by Name or Acronym
      */
-    public async organizationLookupByName(pageNumber: string, name: string, includeAddresses: string, contentType: string, options: ConnectorOperationOptions = {}): Promise<OrganizationLookupByNameResponse> {
+    public async organizationLookupByName(pageNumber: number, name: string, includeAddresses: boolean, contentType: string, options: ConnectorOperationOptions = {}): Promise<OrganizationLookupByNameResponse> {
         const queryParams: string[] = [];
         if (name !== undefined) {
             queryParams.push(`name=${encodeURIComponent(String(name))}`);
@@ -4710,7 +4710,7 @@ export class ImpexiumClient extends ConnectorClientBase {
         if (includeAddresses !== undefined) {
             queryParams.push(`includeAddresses=${encodeURIComponent(String(includeAddresses))}`);
         }
-        const requestPath = `/api/v1/Organizations/Lookup/${pageNumber}` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
+        const requestPath = `/api/v1/Organizations/Lookup/${encodeURIComponent(String(pageNumber))}` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestHeaders: Record<string, string> = {};
         if (contentType !== undefined) {
             requestHeaders["Content-Type"] = String(contentType);
@@ -4725,7 +4725,7 @@ export class ImpexiumClient extends ConnectorClientBase {
      * Get All Committees
      * @remarks Get All Committees
      */
-    public async getAllCommittees(pageNumber: string, contentType: string, options: GetAllCommitteesOptions = {}): Promise<GetAllCommitteesResponse> {
+    public async getAllCommittees(pageNumber: number, contentType: string, options: GetAllCommitteesOptions = {}): Promise<GetAllCommitteesResponse> {
         const queryParams: string[] = [];
         if (options.code !== undefined) {
             queryParams.push(`Code=${encodeURIComponent(String(options.code))}`);
@@ -4739,7 +4739,7 @@ export class ImpexiumClient extends ConnectorClientBase {
         if (options.activeOnly !== undefined) {
             queryParams.push(`activeOnly=${encodeURIComponent(String(options.activeOnly))}`);
         }
-        const requestPath = `/api/v1/Committees/${pageNumber}` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
+        const requestPath = `/api/v1/Committees/${encodeURIComponent(String(pageNumber))}` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestHeaders: Record<string, string> = {};
         if (contentType !== undefined) {
             requestHeaders["Content-Type"] = String(contentType);
@@ -4755,7 +4755,7 @@ export class ImpexiumClient extends ConnectorClientBase {
      * @remarks Get Positions by Committee
      */
     public async getPositionsByCommittee(code: string, contentType: string, options: ConnectorOperationOptions = {}): Promise<GetPositionsByCommitteeResponse> {
-        const requestPath = `/api/v1/Committees/${code}/Positions`;
+        const requestPath = `/api/v1/Committees/${encodeURIComponent(String(code))}/Positions`;
         const requestHeaders: Record<string, string> = {};
         if (contentType !== undefined) {
             requestHeaders["Content-Type"] = String(contentType);
@@ -4770,8 +4770,8 @@ export class ImpexiumClient extends ConnectorClientBase {
      * Get Sub-Committees
      * @remarks Get Sub-Committees
      */
-    public async getSubCommittees(code: string, pageNumber: string, contentType: string, options: ConnectorOperationOptions = {}): Promise<GetSubCommitteesResponse> {
-        const requestPath = `/api/v1/Committees/${code}/subcommittees/${pageNumber}`;
+    public async getSubCommittees(code: string, pageNumber: number, contentType: string, options: ConnectorOperationOptions = {}): Promise<GetSubCommitteesResponse> {
+        const requestPath = `/api/v1/Committees/${encodeURIComponent(String(code))}/subcommittees/${encodeURIComponent(String(pageNumber))}`;
         const requestHeaders: Record<string, string> = {};
         if (contentType !== undefined) {
             requestHeaders["Content-Type"] = String(contentType);
@@ -4786,8 +4786,8 @@ export class ImpexiumClient extends ConnectorClientBase {
      * Get Individual's Active Subscriptions
      * @remarks Get Individual's Active Subscriptions
      */
-    public async getIndividualsActiveSubscriptions(id: string, pageNumber: string, contentType: string, options: ConnectorOperationOptions = {}): Promise<GetIndividualsActiveSubscriptionsResponse> {
-        const requestPath = `/api/v1/Individuals/${id}/Subscriptions/All/${pageNumber}`;
+    public async getIndividualsActiveSubscriptions(id: string, pageNumber: number, contentType: string, options: ConnectorOperationOptions = {}): Promise<GetIndividualsActiveSubscriptionsResponse> {
+        const requestPath = `/api/v1/Individuals/${encodeURIComponent(String(id))}/Subscriptions/All/${encodeURIComponent(String(pageNumber))}`;
         const requestHeaders: Record<string, string> = {};
         if (contentType !== undefined) {
             requestHeaders["Content-Type"] = String(contentType);
@@ -4802,7 +4802,7 @@ export class ImpexiumClient extends ConnectorClientBase {
      * List all Individuals
      * @remarks List all Individuals
      */
-    public listAllIndividuals(pageNumber: string, contentType: string, options: ListAllIndividualsOptions = {}): ConnectorPagedAsyncIterableIterator<IndividualData> {
+    public listAllIndividuals(pageNumber: number, contentType: string, options: ListAllIndividualsOptions = {}): ConnectorPagedAsyncIterableIterator<IndividualData> {
         const queryParams: string[] = [];
         if (options.name !== undefined) {
             queryParams.push(`Name=${encodeURIComponent(String(options.name))}`);
@@ -4813,7 +4813,7 @@ export class ImpexiumClient extends ConnectorClientBase {
         if (options.oldId !== undefined) {
             queryParams.push(`oldID=${encodeURIComponent(String(options.oldId))}`);
         }
-        const requestPath = `/api/v1/Individuals/${pageNumber}` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
+        const requestPath = `/api/v1/Individuals/${encodeURIComponent(String(pageNumber))}` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestHeaders: Record<string, string> = {};
         if (contentType !== undefined) {
             requestHeaders["Content-Type"] = String(contentType);
@@ -4834,7 +4834,7 @@ export class ImpexiumClient extends ConnectorClientBase {
      * Find Customer by Phone Number
      * @remarks Find Customer by Phone Number.
      */
-    public async findCustomerPhone(pageNumber: string, phoneNumber: string, includeAddress: string, includePhone: string, includeEmail: string, contentType: string, options: ConnectorOperationOptions = {}): Promise<FindCustomerPhoneResponse> {
+    public async findCustomerPhone(pageNumber: string, phoneNumber: string, includeAddress: boolean, includePhone: boolean, includeEmail: boolean, contentType: string, options: ConnectorOperationOptions = {}): Promise<FindCustomerPhoneResponse> {
         const queryParams: string[] = [];
         if (phoneNumber !== undefined) {
             queryParams.push(`phoneNumber=${encodeURIComponent(String(phoneNumber))}`);
@@ -4848,7 +4848,7 @@ export class ImpexiumClient extends ConnectorClientBase {
         if (includeEmail !== undefined) {
             queryParams.push(`includeEmail=${encodeURIComponent(String(includeEmail))}`);
         }
-        const requestPath = `/api/v1/Customers/${pageNumber}` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
+        const requestPath = `/api/v1/Customers/${encodeURIComponent(String(pageNumber))}` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestHeaders: Record<string, string> = {};
         if (contentType !== undefined) {
             requestHeaders["Content-Type"] = String(contentType);
@@ -4864,7 +4864,7 @@ export class ImpexiumClient extends ConnectorClientBase {
      * @remarks Mark the Registrant as Attended for the specified Events.
      */
     public async markRegistrantAttended(input: MarkRegistrantAttendedInput, recordNumber: string, contentType: string, options: ConnectorOperationOptions = {}): Promise<void> {
-        const requestPath = `/api/v1/Events/Registrants/${recordNumber}/Attended`;
+        const requestPath = `/api/v1/Events/Registrants/${encodeURIComponent(String(recordNumber))}/Attended`;
         const requestHeaders: Record<string, string> = {};
         if (contentType !== undefined) {
             requestHeaders["Content-Type"] = String(contentType);
@@ -4878,7 +4878,7 @@ export class ImpexiumClient extends ConnectorClientBase {
      * @remarks Add a new Award Nomination.
      */
     public async addAwardsAwardNomination(input: AwardNominationData, id: string, contentType: string, options: ConnectorOperationOptions = {}): Promise<void> {
-        const requestPath = `/api/v1/Awards/${id}/Nominations`;
+        const requestPath = `/api/v1/Awards/${encodeURIComponent(String(id))}/Nominations`;
         const requestHeaders: Record<string, string> = {};
         if (contentType !== undefined) {
             requestHeaders["Content-Type"] = String(contentType);
@@ -4892,7 +4892,7 @@ export class ImpexiumClient extends ConnectorClientBase {
      * @remarks Update an existing Award Nomination.
      */
     public async updateAwardAwardNomination(input: UpdateAwardNominationData, id: string, nomineeRecordNumber: string, contentType: string, options: ConnectorOperationOptions = {}): Promise<void> {
-        const requestPath = `/api/v1/Awards/${id}/Nominations/${nomineeRecordNumber}`;
+        const requestPath = `/api/v1/Awards/${encodeURIComponent(String(id))}/Nominations/${encodeURIComponent(String(nomineeRecordNumber))}`;
         const requestHeaders: Record<string, string> = {};
         if (contentType !== undefined) {
             requestHeaders["Content-Type"] = String(contentType);
@@ -4905,12 +4905,12 @@ export class ImpexiumClient extends ConnectorClientBase {
      * List Award Individual Recipients
      * @remarks List all Individuals that are Award Recipients.
      */
-    public getAwardIndividualAwardRecipients(pageNumber: string, id: string, includeDetails: string, contentType: string, options: ConnectorOperationOptions = {}): ConnectorPagedAsyncIterableIterator<AwardRecipientIndividualData> {
+    public getAwardIndividualAwardRecipients(pageNumber: number, id: string, includeDetails: boolean, contentType: string, options: ConnectorOperationOptions = {}): ConnectorPagedAsyncIterableIterator<AwardRecipientIndividualData> {
         const queryParams: string[] = [];
         if (includeDetails !== undefined) {
             queryParams.push(`includeDetails=${encodeURIComponent(String(includeDetails))}`);
         }
-        const requestPath = `/api/v1/Awards/${id}/Recipients/Individuals/${pageNumber}` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
+        const requestPath = `/api/v1/Awards/${encodeURIComponent(String(id))}/Recipients/Individuals/${encodeURIComponent(String(pageNumber))}` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestHeaders: Record<string, string> = {};
         if (contentType !== undefined) {
             requestHeaders["Content-Type"] = String(contentType);
@@ -4931,12 +4931,12 @@ export class ImpexiumClient extends ConnectorClientBase {
      * List Award Organization Recipients
      * @remarks List all Organizations that are Award Recipients.
      */
-    public getAwardOrganizationAwardRecipients(pageNumber: string, id: string, includeDetails: string, contentType: string, options: ConnectorOperationOptions = {}): ConnectorPagedAsyncIterableIterator<AwardRecipientOrganizationData> {
+    public getAwardOrganizationAwardRecipients(pageNumber: number, id: string, includeDetails: boolean, contentType: string, options: ConnectorOperationOptions = {}): ConnectorPagedAsyncIterableIterator<AwardRecipientOrganizationData> {
         const queryParams: string[] = [];
         if (includeDetails !== undefined) {
             queryParams.push(`includeDetails=${encodeURIComponent(String(includeDetails))}`);
         }
-        const requestPath = `/api/v1/Awards/${id}/Recipients/Organizations/${pageNumber}` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
+        const requestPath = `/api/v1/Awards/${encodeURIComponent(String(id))}/Recipients/Organizations/${encodeURIComponent(String(pageNumber))}` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestHeaders: Record<string, string> = {};
         if (contentType !== undefined) {
             requestHeaders["Content-Type"] = String(contentType);

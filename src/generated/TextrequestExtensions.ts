@@ -579,15 +579,15 @@ export interface GetContactsOptions extends ConnectorOperationOptions {
     /** Cutoff time for searching contacts by when they were created. No contacts created before this time will be shown. */
     contactCreatedAfter?: string;
     /** Whether to search for contacts whose conversations have been resolved. */
-    isResolved?: string;
+    isResolved?: boolean;
     /** Whether to search for contacts who have been blocked. */
-    isBlocked?: string;
+    isBlocked?: boolean;
     /** Whether to search for contacts who have been archived. */
-    isArchived?: string;
+    isArchived?: boolean;
     /** Whether to search for contacts who have been suppressed. */
-    isSuppressed?: string;
+    isSuppressed?: boolean;
     /** Whether to search for contacts who have opted out of receiving texts. */
-    hasOptedOut?: string;
+    hasOptedOut?: boolean;
     /** Cutoff time for searching contacts by when the last message was sent to the customer. No contacts who sent messages after this time will be shown. Uses timestamp as local time. To filter by time stamp in UTC time, use last_message_sent_before_utc */
     lastMessageSentBefore?: string;
     /** Cutoff time for searching contacts by when the last message was sent to the customer. No contacts whose last sent message is before this time will be shown. Uses timestamp as local time. To filter by time stamp in UTC time, use last_message_sent_after_utc */
@@ -641,9 +641,9 @@ export interface GetConversationsOptions extends ConnectorOperationOptions {
     /** Search term for filtering conversations by phone number or display name. If the search term is less than a full name or phone number, the search will return all conversations that partially match it. */
     search?: string;
     /** The page of entities to get. When getting values, there is a max size per page, defined by page_size. If page is greater than the last page, an empty array will be returned. */
-    page?: string;
+    page?: number;
     /** The size of each page to get. When getting values, this is a max size per page, with accessing subsequent pages done by the page parameter. */
-    pageSize?: string;
+    pageSize?: number;
 }
 
 /**
@@ -651,9 +651,9 @@ export interface GetConversationsOptions extends ConnectorOperationOptions {
  */
 export interface GetDashboardsOptions extends ConnectorOperationOptions {
     /** The page of entities to get. When getting values, there is a max size per page, defined by page_size. If page is greater than the last page, an empty array will be returned. */
-    page?: string;
+    page?: number;
     /** The size of each page to get. When getting values, this is a max size per page, with accessing subsequent pages done by the page parameter. */
-    pageSize?: string;
+    pageSize?: number;
 }
 // #endregion Types
 
@@ -701,7 +701,7 @@ export class TextrequestClient extends ConnectorClientBase {
      * Get a conversation's messages by a contact's phone number
      * @remarks Get the conversation between the specified dashboard and phone number.
      */
-    public async getMessagesByContactPhone(dashboardId: string, phoneNumber: string, page: string, pageSize: string, options: ConnectorOperationOptions = {}): Promise<GetMessagesByContactPhoneResponse> {
+    public async getMessagesByContactPhone(dashboardId: number, phoneNumber: string, page: number, pageSize: number, options: ConnectorOperationOptions = {}): Promise<GetMessagesByContactPhoneResponse> {
         const queryParams: string[] = [];
         if (page !== undefined) {
             queryParams.push(`page=${encodeURIComponent(String(page))}`);
@@ -709,7 +709,7 @@ export class TextrequestClient extends ConnectorClientBase {
         if (pageSize !== undefined) {
             queryParams.push(`page_size=${encodeURIComponent(String(pageSize))}`);
         }
-        const requestPath = `/dashboards/${dashboardId}/contacts/${phoneNumber}/messages` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
+        const requestPath = `/dashboards/${encodeURIComponent(String(dashboardId))}/contacts/${encodeURIComponent(String(phoneNumber))}/messages` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.sendWithTracingAsync<GetMessagesByContactPhoneResponse>("Textrequest.getMessagesByContactPhone", "GetMessagesByContactPhone", "GET", requestUrl, undefined, options);
 
@@ -720,8 +720,8 @@ export class TextrequestClient extends ConnectorClientBase {
      * Send a message to the contact with the given phone number
      * @remarks Sends a message (starting a new conversation if the given phone number has no message history).
      */
-    public async sendMessageByPhoneNumber(input: SendMessageByPhoneNumberInput, dashboardId: string, phoneNumber: string, options: ConnectorOperationOptions = {}): Promise<SendMessageByPhoneNumberResponse> {
-        const requestPath = `/dashboards/${dashboardId}/contacts/${phoneNumber}/messages`;
+    public async sendMessageByPhoneNumber(input: SendMessageByPhoneNumberInput, dashboardId: number, phoneNumber: string, options: ConnectorOperationOptions = {}): Promise<SendMessageByPhoneNumberResponse> {
+        const requestPath = `/dashboards/${encodeURIComponent(String(dashboardId))}/contacts/${encodeURIComponent(String(phoneNumber))}/messages`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.sendWithTracingAsync<SendMessageByPhoneNumberResponse>("Textrequest.sendMessageByPhoneNumber", "SendMessageByPhoneNumber", "POST", requestUrl, input, options);
 
@@ -732,8 +732,8 @@ export class TextrequestClient extends ConnectorClientBase {
      * Archive a Conversation
      * @remarks Archives a conversation, removing it from the results of all conversation retrieval endpoints. A conversation will be automatically unarchived if the customer sends a text to your Text Request number, or if you send the customer a text from your Text Request number. Archiving conversations is a good way to remove clutter from customers you don't plan on talking to in the future. Note that if a customer texts in "STOP" to prevent you from sending them any further SMS messages, the conversation is automatically archived.
      */
-    public async archiveConversation(dashboardId: string, phoneNumber: string, options: ConnectorOperationOptions = {}): Promise<string> {
-        const requestPath = `/dashboards/${dashboardId}/contacts/${phoneNumber}/conversations/archive`;
+    public async archiveConversation(dashboardId: number, phoneNumber: string, options: ConnectorOperationOptions = {}): Promise<string> {
+        const requestPath = `/dashboards/${encodeURIComponent(String(dashboardId))}/contacts/${encodeURIComponent(String(phoneNumber))}/conversations/archive`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.sendWithTracingAsync<string>("Textrequest.archiveConversation", "ArchiveConversation", "PUT", requestUrl, undefined, options);
 
@@ -744,8 +744,8 @@ export class TextrequestClient extends ConnectorClientBase {
      * Unarchive a Conversation
      * @remarks Unarchives a conversation. Once a conversation is unarchived, it will once again appear in the queue. it will also appear in conversations returned by the /conversations endpoint. If a conversation is already unarchived, this method has no effect.
      */
-    public async unarchiveConversation(dashboardId: string, phoneNumber: string, options: ConnectorOperationOptions = {}): Promise<string> {
-        const requestPath = `/dashboards/${dashboardId}/contacts/${phoneNumber}/conversations/unarchive`;
+    public async unarchiveConversation(dashboardId: number, phoneNumber: string, options: ConnectorOperationOptions = {}): Promise<string> {
+        const requestPath = `/dashboards/${encodeURIComponent(String(dashboardId))}/contacts/${encodeURIComponent(String(phoneNumber))}/conversations/unarchive`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.sendWithTracingAsync<string>("Textrequest.unarchiveConversation", "UnarchiveConversation", "PUT", requestUrl, undefined, options);
 
@@ -756,8 +756,8 @@ export class TextrequestClient extends ConnectorClientBase {
      * Gets the contact with the specified phone number
      * @remarks Gets the contact with the specified phone number
      */
-    public async getContactByPhoneNumber(dashboardId: string, phoneNumber: string, options: ConnectorOperationOptions = {}): Promise<GetContactByPhoneNumberResponse> {
-        const requestPath = `/dashboards/${dashboardId}/contacts/${phoneNumber}`;
+    public async getContactByPhoneNumber(dashboardId: number, phoneNumber: string, options: ConnectorOperationOptions = {}): Promise<GetContactByPhoneNumberResponse> {
+        const requestPath = `/dashboards/${encodeURIComponent(String(dashboardId))}/contacts/${encodeURIComponent(String(phoneNumber))}`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.sendWithTracingAsync<GetContactByPhoneNumberResponse>("Textrequest.getContactByPhoneNumber", "GetContactByPhoneNumber", "GET", requestUrl, undefined, options);
 
@@ -768,8 +768,8 @@ export class TextrequestClient extends ConnectorClientBase {
      * Deletes the contact with the specified phone number
      * @remarks Deletes the contact with the specified phone number
      */
-    public async deleteContact(dashboardId: string, phoneNumber: string, options: ConnectorOperationOptions = {}): Promise<string> {
-        const requestPath = `/dashboards/${dashboardId}/contacts/${phoneNumber}`;
+    public async deleteContact(dashboardId: number, phoneNumber: string, options: ConnectorOperationOptions = {}): Promise<string> {
+        const requestPath = `/dashboards/${encodeURIComponent(String(dashboardId))}/contacts/${encodeURIComponent(String(phoneNumber))}`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.sendWithTracingAsync<string>("Textrequest.deleteContact", "DeleteContact", "DELETE", requestUrl, undefined, options);
 
@@ -780,8 +780,8 @@ export class TextrequestClient extends ConnectorClientBase {
      * Create or update a contact
      * @remarks Creates or updates a contact (depending on whether one already exists with the given phone number).
      */
-    public async createContact(input: CreateContactInput, dashboardId: string, phoneNumber: string, options: ConnectorOperationOptions = {}): Promise<CreateContactResponse> {
-        const requestPath = `/dashboards/${dashboardId}/contacts/${phoneNumber}`;
+    public async createContact(input: CreateContactInput, dashboardId: number, phoneNumber: string, options: ConnectorOperationOptions = {}): Promise<CreateContactResponse> {
+        const requestPath = `/dashboards/${encodeURIComponent(String(dashboardId))}/contacts/${encodeURIComponent(String(phoneNumber))}`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.sendWithTracingAsync<CreateContactResponse>("Textrequest.createContact", "CreateContact", "POST", requestUrl, input, options);
 
@@ -792,7 +792,7 @@ export class TextrequestClient extends ConnectorClientBase {
      * Get all contacts that match the specified filtering criterion
      * @remarks Gets all contacts that match the specified filtering criterion. Only the dashboard specified will be searched; there is no account level search for a number available.
      */
-    public async getContacts(dashboardId: string, page: string, pageSize: string, options: GetContactsOptions = {}): Promise<GetContactsResponse> {
+    public async getContacts(dashboardId: number, page: number, pageSize: number, options: GetContactsOptions = {}): Promise<GetContactsResponse> {
         const queryParams: string[] = [];
         if (options.contactPhoneNumber !== undefined) {
             queryParams.push(`contact_phone_number=${encodeURIComponent(String(options.contactPhoneNumber))}`);
@@ -866,7 +866,7 @@ export class TextrequestClient extends ConnectorClientBase {
         if (pageSize !== undefined) {
             queryParams.push(`page_size=${encodeURIComponent(String(pageSize))}`);
         }
-        const requestPath = `/dashboards/${dashboardId}/contacts` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
+        const requestPath = `/dashboards/${encodeURIComponent(String(dashboardId))}/contacts` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.sendWithTracingAsync<GetContactsResponse>("Textrequest.getContacts", "GetContacts", "GET", requestUrl, undefined, options);
 
@@ -877,8 +877,8 @@ export class TextrequestClient extends ConnectorClientBase {
      * Bulk update contacts
      * @remarks Only the dashboard specified will have contacts added; contacts are organized by dashboard, and there is no account level search for a number available.
      */
-    public async updateBulkContacts(input: BulkUpdateContactsInput, dashboardId: string, options: ConnectorOperationOptions = {}): Promise<Array<Record<string, unknown>>> {
-        const requestPath = `/dashboards/${dashboardId}/contacts`;
+    public async updateBulkContacts(input: BulkUpdateContactsInput, dashboardId: number, options: ConnectorOperationOptions = {}): Promise<Array<Record<string, unknown>>> {
+        const requestPath = `/dashboards/${encodeURIComponent(String(dashboardId))}/contacts`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.sendWithTracingAsync<Array<Record<string, unknown>>>("Textrequest.updateBulkContacts", "BulkUpdateContacts", "POST", requestUrl, input, options);
 
@@ -889,8 +889,8 @@ export class TextrequestClient extends ConnectorClientBase {
      * Get a group by its id
      * @remarks Gets the group with the specified id.
      */
-    public async getGroupById(dashboardId: string, groupId: string, options: ConnectorOperationOptions = {}): Promise<GetGroupByIdResponse> {
-        const requestPath = `/dashboards/${dashboardId}/groups/${groupId}`;
+    public async getGroupById(dashboardId: number, groupId: number, options: ConnectorOperationOptions = {}): Promise<GetGroupByIdResponse> {
+        const requestPath = `/dashboards/${encodeURIComponent(String(dashboardId))}/groups/${encodeURIComponent(String(groupId))}`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.sendWithTracingAsync<GetGroupByIdResponse>("Textrequest.getGroupById", "GetGroupById", "GET", requestUrl, undefined, options);
 
@@ -901,8 +901,8 @@ export class TextrequestClient extends ConnectorClientBase {
      * Deletes the group with the specified id
      * @remarks Deletes the group with the specified id. This will succeed even if there are contacts that are members of the group (the contacts will not be deleted).
      */
-    public async deleteGroup(dashboardId: string, groupId: string, options: ConnectorOperationOptions = {}): Promise<string> {
-        const requestPath = `/dashboards/${dashboardId}/groups/${groupId}`;
+    public async deleteGroup(dashboardId: number, groupId: number, options: ConnectorOperationOptions = {}): Promise<string> {
+        const requestPath = `/dashboards/${encodeURIComponent(String(dashboardId))}/groups/${encodeURIComponent(String(groupId))}`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.sendWithTracingAsync<string>("Textrequest.deleteGroup", "DeleteGroup", "DELETE", requestUrl, undefined, options);
 
@@ -913,8 +913,8 @@ export class TextrequestClient extends ConnectorClientBase {
      * Updates a group with the given id
      * @remarks Updates a group's name using the group's numerical id. If the passed in group id does not exist, the call will fail.
      */
-    public async updateGroup(input: UpdateGroupInput, dashboardId: string, groupId: string, options: ConnectorOperationOptions = {}): Promise<UpdateGroupResponse> {
-        const requestPath = `/dashboards/${dashboardId}/groups/${groupId}`;
+    public async updateGroup(input: UpdateGroupInput, dashboardId: number, groupId: number, options: ConnectorOperationOptions = {}): Promise<UpdateGroupResponse> {
+        const requestPath = `/dashboards/${encodeURIComponent(String(dashboardId))}/groups/${encodeURIComponent(String(groupId))}`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.sendWithTracingAsync<UpdateGroupResponse>("Textrequest.updateGroup", "UpdateGroup", "PUT", requestUrl, input, options);
 
@@ -925,7 +925,7 @@ export class TextrequestClient extends ConnectorClientBase {
      * Gets all groups
      * @remarks Gets all groups for the user's account.
      */
-    public async getGroups(dashboardId: string, page: string, pageSize: string, options: ConnectorOperationOptions = {}): Promise<GetGroupsResponse> {
+    public async getGroups(dashboardId: number, page: number, pageSize: number, options: ConnectorOperationOptions = {}): Promise<GetGroupsResponse> {
         const queryParams: string[] = [];
         if (page !== undefined) {
             queryParams.push(`page=${encodeURIComponent(String(page))}`);
@@ -933,7 +933,7 @@ export class TextrequestClient extends ConnectorClientBase {
         if (pageSize !== undefined) {
             queryParams.push(`page_size=${encodeURIComponent(String(pageSize))}`);
         }
-        const requestPath = `/dashboards/${dashboardId}/groups` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
+        const requestPath = `/dashboards/${encodeURIComponent(String(dashboardId))}/groups` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.sendWithTracingAsync<GetGroupsResponse>("Textrequest.getGroups", "GetGroups", "GET", requestUrl, undefined, options);
 
@@ -944,8 +944,8 @@ export class TextrequestClient extends ConnectorClientBase {
      * Creates a new group
      * @remarks Creates a new group with the provided name.
      */
-    public async createGroup(input: CreateGroupInput, dashboardId: string, options: ConnectorOperationOptions = {}): Promise<CreateGroupResponse> {
-        const requestPath = `/dashboards/${dashboardId}/groups`;
+    public async createGroup(input: CreateGroupInput, dashboardId: number, options: ConnectorOperationOptions = {}): Promise<CreateGroupResponse> {
+        const requestPath = `/dashboards/${encodeURIComponent(String(dashboardId))}/groups`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.sendWithTracingAsync<CreateGroupResponse>("Textrequest.createGroup", "CreateGroup", "POST", requestUrl, input, options);
 
@@ -956,7 +956,7 @@ export class TextrequestClient extends ConnectorClientBase {
      * Gets all tags
      * @remarks Gets all the tags for this dashboard. Tags are unique between dashboards.
      */
-    public async getTags(dashboardId: string, page: string, pageSize: string, options: ConnectorOperationOptions = {}): Promise<GetTagsResponse> {
+    public async getTags(dashboardId: number, page: number, pageSize: number, options: ConnectorOperationOptions = {}): Promise<GetTagsResponse> {
         const queryParams: string[] = [];
         if (page !== undefined) {
             queryParams.push(`page=${encodeURIComponent(String(page))}`);
@@ -964,7 +964,7 @@ export class TextrequestClient extends ConnectorClientBase {
         if (pageSize !== undefined) {
             queryParams.push(`page_size=${encodeURIComponent(String(pageSize))}`);
         }
-        const requestPath = `/dashboards/${dashboardId}/tags` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
+        const requestPath = `/dashboards/${encodeURIComponent(String(dashboardId))}/tags` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.sendWithTracingAsync<GetTagsResponse>("Textrequest.getTags", "GetTags", "GET", requestUrl, undefined, options);
 
@@ -975,8 +975,8 @@ export class TextrequestClient extends ConnectorClientBase {
      * Gets all custom fields
      * @remarks Gets all custom fields for this dashboard. Custom fields are unique between dashboards.
      */
-    public async getCustomFields(dashboardId: string, options: ConnectorOperationOptions = {}): Promise<Array<Record<string, unknown>>> {
-        const requestPath = `/dashboards/${dashboardId}/fields`;
+    public async getCustomFields(dashboardId: number, options: ConnectorOperationOptions = {}): Promise<Array<Record<string, unknown>>> {
+        const requestPath = `/dashboards/${encodeURIComponent(String(dashboardId))}/fields`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.sendWithTracingAsync<Array<Record<string, unknown>>>("Textrequest.getCustomFields", "GetCustomFields", "GET", requestUrl, undefined, options);
 
@@ -987,8 +987,8 @@ export class TextrequestClient extends ConnectorClientBase {
      * Gets the payment with the specified id
      * @remarks Gets the payment with the specified id.
      */
-    public async getPayment(dashboardId: string, paymentId: string, options: ConnectorOperationOptions = {}): Promise<GetPaymentResponse> {
-        const requestPath = `/dashboards/${dashboardId}/payments/${paymentId}`;
+    public async getPayment(dashboardId: number, paymentId: number, options: ConnectorOperationOptions = {}): Promise<GetPaymentResponse> {
+        const requestPath = `/dashboards/${encodeURIComponent(String(dashboardId))}/payments/${encodeURIComponent(String(paymentId))}`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.sendWithTracingAsync<GetPaymentResponse>("Textrequest.getPayment", "GetPayment", "GET", requestUrl, undefined, options);
 
@@ -999,8 +999,8 @@ export class TextrequestClient extends ConnectorClientBase {
      * Mark a payment as paid
      * @remarks Closes a payment as "paid". Use this endpoint for when the payment is paid through a means other than the payment request portal. This will close the payment and add its payment amount to your statistics. This endpoint is not required for payments paid through the payments-portal sent through Text Request; that will automatically mark a payment as paid.
      */
-    public async markPaymentPaid(dashboardId: string, paymentId: string, options: ConnectorOperationOptions = {}): Promise<MarkPaymentPaidResponse> {
-        const requestPath = `/dashboards/${dashboardId}/payments/${paymentId}/mark_as_paid`;
+    public async markPaymentPaid(dashboardId: number, paymentId: number, options: ConnectorOperationOptions = {}): Promise<MarkPaymentPaidResponse> {
+        const requestPath = `/dashboards/${encodeURIComponent(String(dashboardId))}/payments/${encodeURIComponent(String(paymentId))}/mark_as_paid`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.sendWithTracingAsync<MarkPaymentPaidResponse>("Textrequest.markPaymentPaid", "MarkPaymentPaid", "POST", requestUrl, undefined, options);
 
@@ -1011,8 +1011,8 @@ export class TextrequestClient extends ConnectorClientBase {
      * Send a follow-up text reminding the user to pay the specified payment
      * @remarks Sends a reminder to the contact to pay the specified payment. The content of the message is auto-generated. To avoid spam, only one reminder can be sent per payment
      */
-    public async sendPaymentReminder(dashboardId: string, paymentId: string, options: ConnectorOperationOptions = {}): Promise<SendPaymentReminderResponse> {
-        const requestPath = `/dashboards/${dashboardId}/payments/${paymentId}/resend`;
+    public async sendPaymentReminder(dashboardId: number, paymentId: number, options: ConnectorOperationOptions = {}): Promise<SendPaymentReminderResponse> {
+        const requestPath = `/dashboards/${encodeURIComponent(String(dashboardId))}/payments/${encodeURIComponent(String(paymentId))}/resend`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.sendWithTracingAsync<SendPaymentReminderResponse>("Textrequest.sendPaymentReminder", "SendPaymentReminder", "POST", requestUrl, undefined, options);
 
@@ -1023,8 +1023,8 @@ export class TextrequestClient extends ConnectorClientBase {
      * Cancels the specified payment
      * @remarks Cancels the specified payment, texting the user that the payment has been canceled. Payments cannot be edited, so canceling and issuing a new payment is the best way to correct a payment.
      */
-    public async cancelPayment(dashboardId: string, paymentId: string, options: ConnectorOperationOptions = {}): Promise<CancelPaymentResponse> {
-        const requestPath = `/dashboards/${dashboardId}/payments/${paymentId}/cancel`;
+    public async cancelPayment(dashboardId: number, paymentId: number, options: ConnectorOperationOptions = {}): Promise<CancelPaymentResponse> {
+        const requestPath = `/dashboards/${encodeURIComponent(String(dashboardId))}/payments/${encodeURIComponent(String(paymentId))}/cancel`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.sendWithTracingAsync<CancelPaymentResponse>("Textrequest.cancelPayment", "CancelPayment", "POST", requestUrl, undefined, options);
 
@@ -1035,7 +1035,7 @@ export class TextrequestClient extends ConnectorClientBase {
      * Gets all payments
      * @remarks Gets all payments, including canceled and paid payments. These can be filtered using the query parameters.
      */
-    public async getPayments(dashboardId: string, page: string, pageSize: string, options: GetPaymentsOptions = {}): Promise<GetPaymentsResponse> {
+    public async getPayments(dashboardId: number, page: number, pageSize: number, options: GetPaymentsOptions = {}): Promise<GetPaymentsResponse> {
         const queryParams: string[] = [];
         if (options.referenceNumber !== undefined) {
             queryParams.push(`reference_number=${encodeURIComponent(String(options.referenceNumber))}`);
@@ -1055,7 +1055,7 @@ export class TextrequestClient extends ConnectorClientBase {
         if (pageSize !== undefined) {
             queryParams.push(`page_size=${encodeURIComponent(String(pageSize))}`);
         }
-        const requestPath = `/dashboards/${dashboardId}/payments` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
+        const requestPath = `/dashboards/${encodeURIComponent(String(dashboardId))}/payments` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.sendWithTracingAsync<GetPaymentsResponse>("Textrequest.getPayments", "GetPayments", "GET", requestUrl, undefined, options);
 
@@ -1066,8 +1066,8 @@ export class TextrequestClient extends ConnectorClientBase {
      * Creates a new payment
      * @remarks Creates a new payment with the provided message to the provided contact.
      */
-    public async createPayment(input: CreatePaymentInput, dashboardId: string, options: ConnectorOperationOptions = {}): Promise<CreatePaymentResponse> {
-        const requestPath = `/dashboards/${dashboardId}/payments`;
+    public async createPayment(input: CreatePaymentInput, dashboardId: number, options: ConnectorOperationOptions = {}): Promise<CreatePaymentResponse> {
+        const requestPath = `/dashboards/${encodeURIComponent(String(dashboardId))}/payments`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.sendWithTracingAsync<CreatePaymentResponse>("Textrequest.createPayment", "CreatePayment", "POST", requestUrl, input, options);
 
@@ -1078,8 +1078,8 @@ export class TextrequestClient extends ConnectorClientBase {
      * Get info on this specific dashboard
      * @remarks Returns the name and phone of the dashboard.
      */
-    public async getDashboard(dashboardId: string, options: ConnectorOperationOptions = {}): Promise<GetDashboardResponse> {
-        const requestPath = `/dashboards/${dashboardId}`;
+    public async getDashboard(dashboardId: number, options: ConnectorOperationOptions = {}): Promise<GetDashboardResponse> {
+        const requestPath = `/dashboards/${encodeURIComponent(String(dashboardId))}`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.sendWithTracingAsync<GetDashboardResponse>("Textrequest.getDashboard", "GetDashboard", "GET", requestUrl, undefined, options);
 
@@ -1090,8 +1090,8 @@ export class TextrequestClient extends ConnectorClientBase {
      * Deletes the specified dashboard
      * @remarks Deletes the specified dashboard.
      */
-    public async deleteDashboard(dashboardId: string, options: ConnectorOperationOptions = {}): Promise<string> {
-        const requestPath = `/dashboards/${dashboardId}`;
+    public async deleteDashboard(dashboardId: number, options: ConnectorOperationOptions = {}): Promise<string> {
+        const requestPath = `/dashboards/${encodeURIComponent(String(dashboardId))}`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.sendWithTracingAsync<string>("Textrequest.deleteDashboard", "DeleteDashboard", "DELETE", requestUrl, undefined, options);
 
@@ -1102,8 +1102,8 @@ export class TextrequestClient extends ConnectorClientBase {
      * Update a specific dashboard's name
      * @remarks Updates a dashboard. This does not change a dashboard's phone number. If you want a new number with another dashboard's contacts, you will have to create a new dashboard with a POST and add the contacts with a bulk export/import.
      */
-    public async updateDashboardsName(input: UpdateDashboardsNameInput, dashboardId: string, options: ConnectorOperationOptions = {}): Promise<UpdateDashboardsNameResponse> {
-        const requestPath = `/dashboards/${dashboardId}`;
+    public async updateDashboardsName(input: UpdateDashboardsNameInput, dashboardId: number, options: ConnectorOperationOptions = {}): Promise<UpdateDashboardsNameResponse> {
+        const requestPath = `/dashboards/${encodeURIComponent(String(dashboardId))}`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.sendWithTracingAsync<UpdateDashboardsNameResponse>("Textrequest.updateDashboardsName", "UpdateDashboardsName", "PUT", requestUrl, input, options);
 
@@ -1114,7 +1114,7 @@ export class TextrequestClient extends ConnectorClientBase {
      * Gets all conversations for this dashboard
      * @remarks Gets all conversations for this dashboard, and includes info on the last message for each conversation.
      */
-    public async getConversations(dashboardId: string, options: GetConversationsOptions = {}): Promise<GetConversationsResponse> {
+    public async getConversations(dashboardId: number, options: GetConversationsOptions = {}): Promise<GetConversationsResponse> {
         const queryParams: string[] = [];
         if (options.tags !== undefined) {
             queryParams.push(`tags=${encodeURIComponent(String(options.tags))}`);
@@ -1134,7 +1134,7 @@ export class TextrequestClient extends ConnectorClientBase {
         if (options.pageSize !== undefined) {
             queryParams.push(`page_size=${encodeURIComponent(String(options.pageSize))}`);
         }
-        const requestPath = `/dashboards/${dashboardId}/conversations` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
+        const requestPath = `/dashboards/${encodeURIComponent(String(dashboardId))}/conversations` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.sendWithTracingAsync<GetConversationsResponse>("Textrequest.getConversations", "GetConversations", "GET", requestUrl, undefined, options);
 

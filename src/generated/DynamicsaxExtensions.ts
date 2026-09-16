@@ -253,7 +253,7 @@ export interface AxOnlineProcedureResult {
     /** Output parameter values */
     value?: string;
     /** Output parameter values */
-    OutputParameters?: Record<string, unknown>;
+    OutputParameters?: Record<string, ObjectEntity>;
 }
 
 /**
@@ -285,7 +285,7 @@ export interface Table {
     /** The display name of the table. */
     DisplayName?: string;
     /** Additional table properties provided by the connector to the clients. */
-    DynamicProperties?: Record<string, unknown>;
+    DynamicProperties?: Record<string, ObjectEntity>;
 }
 
 /**
@@ -300,7 +300,7 @@ export interface PassThroughNativeQuery {
  * Definition: Item
  */
 export interface Item {
-    dynamicProperties?: Record<string, unknown>;
+    dynamicProperties?: Record<string, ObjectEntity>;
 }
 
 /**
@@ -333,7 +333,7 @@ export interface ExportableItemsList {
  * Definition: ExportableItem
  */
 export interface ExportableItem {
-    dynamicProperties?: Record<string, unknown>;
+    dynamicProperties?: Record<string, ObjectEntity>;
 }
 
 /**
@@ -347,13 +347,13 @@ export interface GetItemsOptions extends ConnectorOperationOptions {
     /** An ODATA orderBy query for specifying the order of entries. */
     orderby?: string;
     /** Total number of entries to retrieve (default = all). */
-    top?: string;
+    top?: number;
     /** The number of entries to skip (default = 0). */
-    skip?: string;
+    skip?: number;
     /** Specific fields to retrieve from entries (default = all). */
     select?: string;
     /** Query across companies (default = no). */
-    crossCompany?: string;
+    crossCompany?: boolean;
 }
 // #endregion Types
 
@@ -426,7 +426,7 @@ export class DynamicsaxClient extends ConnectorClientBase {
      * @remarks Execute action
      */
     public async executeProcedure(input: ExecuteProcedureInput, dataset: string, procedure: string, options: ConnectorOperationOptions = {}): Promise<AxOnlineProcedureResult> {
-        const requestPath = `/datasets/${encodeURIComponent(String(dataset))}/procedures/${procedure}`;
+        const requestPath = `/datasets/${encodeURIComponent(encodeURIComponent(String(dataset)))}/procedures/${encodeURIComponent(encodeURIComponent(String(procedure)))}`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.sendWithTracingAsync<AxOnlineProcedureResult>("Dynamicsax.executeProcedure", "ExecuteProcedure", "POST", requestUrl, input, options);
 
@@ -460,7 +460,7 @@ export class DynamicsaxClient extends ConnectorClientBase {
         if (options.crossCompany !== undefined) {
             queryParams.push(`cross-company=${encodeURIComponent(String(options.crossCompany))}`);
         }
-        const requestPath = `/datasets/${encodeURIComponent(String(dataset))}/tables/${table}/items` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
+        const requestPath = `/datasets/${encodeURIComponent(encodeURIComponent(String(dataset)))}/tables/${encodeURIComponent(encodeURIComponent(String(table)))}/items` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         return this.createPageable<ItemsList, Item>(
             requestPath,
             async (requestUrl, isFirstPage) => {
@@ -479,7 +479,7 @@ export class DynamicsaxClient extends ConnectorClientBase {
      * @remarks Create a new record in an entity
      */
     public async postItem(input: PostItemInput, dataset: string, table: string, options: ConnectorOperationOptions = {}): Promise<PostItemResponse> {
-        const requestPath = `/datasets/${encodeURIComponent(String(dataset))}/tables/${table}/items`;
+        const requestPath = `/datasets/${encodeURIComponent(encodeURIComponent(String(dataset)))}/tables/${encodeURIComponent(encodeURIComponent(String(table)))}/items`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.sendWithTracingAsync<PostItemResponse>("Dynamicsax.postItem", "PostItem", "POST", requestUrl, input, options);
 
@@ -491,7 +491,7 @@ export class DynamicsaxClient extends ConnectorClientBase {
      * @remarks Retrieves a single record
      */
     public async getItem(dataset: string, table: string, id: string, options: ConnectorOperationOptions = {}): Promise<GetItemResponse> {
-        const requestPath = `/datasets/${encodeURIComponent(String(dataset))}/tables/${table}/items/${id}`;
+        const requestPath = `/datasets/${encodeURIComponent(encodeURIComponent(String(dataset)))}/tables/${encodeURIComponent(encodeURIComponent(String(table)))}/items/${encodeURIComponent(encodeURIComponent(String(id)))}`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.sendWithTracingAsync<GetItemResponse>("Dynamicsax.getItem", "GetItem", "GET", requestUrl, undefined, options);
 
@@ -503,7 +503,7 @@ export class DynamicsaxClient extends ConnectorClientBase {
      * @remarks Deletes a single record in an entity
      */
     public async deleteItem(dataset: string, table: string, id: string, options: ConnectorOperationOptions = {}): Promise<void> {
-        const requestPath = `/datasets/${encodeURIComponent(String(dataset))}/tables/${table}/items/${id}`;
+        const requestPath = `/datasets/${encodeURIComponent(encodeURIComponent(String(dataset)))}/tables/${encodeURIComponent(encodeURIComponent(String(table)))}/items/${encodeURIComponent(encodeURIComponent(String(id)))}`;
         const requestUrl = this.resolveUrl(requestPath);
         await this.sendWithTracingAsync<void>("Dynamicsax.deleteItem", "DeleteItem", "DELETE", requestUrl, undefined, options);
     }
@@ -513,7 +513,7 @@ export class DynamicsaxClient extends ConnectorClientBase {
      * @remarks Updates a single record in an entity
      */
     public async patchItem(input: PatchItemInput, dataset: string, table: string, id: string, options: ConnectorOperationOptions = {}): Promise<PatchItemResponse> {
-        const requestPath = `/datasets/${encodeURIComponent(String(dataset))}/tables/${table}/items/${id}`;
+        const requestPath = `/datasets/${encodeURIComponent(encodeURIComponent(String(dataset)))}/tables/${encodeURIComponent(encodeURIComponent(String(table)))}/items/${encodeURIComponent(encodeURIComponent(String(id)))}`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.sendWithTracingAsync<PatchItemResponse>("Dynamicsax.patchItem", "PatchItem", "PATCH", requestUrl, input, options);
 
@@ -525,7 +525,7 @@ export class DynamicsaxClient extends ConnectorClientBase {
      * @remarks Retrieves a list of entities
      */
     public async getTables(dataset: string, options: ConnectorOperationOptions = {}): Promise<TablesList> {
-        const requestPath = `/datasets/${encodeURIComponent(String(dataset))}/tables`;
+        const requestPath = `/datasets/${encodeURIComponent(encodeURIComponent(String(dataset)))}/tables`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.sendWithTracingAsync<TablesList>("Dynamicsax.getTables", "GetTables", "GET", requestUrl, undefined, options);
 

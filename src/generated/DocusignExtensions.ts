@@ -1069,9 +1069,9 @@ export interface SearchListEnvelopesOptions extends ConnectorOperationOptions {
     /** Sorts envelopes in the selected order */
     orderBy?: string;
     /** Specify the number of envelopes to return (default is 10; maximum is 1,000) */
-    top?: string;
+    top?: number;
     /** Specify the number of envelopes to skip from the start */
-    skip?: string;
+    skip?: number;
     /** Enter start date-time in UTC format: 2017-05-02T01:44z */
     fromDate?: string;
     /** Enter end date-time in UTC format: 2017-05-02T01:44z. */
@@ -1249,7 +1249,7 @@ export class DocusignClient extends ConnectorClientBase {
      * @remarks Get document generation form fields from envelope
      */
     public async getDocgenFormFields(accountId: string, envelopeId: string, options: ConnectorOperationOptions = {}): Promise<DocGenFormFieldsResponse> {
-        const requestPath = `/accounts/${accountId}/envelopes/${envelopeId}/docGenFormFields`;
+        const requestPath = `/accounts/${encodeURIComponent(String(accountId))}/envelopes/${encodeURIComponent(String(envelopeId))}/docGenFormFields`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.sendWithTracingAsync<DocGenFormFieldsResponse>("Docusign.getDocgenFormFields", "GetDocgenFormFields", "GET", requestUrl, undefined, options);
 
@@ -1265,7 +1265,7 @@ export class DocusignClient extends ConnectorClientBase {
         if (documentGuid !== undefined) {
             queryParams.push(`documentGuid=${encodeURIComponent(String(documentGuid))}`);
         }
-        const requestPath = `/accounts/${accountId}/envelopes/${envelopeId}/docGenFormFields` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
+        const requestPath = `/accounts/${encodeURIComponent(String(accountId))}/envelopes/${encodeURIComponent(String(envelopeId))}/docGenFormFields` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
         await this.sendWithTracingAsync<void>("Docusign.updateDocgenFormFields", "UpdateDocgenFormFields", "PUT", requestUrl, input, options);
     }
@@ -1275,7 +1275,7 @@ export class DocusignClient extends ConnectorClientBase {
      * @remarks Get document generation form fields from template (bulk send templates only)
      */
     public async getDocGenTemplateTabs(accountId: string, templateId: string, options: ConnectorOperationOptions = {}): Promise<GetDocGenTemplateTabsResponse> {
-        const requestPath = `/accounts/${accountId}/templates/${templateId}`;
+        const requestPath = `/accounts/${encodeURIComponent(String(accountId))}/templates/${encodeURIComponent(String(templateId))}`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.sendWithTracingAsync<GetDocGenTemplateTabsResponse>("Docusign.getDocGenTemplateTabs", "GetDocGenTemplateTabs", "GET", requestUrl, undefined, options);
 
@@ -1291,7 +1291,7 @@ export class DocusignClient extends ConnectorClientBase {
         if (voidedReason !== undefined) {
             queryParams.push(`voidedReason=${encodeURIComponent(String(voidedReason))}`);
         }
-        const requestPath = `/accounts/${accountId}/envelopes/${envelopeId}/voidEnvelope` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
+        const requestPath = `/accounts/${encodeURIComponent(String(accountId))}/envelopes/${encodeURIComponent(String(envelopeId))}/voidEnvelope` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.sendWithTracingAsync<EnvelopeVoidResponse>("Docusign.voidEnvelope", "VoidEnvelope", "PUT", requestUrl, undefined, options);
 
@@ -1303,7 +1303,7 @@ export class DocusignClient extends ConnectorClientBase {
      * @remarks This action resends a Docusign envelope or sends a reminder to recipients who need to sign a Docusign agreement based on a provided EnvelopeId.
      */
     public async resendEnvelope(envelopeId: string, options: ConnectorOperationOptions = {}): Promise<EnvelopeResendResponse> {
-        const requestPath = `/accounts/copilotAccount/envelopes/${envelopeId}/resendEnvelope`;
+        const requestPath = `/accounts/copilotAccount/envelopes/${encodeURIComponent(String(envelopeId))}/resendEnvelope`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.sendWithTracingAsync<EnvelopeResendResponse>("Docusign.resendEnvelope", "ResendEnvelope", "PUT", requestUrl, undefined, options);
 
@@ -1314,7 +1314,7 @@ export class DocusignClient extends ConnectorClientBase {
      * Add reminders for an envelope
      * @remarks Add reminders for an envelope
      */
-    public async addReminders(accountId: string, envelopeId: string, reminderEnabled: string, reminderDelay: string, reminderFrequency: string, options: AddRemindersOptions = {}): Promise<AddRemindersResponse> {
+    public async addReminders(accountId: string, envelopeId: string, reminderEnabled: boolean, reminderDelay: string, reminderFrequency: string, options: AddRemindersOptions = {}): Promise<AddRemindersResponse> {
         const queryParams: string[] = [];
         if (reminderEnabled !== undefined) {
             queryParams.push(`reminderEnabled=${encodeURIComponent(String(reminderEnabled))}`);
@@ -1328,7 +1328,7 @@ export class DocusignClient extends ConnectorClientBase {
         if (options.expireAfter !== undefined) {
             queryParams.push(`expireAfter=${encodeURIComponent(String(options.expireAfter))}`);
         }
-        const requestPath = `/accounts/${accountId}/envelopes/${envelopeId}/notification` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
+        const requestPath = `/accounts/${encodeURIComponent(String(accountId))}/envelopes/${encodeURIComponent(String(envelopeId))}/notification` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.sendWithTracingAsync<AddRemindersResponse>("Docusign.addReminders", "AddReminders", "PUT", requestUrl, undefined, options);
 
@@ -1340,7 +1340,7 @@ export class DocusignClient extends ConnectorClientBase {
      * @remarks Get document tabs from envelope
      */
     public async getEnvelopeDocumentTabs(accountId: string, envelopeId: string, documentId: string, options: ConnectorOperationOptions = {}): Promise<ListTabsResponse> {
-        const requestPath = `/accounts/${accountId}/envelopes/${envelopeId}/documents/${documentId}/tabs`;
+        const requestPath = `/accounts/${encodeURIComponent(String(accountId))}/envelopes/${encodeURIComponent(String(envelopeId))}/documents/${encodeURIComponent(String(documentId))}/tabs`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.sendWithTracingAsync<ListTabsResponse>("Docusign.getEnvelopeDocumentTabs", "GetEnvelopeDocumentTabs", "GET", requestUrl, undefined, options);
 
@@ -1352,7 +1352,7 @@ export class DocusignClient extends ConnectorClientBase {
      * @remarks Update values for a list of prefill tabs
      */
     public async updateEnvelopePrefillTabs(input: UpdateEnvelopePrefillTabsInput, accountId: string, envelopeId: string, documentId: string, options: ConnectorOperationOptions = {}): Promise<void> {
-        const requestPath = `/accounts/${accountId}/envelopes/${envelopeId}/documents/${documentId}/tabs`;
+        const requestPath = `/accounts/${encodeURIComponent(String(accountId))}/envelopes/${encodeURIComponent(String(envelopeId))}/documents/${encodeURIComponent(String(documentId))}/tabs`;
         const requestUrl = this.resolveUrl(requestPath);
         await this.sendWithTracingAsync<void>("Docusign.updateEnvelopePrefillTabs", "UpdateEnvelopePrefillTabs", "PUT", requestUrl, input, options);
     }
@@ -1362,7 +1362,7 @@ export class DocusignClient extends ConnectorClientBase {
      * @remarks Get document tabs from template
      */
     public async getTemplateDocumentTabs(accountId: string, templateId: string, documentId: string, options: ConnectorOperationOptions = {}): Promise<ListTabsResponse> {
-        const requestPath = `/accounts/${accountId}/templates/${templateId}/documents/${documentId}/tabs`;
+        const requestPath = `/accounts/${encodeURIComponent(String(accountId))}/templates/${encodeURIComponent(String(templateId))}/documents/${encodeURIComponent(String(documentId))}/tabs`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.sendWithTracingAsync<ListTabsResponse>("Docusign.getTemplateDocumentTabs", "GetTemplateDocumentTabs", "GET", requestUrl, undefined, options);
 
@@ -1374,7 +1374,7 @@ export class DocusignClient extends ConnectorClientBase {
      * @remarks Get document custom fields from envelope
      */
     public async getEnvelopeDocumentFields(accountId: string, envelopeId: string, documentId: string, options: ConnectorOperationOptions = {}): Promise<ListEnvelopeDocumentFieldsResponse> {
-        const requestPath = `/accounts/${accountId}/envelopes/${envelopeId}/documents/${documentId}/fields`;
+        const requestPath = `/accounts/${encodeURIComponent(String(accountId))}/envelopes/${encodeURIComponent(String(envelopeId))}/documents/${encodeURIComponent(String(documentId))}/fields`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.sendWithTracingAsync<ListEnvelopeDocumentFieldsResponse>("Docusign.getEnvelopeDocumentFields", "GetEnvelopeDocumentFields", "GET", requestUrl, undefined, options);
 
@@ -1399,7 +1399,7 @@ export class DocusignClient extends ConnectorClientBase {
         if (options.mergeRolesOnDraft !== undefined) {
             queryParams.push(`merge_roles_on_draft=${encodeURIComponent(String(options.mergeRolesOnDraft))}`);
         }
-        const requestPath = `/accounts/${accountId}/envelopes/compositeTemplates` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
+        const requestPath = `/accounts/${encodeURIComponent(String(accountId))}/envelopes/compositeTemplates` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.sendWithTracingAsync<CompositeTemplatesResponse>("Docusign.compositeTemplates", "CompositeTemplates", "POST", requestUrl, input, options);
 
@@ -1451,7 +1451,7 @@ export class DocusignClient extends ConnectorClientBase {
         if (options.toDate !== undefined) {
             queryParams.push(`to_date=${encodeURIComponent(String(options.toDate))}`);
         }
-        const requestPath = `/accounts/${accountId}/envelopes/SearchListEnvelopes` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
+        const requestPath = `/accounts/${encodeURIComponent(String(accountId))}/envelopes/SearchListEnvelopes` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         return this.createPageable<FilteredEnvelopeListResponse, FilteredEnvelopes>(
             requestPath,
             async (requestUrl) => {
@@ -1476,7 +1476,7 @@ export class DocusignClient extends ConnectorClientBase {
         if (status !== undefined) {
             queryParams.push(`status=${encodeURIComponent(String(status))}`);
         }
-        const requestPath = `/accounts/${accountId}/envelopes/createFromTemplateNoRecipients` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
+        const requestPath = `/accounts/${encodeURIComponent(String(accountId))}/envelopes/createFromTemplateNoRecipients` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.sendWithTracingAsync<CreateEnvelopeResponse>("Docusign.createEnvelopeFromTemplateNoRecipients", "CreateEnvelopeFromTemplateNoRecipients", "POST", requestUrl, undefined, options);
 
@@ -1501,7 +1501,7 @@ export class DocusignClient extends ConnectorClientBase {
         if (options.emailBody !== undefined) {
             queryParams.push(`emailBody=${encodeURIComponent(String(options.emailBody))}`);
         }
-        const requestPath = `/accounts/${accountId}/envelopes` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
+        const requestPath = `/accounts/${encodeURIComponent(String(accountId))}/envelopes` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.sendWithTracingAsync<CreateEnvelopeResponse>("Docusign.sendEnvelope", "SendEnvelope", "POST", requestUrl, input, options);
 
@@ -1523,7 +1523,7 @@ export class DocusignClient extends ConnectorClientBase {
         if (options.emailSubject !== undefined) {
             queryParams.push(`emailSubject=${encodeURIComponent(String(options.emailSubject))}`);
         }
-        const requestPath = `/accounts/${accountId}/envelopes/createWithRecipientFields` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
+        const requestPath = `/accounts/${encodeURIComponent(String(accountId))}/envelopes/createWithRecipientFields` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.sendWithTracingAsync<CreateEnvelopeResponse>("Docusign.sendEnvelopeWithRecipientFields", "SendEnvelopeWithRecipientFields", "POST", requestUrl, input, options);
 
@@ -1535,7 +1535,7 @@ export class DocusignClient extends ConnectorClientBase {
      * @remarks Send an existing envelope.
      */
     public async sendDraftEnvelope(accountId: string, envelopeId: string, options: ConnectorOperationOptions = {}): Promise<SendDraftEnvelopeResponse> {
-        const requestPath = `/accounts/${accountId}/envelopes/${envelopeId}`;
+        const requestPath = `/accounts/${encodeURIComponent(String(accountId))}/envelopes/${encodeURIComponent(String(envelopeId))}`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.sendWithTracingAsync<SendDraftEnvelopeResponse>("Docusign.sendDraftEnvelope", "SendDraftEnvelope", "PUT", requestUrl, undefined, options);
 
@@ -1551,7 +1551,7 @@ export class DocusignClient extends ConnectorClientBase {
         if (fieldName !== undefined) {
             queryParams.push(`fieldName=${encodeURIComponent(String(fieldName))}`);
         }
-        const requestPath = `/accounts/${accountId}/envelopes/${envelopeId}/custom_fields` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
+        const requestPath = `/accounts/${encodeURIComponent(String(accountId))}/envelopes/${encodeURIComponent(String(envelopeId))}/custom_fields` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.sendWithTracingAsync<EnvelopeCustomFieldResponse>("Docusign.getEnvelopeCustomField", "GetEnvelopeCustomField", "GET", requestUrl, undefined, options);
 
@@ -1576,7 +1576,7 @@ export class DocusignClient extends ConnectorClientBase {
         if (value !== undefined) {
             queryParams.push(`value=${encodeURIComponent(String(value))}`);
         }
-        const requestPath = `/accounts/${accountId}/envelopes/${envelopeId}/custom_fields` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
+        const requestPath = `/accounts/${encodeURIComponent(String(accountId))}/envelopes/${encodeURIComponent(String(envelopeId))}/custom_fields` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.sendWithTracingAsync<UpdateEnvelopeCustomFieldResponse>("Docusign.updateEnvelopeCustomField", "UpdateEnvelopeCustomField", "PUT", requestUrl, undefined, options);
 
@@ -1595,7 +1595,7 @@ export class DocusignClient extends ConnectorClientBase {
         if (returnUrl !== undefined) {
             queryParams.push(`returnUrl=${encodeURIComponent(String(returnUrl))}`);
         }
-        const requestPath = `/accounts/${accountId}/envelopes/${envelopeId}/views/sender` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
+        const requestPath = `/accounts/${encodeURIComponent(String(accountId))}/envelopes/${encodeURIComponent(String(envelopeId))}/views/sender` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.sendWithTracingAsync<EmbeddedSenderResponse>("Docusign.generateEmbeddedSenderURL", "GenerateEmbeddedSenderURL", "POST", requestUrl, input, options);
 
@@ -1607,7 +1607,7 @@ export class DocusignClient extends ConnectorClientBase {
      * @remarks List recipients from an envelope
      */
     public getRecipientStatus(accountId: string, envelopeId: string, options: ConnectorOperationOptions = {}): ConnectorPagedAsyncIterableIterator<Signer> {
-        const requestPath = `/accounts/${accountId}/envelopes/${envelopeId}/recipients`;
+        const requestPath = `/accounts/${encodeURIComponent(String(accountId))}/envelopes/${encodeURIComponent(String(envelopeId))}/recipients`;
         return this.createPageable<ListRecipientsResponse, Signer>(
             requestPath,
             async (requestUrl) => {
@@ -1632,7 +1632,7 @@ export class DocusignClient extends ConnectorClientBase {
         if (removeRecipientFromEnvelopeRecipientId !== undefined) {
             queryParams.push(`RemoveRecipientFromEnvelopeRecipientId=${encodeURIComponent(String(removeRecipientFromEnvelopeRecipientId))}`);
         }
-        const requestPath = `/accounts/${accountId}/envelopes/${envelopeId}/recipients` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
+        const requestPath = `/accounts/${encodeURIComponent(String(accountId))}/envelopes/${encodeURIComponent(String(envelopeId))}/recipients` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.sendWithTracingAsync<ListRecipientsResponse>("Docusign.removeRecipientFromEnvelope", "RemoveRecipientFromEnvelope", "DELETE", requestUrl, undefined, options);
 
@@ -1657,7 +1657,7 @@ export class DocusignClient extends ConnectorClientBase {
         if (options.recipientId !== undefined) {
             queryParams.push(`recipientId=${encodeURIComponent(String(options.recipientId))}`);
         }
-        const requestPath = `/accounts/${accountId}/envelopes/${envelopeId}/recipientFields` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
+        const requestPath = `/accounts/${encodeURIComponent(String(accountId))}/envelopes/${encodeURIComponent(String(envelopeId))}/recipientFields` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.sendWithTracingAsync<Signer>("Docusign.getRecipientFields", "GetRecipientFields", "GET", requestUrl, undefined, options);
 
@@ -1669,7 +1669,7 @@ export class DocusignClient extends ConnectorClientBase {
      * @remarks Get audit event list
      */
     public async getAuditEvents(accountId: string, envelopeId: string, options: ConnectorOperationOptions = {}): Promise<AuditResponse> {
-        const requestPath = `/accounts/${accountId}/envelopes/${envelopeId}/audit_events`;
+        const requestPath = `/accounts/${encodeURIComponent(String(accountId))}/envelopes/${encodeURIComponent(String(envelopeId))}/audit_events`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.sendWithTracingAsync<AuditResponse>("Docusign.getAuditEvents", "GetAuditEvents", "GET", requestUrl, undefined, options);
 
@@ -1691,7 +1691,7 @@ export class DocusignClient extends ConnectorClientBase {
         if (verificationType !== undefined) {
             queryParams.push(`verificationType=${encodeURIComponent(String(verificationType))}`);
         }
-        const requestPath = `/accounts/${accountId}/envelopes/${envelopeId}/recipients/addRecipientV2` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
+        const requestPath = `/accounts/${encodeURIComponent(String(accountId))}/envelopes/${encodeURIComponent(String(envelopeId))}/recipients/addRecipientV2` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.sendWithTracingAsync<AddVerificationToRecipientResponse>("Docusign.addVerificationToRecipient", "AddVerificationToRecipient", "PUT", requestUrl, input, options);
 
@@ -1746,7 +1746,7 @@ export class DocusignClient extends ConnectorClientBase {
         if (options.signingGroupId !== undefined) {
             queryParams.push(`signingGroupId=${encodeURIComponent(String(options.signingGroupId))}`);
         }
-        const requestPath = `/accounts/${accountId}/envelopes/${envelopeId}/recipients/updateRecipient` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
+        const requestPath = `/accounts/${encodeURIComponent(String(accountId))}/envelopes/${encodeURIComponent(String(envelopeId))}/recipients/updateRecipient` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.sendWithTracingAsync<Signer>("Docusign.updateEnvelopeRecipient", "UpdateEnvelopeRecipient", "PUT", requestUrl, input, options);
 
@@ -1765,7 +1765,7 @@ export class DocusignClient extends ConnectorClientBase {
         if (options.preserveTemplateRecipient !== undefined) {
             queryParams.push(`preserve_template_recipient=${encodeURIComponent(String(options.preserveTemplateRecipient))}`);
         }
-        const requestPath = `/accounts/${accountId}/envelopes/${envelopeId}/templates` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
+        const requestPath = `/accounts/${encodeURIComponent(String(accountId))}/envelopes/${encodeURIComponent(String(envelopeId))}/templates` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
         await this.sendWithTracingAsync<void>("Docusign.applyTemplatesToDocuments", "ApplyTemplatesToDocuments", "POST", requestUrl, input, options);
     }
@@ -1779,7 +1779,7 @@ export class DocusignClient extends ConnectorClientBase {
         if (name !== undefined) {
             queryParams.push(`name=${encodeURIComponent(String(name))}`);
         }
-        const requestPath = `/accounts/${accountId}/bulk_send_lists` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
+        const requestPath = `/accounts/${encodeURIComponent(String(accountId))}/bulk_send_lists` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.sendWithTracingAsync<BulkSendListGuid>("Docusign.createBulkSendList", "CreateBulkSendList", "POST", requestUrl, input, options);
 
@@ -1795,7 +1795,7 @@ export class DocusignClient extends ConnectorClientBase {
         if (envelopeOrTemplateId !== undefined) {
             queryParams.push(`envelopeOrTemplateId=${encodeURIComponent(String(envelopeOrTemplateId))}`);
         }
-        const requestPath = `/accounts/${accountId}/bulk_send_lists/${bulkSendListId}/send` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
+        const requestPath = `/accounts/${encodeURIComponent(String(accountId))}/bulk_send_lists/${encodeURIComponent(String(bulkSendListId))}/send` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.sendWithTracingAsync<BulkSendListGuid>("Docusign.sendBulk", "BulkSend", "POST", requestUrl, undefined, options);
 
@@ -1819,7 +1819,7 @@ export class DocusignClient extends ConnectorClientBase {
      * @remarks List templates for a specific account.
      */
     public getEnvelopeTemplates(accountId: string, options: ConnectorOperationOptions = {}): ConnectorPagedAsyncIterableIterator<EnvelopeTemplate> {
-        const requestPath = `/accounts/${accountId}/templates`;
+        const requestPath = `/accounts/${encodeURIComponent(String(accountId))}/templates`;
         return this.createPageable<ListTemplatesResponse, EnvelopeTemplate>(
             requestPath,
             async (requestUrl) => {
@@ -1837,7 +1837,7 @@ export class DocusignClient extends ConnectorClientBase {
      * @remarks Add documents to an envelope.
      */
     public async addDocumentsToEnvelope(input: AddDocumentsToEnvelopeInput, accountId: string, envelopeId: string, options: ConnectorOperationOptions = {}): Promise<AddDocumentsResponse> {
-        const requestPath = `/accounts/${accountId}/envelopes/${envelopeId}/documents`;
+        const requestPath = `/accounts/${encodeURIComponent(String(accountId))}/envelopes/${encodeURIComponent(String(envelopeId))}/documents`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.sendWithTracingAsync<AddDocumentsResponse>("Docusign.addDocumentsToEnvelope", "AddDocumentsToEnvelope", "PUT", requestUrl, input, options);
 
@@ -1849,7 +1849,7 @@ export class DocusignClient extends ConnectorClientBase {
      * @remarks List documents from a template
      */
     public listTemplateDocuments(accountId: string, templateId: string, options: ConnectorOperationOptions = {}): ConnectorPagedAsyncIterableIterator<EnvelopeDocument> {
-        const requestPath = `/accounts/${accountId}/templates/${templateId}/documents`;
+        const requestPath = `/accounts/${encodeURIComponent(String(accountId))}/templates/${encodeURIComponent(String(templateId))}/documents`;
         return this.createPageable<ListTemplateDocumentsResponse, EnvelopeDocument>(
             requestPath,
             async (requestUrl) => {
@@ -1867,7 +1867,7 @@ export class DocusignClient extends ConnectorClientBase {
      * @remarks List documents from an envelope
      */
     public listEnvelopeDocuments(accountId: string, envelopeId: string, options: ConnectorOperationOptions = {}): ConnectorPagedAsyncIterableIterator<EnvelopeDocument> {
-        const requestPath = `/accounts/${accountId}/envelopes/${envelopeId}/envelopeDocuments`;
+        const requestPath = `/accounts/${encodeURIComponent(String(accountId))}/envelopes/${encodeURIComponent(String(envelopeId))}/envelopeDocuments`;
         return this.createPageable<ListDocumentsResponse, EnvelopeDocument>(
             requestPath,
             async (requestUrl) => {
@@ -1889,7 +1889,7 @@ export class DocusignClient extends ConnectorClientBase {
         if (documentName !== undefined) {
             queryParams.push(`documentName=${encodeURIComponent(String(documentName))}`);
         }
-        const requestPath = `/accounts/${accountId}/envelopes/${envelopeId}/get_document_info` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
+        const requestPath = `/accounts/${encodeURIComponent(String(accountId))}/envelopes/${encodeURIComponent(String(envelopeId))}/get_document_info` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.sendWithTracingAsync<EnvelopeDocument>("Docusign.getEnvelopeDocumentInfo", "GetEnvelopeDocumentInfo", "GET", requestUrl, undefined, options);
 
@@ -1905,7 +1905,7 @@ export class DocusignClient extends ConnectorClientBase {
         if (tabLabel !== undefined) {
             queryParams.push(`tabLabel=${encodeURIComponent(String(tabLabel))}`);
         }
-        const requestPath = `/accounts/${accountId}/envelopes/${envelopeId}/recipients/${recipientId}/tabs` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
+        const requestPath = `/accounts/${encodeURIComponent(String(accountId))}/envelopes/${encodeURIComponent(String(envelopeId))}/recipients/${encodeURIComponent(String(recipientId))}/tabs` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.sendWithTracingAsync<Tab>("Docusign.getTabInfo", "GetTabInfo", "GET", requestUrl, undefined, options);
 
@@ -1921,7 +1921,7 @@ export class DocusignClient extends ConnectorClientBase {
         if (tabType !== undefined) {
             queryParams.push(`tabType=${encodeURIComponent(String(tabType))}`);
         }
-        const requestPath = `/accounts/${accountId}/envelopes/${envelopeId}/recipients/${recipientId}/tabs` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
+        const requestPath = `/accounts/${encodeURIComponent(String(accountId))}/envelopes/${encodeURIComponent(String(envelopeId))}/recipients/${encodeURIComponent(String(recipientId))}/tabs` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.sendWithTracingAsync<AddRecipientTabsResponse>("Docusign.addRecipientTabs", "AddRecipientTabs", "POST", requestUrl, input, options);
 
@@ -1933,7 +1933,7 @@ export class DocusignClient extends ConnectorClientBase {
      * @remarks Update recipient tab values on an envelope
      */
     public async updateRecipientTabsValues(input: UpdateRecipientTabsValuesInput, accountId: string, envelopeId: string, recipientId: string, options: ConnectorOperationOptions = {}): Promise<void> {
-        const requestPath = `/accounts/${accountId}/envelopes/${envelopeId}/recipients/${recipientId}/tabs`;
+        const requestPath = `/accounts/${encodeURIComponent(String(accountId))}/envelopes/${encodeURIComponent(String(envelopeId))}/recipients/${encodeURIComponent(String(recipientId))}/tabs`;
         const requestUrl = this.resolveUrl(requestPath);
         await this.sendWithTracingAsync<void>("Docusign.updateRecipientTabsValues", "UpdateRecipientTabsValues", "PUT", requestUrl, input, options);
     }
@@ -1943,7 +1943,7 @@ export class DocusignClient extends ConnectorClientBase {
      * @remarks Get recipient tabs from envelope
      */
     public async getEnvelopeRecipientTabs(accountId: string, envelopeId: string, recipientId: string, options: ConnectorOperationOptions = {}): Promise<RecipientTabsResponse> {
-        const requestPath = `/accounts/${accountId}/envelopes/${envelopeId}/recipients/${recipientId}/recipientTabs`;
+        const requestPath = `/accounts/${encodeURIComponent(String(accountId))}/envelopes/${encodeURIComponent(String(envelopeId))}/recipients/${encodeURIComponent(String(recipientId))}/recipientTabs`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.sendWithTracingAsync<RecipientTabsResponse>("Docusign.getEnvelopeRecipientTabs", "GetEnvelopeRecipientTabs", "GET", requestUrl, undefined, options);
 
@@ -1959,7 +1959,7 @@ export class DocusignClient extends ConnectorClientBase {
         if (instanceName !== undefined) {
             queryParams.push(`instanceName=${encodeURIComponent(String(instanceName))}`);
         }
-        const requestPath = `/accounts/${accountId}/maestro-workflows/trigger/${workflowId}` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
+        const requestPath = `/accounts/${encodeURIComponent(String(accountId))}/maestro-workflows/trigger/${encodeURIComponent(String(workflowId))}` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.sendWithTracingAsync<TriggerMaestroFlowResponse>("Docusign.triggerMaestroFlow", "TriggerMaestroFlow", "POST", requestUrl, input, options);
 
@@ -2029,7 +2029,7 @@ export class DocusignClient extends ConnectorClientBase {
         if (options.workflowId !== undefined) {
             queryParams.push(`workflowId=${encodeURIComponent(String(options.workflowId))}`);
         }
-        const requestPath = `/accounts/${accountId}/envelopes/${envelopeId}/recipients/addRecipientV2` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
+        const requestPath = `/accounts/${encodeURIComponent(String(accountId))}/envelopes/${encodeURIComponent(String(envelopeId))}/recipients/addRecipientV2` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.sendWithTracingAsync<Signer>("Docusign.addRecipientToEnvelope", "AddRecipientToEnvelopeV2", "POST", requestUrl, input, options);
 
@@ -2045,7 +2045,7 @@ export class DocusignClient extends ConnectorClientBase {
         if (emailSubject !== undefined) {
             queryParams.push(`emailSubject=${encodeURIComponent(String(emailSubject))}`);
         }
-        const requestPath = `/accounts/${accountId}/envelopes/createBlankEnvelopeV2` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
+        const requestPath = `/accounts/${encodeURIComponent(String(accountId))}/envelopes/createBlankEnvelopeV2` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.sendWithTracingAsync<CreateEnvelopeResponse>("Docusign.createBlankEnvelope", "CreateBlankEnvelopeV2", "POST", requestUrl, input, options);
 
@@ -2067,7 +2067,7 @@ export class DocusignClient extends ConnectorClientBase {
         if (returnUrl !== undefined) {
             queryParams.push(`returnUrl=${encodeURIComponent(String(returnUrl))}`);
         }
-        const requestPath = `/accounts/${accountId}/envelopes/${envelopeId}/views/recipientV2` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
+        const requestPath = `/accounts/${encodeURIComponent(String(accountId))}/envelopes/${encodeURIComponent(String(envelopeId))}/views/recipientV2` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.sendWithTracingAsync<EmbeddedSigningResponse>("Docusign.generateEmbeddedSigningURL", "GenerateEmbeddedSigningURLV2", "POST", requestUrl, input, options);
 
@@ -2083,7 +2083,7 @@ export class DocusignClient extends ConnectorClientBase {
         if (options.language !== undefined) {
             queryParams.push(`language=${encodeURIComponent(String(options.language))}`);
         }
-        const requestPath = `/accounts/${accountId}/envelopes/${envelopeId}/documents/${documentId}/documentsDownload` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
+        const requestPath = `/accounts/${encodeURIComponent(String(accountId))}/envelopes/${encodeURIComponent(String(envelopeId))}/documents/${encodeURIComponent(String(documentId))}/documentsDownload` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.sendWithTracingAsync<Blob>("Docusign.getDocuments", "GetDocumentsV2", "GET", requestUrl, undefined, options);
 

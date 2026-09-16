@@ -205,7 +205,7 @@ export class SendgridClient extends ConnectorClientBase {
      * @remarks Get the global suppression
      */
     public async getGlobalSuppression(email: string, options: ConnectorOperationOptions = {}): Promise<GetGlobalSuppressResponse> {
-        const requestPath = `/suppressions/global/${email}`;
+        const requestPath = `/suppressions/global/${encodeURIComponent(String(email))}`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.sendWithTracingAsync<GetGlobalSuppressResponse>("Sendgrid.getGlobalSuppression", "GetGlobalSuppression", "GET", requestUrl, undefined, options);
 
@@ -217,7 +217,7 @@ export class SendgridClient extends ConnectorClientBase {
      * @remarks Delete the global suppression
      */
     public async deleteGlobalSuppression(email: string, options: ConnectorOperationOptions = {}): Promise<void> {
-        const requestPath = `/suppressions/global/${email}`;
+        const requestPath = `/suppressions/global/${encodeURIComponent(String(email))}`;
         const requestUrl = this.resolveUrl(requestPath);
         await this.sendWithTracingAsync<void>("Sendgrid.deleteGlobalSuppression", "DeleteGlobalSuppression", "DELETE", requestUrl, undefined, options);
     }
@@ -227,7 +227,7 @@ export class SendgridClient extends ConnectorClientBase {
      * @remarks Add an individual recipient to a recipient list.
      */
     public async addRecipientToList(listId: string, recipientId: string, options: ConnectorOperationOptions = {}): Promise<ObjectEntity> {
-        const requestPath = `/v3/contactdb/lists/${listId}/recipients/${recipientId}`;
+        const requestPath = `/v3/contactdb/lists/${encodeURIComponent(String(listId))}/recipients/${encodeURIComponent(String(recipientId))}`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.sendWithTracingAsync<ObjectEntity>("Sendgrid.addRecipientToList", "AddRecipientToList", "POST", requestUrl, undefined, options);
 
@@ -239,7 +239,7 @@ export class SendgridClient extends ConnectorClientBase {
      * @remarks Get a specific bounce for a given email address.
      */
     public async getBounce(email: string, options: ConnectorOperationOptions = {}): Promise<Array<Bounce>> {
-        const requestPath = `/suppression/bounces/${email}`;
+        const requestPath = `/suppression/bounces/${encodeURIComponent(String(email))}`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.sendWithTracingAsync<Array<Bounce>>("Sendgrid.getBounce", "GetBounce", "GET", requestUrl, undefined, options);
 
@@ -251,7 +251,7 @@ export class SendgridClient extends ConnectorClientBase {
      * @remarks Delete an email address from your bounce list.
      */
     public async deleteBounce(email: string, options: ConnectorOperationOptions = {}): Promise<void> {
-        const requestPath = `/suppression/bounces/${email}`;
+        const requestPath = `/suppression/bounces/${encodeURIComponent(String(email))}`;
         const requestUrl = this.resolveUrl(requestPath);
         await this.sendWithTracingAsync<void>("Sendgrid.deleteBounce", "DeleteBounce", "DELETE", requestUrl, undefined, options);
     }
@@ -261,7 +261,7 @@ export class SendgridClient extends ConnectorClientBase {
      * @remarks Check if email is in unsubscribed email list.
      */
     public async listCheckEmailIsInUnsubscribes(email: string, options: ConnectorOperationOptions = {}): Promise<EmailIsUnsubscribedResponse> {
-        const requestPath = `/unsubscribes/${email}`;
+        const requestPath = `/unsubscribes/${encodeURIComponent(String(email))}`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.sendWithTracingAsync<EmailIsUnsubscribedResponse>("Sendgrid.listCheckEmailIsInUnsubscribes", "CheckEmailIsInUnsubscribesList", "GET", requestUrl, undefined, options);
 

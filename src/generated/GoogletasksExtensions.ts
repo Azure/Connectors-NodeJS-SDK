@@ -183,7 +183,7 @@ export class GoogletasksClient extends ConnectorClientBase {
      * @remarks Lists the tasks for a specific task list.
      */
     public listTasks(taskListId: string, options: ConnectorOperationOptions = {}): ConnectorPagedAsyncIterableIterator<TaskObject> {
-        const requestPath = `/lists/${taskListId}/tasks`;
+        const requestPath = `/lists/${encodeURIComponent(String(taskListId))}/tasks`;
         return this.createPageable<TaskList, TaskObject>(
             requestPath,
             async (requestUrl) => {
@@ -201,7 +201,7 @@ export class GoogletasksClient extends ConnectorClientBase {
      * @remarks Create a task in a specific task list.
      */
     public async createTask(input: TaskCreate, taskListId: string, options: ConnectorOperationOptions = {}): Promise<TaskObject> {
-        const requestPath = `/lists/${taskListId}/tasks`;
+        const requestPath = `/lists/${encodeURIComponent(String(taskListId))}/tasks`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.sendWithTracingAsync<TaskObject>("Googletasks.createTask", "CreateTask", "POST", requestUrl, input, options);
 
@@ -213,7 +213,7 @@ export class GoogletasksClient extends ConnectorClientBase {
      * @remarks Get specific task from the specified task list.
      */
     public async listTask(taskListId: string, taskId: string, options: ConnectorOperationOptions = {}): Promise<TaskObject> {
-        const requestPath = `/lists/${taskListId}/tasks/${taskId}`;
+        const requestPath = `/lists/${encodeURIComponent(String(taskListId))}/tasks/${encodeURIComponent(String(taskId))}`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.sendWithTracingAsync<TaskObject>("Googletasks.listTask", "ListTask", "GET", requestUrl, undefined, options);
 

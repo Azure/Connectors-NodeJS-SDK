@@ -21,7 +21,7 @@ async function main(): Promise<void> {
 
     try {
         const result: RepositoryDetails = await client.getRepositoryById(
-            GITHUB_REPOSITORY_ID,
+            Number(GITHUB_REPOSITORY_ID),
             "application/vnd.github+json",
         );
         console.log(`Repository id: ${String(result.id ?? "unknown")}`);

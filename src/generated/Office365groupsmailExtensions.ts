@@ -396,7 +396,7 @@ export class Office365groupsmailClient extends ConnectorClientBase {
      * @remarks Get all the conversations in this group.
      */
     public listConversations(groupId: string, options: ConnectorOperationOptions = {}): ConnectorPagedAsyncIterableIterator<Conversation> {
-        const requestPath = `/v1.0/groups/${groupId}/conversations`;
+        const requestPath = `/v1.0/groups/${encodeURIComponent(String(groupId))}/conversations`;
         return this.createPageable<ListConversationsResponse, Conversation>(
             requestPath,
             async (requestUrl, isFirstPage) => {
@@ -415,7 +415,7 @@ export class Office365groupsmailClient extends ConnectorClientBase {
      * @remarks Create a new conversation in this group.
      */
     public async createConversation(input: CreateConversationBody, groupId: string, contentType: string, options: ConnectorOperationOptions = {}): Promise<CreateConversationResponse> {
-        const requestPath = `/v1.0/groups/${groupId}/conversations`;
+        const requestPath = `/v1.0/groups/${encodeURIComponent(String(groupId))}/conversations`;
         const requestHeaders: Record<string, string> = {};
         if (contentType !== undefined) {
             requestHeaders["content-type"] = String(contentType);
@@ -431,7 +431,7 @@ export class Office365groupsmailClient extends ConnectorClientBase {
      * @remarks Retrieves the properties of a particular conversation.
      */
     public async getGroupConversation(groupId: string, conversationId: string, options: ConnectorOperationOptions = {}): Promise<Conversation> {
-        const requestPath = `/v1.0/groups/${groupId}/conversations/${conversationId}`;
+        const requestPath = `/v1.0/groups/${encodeURIComponent(String(groupId))}/conversations/${encodeURIComponent(String(conversationId))}`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.sendWithTracingAsync<Conversation>("Office365groupsmail.getGroupConversation", "GetGroupConversation", "GET", requestUrl, undefined, options);
 
@@ -443,7 +443,7 @@ export class Office365groupsmailClient extends ConnectorClientBase {
      * @remarks Get all the threads in a group conversation.
      */
     public listConversationThreads(groupId: string, conversationId: string, options: ConnectorOperationOptions = {}): ConnectorPagedAsyncIterableIterator<ConversationThread> {
-        const requestPath = `/v1.0/groups/${groupId}/conversations/${conversationId}/threads`;
+        const requestPath = `/v1.0/groups/${encodeURIComponent(String(groupId))}/conversations/${encodeURIComponent(String(conversationId))}/threads`;
         return this.createPageable<ListConversationThreadsResponse, ConversationThread>(
             requestPath,
             async (requestUrl, isFirstPage) => {
@@ -462,7 +462,7 @@ export class Office365groupsmailClient extends ConnectorClientBase {
      * @remarks Create a new thread in the specified conversation.
      */
     public async createConversationThread(input: CreateConversationBody, groupId: string, conversationId: string, contentType: string, options: ConnectorOperationOptions = {}): Promise<NewConversationThreadResponse> {
-        const requestPath = `/v1.0/groups/${groupId}/conversations/${conversationId}/threads`;
+        const requestPath = `/v1.0/groups/${encodeURIComponent(String(groupId))}/conversations/${encodeURIComponent(String(conversationId))}/threads`;
         const requestHeaders: Record<string, string> = {};
         if (contentType !== undefined) {
             requestHeaders["content-type"] = String(contentType);
@@ -478,7 +478,7 @@ export class Office365groupsmailClient extends ConnectorClientBase {
      * @remarks Get all the threads of a group.
      */
     public listGroupThreads(groupId: string, options: ConnectorOperationOptions = {}): ConnectorPagedAsyncIterableIterator<ConversationThread> {
-        const requestPath = `/v1.0/groups/${groupId}/threads`;
+        const requestPath = `/v1.0/groups/${encodeURIComponent(String(groupId))}/threads`;
         return this.createPageable<ListGroupThreadsResponse, ConversationThread>(
             requestPath,
             async (requestUrl, isFirstPage) => {
@@ -497,7 +497,7 @@ export class Office365groupsmailClient extends ConnectorClientBase {
      * @remarks Start a new group conversation by first creating a thread.
      */
     public async createGroupThread(input: CreateConversationBody, groupId: string, contentType: string, options: ConnectorOperationOptions = {}): Promise<NewConversationThreadResponse> {
-        const requestPath = `/v1.0/groups/${groupId}/threads`;
+        const requestPath = `/v1.0/groups/${encodeURIComponent(String(groupId))}/threads`;
         const requestHeaders: Record<string, string> = {};
         if (contentType !== undefined) {
             requestHeaders["content-type"] = String(contentType);
@@ -513,7 +513,7 @@ export class Office365groupsmailClient extends ConnectorClientBase {
      * @remarks Get a specific thread that belongs to a group.
      */
     public async getConversationThread(groupId: string, threadId: string, options: ConnectorOperationOptions = {}): Promise<ConversationThread> {
-        const requestPath = `/v1.0/groups/${groupId}/threads/${threadId}`;
+        const requestPath = `/v1.0/groups/${encodeURIComponent(String(groupId))}/threads/${encodeURIComponent(String(threadId))}`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.sendWithTracingAsync<ConversationThread>("Office365groupsmail.getConversationThread", "GetConversationThread", "GET", requestUrl, undefined, options);
 
@@ -525,7 +525,7 @@ export class Office365groupsmailClient extends ConnectorClientBase {
      * @remarks Deletes the specified conversation thread.
      */
     public async deleteConversationThread(groupId: string, threadId: string, options: ConnectorOperationOptions = {}): Promise<void> {
-        const requestPath = `/v1.0/groups/${groupId}/threads/${threadId}`;
+        const requestPath = `/v1.0/groups/${encodeURIComponent(String(groupId))}/threads/${encodeURIComponent(String(threadId))}`;
         const requestUrl = this.resolveUrl(requestPath);
         await this.sendWithTracingAsync<void>("Office365groupsmail.deleteConversationThread", "DeleteConversationThread", "DELETE", requestUrl, undefined, options);
     }
@@ -535,7 +535,7 @@ export class Office365groupsmailClient extends ConnectorClientBase {
      * @remarks Get all the posts of the specified conversation thread.
      */
     public listThreadPosts(groupId: string, threadId: string, options: ConnectorOperationOptions = {}): ConnectorPagedAsyncIterableIterator<Post> {
-        const requestPath = `/v1.0/groups/${groupId}/threads/${threadId}/posts`;
+        const requestPath = `/v1.0/groups/${encodeURIComponent(String(groupId))}/threads/${encodeURIComponent(String(threadId))}/posts`;
         return this.createPageable<ListThreadPostsResponse, Post>(
             requestPath,
             async (requestUrl, isFirstPage) => {
@@ -558,7 +558,7 @@ export class Office365groupsmailClient extends ConnectorClientBase {
         if (expand !== undefined) {
             queryParams.push(`$expand=${encodeURIComponent(String(expand))}`);
         }
-        const requestPath = `/v1.0/groups/${groupId}/threads/${threadId}/posts/${postId}` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
+        const requestPath = `/v1.0/groups/${encodeURIComponent(String(groupId))}/threads/${encodeURIComponent(String(threadId))}/posts/${encodeURIComponent(String(postId))}` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.sendWithTracingAsync<Post>("Office365groupsmail.getThread", "GetThreadPost", "GET", requestUrl, undefined, options);
 
@@ -570,7 +570,7 @@ export class Office365groupsmailClient extends ConnectorClientBase {
      * @remarks Retrieve a list of attachments that belong to a post.
      */
     public getAttachments(groupId: string, threadId: string, postId: string, options: ConnectorOperationOptions = {}): ConnectorPagedAsyncIterableIterator<Attachment> {
-        const requestPath = `/v1.0/groups/${groupId}/threads/${threadId}/posts/${postId}/attachments`;
+        const requestPath = `/v1.0/groups/${encodeURIComponent(String(groupId))}/threads/${encodeURIComponent(String(threadId))}/posts/${encodeURIComponent(String(postId))}/attachments`;
         return this.createPageable<GetAttachmentsResponse, Attachment>(
             requestPath,
             async (requestUrl, isFirstPage) => {
@@ -589,7 +589,7 @@ export class Office365groupsmailClient extends ConnectorClientBase {
      * @remarks Reply to a thread in a group conversation and add a new post to it.
      */
     public async replyToAThread(input: ReplyConversationThreadBody, groupId: string, threadId: string, contentType: string, options: ConnectorOperationOptions = {}): Promise<void> {
-        const requestPath = `/v1.0/groups/${groupId}/threads/${threadId}/reply`;
+        const requestPath = `/v1.0/groups/${encodeURIComponent(String(groupId))}/threads/${encodeURIComponent(String(threadId))}/reply`;
         const requestHeaders: Record<string, string> = {};
         if (contentType !== undefined) {
             requestHeaders["content-type"] = String(contentType);
@@ -603,7 +603,7 @@ export class Office365groupsmailClient extends ConnectorClientBase {
      * @remarks Reply to a post and add a new post to the specified thread in a group conversation.
      */
     public async reply(input: ReplyConversationThreadBody, groupId: string, threadId: string, postId: string, contentType: string, options: ConnectorOperationOptions = {}): Promise<void> {
-        const requestPath = `/v1.0/groups/${groupId}/threads/${threadId}/posts/${postId}/reply`;
+        const requestPath = `/v1.0/groups/${encodeURIComponent(String(groupId))}/threads/${encodeURIComponent(String(threadId))}/posts/${encodeURIComponent(String(postId))}/reply`;
         const requestHeaders: Record<string, string> = {};
         if (contentType !== undefined) {
             requestHeaders["content-type"] = String(contentType);
@@ -654,7 +654,7 @@ export class Office365groupsmailClient extends ConnectorClientBase {
      * @remarks Forward a post to a recipient.
      */
     public async forward(input: ForwardPostBody, groupMail: string, conversationId: string, threadId: string, postId: string, prefer: string, contentType: string, options: ConnectorOperationOptions = {}): Promise<void> {
-        const requestPath = `/beta/groups/${groupMail}/conversations/${conversationId}/threads/${threadId}/posts/${postId}/forward`;
+        const requestPath = `/beta/groups/${encodeURIComponent(String(groupMail))}/conversations/${encodeURIComponent(String(conversationId))}/threads/${encodeURIComponent(String(threadId))}/posts/${encodeURIComponent(String(postId))}/forward`;
         const requestHeaders: Record<string, string> = {};
         if (prefer !== undefined) {
             requestHeaders["Prefer"] = String(prefer);

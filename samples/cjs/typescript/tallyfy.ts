@@ -9,7 +9,7 @@ const USER_ID = process.env.TALLYFY_USER_ID ?? "";
 if (!CONNECTION_URL || !ORGANIZATION || !USER_ID) throw new Error("TALLYFY_CONNECTION_URL, TALLYFY_ORGANIZATION, and TALLYFY_USER_ID are required.");
 async function main(): Promise<void> {
     try {
-        const tasks = await new TallyfyClient(CONNECTION_URL, new ManagedIdentityTokenProvider()).getUserTasks(ORGANIZATION, USER_ID);
+        const tasks = await new TallyfyClient(CONNECTION_URL, new ManagedIdentityTokenProvider()).getUserTasks(ORGANIZATION, Number(USER_ID));
         console.log("Tasks:", JSON.stringify(tasks, null, 2));
     } catch (error) {
         if (error instanceof ConnectorError) console.error(`Connector error (${error.statusCode}): ${error.message}`);

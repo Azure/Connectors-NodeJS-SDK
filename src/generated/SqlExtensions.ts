@@ -108,7 +108,7 @@ export interface Database {
     /** The display name of the database. */
     DisplayName?: string;
     /** Additional database properties provided by the connector to the clients. */
-    DynamicProperties?: Record<string, unknown>;
+    DynamicProperties?: Record<string, ObjectEntity>;
     /** Database items */
     tables?: Array<Table>;
 }
@@ -241,7 +241,7 @@ export interface DynamicValues {
  * Definition: Item
  */
 export interface Item {
-    dynamicProperties?: Record<string, unknown>;
+    dynamicProperties?: Record<string, ObjectEntity>;
 }
 
 /**
@@ -294,9 +294,9 @@ export interface PassThroughNativeQueryBody {
     /** Query Text */
     query?: string;
     /** Formal Parameters */
-    formalParameters?: Record<string, unknown>;
+    formalParameters?: Record<string, string>;
     /** Actual parameters */
-    actualParameters?: Record<string, unknown>;
+    actualParameters?: Record<string, ObjectEntity>;
 }
 
 /**
@@ -315,9 +315,9 @@ export interface PassThroughNativeQueryMetadata {
  */
 export interface PassThroughNativeQueryResult {
     /** Output parameter values */
-    OutputParameters?: Record<string, unknown>;
+    OutputParameters?: Record<string, ObjectEntity>;
     /** Collection of all result sets */
-    ResultSets?: Record<string, unknown>;
+    ResultSets?: Record<string, Array<Record<string, ObjectEntity>>>;
 }
 
 /**
@@ -346,11 +346,11 @@ export interface ProcedureMetadata {
  */
 export interface ProcedureResult {
     /** Output parameter values. The schema is dynamic based on the procedure. */
-    OutputParameters?: Record<string, unknown>;
+    OutputParameters?: Record<string, ObjectEntity>;
     /** Return code of a procedure. */
     ReturnCode?: number;
     /** Result sets returned by a procedure. The schema is dynamic based on the procedure. */
-    ResultSets?: Record<string, unknown>;
+    ResultSets?: Record<string, Array<Record<string, ObjectEntity>>>;
 }
 
 /**
@@ -396,7 +396,7 @@ export interface Server {
     /** The display name of the server. */
     DisplayName?: string;
     /** Additional server properties provided by the connector to the clients. */
-    DynamicProperties?: Record<string, unknown>;
+    DynamicProperties?: Record<string, ObjectEntity>;
     /** Table items */
     databases?: Array<Database>;
 }
@@ -405,7 +405,7 @@ export interface Server {
  * Definition: SqlItem
  */
 export interface SqlItem {
-    dynamicProperties?: Record<string, unknown>;
+    dynamicProperties?: Record<string, ObjectEntity>;
 }
 
 /**
@@ -421,11 +421,11 @@ export interface SqlItemsList {
  */
 export interface SqlPassThroughNativeQueryBody {
     /** Actual parameters */
-    actualParameters?: Record<string, unknown>;
+    actualParameters?: Record<string, ObjectEntity>;
     /** Query Text */
     query?: string;
     /** Formal Parameters */
-    formalParameters?: Record<string, unknown>;
+    formalParameters?: Record<string, string>;
 }
 
 /**
@@ -433,9 +433,9 @@ export interface SqlPassThroughNativeQueryBody {
  */
 export interface SqlPassThroughNativeQueryResult {
     /** Output parameter values */
-    OutputParameters?: Record<string, unknown>;
+    OutputParameters?: Record<string, ObjectEntity>;
     /** Collection of all result sets */
-    ResultSets?: Record<string, unknown>;
+    ResultSets?: Record<string, Array<Record<string, ObjectEntity>>>;
 }
 
 /**
@@ -447,7 +447,7 @@ export interface Table {
     /** The display name of the table. */
     DisplayName?: string;
     /** Additional table properties provided by the connector to the clients. */
-    DynamicProperties?: Record<string, unknown>;
+    DynamicProperties?: Record<string, ObjectEntity>;
 }
 
 /**
@@ -600,15 +600,15 @@ export interface GetItemsOptions extends ConnectorOperationOptions {
     /** An ODATA orderBy query for specifying the order of entries. */
     orderby?: string;
     /** The number of entries to skip (default = 0). */
-    skip?: string;
+    skip?: number;
     /** Total number of entries to retrieve (default = all). */
-    top?: string;
+    top?: number;
     /** Specific fields to retrieve from entries (default = all). */
     select?: string;
     /** Option to specify if only total entity count should be returned in the query (default = false). */
-    count?: string;
+    count?: boolean;
     /** Specify whether to extract MIP labels. */
-    extractSensitivityLabel?: string;
+    extractSensitivityLabel?: boolean;
     /** Default collection will be queried unless specified. */
     purviewAccountName?: string;
 }
@@ -618,7 +618,7 @@ export interface GetItemsOptions extends ConnectorOperationOptions {
  */
 export interface GetTablesOptions extends ConnectorOperationOptions {
     /** Specify whether to extract MIP labels. */
-    extractSensitivityLabel?: string;
+    extractSensitivityLabel?: boolean;
     /** Default collection will be queried unless specified. */
     purviewAccountName?: string;
 }
@@ -786,7 +786,7 @@ export class SqlClient extends ConnectorClientBase {
      * @remarks This operation deletes a row from a table.
      */
     public async deleteItem(server: string, database: string, table: string, id: string, options: ConnectorOperationOptions = {}): Promise<void> {
-        const requestPath = `/v2/datasets/${server},${database}/tables/${table}/items/${id}`;
+        const requestPath = `/v2/datasets/${encodeURIComponent(encodeURIComponent(String(server)))},${encodeURIComponent(encodeURIComponent(String(database)))}/tables/${encodeURIComponent(encodeURIComponent(String(table)))}/items/${encodeURIComponent(encodeURIComponent(String(id)))}`;
         const requestUrl = this.resolveUrl(requestPath);
         await this.sendWithTracingAsync<void>("Sql.deleteItem", "DeleteItem_V2", "DELETE", requestUrl, undefined, options);
     }
@@ -796,7 +796,7 @@ export class SqlClient extends ConnectorClientBase {
      * @remarks Execute a SQL query
      */
     public async executePassThroughNativeQuery(input: SqlPassThroughNativeQueryBody, server: string, database: string, options: ConnectorOperationOptions = {}): Promise<ExecutePassThroughNativeQueryResponse> {
-        const requestPath = `/v2/datasets/${server},${database}/query/sql`;
+        const requestPath = `/v2/datasets/${encodeURIComponent(encodeURIComponent(String(server)))},${encodeURIComponent(encodeURIComponent(String(database)))}/query/sql`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.sendWithTracingAsync<ExecutePassThroughNativeQueryResponse>("Sql.executePassThroughNativeQuery", "ExecutePassThroughNativeQuery_V2", "POST", requestUrl, input, options);
 
@@ -808,7 +808,7 @@ export class SqlClient extends ConnectorClientBase {
      * @remarks This operation runs a stored procedure.
      */
     public async executeProcedure(input: ExecuteProcedureInput, server: string, database: string, procedure: string, options: ConnectorOperationOptions = {}): Promise<ExecuteProcedureResponse> {
-        const requestPath = `/v2/datasets/${server},${database}/procedures/${procedure}`;
+        const requestPath = `/v2/datasets/${encodeURIComponent(encodeURIComponent(String(server)))},${encodeURIComponent(encodeURIComponent(String(database)))}/procedures/${encodeURIComponent(encodeURIComponent(String(procedure)))}`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.sendWithTracingAsync<ExecuteProcedureResponse>("Sql.executeProcedure", "ExecuteProcedure_V2", "POST", requestUrl, input, options);
 
@@ -820,7 +820,7 @@ export class SqlClient extends ConnectorClientBase {
      * @remarks This operation gets a row from a table.
      */
     public async getItem(server: string, database: string, table: string, id: string, options: ConnectorOperationOptions = {}): Promise<GetItemResponse> {
-        const requestPath = `/v2/datasets/${server},${database}/tables/${table}/items/${id}`;
+        const requestPath = `/v2/datasets/${encodeURIComponent(encodeURIComponent(String(server)))},${encodeURIComponent(encodeURIComponent(String(database)))}/tables/${encodeURIComponent(encodeURIComponent(String(table)))}/items/${encodeURIComponent(encodeURIComponent(String(id)))}`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.sendWithTracingAsync<GetItemResponse>("Sql.getItem", "GetItem_V2", "GET", requestUrl, undefined, options);
 
@@ -860,7 +860,7 @@ export class SqlClient extends ConnectorClientBase {
         if (options.purviewAccountName !== undefined) {
             queryParams.push(`purviewAccountName=${encodeURIComponent(String(options.purviewAccountName))}`);
         }
-        const requestPath = `/v2/datasets/${server},${database}/tables/${table}/items` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
+        const requestPath = `/v2/datasets/${encodeURIComponent(encodeURIComponent(String(server)))},${encodeURIComponent(encodeURIComponent(String(database)))}/tables/${encodeURIComponent(encodeURIComponent(String(table)))}/items` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         return this.createPageable<GetItemsResponse, SqlItem>(
             requestPath,
             async (requestUrl, isFirstPage) => {
@@ -886,7 +886,7 @@ export class SqlClient extends ConnectorClientBase {
         if (options.purviewAccountName !== undefined) {
             queryParams.push(`purviewAccountName=${encodeURIComponent(String(options.purviewAccountName))}`);
         }
-        const requestPath = `/v2/datasets/${server},${database}/tables` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
+        const requestPath = `/v2/datasets/${encodeURIComponent(encodeURIComponent(String(server)))},${encodeURIComponent(encodeURIComponent(String(database)))}/tables` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.sendWithTracingAsync<GetTablesResponse>("Sql.getTables", "GetTables_V2", "GET", requestUrl, undefined, options);
 
@@ -898,7 +898,7 @@ export class SqlClient extends ConnectorClientBase {
      * @remarks This operation updates an existing row in a table.
      */
     public async patchItem(input: PatchItemInput, server: string, database: string, table: string, id: string, options: ConnectorOperationOptions = {}): Promise<PatchItemResponse> {
-        const requestPath = `/v2/datasets/${server},${database}/tables/${table}/items/${id}`;
+        const requestPath = `/v2/datasets/${encodeURIComponent(encodeURIComponent(String(server)))},${encodeURIComponent(encodeURIComponent(String(database)))}/tables/${encodeURIComponent(encodeURIComponent(String(table)))}/items/${encodeURIComponent(encodeURIComponent(String(id)))}`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.sendWithTracingAsync<PatchItemResponse>("Sql.patchItem", "PatchItem_V2", "PATCH", requestUrl, input, options);
 
@@ -910,7 +910,7 @@ export class SqlClient extends ConnectorClientBase {
      * @remarks This operation inserts a new row into a table.
      */
     public async postItem(input: PostItemInput, server: string, database: string, table: string, options: ConnectorOperationOptions = {}): Promise<PostItemResponse> {
-        const requestPath = `/v2/datasets/${server},${database}/tables/${table}/items`;
+        const requestPath = `/v2/datasets/${encodeURIComponent(encodeURIComponent(String(server)))},${encodeURIComponent(encodeURIComponent(String(database)))}/tables/${encodeURIComponent(encodeURIComponent(String(table)))}/items`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.sendWithTracingAsync<PostItemResponse>("Sql.postItem", "PostItem_V2", "POST", requestUrl, input, options);
 

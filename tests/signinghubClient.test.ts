@@ -69,9 +69,9 @@ describe("SigninghubClient — downloadAttachmentAttachment", () => {
 
         const client = new SigninghubClient(TestConnectionUrl, createMockCredential());
         const result = await client.downloadAttachmentAttachment(
-            "123",
-            "456",
-            "789",
+            123,
+            456,
+            789,
             "application/json",
             "application/pdf",
         );
@@ -89,9 +89,9 @@ describe("SigninghubClient — downloadAttachmentAttachment", () => {
         const client = new SigninghubClient(TestConnectionUrl, createMockCredential());
         try {
             await client.downloadAttachmentAttachment(
-                "123",
-                "456",
-                "789",
+                123,
+                456,
+                789,
                 "application/json",
                 "application/pdf",
             );

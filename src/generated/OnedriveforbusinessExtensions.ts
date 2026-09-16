@@ -138,7 +138,7 @@ export interface BlobMetadataPage {
  */
 export interface GetFileContentByPathOptions extends ConnectorOperationOptions {
     /** A boolean value (true, false) to infer content-type based on extension. */
-    inferContentType?: string;
+    inferContentType?: boolean;
 }
 
 /**
@@ -146,7 +146,7 @@ export interface GetFileContentByPathOptions extends ConnectorOperationOptions {
  */
 export interface GetFileContentOptions extends ConnectorOperationOptions {
     /** A boolean value (true, false) to infer content-type based on extension. */
-    inferContentType?: string;
+    inferContentType?: boolean;
 }
 
 /**
@@ -154,7 +154,7 @@ export interface GetFileContentOptions extends ConnectorOperationOptions {
  */
 export interface CopyFileOptions extends ConnectorOperationOptions {
     /** Overwrites the destination file if set to 'true'. */
-    overwrite?: string;
+    overwrite?: boolean;
 }
 
 /**
@@ -162,7 +162,7 @@ export interface CopyFileOptions extends ConnectorOperationOptions {
  */
 export interface CopyDriveFileOptions extends ConnectorOperationOptions {
     /** Overwrites the destination file if set to 'true'. */
-    overwrite?: string;
+    overwrite?: boolean;
 }
 
 /**
@@ -170,7 +170,7 @@ export interface CopyDriveFileOptions extends ConnectorOperationOptions {
  */
 export interface CopyDriveFileByPathOptions extends ConnectorOperationOptions {
     /** Overwrites the destination file if set to 'true'. */
-    overwrite?: string;
+    overwrite?: boolean;
 }
 
 /**
@@ -178,7 +178,7 @@ export interface CopyDriveFileByPathOptions extends ConnectorOperationOptions {
  */
 export interface MoveFileOptions extends ConnectorOperationOptions {
     /** Overwrites the destination file if set to 'true'. */
-    overwrite?: string;
+    overwrite?: boolean;
 }
 
 /**
@@ -186,7 +186,7 @@ export interface MoveFileOptions extends ConnectorOperationOptions {
  */
 export interface MoveFileByPathOptions extends ConnectorOperationOptions {
     /** Overwrites the destination file if set to 'true'. */
-    overwrite?: string;
+    overwrite?: boolean;
 }
 
 /**
@@ -210,7 +210,7 @@ export interface ConvertFileByPathOptions extends ConnectorOperationOptions {
  */
 export interface FindFilesOptions extends ConnectorOperationOptions {
     /** Maximum number of files to return (1-100) */
-    maxFileCount?: string;
+    maxFileCount?: number;
 }
 
 /**
@@ -218,7 +218,7 @@ export interface FindFilesOptions extends ConnectorOperationOptions {
  */
 export interface FindFilesByPathOptions extends ConnectorOperationOptions {
     /** Maximum number of files to return (1-100) */
-    maxFileCount?: string;
+    maxFileCount?: number;
 }
 
 /**
@@ -242,7 +242,7 @@ export interface CreateShareLinkByPathOptions extends ConnectorOperationOptions 
  */
 export interface ExtractFolderOptions extends ConnectorOperationOptions {
     /** Overwrites the destination files if set to 'true'. */
-    overwrite?: string;
+    overwrite?: boolean;
 }
 
 /**
@@ -252,7 +252,7 @@ export interface ListFolderOptions extends ConnectorOperationOptions {
     /** The 'skipToken' service parameter. */
     skipToken?: string;
     /** The number of results to return. */
-    top?: string;
+    top?: number;
 }
 
 /**
@@ -472,7 +472,7 @@ export class OnedriveforbusinessClient extends ConnectorClientBase {
      * @remarks This operation gets the metadata for a file.
      */
     public async getFileMetadata(id: string, options: ConnectorOperationOptions = {}): Promise<BlobMetadata> {
-        const requestPath = `/datasets/default/files/${id}`;
+        const requestPath = `/datasets/default/files/${encodeURIComponent(encodeURIComponent(String(id)))}`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.sendWithTracingAsync<BlobMetadata>("Onedriveforbusiness.getFileMetadata", "GetFileMetadata", "GET", requestUrl, undefined, options);
 
@@ -484,7 +484,7 @@ export class OnedriveforbusinessClient extends ConnectorClientBase {
      * @remarks This operation updates a file.
      */
     public async updateFile(input: UpdateFileInput, id: string, options: ConnectorOperationOptions = {}): Promise<BlobMetadata> {
-        const requestPath = `/datasets/default/files/${id}`;
+        const requestPath = `/datasets/default/files/${encodeURIComponent(encodeURIComponent(String(id)))}`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.sendWithTracingAsync<BlobMetadata>("Onedriveforbusiness.updateFile", "UpdateFile", "PUT", requestUrl, input, options);
 
@@ -496,7 +496,7 @@ export class OnedriveforbusinessClient extends ConnectorClientBase {
      * @remarks This operation deletes a file.
      */
     public async deleteFile(id: string, options: ConnectorOperationOptions = {}): Promise<void> {
-        const requestPath = `/datasets/default/files/${id}`;
+        const requestPath = `/datasets/default/files/${encodeURIComponent(encodeURIComponent(String(id)))}`;
         const requestUrl = this.resolveUrl(requestPath);
         await this.sendWithTracingAsync<void>("Onedriveforbusiness.deleteFile", "DeleteFile", "DELETE", requestUrl, undefined, options);
     }
@@ -545,7 +545,7 @@ export class OnedriveforbusinessClient extends ConnectorClientBase {
         if (options.inferContentType !== undefined) {
             queryParams.push(`inferContentType=${encodeURIComponent(String(options.inferContentType))}`);
         }
-        const requestPath = `/datasets/default/files/${id}/content` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
+        const requestPath = `/datasets/default/files/${encodeURIComponent(encodeURIComponent(String(id)))}/content` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.sendWithTracingAsync<Blob>("Onedriveforbusiness.getFileContent", "GetFileContent", "GET", requestUrl, undefined, options);
 
@@ -605,7 +605,7 @@ export class OnedriveforbusinessClient extends ConnectorClientBase {
         if (options.overwrite !== undefined) {
             queryParams.push(`overwrite=${encodeURIComponent(String(options.overwrite))}`);
         }
-        const requestPath = `/datasets/default/files/${id}/copy` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
+        const requestPath = `/datasets/default/files/${encodeURIComponent(encodeURIComponent(String(id)))}/copy` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.sendWithTracingAsync<BlobMetadata>("Onedriveforbusiness.copyDriveFile", "CopyDriveFile", "POST", requestUrl, undefined, options);
 
@@ -646,7 +646,7 @@ export class OnedriveforbusinessClient extends ConnectorClientBase {
         if (options.overwrite !== undefined) {
             queryParams.push(`overwrite=${encodeURIComponent(String(options.overwrite))}`);
         }
-        const requestPath = `/datasets/default/files/${id}/move` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
+        const requestPath = `/datasets/default/files/${encodeURIComponent(encodeURIComponent(String(id)))}/move` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.sendWithTracingAsync<BlobMetadata>("Onedriveforbusiness.moveFile", "MoveFile", "POST", requestUrl, undefined, options);
 
@@ -684,7 +684,7 @@ export class OnedriveforbusinessClient extends ConnectorClientBase {
         if (options.type !== undefined) {
             queryParams.push(`type=${encodeURIComponent(String(options.type))}`);
         }
-        const requestPath = `/datasets/default/files/${id}/convert` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
+        const requestPath = `/datasets/default/files/${encodeURIComponent(encodeURIComponent(String(id)))}/convert` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.sendWithTracingAsync<Blob>("Onedriveforbusiness.convertFile", "ConvertFile", "GET", requestUrl, undefined, options);
 
@@ -719,7 +719,7 @@ export class OnedriveforbusinessClient extends ConnectorClientBase {
         if (size !== undefined) {
             queryParams.push(`size=${encodeURIComponent(String(size))}`);
         }
-        const requestPath = `/datasets/default/files/${id}/thumbnail` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
+        const requestPath = `/datasets/default/files/${encodeURIComponent(encodeURIComponent(String(id)))}/thumbnail` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.sendWithTracingAsync<Thumbnail>("Onedriveforbusiness.getFileThumbnail", "GetFileThumbnail", "GET", requestUrl, undefined, options);
 
@@ -759,7 +759,7 @@ export class OnedriveforbusinessClient extends ConnectorClientBase {
         if (options.maxFileCount !== undefined) {
             queryParams.push(`maxFileCount=${encodeURIComponent(String(options.maxFileCount))}`);
         }
-        const requestPath = `/datasets/default/folders/${id}/search` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
+        const requestPath = `/datasets/default/folders/${encodeURIComponent(encodeURIComponent(String(id)))}/search` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.sendWithTracingAsync<Array<BlobMetadata>>("Onedriveforbusiness.findFiles", "FindFiles", "GET", requestUrl, undefined, options);
 
@@ -803,7 +803,7 @@ export class OnedriveforbusinessClient extends ConnectorClientBase {
         if (options.scope !== undefined) {
             queryParams.push(`scope=${encodeURIComponent(String(options.scope))}`);
         }
-        const requestPath = `/datasets/default/files/${id}/shareV2` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
+        const requestPath = `/datasets/default/files/${encodeURIComponent(encodeURIComponent(String(id)))}/shareV2` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.sendWithTracingAsync<SharingLink>("Onedriveforbusiness.createShareLink", "CreateShareLinkV2", "POST", requestUrl, undefined, options);
 
@@ -866,7 +866,7 @@ export class OnedriveforbusinessClient extends ConnectorClientBase {
         if (options.top !== undefined) {
             queryParams.push(`top=${encodeURIComponent(String(options.top))}`);
         }
-        const requestPath = `/datasets/default/foldersV2/${id}` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
+        const requestPath = `/datasets/default/foldersV2/${encodeURIComponent(encodeURIComponent(String(id)))}` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         return this.createPageable<BlobMetadataPage, BlobMetadata>(
             requestPath,
             async (requestUrl, isFirstPage) => {

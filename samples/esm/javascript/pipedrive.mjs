@@ -36,7 +36,7 @@ async function main() {
 
     // Example 1: Retrieve a deal by id.
     try {
-        const deal = await client.getDeal(DEAL_ID);
+        const deal = await client.getDeal(Number(DEAL_ID));
         console.log("Deal:", JSON.stringify(deal, null, 2));
     } catch (error) {
         if (error instanceof ConnectorError) {

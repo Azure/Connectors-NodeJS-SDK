@@ -8,7 +8,7 @@ if (!CONNECTION_URL) throw new Error("IMPEXIUM_CONNECTION_URL is required.");
 async function main(): Promise<void> {
     try {
         const checkouts = await new ImpexiumClient(CONNECTION_URL, new ManagedIdentityTokenProvider()).getAbandonedCheckouts(
-            "1",
+            1,
             process.env.IMPEXIUM_ABANDONED_FROM ?? "",
             "application/json",
         );

@@ -127,7 +127,7 @@ export interface BlobMetadataPage {
  */
 export interface GetFileMetadataByPathOptions extends ConnectorOperationOptions {
     /** The 'queryParametersSingleEncoded' service parameter. */
-    queryParametersSingleEncoded?: string;
+    queryParametersSingleEncoded?: boolean;
 }
 
 /**
@@ -135,9 +135,9 @@ export interface GetFileMetadataByPathOptions extends ConnectorOperationOptions 
  */
 export interface GetFileContentByPathOptions extends ConnectorOperationOptions {
     /** A boolean value (true, false) to infer content-type based on extension. */
-    inferContentType?: string;
+    inferContentType?: boolean;
     /** The 'queryParametersSingleEncoded' service parameter. */
-    queryParametersSingleEncoded?: string;
+    queryParametersSingleEncoded?: boolean;
 }
 
 /**
@@ -145,7 +145,7 @@ export interface GetFileContentByPathOptions extends ConnectorOperationOptions {
  */
 export interface GetFileContentOptions extends ConnectorOperationOptions {
     /** A boolean value (true, false) to infer content-type based on extension. */
-    inferContentType?: string;
+    inferContentType?: boolean;
 }
 
 /**
@@ -153,7 +153,7 @@ export interface GetFileContentOptions extends ConnectorOperationOptions {
  */
 export interface CreateFileOptions extends ConnectorOperationOptions {
     /** The 'queryParametersSingleEncoded' service parameter. */
-    queryParametersSingleEncoded?: string;
+    queryParametersSingleEncoded?: boolean;
 }
 
 /**
@@ -161,9 +161,9 @@ export interface CreateFileOptions extends ConnectorOperationOptions {
  */
 export interface CopyFileOptions extends ConnectorOperationOptions {
     /** Overwrites the destination file if set to 'true'. */
-    overwrite?: string;
+    overwrite?: boolean;
     /** The 'queryParametersSingleEncoded' service parameter. */
-    queryParametersSingleEncoded?: string;
+    queryParametersSingleEncoded?: boolean;
 }
 
 /**
@@ -171,9 +171,9 @@ export interface CopyFileOptions extends ConnectorOperationOptions {
  */
 export interface ExtractFolderOptions extends ConnectorOperationOptions {
     /** Overwrites the destination files if set to 'true'. */
-    overwrite?: string;
+    overwrite?: boolean;
     /** The 'queryParametersSingleEncoded' service parameter. */
-    queryParametersSingleEncoded?: string;
+    queryParametersSingleEncoded?: boolean;
 }
 
 /**
@@ -314,7 +314,7 @@ export class DropboxClient extends ConnectorClientBase {
      * @remarks This operation gets the metadata for a file.
      */
     public async getFileMetadata(id: string, options: ConnectorOperationOptions = {}): Promise<BlobMetadata> {
-        const requestPath = `/datasets/default/files/${id}`;
+        const requestPath = `/datasets/default/files/${encodeURIComponent(encodeURIComponent(String(id)))}`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.sendWithTracingAsync<BlobMetadata>("Dropbox.getFileMetadata", "GetFileMetadata", "GET", requestUrl, undefined, options);
 
@@ -326,7 +326,7 @@ export class DropboxClient extends ConnectorClientBase {
      * @remarks This operation updates a file.
      */
     public async updateFile(input: UpdateFileInput, id: string, options: ConnectorOperationOptions = {}): Promise<BlobMetadata> {
-        const requestPath = `/datasets/default/files/${id}`;
+        const requestPath = `/datasets/default/files/${encodeURIComponent(encodeURIComponent(String(id)))}`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.sendWithTracingAsync<BlobMetadata>("Dropbox.updateFile", "UpdateFile", "PUT", requestUrl, input, options);
 
@@ -338,7 +338,7 @@ export class DropboxClient extends ConnectorClientBase {
      * @remarks This operation deletes a file.
      */
     public async deleteFile(id: string, options: ConnectorOperationOptions = {}): Promise<void> {
-        const requestPath = `/datasets/default/files/${id}`;
+        const requestPath = `/datasets/default/files/${encodeURIComponent(encodeURIComponent(String(id)))}`;
         const requestUrl = this.resolveUrl(requestPath);
         await this.sendWithTracingAsync<void>("Dropbox.deleteFile", "DeleteFile", "DELETE", requestUrl, undefined, options);
     }
@@ -393,7 +393,7 @@ export class DropboxClient extends ConnectorClientBase {
         if (options.inferContentType !== undefined) {
             queryParams.push(`inferContentType=${encodeURIComponent(String(options.inferContentType))}`);
         }
-        const requestPath = `/datasets/default/files/${id}/content` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
+        const requestPath = `/datasets/default/files/${encodeURIComponent(encodeURIComponent(String(id)))}/content` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.sendWithTracingAsync<Blob>("Dropbox.getFileContent", "GetFileContent", "GET", requestUrl, undefined, options);
 
@@ -452,7 +452,7 @@ export class DropboxClient extends ConnectorClientBase {
      * @remarks This operation gets the list of files and subfolders in a folder.
      */
     public listFolder(id: string, options: ConnectorOperationOptions = {}): ConnectorPagedAsyncIterableIterator<BlobMetadata> {
-        const requestPath = `/datasets/default/folders/${id}`;
+        const requestPath = `/datasets/default/folders/${encodeURIComponent(encodeURIComponent(String(id)))}`;
         return this.createPageable<Array<BlobMetadata>, BlobMetadata>(
             requestPath,
             async (requestUrl) => {

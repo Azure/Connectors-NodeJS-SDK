@@ -961,9 +961,9 @@ export interface GetIssuesOptions extends ConnectorOperationOptions {
     /** Filter by issues after given date. */
     since?: string;
     /** Number of results per page. */
-    perPage?: string;
+    perPage?: number;
     /** Page number to display. */
-    page?: string;
+    page?: number;
 }
 
 /**
@@ -981,9 +981,9 @@ export interface GetPullRequestsOptions extends ConnectorOperationOptions {
     /** Direction of sort. */
     direction?: string;
     /** Number of results per page. */
-    perPage?: string;
+    perPage?: number;
     /** Page number to display. */
-    page?: string;
+    page?: number;
 }
 
 /**
@@ -991,9 +991,9 @@ export interface GetPullRequestsOptions extends ConnectorOperationOptions {
  */
 export interface GetAssigneesOptions extends ConnectorOperationOptions {
     /** Number of results per page. */
-    perPage?: string;
+    perPage?: number;
     /** Page number to display. */
-    page?: string;
+    page?: number;
 }
 
 /**
@@ -1001,9 +1001,9 @@ export interface GetAssigneesOptions extends ConnectorOperationOptions {
  */
 export interface ListCollaboratorsOptions extends ConnectorOperationOptions {
     /** Number of results per page. */
-    perPage?: string;
+    perPage?: number;
     /** Page number to display. */
-    page?: string;
+    page?: number;
 }
 
 /**
@@ -1017,9 +1017,9 @@ export interface GetMilestonesOptions extends ConnectorOperationOptions {
     /** Direction of sort. */
     direction?: string;
     /** Number of results per page. */
-    perPage?: string;
+    perPage?: number;
     /** Page number to display. */
-    page?: string;
+    page?: number;
 }
 
 /**
@@ -1027,9 +1027,9 @@ export interface GetMilestonesOptions extends ConnectorOperationOptions {
  */
 export interface GetLabelsOptions extends ConnectorOperationOptions {
     /** Number of results per page. */
-    perPage?: string;
+    perPage?: number;
     /** Page number to display. */
-    page?: string;
+    page?: number;
 }
 
 /**
@@ -1037,9 +1037,9 @@ export interface GetLabelsOptions extends ConnectorOperationOptions {
  */
 export interface GetIssueLabelsOptions extends ConnectorOperationOptions {
     /** Number of results per page. */
-    perPage?: string;
+    perPage?: number;
     /** Page number to display. */
-    page?: string;
+    page?: number;
 }
 
 /**
@@ -1053,9 +1053,9 @@ export interface GetReposOptions extends ConnectorOperationOptions {
     /** Direction of sort. */
     direction?: string;
     /** Number of results per page. */
-    perPage?: string;
+    perPage?: number;
     /** Page number to fetch */
-    page?: string;
+    page?: number;
 }
 
 /**
@@ -1069,9 +1069,9 @@ export interface GetOrgReposOptions extends ConnectorOperationOptions {
     /** Direction of sort. */
     direction?: string;
     /** Number of results per page. */
-    perPage?: string;
+    perPage?: number;
     /** Page number to fetch */
-    page?: string;
+    page?: number;
 }
 
 /**
@@ -1093,9 +1093,9 @@ export interface GetUserReposOptions extends ConnectorOperationOptions {
     /** Direction of sort. */
     direction?: string;
     /** Number of results per page. */
-    perPage?: string;
+    perPage?: number;
     /** Page number to fetch */
-    page?: string;
+    page?: number;
 }
 
 /**
@@ -1107,9 +1107,9 @@ export interface SearchIssuesOptions extends ConnectorOperationOptions {
     /** Direction of sort. */
     order?: string;
     /** Number of results per page. */
-    perPage?: string;
+    perPage?: number;
     /** Page number to fetch */
-    page?: string;
+    page?: number;
 }
 
 /**
@@ -1197,7 +1197,7 @@ export class GithubClient extends ConnectorClientBase {
      * @remarks This operation is used to create a new issue for a specific repository.
      */
     public async createIssue(input: IssueBasicDetailsModel, repositoryOwner: string, repositoryName: string, options: ConnectorOperationOptions = {}): Promise<IssueDetailsModel> {
-        const requestPath = `/repos/${repositoryOwner}/${repositoryName}/issues`;
+        const requestPath = `/repos/${encodeURIComponent(String(repositoryOwner))}/${encodeURIComponent(String(repositoryName))}/issues`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.sendWithTracingAsync<IssueDetailsModel>("Github.createIssue", "CreateIssue", "POST", requestUrl, input, options);
 
@@ -1243,7 +1243,7 @@ export class GithubClient extends ConnectorClientBase {
         if (options.page !== undefined) {
             queryParams.push(`page=${encodeURIComponent(String(options.page))}`);
         }
-        const requestPath = `/repos/${repositoryOwner}/${repositoryName}/issues` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
+        const requestPath = `/repos/${encodeURIComponent(String(repositoryOwner))}/${encodeURIComponent(String(repositoryName))}/issues` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.sendWithTracingAsync<Array<GeneralAPIModel>>("Github.getIssues", "GetIssues", "GET", requestUrl, undefined, options);
 
@@ -1255,7 +1255,7 @@ export class GithubClient extends ConnectorClientBase {
      * @remarks Gets your public key, which you need to encrypt secrets. You need to encrypt a secret before you can create or update secrets.
      */
     public async getRepositoryPublicKey(repositoryOwner: string, repositoryName: string, accept: string, options: ConnectorOperationOptions = {}): Promise<ActionsPublicKey> {
-        const requestPath = `/repos/${repositoryOwner}/${repositoryName}/actions/secrets/public-key`;
+        const requestPath = `/repos/${encodeURIComponent(String(repositoryOwner))}/${encodeURIComponent(String(repositoryName))}/actions/secrets/public-key`;
         const requestHeaders: Record<string, string> = {};
         if (accept !== undefined) {
             requestHeaders["Accept"] = String(accept);
@@ -1271,7 +1271,7 @@ export class GithubClient extends ConnectorClientBase {
      * @remarks Creates or updates a repository secret with an encrypted value. Encrypt your secret using LibSodium.
      */
     public async createUpdateRepositorySecret(input: CreateRepositorySecretRequest, repositoryOwner: string, repositoryName: string, secretName: string, accept: string, options: ConnectorOperationOptions = {}): Promise<void> {
-        const requestPath = `/repos/${repositoryOwner}/${repositoryName}/actions/secrets/${secretName}`;
+        const requestPath = `/repos/${encodeURIComponent(String(repositoryOwner))}/${encodeURIComponent(String(repositoryName))}/actions/secrets/${encodeURIComponent(String(secretName))}`;
         const requestHeaders: Record<string, string> = {};
         if (accept !== undefined) {
             requestHeaders["Accept"] = String(accept);
@@ -1285,7 +1285,7 @@ export class GithubClient extends ConnectorClientBase {
      * @remarks Creates a new repository using a repository template. The authenticated user must own or be a member of an organization that owns the repository.
      */
     public async createRepositoryUsingTemplate(input: CreateRepositoryUsingTemplateRequest, templateOwner: string, templateRepository: string, accept: string, options: ConnectorOperationOptions = {}): Promise<RepositoryDetails> {
-        const requestPath = `/repos/${templateOwner}/${templateRepository}/generate`;
+        const requestPath = `/repos/${encodeURIComponent(String(templateOwner))}/${encodeURIComponent(String(templateRepository))}/generate`;
         const requestHeaders: Record<string, string> = {};
         if (accept !== undefined) {
             requestHeaders["Accept"] = String(accept);
@@ -1300,8 +1300,8 @@ export class GithubClient extends ConnectorClientBase {
      * Get a repository by Id
      * @remarks Gets a repository by Id.
      */
-    public async getRepositoryById(repositoryId: string, accept: string, options: ConnectorOperationOptions = {}): Promise<RepositoryDetails> {
-        const requestPath = `/repositories/${repositoryId}`;
+    public async getRepositoryById(repositoryId: number, accept: string, options: ConnectorOperationOptions = {}): Promise<RepositoryDetails> {
+        const requestPath = `/repositories/${encodeURIComponent(String(repositoryId))}`;
         const requestHeaders: Record<string, string> = {};
         if (accept !== undefined) {
             requestHeaders["Accept"] = String(accept);
@@ -1317,7 +1317,7 @@ export class GithubClient extends ConnectorClientBase {
      * @remarks Creates a reference for your repository. You are unable to create new references for empty repositories, even if the commit SHA-1 hash used exists. Empty repositories are repositories without branches.
      */
     public async createReference(input: CreateReferenceRequest, repositoryOwner: string, repositoryName: string, accept: string, options: ConnectorOperationOptions = {}): Promise<GitReference> {
-        const requestPath = `/repos/${repositoryOwner}/${repositoryName}/git/refs`;
+        const requestPath = `/repos/${encodeURIComponent(String(repositoryOwner))}/${encodeURIComponent(String(repositoryName))}/git/refs`;
         const requestHeaders: Record<string, string> = {};
         if (accept !== undefined) {
             requestHeaders["Accept"] = String(accept);
@@ -1333,7 +1333,7 @@ export class GithubClient extends ConnectorClientBase {
      * @remarks Returns a single reference from your Git database. The `reference` parameter must be formatted as `heads/<branch name>` for branches and `tags/<tag name>` for tags. If the `reference` doesn't match an existing ref, a `404` is returned.
      */
     public async getReference(repositoryOwner: string, repositoryName: string, reference: string, accept: string, options: ConnectorOperationOptions = {}): Promise<GitReference> {
-        const requestPath = `/repos/${repositoryOwner}/${repositoryName}/git/ref/${reference}`;
+        const requestPath = `/repos/${encodeURIComponent(String(repositoryOwner))}/${encodeURIComponent(String(repositoryName))}/git/ref/${encodeURIComponent(String(reference))}`;
         const requestHeaders: Record<string, string> = {};
         if (accept !== undefined) {
             requestHeaders["Accept"] = String(accept);
@@ -1348,8 +1348,8 @@ export class GithubClient extends ConnectorClientBase {
      * Merge a pull request
      * @remarks This operation is used to merge a pull request for the repository.
      */
-    public async mergePullRequest(input: PullRequestMergeRequest, repositoryOwner: string, repositoryName: string, pullNumber: string, accept: string, options: ConnectorOperationOptions = {}): Promise<PullRequestMergeResult> {
-        const requestPath = `/repos/${repositoryOwner}/${repositoryName}/pulls/${pullNumber}/merge`;
+    public async mergePullRequest(input: PullRequestMergeRequest, repositoryOwner: string, repositoryName: string, pullNumber: number, accept: string, options: ConnectorOperationOptions = {}): Promise<PullRequestMergeResult> {
+        const requestPath = `/repos/${encodeURIComponent(String(repositoryOwner))}/${encodeURIComponent(String(repositoryName))}/pulls/${encodeURIComponent(String(pullNumber))}/merge`;
         const requestHeaders: Record<string, string> = {};
         if (accept !== undefined) {
             requestHeaders["Accept"] = String(accept);
@@ -1364,8 +1364,8 @@ export class GithubClient extends ConnectorClientBase {
      * Get a pull request
      * @remarks This operation is used to get a pull request for the repository.
      */
-    public async getPullRequest(repositoryOwner: string, repositoryName: string, pullNumber: string, accept: string, options: ConnectorOperationOptions = {}): Promise<PullRequest> {
-        const requestPath = `/repos/${repositoryOwner}/${repositoryName}/pulls/${pullNumber}`;
+    public async getPullRequest(repositoryOwner: string, repositoryName: string, pullNumber: number, accept: string, options: ConnectorOperationOptions = {}): Promise<PullRequest> {
+        const requestPath = `/repos/${encodeURIComponent(String(repositoryOwner))}/${encodeURIComponent(String(repositoryName))}/pulls/${encodeURIComponent(String(pullNumber))}`;
         const requestHeaders: Record<string, string> = {};
         if (accept !== undefined) {
             requestHeaders["Accept"] = String(accept);
@@ -1380,8 +1380,8 @@ export class GithubClient extends ConnectorClientBase {
      * Update a pull request
      * @remarks This operation is used to update a pull request for the repository. To update a pull request in a public repository, you must have write access to the head or the source branch. For organization-owned repositories, you must be a member of the organization that owns the repository to open or update a pull request.
      */
-    public async updatePullRequest(input: PullRequestUpdateRequest, repositoryOwner: string, repositoryName: string, pullNumber: string, accept: string, options: ConnectorOperationOptions = {}): Promise<PullRequest> {
-        const requestPath = `/repos/${repositoryOwner}/${repositoryName}/pulls/${pullNumber}`;
+    public async updatePullRequest(input: PullRequestUpdateRequest, repositoryOwner: string, repositoryName: string, pullNumber: number, accept: string, options: ConnectorOperationOptions = {}): Promise<PullRequest> {
+        const requestPath = `/repos/${encodeURIComponent(String(repositoryOwner))}/${encodeURIComponent(String(repositoryName))}/pulls/${encodeURIComponent(String(pullNumber))}`;
         const requestHeaders: Record<string, string> = {};
         if (accept !== undefined) {
             requestHeaders["Accept"] = String(accept);
@@ -1396,8 +1396,8 @@ export class GithubClient extends ConnectorClientBase {
      * Get the list of files from a pull request
      * @remarks This operation is used to get the list of files from a pull request for the repository.
      */
-    public async getPullRequestFiles(repositoryOwner: string, repositoryName: string, pullNumber: string, accept: string, options: ConnectorOperationOptions = {}): Promise<Array<PullRequestFile>> {
-        const requestPath = `/repos/${repositoryOwner}/${repositoryName}/pulls/${pullNumber}/files`;
+    public async getPullRequestFiles(repositoryOwner: string, repositoryName: string, pullNumber: number, accept: string, options: ConnectorOperationOptions = {}): Promise<Array<PullRequestFile>> {
+        const requestPath = `/repos/${encodeURIComponent(String(repositoryOwner))}/${encodeURIComponent(String(repositoryName))}/pulls/${encodeURIComponent(String(pullNumber))}/files`;
         const requestHeaders: Record<string, string> = {};
         if (accept !== undefined) {
             requestHeaders["Accept"] = String(accept);
@@ -1412,8 +1412,8 @@ export class GithubClient extends ConnectorClientBase {
      * Request reviewers for a pull request
      * @remarks Requests reviews for a pull request from a given set of users and/or teams.
      */
-    public async requestReviewersPullRequest(input: RequestReviewersBody, repositoryOwner: string, repositoryName: string, pullNumber: string, accept: string, options: ConnectorOperationOptions = {}): Promise<void> {
-        const requestPath = `/repos/${repositoryOwner}/${repositoryName}/pulls/${pullNumber}/requested_reviewers`;
+    public async requestReviewersPullRequest(input: RequestReviewersBody, repositoryOwner: string, repositoryName: string, pullNumber: number, accept: string, options: ConnectorOperationOptions = {}): Promise<void> {
+        const requestPath = `/repos/${encodeURIComponent(String(repositoryOwner))}/${encodeURIComponent(String(repositoryName))}/pulls/${encodeURIComponent(String(pullNumber))}/requested_reviewers`;
         const requestHeaders: Record<string, string> = {};
         if (accept !== undefined) {
             requestHeaders["Accept"] = String(accept);
@@ -1426,8 +1426,8 @@ export class GithubClient extends ConnectorClientBase {
      * Remove requested reviewers from a pull request
      * @remarks Remove requested reviewers from a pull request from a given set of users and/or teams.
      */
-    public async removeReviewersPullRequest(input: RequestReviewersBody, repositoryOwner: string, repositoryName: string, pullNumber: string, accept: string, options: ConnectorOperationOptions = {}): Promise<void> {
-        const requestPath = `/repos/${repositoryOwner}/${repositoryName}/pulls/${pullNumber}/requested_reviewers`;
+    public async removeReviewersPullRequest(input: RequestReviewersBody, repositoryOwner: string, repositoryName: string, pullNumber: number, accept: string, options: ConnectorOperationOptions = {}): Promise<void> {
+        const requestPath = `/repos/${encodeURIComponent(String(repositoryOwner))}/${encodeURIComponent(String(repositoryName))}/pulls/${encodeURIComponent(String(pullNumber))}/requested_reviewers`;
         const requestHeaders: Record<string, string> = {};
         if (accept !== undefined) {
             requestHeaders["Accept"] = String(accept);
@@ -1441,7 +1441,7 @@ export class GithubClient extends ConnectorClientBase {
      * @remarks This operation is to create a pull request in a repository. To open or update a pull request in a public repository, you must have write access to the head or the source branch. For organization-owned repositories, you must be a member of the organization that owns the repository to create a pull request.
      */
     public async createPullRequest(input: PullRequestCreateRequest, repositoryOwner: string, repositoryName: string, accept: string, options: ConnectorOperationOptions = {}): Promise<PullRequest> {
-        const requestPath = `/repos/${repositoryOwner}/${repositoryName}/pulls`;
+        const requestPath = `/repos/${encodeURIComponent(String(repositoryOwner))}/${encodeURIComponent(String(repositoryName))}/pulls`;
         const requestHeaders: Record<string, string> = {};
         if (accept !== undefined) {
             requestHeaders["Accept"] = String(accept);
@@ -1479,7 +1479,7 @@ export class GithubClient extends ConnectorClientBase {
         if (options.page !== undefined) {
             queryParams.push(`page=${encodeURIComponent(String(options.page))}`);
         }
-        const requestPath = `/repos/${repositoryOwner}/${repositoryName}/pulls` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
+        const requestPath = `/repos/${encodeURIComponent(String(repositoryOwner))}/${encodeURIComponent(String(repositoryName))}/pulls` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.sendWithTracingAsync<Array<GeneralAPIModel>>("Github.getPullRequests", "GetPullRequests", "GET", requestUrl, undefined, options);
 
@@ -1491,7 +1491,7 @@ export class GithubClient extends ConnectorClientBase {
      * @remarks This operation is to trigger a webhook event called `repository_dispatch` when you want activity that happens outside of GitHub to trigger a GitHub Actions workflow or GitHub App webhook. You must configure your GitHub Actions workflow or GitHub App to run when the `repository_dispatch` event occurs.
      */
     public async createRepositoryDispatchEvent(input: RepositoryDispatchEvent, repositoryOwner: string, repositoryName: string, accept: string, options: ConnectorOperationOptions = {}): Promise<void> {
-        const requestPath = `/repos/${repositoryOwner}/${repositoryName}/dispatches`;
+        const requestPath = `/repos/${encodeURIComponent(String(repositoryOwner))}/${encodeURIComponent(String(repositoryName))}/dispatches`;
         const requestHeaders: Record<string, string> = {};
         if (accept !== undefined) {
             requestHeaders["Accept"] = String(accept);
@@ -1505,7 +1505,7 @@ export class GithubClient extends ConnectorClientBase {
      * @remarks Both `base` and `head` must be branch names in `repositoryName`. To compare branches across other repositories in the same network as `repositoryName`, use the format `<USERNAME>:branch`. The response is equivalent to running the `git log base..head` command; however, commits are returned in chronological order.
      */
     public async compareRepositoryCommits(repositoryOwner: string, repositoryName: string, base: string, head: string, accept: string, options: ConnectorOperationOptions = {}): Promise<CommitComparison> {
-        const requestPath = `/repos/${repositoryOwner}/${repositoryName}/compare/${base}...${head}`;
+        const requestPath = `/repos/${encodeURIComponent(String(repositoryOwner))}/${encodeURIComponent(String(repositoryName))}/compare/${encodeURIComponent(String(base))}...${encodeURIComponent(String(head))}`;
         const requestHeaders: Record<string, string> = {};
         if (accept !== undefined) {
             requestHeaders["Accept"] = String(accept);
@@ -1520,8 +1520,8 @@ export class GithubClient extends ConnectorClientBase {
      * Add selected repository to an organization secret
      * @remarks Adds a repository to an organization secret when the `visibility` for repository access is set to `selected`. The visibility is set when you [Create or update an organization secret](https://developer.github.com/v3/actions/secrets/#create-or-update-an-organization-secret). You must authenticate using an access token with the `admin:org` scope to use this endpoint. GitHub Apps must have the `secrets` organization permission to use this endpoint.
      */
-    public async addSelectedRepoToOrgSecret(repositoryOwner: string, repositoryId: string, secretName: string, options: ConnectorOperationOptions = {}): Promise<void> {
-        const requestPath = `/orgs/${repositoryOwner}/actions/secrets/${secretName}/repositories/${repositoryId}`;
+    public async addSelectedRepoToOrgSecret(repositoryOwner: string, repositoryId: number, secretName: string, options: ConnectorOperationOptions = {}): Promise<void> {
+        const requestPath = `/orgs/${encodeURIComponent(String(repositoryOwner))}/actions/secrets/${encodeURIComponent(String(secretName))}/repositories/${encodeURIComponent(String(repositoryId))}`;
         const requestUrl = this.resolveUrl(requestPath);
         await this.sendWithTracingAsync<void>("Github.addSelectedRepoToOrgSecret", "AddSelectedRepoToOrgSecret", "PUT", requestUrl, undefined, options);
     }
@@ -1530,8 +1530,8 @@ export class GithubClient extends ConnectorClientBase {
      * Remove selected repository from an organization secret
      * @remarks Removes a repository from an organization secret when the `visibility` for repository access is set to `selected`. The visibility is set when you [Create or update an organization secret](https://developer.github.com/v3/actions/secrets/#create-or-update-an-organization-secret). You must authenticate using an access token with the `admin:org` scope to use this endpoint. GitHub Apps must have the `secrets` organization permission to use this endpoint.
      */
-    public async removeSelectedRepoFromOrgSecret(repositoryOwner: string, repositoryId: string, secretName: string, options: ConnectorOperationOptions = {}): Promise<void> {
-        const requestPath = `/orgs/${repositoryOwner}/actions/secrets/${secretName}/repositories/${repositoryId}`;
+    public async removeSelectedRepoFromOrgSecret(repositoryOwner: string, repositoryId: number, secretName: string, options: ConnectorOperationOptions = {}): Promise<void> {
+        const requestPath = `/orgs/${encodeURIComponent(String(repositoryOwner))}/actions/secrets/${encodeURIComponent(String(secretName))}/repositories/${encodeURIComponent(String(repositoryId))}`;
         const requestUrl = this.resolveUrl(requestPath);
         await this.sendWithTracingAsync<void>("Github.removeSelectedRepoFromOrgSecret", "RemoveSelectedRepoFromOrgSecret", "DELETE", requestUrl, undefined, options);
     }
@@ -1541,7 +1541,7 @@ export class GithubClient extends ConnectorClientBase {
      * @remarks Deletes a GitHub Webhook
      */
     public async deleteWebhookTrigger(repositoryOwner: string, repositoryName: string, webhookId: string, options: ConnectorOperationOptions = {}): Promise<void> {
-        const requestPath = `/repos/${repositoryOwner}/${repositoryName}/hooks/${webhookId}`;
+        const requestPath = `/repos/${encodeURIComponent(String(repositoryOwner))}/${encodeURIComponent(String(repositoryName))}/hooks/${encodeURIComponent(String(webhookId))}`;
         const requestUrl = this.resolveUrl(requestPath);
         await this.sendWithTracingAsync<void>("Github.deleteWebhookTrigger", "DeleteWebhookTrigger", "DELETE", requestUrl, undefined, options);
     }
@@ -1550,8 +1550,8 @@ export class GithubClient extends ConnectorClientBase {
      * Get a particular issue of a repository
      * @remarks Get a particular issue of a repository.
      */
-    public async getIssueNum(repositoryOwner: string, repositoryName: string, issueNumber: string, options: ConnectorOperationOptions = {}): Promise<IssueDetailsModel> {
-        const requestPath = `/repos/${repositoryOwner}/${repositoryName}/issues/${issueNumber}`;
+    public async getIssueNum(repositoryOwner: string, repositoryName: string, issueNumber: number, options: ConnectorOperationOptions = {}): Promise<IssueDetailsModel> {
+        const requestPath = `/repos/${encodeURIComponent(String(repositoryOwner))}/${encodeURIComponent(String(repositoryName))}/issues/${encodeURIComponent(String(issueNumber))}`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.sendWithTracingAsync<IssueDetailsModel>("Github.getIssueNum", "GetIssueNum", "GET", requestUrl, undefined, options);
 
@@ -1562,8 +1562,8 @@ export class GithubClient extends ConnectorClientBase {
      * Update an Issue
      * @remarks Update an existing issue given the issue number.
      */
-    public async updateIssueNum(input: IssueUpdateModel, repositoryOwner: string, repositoryName: string, issueNumber: string, options: ConnectorOperationOptions = {}): Promise<IssueDetailsModel> {
-        const requestPath = `/repos/${repositoryOwner}/${repositoryName}/issues/${issueNumber}`;
+    public async updateIssueNum(input: IssueUpdateModel, repositoryOwner: string, repositoryName: string, issueNumber: number, options: ConnectorOperationOptions = {}): Promise<IssueDetailsModel> {
+        const requestPath = `/repos/${encodeURIComponent(String(repositoryOwner))}/${encodeURIComponent(String(repositoryName))}/issues/${encodeURIComponent(String(issueNumber))}`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.sendWithTracingAsync<IssueDetailsModel>("Github.updateIssueNum", "UpdateIssueNum", "PATCH", requestUrl, input, options);
 
@@ -1574,8 +1574,8 @@ export class GithubClient extends ConnectorClientBase {
      * Update a milestone
      * @remarks Update an existing milestone.
      */
-    public async updateMilestone(input: MilestoneUpdateModel, repositoryOwner: string, repositoryName: string, milestoneNumber: string, options: ConnectorOperationOptions = {}): Promise<Milestone> {
-        const requestPath = `/repos/${repositoryOwner}/${repositoryName}/milestones/${milestoneNumber}`;
+    public async updateMilestone(input: MilestoneUpdateModel, repositoryOwner: string, repositoryName: string, milestoneNumber: number, options: ConnectorOperationOptions = {}): Promise<Milestone> {
+        const requestPath = `/repos/${encodeURIComponent(String(repositoryOwner))}/${encodeURIComponent(String(repositoryName))}/milestones/${encodeURIComponent(String(milestoneNumber))}`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.sendWithTracingAsync<Milestone>("Github.updateMilestone", "UpdateMilestone", "PATCH", requestUrl, input, options);
 
@@ -1616,7 +1616,7 @@ export class GithubClient extends ConnectorClientBase {
         if (options.page !== undefined) {
             queryParams.push(`page=${encodeURIComponent(String(options.page))}`);
         }
-        const requestPath = `/repos/${repositoryOwner}/${repositoryName}/assignees` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
+        const requestPath = `/repos/${encodeURIComponent(String(repositoryOwner))}/${encodeURIComponent(String(repositoryName))}/assignees` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.sendWithTracingAsync<Array<GeneralAPIModel>>("Github.getAssignees", "GetAssignees", "GET", requestUrl, undefined, options);
 
@@ -1635,7 +1635,7 @@ export class GithubClient extends ConnectorClientBase {
         if (options.page !== undefined) {
             queryParams.push(`page=${encodeURIComponent(String(options.page))}`);
         }
-        const requestPath = `/repos/${repositoryOwner}/${repositoryName}/collaborators` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
+        const requestPath = `/repos/${encodeURIComponent(String(repositoryOwner))}/${encodeURIComponent(String(repositoryName))}/collaborators` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         return this.createPageable<Array<GeneralAPIModel>, GeneralAPIModel>(
             requestPath,
             async (requestUrl) => {
@@ -1653,7 +1653,7 @@ export class GithubClient extends ConnectorClientBase {
      * @remarks Check if a user is a repository collaborator.
      */
     public async checkCollaborator(repositoryOwner: string, repositoryName: string, userName: string, options: ConnectorOperationOptions = {}): Promise<GeneralAPIModel> {
-        const requestPath = `/repos/${repositoryOwner}/${repositoryName}/collaborators/${userName}`;
+        const requestPath = `/repos/${encodeURIComponent(String(repositoryOwner))}/${encodeURIComponent(String(repositoryName))}/collaborators/${encodeURIComponent(String(userName))}`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.sendWithTracingAsync<GeneralAPIModel>("Github.checkCollaborator", "checkCollaborator", "GET", requestUrl, undefined, options);
 
@@ -1681,7 +1681,7 @@ export class GithubClient extends ConnectorClientBase {
         if (options.page !== undefined) {
             queryParams.push(`page=${encodeURIComponent(String(options.page))}`);
         }
-        const requestPath = `/repos/${repositoryOwner}/${repositoryName}/milestones` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
+        const requestPath = `/repos/${encodeURIComponent(String(repositoryOwner))}/${encodeURIComponent(String(repositoryName))}/milestones` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.sendWithTracingAsync<Array<GeneralAPIModel>>("Github.getMilestones", "GetMilestones", "GET", requestUrl, undefined, options);
 
@@ -1700,7 +1700,7 @@ export class GithubClient extends ConnectorClientBase {
         if (options.page !== undefined) {
             queryParams.push(`page=${encodeURIComponent(String(options.page))}`);
         }
-        const requestPath = `/repos/${repositoryOwner}/${repositoryName}/labels` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
+        const requestPath = `/repos/${encodeURIComponent(String(repositoryOwner))}/${encodeURIComponent(String(repositoryName))}/labels` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.sendWithTracingAsync<Array<GeneralAPIModel>>("Github.getLabels", "GetLabels", "GET", requestUrl, undefined, options);
 
@@ -1711,7 +1711,7 @@ export class GithubClient extends ConnectorClientBase {
      * Lists all labels for an issue
      * @remarks Lists all labels for an issue.
      */
-    public async getIssueLabels(repositoryOwner: string, repositoryName: string, issueNumber: string, options: GetIssueLabelsOptions = {}): Promise<Array<GeneralAPIModel>> {
+    public async getIssueLabels(repositoryOwner: string, repositoryName: string, issueNumber: number, options: GetIssueLabelsOptions = {}): Promise<Array<GeneralAPIModel>> {
         const queryParams: string[] = [];
         if (options.perPage !== undefined) {
             queryParams.push(`per_page=${encodeURIComponent(String(options.perPage))}`);
@@ -1719,7 +1719,7 @@ export class GithubClient extends ConnectorClientBase {
         if (options.page !== undefined) {
             queryParams.push(`page=${encodeURIComponent(String(options.page))}`);
         }
-        const requestPath = `/repos/${repositoryOwner}/${repositoryName}/issues/${issueNumber}/labels` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
+        const requestPath = `/repos/${encodeURIComponent(String(repositoryOwner))}/${encodeURIComponent(String(repositoryName))}/issues/${encodeURIComponent(String(issueNumber))}/labels` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.sendWithTracingAsync<Array<GeneralAPIModel>>("Github.getIssueLabels", "GetIssueLabels", "GET", requestUrl, undefined, options);
 
@@ -1747,7 +1747,7 @@ export class GithubClient extends ConnectorClientBase {
         if (options.page !== undefined) {
             queryParams.push(`page=${encodeURIComponent(String(options.page))}`);
         }
-        const requestPath = `/users/${repositoryOwner}/repos` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
+        const requestPath = `/users/${encodeURIComponent(String(repositoryOwner))}/repos` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.sendWithTracingAsync<Array<GeneralAPIModel>>("Github.getRepos", "GetRepos", "GET", requestUrl, undefined, options);
 
@@ -1775,7 +1775,7 @@ export class GithubClient extends ConnectorClientBase {
         if (options.page !== undefined) {
             queryParams.push(`page=${encodeURIComponent(String(options.page))}`);
         }
-        const requestPath = `/orgs/${repositoryOwner}/repos` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
+        const requestPath = `/orgs/${encodeURIComponent(String(repositoryOwner))}/repos` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.sendWithTracingAsync<Array<GeneralAPIModel>>("Github.getOrgRepos", "GetOrgRepos", "GET", requestUrl, undefined, options);
 

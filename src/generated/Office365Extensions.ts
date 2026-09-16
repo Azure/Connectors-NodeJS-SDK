@@ -1402,7 +1402,7 @@ export interface Table {
     /** The display name of the table. */
     DisplayName?: string;
     /** Additional table properties provided by the connector to the clients. */
-    DynamicProperties?: Record<string, unknown>;
+    DynamicProperties?: Record<string, ObjectEntity>;
 }
 
 /**
@@ -2188,9 +2188,9 @@ export interface GetCalendarItemsOptions extends ConnectorOperationOptions {
     /** An ODATA orderBy query for specifying the order of entries. */
     orderby?: string;
     /** Total number of entries to retrieve (default = all). */
-    top?: string;
+    top?: number;
     /** The number of entries to skip (default = 0). */
-    skip?: string;
+    skip?: number;
 }
 
 /**
@@ -2198,9 +2198,9 @@ export interface GetCalendarItemsOptions extends ConnectorOperationOptions {
  */
 export interface GetCalendarTablesOptions extends ConnectorOperationOptions {
     /** Number of calendars to skip. */
-    skip?: string;
+    skip?: number;
     /** Calendar page size. */
-    top?: string;
+    top?: number;
     /** Orders calendars. */
     orderBy?: string;
 }
@@ -2214,9 +2214,9 @@ export interface GetContactItemsOptions extends ConnectorOperationOptions {
     /** An ODATA orderBy query for specifying the order of entries. */
     orderby?: string;
     /** Total number of entries to retrieve (default = all). */
-    top?: string;
+    top?: number;
     /** The number of entries to skip (default = 0). */
-    skip?: string;
+    skip?: number;
 }
 
 /**
@@ -2250,9 +2250,9 @@ export interface ForwardEmailOptions extends ConnectorOperationOptions {
     /** Address of the shared mailbox to forward mail from. */
     mailboxAddress?: string;
     /** Select if you want to extract Sensitivity label ( false, true). */
-    extractSensitivityLabel?: string;
+    extractSensitivityLabel?: boolean;
     /** A boolean whether to fetch sensitivity label Metadata for associated LabelId. */
-    fetchSensitivityLabelMetadata?: string;
+    fetchSensitivityLabelMetadata?: boolean;
 }
 
 /**
@@ -2262,9 +2262,9 @@ export interface GetAttachmentOptions extends ConnectorOperationOptions {
     /** Address of the shared mailbox to retrieve attachment from. */
     mailboxAddress?: string;
     /** Select if you want to extract Sensitivity label ( false, true). */
-    extractSensitivityLabel?: string;
+    extractSensitivityLabel?: boolean;
     /** A boolean whether to fetch sensitivity label Metadata for associated LabelId. */
-    fetchSensitivityLabelMetadata?: string;
+    fetchSensitivityLabelMetadata?: boolean;
 }
 
 /**
@@ -2274,13 +2274,13 @@ export interface GetEmailOptions extends ConnectorOperationOptions {
     /** Address of the shared mailbox to retrieve mail from. */
     mailboxAddress?: string;
     /** If set to true, attachments content will also be retrieved along with the email. */
-    includeAttachments?: string;
+    includeAttachments?: boolean;
     /** Internet Message Id. */
     internetMessageId?: string;
     /** Select if you want to extract Sensitivity label ( false, true). */
-    extractSensitivityLabel?: string;
+    extractSensitivityLabel?: boolean;
     /** A boolean whether to fetch sensitivity label Metadata for associated LabelId. */
-    fetchSensitivityLabelMetadata?: string;
+    fetchSensitivityLabelMetadata?: boolean;
 }
 
 /**
@@ -2300,21 +2300,21 @@ export interface GetEmailsOptions extends ConnectorOperationOptions {
     /** Importance of the email (Any, High, Normal, Low). */
     importance?: string;
     /** If set to true, only emails with an attachment will be retrieved. Emails without any attachments will be skipped. If set to false, all emails will be retrieved. */
-    fetchOnlyWithAttachment?: string;
+    fetchOnlyWithAttachment?: boolean;
     /** String to look for in the subject line. */
     subjectFilter?: string;
     /** Retrieve only unread emails?. */
-    fetchOnlyUnread?: string;
+    fetchOnlyUnread?: boolean;
     /** Retrieve only flagged emails?. */
-    fetchOnlyFlagged?: string;
+    fetchOnlyFlagged?: boolean;
     /** Address of the shared mailbox to retrieve mails from. */
     mailboxAddress?: string;
     /** If set to true, attachments content will also be retrieved along with the email. */
-    includeAttachments?: string;
+    includeAttachments?: boolean;
     /** Search query to filter emails. How to use '$search' parameter please refer to: https://docs.microsoft.com/graph/query-parameters#search-parameter. */
     searchQuery?: string;
     /** Number of emails to retrieve (default: 10, max: 1000). */
-    top?: string;
+    top?: number;
 }
 
 /**
@@ -2326,9 +2326,9 @@ export interface GetEventsCalendarViewOptions extends ConnectorOperationOptions 
     /** An ODATA orderBy query for specifying the order of entries. */
     orderby?: string;
     /** Total number of entries to retrieve (default = all). */
-    top?: string;
+    top?: number;
     /** The number of entries to skip (default = 0). */
-    skip?: string;
+    skip?: number;
     /** Search text for matching event body and subject */
     search?: string;
 }
@@ -2923,7 +2923,7 @@ export class Office365Client extends ConnectorClientBase {
      * @remarks This operation sends a Draft message.
      */
     public async sendDraftEmail(messageId: string, options: ConnectorOperationOptions = {}): Promise<void> {
-        const requestPath = `/Draft/Send/${messageId}`;
+        const requestPath = `/Draft/Send/${encodeURIComponent(String(messageId))}`;
         const requestUrl = this.resolveUrl(requestPath);
         await this.sendWithTracingAsync<void>("Office365.sendDraftEmail", "SendDraftEmail", "POST", requestUrl, undefined, options);
     }
@@ -2950,7 +2950,7 @@ export class Office365Client extends ConnectorClientBase {
      * @remarks This operation assigns an Outlook category to multiple emails.
      */
     public async assignCategoryBulk(input: AssignCategoryBulkInput, categoryName: string, options: ConnectorOperationOptions = {}): Promise<BatchOperationResult> {
-        const requestPath = `/Mail/Category/Bulk/${categoryName}`;
+        const requestPath = `/Mail/Category/Bulk/${encodeURIComponent(String(categoryName))}`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.sendWithTracingAsync<BatchOperationResult>("Office365.assignCategoryBulk", "AssignCategoryBulk", "POST", requestUrl, input, options);
 
@@ -2986,7 +2986,7 @@ export class Office365Client extends ConnectorClientBase {
      * @remarks Updates the photo of the specified contact of the current user. The size of the photo must be less than 4 MB.
      */
     public async updateMyContactPhoto(input: UpdateMyContactPhotoInput, folder: string, id: string, options: UpdateMyContactPhotoOptions = {}): Promise<void> {
-        const requestPath = `/codeless/v1.0/me/contactFolders/${folder}/contacts/${id}/photo/$value`;
+        const requestPath = `/codeless/v1.0/me/contactFolders/${encodeURIComponent(encodeURIComponent(String(folder)))}/contacts/${encodeURIComponent(encodeURIComponent(String(id)))}/photo/$value`;
         const requestHeaders: Record<string, string> = {};
         if (options.contentType !== undefined) {
             requestHeaders["Content-Type"] = String(options.contentType);
@@ -3085,7 +3085,7 @@ export class Office365Client extends ConnectorClientBase {
      * @remarks This operation deletes an event in a calendar.
      */
     public async deleteCalendarItem(calendar: string, event_: string, options: ConnectorOperationOptions = {}): Promise<void> {
-        const requestPath = `/codeless/v1.0/me/calendars/${calendar}/events/${event_}`;
+        const requestPath = `/codeless/v1.0/me/calendars/${encodeURIComponent(encodeURIComponent(String(calendar)))}/events/${encodeURIComponent(encodeURIComponent(String(event_)))}`;
         const requestUrl = this.resolveUrl(requestPath);
         await this.sendWithTracingAsync<void>("Office365.deleteCalendarItem", "CalendarDeleteItem_V2", "DELETE", requestUrl, undefined, options);
     }
@@ -3095,7 +3095,7 @@ export class Office365Client extends ConnectorClientBase {
      * @remarks This operation gets a specific event from a calendar using Graph API.
      */
     public async getCalendarItem(table: string, id: string, options: ConnectorOperationOptions = {}): Promise<GraphCalendarEventClientReceive> {
-        const requestPath = `/datasets/calendars/v3/tables/${table}/items/${id}`;
+        const requestPath = `/datasets/calendars/v3/tables/${encodeURIComponent(encodeURIComponent(String(table)))}/items/${encodeURIComponent(encodeURIComponent(String(id)))}`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.sendWithTracingAsync<GraphCalendarEventClientReceive>("Office365.getCalendarItem", "V3CalendarGetItem", "GET", requestUrl, undefined, options);
 
@@ -3120,7 +3120,7 @@ export class Office365Client extends ConnectorClientBase {
         if (options.skip !== undefined) {
             queryParams.push(`$skip=${encodeURIComponent(String(options.skip))}`);
         }
-        const requestPath = `/datasets/calendars/v4/tables/${table}/items` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
+        const requestPath = `/datasets/calendars/v4/tables/${encodeURIComponent(encodeURIComponent(String(table)))}/items` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.sendWithTracingAsync<GraphCalendarEventListClientReceive>("Office365.getCalendarItems", "V4CalendarGetItems", "GET", requestUrl, undefined, options);
 
@@ -3154,7 +3154,7 @@ export class Office365Client extends ConnectorClientBase {
      * @remarks This operation updates an event in a calendar using Graph API.
      */
     public async patchCalendarItem(input: GraphCalendarEventClient, table: string, id: string, options: ConnectorOperationOptions = {}): Promise<GraphCalendarEventClientReceive> {
-        const requestPath = `/datasets/calendars/v4/tables/${table}/items/${id}`;
+        const requestPath = `/datasets/calendars/v4/tables/${encodeURIComponent(encodeURIComponent(String(table)))}/items/${encodeURIComponent(encodeURIComponent(String(id)))}`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.sendWithTracingAsync<GraphCalendarEventClientReceive>("Office365.patchCalendarItem", "V4CalendarPatchItem", "PATCH", requestUrl, input, options);
 
@@ -3166,7 +3166,7 @@ export class Office365Client extends ConnectorClientBase {
      * @remarks This operation creates a new event in a calendar.
      */
     public async calendarPostItem(input: GraphCalendarEventClient, table: string, options: ConnectorOperationOptions = {}): Promise<GraphCalendarEventClientReceive> {
-        const requestPath = `/datasets/calendars/v4/tables/${table}/items`;
+        const requestPath = `/datasets/calendars/v4/tables/${encodeURIComponent(encodeURIComponent(String(table)))}/items`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.sendWithTracingAsync<GraphCalendarEventClientReceive>("Office365.calendarPostItem", "V4CalendarPostItem", "POST", requestUrl, input, options);
 
@@ -3178,7 +3178,7 @@ export class Office365Client extends ConnectorClientBase {
      * @remarks This operation deletes a contact from a contacts folder.
      */
     public async deleteContactItem(folder: string, id: string, options: ConnectorOperationOptions = {}): Promise<void> {
-        const requestPath = `/codeless/v1.0/me/contactFolders/${folder}/contacts/${id}`;
+        const requestPath = `/codeless/v1.0/me/contactFolders/${encodeURIComponent(encodeURIComponent(String(folder)))}/contacts/${encodeURIComponent(encodeURIComponent(String(id)))}`;
         const requestUrl = this.resolveUrl(requestPath);
         await this.sendWithTracingAsync<void>("Office365.deleteContactItem", "ContactDeleteItem_V2", "DELETE", requestUrl, undefined, options);
     }
@@ -3188,7 +3188,7 @@ export class Office365Client extends ConnectorClientBase {
      * @remarks This operation gets a specific contact from a contacts folder.
      */
     public async getContactItem(folder: string, id: string, options: ConnectorOperationOptions = {}): Promise<ContactResponse> {
-        const requestPath = `/codeless/v1.0/me/contactFolders/${folder}/contacts/${id}`;
+        const requestPath = `/codeless/v1.0/me/contactFolders/${encodeURIComponent(encodeURIComponent(String(folder)))}/contacts/${encodeURIComponent(encodeURIComponent(String(id)))}`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.sendWithTracingAsync<ContactResponse>("Office365.getContactItem", "ContactGetItem_V2", "GET", requestUrl, undefined, options);
 
@@ -3213,7 +3213,7 @@ export class Office365Client extends ConnectorClientBase {
         if (options.skip !== undefined) {
             queryParams.push(`$skip=${encodeURIComponent(String(options.skip))}`);
         }
-        const requestPath = `/codeless/v1.0/me/contactFolders/${folder}/contacts` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
+        const requestPath = `/codeless/v1.0/me/contactFolders/${encodeURIComponent(encodeURIComponent(String(folder)))}/contacts` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         return this.createPageable<EntityListResponseContactResponse, ContactResponse>(
             requestPath,
             async (requestUrl, isFirstPage) => {
@@ -3244,7 +3244,7 @@ export class Office365Client extends ConnectorClientBase {
      * @remarks This operation updates a contact in a contacts folder.
      */
     public async patchContactItem(input: Contact, folder: string, id: string, options: ConnectorOperationOptions = {}): Promise<ContactResponse> {
-        const requestPath = `/codeless/v1.0/me/contactFolders/${folder}/contacts/${id}`;
+        const requestPath = `/codeless/v1.0/me/contactFolders/${encodeURIComponent(encodeURIComponent(String(folder)))}/contacts/${encodeURIComponent(encodeURIComponent(String(id)))}`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.sendWithTracingAsync<ContactResponse>("Office365.patchContactItem", "ContactPatchItem_V2", "PATCH", requestUrl, input, options);
 
@@ -3256,7 +3256,7 @@ export class Office365Client extends ConnectorClientBase {
      * @remarks This operation creates a new contact in a contacts folder.
      */
     public async contactPostItem(input: Contact, folder: string, options: ConnectorOperationOptions = {}): Promise<ContactResponse> {
-        const requestPath = `/codeless/v1.0/me/contactFolders/${folder}/contacts`;
+        const requestPath = `/codeless/v1.0/me/contactFolders/${encodeURIComponent(encodeURIComponent(String(folder)))}/contacts`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.sendWithTracingAsync<ContactResponse>("Office365.contactPostItem", "ContactPostItem_V2", "POST", requestUrl, input, options);
 
@@ -3272,7 +3272,7 @@ export class Office365Client extends ConnectorClientBase {
         if (options.mailboxAddress !== undefined) {
             queryParams.push(`mailboxAddress=${encodeURIComponent(String(options.mailboxAddress))}`);
         }
-        const requestPath = `/codeless/v1.0/me/messages/${messageId}` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
+        const requestPath = `/codeless/v1.0/me/messages/${encodeURIComponent(String(messageId))}` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
         await this.sendWithTracingAsync<void>("Office365.deleteEmail", "DeleteEmail_V2", "DELETE", requestUrl, undefined, options);
     }
@@ -3286,7 +3286,7 @@ export class Office365Client extends ConnectorClientBase {
         if (options.mailboxAddress !== undefined) {
             queryParams.push(`mailboxAddress=${encodeURIComponent(String(options.mailboxAddress))}`);
         }
-        const requestPath = `/codeless/beta/me/messages/${messageId}/$value` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
+        const requestPath = `/codeless/beta/me/messages/${encodeURIComponent(String(messageId))}/$value` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.sendWithTracingAsync<Blob>("Office365.exportEmail", "ExportEmail_V2", "GET", requestUrl, undefined, options);
 
@@ -3314,7 +3314,7 @@ export class Office365Client extends ConnectorClientBase {
         if (options.mailboxAddress !== undefined) {
             queryParams.push(`mailboxAddress=${encodeURIComponent(String(options.mailboxAddress))}`);
         }
-        const requestPath = `/codeless/v1.0/me/messages/${messageId}/flag` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
+        const requestPath = `/codeless/v1.0/me/messages/${encodeURIComponent(String(messageId))}/flag` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
         await this.sendWithTracingAsync<void>("Office365.flag", "Flag_V2", "PATCH", requestUrl, input, options);
     }
@@ -3334,7 +3334,7 @@ export class Office365Client extends ConnectorClientBase {
         if (options.fetchSensitivityLabelMetadata !== undefined) {
             queryParams.push(`fetchSensitivityLabelMetadata=${encodeURIComponent(String(options.fetchSensitivityLabelMetadata))}`);
         }
-        const requestPath = `/codeless/v1.0/me/messages/${messageId}/forward` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
+        const requestPath = `/codeless/v1.0/me/messages/${encodeURIComponent(String(messageId))}/forward` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
         await this.sendWithTracingAsync<void>("Office365.forwardEmail", "ForwardEmail_V2", "POST", requestUrl, input, options);
     }
@@ -3354,7 +3354,7 @@ export class Office365Client extends ConnectorClientBase {
         if (options.fetchSensitivityLabelMetadata !== undefined) {
             queryParams.push(`fetchSensitivityLabelMetadata=${encodeURIComponent(String(options.fetchSensitivityLabelMetadata))}`);
         }
-        const requestPath = `/codeless/v1.0/me/messages/${messageId}/attachments/${attachmentId}` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
+        const requestPath = `/codeless/v1.0/me/messages/${encodeURIComponent(String(messageId))}/attachments/${encodeURIComponent(String(attachmentId))}` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.sendWithTracingAsync<GetAttachmentResponse>("Office365.getAttachment", "GetAttachment_V2", "GET", requestUrl, undefined, options);
 
@@ -3382,7 +3382,7 @@ export class Office365Client extends ConnectorClientBase {
         if (options.fetchSensitivityLabelMetadata !== undefined) {
             queryParams.push(`fetchSensitivityLabelMetadata=${encodeURIComponent(String(options.fetchSensitivityLabelMetadata))}`);
         }
-        const requestPath = `/v2/Mail/${messageId}` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
+        const requestPath = `/v2/Mail/${encodeURIComponent(String(messageId))}` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.sendWithTracingAsync<GraphClientReceiveMessage>("Office365.getEmail", "GetEmailV2", "GET", requestUrl, undefined, options);
 
@@ -3522,7 +3522,7 @@ export class Office365Client extends ConnectorClientBase {
      * @remarks Get the meeting rooms in a specific room list
      */
     public async getRoomsInRoomList(roomList: string, options: ConnectorOperationOptions = {}): Promise<GetRoomsInRoomListResponse> {
-        const requestPath = `/codeless/beta/me/findRooms(RoomList='${roomList}')`;
+        const requestPath = `/codeless/beta/me/findRooms(RoomList='${encodeURIComponent(String(roomList))}')`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.sendWithTracingAsync<GetRoomsInRoomListResponse>("Office365.getRoomsInRoomList", "GetRoomsInRoomList_V2", "GET", requestUrl, undefined, options);
 
@@ -3538,7 +3538,7 @@ export class Office365Client extends ConnectorClientBase {
         if (options.mailboxAddress !== undefined) {
             queryParams.push(`mailboxAddress=${encodeURIComponent(String(options.mailboxAddress))}`);
         }
-        const requestPath = `/codeless/v3/v1.0/me/messages/${messageId}/markAsRead` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
+        const requestPath = `/codeless/v3/v1.0/me/messages/${encodeURIComponent(String(messageId))}/markAsRead` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
         await this.sendWithTracingAsync<void>("Office365.markAsRead", "MarkAsRead_V3", "PATCH", requestUrl, input, options);
     }
@@ -3555,7 +3555,7 @@ export class Office365Client extends ConnectorClientBase {
         if (options.mailboxAddress !== undefined) {
             queryParams.push(`mailboxAddress=${encodeURIComponent(String(options.mailboxAddress))}`);
         }
-        const requestPath = `/v2/Mail/Move/${messageId}` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
+        const requestPath = `/v2/Mail/Move/${encodeURIComponent(String(messageId))}` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.sendWithTracingAsync<GraphClientReceiveMessage>("Office365.move", "MoveV2", "POST", requestUrl, undefined, options);
 
@@ -3571,7 +3571,7 @@ export class Office365Client extends ConnectorClientBase {
         if (options.mailboxAddress !== undefined) {
             queryParams.push(`mailboxAddress=${encodeURIComponent(String(options.mailboxAddress))}`);
         }
-        const requestPath = `/v3/Mail/ReplyTo/${messageId}` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
+        const requestPath = `/v3/Mail/ReplyTo/${encodeURIComponent(String(messageId))}` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
         await this.sendWithTracingAsync<void>("Office365.replyTo", "ReplyToV3", "POST", requestUrl, input, options);
     }
@@ -3581,7 +3581,7 @@ export class Office365Client extends ConnectorClientBase {
      * @remarks Respond to an event invite.
      */
     public async respondToEvent(input: ResponseToEventInvite, eventId: string, response: string, options: ConnectorOperationOptions = {}): Promise<void> {
-        const requestPath = `/codeless/v1.0/me/events/${eventId}/${response}`;
+        const requestPath = `/codeless/v1.0/me/events/${encodeURIComponent(String(eventId))}/${encodeURIComponent(String(response))}`;
         const requestUrl = this.resolveUrl(requestPath);
         await this.sendWithTracingAsync<void>("Office365.respondToEvent", "RespondToEvent_V2", "POST", requestUrl, input, options);
     }

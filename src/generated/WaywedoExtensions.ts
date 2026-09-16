@@ -392,7 +392,7 @@ export class WaywedoClient extends ConnectorClientBase {
      * @remarks Retrieve a specific checklist instance by ID
      */
     public async getChecklistInstance(instanceId: string, options: ConnectorOperationOptions = {}): Promise<ChecklistInstance> {
-        const requestPath = `/v1/ChecklistInstances/${instanceId}`;
+        const requestPath = `/v1/ChecklistInstances/${encodeURIComponent(String(instanceId))}`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.sendWithTracingAsync<ChecklistInstance>("Waywedo.getChecklistInstance", "ChecklistInstances_Get", "GET", requestUrl, undefined, options);
 
@@ -404,7 +404,7 @@ export class WaywedoClient extends ConnectorClientBase {
      * @remarks Retrieve all activity for a checklist instance
      */
     public async checklistInstancesActivity(instanceId: string, options: ConnectorOperationOptions = {}): Promise<Array<Record<string, unknown>>> {
-        const requestPath = `/v1/ChecklistInstances/${instanceId}/Activity`;
+        const requestPath = `/v1/ChecklistInstances/${encodeURIComponent(String(instanceId))}/Activity`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.sendWithTracingAsync<Array<Record<string, unknown>>>("Waywedo.checklistInstancesActivity", "ChecklistInstances_Activity", "GET", requestUrl, undefined, options);
 
@@ -420,7 +420,7 @@ export class WaywedoClient extends ConnectorClientBase {
         if (options.query !== undefined) {
             queryParams.push(`query=${encodeURIComponent(String(options.query))}`);
         }
-        const requestPath = `/v1/ChecklistInstances/${instanceId}/Steps` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
+        const requestPath = `/v1/ChecklistInstances/${encodeURIComponent(String(instanceId))}/Steps` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.sendWithTracingAsync<Array<ChecklistStep>>("Waywedo.findSteps", "Find_Steps", "GET", requestUrl, undefined, options);
 
@@ -432,7 +432,7 @@ export class WaywedoClient extends ConnectorClientBase {
      * @remarks Retrieve a specific checklist step by ID
      */
     public async getChecklistStep(instanceId: string, stepId: string, options: ConnectorOperationOptions = {}): Promise<ChecklistStep> {
-        const requestPath = `/v1/ChecklistInstances/${instanceId}/Steps/${stepId}`;
+        const requestPath = `/v1/ChecklistInstances/${encodeURIComponent(String(instanceId))}/Steps/${encodeURIComponent(String(stepId))}`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.sendWithTracingAsync<ChecklistStep>("Waywedo.getChecklistStep", "ChecklistSteps_Get", "GET", requestUrl, undefined, options);
 
@@ -444,7 +444,7 @@ export class WaywedoClient extends ConnectorClientBase {
      * @remarks Mark a specific step in a checklist instance as complete.
      */
     public async checklistStepsComplete(input: ChecklistStepsCompleteInput, instanceId: string, stepId: string, options: ConnectorOperationOptions = {}): Promise<ChecklistStepsCompleteResponse> {
-        const requestPath = `/v1/ChecklistInstances/${instanceId}/Steps/${stepId}/Complete`;
+        const requestPath = `/v1/ChecklistInstances/${encodeURIComponent(String(instanceId))}/Steps/${encodeURIComponent(String(stepId))}/Complete`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.sendWithTracingAsync<ChecklistStepsCompleteResponse>("Waywedo.checklistStepsComplete", "ChecklistSteps_Complete", "POST", requestUrl, input, options);
 
@@ -467,7 +467,7 @@ export class WaywedoClient extends ConnectorClientBase {
      * Find Checklist
      * @remarks Search for a checklist by title
      */
-    public async findChecklist(type: string, options: FindChecklistOptions = {}): Promise<Array<Procedure>> {
+    public async findChecklist(type: number, options: FindChecklistOptions = {}): Promise<Array<Procedure>> {
         const queryParams: string[] = [];
         if (options.query !== undefined) {
             queryParams.push(`query=${encodeURIComponent(String(options.query))}`);
@@ -486,8 +486,8 @@ export class WaywedoClient extends ConnectorClientBase {
      * Get A Checklist Or Procedure
      * @remarks Retrieve a specific checklist or procedure by ID
      */
-    public async getProcedure(procedureId: string, options: ConnectorOperationOptions = {}): Promise<Procedure> {
-        const requestPath = `/v1/Procedures/${procedureId}`;
+    public async getProcedure(procedureId: number, options: ConnectorOperationOptions = {}): Promise<Procedure> {
+        const requestPath = `/v1/Procedures/${encodeURIComponent(String(procedureId))}`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.sendWithTracingAsync<Procedure>("Waywedo.getProcedure", "Procedures_Get", "GET", requestUrl, undefined, options);
 
@@ -498,12 +498,12 @@ export class WaywedoClient extends ConnectorClientBase {
      * Find Checklist Instance
      * @remarks Search for a checklist instance by title.
      */
-    public async findChecklistInstances(procedureId: string, options: FindChecklistInstancesOptions = {}): Promise<Array<ChecklistInstance>> {
+    public async findChecklistInstances(procedureId: number, options: FindChecklistInstancesOptions = {}): Promise<Array<ChecklistInstance>> {
         const queryParams: string[] = [];
         if (options.query !== undefined) {
             queryParams.push(`query=${encodeURIComponent(String(options.query))}`);
         }
-        const requestPath = `/v1/Procedures/${procedureId}/ChecklistInstances` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
+        const requestPath = `/v1/Procedures/${encodeURIComponent(String(procedureId))}/ChecklistInstances` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.sendWithTracingAsync<Array<ChecklistInstance>>("Waywedo.findChecklistInstances", "Find_Checklist_Instances", "GET", requestUrl, undefined, options);
 

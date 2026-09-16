@@ -111,7 +111,7 @@ export interface CreateChannelOptions extends ConnectorOperationOptions {
     /** The name of the new channel. */
     name?: string;
     /** Channel is private or not */
-    isPrivate?: string;
+    isPrivate?: boolean;
 }
 
 /**

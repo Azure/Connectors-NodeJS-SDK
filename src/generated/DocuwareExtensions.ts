@@ -268,7 +268,7 @@ export class DocuwareClient extends ConnectorClientBase {
         if (searchDialogId !== undefined) {
             queryParams.push(`SearchDialogId=${encodeURIComponent(String(searchDialogId))}`);
         }
-        const requestPath = `/FileCabinets/${fileCabinet}/Search` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
+        const requestPath = `/FileCabinets/${encodeURIComponent(String(fileCabinet))}/Search` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.sendWithTracingAsync<SearchForDocumentsInFileCabinetResponse>("Docuware.searchForDocumentsInFileCabinet", "SearchForDocumentsInFileCabinet", "POST", requestUrl, input, options);
 
@@ -307,8 +307,8 @@ export class DocuwareClient extends ConnectorClientBase {
      * Get document information
      * @remarks Gets information about a document.
      */
-    public async getDocumentInformation(fileCabinetId: string, documentId: string, options: ConnectorOperationOptions = {}): Promise<GetDocumentInformationResponse> {
-        const requestPath = `/FileCabinets/${fileCabinetId}/Documents/${documentId}`;
+    public async getDocumentInformation(fileCabinetId: string, documentId: number, options: ConnectorOperationOptions = {}): Promise<GetDocumentInformationResponse> {
+        const requestPath = `/FileCabinets/${encodeURIComponent(String(fileCabinetId))}/Documents/${encodeURIComponent(String(documentId))}`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.sendWithTracingAsync<GetDocumentInformationResponse>("Docuware.getDocumentInformation", "GetDocumentInformation", "GET", requestUrl, undefined, options);
 
@@ -319,8 +319,8 @@ export class DocuwareClient extends ConnectorClientBase {
      * Delete a document
      * @remarks Deletes a document from a file cabinet or document tray.
      */
-    public async deleteDocument(fileCabinetId: string, documentId: string, options: ConnectorOperationOptions = {}): Promise<void> {
-        const requestPath = `/FileCabinets/${fileCabinetId}/Documents/${documentId}`;
+    public async deleteDocument(fileCabinetId: string, documentId: number, options: ConnectorOperationOptions = {}): Promise<void> {
+        const requestPath = `/FileCabinets/${encodeURIComponent(String(fileCabinetId))}/Documents/${encodeURIComponent(String(documentId))}`;
         const requestUrl = this.resolveUrl(requestPath);
         await this.sendWithTracingAsync<void>("Docuware.deleteDocument", "DeleteDocument", "DELETE", requestUrl, undefined, options);
     }
@@ -329,12 +329,12 @@ export class DocuwareClient extends ConnectorClientBase {
      * Download a file
      * @remarks Downloads a file/section of a document stored in a file cabinet or document tray.
      */
-    public async downloadFile(fileCabinetId: string, documentId: string, fileNumber: string, documentFormat: string, accept: string, acceptEncoding: string, options: ConnectorOperationOptions = {}): Promise<Blob> {
+    public async downloadFile(fileCabinetId: string, documentId: number, fileNumber: string, documentFormat: string, accept: string, acceptEncoding: string, options: ConnectorOperationOptions = {}): Promise<Blob> {
         const queryParams: string[] = [];
         if (documentFormat !== undefined) {
             queryParams.push(`DocumentFormat=${encodeURIComponent(String(documentFormat))}`);
         }
-        const requestPath = `/FileCabinets/${fileCabinetId}/Documents/${documentId}/Sections/${fileNumber}/Download` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
+        const requestPath = `/FileCabinets/${encodeURIComponent(String(fileCabinetId))}/Documents/${encodeURIComponent(String(documentId))}/Sections/${encodeURIComponent(String(fileNumber))}/Download` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestHeaders: Record<string, string> = {};
         if (accept !== undefined) {
             requestHeaders["Accept"] = String(accept);
@@ -352,12 +352,12 @@ export class DocuwareClient extends ConnectorClientBase {
      * Download a document
      * @remarks Downloads a document from a file cabinet or document tray.
      */
-    public async downloadDocument(fileCabinetId: string, documentId: string, documentFormat: string, accept: string, acceptEncoding: string, options: ConnectorOperationOptions = {}): Promise<Blob> {
+    public async downloadDocument(fileCabinetId: string, documentId: number, documentFormat: string, accept: string, acceptEncoding: string, options: ConnectorOperationOptions = {}): Promise<Blob> {
         const queryParams: string[] = [];
         if (documentFormat !== undefined) {
             queryParams.push(`DocumentFormat=${encodeURIComponent(String(documentFormat))}`);
         }
-        const requestPath = `/FileCabinets/${fileCabinetId}/Documents/${documentId}/Download` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
+        const requestPath = `/FileCabinets/${encodeURIComponent(String(fileCabinetId))}/Documents/${encodeURIComponent(String(documentId))}/Download` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestHeaders: Record<string, string> = {};
         if (accept !== undefined) {
             requestHeaders["Accept"] = String(accept);
@@ -375,8 +375,8 @@ export class DocuwareClient extends ConnectorClientBase {
      * Update index fields
      * @remarks Updates the index fields of a document.
      */
-    public async updateIndexFields(input: UpdateIndexFieldsInput, fileCabinetId: string, documentId: string, options: ConnectorOperationOptions = {}): Promise<UpdateIndexFieldsResponse> {
-        const requestPath = `/FileCabinets/${fileCabinetId}/Documents/${documentId}/Fields`;
+    public async updateIndexFields(input: UpdateIndexFieldsInput, fileCabinetId: string, documentId: number, options: ConnectorOperationOptions = {}): Promise<UpdateIndexFieldsResponse> {
+        const requestPath = `/FileCabinets/${encodeURIComponent(String(fileCabinetId))}/Documents/${encodeURIComponent(String(documentId))}/Fields`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.sendWithTracingAsync<UpdateIndexFieldsResponse>("Docuware.updateIndexFields", "UpdateIndexFields", "PUT", requestUrl, input, options);
 
@@ -392,7 +392,7 @@ export class DocuwareClient extends ConnectorClientBase {
         if (options.storeDialogId !== undefined) {
             queryParams.push(`StoreDialogID=${encodeURIComponent(String(options.storeDialogId))}`);
         }
-        const requestPath = `/FileCabinets/${destinationFileCabinetId}/Task/Transfer` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
+        const requestPath = `/FileCabinets/${encodeURIComponent(String(destinationFileCabinetId))}/Task/Transfer` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.sendWithTracingAsync<TransferDocumentResponse>("Docuware.transferDocument", "TransferDocument", "POST", requestUrl, input, options);
 
@@ -403,8 +403,8 @@ export class DocuwareClient extends ConnectorClientBase {
      * Place a stamp
      * @remarks Places a stamp on a document.
      */
-    public async placeAStamp(input: PlaceAStampInput, fileCabinetId: string, documentId: string, options: ConnectorOperationOptions = {}): Promise<PlaceAStampResponse> {
-        const requestPath = `/FileCabinets/${fileCabinetId}/Documents/${documentId}/Annotation`;
+    public async placeAStamp(input: PlaceAStampInput, fileCabinetId: string, documentId: number, options: ConnectorOperationOptions = {}): Promise<PlaceAStampResponse> {
+        const requestPath = `/FileCabinets/${encodeURIComponent(String(fileCabinetId))}/Documents/${encodeURIComponent(String(documentId))}/Annotation`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.sendWithTracingAsync<PlaceAStampResponse>("Docuware.placeAStamp", "PlaceAStamp", "PUT", requestUrl, input, options);
 
@@ -420,7 +420,7 @@ export class DocuwareClient extends ConnectorClientBase {
         if (options.dialogType !== undefined) {
             queryParams.push(`DialogType=${encodeURIComponent(String(options.dialogType))}`);
         }
-        const requestPath = `/FileCabinets/${fileCabinet}/Dialogs` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
+        const requestPath = `/FileCabinets/${encodeURIComponent(String(fileCabinet))}/Dialogs` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.sendWithTracingAsync<GetDialogsResponse>("Docuware.getDialogs", "GetDialogs", "GET", requestUrl, undefined, options);
 
@@ -432,7 +432,7 @@ export class DocuwareClient extends ConnectorClientBase {
      * @remarks Gets a list of stamps for a file cabinet or document tray.
      */
     public async getStamps(fileCabinet: string, options: ConnectorOperationOptions = {}): Promise<GetStampsResponse> {
-        const requestPath = `/FileCabinets/${fileCabinet}/Stamps`;
+        const requestPath = `/FileCabinets/${encodeURIComponent(String(fileCabinet))}/Stamps`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.sendWithTracingAsync<GetStampsResponse>("Docuware.getStamps", "GetStamps", "GET", requestUrl, undefined, options);
 
@@ -444,7 +444,7 @@ export class DocuwareClient extends ConnectorClientBase {
      * @remarks Gets a list of fields for a stamp.
      */
     public async getStampFields(fileCabinet: string, stamp: string, options: ConnectorOperationOptions = {}): Promise<GetStampFieldsResponse> {
-        const requestPath = `/FileCabinets/${fileCabinet}/Stamps/${stamp}/Fields`;
+        const requestPath = `/FileCabinets/${encodeURIComponent(String(fileCabinet))}/Stamps/${encodeURIComponent(String(stamp))}/Fields`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.sendWithTracingAsync<GetStampFieldsResponse>("Docuware.getStampFields", "GetStampFields", "GET", requestUrl, undefined, options);
 
@@ -460,7 +460,7 @@ export class DocuwareClient extends ConnectorClientBase {
         if (options.fieldType !== undefined) {
             queryParams.push(`FieldType=${encodeURIComponent(String(options.fieldType))}`);
         }
-        const requestPath = `/FileCabinets/${fileCabinet}/Fields` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
+        const requestPath = `/FileCabinets/${encodeURIComponent(String(fileCabinet))}/Fields` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.sendWithTracingAsync<GetFileCabinetFieldsResponse>("Docuware.getFileCabinetFields", "GetFileCabinetFields", "GET", requestUrl, undefined, options);
 
@@ -472,7 +472,7 @@ export class DocuwareClient extends ConnectorClientBase {
      * @remarks Gets the fields for a dialog
      */
     public async getDialogFields(fileCabinet: string, dialogId: string, options: ConnectorOperationOptions = {}): Promise<GetDialogFieldsResponse> {
-        const requestPath = `/FileCabinets/${fileCabinet}/Dialogs/${dialogId}/Fields`;
+        const requestPath = `/FileCabinets/${encodeURIComponent(String(fileCabinet))}/Dialogs/${encodeURIComponent(String(dialogId))}/Fields`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.sendWithTracingAsync<GetDialogFieldsResponse>("Docuware.getDialogFields", "GetDialogFields", "GET", requestUrl, undefined, options);
 
@@ -484,7 +484,7 @@ export class DocuwareClient extends ConnectorClientBase {
      * @remarks List documents from the specified document tray.
      */
     public listDocumentsInDocumentTray(documentTray: string, options: ConnectorOperationOptions = {}): ConnectorPagedAsyncIterableIterator<Record<string, unknown>> {
-        const requestPath = `/DocumentTrays/${documentTray}/Search`;
+        const requestPath = `/DocumentTrays/${encodeURIComponent(String(documentTray))}/Search`;
         return this.createPageable<ListDocumentsInDocumentTrayResponse, Record<string, unknown>>(
             requestPath,
             async (requestUrl) => {

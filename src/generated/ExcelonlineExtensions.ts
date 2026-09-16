@@ -163,7 +163,7 @@ export interface ItemsList {
  * Definition: Item
  */
 export interface Item {
-    dynamicProperties?: Record<string, unknown>;
+    dynamicProperties?: Record<string, ObjectEntity>;
 }
 
 /**
@@ -183,7 +183,7 @@ export interface Table {
     /** The display name of the table. */
     DisplayName?: string;
     /** Additional table properties provided by the connector to the clients. */
-    DynamicProperties?: Record<string, unknown>;
+    DynamicProperties?: Record<string, ObjectEntity>;
 }
 
 /**
@@ -225,7 +225,7 @@ export interface CreateIdColumnOptions extends ConnectorOperationOptions {
     /** Provide the key column name. */
     idColumn?: string;
     /** Should the key column be populated or not. */
-    populateColumn?: string;
+    populateColumn?: boolean;
 }
 
 /**
@@ -237,9 +237,9 @@ export interface GetItemsOptions extends ConnectorOperationOptions {
     /** An ODATA orderBy query for specifying the order of entries. */
     orderby?: string;
     /** Total number of entries to retrieve (default = all). */
-    top?: string;
+    top?: number;
     /** The number of entries to skip (default = 0). */
-    skip?: string;
+    skip?: number;
     /** Comma-separated list of columns to retrieve (first 500 by default). */
     select?: string;
     /** Select a column from the drop-down. */
@@ -313,7 +313,7 @@ export class ExcelonlineClient extends ConnectorClientBase {
         if (source !== undefined) {
             queryParams.push(`source=${encodeURIComponent(String(source))}`);
         }
-        const requestPath = `/drives/${drive}/files/${file}/tables` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
+        const requestPath = `/drives/${encodeURIComponent(String(drive))}/files/${encodeURIComponent(String(file))}/tables` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.sendWithTracingAsync<TableMetadata>("Excelonline.createTable", "CreateTable", "POST", requestUrl, input, options);
 
@@ -335,7 +335,7 @@ export class ExcelonlineClient extends ConnectorClientBase {
         if (options.populateColumn !== undefined) {
             queryParams.push(`populateColumn=${encodeURIComponent(String(options.populateColumn))}`);
         }
-        const requestPath = `/drives/${drive}/files/${file}/tables/${table}/createIdColumn` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
+        const requestPath = `/drives/${encodeURIComponent(String(drive))}/files/${encodeURIComponent(String(file))}/tables/${encodeURIComponent(String(table))}/createIdColumn` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
         await this.sendWithTracingAsync<void>("Excelonline.createIdColumn", "CreateIdColumn", "POST", requestUrl, undefined, options);
     }
@@ -370,7 +370,7 @@ export class ExcelonlineClient extends ConnectorClientBase {
         if (options.dateTimeFormat !== undefined) {
             queryParams.push(`dateTimeFormat=${encodeURIComponent(String(options.dateTimeFormat))}`);
         }
-        const requestPath = `/drives/${drive}/files/${file}/tables/${table}/items` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
+        const requestPath = `/drives/${encodeURIComponent(String(drive))}/files/${encodeURIComponent(String(file))}/tables/${encodeURIComponent(String(table))}/items` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         return this.createPageable<ItemsList, Item>(
             requestPath,
             async (requestUrl, isFirstPage) => {
@@ -399,7 +399,7 @@ export class ExcelonlineClient extends ConnectorClientBase {
         if (options.dateTimeFormat !== undefined) {
             queryParams.push(`dateTimeFormat=${encodeURIComponent(String(options.dateTimeFormat))}`);
         }
-        const requestPath = `/drives/${drive}/files/${file}/tables/${table}/items/${id}` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
+        const requestPath = `/drives/${encodeURIComponent(String(drive))}/files/${encodeURIComponent(String(file))}/tables/${encodeURIComponent(String(table))}/items/${encodeURIComponent(encodeURIComponent(String(id)))}` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.sendWithTracingAsync<Item>("Excelonline.getItem", "GetItem", "GET", requestUrl, undefined, options);
 
@@ -418,7 +418,7 @@ export class ExcelonlineClient extends ConnectorClientBase {
         if (idColumn !== undefined) {
             queryParams.push(`idColumn=${encodeURIComponent(String(idColumn))}`);
         }
-        const requestPath = `/drives/${drive}/files/${file}/tables/${table}/items/${id}` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
+        const requestPath = `/drives/${encodeURIComponent(String(drive))}/files/${encodeURIComponent(String(file))}/tables/${encodeURIComponent(String(table))}/items/${encodeURIComponent(encodeURIComponent(String(id)))}` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
         await this.sendWithTracingAsync<void>("Excelonline.deleteItem", "DeleteItem", "DELETE", requestUrl, undefined, options);
     }
@@ -441,7 +441,7 @@ export class ExcelonlineClient extends ConnectorClientBase {
         if (options.dateTimeFormat !== undefined) {
             queryParams.push(`dateTimeFormat=${encodeURIComponent(String(options.dateTimeFormat))}`);
         }
-        const requestPath = `/drives/${drive}/files/${file}/tables/${table}/items/${id}` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
+        const requestPath = `/drives/${encodeURIComponent(String(drive))}/files/${encodeURIComponent(String(file))}/tables/${encodeURIComponent(String(table))}/items/${encodeURIComponent(encodeURIComponent(String(id)))}` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.sendWithTracingAsync<Item>("Excelonline.patchItem", "PatchItem", "PATCH", requestUrl, input, options);
 
@@ -457,7 +457,7 @@ export class ExcelonlineClient extends ConnectorClientBase {
         if (source !== undefined) {
             queryParams.push(`source=${encodeURIComponent(String(source))}`);
         }
-        const requestPath = `/codeless/v1.0/drives/${drive}/items/${file}/workbook/worksheets` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
+        const requestPath = `/codeless/v1.0/drives/${encodeURIComponent(String(drive))}/items/${encodeURIComponent(String(file))}/workbook/worksheets` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.sendWithTracingAsync<GetAllWorksheetsResponse>("Excelonline.getAllWorksheets", "GetAllWorksheets", "GET", requestUrl, undefined, options);
 
@@ -473,7 +473,7 @@ export class ExcelonlineClient extends ConnectorClientBase {
         if (source !== undefined) {
             queryParams.push(`source=${encodeURIComponent(String(source))}`);
         }
-        const requestPath = `/codeless/v1.0/drives/${drive}/items/${file}/workbook/worksheets` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
+        const requestPath = `/codeless/v1.0/drives/${encodeURIComponent(String(drive))}/items/${encodeURIComponent(String(file))}/workbook/worksheets` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.sendWithTracingAsync<WorksheetMetadata>("Excelonline.createWorksheet", "CreateWorksheet", "POST", requestUrl, input, options);
 
@@ -492,7 +492,7 @@ export class ExcelonlineClient extends ConnectorClientBase {
         if (options.select !== undefined) {
             queryParams.push(`$select=${encodeURIComponent(String(options.select))}`);
         }
-        const requestPath = `/codeless/v1.0/drives/${drive}/items/${file}/workbook/tables` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
+        const requestPath = `/codeless/v1.0/drives/${encodeURIComponent(String(drive))}/items/${encodeURIComponent(String(file))}/workbook/tables` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.sendWithTracingAsync<GetTablesResponse>("Excelonline.getTables", "GetTables", "GET", requestUrl, undefined, options);
 
@@ -511,7 +511,7 @@ export class ExcelonlineClient extends ConnectorClientBase {
         if (options.dateTimeFormat !== undefined) {
             queryParams.push(`dateTimeFormat=${encodeURIComponent(String(options.dateTimeFormat))}`);
         }
-        const requestPath = `/codeless/v1.2/drives/${drive}/items/${file}/workbook/tables/${table}/rows` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
+        const requestPath = `/codeless/v1.2/drives/${encodeURIComponent(String(drive))}/items/${encodeURIComponent(String(file))}/workbook/tables/${encodeURIComponent(String(table))}/rows` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.sendWithTracingAsync<Item>("Excelonline.addRow", "AddRowV2", "POST", requestUrl, input, options);
 

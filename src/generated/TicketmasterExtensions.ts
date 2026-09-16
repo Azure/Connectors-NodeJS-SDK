@@ -187,7 +187,7 @@ export interface SuggestionsGetResponse {
  */
 export interface GetEventsOptions extends ConnectorOperationOptions {
     /** The page size of the response. */
-    size?: string;
+    size?: number;
     /** The filter for entities by their identifier. */
     id?: string;
     /** The keyword to search on. */
@@ -229,49 +229,49 @@ export interface GetEventsOptions extends ConnectorOperationOptions {
     /** The filter with onsale end date before this date. */
     onsaleEndDateTime?: string;
     /** The filter by city. */
-    city?: string;
+    city?: Array<string>;
     /** The filter by country code. */
     countryCode?: string;
     /** The filter by state code. */
     stateCode?: string;
     /** The filter by classification name: name of any segment, genre, sub-genre, type, sub-type. */
-    classificationName?: string;
+    classificationName?: Array<string>;
     /** The filter by classification identifier: identifier of any segment, genre, sub-genre, type, sub-type. */
-    classificationId?: string;
+    classificationId?: Array<string>;
     /** The filter by DMA identifier. */
     dmaId?: string;
     /** The filter with event local start date time within this range. */
-    localStartDateTime?: string;
+    localStartDateTime?: Array<string>;
     /** The filter for events where event local start and end date overlap this range. */
-    localStartEndDateTime?: string;
+    localStartEndDateTime?: Array<string>;
     /** The filter for events where event start and end date overlap this range. */
-    startEndDateTime?: string;
+    startEndDateTime?: Array<string>;
     /** The filter for events with public visibility starting. */
-    publicVisibilityStartDateTime?: string;
+    publicVisibilityStartDateTime?: Array<string>;
     /** The filter for events with a presale start and end that intersects with this range. */
-    preSaleDateTime?: string;
+    preSaleDateTime?: Array<string>;
     /** The filter with onsale start date on this date. */
     onsaleOnStartDate?: string;
     /** The filter with onsale range within this date. */
     onsaleOnAfterStartDate?: string;
     /** The filter by collection identifier. */
-    collectionId?: string;
+    collectionId?: Array<string>;
     /** The filter by segment identifier. */
-    segmentId?: string;
+    segmentId?: Array<string>;
     /** The filter by segment name. */
-    segmentName?: string;
+    segmentName?: Array<string>;
     /** The filter by classification that are family-friendly. */
     includeFamily?: string;
     /** The filter by promoter identifier. */
     promoterId?: string;
     /** The filter by genre identifier. */
-    genreId?: string;
+    genreId?: Array<string>;
     /** The filter by sub-genre identifier. */
-    subGenreId?: string;
+    subGenreId?: Array<string>;
     /** The filter by type identifier. */
-    typeId?: string;
+    typeId?: Array<string>;
     /** The filter by sub-type identifier. */
-    subTypeId?: string;
+    subTypeId?: Array<string>;
     /** The filter for events by geoHash. */
     geoPoint?: string;
     /** The popularity boost by country, default is us. */
@@ -279,7 +279,7 @@ export interface GetEventsOptions extends ConnectorOperationOptions {
     /** Indicates whether to include spell check suggestions in the response. */
     includeSpellcheck?: string;
     /** The filter for entities based on domains they are available on. */
-    domain?: string;
+    domain?: Array<string>;
 }
 
 /**
@@ -289,7 +289,7 @@ export interface GetEventOptions extends ConnectorOperationOptions {
     /** The locale in ISO code format. Multiple comma-separated values can be provided. */
     locale?: string;
     /** The filter for entities based on domains they are available on. */
-    domain?: string;
+    domain?: Array<string>;
 }
 
 /**
@@ -299,7 +299,7 @@ export interface GetEventImagesOptions extends ConnectorOperationOptions {
     /** The locale in ISO code format. Multiple comma-separated values can be provided. */
     locale?: string;
     /** The filter for entities based on domains they are available on. */
-    domain?: string;
+    domain?: Array<string>;
 }
 
 /**
@@ -323,21 +323,21 @@ export interface GetAttractionsOptions extends ConnectorOperationOptions {
     /** The sorting order of the search result. */
     sort?: string;
     /** The filter for attractions by classification name. */
-    classificationName?: string;
+    classificationName?: Array<string>;
     /** The filter for attractions by classification identifier. */
-    classificationId?: string;
+    classificationId?: Array<string>;
     /** The filter by classification that are family-friendly. */
     includeFamily?: string;
     /** The filter for attractions by segment identifier. */
-    segmentId?: string;
+    segmentId?: Array<string>;
     /** The filter for attractions by genre identifier. */
-    genreId?: string;
+    genreId?: Array<string>;
     /** The filter for attractions by sub-genre identifier. */
-    subGenreId?: string;
+    subGenreId?: Array<string>;
     /** The filter for attractions by type identifier. */
-    typeId?: string;
+    typeId?: Array<string>;
     /** The filter for attractions by sub-type identifier. */
-    subTypeId?: string;
+    subTypeId?: Array<string>;
     /** The filter for attractions by country code. */
     countryCode?: string;
     /** The popularity boost by country, default is us. */
@@ -345,7 +345,7 @@ export interface GetAttractionsOptions extends ConnectorOperationOptions {
     /** Indicates whether to include spell check suggestions in the response. */
     includeSpellcheck?: string;
     /** The filter for entities based on domains they are available on. */
-    domain?: string;
+    domain?: Array<string>;
 }
 
 /**
@@ -355,7 +355,7 @@ export interface GetAttractionOptions extends ConnectorOperationOptions {
     /** The locale in ISO code format. Multiple comma-separated values can be provided. */
     locale?: string;
     /** The filter for entities based on domains they are available on. */
-    domain?: string;
+    domain?: Array<string>;
 }
 
 /**
@@ -385,7 +385,7 @@ export interface GetClassificationsOptions extends ConnectorOperationOptions {
     /** Indicates whether to include spell check suggestions in the response. */
     includeSpellcheck?: string;
     /** The filter for entities based on domains they are available on. */
-    domain?: string;
+    domain?: Array<string>;
 }
 
 /**
@@ -395,7 +395,7 @@ export interface GetClassificationOptions extends ConnectorOperationOptions {
     /** The locale in ISO code format. Multiple comma-separated values can be provided. */
     locale?: string;
     /** The filter for entities based on domains they are available on. */
-    domain?: string;
+    domain?: Array<string>;
 }
 
 /**
@@ -405,7 +405,7 @@ export interface GetGenreOptions extends ConnectorOperationOptions {
     /** The locale in ISO code format. Multiple comma-separated values can be provided. */
     locale?: string;
     /** The filter for entities based on domains they are available on. */
-    domain?: string;
+    domain?: Array<string>;
 }
 
 /**
@@ -415,7 +415,7 @@ export interface GetSegmentOptions extends ConnectorOperationOptions {
     /** The locale in ISO code format. Multiple comma-separated values can be provided. */
     locale?: string;
     /** The filter for entities based on domains they are available on. */
-    domain?: string;
+    domain?: Array<string>;
 }
 
 /**
@@ -425,7 +425,7 @@ export interface GetSubGenreOptions extends ConnectorOperationOptions {
     /** The locale in ISO code format. Multiple comma-separated values can be provided. */
     locale?: string;
     /** The filter for entities based on domains they are available on. */
-    domain?: string;
+    domain?: Array<string>;
 }
 
 /**
@@ -465,7 +465,7 @@ export interface GetVenuesOptions extends ConnectorOperationOptions {
     /** Indicates whether to include spell check suggestions in the response. */
     includeSpellcheck?: string;
     /** The filter for entities based on domains they are available on. */
-    domain?: string;
+    domain?: Array<string>;
 }
 
 /**
@@ -475,7 +475,7 @@ export interface GetVenueOptions extends ConnectorOperationOptions {
     /** The locale in ISO code format. Multiple comma-separated values can be provided. */
     locale?: string;
     /** The filter for entities based on domains they are available on. */
-    domain?: string;
+    domain?: Array<string>;
 }
 
 /**
@@ -505,21 +505,21 @@ export interface GetSuggestionsOptions extends ConnectorOperationOptions {
     /** The filter suggestions by country code. */
     countryCode?: string;
     /** The filter suggestions by segment identifier. */
-    segmentId?: string;
+    segmentId?: Array<string>;
     /** The filter for events by geoHash. */
     geoPoint?: string;
     /** Which resources to include in the suggest response, defaults to all resources. */
-    resource?: string;
+    resource?: Array<string>;
     /** The popularity boost by country, default is us. */
     preferredCountry?: string;
     /** The filter for events where event start and end date overlap this range. */
-    startEndDateTime?: string;
+    startEndDateTime?: Array<string>;
     /** The filter for events where event local start and end date overlap this range. */
-    localStartEndDateTime?: string;
+    localStartEndDateTime?: Array<string>;
     /** Indicates whether to include spell check suggestions in the response. */
     includeSpellcheck?: string;
     /** The filter for entities based on domains they are available on. */
-    domain?: string;
+    domain?: Array<string>;
 }
 // #endregion Types
 
@@ -710,7 +710,7 @@ export class TicketmasterClient extends ConnectorClientBase {
         if (options.domain !== undefined) {
             queryParams.push(`domain=${encodeURIComponent(String(options.domain))}`);
         }
-        const requestPath = `/discovery/v2/events/${id}` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
+        const requestPath = `/discovery/v2/events/${encodeURIComponent(String(id))}` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.sendWithTracingAsync<EventGetResponse>("Ticketmaster.getEvent", "EventGet", "GET", requestUrl, undefined, options);
 
@@ -729,7 +729,7 @@ export class TicketmasterClient extends ConnectorClientBase {
         if (options.domain !== undefined) {
             queryParams.push(`domain=${encodeURIComponent(String(options.domain))}`);
         }
-        const requestPath = `/discovery/v2/events/${id}/images` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
+        const requestPath = `/discovery/v2/events/${encodeURIComponent(String(id))}/images` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.sendWithTracingAsync<EventImagesGetResponse>("Ticketmaster.getEventImages", "EventImagesGet", "GET", requestUrl, undefined, options);
 
@@ -821,7 +821,7 @@ export class TicketmasterClient extends ConnectorClientBase {
         if (options.domain !== undefined) {
             queryParams.push(`domain=${encodeURIComponent(String(options.domain))}`);
         }
-        const requestPath = `/discovery/v2/attractions/${id}` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
+        const requestPath = `/discovery/v2/attractions/${encodeURIComponent(String(id))}` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.sendWithTracingAsync<AttractionGetResponse>("Ticketmaster.getAttraction", "AttractionGet", "GET", requestUrl, undefined, options);
 
@@ -889,7 +889,7 @@ export class TicketmasterClient extends ConnectorClientBase {
         if (options.domain !== undefined) {
             queryParams.push(`domain=${encodeURIComponent(String(options.domain))}`);
         }
-        const requestPath = `/discovery/v2/classifications/${id}` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
+        const requestPath = `/discovery/v2/classifications/${encodeURIComponent(String(id))}` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.sendWithTracingAsync<ClassificationGetResponse>("Ticketmaster.getClassification", "ClassificationGet", "GET", requestUrl, undefined, options);
 
@@ -908,7 +908,7 @@ export class TicketmasterClient extends ConnectorClientBase {
         if (options.domain !== undefined) {
             queryParams.push(`domain=${encodeURIComponent(String(options.domain))}`);
         }
-        const requestPath = `/discovery/v2/classifications/genres/${id}` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
+        const requestPath = `/discovery/v2/classifications/genres/${encodeURIComponent(String(id))}` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.sendWithTracingAsync<GenreGetResponse>("Ticketmaster.getGenre", "GenreGet", "GET", requestUrl, undefined, options);
 
@@ -927,7 +927,7 @@ export class TicketmasterClient extends ConnectorClientBase {
         if (options.domain !== undefined) {
             queryParams.push(`domain=${encodeURIComponent(String(options.domain))}`);
         }
-        const requestPath = `/discovery/v2/classifications/segments/${id}` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
+        const requestPath = `/discovery/v2/classifications/segments/${encodeURIComponent(String(id))}` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.sendWithTracingAsync<SegmentGetResponse>("Ticketmaster.getSegment", "SegmentGet", "GET", requestUrl, undefined, options);
 
@@ -946,7 +946,7 @@ export class TicketmasterClient extends ConnectorClientBase {
         if (options.domain !== undefined) {
             queryParams.push(`domain=${encodeURIComponent(String(options.domain))}`);
         }
-        const requestPath = `/discovery/v2/classifications/subgenres/${id}` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
+        const requestPath = `/discovery/v2/classifications/subgenres/${encodeURIComponent(String(id))}` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.sendWithTracingAsync<SubGenreGetResponse>("Ticketmaster.getSubGenre", "SubGenreGet", "GET", requestUrl, undefined, options);
 
@@ -1029,7 +1029,7 @@ export class TicketmasterClient extends ConnectorClientBase {
         if (options.domain !== undefined) {
             queryParams.push(`domain=${encodeURIComponent(String(options.domain))}`);
         }
-        const requestPath = `/discovery/v2/venues/${id}` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
+        const requestPath = `/discovery/v2/venues/${encodeURIComponent(String(id))}` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.sendWithTracingAsync<VenueGetResponse>("Ticketmaster.getVenue", "VenueGet", "GET", requestUrl, undefined, options);
 

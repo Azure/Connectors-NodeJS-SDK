@@ -129,7 +129,7 @@ export class PlivoClient extends ConnectorClientBase {
      * @remarks This operation is used to make a call.
      */
     public async makeCall(input: Call, authId: string, options: ConnectorOperationOptions = {}): Promise<MakeCallResponse> {
-        const requestPath = `/v1/Account/${authId}/Call/`;
+        const requestPath = `/v1/Account/${encodeURIComponent(String(authId))}/Call/`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.sendWithTracingAsync<MakeCallResponse>("Plivo.makeCall", "MakeCall", "POST", requestUrl, input, options);
 
@@ -141,7 +141,7 @@ export class PlivoClient extends ConnectorClientBase {
      * @remarks This operation returns a list of all messages associated with your Plivo account.
      */
     public listMessages(authId: string, options: ConnectorOperationOptions = {}): ConnectorPagedAsyncIterableIterator<Record<string, unknown>> {
-        const requestPath = `/v1/Account/${authId}/Message/`;
+        const requestPath = `/v1/Account/${encodeURIComponent(String(authId))}/Message/`;
         return this.createPageable<ListMessagesResponse, Record<string, unknown>>(
             requestPath,
             async (requestUrl) => {
@@ -159,7 +159,7 @@ export class PlivoClient extends ConnectorClientBase {
      * @remarks This operation is used to send a text message.
      */
     public async sendSMS(input: SMS, authId: string, options: ConnectorOperationOptions = {}): Promise<SendSMSResponse> {
-        const requestPath = `/v1/Account/${authId}/Message/`;
+        const requestPath = `/v1/Account/${encodeURIComponent(String(authId))}/Message/`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.sendWithTracingAsync<SendSMSResponse>("Plivo.sendSMS", "SendSMS", "POST", requestUrl, input, options);
 
@@ -171,7 +171,7 @@ export class PlivoClient extends ConnectorClientBase {
      * @remarks This operation is used to fetch the details of a message, given the message ID.
      */
     public async getMessage(authId: string, messageUuid: string, options: ConnectorOperationOptions = {}): Promise<GetMessageResponse> {
-        const requestPath = `/v1/Account/${authId}/Message/${messageUuid}/`;
+        const requestPath = `/v1/Account/${encodeURIComponent(String(authId))}/Message/${encodeURIComponent(String(messageUuid))}/`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.sendWithTracingAsync<GetMessageResponse>("Plivo.getMessage", "GetMessage", "GET", requestUrl, undefined, options);
 

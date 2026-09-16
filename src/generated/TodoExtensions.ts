@@ -238,7 +238,7 @@ export interface CreateToDoList {
  */
 export interface ListToDosByFolderOptions extends ConnectorOperationOptions {
     /** Total number of entries to retrieve (default = 10, maximum = 999). */
-    top?: string;
+    top?: number;
 }
 
 /**
@@ -309,7 +309,7 @@ export class TodoClient extends ConnectorClientBase {
      * @remarks This operation is used to update a specific to-do list.
      */
     public async updateToDoList(input: CreateToDoList, folderId: string, options: ConnectorOperationOptions = {}): Promise<TodoList> {
-        const requestPath = `/lists/${folderId}`;
+        const requestPath = `/lists/${encodeURIComponent(String(folderId))}`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.sendWithTracingAsync<TodoList>("Todo.updateToDoList", "UpdateToDoList", "PATCH", requestUrl, input, options);
 
@@ -321,7 +321,7 @@ export class TodoClient extends ConnectorClientBase {
      * @remarks This operation is used to delete a specific to-do list.
      */
     public async deleteToDoList(folderId: string, options: ConnectorOperationOptions = {}): Promise<void> {
-        const requestPath = `/lists/${folderId}`;
+        const requestPath = `/lists/${encodeURIComponent(String(folderId))}`;
         const requestUrl = this.resolveUrl(requestPath);
         await this.sendWithTracingAsync<void>("Todo.deleteToDoList", "DeleteToDoList", "DELETE", requestUrl, undefined, options);
     }
@@ -331,7 +331,7 @@ export class TodoClient extends ConnectorClientBase {
      * @remarks This operation is used to create a to-do in the specified to-do list.
      */
     public async createToDo(input: CreateToDo, folderId: string, options: ConnectorOperationOptions = {}): Promise<ToDo> {
-        const requestPath = `/lists/${folderId}/tasks`;
+        const requestPath = `/lists/${encodeURIComponent(String(folderId))}/tasks`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.sendWithTracingAsync<ToDo>("Todo.createToDo", "CreateToDoV3", "POST", requestUrl, input, options);
 
@@ -355,7 +355,7 @@ export class TodoClient extends ConnectorClientBase {
      * @remarks This operation is used to delete a task.
      */
     public async deleteToDo(folderId: string, id: string, options: ConnectorOperationOptions = {}): Promise<void> {
-        const requestPath = `/lists/${folderId}/tasks/${id}`;
+        const requestPath = `/lists/${encodeURIComponent(String(folderId))}/tasks/${encodeURIComponent(String(id))}`;
         const requestUrl = this.resolveUrl(requestPath);
         await this.sendWithTracingAsync<void>("Todo.deleteToDo", "DeleteToDoV2", "DELETE", requestUrl, undefined, options);
     }
@@ -383,7 +383,7 @@ export class TodoClient extends ConnectorClientBase {
      * @remarks This operation is used to get the to-do with the given Id.
      */
     public async getToDo(folderId: string, id: string, options: ConnectorOperationOptions = {}): Promise<ToDo> {
-        const requestPath = `/lists/${folderId}/tasks/${id}`;
+        const requestPath = `/lists/${encodeURIComponent(String(folderId))}/tasks/${encodeURIComponent(String(id))}`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.sendWithTracingAsync<ToDo>("Todo.getToDo", "GetToDoV3", "GET", requestUrl, undefined, options);
 
@@ -395,7 +395,7 @@ export class TodoClient extends ConnectorClientBase {
      * @remarks This operation is used to get a specific to-do list.
      */
     public async getToDoList(folderId: string, options: ConnectorOperationOptions = {}): Promise<TodoList> {
-        const requestPath = `/lists/${folderId}`;
+        const requestPath = `/lists/${encodeURIComponent(String(folderId))}`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.sendWithTracingAsync<TodoList>("Todo.getToDoList", "GetToDoListV2", "GET", requestUrl, undefined, options);
 
@@ -411,7 +411,7 @@ export class TodoClient extends ConnectorClientBase {
         if (options.top !== undefined) {
             queryParams.push(`$top=${encodeURIComponent(String(options.top))}`);
         }
-        const requestPath = `/lists/${folderId}/tasks` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
+        const requestPath = `/lists/${encodeURIComponent(String(folderId))}/tasks` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         return this.createPageable<Array<ToDo>, ToDo>(
             requestPath,
             async (requestUrl) => {
@@ -429,7 +429,7 @@ export class TodoClient extends ConnectorClientBase {
      * @remarks This operation is used to update a specific to-do.
      */
     public async updateToDo(input: UpdateToDo, folderId: string, id: string, options: ConnectorOperationOptions = {}): Promise<ToDo> {
-        const requestPath = `/lists/${folderId}/tasks/${id}`;
+        const requestPath = `/lists/${encodeURIComponent(String(folderId))}/tasks/${encodeURIComponent(String(id))}`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.sendWithTracingAsync<ToDo>("Todo.updateToDo", "UpdateToDoV2", "PATCH", requestUrl, input, options);
 

@@ -176,7 +176,7 @@ export interface ExecuteSoqlQueryParameters {
     /** SOQL Query text. Dynamic parameters can be specified using '@paramName' syntax. */
     query: string;
     /** SOQL Query dynamic parameters. Key is parameter name (without '@' at sign), value is parameter value. */
-    parameters?: Record<string, unknown>;
+    parameters?: Record<string, string>;
 }
 
 /**
@@ -201,7 +201,7 @@ export interface ExternalIdFieldsList {
  * Definition: Item
  */
 export interface Item {
-    dynamicProperties?: Record<string, unknown>;
+    dynamicProperties?: Record<string, ObjectEntity>;
 }
 
 /**
@@ -248,7 +248,7 @@ export interface Table {
     /** The display name of the table. */
     DisplayName?: string;
     /** Additional table properties provided by the connector to the clients. */
-    DynamicProperties?: Record<string, unknown>;
+    DynamicProperties?: Record<string, ObjectEntity>;
 }
 
 /**
@@ -531,9 +531,9 @@ export interface GetItemsOptions extends ConnectorOperationOptions {
     /** An ODATA orderBy query for specifying the order of entries. */
     orderby?: string;
     /** Total number of entries to retrieve (default = all). */
-    top?: string;
+    top?: number;
     /** The number of entries to skip (default = 0). */
-    skip?: string;
+    skip?: number;
     /** Specific fields to retrieve from entries (default = all). */
     select?: string;
 }
@@ -547,9 +547,9 @@ export interface GetItemsTableAccountOptions extends ConnectorOperationOptions {
     /** An ODATA orderBy query for specifying the order of entries. */
     orderby?: string;
     /** Total number of entries to retrieve (default = all). */
-    top?: string;
+    top?: number;
     /** The number of entries to skip (default = 0). */
-    skip?: string;
+    skip?: number;
     /** Specific fields to retrieve from entries (default = all). */
     select?: string;
 }
@@ -563,9 +563,9 @@ export interface GetItemsTableUserOptions extends ConnectorOperationOptions {
     /** An ODATA orderBy query for specifying the order of entries. */
     orderby?: string;
     /** Total number of entries to retrieve (default = all). */
-    top?: string;
+    top?: number;
     /** The number of entries to skip (default = 0). */
-    skip?: string;
+    skip?: number;
     /** Specific fields to retrieve from entries (default = all). */
     select?: string;
 }
@@ -579,9 +579,9 @@ export interface GetItemsTableCaseOptions extends ConnectorOperationOptions {
     /** An ODATA orderBy query for specifying the order of entries. */
     orderby?: string;
     /** Total number of entries to retrieve (default = all). */
-    top?: string;
+    top?: number;
     /** The number of entries to skip (default = 0). */
-    skip?: string;
+    skip?: number;
     /** Specific fields to retrieve from entries (default = all). */
     select?: string;
 }
@@ -595,9 +595,9 @@ export interface GetItemsTableOpportunityOptions extends ConnectorOperationOptio
     /** An ODATA orderBy query for specifying the order of entries. */
     orderby?: string;
     /** Total number of entries to retrieve (default = all). */
-    top?: string;
+    top?: number;
     /** The number of entries to skip (default = 0). */
-    skip?: string;
+    skip?: number;
     /** Specific fields to retrieve from entries (default = all). */
     select?: string;
 }
@@ -611,9 +611,9 @@ export interface GetItemsTableProduct2Options extends ConnectorOperationOptions 
     /** An ODATA orderBy query for specifying the order of entries. */
     orderby?: string;
     /** Total number of entries to retrieve (default = all). */
-    top?: string;
+    top?: number;
     /** The number of entries to skip (default = 0). */
-    skip?: string;
+    skip?: number;
     /** Specific fields to retrieve from entries (default = all). */
     select?: string;
 }
@@ -627,9 +627,9 @@ export interface GetItemsTableContactOptions extends ConnectorOperationOptions {
     /** An ODATA orderBy query for specifying the order of entries. */
     orderby?: string;
     /** Total number of entries to retrieve (default = all). */
-    top?: string;
+    top?: number;
     /** The number of entries to skip (default = 0). */
-    skip?: string;
+    skip?: number;
     /** Specific fields to retrieve from entries (default = all). */
     select?: string;
 }
@@ -641,7 +641,7 @@ export interface GetAllJobsOptions extends ConnectorOperationOptions {
     /** Concurrency Mode */
     concurrenyMode?: string;
     /** Is PK Chunking Enabled */
-    isPkChunkingEnabled?: string;
+    isPkChunkingEnabled?: boolean;
     /** Job Type */
     jobType?: string;
     /** Query Locator */
@@ -819,7 +819,7 @@ export class SalesforceClient extends ConnectorClientBase {
      * @remarks This operation retrieves a record using an external ID.
      */
     public async getItemByExternalId(table: string, externalIdField: string, externalId: string, options: ConnectorOperationOptions = {}): Promise<GetItemByExternalIdResponse> {
-        const requestPath = `/datasets/default/tables/${table}/externalIdFields/${externalIdField}/${externalId}`;
+        const requestPath = `/datasets/default/tables/${encodeURIComponent(encodeURIComponent(String(table)))}/externalIdFields/${encodeURIComponent(encodeURIComponent(String(externalIdField)))}/${encodeURIComponent(encodeURIComponent(String(externalId)))}`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.sendWithTracingAsync<GetItemByExternalIdResponse>("Salesforce.getItemByExternalId", "GetItemByExternalId", "GET", requestUrl, undefined, options);
 
@@ -847,7 +847,7 @@ export class SalesforceClient extends ConnectorClientBase {
         if (options.select !== undefined) {
             queryParams.push(`$select=${encodeURIComponent(String(options.select))}`);
         }
-        const requestPath = `/datasets/default/tables/${table}/items` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
+        const requestPath = `/datasets/default/tables/${encodeURIComponent(encodeURIComponent(String(table)))}/items` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         return this.createPageable<ItemsList, Item>(
             requestPath,
             async (requestUrl, isFirstPage) => {
@@ -1076,7 +1076,7 @@ export class SalesforceClient extends ConnectorClientBase {
      * @remarks This operation deletes a record.
      */
     public async deleteItem(table: string, id: string, options: ConnectorOperationOptions = {}): Promise<void> {
-        const requestPath = `/datasets/default/tables/${table}/items/${id}`;
+        const requestPath = `/datasets/default/tables/${encodeURIComponent(encodeURIComponent(String(table)))}/items/${encodeURIComponent(encodeURIComponent(String(id)))}`;
         const requestUrl = this.resolveUrl(requestPath);
         await this.sendWithTracingAsync<void>("Salesforce.deleteItem", "DeleteItem", "DELETE", requestUrl, undefined, options);
     }
@@ -1123,7 +1123,7 @@ export class SalesforceClient extends ConnectorClientBase {
      * @remarks Uploads data for a job using CSV data.
      */
     public async uploadJobData(input: UploadJobDataInput, jobId: string, options: ConnectorOperationOptions = {}): Promise<void> {
-        const requestPath = `/codeless/jobs/ingest/${jobId}/batches`;
+        const requestPath = `/codeless/jobs/ingest/${encodeURIComponent(String(jobId))}/batches`;
         const requestUrl = this.resolveUrl(requestPath);
         await this.sendWithTracingAsync<void>("Salesforce.uploadJobData", "UploadJobData", "PUT", requestUrl, input, options);
     }
@@ -1133,7 +1133,7 @@ export class SalesforceClient extends ConnectorClientBase {
      * @remarks Retrieves detailed information about a job.
      */
     public async getJobInfo(jobId: string, options: ConnectorOperationOptions = {}): Promise<CheckJobResponse> {
-        const requestPath = `/codeless/jobs/ingest/${jobId}`;
+        const requestPath = `/codeless/jobs/ingest/${encodeURIComponent(String(jobId))}`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.sendWithTracingAsync<CheckJobResponse>("Salesforce.getJobInfo", "GetJobInfo", "GET", requestUrl, undefined, options);
 
@@ -1145,7 +1145,7 @@ export class SalesforceClient extends ConnectorClientBase {
      * @remarks Closes or aborts a job. Use UploadComplete to close a job, or Aborted to abort a job. If you close a job, Salesforce queues the job and uploaded data for processing, and you can’t add any additional job data. If you abort a job, the job does not get queued or processed.
      */
     public async closeJob(input: CloseJobRequest, jobId: string, options: ConnectorOperationOptions = {}): Promise<JobInfo> {
-        const requestPath = `/codeless/jobs/ingest/${jobId}`;
+        const requestPath = `/codeless/jobs/ingest/${encodeURIComponent(String(jobId))}`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.sendWithTracingAsync<JobInfo>("Salesforce.closeJob", "CloseJob", "PATCH", requestUrl, input, options);
 
@@ -1157,7 +1157,7 @@ export class SalesforceClient extends ConnectorClientBase {
      * @remarks Deletes a job. To be deleted, a job must have a state of UploadComplete, JobComplete, Aborted, or Failed.
      */
     public async deleteJob(jobId: string, options: ConnectorOperationOptions = {}): Promise<void> {
-        const requestPath = `/codeless/jobs/ingest/${jobId}`;
+        const requestPath = `/codeless/jobs/ingest/${encodeURIComponent(String(jobId))}`;
         const requestUrl = this.resolveUrl(requestPath);
         await this.sendWithTracingAsync<void>("Salesforce.deleteJob", "DeleteJob", "DELETE", requestUrl, undefined, options);
     }
@@ -1171,7 +1171,7 @@ export class SalesforceClient extends ConnectorClientBase {
         if (resultType !== undefined) {
             queryParams.push(`resultType=${encodeURIComponent(String(resultType))}`);
         }
-        const requestPath = `/codeless/jobs/ingest/${jobId}/results` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
+        const requestPath = `/codeless/jobs/ingest/${encodeURIComponent(String(jobId))}/results` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.sendWithTracingAsync<string>("Salesforce.getJobRecordResults", "GetJobRecordResults", "GET", requestUrl, undefined, options);
 
@@ -1268,7 +1268,7 @@ export class SalesforceClient extends ConnectorClientBase {
         if (options.select !== undefined) {
             queryParams.push(`$select=${encodeURIComponent(String(options.select))}`);
         }
-        const requestPath = `/v2/datasets/default/tables/${table}/items/${id}` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
+        const requestPath = `/v2/datasets/default/tables/${encodeURIComponent(encodeURIComponent(String(table)))}/items/${encodeURIComponent(encodeURIComponent(String(id)))}` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.sendWithTracingAsync<GetItemResponse>("Salesforce.getItem", "GetItem_V2", "GET", requestUrl, undefined, options);
 
@@ -1284,7 +1284,7 @@ export class SalesforceClient extends ConnectorClientBase {
         if (options.select !== undefined) {
             queryParams.push(`$select=${encodeURIComponent(String(options.select))}`);
         }
-        const requestPath = `/v3/datasets/default/tables/${table}/items/${id}` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
+        const requestPath = `/v3/datasets/default/tables/${encodeURIComponent(encodeURIComponent(String(table)))}/items/${encodeURIComponent(encodeURIComponent(String(id)))}` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.sendWithTracingAsync<PatchItemResponse>("Salesforce.patchItem", "PatchItem_V3", "PATCH", requestUrl, input, options);
 
@@ -1296,7 +1296,7 @@ export class SalesforceClient extends ConnectorClientBase {
      * @remarks This operation inserts or updates (upserts) a record using an external ID.
      */
     public async patchItemByExternalId(input: PatchItemByExternalIdInput, table: string, externalIdField: string, externalId: string, options: ConnectorOperationOptions = {}): Promise<PatchItemByExternalIdResponse> {
-        const requestPath = `/v2/datasets/default/tables/${table}/externalIdFields/${externalIdField}/${externalId}`;
+        const requestPath = `/v2/datasets/default/tables/${encodeURIComponent(encodeURIComponent(String(table)))}/externalIdFields/${encodeURIComponent(encodeURIComponent(String(externalIdField)))}/${encodeURIComponent(encodeURIComponent(String(externalId)))}`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.sendWithTracingAsync<PatchItemByExternalIdResponse>("Salesforce.patchItemByExternalId", "PatchItemByExternalIdV2", "PATCH", requestUrl, input, options);
 
@@ -1308,7 +1308,7 @@ export class SalesforceClient extends ConnectorClientBase {
      * @remarks This operation creates a record and allows null values.
      */
     public async postItem(input: PostItemInput, table: string, options: ConnectorOperationOptions = {}): Promise<PostItemResponse> {
-        const requestPath = `/v2/datasets/default/tables/${table}/items`;
+        const requestPath = `/v2/datasets/default/tables/${encodeURIComponent(encodeURIComponent(String(table)))}/items`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.sendWithTracingAsync<PostItemResponse>("Salesforce.postItem", "PostItem_V2", "POST", requestUrl, input, options);
 

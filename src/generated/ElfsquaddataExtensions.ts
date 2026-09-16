@@ -71,9 +71,9 @@ export interface InvokeFunctionResponse {
  */
 export interface GetEntitiesOptions extends ConnectorOperationOptions {
     /** Top */
-    top?: string;
+    top?: number;
     /** Skip */
-    skip?: string;
+    skip?: number;
     /** Order by */
     orderby?: string;
     /** Filter items */
@@ -83,7 +83,7 @@ export interface GetEntitiesOptions extends ConnectorOperationOptions {
     /** Expand */
     expand?: string;
     /** Count */
-    count?: string;
+    count?: boolean;
 }
 // #endregion Types
 
@@ -154,7 +154,7 @@ export class ElfsquaddataClient extends ConnectorClientBase {
         if (options.count !== undefined) {
             queryParams.push(`$count=${encodeURIComponent(String(options.count))}`);
         }
-        const requestPath = `/data/1/${entityName}` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
+        const requestPath = `/data/1/${encodeURIComponent(String(entityName))}` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         return this.createPageable<GetEntitiesResponse, unknown>(
             requestPath,
             async (requestUrl, isFirstPage) => {
@@ -173,7 +173,7 @@ export class ElfsquaddataClient extends ConnectorClientBase {
      * @remarks Create entity
      */
     public async postEntityById(input: PostEntityByIdInput, entityName: string, options: ConnectorOperationOptions = {}): Promise<PostEntityByIdResponse> {
-        const requestPath = `/data/1/${entityName}`;
+        const requestPath = `/data/1/${encodeURIComponent(String(entityName))}`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.sendWithTracingAsync<PostEntityByIdResponse>("Elfsquaddata.postEntityById", "post_entity_by_id", "POST", requestUrl, input, options);
 
@@ -185,7 +185,7 @@ export class ElfsquaddataClient extends ConnectorClientBase {
      * @remarks Get entity by id
      */
     public async getEntityById(entityName: string, id: string, options: ConnectorOperationOptions = {}): Promise<GetEntityByIdResponse> {
-        const requestPath = `/data/1/${entityName}(${id})`;
+        const requestPath = `/data/1/${encodeURIComponent(String(entityName))}(${encodeURIComponent(String(id))})`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.sendWithTracingAsync<GetEntityByIdResponse>("Elfsquaddata.getEntityById", "get_entity_by_id", "GET", requestUrl, undefined, options);
 
@@ -197,7 +197,7 @@ export class ElfsquaddataClient extends ConnectorClientBase {
      * @remarks Delete entity
      */
     public async deleteEntityById(entityName: string, id: string, options: ConnectorOperationOptions = {}): Promise<void> {
-        const requestPath = `/data/1/${entityName}(${id})`;
+        const requestPath = `/data/1/${encodeURIComponent(String(entityName))}(${encodeURIComponent(String(id))})`;
         const requestUrl = this.resolveUrl(requestPath);
         await this.sendWithTracingAsync<void>("Elfsquaddata.deleteEntityById", "delete_entity_by_id", "DELETE", requestUrl, undefined, options);
     }
@@ -207,7 +207,7 @@ export class ElfsquaddataClient extends ConnectorClientBase {
      * @remarks Update entity
      */
     public async putEntityById(input: PutEntityByIdInput, entityName: string, id: string, options: ConnectorOperationOptions = {}): Promise<void> {
-        const requestPath = `/data/1/${entityName}(${id})`;
+        const requestPath = `/data/1/${encodeURIComponent(String(entityName))}(${encodeURIComponent(String(id))})`;
         const requestUrl = this.resolveUrl(requestPath);
         await this.sendWithTracingAsync<void>("Elfsquaddata.putEntityById", "put_entity_by_id", "PUT", requestUrl, input, options);
     }
@@ -217,7 +217,7 @@ export class ElfsquaddataClient extends ConnectorClientBase {
      * @remarks Invoke function
      */
     public async invokeFunction(input: InvokeFunctionInput, functionPath: string, options: ConnectorOperationOptions = {}): Promise<InvokeFunctionResponse> {
-        const requestPath = `/${functionPath}`;
+        const requestPath = `/${encodeURIComponent(String(functionPath))}`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.sendWithTracingAsync<InvokeFunctionResponse>("Elfsquaddata.invokeFunction", "invoke_function", "PUT", requestUrl, input, options);
 
