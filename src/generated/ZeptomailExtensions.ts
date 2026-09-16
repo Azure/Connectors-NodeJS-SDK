@@ -181,11 +181,9 @@ export class ZeptomailClient extends ConnectorClientBase {
      * Get processed email details
      * @remarks This endpoint fetches detailed information about emails processed by Mail Agent identified by its unique ID. It returns data including the Subject, From Address, Sent time and Request ID for emails sent for the time range. The mailagent_key parameter should match the  Mail Agent key of the Mail Agent as listed in our system.
      */
-    public async getProcessedEmailsAsync(mailagentKey?: string, subject?: string, from?: string, to?: string, dateFrom?: string, dateTo?: string, requestId?: string, isHb?: string, isSb?: string, abortSignal?: AbortSignalLike): Promise<GetProcessedEmailsResponse> {
+    public async getProcessedEmailsAsync(mailagentKey: string, subject?: string, from?: string, to?: string, dateFrom?: string, dateTo?: string, requestId?: string, isHb?: boolean, isSb?: boolean, abortSignal?: AbortSignalLike): Promise<GetProcessedEmailsResponse> {
         const queryParams: string[] = [];
-        if (mailagentKey !== undefined) {
-            queryParams.push(`mailagent_key=${encodeURIComponent(String(mailagentKey))}`);
-        }
+        queryParams.push(`mailagent_key=${encodeURIComponent(String(mailagentKey))}`);
         if (subject !== undefined) {
             queryParams.push(`subject=${encodeURIComponent(String(subject))}`);
         }
@@ -257,11 +255,9 @@ export class ZeptomailClient extends ConnectorClientBase {
      * Processed emails analytics
      * @remarks This endpoint fetches emails analytics for emails sent by Mail Agent identified by its Mail Agent name. It returns data including total count of Hardbounce, Softbounce and Sent statistics over a period of time and each day . The mailagent parameter should match the Mail Agent name as listed in our system.
      */
-    public async processedMailStatsAsync(mailagent?: string, fromTime?: string, toTime?: string, abortSignal?: AbortSignalLike): Promise<ProcessedMailStatsResponse> {
+    public async processedMailStatsAsync(mailagent: string, fromTime?: string, toTime?: string, abortSignal?: AbortSignalLike): Promise<ProcessedMailStatsResponse> {
         const queryParams: string[] = [];
-        if (mailagent !== undefined) {
-            queryParams.push(`mailagent=${encodeURIComponent(String(mailagent))}`);
-        }
+        queryParams.push(`mailagent=${encodeURIComponent(String(mailagent))}`);
         if (fromTime !== undefined) {
             queryParams.push(`from_time=${encodeURIComponent(String(fromTime))}`);
         }
