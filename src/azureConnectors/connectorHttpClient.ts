@@ -59,7 +59,49 @@ export class ConnectorHttpClient {
     private static readonly ApiHubScopes = ["https://apihub.azure.com/.default"];
     private static readonly DefaultMaxRetries = 3;
     private static readonly DefaultRetryPolicyName = "defaultRetryPolicy";
+    private static readonly LoggingPolicyName = "connectorLoggingPolicy";
+    private static readonly RedactedHeaderValue = "REDACTED";
     private static readonly RetryLoggingPolicyName = "connectorRetryLoggingPolicy";
+    private static readonly SafeLoggedHeaderNames = new Set([
+        "accept",
+        "accept-encoding",
+        "cache-control",
+        "client-request-id",
+        "connection",
+        "content-length",
+        "content-type",
+        "date",
+        "etag",
+        "expires",
+        "if-match",
+        "if-modified-since",
+        "if-none-match",
+        "if-unmodified-since",
+        "last-modified",
+        "ms-cv",
+        "pragma",
+        "request-id",
+        "retry-after",
+        "return-client-request-id",
+        "server",
+        "traceparent",
+        "transfer-encoding",
+        "user-agent",
+        "www-authenticate",
+        "x-ms-client-request-id",
+        "x-ms-correlation-request-id",
+        "x-ms-request-id",
+        "x-ms-return-client-request-id",
+        "x-ms-useragent",
+    ]);
+    private static readonly SensitiveLoggedHeaderNames = new Set([
+        "api-key",
+        "authorization",
+        "cookie",
+        "proxy-authorization",
+        "set-cookie",
+        "x-api-key",
+    ]);
     private static readonly SafeHttpMethods = new Set<HttpMethods>(["GET", "HEAD", "OPTIONS", "TRACE"]);
 
     private readonly credential: TokenCredential;
@@ -109,7 +151,6 @@ export class ConnectorHttpClient {
     ): Promise<ConnectorResponse<TValue>> {
         const effectiveScopes = scopes ?? ConnectorHttpClient.ApiHubScopes;
         const logUrl = ConnectorHttpClient.sanitizeUrlForLogging(url);
-        const startTime = Date.now();
         logger.info(`Request ${method} ${logUrl}`);
         const request = createPipelineRequest({
             url,
@@ -130,13 +171,6 @@ export class ConnectorHttpClient {
 
         try {
             const response = await this.getPipeline(effectiveScopes).sendRequest(this.httpClient, request);
-            const responseMessage = `Response ${response.status} ${method} ${logUrl} (${Date.now() - startTime}ms)`;
-            if (response.status >= 200 && response.status < 300) {
-                logger.info(responseMessage);
-            } else {
-                logger.error(responseMessage);
-            }
-
             return ConnectorHttpClient.createConnectorResponse<TValue>(response);
         } catch (error) {
             if (abortSignal?.aborted || error instanceof Error && error.name === "AbortError") {
@@ -182,10 +216,39 @@ export class ConnectorHttpClient {
                 bearerTokenAuthenticationPolicy({ credential: this.credential, scopes: pipelineScopes }),
                 { phase: "Sign" },
             );
+            pipeline.addPolicy(
+                ConnectorHttpClient.createLoggingPolicy(),
+                { afterPhase: "Sign" },
+            );
             this.pipelines.set(key, pipeline);
         }
 
         return pipeline;
+    }
+
+    private static createLoggingPolicy(): PipelinePolicy {
+        return {
+            name: ConnectorHttpClient.LoggingPolicyName,
+            sendRequest: async (request, next): Promise<PipelineResponse> => {
+                const logUrl = ConnectorHttpClient.sanitizeUrlForLogging(request.url);
+                const startTime = Date.now();
+                logger.info(
+                    `Request headers: ${ConnectorHttpClient.formatHeadersForLogging(
+                        request.headers.toJSON(),
+                        ConnectorHttpClient.SafeLoggedHeaderNames,
+                    )}`,
+                );
+                const response = await next(request);
+                logger.info(`Response ${response.status} ${request.method} ${logUrl} (${Date.now() - startTime}ms)`);
+                logger.info(
+                    `Response headers: ${ConnectorHttpClient.formatHeadersForLogging(
+                        response.headers.toJSON(),
+                        ConnectorHttpClient.SafeLoggedHeaderNames,
+                    )}`,
+                );
+                return response;
+            },
+        };
     }
 
     private static createRetryLoggingPolicy(maxRetries: number): PipelinePolicy {
@@ -210,6 +273,26 @@ export class ConnectorHttpClient {
                 }
             },
         };
+    }
+
+    private static formatHeadersForLogging(
+        headers: Record<string, string>,
+        allowedHeaderNames: ReadonlySet<string>,
+    ): string {
+        const sanitizedHeaders = Object.fromEntries(
+            Object.entries(headers)
+                .sort(([leftName], [rightName]) => leftName.localeCompare(rightName))
+                .map(([headerName, headerValue]) => {
+                    const normalizedHeaderName = headerName.toLowerCase();
+                    const canLogValue = allowedHeaderNames.has(normalizedHeaderName) &&
+                        !ConnectorHttpClient.SensitiveLoggedHeaderNames.has(normalizedHeaderName);
+                    return [
+                        headerName,
+                        canLogValue ? headerValue : ConnectorHttpClient.RedactedHeaderValue,
+                    ];
+                }),
+        );
+        return JSON.stringify(sanitizedHeaders);
     }
 
     private static sanitizeUrlForLogging(url: string): string {

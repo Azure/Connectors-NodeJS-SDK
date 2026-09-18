@@ -190,6 +190,27 @@ for await (const page of client.listSubscriptions().byPage()) {
 }
 ```
 
+### TypeScript — Inspect complete responses
+
+Every generated operation accepts an `onResponse` callback through its options. The
+callback exposes the complete status, headers, and raw body while the method keeps its
+typed return value. HTTP failures also provide the resulting `ConnectorError` as the
+third callback argument.
+
+```typescript
+const subscription = await client.getSubscription(
+    "subscription-id",
+    "2016-06-01",
+    {
+        onResponse: (rawResponse, parsedResponse, error) => {
+            console.log(rawResponse.status);
+            console.log(rawResponse.headers.toJSON());
+            console.log(rawResponse.bodyAsText);
+        },
+    },
+);
+```
+
 ### TypeScript — Post a Teams message
 
 ```typescript

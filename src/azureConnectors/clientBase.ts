@@ -107,9 +107,12 @@ export abstract class ConnectorClientBase {
                 requestHeaders,
             );
             if (!response.isSuccessStatusCode) {
-                throw new ConnectorError(this.connectorName, operationName, response.rawResponse);
+                const error = new ConnectorError(this.connectorName, operationName, response.rawResponse);
+                options.onResponse?.(response.rawResponse, response.value, error);
+                throw error;
             }
 
+            options.onResponse?.(response.rawResponse, response.value);
             return response;
         });
     }

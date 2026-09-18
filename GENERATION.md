@@ -94,6 +94,7 @@ inputs it consumed.
 | `status` | `template` until a run records real values; `generated` for a captured run. |
 | `generatedAtUtc` | ISO 8601 UTC timestamp of the generation run. |
 | `generator.bpmBaseCommit` | Immutable, reachable BPM commit SHA used as the generator source baseline. |
+| `generator.bpmHeadCommit` | Immutable BPM commit whose generator tree the base-plus-patch composition must reproduce. |
 | `generator.bpmBranch` | BPM branch the commit was on (informational). |
 | `generator.assemblyVersion` | File version of the built `Microsoft.Azure.Workflows.CodefulSdkGenerator.dll`. |
 | `generator.sourcePatch.path` | Repository-relative patch applied to `bpmBaseCommit` before building the generator. |
@@ -106,8 +107,8 @@ inputs it consumed.
 | `connectors[].swaggerSnapshot` | Path to the persisted Swagger the run consumed for that connector. |
 | `connectors[].swaggerSha256` | SHA-256 of the snapshot as UTF-8 text with CRLF normalized to LF, so provenance is platform-independent. |
 | `connectors[].outputSha256` | SHA-256 of the generated `outputFile` as UTF-8 text with CRLF normalized to LF, so provenance is platform-independent. |
-| `connectors[].generatorCommit` | Optional immutable BPM commit used instead of `generator.bpmBaseCommit` for one connector. |
-| `connectors[].sourcePatch.path` | Optional repository-relative patch applied to that connector's `generatorCommit`. |
+| `connectors[].generatorCommit` | Optional immutable BPM baseline used instead of `generator.bpmBaseCommit` for one connector; requires `sourcePatch`. |
+| `connectors[].sourcePatch.path` | Repository-relative patch required with a connector-specific `generatorCommit`. |
 | `connectors[].sourcePatch.sha256` | SHA-256 of the connector-specific patch as canonical UTF-8/LF text. |
 
 ### Recording provenance for a run
@@ -120,11 +121,12 @@ When `generator.sourcePatch` is present, reproduce the generator source before b
 ```powershell
 git -C <BPM-repo-root> checkout <bpmBaseCommit>
 git -C <BPM-repo-root> apply --unidiff-zero <SDK-repo-root>/<sourcePatch.path>
+git -C <BPM-repo-root> diff --exit-code <bpmHeadCommit> -- src/tools/CodefulSdkGenerator
 ```
 
-When a connector records `generatorCommit` and `sourcePatch`, apply that patch to
-the connector-specific commit instead of the top-level generator source before
-regenerating that connector.
+The final command must report no differences. When a connector records
+`generatorCommit`, it must also record `sourcePatch`; apply that composition instead
+of the top-level generator source before regenerating that connector.
 
 ```powershell
 function Get-CanonicalTextSha256 {
@@ -147,7 +149,7 @@ $manifest = Get-Content generation.manifest.json -Raw | ConvertFrom-Json
 
 $manifest.status = "generated"
 $manifest.generatedAtUtc = [DateTime]::UtcNow.ToString("yyyy-MM-ddTHH:mm:ssZ")
-$manifest.generator.bpmBaseCommit = (git -C $bpmRepoRoot rev-parse HEAD)
+$manifest.generator.bpmHeadCommit = (git -C $bpmRepoRoot rev-parse HEAD)
 $manifest.generator.bpmBranch = (git -C $bpmRepoRoot rev-parse --abbrev-ref HEAD)
 $manifest.generator.sourcePatch.sha256 = Get-CanonicalTextSha256 -Path $manifest.generator.sourcePatch.path
 
@@ -183,8 +185,8 @@ $manifest | ConvertTo-Json -Depth 6 | Set-Content generation.manifest.json -Enco
 - **Do not hand-edit** the manifest's generated values; let the tooling write them so
   they always match the actual run.
 - **The `tests/generationManifest.test.ts` guard runs in CI** and fails the build unless
-  `status` is `generated`, `generator.bpmBaseCommit` and the hashed source patch are
-  populated, and every
+  `status` is `generated`, the base/head/assembly source composition and hashed unified
+  patch are populated consistently, connector-specific commits have their own patch, and every
   `connectors[].swaggerSha256` and `connectors[].outputSha256` matches the SHA-256 of
   its committed `swagger-cache/` snapshot and canonical UTF-8/LF generated output.
   Regenerate rather than hand-editing so the guard stays green.

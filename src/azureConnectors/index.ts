@@ -14,7 +14,11 @@ export type { PagedAsyncIterableIterator } from "@azure/core-paging";
 export { ConnectorClientBase } from "./clientBase.ts";
 export type { ConnectorPageSettings, ConnectorPagedAsyncIterableIterator } from "./clientBase.ts";
 export { DefaultConnectorClientOptions } from "./options.ts";
-export type { ConnectorClientOptions, ConnectorOperationOptions } from "./options.ts";
+export type {
+    ConnectorClientOptions,
+    ConnectorOperationOptions,
+    ConnectorRawResponseCallback,
+} from "./options.ts";
 export {
     ManagedIdentityTokenProvider,
     ConnectionStringTokenProvider,

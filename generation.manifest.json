@@ -1,6 +1,6 @@
 {
   "_comment": "Provenance record for the generated clients under src/generated/. It lets a regeneration be reproduced and any cross-language surface delta be attributed to a specific generator revision and Swagger input. Regenerate and repopulate this file on every run (see the 'Provenance & Reproducibility' section of GENERATION.md). A reviewable regeneration PR must have status 'generated' with non-null provenance, swaggerSha256 values that match the committed swagger-cache/ snapshots, and outputSha256 values that match the canonical UTF-8/LF generated outputs; the tests/generationManifest.test.ts guard enforces this.",
-  "manifestVersion": 2,
+  "manifestVersion": 3,
   "status": "generated",
   "generatedAtUtc": "2026-09-18T05:53:27Z",
   "generator": {
@@ -8,8 +8,9 @@
     "tool": "CodefulSdkGenerator (LogicAppsCompiler)",
     "projectPath": "src/tools/CodefulSdkGenerator/LogicAppsCompiler.Cli/LogicAppsCompiler.Cli.csproj",
     "bpmBaseCommit": "b274d2740d7f3c69e14832ab8115ea76e14fb8a8",
+    "bpmHeadCommit": "e4d9139998b8887415b028ea520946de900ecd33",
     "bpmBranch": "swapnil/feature/typescript-generator-conventions",
-    "assemblyVersion": "1.190.0.22",
+    "assemblyVersion": "1.190.0.49",
     "sourcePatch": {
       "path": "generator-patches/e4d9139-typescript-azure-sdk-conventions.patch",
       "sha256": "a9bd39374d135f584e6e5f0932c87961f3314eeb909dab44412a9585f8841e00"
@@ -403,8 +404,7 @@
       "outputFile": "src/generated/SeismicplannerExtensions.ts",
       "swaggerSnapshot": "swagger-cache/seismicplanner.swagger.json",
       "swaggerSha256": "adb321a0255847eab5f08294342cc59e9a12124b02b3676e5c43176fab460670",
-      "outputSha256": "4770e03ece22695290a616b32f446b6ee7cc992e2bf045d264404ae4ba67e64b",
-      "generatorCommit": "08204b6fe8ed4bd59f75b6af3ba3db308688a0bc"
+      "outputSha256": "4770e03ece22695290a616b32f446b6ee7cc992e2bf045d264404ae4ba67e64b"
     },
     {
       "apiName": "sendgrid",

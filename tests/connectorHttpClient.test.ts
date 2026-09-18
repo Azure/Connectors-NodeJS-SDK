@@ -408,6 +408,43 @@ describe("ConnectorHttpClient", () => {
         expect(messages.join("\n")).not.toMatch(/customer-message-id|secret/);
     });
 
+    it("should log allowlisted headers and redact sensitive values", async () => {
+        const httpClient = new MockHttpClient(async request => createMockResponse(
+            request,
+            200,
+            "",
+            {
+                "set-cookie": "response-secret",
+                "x-ms-request-id": "response-request-id",
+            },
+        ));
+        const client = new ConnectorHttpClient(new MockTokenCredential(), { httpClient });
+
+        const messages = await captureConnectorLogs(async () => {
+            await client.sendAsync(
+                "GET",
+                "https://example.com/api/items",
+                undefined,
+                undefined,
+                undefined,
+                undefined,
+                {
+                    "x-service-safe": "safe-service-value",
+                    "x-service-secret": "request-secret",
+                },
+            );
+        });
+        const combinedMessages = messages.join("\n");
+
+        expect(combinedMessages).toMatch(/Request headers: .*"authorization":"REDACTED"/);
+        expect(combinedMessages).toMatch(/Request headers: .*"x-ms-client-request-id":"[^"]+"/);
+        expect(combinedMessages).toMatch(/Request headers: .*"x-service-safe":"REDACTED"/);
+        expect(combinedMessages).toMatch(/Request headers: .*"x-service-secret":"REDACTED"/);
+        expect(combinedMessages).toMatch(/Response headers: .*"x-ms-request-id":"response-request-id"/);
+        expect(combinedMessages).toMatch(/Response headers: .*"set-cookie":"REDACTED"/);
+        expect(combinedMessages).not.toMatch(/mock-bearer-token|safe-service-value|request-secret|response-secret/);
+    });
+
     it("should log each retry attempt", async () => {
         const httpClient = new MockHttpClient(async (request, attempt) => attempt < 3
             ? createMockResponse(request, 503, "Unavailable")
@@ -427,7 +464,7 @@ describe("ConnectorHttpClient", () => {
         ]);
     });
 
-    it("should log non-success responses as errors", async () => {
+    it("should log non-success response metadata at Info", async () => {
         const httpClient = new MockHttpClient(async request => createMockResponse(request, 404, "Not found"));
         const client = new ConnectorHttpClient(new MockTokenCredential(), { httpClient });
 
@@ -436,7 +473,7 @@ describe("ConnectorHttpClient", () => {
         });
 
         expect(messages).toEqual(expect.arrayContaining([
-            expect.stringMatching(/^azure:connectors:error Response 404 GET https:\/\/example\.com \(\d+ms\)$/),
+            expect.stringMatching(/^azure:connectors:info Response 404 GET https:\/\/example\.com \(\d+ms\)$/),
         ]));
         expect(messages.join("\n")).not.toContain("customer-id");
     });

@@ -193,6 +193,29 @@ describe("ConnectorClientBase tracing", () => {
         expect(instrumenter.spans.every(entry => entry.span.ended)).toBe(true);
     });
 
+    it("should expose the complete successful response through operation options", async () => {
+        const httpClient = new TestHttpClient(200);
+        const client = new TestClient("https://example.com/runtime", createCredential(), {
+            httpClient,
+            retryOptions: { maxRetries: 0 },
+        });
+        const onResponse = jest.fn();
+
+        await client.getItem({ onResponse });
+
+        expect(onResponse).toHaveBeenCalledTimes(1);
+        expect(onResponse).toHaveBeenCalledWith(
+            expect.objectContaining({
+                status: 200,
+                bodyAsText: "{}",
+                headers: expect.objectContaining({}),
+            }),
+            {},
+        );
+        const rawResponse = onResponse.mock.calls[0][0] as PipelineResponse;
+        expect(rawResponse.headers.get("x-test-response")).toBe("response-value");
+    });
+
     it("should mark the operation span failed when a connector response is unsuccessful", async () => {
         const instrumenter = new TestInstrumenter();
         useInstrumenter(instrumenter);
@@ -201,12 +224,18 @@ describe("ConnectorClientBase tracing", () => {
             httpClient,
             retryOptions: { maxRetries: 0 },
         });
+        const onResponse = jest.fn();
 
-        await expect(client.getItem()).rejects.toMatchObject({
+        await expect(client.getItem({ onResponse })).rejects.toMatchObject({
             name: "ConnectorError",
             statusCode: 500,
         });
 
+        expect(onResponse).toHaveBeenCalledWith(
+            expect.objectContaining({ status: 500, bodyAsText: "failure body" }),
+            undefined,
+            expect.objectContaining({ name: "ConnectorError", statusCode: 500 }),
+        );
         expect(instrumenter.spans[0].span.status).toMatchObject({ status: "error" });
     });
 });
