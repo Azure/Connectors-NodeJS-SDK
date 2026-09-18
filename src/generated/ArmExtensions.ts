@@ -570,9 +570,9 @@ export interface GetDeploymentOptions extends ConnectorOperationOptions {
 }
 
 /**
- * Options for the createDeploymentOrUpdate operation.
+ * Options for the upsertDeployment operation.
  */
-export interface CreateDeploymentOrUpdateOptions extends ConnectorOperationOptions {
+export interface UpsertDeploymentOptions extends ConnectorOperationOptions {
     /** If the action should wait until deployment is completed */
     wait?: boolean;
 }
@@ -753,7 +753,7 @@ export class ArmClient extends ConnectorClientBase {
      * Create or update a template deployment
      * @remarks Create or update a named resource group template deployment. A template and parameters are expected for the request to succeed.
      */
-    public async createDeploymentOrUpdate(input: Deployment, subscriptionId: string, resourceGroupName: string, deploymentName: string, xMsApiVersion: string, options: CreateDeploymentOrUpdateOptions = {}): Promise<DeploymentExtended> {
+    public async upsertDeployment(input: Deployment, subscriptionId: string, resourceGroupName: string, deploymentName: string, xMsApiVersion: string, options: UpsertDeploymentOptions = {}): Promise<DeploymentExtended> {
         const queryParams: string[] = [];
         if (xMsApiVersion !== undefined) {
             queryParams.push(`x-ms-api-version=${encodeURIComponent(String(xMsApiVersion))}`);
@@ -763,7 +763,7 @@ export class ArmClient extends ConnectorClientBase {
         }
         const requestPath = `/subscriptions/${encodeURIComponent(String(subscriptionId))}/resourcegroups/${encodeURIComponent(String(resourceGroupName))}/providers/Microsoft.Resources/deployments/${encodeURIComponent(String(deploymentName))}` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
-        const httpResponse = await this.sendWithTracingAsync<DeploymentExtended>("Arm.createDeploymentOrUpdate", "Deployments_CreateOrUpdate", "PUT", requestUrl, input, options);
+        const httpResponse = await this.sendWithTracingAsync<DeploymentExtended>("Arm.upsertDeployment", "Deployments_CreateOrUpdate", "PUT", requestUrl, input, options);
 
         return httpResponse.value as DeploymentExtended;
     }
@@ -1031,14 +1031,14 @@ export class ArmClient extends ConnectorClientBase {
      * Create or update a resource group
      * @remarks Creates or updates a resource group. The response code can be used to distinguish between a create (201) or update (200).
      */
-    public async createResourceGroupOrUpdate(input: ResourceGroup, subscriptionId: string, resourceGroupName: string, xMsApiVersion: string, options: ConnectorOperationOptions = {}): Promise<ResourceGroup> {
+    public async upsertResourceGroup(input: ResourceGroup, subscriptionId: string, resourceGroupName: string, xMsApiVersion: string, options: ConnectorOperationOptions = {}): Promise<ResourceGroup> {
         const queryParams: string[] = [];
         if (xMsApiVersion !== undefined) {
             queryParams.push(`x-ms-api-version=${encodeURIComponent(String(xMsApiVersion))}`);
         }
         const requestPath = `/subscriptions/${encodeURIComponent(String(subscriptionId))}/resourcegroups/${encodeURIComponent(String(resourceGroupName))}` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
-        const httpResponse = await this.sendWithTracingAsync<ResourceGroup>("Arm.createResourceGroupOrUpdate", "ResourceGroups_CreateOrUpdate", "PUT", requestUrl, input, options);
+        const httpResponse = await this.sendWithTracingAsync<ResourceGroup>("Arm.upsertResourceGroup", "ResourceGroups_CreateOrUpdate", "PUT", requestUrl, input, options);
 
         return httpResponse.value as ResourceGroup;
     }
@@ -1170,14 +1170,14 @@ export class ArmClient extends ConnectorClientBase {
      * Create or update a resource
      * @remarks Creates or updates a resource. The response code can be used to distinguish between a create (201) or update (200).
      */
-    public async createResourceOrUpdateById(input: GenericResource, subscriptionId: string, resourceGroupName: string, resourceProviderNamespace: string, shortResourceId: string, xMsApiVersion: string, options: ConnectorOperationOptions = {}): Promise<GenericResource> {
+    public async upsertResourceById(input: GenericResource, subscriptionId: string, resourceGroupName: string, resourceProviderNamespace: string, shortResourceId: string, xMsApiVersion: string, options: ConnectorOperationOptions = {}): Promise<GenericResource> {
         const queryParams: string[] = [];
         if (xMsApiVersion !== undefined) {
             queryParams.push(`x-ms-api-version=${encodeURIComponent(String(xMsApiVersion))}`);
         }
         const requestPath = `/subscriptions/${encodeURIComponent(String(subscriptionId))}/resourcegroups/${encodeURIComponent(String(resourceGroupName))}/providers/${encodeURIComponent(String(resourceProviderNamespace))}/${encodeURIComponent(String(shortResourceId))}` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
-        const httpResponse = await this.sendWithTracingAsync<GenericResource>("Arm.createResourceOrUpdateById", "Resources_CreateOrUpdateById", "PUT", requestUrl, input, options);
+        const httpResponse = await this.sendWithTracingAsync<GenericResource>("Arm.upsertResourceById", "Resources_CreateOrUpdateById", "PUT", requestUrl, input, options);
 
         return httpResponse.value as GenericResource;
     }
@@ -1248,14 +1248,14 @@ export class ArmClient extends ConnectorClientBase {
      * Create or update a subscription resource tag value
      * @remarks Create or update a subscription resource tag value.
      */
-    public async createTagOrUpdateValue(subscriptionId: string, tagName: string, tagValue: string, xMsApiVersion: string, options: ConnectorOperationOptions = {}): Promise<TagValue> {
+    public async upsertTagValue(subscriptionId: string, tagName: string, tagValue: string, xMsApiVersion: string, options: ConnectorOperationOptions = {}): Promise<TagValue> {
         const queryParams: string[] = [];
         if (xMsApiVersion !== undefined) {
             queryParams.push(`x-ms-api-version=${encodeURIComponent(String(xMsApiVersion))}`);
         }
         const requestPath = `/subscriptions/${encodeURIComponent(String(subscriptionId))}/tagNames/${encodeURIComponent(String(tagName))}/tagValues/${encodeURIComponent(String(tagValue))}` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
-        const httpResponse = await this.sendWithTracingAsync<TagValue>("Arm.createTagOrUpdateValue", "Tags_CreateOrUpdateValue", "PUT", requestUrl, undefined, options);
+        const httpResponse = await this.sendWithTracingAsync<TagValue>("Arm.upsertTagValue", "Tags_CreateOrUpdateValue", "PUT", requestUrl, undefined, options);
 
         return httpResponse.value as TagValue;
     }
@@ -1278,14 +1278,14 @@ export class ArmClient extends ConnectorClientBase {
      * Create or update a subscription resource tag name
      * @remarks Create or update a subscription resource tag name.
      */
-    public async createTagOrUpdate(subscriptionId: string, tagName: string, xMsApiVersion: string, options: ConnectorOperationOptions = {}): Promise<TagDetails> {
+    public async upsertTag(subscriptionId: string, tagName: string, xMsApiVersion: string, options: ConnectorOperationOptions = {}): Promise<TagDetails> {
         const queryParams: string[] = [];
         if (xMsApiVersion !== undefined) {
             queryParams.push(`x-ms-api-version=${encodeURIComponent(String(xMsApiVersion))}`);
         }
         const requestPath = `/subscriptions/${encodeURIComponent(String(subscriptionId))}/tagNames/${encodeURIComponent(String(tagName))}` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
-        const httpResponse = await this.sendWithTracingAsync<TagDetails>("Arm.createTagOrUpdate", "Tags_CreateOrUpdate", "PUT", requestUrl, undefined, options);
+        const httpResponse = await this.sendWithTracingAsync<TagDetails>("Arm.upsertTag", "Tags_CreateOrUpdate", "PUT", requestUrl, undefined, options);
 
         return httpResponse.value as TagDetails;
     }

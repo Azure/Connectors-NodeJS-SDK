@@ -2,7 +2,7 @@
   "_comment": "Provenance record for the generated clients under src/generated/. It lets a regeneration be reproduced and any cross-language surface delta be attributed to a specific generator revision and Swagger input. Regenerate and repopulate this file on every run (see the 'Provenance & Reproducibility' section of GENERATION.md). A reviewable regeneration PR must have status 'generated' with non-null provenance, swaggerSha256 values that match the committed swagger-cache/ snapshots, and outputSha256 values that match the canonical UTF-8/LF generated outputs; the tests/generationManifest.test.ts guard enforces this.",
   "manifestVersion": 2,
   "status": "generated",
-  "generatedAtUtc": "2026-09-16T19:51:32Z",
+  "generatedAtUtc": "2026-09-18T05:53:27Z",
   "generator": {
     "repository": "https://msazure.visualstudio.com/One/_git/AzureUX-BPM",
     "tool": "CodefulSdkGenerator (LogicAppsCompiler)",
@@ -11,8 +11,8 @@
     "bpmBranch": "swapnil/feature/typescript-generator-conventions",
     "assemblyVersion": "1.190.0.22",
     "sourcePatch": {
-      "path": "generator-patches/b8b6d31-typescript-azure-sdk-conventions.patch",
-      "sha256": "d61bc7bd48c1f7875098831ef763600ac6ae802a714132d869b330d9be8b6d1c"
+      "path": "generator-patches/e4d9139-typescript-azure-sdk-conventions.patch",
+      "sha256": "a9bd39374d135f584e6e5f0932c87961f3314eeb909dab44412a9585f8841e00"
     }
   },
   "command": "LogicAppsCompiler.exe <output-directory> --directClient --language=typescript --connectors=arm,azureblob,azureeventgrid,azureiotcentral,azuremonitorlogs,box,campfire,clicksendsms,cloudmersiveconvert,commondataservice,docusign,docuware,dropbox,dynamicsax,elfsquaddata,etsy,eventbrite,excelonline,formstackforms,freshservice,ftp,github,googlecalendar,googledrive,googletasks,impexium,infusionsoft,insightly,jedoxodatahub,jira,kusto,mailchimp,meetingroommap,microsoftforms,monday,mq,msgraphgroupsanduser,office365,office365groupsmail,office365users,onedriveforbusiness,orderful,pdfco,pipedrive,plivo,plumsail,powerbi,projectplace,replicon,revai,rss,salesforce,seismicplanner,sendgrid,sharepointonline,shifts,signinghub,slack,smtp,sql,starmind,starrezrestv1,tallyfy,teams,textrequest,ticketmaster,todo,twitter,typeform,waywedo,webex,wordpress,zendesk,zohosign",
@@ -39,7 +39,7 @@
       "outputFile": "src/generated/ArmExtensions.ts",
       "swaggerSnapshot": "swagger-cache/arm.swagger.json",
       "swaggerSha256": "5974fb8aaee9a2d46d64171889a52c0cf5345aff190a52cd045b2fc5e1d79a7f",
-      "outputSha256": "3c19111e63b77148559315c4c90607439af131624c954a843774e48bd69c6855"
+      "outputSha256": "27e8f8656893e103b88d4aca5b81bc4630c44b8866eb1a566d37fa795fb8e887"
     },
     {
       "apiName": "azureblob",
@@ -88,7 +88,7 @@
       "outputFile": "src/generated/ClicksendsmsExtensions.ts",
       "swaggerSnapshot": "swagger-cache/clicksendsms.swagger.json",
       "swaggerSha256": "4b231296afcdada895783d197201e3e91b0ec4347239209c44b56f78c47774af",
-      "outputSha256": "2d4e9eed01cf70bae4122e351f89841e58edb9063a763e640abf1c0194f00dce"
+      "outputSha256": "b10ab001513e2c7af0635c21aec00c014795a3d9d996c3c75480343770233d2c"
     },
     {
       "apiName": "cloudmersiveconvert",
@@ -207,7 +207,7 @@
       "outputFile": "src/generated/GoogletasksExtensions.ts",
       "swaggerSnapshot": "swagger-cache/googletasks.swagger.json",
       "swaggerSha256": "0c7f04201868f4f31b01a72191cf9c28617bf09cb07265ef1bab75723c20efb6",
-      "outputSha256": "f201a662dea1aa7999626dafa1282d051102cf35bd990557ec337e1f91b9d8bd"
+      "outputSha256": "c53f94bf10a54983230e97b274f6bc9f1f09dc7fefa7ab9cf5e37a025cba69c6"
     },
     {
       "apiName": "impexium",
@@ -411,7 +411,7 @@
       "outputFile": "src/generated/SendgridExtensions.ts",
       "swaggerSnapshot": "swagger-cache/sendgrid.swagger.json",
       "swaggerSha256": "a5d7caddb68834238831a5a808180c5f84c0c7075130fc09a0a2a998a0dc7fd6",
-      "outputSha256": "bb05d18a865e065063a6d0020d61aeed37c479ea3398277bd72ea1ea1ce82be9"
+      "outputSha256": "eff21f76d79daaa558986175356bd4f5747eb0492b7ef5f7675572dcc5d6a63e"
     },
     {
       "apiName": "sharepointonline",

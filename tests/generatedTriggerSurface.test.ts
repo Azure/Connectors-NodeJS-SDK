@@ -19,7 +19,10 @@ const StandardActionVerbs = new Set([
     "add", "approve", "cancel", "copy", "create", "decline", "delete", "disable", "download", "enable",
     "execute", "export", "finish", "forward", "get", "list", "move", "patch", "register", "reject",
     "remove", "rename", "replace", "resume", "rerun", "run", "search", "send", "set", "start", "stop",
-    "submit", "test", "unregister", "update", "upload", "validate",
+    "submit", "test", "unregister", "update", "upload", "upsert", "validate",
+]);
+const CuratedActionMethodNames = new Set([
+    "Sendgrid.checkEmailIsInUnsubscribesList",
 ]);
 
 /**
@@ -190,6 +193,10 @@ describe("Generated clients — no trigger operation is invoked as a data-plane 
 
     it("should project standardized action verbs before resource nouns", () => {
         const violations = generatedFiles.flatMap(file => extractClientMethodNames(file.content).flatMap(methodName => {
+            if (CuratedActionMethodNames.has(`${file.connector}.${methodName}`)) {
+                return [];
+            }
+
             const words = splitIdentifierWords(methodName).map(word => word.toLowerCase());
             if (StandardActionVerbs.has(words[0])) {
                 return [];
@@ -248,6 +255,46 @@ describe("Generated clients — no trigger operation is invoked as a data-plane 
         expect(commonDataService).toBeDefined();
         expect(commonDataService!.content).toContain("schema?: ObjectEntity;");
         expect(commonDataService!.content).toContain("export interface ObjectEntity");
+    });
+
+    it("should preserve curated connector action names", () => {
+        const clickSend = generatedFiles.find(file => file.connector === "Clicksendsms");
+        const googleTasks = generatedFiles.find(file => file.connector === "Googletasks");
+        const sendGrid = generatedFiles.find(file => file.connector === "Sendgrid");
+        expect(clickSend).toBeDefined();
+        expect(googleTasks).toBeDefined();
+        expect(sendGrid).toBeDefined();
+
+        expect(extractClientMethodNames(clickSend!.content)).toEqual(expect.arrayContaining([
+            "createList",
+            "deleteList",
+            "createListContact",
+            "deleteListContact",
+        ]));
+        expect(extractClientMethodNames(googleTasks!.content)).toContain("getTask");
+        expect(extractClientMethodNames(sendGrid!.content)).toContain("checkEmailIsInUnsubscribesList");
+    });
+
+    it("should project CreateOrUpdate operations as upserts", () => {
+        const arm = generatedFiles.find(file => file.connector === "Arm");
+        expect(arm).toBeDefined();
+        expect(extractClientMethodNames(arm!.content)).toEqual(expect.arrayContaining([
+            "upsertDeployment",
+            "upsertResourceGroup",
+            "upsertResourceById",
+            "upsertTag",
+            "upsertTagValue",
+        ]));
+        expect(arm!.content).not.toMatch(/public async create\w+OrUpdate/);
+    });
+
+    it("should not emit self-extending operation options types", () => {
+        const violations = generatedFiles.flatMap(file => {
+            const selfExtendingInterface = /export interface (\w+) extends \1\b/g;
+            return [...file.content.matchAll(selfExtendingInterface)].map(match => `${file.connector}.${match[1]}`);
+        });
+
+        expect(violations).toEqual([]);
     });
 
     it.each(generatedFiles)(

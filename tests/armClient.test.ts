@@ -212,7 +212,7 @@ describe("ArmClient — getResourceGroup", () => {
     });
 });
 
-describe("ArmClient — createResourceGroupOrUpdate", () => {
+describe("ArmClient — upsertResourceGroup", () => {
     afterEach(() => {
         jest.restoreAllMocks();
     });
@@ -223,7 +223,7 @@ describe("ArmClient — createResourceGroupOrUpdate", () => {
         mockFetchResponse(mockResponse);
 
         const client = new ArmClient(TestConnectionUrl, createMockCredential());
-        const result = await client.createResourceGroupOrUpdate(
+        const result = await client.upsertResourceGroup(
             input,
             TestSubscriptionId,
             TestResourceGroupName,
@@ -254,7 +254,7 @@ describe("ArmClient — deleteResourceGroup", () => {
     });
 });
 
-describe("ArmClient — createDeploymentOrUpdate", () => {
+describe("ArmClient — upsertDeployment", () => {
     afterEach(() => {
         jest.restoreAllMocks();
     });
@@ -265,7 +265,7 @@ describe("ArmClient — createDeploymentOrUpdate", () => {
         mockFetchResponse(mockResponse);
 
         const client = new ArmClient(TestConnectionUrl, createMockCredential());
-        const result = await client.createDeploymentOrUpdate(
+        const result = await client.upsertDeployment(
             input,
             TestSubscriptionId,
             TestResourceGroupName,

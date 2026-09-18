@@ -393,11 +393,12 @@ export class ClicksendsmsClient extends ConnectorClientBase {
     /**
      * Create New Contact List
      * @remarks Create New Contact List
+     * @remarks Uses the curated name for operationId 'create_list'.
      */
-    public async listCreate(input: CreateListInput, options: ConnectorOperationOptions = {}): Promise<CreateListResponse> {
+    public async createList(input: CreateListInput, options: ConnectorOperationOptions = {}): Promise<CreateListResponse> {
         const requestPath = `/lists`;
         const requestUrl = this.resolveUrl(requestPath);
-        const httpResponse = await this.sendWithTracingAsync<CreateListResponse>("Clicksendsms.listCreate", "create_list", "POST", requestUrl, input, options);
+        const httpResponse = await this.sendWithTracingAsync<CreateListResponse>("Clicksendsms.createList", "create_list", "POST", requestUrl, input, options);
 
         return httpResponse.value as CreateListResponse;
     }
@@ -436,11 +437,12 @@ export class ClicksendsmsClient extends ConnectorClientBase {
     /**
      * Delete List
      * @remarks Delete a specific contact list
+     * @remarks Uses the curated name for operationId 'delete_list'.
      */
-    public async listDelete(listId: number, options: ConnectorOperationOptions = {}): Promise<DeleteListResponse> {
+    public async deleteList(listId: number, options: ConnectorOperationOptions = {}): Promise<DeleteListResponse> {
         const requestPath = `/lists/${encodeURIComponent(String(listId))}`;
         const requestUrl = this.resolveUrl(requestPath);
-        const httpResponse = await this.sendWithTracingAsync<DeleteListResponse>("Clicksendsms.listDelete", "delete_list", "DELETE", requestUrl, undefined, options);
+        const httpResponse = await this.sendWithTracingAsync<DeleteListResponse>("Clicksendsms.deleteList", "delete_list", "DELETE", requestUrl, undefined, options);
 
         return httpResponse.value as DeleteListResponse;
     }
@@ -448,11 +450,12 @@ export class ClicksendsmsClient extends ConnectorClientBase {
     /**
      * Create New Contact
      * @remarks Create New Contact
+     * @remarks Uses the curated name for operationId 'create_list_contact'.
      */
-    public async listCreateContact(input: CreateListContactInput, listId: number, options: ConnectorOperationOptions = {}): Promise<CreateListContactResponse> {
+    public async createListContact(input: CreateListContactInput, listId: number, options: ConnectorOperationOptions = {}): Promise<CreateListContactResponse> {
         const requestPath = `/lists/${encodeURIComponent(String(listId))}/contacts`;
         const requestUrl = this.resolveUrl(requestPath);
-        const httpResponse = await this.sendWithTracingAsync<CreateListContactResponse>("Clicksendsms.listCreateContact", "create_list_contact", "POST", requestUrl, input, options);
+        const httpResponse = await this.sendWithTracingAsync<CreateListContactResponse>("Clicksendsms.createListContact", "create_list_contact", "POST", requestUrl, input, options);
 
         return httpResponse.value as CreateListContactResponse;
     }
@@ -472,11 +475,12 @@ export class ClicksendsmsClient extends ConnectorClientBase {
     /**
      * Delete a Contact
      * @remarks Delete a Contact
+     * @remarks Uses the curated name for operationId 'delete_list_contact'.
      */
-    public async listDeleteContact(listId: number, contactId: number, options: ConnectorOperationOptions = {}): Promise<DeleteListContactResponse> {
+    public async deleteListContact(listId: number, contactId: number, options: ConnectorOperationOptions = {}): Promise<DeleteListContactResponse> {
         const requestPath = `/lists/${encodeURIComponent(String(listId))}/contacts/${encodeURIComponent(String(contactId))}`;
         const requestUrl = this.resolveUrl(requestPath);
-        const httpResponse = await this.sendWithTracingAsync<DeleteListContactResponse>("Clicksendsms.listDeleteContact", "delete_list_contact", "DELETE", requestUrl, undefined, options);
+        const httpResponse = await this.sendWithTracingAsync<DeleteListContactResponse>("Clicksendsms.deleteListContact", "delete_list_contact", "DELETE", requestUrl, undefined, options);
 
         return httpResponse.value as DeleteListContactResponse;
     }

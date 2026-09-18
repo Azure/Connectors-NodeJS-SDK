@@ -211,11 +211,12 @@ export class GoogletasksClient extends ConnectorClientBase {
     /**
      * Get a task from a task list
      * @remarks Get specific task from the specified task list.
+     * @remarks Uses the curated name for operationId 'ListTask'.
      */
-    public async listTask(taskListId: string, taskId: string, options: ConnectorOperationOptions = {}): Promise<TaskObject> {
+    public async getTask(taskListId: string, taskId: string, options: ConnectorOperationOptions = {}): Promise<TaskObject> {
         const requestPath = `/lists/${encodeURIComponent(String(taskListId))}/tasks/${encodeURIComponent(String(taskId))}`;
         const requestUrl = this.resolveUrl(requestPath);
-        const httpResponse = await this.sendWithTracingAsync<TaskObject>("Googletasks.listTask", "ListTask", "GET", requestUrl, undefined, options);
+        const httpResponse = await this.sendWithTracingAsync<TaskObject>("Googletasks.getTask", "ListTask", "GET", requestUrl, undefined, options);
 
         return httpResponse.value as TaskObject;
     }

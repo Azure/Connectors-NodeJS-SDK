@@ -259,11 +259,12 @@ export class SendgridClient extends ConnectorClientBase {
     /**
      * Check if email is in unsubscribed email list
      * @remarks Check if email is in unsubscribed email list.
+     * @remarks Uses the curated name for operationId 'CheckEmailIsInUnsubscribesList'.
      */
-    public async listCheckEmailIsInUnsubscribes(email: string, options: ConnectorOperationOptions = {}): Promise<EmailIsUnsubscribedResponse> {
+    public async checkEmailIsInUnsubscribesList(email: string, options: ConnectorOperationOptions = {}): Promise<EmailIsUnsubscribedResponse> {
         const requestPath = `/unsubscribes/${encodeURIComponent(String(email))}`;
         const requestUrl = this.resolveUrl(requestPath);
-        const httpResponse = await this.sendWithTracingAsync<EmailIsUnsubscribedResponse>("Sendgrid.listCheckEmailIsInUnsubscribes", "CheckEmailIsInUnsubscribesList", "GET", requestUrl, undefined, options);
+        const httpResponse = await this.sendWithTracingAsync<EmailIsUnsubscribedResponse>("Sendgrid.checkEmailIsInUnsubscribesList", "CheckEmailIsInUnsubscribesList", "GET", requestUrl, undefined, options);
 
         return httpResponse.value as EmailIsUnsubscribedResponse;
     }
