@@ -2,18 +2,18 @@
   "_comment": "Provenance record for the generated clients under src/generated/. It lets a regeneration be reproduced and any cross-language surface delta be attributed to a specific generator revision and Swagger input. Regenerate and repopulate this file on every run (see the 'Provenance & Reproducibility' section of GENERATION.md). A reviewable regeneration PR must have status 'generated' with non-null provenance, swaggerSha256 values that match the committed swagger-cache/ snapshots, and outputSha256 values that match the canonical UTF-8/LF generated outputs; the tests/generationManifest.test.ts guard enforces this.",
   "manifestVersion": 3,
   "status": "generated",
-  "generatedAtUtc": "2026-09-18T05:53:27Z",
+  "generatedAtUtc": "2026-09-18T07:52:05Z",
   "generator": {
     "repository": "https://msazure.visualstudio.com/One/_git/AzureUX-BPM",
     "tool": "CodefulSdkGenerator (LogicAppsCompiler)",
     "projectPath": "src/tools/CodefulSdkGenerator/LogicAppsCompiler.Cli/LogicAppsCompiler.Cli.csproj",
     "bpmBaseCommit": "b274d2740d7f3c69e14832ab8115ea76e14fb8a8",
-    "bpmHeadCommit": "e4d9139998b8887415b028ea520946de900ecd33",
+    "bpmHeadCommit": "c1c689e0f93ad6000826dcb3d8549dd0ba17ba94",
     "bpmBranch": "swapnil/feature/typescript-generator-conventions",
     "assemblyVersion": "1.190.0.49",
     "sourcePatch": {
-      "path": "generator-patches/e4d9139-typescript-azure-sdk-conventions.patch",
-      "sha256": "a9bd39374d135f584e6e5f0932c87961f3314eeb909dab44412a9585f8841e00"
+      "path": "generator-patches/c1c689e-typescript-azure-sdk-conventions.patch",
+      "sha256": "3aac8c984725bd5107646d3382c7c65db9da363b0ecdb3da86084bcfbc0b1d78"
     }
   },
   "command": "LogicAppsCompiler.exe <output-directory> --directClient --language=typescript --connectors=arm,azureblob,azureeventgrid,azureiotcentral,azuremonitorlogs,box,campfire,clicksendsms,cloudmersiveconvert,commondataservice,docusign,docuware,dropbox,dynamicsax,elfsquaddata,etsy,eventbrite,excelonline,formstackforms,freshservice,ftp,github,googlecalendar,googledrive,googletasks,impexium,infusionsoft,insightly,jedoxodatahub,jira,kusto,mailchimp,meetingroommap,microsoftforms,monday,mq,msgraphgroupsanduser,office365,office365groupsmail,office365users,onedriveforbusiness,orderful,pdfco,pipedrive,plivo,plumsail,powerbi,projectplace,replicon,revai,rss,salesforce,seismicplanner,sendgrid,sharepointonline,shifts,signinghub,slack,smtp,sql,starmind,starrezrestv1,tallyfy,teams,textrequest,ticketmaster,todo,twitter,typeform,waywedo,webex,wordpress,zendesk,zohosign",
