@@ -93,6 +93,29 @@ describe("CloudmersiveconvertClient — createEditDocumentDocxBlankDocument", ()
     });
 });
 
+describe("CloudmersiveconvertClient — multipart conversion", () => {
+    afterEach(() => {
+        jest.restoreAllMocks();
+    });
+
+    it("should POST a multipart file through the generated operation", async () => {
+        mockFetchResponse({});
+        const client = new CloudmersiveconvertClient(TestConnectionUrl, createMockCredential());
+
+        const result = await client.convertDocumentAutodetectToPdf({
+            inputFile: new Blob(["document content"], { type: "text/plain" }),
+        });
+
+        expect(result).toBeInstanceOf(Blob);
+        expect(await result.text()).toBe("{}");
+        const [url, init] = (global.fetch as jest.Mock).mock.calls[0];
+        expect(url).toContain("/convert/autodetect/to/pdf");
+        expect(init.method).toBe("POST");
+        expect(init.headers["Content-Type"]).toMatch(/^multipart\/form-data; boundary=/);
+        expect(init.body).toBeDefined();
+    });
+});
+
 describe("CloudmersiveDocumentConversion — connector registry", () => {
     it("should expose CloudmersiveDocumentConversion in ConnectorNames", () => {
         expect(ConnectorNames.CloudmersiveDocumentConversion).toBe("cloudmersiveconvert");

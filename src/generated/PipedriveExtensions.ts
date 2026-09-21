@@ -152,9 +152,7 @@ export interface ListOrganizationsResponse {
 /**
  * Definition: TrigNewActivityResponse
  */
-export interface TrigNewActivityResponse {
-    [key: string]: unknown;
-}
+export type TrigNewActivityResponse = Array<ActivityResponse>;
 
 /**
  * Definition: ActivityResponse
@@ -211,9 +209,7 @@ export interface ActivityResponse {
 /**
  * Definition: TrigNewDealResponse
  */
-export interface TrigNewDealResponse {
-    [key: string]: unknown;
-}
+export type TrigNewDealResponse = Array<DealResponse>;
 
 /**
  * Definition: DealResponse

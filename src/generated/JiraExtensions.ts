@@ -201,9 +201,7 @@ export interface Project {
 /**
  * Definition: ProjectArray
  */
-export interface ProjectArray {
-    [key: string]: unknown;
-}
+export type ProjectArray = Array<Record<string, unknown>>;
 
 /**
  * Definition: PartialIssue
@@ -274,9 +272,7 @@ export interface User {
 /**
  * Definition: UserList
  */
-export interface UserList {
-    [key: string]: unknown;
-}
+export type UserList = Array<Record<string, unknown>>;
 
 /**
  * Definition: Reporter
@@ -304,9 +300,7 @@ export interface ListFiltersResponse {
 /**
  * Definition: FilterArray
  */
-export interface FilterArray {
-    [key: string]: unknown;
-}
+export type FilterArray = Array<Record<string, unknown>>;
 
 /**
  * Definition: ListIssuesResponse
@@ -333,9 +327,7 @@ export interface ListIssuesResponseDatacenter {
 /**
  * Definition: IssueTypes
  */
-export interface IssueTypes {
-    [key: string]: unknown;
-}
+export type IssueTypes = Array<Record<string, unknown>>;
 
 /**
  * Definition: CreateIssueRequest
@@ -354,16 +346,12 @@ export interface UpdateIssueRequest {
 /**
  * Definition: StatusList
  */
-export interface StatusList {
-    [key: string]: unknown;
-}
+export type StatusList = Array<Record<string, unknown>>;
 
 /**
  * Definition: PriorityList
  */
-export interface PriorityList {
-    [key: string]: unknown;
-}
+export type PriorityList = Array<Record<string, unknown>>;
 
 /**
  * Definition: Comment
@@ -388,9 +376,7 @@ export interface CommentResponse {
 /**
  * Definition: Sites
  */
-export interface Sites {
-    [key: string]: unknown;
-}
+export type Sites = Array<Record<string, unknown>>;
 
 /**
  * Definition: Transition

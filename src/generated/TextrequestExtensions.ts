@@ -202,9 +202,7 @@ export interface GetContactsResponse {
 /**
  * Bulk update contacts
  */
-export interface BulkUpdateContactsInput {
-    [key: string]: unknown;
-}
+export type BulkUpdateContactsInput = Array<Record<string, unknown>>;
 
 /**
  * Response for Get a group by its id

@@ -361,9 +361,7 @@ export type Language = "de" | "en" | "es" | "fr" | "hr" | "it" | "pt" | "ro" | "
 /**
  * Definition: ExpertConceptScores
  */
-export interface ExpertConceptScores {
-    [key: string]: unknown;
-}
+export type ExpertConceptScores = Array<Record<string, unknown>>;
 
 /**
  * Definition: GraphQLUserResponse

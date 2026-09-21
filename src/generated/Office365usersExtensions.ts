@@ -673,7 +673,7 @@ export class Office365usersClient extends ConnectorClientBase {
     public async userPhoto(id: string, options: ConnectorOperationOptions = {}): Promise<Blob> {
         const requestPath = `/codeless/v1.0/users/${encodeURIComponent(String(id))}/photo/$value`;
         const requestUrl = this.resolveUrl(requestPath);
-        const httpResponse = await this.sendWithTracingAsync<Blob>("Office365users.userPhoto", "UserPhoto_V2", "GET", requestUrl, undefined, options);
+        const httpResponse = await this.sendWithTracingAsync<Blob>("Office365users.userPhoto", "UserPhoto_V2", "GET", requestUrl, undefined, options, undefined, true);
 
         return httpResponse.value as Blob;
     }

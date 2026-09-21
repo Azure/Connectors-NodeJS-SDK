@@ -48,6 +48,20 @@ export interface GetFormDataResponse {
 }
 
 /**
+ * Response for Create a document for signing
+ */
+export interface CreateDocumentResponse {
+    /** code */
+    code?: number;
+    /** requests */
+    requests?: Record<string, unknown>;
+    /** Message */
+    message?: string;
+    /** status */
+    status?: string;
+}
+
+/**
  * Response for Get a document
  */
 export interface GetDocumentResponse {
@@ -98,6 +112,14 @@ export interface SendSignRequestResponse {
  */
 export interface GetTemplatesResponse {
     templates?: Array<Record<string, unknown>>;
+}
+
+/**
+ * Multipart form data for the createDocument operation.
+ */
+export interface CreateDocumentFormData {
+    /** create a document */
+    file: Blob;
 }
 // #endregion Types
 
@@ -151,7 +173,7 @@ export class ZohosignClient extends ConnectorClientBase {
     public async downloadCompletionCertificate(requestId: number, options: ConnectorOperationOptions = {}): Promise<Blob> {
         const requestPath = `/requests/${encodeURIComponent(String(requestId))}/completioncertificate`;
         const requestUrl = this.resolveUrl(requestPath);
-        const httpResponse = await this.sendWithTracingAsync<Blob>("Zohosign.downloadCompletionCertificate", "download-completion-certificate", "GET", requestUrl, undefined, options);
+        const httpResponse = await this.sendWithTracingAsync<Blob>("Zohosign.downloadCompletionCertificate", "download-completion-certificate", "GET", requestUrl, undefined, options, undefined, true);
 
         return httpResponse.value as Blob;
     }
@@ -163,7 +185,7 @@ export class ZohosignClient extends ConnectorClientBase {
     public async downloadDocument(requestId: number, options: ConnectorOperationOptions = {}): Promise<Blob> {
         const requestPath = `/requests/${encodeURIComponent(String(requestId))}/pdf`;
         const requestUrl = this.resolveUrl(requestPath);
-        const httpResponse = await this.sendWithTracingAsync<Blob>("Zohosign.downloadDocument", "download-document", "GET", requestUrl, undefined, options);
+        const httpResponse = await this.sendWithTracingAsync<Blob>("Zohosign.downloadDocument", "download-document", "GET", requestUrl, undefined, options, undefined, true);
 
         return httpResponse.value as Blob;
     }
@@ -175,7 +197,7 @@ export class ZohosignClient extends ConnectorClientBase {
     public async downloadFile(requestId: number, documentId: number, options: ConnectorOperationOptions = {}): Promise<Blob> {
         const requestPath = `/requests/${encodeURIComponent(String(requestId))}/documents/${encodeURIComponent(String(documentId))}/pdf`;
         const requestUrl = this.resolveUrl(requestPath);
-        const httpResponse = await this.sendWithTracingAsync<Blob>("Zohosign.downloadFile", "download-file", "GET", requestUrl, undefined, options);
+        const httpResponse = await this.sendWithTracingAsync<Blob>("Zohosign.downloadFile", "download-file", "GET", requestUrl, undefined, options, undefined, true);
 
         return httpResponse.value as Blob;
     }
@@ -220,6 +242,21 @@ export class ZohosignClient extends ConnectorClientBase {
         const requestPath = `/requests/${encodeURIComponent(String(requestId))}/delete`;
         const requestUrl = this.resolveUrl(requestPath);
         await this.sendWithTracingAsync<void>("Zohosign.deleteDocument", "delete-document", "PUT", requestUrl, undefined, options);
+    }
+
+    /**
+     * Create a document for signing
+     * @remarks An action to create a document for signing by uploading a file.
+     */
+    public async createDocument(input: CreateDocumentFormData, options: ConnectorOperationOptions = {}): Promise<CreateDocumentResponse> {
+        const requestPath = `/requests`;
+        const formData = new FormData();
+        formData.append("file", input.file);
+
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.sendWithTracingAsync<CreateDocumentResponse>("Zohosign.createDocument", "Create-Document", "POST", requestUrl, formData, options);
+
+        return httpResponse.value as CreateDocumentResponse;
     }
 
     /**

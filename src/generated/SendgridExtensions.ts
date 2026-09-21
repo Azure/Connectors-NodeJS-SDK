@@ -140,9 +140,7 @@ export interface ScopeList {
 /**
  * Definition: Bounces
  */
-export interface Bounces {
-    [key: string]: unknown;
-}
+export type Bounces = Array<Bounce>;
 
 /**
  * Definition: EmailIsUnsubscribedResponse

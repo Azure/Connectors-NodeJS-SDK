@@ -34,9 +34,7 @@ export type DocumentsUploadStreamInput = string;
 /**
  * Assign Document Field
  */
-export interface FieldsAutoAssignFieldInput {
-    [key: string]: unknown;
-}
+export type FieldsAutoAssignFieldInput = Array<AssignFieldRequest>;
 
 /**
  * Response for Download Package
@@ -55,23 +53,17 @@ export interface WorkflowEvidenceReportDownloadBytesResponse {
 /**
  * Add Groups to Workflow
  */
-export interface WorkflowWorkflowAddGroupInput {
-    [key: string]: unknown;
-}
+export type WorkflowWorkflowAddGroupInput = Array<WorflowGroupRequest>;
 
 /**
  * Add Placeholder to Workflow
  */
-export interface WorkflowWorkflowAddPlaceholderInput {
-    [key: string]: unknown;
-}
+export type WorkflowWorkflowAddPlaceholderInput = Array<PlaceholderRequest>;
 
 /**
  * Add Users to Workflow
  */
-export interface WorkflowWorkflowAddUserInput {
-    [key: string]: unknown;
-}
+export type WorkflowWorkflowAddUserInput = Array<WorflowUserRequest>;
 
 /**
  * Definition: ErrorWithDescriptionResponse
@@ -1804,7 +1796,7 @@ export interface RenameDocumentRequest {
 /**
  * Definition: HandSignature
  */
-export type HandSignature = "0" | "1" | "2" | "3" | "4";
+export type HandSignature = 0 | 1 | 2 | 3 | 4;
 
 /**
  * Definition: VerificationResponse

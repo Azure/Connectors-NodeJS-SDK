@@ -608,7 +608,7 @@ export class AzureblobClient extends ConnectorClientBase {
         }
         const requestPath = `/v2/datasets/${encodeURIComponent(encodeURIComponent(String(dataset)))}/files/${encodeURIComponent(encodeURIComponent(String(id)))}/content` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
-        const httpResponse = await this.sendWithTracingAsync<Blob>("Azureblob.getFileContent", "GetFileContent_V2", "GET", requestUrl, undefined, options);
+        const httpResponse = await this.sendWithTracingAsync<Blob>("Azureblob.getFileContent", "GetFileContent_V2", "GET", requestUrl, undefined, options, undefined, true);
 
         return httpResponse.value as Blob;
     }
@@ -636,7 +636,7 @@ export class AzureblobClient extends ConnectorClientBase {
         }
         const requestPath = `/v2/datasets/${encodeURIComponent(encodeURIComponent(String(dataset)))}/GetFileContentByPath` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
-        const httpResponse = await this.sendWithTracingAsync<Blob>("Azureblob.getFileContentByPath", "GetFileContentByPath_V2", "GET", requestUrl, undefined, options);
+        const httpResponse = await this.sendWithTracingAsync<Blob>("Azureblob.getFileContentByPath", "GetFileContentByPath_V2", "GET", requestUrl, undefined, options, undefined, true);
 
         return httpResponse.value as Blob;
     }

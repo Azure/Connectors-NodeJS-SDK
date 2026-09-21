@@ -893,9 +893,7 @@ export interface WorkflowTrigger {
 /**
  * Definition: DynamicValues
  */
-export interface DynamicValues {
-    [key: string]: unknown;
-}
+export type DynamicValues = Array<Record<string, unknown>>;
 
 /**
  * Options for the getDevicesCloudProperties operation.

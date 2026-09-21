@@ -17,9 +17,7 @@ export interface EventRequest {
 /**
  * Definition: EventSchema
  */
-export interface EventSchema {
-    [key: string]: unknown;
-}
+export type EventSchema = Array<Record<string, unknown>>;
 
 /**
  * Definition: TopicTypesResponse

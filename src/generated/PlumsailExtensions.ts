@@ -724,7 +724,7 @@ export class PlumsailClient extends ConnectorClientBase {
     public async flowV1DocumentsJobsApplyDocxTemplate(input: ApplyDocxTemplateRequest, options: ConnectorOperationOptions = {}): Promise<Blob> {
         const requestPath = `/flow/v1/Documents/jobs/ApplyDocxTemplate`;
         const requestUrl = this.resolveUrl(requestPath);
-        const httpResponse = await this.sendWithTracingAsync<Blob>("Plumsail.flowV1DocumentsJobsApplyDocxTemplate", "FlowV1DocumentsJobsApplyDocxTemplatePost", "POST", requestUrl, input, options);
+        const httpResponse = await this.sendWithTracingAsync<Blob>("Plumsail.flowV1DocumentsJobsApplyDocxTemplate", "FlowV1DocumentsJobsApplyDocxTemplatePost", "POST", requestUrl, input, options, undefined, true);
 
         return httpResponse.value as Blob;
     }
@@ -736,7 +736,7 @@ export class PlumsailClient extends ConnectorClientBase {
     public async flowV1DocumentsJobsApplyXlsxTemplate(input: ApplyXlsxTemplateRequest, options: ConnectorOperationOptions = {}): Promise<Blob> {
         const requestPath = `/flow/v1/Documents/jobs/ApplyXlsxTemplate`;
         const requestUrl = this.resolveUrl(requestPath);
-        const httpResponse = await this.sendWithTracingAsync<Blob>("Plumsail.flowV1DocumentsJobsApplyXlsxTemplate", "FlowV1DocumentsJobsApplyXlsxTemplatePost", "POST", requestUrl, input, options);
+        const httpResponse = await this.sendWithTracingAsync<Blob>("Plumsail.flowV1DocumentsJobsApplyXlsxTemplate", "FlowV1DocumentsJobsApplyXlsxTemplatePost", "POST", requestUrl, input, options, undefined, true);
 
         return httpResponse.value as Blob;
     }
@@ -820,7 +820,7 @@ export class PlumsailClient extends ConnectorClientBase {
     public async flowV1DocumentsJobsXslx2Pdf(input: Xlsx2PdfRequest, options: ConnectorOperationOptions = {}): Promise<Blob> {
         const requestPath = `/flow/v1/Documents/jobs/Xslx2Pdf`;
         const requestUrl = this.resolveUrl(requestPath);
-        const httpResponse = await this.sendWithTracingAsync<Blob>("Plumsail.flowV1DocumentsJobsXslx2Pdf", "FlowV1DocumentsJobsXslx2PdfPost", "POST", requestUrl, input, options);
+        const httpResponse = await this.sendWithTracingAsync<Blob>("Plumsail.flowV1DocumentsJobsXslx2Pdf", "FlowV1DocumentsJobsXslx2PdfPost", "POST", requestUrl, input, options, undefined, true);
 
         return httpResponse.value as Blob;
     }
@@ -832,7 +832,7 @@ export class PlumsailClient extends ConnectorClientBase {
     public async flowV1DocumentsJobsPptx2Pdf(input: Pptx2PdfRequest, options: ConnectorOperationOptions = {}): Promise<Blob> {
         const requestPath = `/flow/v1/Documents/jobs/Pptx2Pdf`;
         const requestUrl = this.resolveUrl(requestPath);
-        const httpResponse = await this.sendWithTracingAsync<Blob>("Plumsail.flowV1DocumentsJobsPptx2Pdf", "FlowV1DocumentsJobsPptx2PdfPost", "POST", requestUrl, input, options);
+        const httpResponse = await this.sendWithTracingAsync<Blob>("Plumsail.flowV1DocumentsJobsPptx2Pdf", "FlowV1DocumentsJobsPptx2PdfPost", "POST", requestUrl, input, options, undefined, true);
 
         return httpResponse.value as Blob;
     }
@@ -844,7 +844,7 @@ export class PlumsailClient extends ConnectorClientBase {
     public async flowV1DocumentsJobsAny2PdfV2(input: Any2PdfRequest, options: ConnectorOperationOptions = {}): Promise<Blob> {
         const requestPath = `/flow/v1/Documents/jobs/Any2PdfV2`;
         const requestUrl = this.resolveUrl(requestPath);
-        const httpResponse = await this.sendWithTracingAsync<Blob>("Plumsail.flowV1DocumentsJobsAny2PdfV2", "FlowV1DocumentsJobsAny2PdfV2Post", "POST", requestUrl, input, options);
+        const httpResponse = await this.sendWithTracingAsync<Blob>("Plumsail.flowV1DocumentsJobsAny2PdfV2", "FlowV1DocumentsJobsAny2PdfV2Post", "POST", requestUrl, input, options, undefined, true);
 
         return httpResponse.value as Blob;
     }
@@ -856,7 +856,7 @@ export class PlumsailClient extends ConnectorClientBase {
     public async flowV1DocumentsJobsEmail2Pdf(input: Email2PdfRequest, options: ConnectorOperationOptions = {}): Promise<Blob> {
         const requestPath = `/flow/v1/Documents/jobs/Email2Pdf`;
         const requestUrl = this.resolveUrl(requestPath);
-        const httpResponse = await this.sendWithTracingAsync<Blob>("Plumsail.flowV1DocumentsJobsEmail2Pdf", "FlowV1DocumentsJobsEmail2PdfPost", "POST", requestUrl, input, options);
+        const httpResponse = await this.sendWithTracingAsync<Blob>("Plumsail.flowV1DocumentsJobsEmail2Pdf", "FlowV1DocumentsJobsEmail2PdfPost", "POST", requestUrl, input, options, undefined, true);
 
         return httpResponse.value as Blob;
     }
@@ -868,7 +868,7 @@ export class PlumsailClient extends ConnectorClientBase {
     public async flowV1DocumentsJobsDoc2Docx(input: Doc2DocxRequest, options: ConnectorOperationOptions = {}): Promise<Blob> {
         const requestPath = `/flow/v1/Documents/jobs/Doc2Docx`;
         const requestUrl = this.resolveUrl(requestPath);
-        const httpResponse = await this.sendWithTracingAsync<Blob>("Plumsail.flowV1DocumentsJobsDoc2Docx", "FlowV1DocumentsJobsDoc2DocxPost", "POST", requestUrl, input, options);
+        const httpResponse = await this.sendWithTracingAsync<Blob>("Plumsail.flowV1DocumentsJobsDoc2Docx", "FlowV1DocumentsJobsDoc2DocxPost", "POST", requestUrl, input, options, undefined, true);
 
         return httpResponse.value as Blob;
     }
@@ -880,7 +880,7 @@ export class PlumsailClient extends ConnectorClientBase {
     public async flowV1DocumentsJobsXls2Xlsx(input: Xls2XlsxRequest, options: ConnectorOperationOptions = {}): Promise<Blob> {
         const requestPath = `/flow/v1/Documents/jobs/Xls2Xlsx`;
         const requestUrl = this.resolveUrl(requestPath);
-        const httpResponse = await this.sendWithTracingAsync<Blob>("Plumsail.flowV1DocumentsJobsXls2Xlsx", "FlowV1DocumentsJobsXls2XlsxPost", "POST", requestUrl, input, options);
+        const httpResponse = await this.sendWithTracingAsync<Blob>("Plumsail.flowV1DocumentsJobsXls2Xlsx", "FlowV1DocumentsJobsXls2XlsxPost", "POST", requestUrl, input, options, undefined, true);
 
         return httpResponse.value as Blob;
     }
@@ -892,7 +892,7 @@ export class PlumsailClient extends ConnectorClientBase {
     public async flowV1DocumentsJobsPpt2Pptx(input: Ppt2PptxRequest, options: ConnectorOperationOptions = {}): Promise<Blob> {
         const requestPath = `/flow/v1/Documents/jobs/Ppt2Pptx`;
         const requestUrl = this.resolveUrl(requestPath);
-        const httpResponse = await this.sendWithTracingAsync<Blob>("Plumsail.flowV1DocumentsJobsPpt2Pptx", "FlowV1DocumentsJobsPpt2PptxPost", "POST", requestUrl, input, options);
+        const httpResponse = await this.sendWithTracingAsync<Blob>("Plumsail.flowV1DocumentsJobsPpt2Pptx", "FlowV1DocumentsJobsPpt2PptxPost", "POST", requestUrl, input, options, undefined, true);
 
         return httpResponse.value as Blob;
     }
@@ -920,7 +920,7 @@ export class PlumsailClient extends ConnectorClientBase {
     public async flowV1DocumentsJobsMergeAnyToPdfV2(input: MergeAny2PdfRequest, options: ConnectorOperationOptions = {}): Promise<Blob> {
         const requestPath = `/flow/v1/Documents/jobs/MergeAnyToPdfV2`;
         const requestUrl = this.resolveUrl(requestPath);
-        const httpResponse = await this.sendWithTracingAsync<Blob>("Plumsail.flowV1DocumentsJobsMergeAnyToPdfV2", "FlowV1DocumentsJobsMergeAnyToPdfV2Post", "POST", requestUrl, input, options);
+        const httpResponse = await this.sendWithTracingAsync<Blob>("Plumsail.flowV1DocumentsJobsMergeAnyToPdfV2", "FlowV1DocumentsJobsMergeAnyToPdfV2Post", "POST", requestUrl, input, options, undefined, true);
 
         return httpResponse.value as Blob;
     }
@@ -956,7 +956,7 @@ export class PlumsailClient extends ConnectorClientBase {
     public async flowV1DocumentsJobsImage2Pdf(input: Image2PdfRequest, options: ConnectorOperationOptions = {}): Promise<Blob> {
         const requestPath = `/flow/v1/Documents/jobs/Image2Pdf`;
         const requestUrl = this.resolveUrl(requestPath);
-        const httpResponse = await this.sendWithTracingAsync<Blob>("Plumsail.flowV1DocumentsJobsImage2Pdf", "FlowV1DocumentsJobsImage2PdfPost", "POST", requestUrl, input, options);
+        const httpResponse = await this.sendWithTracingAsync<Blob>("Plumsail.flowV1DocumentsJobsImage2Pdf", "FlowV1DocumentsJobsImage2PdfPost", "POST", requestUrl, input, options, undefined, true);
 
         return httpResponse.value as Blob;
     }
@@ -1016,7 +1016,7 @@ export class PlumsailClient extends ConnectorClientBase {
     public async flowV1DocumentsJobsCompressPdf(input: CompressPdfRequest, options: ConnectorOperationOptions = {}): Promise<Blob> {
         const requestPath = `/flow/v1/Documents/jobs/CompressPdf`;
         const requestUrl = this.resolveUrl(requestPath);
-        const httpResponse = await this.sendWithTracingAsync<Blob>("Plumsail.flowV1DocumentsJobsCompressPdf", "FlowV1DocumentsJobsCompressPdfPost", "POST", requestUrl, input, options);
+        const httpResponse = await this.sendWithTracingAsync<Blob>("Plumsail.flowV1DocumentsJobsCompressPdf", "FlowV1DocumentsJobsCompressPdfPost", "POST", requestUrl, input, options, undefined, true);
 
         return httpResponse.value as Blob;
     }
@@ -1068,7 +1068,7 @@ export class PlumsailClient extends ConnectorClientBase {
     public async flowV1DocumentsJobsCsv2Xlsx(input: Csv2XlsxRequest, options: ConnectorOperationOptions = {}): Promise<Blob> {
         const requestPath = `/flow/v1/Documents/jobs/Csv2Xlsx`;
         const requestUrl = this.resolveUrl(requestPath);
-        const httpResponse = await this.sendWithTracingAsync<Blob>("Plumsail.flowV1DocumentsJobsCsv2Xlsx", "FlowV1DocumentsJobsCsv2XlsxPost", "POST", requestUrl, input, options);
+        const httpResponse = await this.sendWithTracingAsync<Blob>("Plumsail.flowV1DocumentsJobsCsv2Xlsx", "FlowV1DocumentsJobsCsv2XlsxPost", "POST", requestUrl, input, options, undefined, true);
 
         return httpResponse.value as Blob;
     }
@@ -1080,7 +1080,7 @@ export class PlumsailClient extends ConnectorClientBase {
     public async flowV1DocumentsJobsJson2Xlsx(input: Json2XlsxRequest, options: ConnectorOperationOptions = {}): Promise<Blob> {
         const requestPath = `/flow/v1/Documents/jobs/Json2Xlsx`;
         const requestUrl = this.resolveUrl(requestPath);
-        const httpResponse = await this.sendWithTracingAsync<Blob>("Plumsail.flowV1DocumentsJobsJson2Xlsx", "FlowV1DocumentsJobsJson2XlsxPost", "POST", requestUrl, input, options);
+        const httpResponse = await this.sendWithTracingAsync<Blob>("Plumsail.flowV1DocumentsJobsJson2Xlsx", "FlowV1DocumentsJobsJson2XlsxPost", "POST", requestUrl, input, options, undefined, true);
 
         return httpResponse.value as Blob;
     }
@@ -1092,7 +1092,7 @@ export class PlumsailClient extends ConnectorClientBase {
     public async flowV1DocumentsJobsJson2Csv(input: Json2CsvRequest, options: ConnectorOperationOptions = {}): Promise<Blob> {
         const requestPath = `/flow/v1/Documents/jobs/Json2Csv`;
         const requestUrl = this.resolveUrl(requestPath);
-        const httpResponse = await this.sendWithTracingAsync<Blob>("Plumsail.flowV1DocumentsJobsJson2Csv", "FlowV1DocumentsJobsJson2CsvPost", "POST", requestUrl, input, options);
+        const httpResponse = await this.sendWithTracingAsync<Blob>("Plumsail.flowV1DocumentsJobsJson2Csv", "FlowV1DocumentsJobsJson2CsvPost", "POST", requestUrl, input, options, undefined, true);
 
         return httpResponse.value as Blob;
     }
@@ -1180,7 +1180,7 @@ export class PlumsailClient extends ConnectorClientBase {
         }
         const requestPath = `/flow/v1/ProcessesFlow/jobs/ExecuteProcess` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
-        const httpResponse = await this.sendWithTracingAsync<Blob>("Plumsail.executeFlowV1ProcessesFlowJobsProcess", "FlowV1ProcessesFlowJobsExecuteProcessPost", "POST", requestUrl, input, options);
+        const httpResponse = await this.sendWithTracingAsync<Blob>("Plumsail.executeFlowV1ProcessesFlowJobsProcess", "FlowV1ProcessesFlowJobsExecuteProcessPost", "POST", requestUrl, input, options, undefined, true);
 
         return httpResponse.value as Blob;
     }
@@ -1196,7 +1196,7 @@ export class PlumsailClient extends ConnectorClientBase {
         }
         const requestPath = `/flow/v1/ProcessesFlow/jobs/ExecuteProcessWithGeneratedData` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
-        const httpResponse = await this.sendWithTracingAsync<Blob>("Plumsail.executeFlowV1ProcessesFlowJobsProcessWithGeneratedData", "FlowV1ProcessesFlowJobsExecuteProcessWithGeneratedDataPost", "POST", requestUrl, input, options);
+        const httpResponse = await this.sendWithTracingAsync<Blob>("Plumsail.executeFlowV1ProcessesFlowJobsProcessWithGeneratedData", "FlowV1ProcessesFlowJobsExecuteProcessWithGeneratedDataPost", "POST", requestUrl, input, options, undefined, true);
 
         return httpResponse.value as Blob;
     }

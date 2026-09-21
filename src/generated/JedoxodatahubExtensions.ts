@@ -122,9 +122,7 @@ export interface Cell {
 /**
  * Definition: CellArray
  */
-export interface CellArray {
-    [key: string]: unknown;
-}
+export type CellArray = Array<Cell>;
 
 /**
  * Definition: Cube
@@ -139,9 +137,7 @@ export interface Cube {
 /**
  * Definition: CubeArray
  */
-export interface CubeArray {
-    [key: string]: unknown;
-}
+export type CubeArray = Array<Cube>;
 
 /**
  * Definition: Database
@@ -157,9 +153,7 @@ export interface Database {
 /**
  * Definition: DatabaseArray
  */
-export interface DatabaseArray {
-    [key: string]: unknown;
-}
+export type DatabaseArray = Array<Database>;
 
 /**
  * Definition: Dimension
@@ -174,9 +168,7 @@ export interface Dimension {
 /**
  * Definition: DimensionArray
  */
-export interface DimensionArray {
-    [key: string]: unknown;
-}
+export type DimensionArray = Array<Dimension>;
 
 /**
  * Definition: Element
@@ -192,9 +184,7 @@ export interface Element {
 /**
  * Definition: ElementArray
  */
-export interface ElementArray {
-    [key: string]: unknown;
-}
+export type ElementArray = Array<Element>;
 
 /**
  * Definition: Error
@@ -216,9 +206,7 @@ export interface IntegratorComponent {
 /**
  * Definition: IntegratorComponentArray
  */
-export interface IntegratorComponentArray {
-    [key: string]: unknown;
-}
+export type IntegratorComponentArray = Array<IntegratorComponent>;
 
 /**
  * Definition: IntegratorExtractComponentRow
@@ -230,9 +218,7 @@ export interface IntegratorExtractComponentRow {
 /**
  * Definition: IntegratorExtractComponentRowArray
  */
-export interface IntegratorExtractComponentRowArray {
-    [key: string]: unknown;
-}
+export type IntegratorExtractComponentRowArray = Array<IntegratorExtractComponentRow>;
 
 /**
  * Definition: IntegratorProject
@@ -247,9 +233,7 @@ export interface IntegratorProject {
 /**
  * Definition: IntegratorProjectArray
  */
-export interface IntegratorProjectArray {
-    [key: string]: unknown;
-}
+export type IntegratorProjectArray = Array<IntegratorProject>;
 
 /**
  * Definition: IntegratorProjectGroup
@@ -267,9 +251,7 @@ export interface IntegratorProjectGroup {
 /**
  * Definition: IntegratorProjectGroupArray
  */
-export interface IntegratorProjectGroupArray {
-    [key: string]: unknown;
-}
+export type IntegratorProjectGroupArray = Array<IntegratorProjectGroup>;
 
 /**
  * Definition: IntegratorRunResult
@@ -294,9 +276,7 @@ export interface IntegratorTransformComponentRow {
 /**
  * Definition: IntegratorTransformComponentRowArray
  */
-export interface IntegratorTransformComponentRowArray {
-    [key: string]: unknown;
-}
+export type IntegratorTransformComponentRowArray = Array<IntegratorTransformComponentRow>;
 
 /**
  * Definition: View
@@ -315,9 +295,7 @@ export interface View {
 /**
  * Definition: ViewArray
  */
-export interface ViewArray {
-    [key: string]: unknown;
-}
+export type ViewArray = Array<View>;
 
 /**
  * Definition: ViewCell
@@ -329,9 +307,7 @@ export interface ViewCell {
 /**
  * Definition: ViewCellArray
  */
-export interface ViewCellArray {
-    [key: string]: unknown;
-}
+export type ViewCellArray = Array<ViewCell>;
 
 /**
  * Options for the databases operation.

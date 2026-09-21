@@ -29,16 +29,12 @@ export interface WebhookPayload {
 /**
  * Definition: FormsList
  */
-export interface FormsList {
-    [key: string]: unknown;
-}
+export type FormsList = Array<Record<string, unknown>>;
 
 /**
  * Definition: NewResponses
  */
-export interface NewResponses {
-    [key: string]: unknown;
-}
+export type NewResponses = Array<Record<string, unknown>>;
 
 /**
  * Definition: GetFormResponseByIdResult

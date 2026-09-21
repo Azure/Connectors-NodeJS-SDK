@@ -335,9 +335,7 @@ export interface GoalValueCheckinUpdateRequest {
 /**
  * Definition: GoalNotes
  */
-export interface GoalNotes {
-    [key: string]: unknown;
-}
+export type GoalNotes = Array<Record<string, unknown>>;
 
 /**
  * Definition: EvaluatedAlert
@@ -1203,7 +1201,7 @@ export class PowerbiClient extends ConnectorClientBase {
     public async exportInitiateToFileForPbiReports(input: ExportPayloadPowerBIReport, groupid: string, reportid: string, options: ConnectorOperationOptions = {}): Promise<Blob> {
         const requestPath = `/v1.0/myorg/groups/${encodeURIComponent(String(groupid))}/reports/${encodeURIComponent(String(reportid))}/ExportTo`;
         const requestUrl = this.resolveUrl(requestPath);
-        const httpResponse = await this.sendWithTracingAsync<Blob>("Powerbi.exportInitiateToFileForPbiReports", "InitiateExportToFileForPbiReports", "POST", requestUrl, input, options);
+        const httpResponse = await this.sendWithTracingAsync<Blob>("Powerbi.exportInitiateToFileForPbiReports", "InitiateExportToFileForPbiReports", "POST", requestUrl, input, options, undefined, true);
 
         return httpResponse.value as Blob;
     }
@@ -1215,7 +1213,7 @@ export class PowerbiClient extends ConnectorClientBase {
     public async exportInitiateToFileForPaginatedReports(input: ExportPayloadPaginatedReport, groupid: string, reportid: string, options: ConnectorOperationOptions = {}): Promise<Blob> {
         const requestPath = `/v1.0/myorg/groups/${encodeURIComponent(String(groupid))}/reports/${encodeURIComponent(String(reportid))}/ExportToPaginatedReports`;
         const requestUrl = this.resolveUrl(requestPath);
-        const httpResponse = await this.sendWithTracingAsync<Blob>("Powerbi.exportInitiateToFileForPaginatedReports", "InitiateExportToFileForPaginatedReports", "POST", requestUrl, input, options);
+        const httpResponse = await this.sendWithTracingAsync<Blob>("Powerbi.exportInitiateToFileForPaginatedReports", "InitiateExportToFileForPaginatedReports", "POST", requestUrl, input, options, undefined, true);
 
         return httpResponse.value as Blob;
     }

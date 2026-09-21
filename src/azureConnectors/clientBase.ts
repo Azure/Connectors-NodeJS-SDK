@@ -86,6 +86,7 @@ export abstract class ConnectorClientBase {
      * @param body Optional request body.
      * @param options Operation cancellation and tracing options.
     * @param requestHeaders Service-specific request headers generated from operation options.
+    * @param responseAsBlob Whether successful response content should be returned as a Blob.
      */
     protected async sendWithTracingAsync<TValue>(
         spanName: string,
@@ -95,6 +96,7 @@ export abstract class ConnectorClientBase {
         body: unknown,
         options: ConnectorOperationOptions,
         requestHeaders?: Readonly<Record<string, string>>,
+        responseAsBlob = false,
     ): Promise<ConnectorResponse<TValue>> {
         return this.tracingClient.withSpan(spanName, options, async updatedOptions => {
             const response = await this.httpClient.sendAsync<TValue>(
@@ -105,6 +107,7 @@ export abstract class ConnectorClientBase {
                 updatedOptions.abortSignal,
                 updatedOptions.tracingOptions,
                 requestHeaders,
+                responseAsBlob,
             );
             if (!response.isSuccessStatusCode) {
                 const error = new ConnectorError(this.connectorName, operationName, response.rawResponse);
