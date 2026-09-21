@@ -781,7 +781,7 @@ index 9807c17b85a05899cb917f4e47bb602d8cce3f26..0a518b4141143d7f33a5f44928ca4972
  
          [TestMethod]
 diff --git a/src/tools/CodefulSdkGenerator.Tests/DirectClientTypeScriptOutputFormatTests.cs b/src/tools/CodefulSdkGenerator.Tests/DirectClientTypeScriptOutputFormatTests.cs
-index 3df4f905117b4d9c46447b75b335c54c82f23035..51e4ebafb29f3163964a98d4388941e2f6fb83b0 100644
+index 3df4f905117b4d9c46447b75b335c54c82f23035..9f5a9a3155a7a8fa52d7ee9cd421554a3b8f56e3 100644
 --- a/src/tools/CodefulSdkGenerator.Tests/DirectClientTypeScriptOutputFormatTests.cs
 +++ b/src/tools/CodefulSdkGenerator.Tests/DirectClientTypeScriptOutputFormatTests.cs
 @@ -51,6 +51,13 @@ namespace LogicApps.Tests
@@ -905,7 +905,7 @@ index 3df4f905117b4d9c46447b75b335c54c82f23035..51e4ebafb29f3163964a98d4388941e2
          {
              var swagger = JsonObject.Parse(FormatTestSwagger).AsObject();
              var generator = new DirectClientTypeScriptGenerator();
-@@ -355,43 +438,306 @@ namespace LogicApps.Tests
+@@ -355,15 +438,19 @@ namespace LogicApps.Tests
  
              var output = writer.ToString();
  
@@ -920,25 +920,29 @@ index 3df4f905117b4d9c46447b75b335c54c82f23035..51e4ebafb29f3163964a98d4388941e2
 +            Assert.IsFalse(
 +                output.Contains("new ConnectorError", StringComparison.Ordinal),
 +                message: "Generated methods should not construct connector errors directly.");
-+        }
-+
-+        [TestMethod]
-+        [Owner("swapnilnagar")]
+         }
+ 
+         [TestMethod]
+         [Owner("swapnilnagar")]
+-        public void Generate_AllMethodsHaveAbortSignalParameter()
 +        public void Generate_OptionalServiceParametersUseMethodSpecificOptions()
-+        {
-+            var swagger = JsonObject.Parse(FormatTestSwagger).AsObject();
-+            var generator = new DirectClientTypeScriptGenerator();
-+            using var writer = new StringWriter();
-+
-+            generator.Generate(swagger, "formattest", writer);
-+
-+            var output = writer.ToString();
-+
+         {
+             var swagger = JsonObject.Parse(FormatTestSwagger).AsObject();
+             var generator = new DirectClientTypeScriptGenerator();
+@@ -373,25 +460,340 @@ namespace LogicApps.Tests
+ 
+             var output = writer.ToString();
+ 
+-            // NOTE(swapnilnagar): Every generated method accepts a final optional AbortSignalLike. Use a
+-            // type-only import to support non-DOM and polyfilled signals without requiring a runtime export
+-            // when module syntax is preserved.
 +            Assert.IsFalse(
 +                output.Contains("AbortSignalLike", StringComparison.Ordinal),
 +                message: "Generated clients should expose cancellation through ConnectorOperationOptions.");
 +
-+            Assert.IsTrue(
+             Assert.IsTrue(
+-                output.Contains("import type { AbortSignalLike } from \"@azure/abort-controller\";", StringComparison.Ordinal),
+-                message: "Generated clients with action methods should type-import AbortSignalLike from '@azure/abort-controller'.");
 +                output.Contains("import type { ConnectorClientOptions, ConnectorOperationOptions }", StringComparison.Ordinal),
 +                message: "Generated clients should type-import operation options.");
 +
@@ -949,13 +953,15 @@ index 3df4f905117b4d9c46447b75b335c54c82f23035..51e4ebafb29f3163964a98d4388941e2
 +                    output.Contains("export interface UpdateItemOptions extends ConnectorOperationOptions", StringComparison.Ordinal) &&
 +                    output.Contains("url?: string;", StringComparison.Ordinal),
 +                message: "Optional query and header parameters should be emitted on method-specific options types.");
-+            Assert.IsFalse(
+             Assert.IsFalse(
+-                output.Contains("import { AbortSignalLike } from \"@azure/abort-controller\";", StringComparison.Ordinal),
+-                message: "Generated clients should not emit a runtime import for AbortSignalLike.");
 +                condition: output.Contains("filter?: string,", StringComparison.Ordinal) ||
 +                    output.Contains("xMsCorrelationId?: string,", StringComparison.Ordinal) ||
 +                    output.Contains("url?: string,", StringComparison.Ordinal),
 +                message: "Optional service parameters must not remain positional.");
 +        }
-+
+ 
 +        /// <summary>
 +        /// Verifies service parameters cannot redeclare fields inherited from <c>ConnectorOperationOptions</c>.
 +        /// </summary>
@@ -1021,7 +1027,9 @@ index 3df4f905117b4d9c46447b75b335c54c82f23035..51e4ebafb29f3163964a98d4388941e2
 +            generator.Generate(swagger, "formattest", writer);
 +
 +            var output = writer.ToString();
-+            Assert.IsTrue(
+             Assert.IsTrue(
+-                output.Contains("abortSignal?: AbortSignalLike", StringComparison.Ordinal),
+-                message: "Generated methods should include abortSignal?: AbortSignalLike parameter.");
 +                condition: output.Contains("serviceToString?: string;", StringComparison.Ordinal) &&
 +                    output.Contains("toString=${encodeURIComponent(String(options.serviceToString))}", StringComparison.Ordinal),
 +                message: "Object prototype members should use service-owned option names while preserving wire names.");
@@ -1060,24 +1068,23 @@ index 3df4f905117b4d9c46447b75b335c54c82f23035..51e4ebafb29f3163964a98d4388941e2
 +                    StringComparison.Ordinal) &&
 +                    output.Contains("options=${encodeURIComponent(String(serviceOptions))}", StringComparison.Ordinal),
 +                message: "A required service parameter named options should use a stable alternative while preserving its wire name.");
-         }
- 
++        }
++
 +        /// <summary>
 +        /// Verifies method-specific options types cannot shadow imported operation options.
 +        /// </summary>
-         [TestMethod]
-         [Owner("swapnilnagar")]
--        public void Generate_AllMethodsHaveAbortSignalParameter()
++        [TestMethod]
++        [Owner("swapnilnagar")]
 +        public void Generate_OperationWhoseOptionsTypeIsImported_UsesDistinctTypeName()
-         {
-             var swagger = JsonObject.Parse(FormatTestSwagger).AsObject();
++        {
++            var swagger = JsonObject.Parse(FormatTestSwagger).AsObject();
 +            swagger[SchemaPropertyNames.Paths]["/{connectionId}/items"]["get"][SchemaPropertyNames.OperationId] = "ConnectorOperation";
-             var generator = new DirectClientTypeScriptGenerator();
-             using var writer = new StringWriter();
- 
-             generator.Generate(swagger, "formattest", writer);
- 
-             var output = writer.ToString();
++            var generator = new DirectClientTypeScriptGenerator();
++            using var writer = new StringWriter();
++
++            generator.Generate(swagger, "formattest", writer);
++
++            var output = writer.ToString();
 +            Assert.IsTrue(
 +                condition: output.Contains(
 +                    "export interface ConnectorOperationMethodOptions extends ConnectorOperationOptions",
@@ -1088,10 +1095,7 @@ index 3df4f905117b4d9c46447b75b335c54c82f23035..51e4ebafb29f3163964a98d4388941e2
 +                output.Contains("export interface ConnectorOperationOptions extends ConnectorOperationOptions", StringComparison.Ordinal),
 +                message: "Generated options must never extend themselves.");
 +        }
- 
--            // NOTE(swapnilnagar): Every generated method accepts a final optional AbortSignalLike. Use a
--            // type-only import to support non-DOM and polyfilled signals without requiring a runtime export
--            // when module syntax is preserved.
++
 +        /// <summary>
 +        /// Verifies a Swagger model can use an SDK import's exported name without corrupting the module.
 +        /// </summary>
@@ -1133,9 +1137,7 @@ index 3df4f905117b4d9c46447b75b335c54c82f23035..51e4ebafb29f3163964a98d4388941e2
 +            generator.Generate(swagger, "formattest", writer);
 +
 +            var output = writer.ToString();
-             Assert.IsTrue(
--                output.Contains("import type { AbortSignalLike } from \"@azure/abort-controller\";", StringComparison.Ordinal),
--                message: "Generated clients with action methods should type-import AbortSignalLike from '@azure/abort-controller'.");
++            Assert.IsTrue(
 +                condition: output.Contains("import type { TokenCredential as SdkTokenCredential }", StringComparison.Ordinal) &&
 +                    output.Contains("import { ConnectorClientBase as SdkConnectorClientBase }", StringComparison.Ordinal) &&
 +                    output.Contains("import type { ConnectorPagedAsyncIterableIterator as SdkConnectorPagedAsyncIterableIterator }", StringComparison.Ordinal) &&
@@ -1147,9 +1149,7 @@ index 3df4f905117b4d9c46447b75b335c54c82f23035..51e4ebafb29f3163964a98d4388941e2
 +                    output.Contains("SdkConnectorPagedAsyncIterableIterator<ItemModel>", StringComparison.Ordinal) &&
 +                    output.Contains("Promise<ConnectorOperationOptions>", StringComparison.Ordinal),
 +                message: "Swagger models should retain their public names while SDK infrastructure uses import aliases.");
-             Assert.IsFalse(
--                output.Contains("import { AbortSignalLike } from \"@azure/abort-controller\";", StringComparison.Ordinal),
--                message: "Generated clients should not emit a runtime import for AbortSignalLike.");
++            Assert.IsFalse(
 +                output.Contains(
 +                    "import type { ConnectorClientOptions, ConnectorOperationOptions }",
 +                    StringComparison.Ordinal),
@@ -1173,11 +1173,9 @@ index 3df4f905117b4d9c46447b75b335c54c82f23035..51e4ebafb29f3163964a98d4388941e2
 +            using var writer = new StringWriter();
 +
 +            generator.Generate(swagger, "triggeronlytest", writer);
- 
++
 +            var output = writer.ToString();
-             Assert.IsTrue(
--                output.Contains("abortSignal?: AbortSignalLike", StringComparison.Ordinal),
--                message: "Generated methods should include abortSignal?: AbortSignalLike parameter.");
++            Assert.IsTrue(
 +                condition: output.Contains(
 +                    "import { TriggerCallbackPayload as SdkTriggerCallbackPayload }",
 +                    StringComparison.Ordinal) &&
@@ -1186,6 +1184,62 @@ index 3df4f905117b4d9c46447b75b335c54c82f23035..51e4ebafb29f3163964a98d4388941e2
 +                        "export type TriggeronlytestOnNewItemTriggerPayload = SdkTriggerCallbackPayload<string>;",
 +                        StringComparison.Ordinal),
 +                message: "The trigger payload helper should use an import alias when a Swagger model owns its exported name.");
++        }
++
++        /// <summary>
++        /// Verifies a Swagger model cannot redeclare the generated client class.
++        /// </summary>
++        [TestMethod]
++        [Owner("swapnilnagar")]
++        public void Generate_ModelCollidingWithClientClass_RequiresCuration()
++        {
++            var swagger = JsonObject.Parse(FormatTestSwagger).AsObject();
++            swagger[SchemaPropertyNames.Definitions]["FormattestClient"] = new JsonObject
++            {
++                [SchemaPropertyNames.Type] = SchemaTypeNames.Object,
++                [SchemaPropertyNames.Properties] = new JsonObject(),
++            };
++            var generator = new DirectClientTypeScriptGenerator();
++            using var writer = new StringWriter();
++
++            var exception = Assert.ThrowsExactly<InvalidOperationException>(
++                action: () => generator.Generate(swagger, "formattest", writer));
++
++            Assert.IsTrue(
++                condition: exception.Message.Contains("Swagger type 'FormattestClient'", StringComparison.Ordinal) &&
++                    exception.Message.Contains("client class 'FormattestClient'", StringComparison.Ordinal) &&
++                    exception.Message.Contains("TypeScript identifier 'FormattestClient'", StringComparison.Ordinal),
++                message: "The collision error should identify both module-level declaration owners.");
++        }
++
++        /// <summary>
++        /// Verifies a Swagger model cannot redeclare a generated trigger payload alias.
++        /// </summary>
++        [TestMethod]
++        [Owner("swapnilnagar")]
++        public void Generate_ModelCollidingWithTriggerPayloadType_RequiresCuration()
++        {
++            var swagger = JsonObject.Parse(TriggerOnlyTestSwagger).AsObject();
++            swagger[SchemaPropertyNames.Definitions]["TriggeronlytestOnNewItemTriggerPayload"] = new JsonObject
++            {
++                [SchemaPropertyNames.Type] = SchemaTypeNames.Object,
++                [SchemaPropertyNames.Properties] = new JsonObject(),
++            };
++            var generator = new DirectClientTypeScriptGenerator();
++            using var writer = new StringWriter();
++
++            var exception = Assert.ThrowsExactly<InvalidOperationException>(
++                action: () => generator.Generate(swagger, "triggeronlytest", writer));
++
++            Assert.IsTrue(
++                condition: exception.Message.Contains(
++                    "Swagger type 'TriggeronlytestOnNewItemTriggerPayload'",
++                    StringComparison.Ordinal) &&
++                    exception.Message.Contains("trigger operation 'OnNewItem' payload type", StringComparison.Ordinal) &&
++                    exception.Message.Contains(
++                        "TypeScript identifier 'TriggeronlytestOnNewItemTriggerPayload'",
++                        StringComparison.Ordinal),
++                message: "The collision error should identify the Swagger model and generated payload owners.");
 +        }
 +
 +        /// <summary>
@@ -1229,7 +1283,7 @@ index 3df4f905117b4d9c46447b75b335c54c82f23035..51e4ebafb29f3163964a98d4388941e2
          }
  
          /// <summary>
-@@ -409,32 +755,377 @@ namespace LogicApps.Tests
+@@ -409,32 +811,377 @@ namespace LogicApps.Tests
  
              var output = writer.ToString();
              Assert.IsTrue(
@@ -1617,7 +1671,7 @@ index 3df4f905117b4d9c46447b75b335c54c82f23035..51e4ebafb29f3163964a98d4388941e2
          {
              var swagger = JsonObject.Parse(FormatTestSwagger).AsObject();
              swagger[SchemaPropertyNames.Definitions]["ItemListResult"][SchemaPropertyNames.Properties][SchemaPropertyNames.PaginationNextLink][SchemaPropertyNames.Type] = "integer";
-@@ -444,12 +1135,83 @@ namespace LogicApps.Tests
+@@ -444,12 +1191,83 @@ namespace LogicApps.Tests
              generator.Generate(swagger, "formattest", writer);
  
              var output = writer.ToString();
@@ -1706,7 +1760,7 @@ index 3df4f905117b4d9c46447b75b335c54c82f23035..51e4ebafb29f3163964a98d4388941e2
          }
  
          /// <summary>
-@@ -635,7 +1397,7 @@ namespace LogicApps.Tests
+@@ -635,7 +1453,7 @@ namespace LogicApps.Tests
              var output = writer.ToString();
  
              // NOTE(swapnilnagar): The connectorName getter should return the raw connector name string,
@@ -1715,7 +1769,7 @@ index 3df4f905117b4d9c46447b75b335c54c82f23035..51e4ebafb29f3163964a98d4388941e2
              Assert.IsTrue(
                  output.Contains("return \"formattest\"", StringComparison.Ordinal),
                  message: "connectorName property should return the raw connector name.");
-@@ -662,7 +1424,7 @@ namespace LogicApps.Tests
+@@ -662,7 +1480,7 @@ namespace LogicApps.Tests
  
          [TestMethod]
          [Owner("swapnilnagar")]
@@ -1724,7 +1778,7 @@ index 3df4f905117b4d9c46447b75b335c54c82f23035..51e4ebafb29f3163964a98d4388941e2
          {
              var swagger = JsonObject.Parse(FormatTestSwagger).AsObject();
              var generator = new DirectClientTypeScriptGenerator();
-@@ -672,23 +1434,9 @@ namespace LogicApps.Tests
+@@ -672,23 +1490,9 @@ namespace LogicApps.Tests
  
              var output = writer.ToString();
  
@@ -1750,7 +1804,7 @@ index 3df4f905117b4d9c46447b75b335c54c82f23035..51e4ebafb29f3163964a98d4388941e2
          }
  
          /// <summary>
-@@ -723,5 +1471,20 @@ namespace LogicApps.Tests
+@@ -723,5 +1527,20 @@ namespace LogicApps.Tests
  
              return string.Empty;
          }
@@ -2078,7 +2132,7 @@ index 4d2d26d982d81159ea6dae8f5ca4d96722fce20d..10cc8845cc6fc69e32d78b52d40ba3e4
          /// Gets or sets a value indicating whether the operation's version affixes are kept in the
          /// generated method name instead of being simplified away.
 diff --git a/src/tools/CodefulSdkGenerator/DirectClient/DirectClientTypeScriptCodeGenerator.cs b/src/tools/CodefulSdkGenerator/DirectClient/DirectClientTypeScriptCodeGenerator.cs
-index f9462a7570f06d9ca8e93603f9758f0fffbcadb4..7f62d1c2c967757d8ff0e5c3d50b2ab53ebbe1f5 100644
+index f9462a7570f06d9ca8e93603f9758f0fffbcadb4..71e5886a81f854a2914d72b5ba7c992ae38a26d1 100644
 --- a/src/tools/CodefulSdkGenerator/DirectClient/DirectClientTypeScriptCodeGenerator.cs
 +++ b/src/tools/CodefulSdkGenerator/DirectClient/DirectClientTypeScriptCodeGenerator.cs
 @@ -19,7 +19,18 @@ namespace Microsoft.Azure.Workflows.CodefulSdkGenerator.DirectClient
@@ -2193,7 +2247,7 @@ index f9462a7570f06d9ca8e93603f9758f0fffbcadb4..7f62d1c2c967757d8ff0e5c3d50b2ab5
  
              foreach (var method in actionMethods.Where(method => method.IsPaginated))
              {
-@@ -71,34 +152,45 @@ namespace Microsoft.Azure.Workflows.CodefulSdkGenerator.DirectClient
+@@ -71,34 +152,47 @@ namespace Microsoft.Azure.Workflows.CodefulSdkGenerator.DirectClient
  
              var shouldEmitTriggerPayloadContracts = triggerItemTypesByMethod.Count > 0;
  
@@ -2205,10 +2259,12 @@ index f9462a7570f06d9ca8e93603f9758f0fffbcadb4..7f62d1c2c967757d8ff0e5c3d50b2ab5
 +                methods: actionMethods,
 +                resolvedMethodNames: resolvedMethodNames,
 +                triggerItemTypesByMethod: triggerItemTypesByMethod);
-+            this.AllocateImportedTypeNames(
++            var moduleDeclarationNames = this.ValidateAndGetModuleDeclarationNames(
 +                className: className,
++                triggerMethods: triggerMethods,
 +                resolvedOperationOptionsTypeNames: resolvedOperationOptionsTypeNames,
 +                triggerItemTypesByMethod: triggerItemTypesByMethod);
++            this.AllocateImportedTypeNames(moduleDeclarationNames);
 +
              var stringBuilder = new StringBuilder();
  
@@ -2252,7 +2308,7 @@ index f9462a7570f06d9ca8e93603f9758f0fffbcadb4..7f62d1c2c967757d8ff0e5c3d50b2ab5
              this.GenerateTriggerPayloadContracts(stringBuilder, className, triggerMethods, triggerItemTypesByMethod);
  
              stringBuilder.AppendLine("// #endregion Types");
-@@ -109,7 +201,13 @@ namespace Microsoft.Azure.Workflows.CodefulSdkGenerator.DirectClient
+@@ -109,7 +203,13 @@ namespace Microsoft.Azure.Workflows.CodefulSdkGenerator.DirectClient
              stringBuilder.AppendLine("// #region Client");
              stringBuilder.AppendLine();
  
@@ -2267,7 +2323,7 @@ index f9462a7570f06d9ca8e93603f9758f0fffbcadb4..7f62d1c2c967757d8ff0e5c3d50b2ab5
  
              stringBuilder.AppendLine("// #endregion Client");
  
-@@ -199,7 +297,7 @@ namespace Microsoft.Azure.Workflows.CodefulSdkGenerator.DirectClient
+@@ -199,7 +299,7 @@ namespace Microsoft.Azure.Workflows.CodefulSdkGenerator.DirectClient
                  properties[nextLinkName] = new JsonObject
                  {
                      [SchemaPropertyNames.Type] = SchemaTypeNames.String,
@@ -2276,7 +2332,7 @@ index f9462a7570f06d9ca8e93603f9758f0fffbcadb4..7f62d1c2c967757d8ff0e5c3d50b2ab5
                  };
              }
  
-@@ -241,19 +339,16 @@ namespace Microsoft.Azure.Workflows.CodefulSdkGenerator.DirectClient
+@@ -241,19 +341,16 @@ namespace Microsoft.Azure.Workflows.CodefulSdkGenerator.DirectClient
                       DirectClientTypeScriptCodeGenerator.IsPrimitiveJsonType((string)typeNode) &&
                       !schema.TryGetPropertyValue(SchemaPropertyNames.Enum, out _))
              {
@@ -2297,7 +2353,7 @@ index f9462a7570f06d9ca8e93603f9758f0fffbcadb4..7f62d1c2c967757d8ff0e5c3d50b2ab5
                  stringBuilder.AppendLine($"export interface {typeName} {{");
                  stringBuilder.AppendLine("    [key: string]: unknown;");
                  stringBuilder.AppendLine("}");
-@@ -312,6 +407,30 @@ namespace Microsoft.Azure.Workflows.CodefulSdkGenerator.DirectClient
+@@ -312,6 +409,30 @@ namespace Microsoft.Azure.Workflows.CodefulSdkGenerator.DirectClient
              }
          }
  
@@ -2328,7 +2384,7 @@ index f9462a7570f06d9ca8e93603f9758f0fffbcadb4..7f62d1c2c967757d8ff0e5c3d50b2ab5
          /// <summary>
          /// Returns the emitted type name for a swagger definition, honoring the retained-set decision.
          /// </summary>
-@@ -349,12 +468,64 @@ namespace Microsoft.Azure.Workflows.CodefulSdkGenerator.DirectClient
+@@ -349,12 +470,64 @@ namespace Microsoft.Azure.Workflows.CodefulSdkGenerator.DirectClient
              };
          }
  
@@ -2395,7 +2451,7 @@ index f9462a7570f06d9ca8e93603f9758f0fffbcadb4..7f62d1c2c967757d8ff0e5c3d50b2ab5
              stringBuilder.AppendLine();
              stringBuilder.AppendLine("    /**");
              stringBuilder.AppendLine($"     * Creates a new {className}Client.");
-@@ -362,7 +533,7 @@ namespace Microsoft.Azure.Workflows.CodefulSdkGenerator.DirectClient
+@@ -362,7 +535,7 @@ namespace Microsoft.Azure.Workflows.CodefulSdkGenerator.DirectClient
              stringBuilder.AppendLine("     * @param credential The credential used for authentication.");
              stringBuilder.AppendLine("     * @param options Optional connector client options.");
              stringBuilder.AppendLine("     */");
@@ -2404,7 +2460,7 @@ index f9462a7570f06d9ca8e93603f9758f0fffbcadb4..7f62d1c2c967757d8ff0e5c3d50b2ab5
              stringBuilder.AppendLine("        super(connectionRuntimeUrl, credential, options);");
              stringBuilder.AppendLine("    }");
              stringBuilder.AppendLine();
-@@ -371,15 +542,14 @@ namespace Microsoft.Azure.Workflows.CodefulSdkGenerator.DirectClient
+@@ -371,15 +544,14 @@ namespace Microsoft.Azure.Workflows.CodefulSdkGenerator.DirectClient
              stringBuilder.AppendLine("    }");
              stringBuilder.AppendLine();
  
@@ -2426,7 +2482,7 @@ index f9462a7570f06d9ca8e93603f9758f0fffbcadb4..7f62d1c2c967757d8ff0e5c3d50b2ab5
              }
  
              stringBuilder.AppendLine("}");
-@@ -387,63 +557,50 @@ namespace Microsoft.Azure.Workflows.CodefulSdkGenerator.DirectClient
+@@ -387,63 +559,50 @@ namespace Microsoft.Azure.Workflows.CodefulSdkGenerator.DirectClient
          }
  
          /// <summary>
@@ -2521,7 +2577,7 @@ index f9462a7570f06d9ca8e93603f9758f0fffbcadb4..7f62d1c2c967757d8ff0e5c3d50b2ab5
          }
  
          /// <summary>
-@@ -453,13 +610,27 @@ namespace Microsoft.Azure.Workflows.CodefulSdkGenerator.DirectClient
+@@ -453,13 +612,27 @@ namespace Microsoft.Azure.Workflows.CodefulSdkGenerator.DirectClient
          /// <param name="className">The normalized connector class name.</param>
          /// <param name="method">The operation metadata used to generate the method.</param>
          /// <param name="methodName">The unique TypeScript method name.</param>
@@ -2550,7 +2606,7 @@ index f9462a7570f06d9ca8e93603f9758f0fffbcadb4..7f62d1c2c967757d8ff0e5c3d50b2ab5
  
              // NOTE(swapnilnagar): Build method signature parameters.
              var signatureParams = new List<string>();
-@@ -473,20 +644,26 @@ namespace Microsoft.Azure.Workflows.CodefulSdkGenerator.DirectClient
+@@ -473,20 +646,26 @@ namespace Microsoft.Azure.Workflows.CodefulSdkGenerator.DirectClient
              foreach (var param in pathParams)
              {
                  var paramType = this.GetTypeScriptTypeForParameter(param);
@@ -2582,7 +2638,7 @@ index f9462a7570f06d9ca8e93603f9758f0fffbcadb4..7f62d1c2c967757d8ff0e5c3d50b2ab5
                  : method.HasResponse
                      ? $"Promise<{method.ResponseTypeName}>"
                      : "Promise<void>";
-@@ -502,17 +679,20 @@ namespace Microsoft.Azure.Workflows.CodefulSdkGenerator.DirectClient
+@@ -502,17 +681,20 @@ namespace Microsoft.Azure.Workflows.CodefulSdkGenerator.DirectClient
                  stringBuilder.AppendLine($"     * @remarks {DirectClientTypeScriptCodeGenerator.EscapeJsDoc(OperationNameSimplifier.AlignDescriptionVersionAffix(method.Description, method.Summary, methodName))}");
              }
  
@@ -2609,7 +2665,7 @@ index f9462a7570f06d9ca8e93603f9758f0fffbcadb4..7f62d1c2c967757d8ff0e5c3d50b2ab5
  
              var parametersString = string.Join(", ", signatureParams);
              var asyncModifier = pageItemTypeName == null ? "async " : string.Empty;
-@@ -528,8 +708,8 @@ namespace Microsoft.Azure.Workflows.CodefulSdkGenerator.DirectClient
+@@ -528,8 +710,8 @@ namespace Microsoft.Azure.Workflows.CodefulSdkGenerator.DirectClient
                      method,
                      param,
                      this._connectorName)
@@ -2620,7 +2676,7 @@ index f9462a7570f06d9ca8e93603f9758f0fffbcadb4..7f62d1c2c967757d8ff0e5c3d50b2ab5
                  path = path.Replace($"{{{param.Name}}}", parameterExpression, StringComparison.Ordinal);
              }
  
-@@ -538,8 +718,11 @@ namespace Microsoft.Azure.Workflows.CodefulSdkGenerator.DirectClient
+@@ -538,8 +720,11 @@ namespace Microsoft.Azure.Workflows.CodefulSdkGenerator.DirectClient
                  stringBuilder.AppendLine("        const queryParams: string[] = [];");
                  foreach (var param in queryParams)
                  {
@@ -2634,7 +2690,7 @@ index f9462a7570f06d9ca8e93603f9758f0fffbcadb4..7f62d1c2c967757d8ff0e5c3d50b2ab5
                      stringBuilder.AppendLine("        }");
                  }
  
-@@ -550,42 +733,69 @@ namespace Microsoft.Azure.Workflows.CodefulSdkGenerator.DirectClient
+@@ -550,42 +735,69 @@ namespace Microsoft.Azure.Workflows.CodefulSdkGenerator.DirectClient
                  stringBuilder.AppendLine($"        const requestPath = `{path}`;");
              }
  
@@ -2723,7 +2779,7 @@ index f9462a7570f06d9ca8e93603f9758f0fffbcadb4..7f62d1c2c967757d8ff0e5c3d50b2ab5
                      stringBuilder.AppendLine();
                      stringBuilder.AppendLine($"        return httpResponse.value as {method.ResponseTypeName};");
                  }
-@@ -593,11 +803,7 @@ namespace Microsoft.Azure.Workflows.CodefulSdkGenerator.DirectClient
+@@ -593,11 +805,7 @@ namespace Microsoft.Azure.Workflows.CodefulSdkGenerator.DirectClient
              else
              {
                  stringBuilder.AppendLine($"        const requestUrl = this.resolveUrl(requestPath);");
@@ -2736,7 +2792,7 @@ index f9462a7570f06d9ca8e93603f9758f0fffbcadb4..7f62d1c2c967757d8ff0e5c3d50b2ab5
              }
  
              stringBuilder.AppendLine("    }");
-@@ -605,20 +811,277 @@ namespace Microsoft.Azure.Workflows.CodefulSdkGenerator.DirectClient
+@@ -605,20 +813,311 @@ namespace Microsoft.Azure.Workflows.CodefulSdkGenerator.DirectClient
          }
  
          /// <summary>
@@ -2920,26 +2976,60 @@ index f9462a7570f06d9ca8e93603f9758f0fffbcadb4..7f62d1c2c967757d8ff0e5c3d50b2ab5
 +        }
 +
 +        /// <summary>
-+        /// Allocates local SDK import identifiers against every declaration owned by the generated module.
++        /// Validates all public declarations in the generated module and returns their shared namespace.
 +        /// </summary>
 +        /// <param name="className">The normalized connector class name.</param>
++        /// <param name="triggerMethods">The canonical trigger operations to generate.</param>
 +        /// <param name="resolvedOperationOptionsTypeNames">The allocated options type per operation.</param>
 +        /// <param name="triggerItemTypesByMethod">The triggers that emit callback payload types.</param>
-+        private void AllocateImportedTypeNames(
++        private IReadOnlyCollection<string> ValidateAndGetModuleDeclarationNames(
 +            string className,
++            IReadOnlyList<DirectClientMethodInfo> triggerMethods,
 +            IReadOnlyDictionary<DirectClientMethodInfo, string> resolvedOperationOptionsTypeNames,
 +            IReadOnlyDictionary<DirectClientMethodInfo, string> triggerItemTypesByMethod)
 +        {
-+            var reservedNames = new HashSet<string>(this._generatedTypes, StringComparer.Ordinal)
++            var declarations = this._generatedTypes
++                .Select(typeName => (Name: typeName, Identity: $"Swagger type '{typeName}'"))
++                .ToList();
++            declarations.Add(($"{className}Client", $"client class '{className}Client'"));
++
++            if (triggerMethods.Count > 0)
 +            {
-+                $"{className}Client",
-+                $"{className}TriggerOperation",
-+                $"{className}TriggerOperations",
-+                $"{className}TriggerParameters",
-+            };
-+            reservedNames.UnionWith(resolvedOperationOptionsTypeNames.Values);
-+            reservedNames.UnionWith(triggerItemTypesByMethod.Keys.Select(method =>
-+                $"{className}{method.SimplifiedTriggerName}TriggerPayload"));
++                declarations.Add(($"{className}TriggerOperations", "trigger operation map"));
++                declarations.Add(($"{className}TriggerOperation", "trigger operation type"));
++            }
++
++            if (triggerMethods.Any(method => method.TriggerParameters?.Count > 0))
++            {
++                declarations.Add(($"{className}TriggerParameters", "trigger parameter map"));
++            }
++
++            declarations.AddRange(resolvedOperationOptionsTypeNames.Select(entry =>
++                (Name: entry.Value, Identity: $"operation '{entry.Key.OperationId}' options type")));
++            declarations.AddRange(triggerItemTypesByMethod.Keys.Select(method =>
++                (Name: $"{className}{method.SimplifiedTriggerName}TriggerPayload", Identity: $"trigger operation '{method.OperationId}' payload type")));
++
++            var collision = declarations
++                .GroupBy(declaration => declaration.Name, StringComparer.Ordinal)
++                .FirstOrDefault(group => group.Count() > 1);
++            if (collision != null)
++            {
++                throw new InvalidOperationException(
++                    message: $"Connector '{this._connectorName}' module declarations '{string.Join("', '", collision.Select(declaration => declaration.Identity).OrderBy(identity => identity, StringComparer.Ordinal))}' collide on TypeScript identifier '{collision.Key}'. Add stable identity-specific curation.");
++            }
++
++            return declarations
++                .Select(declaration => declaration.Name)
++                .ToHashSet(StringComparer.Ordinal);
++        }
++
++        /// <summary>
++        /// Allocates local SDK import identifiers against every declaration owned by the generated module.
++        /// </summary>
++        /// <param name="moduleDeclarationNames">The identifiers already claimed by local declarations.</param>
++        private void AllocateImportedTypeNames(IReadOnlyCollection<string> moduleDeclarationNames)
++        {
++            var reservedNames = new HashSet<string>(moduleDeclarationNames, StringComparer.Ordinal);
 +
 +            foreach (var importedTypeName in DirectClientTypeScriptCodeGenerator.ImportedTypeIdentifierNames
 +                .OrderBy(typeName => typeName, StringComparer.Ordinal))
@@ -3023,7 +3113,7 @@ index f9462a7570f06d9ca8e93603f9758f0fffbcadb4..7f62d1c2c967757d8ff0e5c3d50b2ab5
          }
  
          private string GetBodyTypeName(DirectClientMethodInfo method)
-@@ -633,8 +1096,11 @@ namespace Microsoft.Azure.Workflows.CodefulSdkGenerator.DirectClient
+@@ -633,8 +1132,11 @@ namespace Microsoft.Azure.Workflows.CodefulSdkGenerator.DirectClient
                  var refStr = (string)refNode;
                  if (refStr.StartsWith(SchemaPropertyNames.DefinitionsRefPrefix, StringComparison.Ordinal))
                  {
@@ -3036,7 +3126,7 @@ index f9462a7570f06d9ca8e93603f9758f0fffbcadb4..7f62d1c2c967757d8ff0e5c3d50b2ab5
                  }
              }
  
-@@ -651,6 +1117,23 @@ namespace Microsoft.Azure.Workflows.CodefulSdkGenerator.DirectClient
+@@ -651,6 +1153,23 @@ namespace Microsoft.Azure.Workflows.CodefulSdkGenerator.DirectClient
                  ?? IdentifierNormalizer.Normalize($"{simplifiedName}Input", isVariableName: false);
          }
  
@@ -3060,7 +3150,7 @@ index f9462a7570f06d9ca8e93603f9758f0fffbcadb4..7f62d1c2c967757d8ff0e5c3d50b2ab5
          /// <summary>
          /// Generates typed callback payload aliases for triggers with resolvable item types.
          /// </summary>
-@@ -684,7 +1167,7 @@ namespace Microsoft.Azure.Workflows.CodefulSdkGenerator.DirectClient
+@@ -684,7 +1203,7 @@ namespace Microsoft.Azure.Workflows.CodefulSdkGenerator.DirectClient
                  stringBuilder.AppendLine("/**");
                  stringBuilder.AppendLine($" * Typed callback payload for trigger operation '{method.OperationId}'.");
                  stringBuilder.AppendLine(" */");
@@ -3069,7 +3159,7 @@ index f9462a7570f06d9ca8e93603f9758f0fffbcadb4..7f62d1c2c967757d8ff0e5c3d50b2ab5
                  emittedAnyContract = true;
              }
  
-@@ -910,20 +1393,11 @@ namespace Microsoft.Azure.Workflows.CodefulSdkGenerator.DirectClient
+@@ -910,20 +1429,11 @@ namespace Microsoft.Azure.Workflows.CodefulSdkGenerator.DirectClient
                  var refStr = (string)refNode;
                  if (refStr.StartsWith(SchemaPropertyNames.DefinitionsRefPrefix, StringComparison.Ordinal))
                  {
@@ -3093,7 +3183,7 @@ index f9462a7570f06d9ca8e93603f9758f0fffbcadb4..7f62d1c2c967757d8ff0e5c3d50b2ab5
                  }
              }
  
-@@ -971,6 +1445,163 @@ namespace Microsoft.Azure.Workflows.CodefulSdkGenerator.DirectClient
+@@ -971,6 +1481,163 @@ namespace Microsoft.Azure.Workflows.CodefulSdkGenerator.DirectClient
              return this.GetTypeScriptType(parameterSchema, null);
          }
  
