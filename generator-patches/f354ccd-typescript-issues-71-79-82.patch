@@ -1,8 +1,8 @@
 diff --git a/src/tools/CodefulSdkGenerator.Tests/DirectClientGeneratorBaseTests.cs b/src/tools/CodefulSdkGenerator.Tests/DirectClientGeneratorBaseTests.cs
-index 4c8cdd11316fdb84a009fbba0a7f75795f26aeee..ec14f01dd6a409b63489009088cde916bde9faf0 100644
+index 4c8cdd11316fdb84a009fbba0a7f75795f26aeee..eb986064d2ac38124fff8d0fe6ab06ab435371cb 100644
 --- a/src/tools/CodefulSdkGenerator.Tests/DirectClientGeneratorBaseTests.cs
 +++ b/src/tools/CodefulSdkGenerator.Tests/DirectClientGeneratorBaseTests.cs
-@@ -1712,6 +1712,50 @@ namespace LogicApps.Tests
+@@ -1712,6 +1712,104 @@ namespace LogicApps.Tests
                  message: "Operations with formData parameters must remain excluded.");
          }
  
@@ -50,14 +50,68 @@ index 4c8cdd11316fdb84a009fbba0a7f75795f26aeee..ec14f01dd6a409b63489009088cde916
 +                message: "A referenced payload parameter must not let an unsupported multipart operation bypass filtering.");
 +        }
 +
++        [TestMethod]
++        [Owner("swapnilnagar")]
++        public void Generate_ReferencedFormDataParameter_IsIncludedOnlyForTypeScript()
++        {
++            var swagger = JsonObject.Parse("""
++            {
++                "swagger": "2.0",
++                "info": { "title": "MultipartConnector", "version": "1.0" },
++                "host": "management.azure.com",
++                "basePath": "/",
++                "schemes": ["https"],
++                "paths": {
++                    "/upload": {
++                        "post": {
++                            "operationId": "UploadFile",
++                            "consumes": ["multipart/form-data"],
++                            "parameters": [
++                                { "$ref": "#/parameters/UploadFile" }
++                            ],
++                            "responses": { "204": { "description": "Uploaded" } }
++                        }
++                    }
++                },
++                "parameters": {
++                    "UploadFile": {
++                        "name": "file",
++                        "in": "formData",
++                        "required": true,
++                        "type": "file"
++                    }
++                },
++                "definitions": {}
++            }
++            """).AsObject();
++            using var csharpWriter = new StringWriter();
++            using var pythonWriter = new StringWriter();
++            using var typeScriptWriter = new StringWriter();
++
++            new DirectClientGenerator().Generate(swagger, "multipartconnector", csharpWriter);
++            new DirectClientPythonGenerator().Generate(swagger, "multipartconnector", pythonWriter);
++            new DirectClientTypeScriptGenerator().Generate(swagger, "multipartconnector", typeScriptWriter);
++
++            Assert.IsFalse(
++                csharpWriter.ToString().Contains("UploadFileAsync", StringComparison.Ordinal),
++                message: "C# should continue excluding referenced form-data operations.");
++            Assert.IsFalse(
++                pythonWriter.ToString().Contains("upload_file_async", StringComparison.Ordinal),
++                message: "Python should continue excluding referenced form-data operations.");
++            Assert.IsTrue(
++                condition: typeScriptWriter.ToString().Contains("public async uploadFile(", StringComparison.Ordinal) &&
++                    typeScriptWriter.ToString().Contains("file: Blob;", StringComparison.Ordinal),
++                message: "TypeScript should resolve and emit referenced form-data parameters.");
++        }
++
          #endregion Multipart operation skip tests
  
          [TestMethod]
 diff --git a/src/tools/CodefulSdkGenerator.Tests/DirectClientTypeScriptOutputFormatTests.cs b/src/tools/CodefulSdkGenerator.Tests/DirectClientTypeScriptOutputFormatTests.cs
-index 9f5a9a3155a7a8fa52d7ee9cd421554a3b8f56e3..2de36f46e1630ee135f741a372aa1e9ce8c94b8c 100644
+index 9f5a9a3155a7a8fa52d7ee9cd421554a3b8f56e3..219a18c89d387295c04cb234c492f7c0c8a94eb8 100644
 --- a/src/tools/CodefulSdkGenerator.Tests/DirectClientTypeScriptOutputFormatTests.cs
 +++ b/src/tools/CodefulSdkGenerator.Tests/DirectClientTypeScriptOutputFormatTests.cs
-@@ -760,6 +760,228 @@ namespace LogicApps.Tests
+@@ -760,6 +760,311 @@ namespace LogicApps.Tests
                  message: "The collision error should identify the Swagger model and generated payload owners.");
          }
  
@@ -86,6 +140,7 @@ index 9f5a9a3155a7a8fa52d7ee9cd421554a3b8f56e3..2de36f46e1630ee135f741a372aa1e9c
 +            definitions["BaseRecord"] = new JsonObject
 +            {
 +                [SchemaPropertyNames.Type] = SchemaTypeNames.Object,
++                [SchemaPropertyNames.Required] = new JsonArray("baseValue"),
 +                [SchemaPropertyNames.Properties] = new JsonObject
 +                {
 +                    ["baseValue"] = new JsonObject
@@ -105,6 +160,7 @@ index 9f5a9a3155a7a8fa52d7ee9cd421554a3b8f56e3..2de36f46e1630ee135f741a372aa1e9c
 +                    new JsonObject
 +                    {
 +                        [SchemaPropertyNames.Type] = SchemaTypeNames.Object,
++                        [SchemaPropertyNames.Required] = new JsonArray("inlineValue"),
 +                        [SchemaPropertyNames.Properties] = new JsonObject
 +                        {
 +                            ["inlineValue"] = new JsonObject
@@ -125,12 +181,14 @@ index 9f5a9a3155a7a8fa52d7ee9cd421554a3b8f56e3..2de36f46e1630ee135f741a372aa1e9c
 +                condition: output.Contains("export type ItemModelArray = Array<ItemModel>;", StringComparison.Ordinal) &&
 +                    output.Contains("export type NumericState = 0 | 1 | 2;", StringComparison.Ordinal) &&
 +                    output.Contains("export interface ComposedRecord {", StringComparison.Ordinal) &&
-+                    output.Contains("baseValue?: string;", StringComparison.Ordinal) &&
-+                    output.Contains("inlineValue?: number;", StringComparison.Ordinal),
++                    output.Contains("baseValue: string;", StringComparison.Ordinal) &&
++                    output.Contains("inlineValue: number;", StringComparison.Ordinal),
 +                message: "Array, numeric enum, and allOf roots should preserve their wire shapes.");
 +            Assert.IsFalse(
 +                condition: output.Contains("export interface ItemModelArray", StringComparison.Ordinal) ||
-+                    output.Contains("export type NumericState = \"0\" | \"1\" | \"2\";", StringComparison.Ordinal),
++                    output.Contains("export type NumericState = \"0\" | \"1\" | \"2\";", StringComparison.Ordinal) ||
++                    output.Contains("baseValue?: string;", StringComparison.Ordinal) ||
++                    output.Contains("inlineValue?: number;", StringComparison.Ordinal),
 +                message: "Root arrays must not become objects and numeric enums must not become strings.");
 +        }
 +
@@ -223,21 +281,65 @@ index 9f5a9a3155a7a8fa52d7ee9cd421554a3b8f56e3..2de36f46e1630ee135f741a372aa1e9c
 +                    {
 +                        new JsonObject
 +                        {
-+                            [SchemaPropertyNames.Name] = "files",
++                            [SchemaPropertyNames.Name] = "inputFile",
++                            [SchemaPropertyNames.In] = "formData",
++                            [SchemaPropertyNames.Required] = true,
++                            [SchemaPropertyNames.Type] = SchemaTypeNames.File,
++                        },
++                        new JsonObject
++                        {
++                            [SchemaPropertyNames.Name] = "csvValues",
 +                            [SchemaPropertyNames.In] = "formData",
 +                            [SchemaPropertyNames.Required] = true,
 +                            [SchemaPropertyNames.Type] = SchemaTypeNames.Array,
 +                            [SchemaPropertyNames.Items] = new JsonObject
 +                            {
-+                                [SchemaPropertyNames.Type] = SchemaTypeNames.File,
++                                [SchemaPropertyNames.Type] = SchemaTypeNames.String,
 +                            },
 +                        },
 +                        new JsonObject
 +                        {
-+                            [SchemaPropertyNames.Name] = "tags",
++                            [SchemaPropertyNames.Name] = "ssvValues",
++                            [SchemaPropertyNames.In] = "formData",
++                            [SchemaPropertyNames.Required] = true,
++                            [SchemaPropertyNames.Type] = SchemaTypeNames.Array,
++                            [SchemaPropertyNames.CollectionFormat] = "ssv",
++                            [SchemaPropertyNames.Items] = new JsonObject
++                            {
++                                [SchemaPropertyNames.Type] = SchemaTypeNames.String,
++                            },
++                        },
++                        new JsonObject
++                        {
++                            [SchemaPropertyNames.Name] = "tsvValues",
++                            [SchemaPropertyNames.In] = "formData",
++                            [SchemaPropertyNames.Required] = true,
++                            [SchemaPropertyNames.Type] = SchemaTypeNames.Array,
++                            [SchemaPropertyNames.CollectionFormat] = "tsv",
++                            [SchemaPropertyNames.Items] = new JsonObject
++                            {
++                                [SchemaPropertyNames.Type] = SchemaTypeNames.String,
++                            },
++                        },
++                        new JsonObject
++                        {
++                            [SchemaPropertyNames.Name] = "pipeValues",
++                            [SchemaPropertyNames.In] = "formData",
++                            [SchemaPropertyNames.Required] = true,
++                            [SchemaPropertyNames.Type] = SchemaTypeNames.Array,
++                            [SchemaPropertyNames.CollectionFormat] = "pipes",
++                            [SchemaPropertyNames.Items] = new JsonObject
++                            {
++                                [SchemaPropertyNames.Type] = SchemaTypeNames.String,
++                            },
++                        },
++                        new JsonObject
++                        {
++                            [SchemaPropertyNames.Name] = "multiValues",
 +                            [SchemaPropertyNames.In] = "formData",
 +                            [SchemaPropertyNames.Required] = false,
 +                            [SchemaPropertyNames.Type] = SchemaTypeNames.Array,
++                            [SchemaPropertyNames.CollectionFormat] = "multi",
 +                            [SchemaPropertyNames.Items] = new JsonObject
 +                            {
 +                                [SchemaPropertyNames.Type] = SchemaTypeNames.String,
@@ -253,6 +355,36 @@ index 9f5a9a3155a7a8fa52d7ee9cd421554a3b8f56e3..2de36f46e1630ee135f741a372aa1e9c
 +                            {
 +                                [SchemaPropertyNames.Ref] = "#/definitions/ItemListResult",
 +                            },
++                        },
++                    },
++                },
++            };
++            paths["/{connectionId}/invalid-file-array"] = new JsonObject
++            {
++                ["post"] = new JsonObject
++                {
++                    [SchemaPropertyNames.OperationId] = "UploadFileArray",
++                    [SchemaPropertyNames.Consumes] = new JsonArray(SchemaPropertyNames.MultipartFormDataContentType),
++                    [SchemaPropertyNames.Parameters] = new JsonArray
++                    {
++                        new JsonObject
++                        {
++                            [SchemaPropertyNames.Name] = "files",
++                            [SchemaPropertyNames.In] = "formData",
++                            [SchemaPropertyNames.Required] = true,
++                            [SchemaPropertyNames.Type] = SchemaTypeNames.Array,
++                            [SchemaPropertyNames.CollectionFormat] = "multi",
++                            [SchemaPropertyNames.Items] = new JsonObject
++                            {
++                                [SchemaPropertyNames.Type] = SchemaTypeNames.File,
++                            },
++                        },
++                    },
++                    [SchemaPropertyNames.Responses] = new JsonObject
++                    {
++                        ["204"] = new JsonObject
++                        {
++                            [SchemaPropertyNames.Description] = "Uploaded",
 +                        },
 +                    },
 +                },
@@ -273,14 +405,19 @@ index 9f5a9a3155a7a8fa52d7ee9cd421554a3b8f56e3..2de36f46e1630ee135f741a372aa1e9c
 +                    output.Contains("formData.append(\"index\", String(input.index));", StringComparison.Ordinal) &&
 +                    output.Contains("requestUrl, formData, options, undefined, true", StringComparison.Ordinal) &&
 +                    output.Contains("public async deleteFile(fileId: string, options: ConnectorOperationOptions = {})", StringComparison.Ordinal) &&
-+                    output.Contains("files: Array<Blob>;", StringComparison.Ordinal) &&
-+                    output.Contains("tags?: Array<string>;", StringComparison.Ordinal) &&
-+                    output.Contains("for (const item of input.files)", StringComparison.Ordinal) &&
-+                    output.Contains("formData.append(\"files\", item);", StringComparison.Ordinal) &&
-+                    output.Contains("for (const item of input.tags)", StringComparison.Ordinal) &&
-+                    output.Contains("formData.append(\"tags\", String(item));", StringComparison.Ordinal) &&
++                    output.Contains("csvValues: Array<string>;", StringComparison.Ordinal) &&
++                    output.Contains("multiValues?: Array<string>;", StringComparison.Ordinal) &&
++                    output.Contains("input.csvValues.map(item => String(item)).join(\",\")", StringComparison.Ordinal) &&
++                    output.Contains("input.ssvValues.map(item => String(item)).join(\" \")", StringComparison.Ordinal) &&
++                    output.Contains("input.tsvValues.map(item => String(item)).join(\"\\t\")", StringComparison.Ordinal) &&
++                    output.Contains("input.pipeValues.map(item => String(item)).join(\"|\")", StringComparison.Ordinal) &&
++                    output.Contains("for (const item of input.multiValues)", StringComparison.Ordinal) &&
++                    output.Contains("formData.append(\"multiValues\", String(item));", StringComparison.Ordinal) &&
 +                    output.Contains("const requestBody = isFirstPage ? formData : undefined;", StringComparison.Ordinal),
 +                message: "TypeScript should expose multipart fields and bodyless multipart-declared deletes.");
++            Assert.IsFalse(
++                output.Contains("uploadFileArray", StringComparison.Ordinal),
++                message: "Swagger 2.0 file arrays are unsupported and should not emit an unusable operation.");
 +        }
 +
          /// <summary>
@@ -308,7 +445,7 @@ index 10cc8845cc6fc69e32d78b52d40ba3e46253b99d..309ad1401e3770642fdca90e6e0e0843
          /// Gets the path parameters.
          /// </summary>
 diff --git a/src/tools/CodefulSdkGenerator/DirectClient/DirectClientTypeScriptCodeGenerator.cs b/src/tools/CodefulSdkGenerator/DirectClient/DirectClientTypeScriptCodeGenerator.cs
-index 71e5886a81f854a2914d72b5ba7c992ae38a26d1..656601726cd694e89bbae9bcb0793b41d8a49b1f 100644
+index 71e5886a81f854a2914d72b5ba7c992ae38a26d1..848fdb16cdd5724aabe51488b6beba226f8c8e7d 100644
 --- a/src/tools/CodefulSdkGenerator/DirectClient/DirectClientTypeScriptCodeGenerator.cs
 +++ b/src/tools/CodefulSdkGenerator/DirectClient/DirectClientTypeScriptCodeGenerator.cs
 @@ -82,7 +82,7 @@ namespace Microsoft.Azure.Workflows.CodefulSdkGenerator.DirectClient
@@ -341,7 +478,28 @@ index 71e5886a81f854a2914d72b5ba7c992ae38a26d1..656601726cd694e89bbae9bcb0793b41
              var properties = new JsonObject();
              SwaggerRefResolver.CollectProperties(schema, context?.Document, properties);
              if (this._paginationNextLinkNames.TryGetValue(typeName, out var nextLinkName) &&
-@@ -347,7 +354,7 @@ namespace Microsoft.Azure.Workflows.CodefulSdkGenerator.DirectClient
+@@ -305,16 +312,11 @@ namespace Microsoft.Azure.Workflows.CodefulSdkGenerator.DirectClient
+ 
+             if (properties.Count > 0)
+             {
+-                // NOTE(swapnilnagar): Extract required property names from schema.
+                 var requiredProperties = new HashSet<string>(StringComparer.Ordinal);
+-                if (schema.TryGetPropertyValue(SchemaPropertyNames.Required, out var requiredNode) &&
+-                    requiredNode is JsonArray requiredArray)
+-                {
+-                    foreach (var item in requiredArray)
+-                    {
+-                        requiredProperties.Add((string)item);
+-                    }
+-                }
++                SwaggerRefResolver.CollectRequiredProperties(
++                    schema: schema,
++                    document: context?.Document,
++                    target: requiredProperties);
+ 
+                 stringBuilder.AppendLine($"export interface {typeName} {{");
+                 foreach (var (propName, propSchema) in properties)
+@@ -347,7 +349,7 @@ namespace Microsoft.Azure.Workflows.CodefulSdkGenerator.DirectClient
                       enumNode is JsonArray enumValues &&
                       enumValues.Count > 0)
              {
@@ -350,7 +508,7 @@ index 71e5886a81f854a2914d72b5ba7c992ae38a26d1..656601726cd694e89bbae9bcb0793b41
              }
              else
              {
-@@ -516,6 +523,45 @@ namespace Microsoft.Azure.Workflows.CodefulSdkGenerator.DirectClient
+@@ -516,6 +518,45 @@ namespace Microsoft.Azure.Workflows.CodefulSdkGenerator.DirectClient
              }
          }
  
@@ -396,7 +554,7 @@ index 71e5886a81f854a2914d72b5ba7c992ae38a26d1..656601726cd694e89bbae9bcb0793b41
          private void GenerateClient(
              StringBuilder stringBuilder,
              string className,
-@@ -621,6 +667,14 @@ namespace Microsoft.Azure.Workflows.CodefulSdkGenerator.DirectClient
+@@ -621,6 +662,14 @@ namespace Microsoft.Azure.Workflows.CodefulSdkGenerator.DirectClient
              string optionsTypeName)
          {
              var hasBodyParam = method.HasBodyParameter;
@@ -411,7 +569,7 @@ index 71e5886a81f854a2914d72b5ba7c992ae38a26d1..656601726cd694e89bbae9bcb0793b41
              var queryParams = method.QueryParameters.ToList();
              var headerParams = method.HeaderParameters.ToList();
              var optionalServiceParams = DirectClientTypeScriptCodeGenerator.GetOptionalServiceParameters(method);
-@@ -642,6 +696,10 @@ namespace Microsoft.Azure.Workflows.CodefulSdkGenerator.DirectClient
+@@ -642,6 +691,10 @@ namespace Microsoft.Azure.Workflows.CodefulSdkGenerator.DirectClient
                  var bodyTypeName = this.GetBodyTypeName(method);
                  signatureParams.Add($"input: {bodyTypeName}");
              }
@@ -422,7 +580,7 @@ index 71e5886a81f854a2914d72b5ba7c992ae38a26d1..656601726cd694e89bbae9bcb0793b41
  
              foreach (var param in pathParams)
              {
-@@ -752,9 +810,59 @@ namespace Microsoft.Azure.Workflows.CodefulSdkGenerator.DirectClient
+@@ -752,9 +805,72 @@ namespace Microsoft.Azure.Workflows.CodefulSdkGenerator.DirectClient
                  requestHeadersArgument = ", requestHeaders";
              }
  
@@ -435,18 +593,31 @@ index 71e5886a81f854a2914d72b5ba7c992ae38a26d1..656601726cd694e89bbae9bcb0793b41
 +                    var propertyExpression = $"input.{propertyNames[parameter]}";
 +                    if (DirectClientTypeScriptCodeGenerator.IsArrayParameter(parameter))
 +                    {
-+                        var itemExpression = DirectClientTypeScriptCodeGenerator.IsFileArrayParameter(parameter)
-+                            ? "item"
-+                            : "String(item)";
++                        var collectionFormat = DirectClientTypeScriptCodeGenerator.GetFormDataCollectionFormat(parameter);
 +                        if (!parameter.IsRequired)
 +                        {
 +                            stringBuilder.AppendLine($"        if ({propertyExpression} !== undefined) {{");
 +                        }
 +
 +                        var indentation = parameter.IsRequired ? "        " : "            ";
-+                        stringBuilder.AppendLine($"{indentation}for (const item of {propertyExpression}) {{");
-+                        stringBuilder.AppendLine($"{indentation}    formData.append(\"{DirectClientTypeScriptCodeGenerator.EscapeTypeScriptString(parameter.Name)}\", {itemExpression});");
-+                        stringBuilder.AppendLine($"{indentation}}}");
++                        if (string.Equals(collectionFormat, "multi", StringComparison.Ordinal))
++                        {
++                            stringBuilder.AppendLine($"{indentation}for (const item of {propertyExpression}) {{");
++                            stringBuilder.AppendLine($"{indentation}    formData.append(\"{DirectClientTypeScriptCodeGenerator.EscapeTypeScriptString(parameter.Name)}\", String(item));");
++                            stringBuilder.AppendLine($"{indentation}}}");
++                        }
++                        else
++                        {
++                            var separator = collectionFormat switch
++                            {
++                                "ssv" => " ",
++                                "tsv" => "\\t",
++                                "pipes" => "|",
++                                _ => ",",
++                            };
++                            stringBuilder.AppendLine($"{indentation}formData.append(\"{DirectClientTypeScriptCodeGenerator.EscapeTypeScriptString(parameter.Name)}\", {propertyExpression}.map(item => String(item)).join(\"{separator}\"));");
++                        }
++
 +                        if (!parameter.IsRequired)
 +                        {
 +                            stringBuilder.AppendLine("        }");
@@ -483,7 +654,7 @@ index 71e5886a81f854a2914d72b5ba7c992ae38a26d1..656601726cd694e89bbae9bcb0793b41
              var spanName = $"{className}.{methodName}";
              var operationName = DirectClientTypeScriptCodeGenerator.EscapeTypeScriptString(method.OperationId);
  
-@@ -769,18 +877,19 @@ namespace Microsoft.Azure.Workflows.CodefulSdkGenerator.DirectClient
+@@ -769,18 +885,19 @@ namespace Microsoft.Azure.Workflows.CodefulSdkGenerator.DirectClient
                          var continuationHttpMethod = method.PaginationContinuationHttpMethod.ToUpperInvariant();
                          stringBuilder.AppendLine("            async (requestUrl, isFirstPage) => {");
                          stringBuilder.AppendLine($"                const requestMethod = isFirstPage ? \"{httpMethod}\" : \"{continuationHttpMethod}\";");
@@ -508,7 +679,7 @@ index 71e5886a81f854a2914d72b5ba7c992ae38a26d1..656601726cd694e89bbae9bcb0793b41
                      }
  
                      stringBuilder.AppendLine();
-@@ -797,7 +906,7 @@ namespace Microsoft.Azure.Workflows.CodefulSdkGenerator.DirectClient
+@@ -797,7 +914,7 @@ namespace Microsoft.Azure.Workflows.CodefulSdkGenerator.DirectClient
                  else
                  {
                      stringBuilder.AppendLine($"        const requestUrl = this.resolveUrl(requestPath);");
@@ -517,7 +688,7 @@ index 71e5886a81f854a2914d72b5ba7c992ae38a26d1..656601726cd694e89bbae9bcb0793b41
                      stringBuilder.AppendLine();
                      stringBuilder.AppendLine($"        return httpResponse.value as {method.ResponseTypeName};");
                  }
-@@ -841,6 +950,24 @@ namespace Microsoft.Azure.Workflows.CodefulSdkGenerator.DirectClient
+@@ -841,6 +958,24 @@ namespace Microsoft.Azure.Workflows.CodefulSdkGenerator.DirectClient
                  scopeDescription: $"Connector '{this._connectorName}' operation '{method.OperationId}' options properties");
          }
  
@@ -542,7 +713,7 @@ index 71e5886a81f854a2914d72b5ba7c992ae38a26d1..656601726cd694e89bbae9bcb0793b41
          /// <summary>
          /// Resolves required service parameter names without colliding with generated operation identifiers.
          /// </summary>
-@@ -1120,6 +1247,60 @@ namespace Microsoft.Azure.Workflows.CodefulSdkGenerator.DirectClient
+@@ -1120,6 +1255,57 @@ namespace Microsoft.Azure.Workflows.CodefulSdkGenerator.DirectClient
              return char.ToUpperInvariant(methodName[0]) + methodName.Substring(1) + "MethodOptions";
          }
  
@@ -577,16 +748,13 @@ index 71e5886a81f854a2914d72b5ba7c992ae38a26d1..656601726cd694e89bbae9bcb0793b41
 +        }
 +
 +        /// <summary>
-+        /// Determines whether a form-data parameter carries an array of files.
++        /// Gets a form-data array parameter's Swagger 2.0 collection format.
 +        /// </summary>
 +        /// <param name="parameter">The form-data parameter.</param>
-+        private static bool IsFileArrayParameter(DirectClientParameter parameter)
++        private static string GetFormDataCollectionFormat(DirectClientParameter parameter)
 +        {
 +            var schema = parameter.Schema ?? parameter.Definition;
-+            return schema != null &&
-+                schema.TryGetPropertyValue(SchemaPropertyNames.Items, out var itemsNode) &&
-+                itemsNode is JsonObject items &&
-+                DirectClientTypeScriptCodeGenerator.IsFileSchema(items);
++            return (string)schema?[SchemaPropertyNames.CollectionFormat] ?? "csv";
 +        }
 +
 +        /// <summary>
@@ -604,7 +772,7 @@ index 71e5886a81f854a2914d72b5ba7c992ae38a26d1..656601726cd694e89bbae9bcb0793b41
          {
              if (method.BodyParameter?.Schema == null)
 diff --git a/src/tools/CodefulSdkGenerator/DirectClient/DirectClientTypeScriptGenerator.cs b/src/tools/CodefulSdkGenerator/DirectClient/DirectClientTypeScriptGenerator.cs
-index f1338e027f2c845350fb314b151d52bfd2073252..a3da273643658c9bd6dabaccfaa37b5f773d6238 100644
+index f1338e027f2c845350fb314b151d52bfd2073252..1af038aa3736fde855b8efc72fd31e1efe54e8b8 100644
 --- a/src/tools/CodefulSdkGenerator/DirectClient/DirectClientTypeScriptGenerator.cs
 +++ b/src/tools/CodefulSdkGenerator/DirectClient/DirectClientTypeScriptGenerator.cs
 @@ -33,6 +33,9 @@ namespace Microsoft.Azure.Workflows.CodefulSdkGenerator.DirectClient
@@ -617,7 +785,16 @@ index f1338e027f2c845350fb314b151d52bfd2073252..a3da273643658c9bd6dabaccfaa37b5f
          /// <inheritdoc />
          /// <remarks>
          /// NOTE(daviburg): TypeScript emits no discovery methods, so discovery-retained operations must not
-@@ -234,6 +237,7 @@ namespace Microsoft.Azure.Workflows.CodefulSdkGenerator.DirectClient
+@@ -216,6 +219,8 @@ namespace Microsoft.Azure.Workflows.CodefulSdkGenerator.DirectClient
+                     schema = schemaNode.AsObject();
+                 }
+ 
++                DirectClientTypeScriptGenerator.ValidateFormDataArrayParameter(paramName, paramIn, param);
++
+                 var normalizedName = IdentifierNormalizer.Normalize(paramName, isVariableName: true);
+ 
+                 // NOTE(swapnilnagar): IdentifierNormalizer prepends '@' for C# keywords. Strip it for TypeScript.
+@@ -234,6 +239,7 @@ namespace Microsoft.Azure.Workflows.CodefulSdkGenerator.DirectClient
                      Location = paramIn,
                      IsRequired = required,
                      Schema = schema,
@@ -625,8 +802,49 @@ index f1338e027f2c845350fb314b151d52bfd2073252..a3da273643658c9bd6dabaccfaa37b5f
                      Definition = param,
                      Description = (string)param[SchemaPropertyNames.Description],
                  });
+@@ -242,6 +248,40 @@ namespace Microsoft.Azure.Workflows.CodefulSdkGenerator.DirectClient
+             return parameters;
+         }
+ 
++        /// <summary>
++        /// Validates the collection encoding supported for a Swagger 2.0 form-data array parameter.
++        /// </summary>
++        /// <param name="parameterName">The parameter wire name.</param>
++        /// <param name="parameterLocation">The parameter location.</param>
++        /// <param name="parameter">The parameter definition.</param>
++        private static void ValidateFormDataArrayParameter(
++            string parameterName,
++            string parameterLocation,
++            JsonObject parameter)
++        {
++            if (!string.Equals(parameterLocation, "formData", StringComparison.Ordinal) ||
++                !string.Equals((string)parameter[SchemaPropertyNames.Type], SchemaTypeNames.Array, StringComparison.Ordinal))
++            {
++                return;
++            }
++
++            if (parameter.TryGetPropertyValue(SchemaPropertyNames.Items, out var itemsNode) &&
++                itemsNode is JsonObject items &&
++                (string.Equals((string)items[SchemaPropertyNames.Type], SchemaTypeNames.File, StringComparison.Ordinal) ||
++                 string.Equals((string)items[SchemaPropertyNames.Format], SchemaFormatNames.Binary, StringComparison.Ordinal)))
++            {
++                throw new NotSupportedException(
++                    message: $"Form-data parameter '{parameterName}' declares an unsupported array of files.");
++            }
++
++            var collectionFormat = (string)parameter[SchemaPropertyNames.CollectionFormat] ?? "csv";
++            if (collectionFormat is not ("csv" or "ssv" or "tsv" or "pipes" or "multi"))
++            {
++                throw new NotSupportedException(
++                    message: $"Form-data parameter '{parameterName}' uses unsupported collection format '{collectionFormat}'.");
++            }
++        }
++
+         /// <inheritdoc />
+         protected override GeneratedClassInfo GenerateMethods(SwaggerContext context, string name, IReadOnlyList<DirectClientMethodInfo> methods, TextWriter writer)
+         {
 diff --git a/src/tools/CodefulSdkGenerator/ManagedConnectorGenerator.cs b/src/tools/CodefulSdkGenerator/ManagedConnectorGenerator.cs
-index 3c4688123bc61111e20b4a7873f6e576212c18b0..73b65ed472ae04f2ef8e12717657ecfa965c2b46 100644
+index 3c4688123bc61111e20b4a7873f6e576212c18b0..565866f6a1bbcd10c5b3b00ed37474e4729f4017 100644
 --- a/src/tools/CodefulSdkGenerator/ManagedConnectorGenerator.cs
 +++ b/src/tools/CodefulSdkGenerator/ManagedConnectorGenerator.cs
 @@ -7,6 +7,7 @@ namespace Microsoft.Azure.Workflows.CodefulSdkGenerator
@@ -659,11 +877,11 @@ index 3c4688123bc61111e20b4a7873f6e576212c18b0..73b65ed472ae04f2ef8e12717657ecfa
 -                    // such operations would emit unusable methods with no way to supply the body.
 -                    if (ManagedConnectorGenerator<TMethod>.HasFormDataParameter(methodDescriptionObject) ||
 -                        ManagedConnectorGenerator<TMethod>.ConsumesOnlyMultipart(methodDescriptionObject, swagger))
-+                    var hasFormDataParameter = ManagedConnectorGenerator<TMethod>.HasFormDataParameter(methodDescriptionObject);
++                    var hasFormDataParameter = ManagedConnectorGenerator<TMethod>.HasFormDataParameter(methodDescriptionObject, swagger);
 +                    var supportsFormDataOperation = this.SupportsMultipartFormData &&
 +                        hasFormDataParameter &&
 +                        ManagedConnectorGenerator<TMethod>.SupportsMultipartFormDataContentType(methodDescriptionObject, swagger);
-+                    var isBodylessOperation = ManagedConnectorGenerator<TMethod>.IsBodylessOperation(method, methodDescriptionObject);
++                    var isBodylessOperation = ManagedConnectorGenerator<TMethod>.IsBodylessOperation(method, methodDescriptionObject, swagger);
 +
 +                    // NOTE(daviburg): Keep unsupported multipart payloads out of generated clients. A bodyless
 +                    // DELETE can still be emitted even when its Swagger carries an irrelevant consumes value.
@@ -674,7 +892,7 @@ index 3c4688123bc61111e20b4a7873f6e576212c18b0..73b65ed472ae04f2ef8e12717657ecfa
                      {
                          Console.WriteLine($"Skipping '{name} / {path} / {method}': consumes multipart content.");
                          continue;
-@@ -173,6 +185,47 @@ namespace Microsoft.Azure.Workflows.CodefulSdkGenerator
+@@ -173,11 +185,69 @@ namespace Microsoft.Azure.Workflows.CodefulSdkGenerator
              return consumes;
          }
  
@@ -700,7 +918,8 @@ index 3c4688123bc61111e20b4a7873f6e576212c18b0..73b65ed472ae04f2ef8e12717657ecfa
 +        /// </summary>
 +        /// <param name="httpMethod">The operation HTTP method.</param>
 +        /// <param name="methodInfo">The JSON object describing the operation.</param>
-+        private static bool IsBodylessOperation(string httpMethod, JsonObject methodInfo)
++        /// <param name="swagger">The root Swagger document.</param>
++        private static bool IsBodylessOperation(string httpMethod, JsonObject methodInfo, JsonObject swagger)
 +        {
 +            if (httpMethod is not ("delete" or "get" or "head" or "options"))
 +            {
@@ -713,17 +932,87 @@ index 3c4688123bc61111e20b4a7873f6e576212c18b0..73b65ed472ae04f2ef8e12717657ecfa
 +                return true;
 +            }
 +
-+            return !parameters.Any(parameterNode =>
-+                parameterNode is JsonObject parameter &&
-+                (parameter.ContainsKey(SchemaPropertyNames.Ref) ||
-+                 (string)parameter[SchemaPropertyNames.In] is "body" or "formData"));
++            foreach (var parameterNode in parameters)
++            {
++                if (parameterNode is not JsonObject parameter)
++                {
++                    continue;
++                }
++
++                if (!ManagedConnectorGenerator<TMethod>.TryResolveParameter(parameter, swagger, out var resolvedParameter))
++                {
++                    return false;
++                }
++
++                if ((string)resolvedParameter[SchemaPropertyNames.In] is "body" or "formData")
++                {
++                    return false;
++                }
++            }
++
++            return true;
 +        }
 +
          /// <summary>
          /// Determines whether an operation declares a Swagger 2.0 <c>formData</c> parameter.
          /// </summary>
+         /// <param name="methodInfo">The JSON object describing the operation.</param>
+-        private static bool HasFormDataParameter(JsonObject methodInfo)
++        /// <param name="swagger">The root Swagger document.</param>
++        private static bool HasFormDataParameter(JsonObject methodInfo, JsonObject swagger)
+         {
+             if (methodInfo == null ||
+                 !methodInfo.TryGetPropertyValue(SchemaPropertyNames.Parameters, out var parametersNode) ||
+@@ -189,7 +259,8 @@ namespace Microsoft.Azure.Workflows.CodefulSdkGenerator
+             foreach (var parameterNode in parameters)
+             {
+                 if (parameterNode is JsonObject parameter &&
+-                    string.Equals((string)parameter[SchemaPropertyNames.In], "formData", StringComparison.Ordinal))
++                    ManagedConnectorGenerator<TMethod>.TryResolveParameter(parameter, swagger, out var resolvedParameter) &&
++                    string.Equals((string)resolvedParameter[SchemaPropertyNames.In], "formData", StringComparison.Ordinal))
+                 {
+                     return true;
+                 }
+@@ -198,6 +269,37 @@ namespace Microsoft.Azure.Workflows.CodefulSdkGenerator
+             return false;
+         }
+ 
++        /// <summary>
++        /// Resolves a shared Swagger parameter reference for multipart classification.
++        /// </summary>
++        /// <param name="parameter">The inline parameter or reference object.</param>
++        /// <param name="swagger">The root Swagger document.</param>
++        /// <param name="resolvedParameter">The resolved parameter when successful.</param>
++        private static bool TryResolveParameter(JsonObject parameter, JsonObject swagger, out JsonObject resolvedParameter)
++        {
++            resolvedParameter = parameter;
++            if (!parameter.TryGetPropertyValue(SchemaPropertyNames.Ref, out var referenceNode))
++            {
++                return true;
++            }
++
++            if (referenceNode is not JsonValue referenceValue ||
++                !referenceValue.TryGetValue<string>(out var referenceString) ||
++                !referenceString.StartsWith(SchemaPropertyNames.ParameterReferencePrefix, StringComparison.Ordinal) ||
++                swagger?.TryGetPropertyValue(SchemaPropertyNames.Parameters, out var sharedParametersNode) != true ||
++                sharedParametersNode is not JsonObject sharedParameters ||
++                !sharedParameters.TryGetPropertyValue(
++                    referenceString.Substring(SchemaPropertyNames.ParameterReferencePrefix.Length),
++                    out var resolvedParameterNode) ||
++                resolvedParameterNode is not JsonObject sharedParameter)
++            {
++                return false;
++            }
++
++            resolvedParameter = sharedParameter;
++            return true;
++        }
++
+         /// <summary>
+         /// Applies generator-family-specific corrections before parsing the Swagger document.
+         /// </summary>
 diff --git a/src/tools/CodefulSdkGenerator/SchemaPropertyNames.cs b/src/tools/CodefulSdkGenerator/SchemaPropertyNames.cs
-index 5697c9b756a342c212d28ae696d9c96934d402fd..654126eeac6f1ed8a7c89e2dfdcca2ed41b481f3 100644
+index 5697c9b756a342c212d28ae696d9c96934d402fd..557801f8ddb8f3897086ec9f0a5416b1ed76a9f9 100644
 --- a/src/tools/CodefulSdkGenerator/SchemaPropertyNames.cs
 +++ b/src/tools/CodefulSdkGenerator/SchemaPropertyNames.cs
 @@ -174,6 +174,11 @@ namespace Microsoft.Azure.Workflows.CodefulSdkGenerator
@@ -738,3 +1027,92 @@ index 5697c9b756a342c212d28ae696d9c96934d402fd..654126eeac6f1ed8a7c89e2dfdcca2ed
          /// <summary>
          /// The swagger 'required' property name.
          /// </summary>
+@@ -189,6 +194,11 @@ namespace Microsoft.Azure.Workflows.CodefulSdkGenerator
+         /// </summary>
+         public const string Parameters = "parameters";
+ 
++        /// <summary>
++        /// The Swagger 2.0 array parameter 'collectionFormat' property name.
++        /// </summary>
++        public const string CollectionFormat = "collectionFormat";
++
+         /// <summary>
+         /// The swagger 'name' property name.
+         /// </summary>
+diff --git a/src/tools/CodefulSdkGenerator/SwaggerRefResolver.cs b/src/tools/CodefulSdkGenerator/SwaggerRefResolver.cs
+index c72af01fed011f1ae2eaa1d1d6ea14efb85f3951..530e9a43a95058ee7fc331730c879175c8806bc4 100644
+--- a/src/tools/CodefulSdkGenerator/SwaggerRefResolver.cs
++++ b/src/tools/CodefulSdkGenerator/SwaggerRefResolver.cs
+@@ -136,5 +136,72 @@ namespace Microsoft.Azure.Workflows.CodefulSdkGenerator
+                 }
+             }
+         }
++
++        /// <summary>
++        /// Recursively collects required property names from direct, referenced, and <c>allOf</c> schemas.
++        /// </summary>
++        /// <param name="schema">The schema whose required property names are collected.</param>
++        /// <param name="document">The root Swagger document containing definitions.</param>
++        /// <param name="target">The target set receiving required property names.</param>
++        /// <param name="visitedDefinitions">The definitions already visited while resolving references.</param>
++        public static void CollectRequiredProperties(
++            JsonObject schema,
++            JsonObject document,
++            HashSet<string> target,
++            HashSet<string> visitedDefinitions = null)
++        {
++            visitedDefinitions ??= new HashSet<string>(StringComparer.Ordinal);
++
++            if (schema.TryGetPropertyValue(SchemaPropertyNames.Ref, out var referenceNode) &&
++                referenceNode is JsonValue reference &&
++                reference.TryGetValue<string>(out var referenceValue) &&
++                referenceValue.StartsWith(SchemaPropertyNames.DefinitionsRefPrefix, StringComparison.Ordinal) &&
++                document?.TryGetPropertyValue(SchemaPropertyNames.Definitions, out var definitionsNode) == true &&
++                definitionsNode is JsonObject definitions)
++            {
++                var definitionName = referenceValue.Substring(SchemaPropertyNames.DefinitionsRefPrefix.Length);
++                if (visitedDefinitions.Add(definitionName) &&
++                    definitions.TryGetPropertyValue(definitionName, out var definitionSchemaNode) &&
++                    definitionSchemaNode is JsonObject definitionSchema)
++                {
++                    SwaggerRefResolver.CollectRequiredProperties(
++                        definitionSchema,
++                        document,
++                        target,
++                        visitedDefinitions);
++                }
++
++                return;
++            }
++
++            if (schema.TryGetPropertyValue(SchemaPropertyNames.AllOf, out var allOfNode) &&
++                allOfNode is JsonArray allOf)
++            {
++                foreach (var memberNode in allOf)
++                {
++                    if (memberNode is JsonObject member)
++                    {
++                        SwaggerRefResolver.CollectRequiredProperties(
++                            member,
++                            document,
++                            target,
++                            visitedDefinitions);
++                    }
++                }
++            }
++
++            if (schema.TryGetPropertyValue(SchemaPropertyNames.Required, out var requiredNode) &&
++                requiredNode is JsonArray required)
++            {
++                foreach (var propertyNode in required)
++                {
++                    if (propertyNode is JsonValue propertyValue &&
++                        propertyValue.TryGetValue<string>(out var propertyName))
++                    {
++                        target.Add(propertyName);
++                    }
++                }
++            }
++        }
+     }
+ }
