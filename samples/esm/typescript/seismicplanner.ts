@@ -1,7 +1,7 @@
 // Copyright (c) Microsoft Corporation.  All rights reserved.
 
 /** Seismic Planner Connector SDK Sample - ESM TypeScript. */
-import { ConnectorException, ManagedIdentityTokenProvider } from "@azure/connectors";
+import { ConnectorError, ManagedIdentityTokenProvider } from "@azure/connectors";
 import { SeismicplannerClient } from "@azure/connectors/generated/SeismicplannerExtensions";
 
 const CONNECTION_URL = process.env.SEISMICPLANNER_CONNECTION_URL ?? "";
@@ -11,10 +11,10 @@ if (!CONNECTION_URL || !SPACE_ID || !NODE_ID) throw new Error("SEISMICPLANNER_CO
 
 async function main(): Promise<void> {
     try {
-        const comments = await new SeismicplannerClient(CONNECTION_URL, new ManagedIdentityTokenProvider()).getCommentsAsync(SPACE_ID, NODE_ID);
+        const comments = await new SeismicplannerClient(CONNECTION_URL, new ManagedIdentityTokenProvider()).getComments(SPACE_ID, NODE_ID);
         console.log("Comments:", JSON.stringify(comments, null, 2));
     } catch (error) {
-        if (error instanceof ConnectorException) console.error(`Connector error (${error.statusCode}): ${error.message}`);
+        if (error instanceof ConnectorError) console.error(`Connector error (${error.statusCode}): ${error.message}`);
         else throw error;
     }
 }

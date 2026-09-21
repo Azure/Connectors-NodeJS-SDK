@@ -8,7 +8,7 @@ import {
     PostMessageRequest,
     PostMessageResponse,
 } from "../src/generated/SlackExtensions.ts";
-import { ConnectorException } from "../src/azureConnectors/connectorException.ts";
+import { ConnectorError } from "../src/azureConnectors/connectorError.ts";
 import { ConnectorNames } from "../src/generated/connectorNames.ts";
 import { availableConnectors } from "../src/generated/ManagedConnectors.ts";
 
@@ -46,7 +46,7 @@ describe("SlackClient — constructor", () => {
     });
 });
 
-describe("SlackClient — listChannelsAsync", () => {
+describe("SlackClient — listChannels", () => {
     afterEach(() => {
         jest.restoreAllMocks();
     });
@@ -56,7 +56,7 @@ describe("SlackClient — listChannelsAsync", () => {
         mockFetchResponse(mockResponse);
 
         const client = new SlackClient(TestConnectionUrl, createMockCredential());
-        const result = await client.listChannelsAsync().byPage().next();
+        const result = await client.listChannels().byPage().next();
 
         expect(result.value).toEqual(mockResponse.value);
         const [url, init] = (global.fetch as jest.Mock).mock.calls[0];
@@ -64,15 +64,15 @@ describe("SlackClient — listChannelsAsync", () => {
         expect(init.method).toBe("GET");
     });
 
-    it("should throw ConnectorException on non-OK response", async () => {
+    it("should throw ConnectorError on non-OK response", async () => {
         mockFetchError(429, '{"error":"rate_limited"}');
 
         const client = new SlackClient(TestConnectionUrl, createMockCredential());
-        await expect(client.listChannelsAsync().byPage().next()).rejects.toThrow(ConnectorException);
+        await expect(client.listChannels().byPage().next()).rejects.toThrow(ConnectorError);
     });
 });
 
-describe("SlackClient — joinChannelAsync", () => {
+describe("SlackClient — joinChannel", () => {
     afterEach(() => {
         jest.restoreAllMocks();
     });
@@ -85,7 +85,7 @@ describe("SlackClient — joinChannelAsync", () => {
         mockFetchResponse(mockResponse);
 
         const client = new SlackClient(TestConnectionUrl, createMockCredential());
-        const result = await client.joinChannelAsync("C123");
+        const result = await client.joinChannel({ channel: "C123" });
 
         expect(result.warning).toBe("already_in_channel");
         const [url, init] = (global.fetch as jest.Mock).mock.calls[0];
@@ -94,7 +94,7 @@ describe("SlackClient — joinChannelAsync", () => {
     });
 });
 
-describe("SlackClient — postMessageAsync", () => {
+describe("SlackClient — postMessage", () => {
     afterEach(() => {
         jest.restoreAllMocks();
     });
@@ -108,7 +108,7 @@ describe("SlackClient — postMessageAsync", () => {
         mockFetchResponse(mockResponse);
 
         const client = new SlackClient(TestConnectionUrl, createMockCredential());
-        const result = await client.postMessageAsync(input);
+        const result = await client.postMessage(input);
 
         expect(result).toEqual(mockResponse);
         const [url, init] = (global.fetch as jest.Mock).mock.calls[0];

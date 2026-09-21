@@ -38,7 +38,7 @@ Azure provides a rich ecosystem of [managed connectors](https://learn.microsoft.
 │  Your Azure Function / Node.js App  │
 │                                     │
 │  const client = new Office365Client │
-│  await client.sendEmailAsync(...)   │
+│  await client.sendEmail(...)   │
 └──────────────┬──────────────────────┘
                │
                ▼
@@ -76,7 +76,7 @@ npm install @azure/connectors
 
 ```typescript
 import { ManagedIdentityCredential } from "@azure/identity";
-import { ConnectorException } from "@azure/connectors";
+import { ConnectorError } from "@azure/connectors";
 import { Office365Client, SendEmailInput } from "@azure/connectors/generated/Office365Extensions";
 
 async function sendEmailExample(): Promise<void> {
@@ -95,7 +95,7 @@ async function sendEmailExample(): Promise<void> {
         Body: "<p>This email was sent using the Azure Connectors Node.js SDK!</p>",
     };
 
-    await client.sendEmailAsync(email);
+    await client.sendEmail(email);
     console.log("Email sent successfully!");
 }
 
@@ -106,7 +106,7 @@ sendEmailExample().catch(console.error);
 
 ```javascript
 import { ManagedIdentityCredential } from "@azure/identity";
-import { ConnectorException } from "@azure/connectors";
+import { ConnectorError } from "@azure/connectors";
 import { Office365Client } from "@azure/connectors/generated/Office365Extensions";
 
 async function sendEmailExample() {
@@ -114,7 +114,7 @@ async function sendEmailExample() {
     const credential = new ManagedIdentityCredential();
     const client = new Office365Client(connectionUrl, credential);
 
-    await client.sendEmailAsync({
+    await client.sendEmail({
         To: "recipient@example.com",
         Subject: "Hello from Node.js SDK",
         Body: "<p>This email was sent using the Azure Connectors Node.js SDK!</p>",
@@ -130,19 +130,17 @@ sendEmailExample().catch(console.error);
 
 ```typescript
 import { ManagedIdentityCredential } from "@azure/identity";
-import { SharepointonlineClient, ItemsList } from "@azure/connectors/generated/SharepointonlineExtensions";
+import { SharepointonlineClient } from "@azure/connectors/generated/SharepointonlineExtensions";
 
 async function listSharePointItems(): Promise<void> {
     const connectionUrl = "https://example.azure.com/connections/sharepointonline";
     const credential = new ManagedIdentityCredential();
     const client = new SharepointonlineClient(connectionUrl, credential);
 
-    const items: ItemsList = await client.getItemsAsync(
+    for await (const item of client.getItems(
         "https://contoso.sharepoint.com/sites/MySite",
         "MyList",
-    );
-
-    for (const item of (items.value ?? []) as Array<Record<string, unknown>>) {
+    )) {
         console.log(`Item: ${item.Title}`);
     }
 }
@@ -161,12 +159,10 @@ async function listSharePointItems() {
     const credential = new ManagedIdentityCredential();
     const client = new SharepointonlineClient(connectionUrl, credential);
 
-    const items = await client.getItemsAsync(
+    for await (const item of client.getItems(
         "https://contoso.sharepoint.com/sites/MySite",
         "MyList",
-    );
-
-    for (const item of items.value ?? []) {
+    )) {
         console.log(`Item: ${item.Title}`);
     }
 }
@@ -185,13 +181,34 @@ import { ArmClient } from "@azure/connectors/generated/ArmExtensions";
 const connectionUrl = "https://example.azure.com/connections/arm";
 const client = new ArmClient(connectionUrl, new ManagedIdentityCredential());
 
-for await (const subscription of client.subscriptionsListAsync()) {
+for await (const subscription of client.listSubscriptions()) {
     console.log(subscription.displayName);
 }
 
-for await (const page of client.subscriptionsListAsync().byPage()) {
+for await (const page of client.listSubscriptions().byPage()) {
     console.log(`Received ${page.length} subscriptions`);
 }
+```
+
+### TypeScript — Inspect complete responses
+
+Every generated operation accepts an `onResponse` callback through its options. The
+callback exposes the complete status, headers, and raw body while the method keeps its
+typed return value. HTTP failures also provide the resulting `ConnectorError` as the
+third callback argument.
+
+```typescript
+const subscription = await client.getSubscription(
+    "subscription-id",
+    "2016-06-01",
+    {
+        onResponse: (rawResponse, parsedResponse, error) => {
+            console.log(rawResponse.status);
+            console.log(rawResponse.headers.toJSON());
+            console.log(rawResponse.bodyAsText);
+        },
+    },
+);
 ```
 
 ### TypeScript — Post a Teams message
@@ -205,7 +222,7 @@ async function postTeamsMessage(): Promise<void> {
     const credential = new ManagedIdentityCredential();
     const client = new TeamsClient(connectionUrl, credential);
 
-    await client.postMessageToConversationAsync(
+    await client.postMessageToConversation(
         "team-group-id",
         "19:channel-id",
         {
@@ -233,7 +250,7 @@ async function postTeamsMessage() {
     const credential = new ManagedIdentityCredential();
     const client = new TeamsClient(connectionUrl, credential);
 
-    await client.postMessageToConversationAsync("team-group-id", "19:channel-id", {
+    await client.postMessageToConversation("team-group-id", "19:channel-id", {
         body: {
             content: "Hello from Node.js!",
             contentType: "text",
@@ -417,17 +434,30 @@ For testing or a custom host transport, set `httpClient` to an implementation
 of `HttpClient` from `@azure/core-rest-pipeline`. Authentication, retries,
 request correlation, tracing, and logging remain pipeline policies.
 
+## Logging
+
+Connector requests, responses, retries, and terminal errors use the standard
+`azure:connectors` logger. Logging is disabled by default; enable it with an
+Azure SDK log level:
+
+```powershell
+$env:AZURE_LOG_LEVEL = "info"
+```
+
+Request URLs are logged without query strings so credentials and signed query
+parameters are not written to diagnostics.
+
 ## Error Handling
 
-All connector errors are thrown as `ConnectorException` with structured details:
+All connector errors are thrown as `ConnectorError` with structured details:
 
 ```typescript
-import { ConnectorException } from "@azure/connectors";
+import { ConnectorError } from "@azure/connectors";
 
 try {
-    await client.sendEmailAsync(email);
+    await client.sendEmail(email);
 } catch (error) {
-    if (error instanceof ConnectorException) {
+    if (error instanceof ConnectorError) {
         console.error(`Operation: '${error.message}'.`);
         console.error(`Status code: '${error.statusCode}'.`);
         console.error(`Response: '${error.responseBody}'.`);
@@ -438,12 +468,12 @@ try {
 ```
 
 ```javascript
-import { ConnectorException } from "@azure/connectors";
+import { ConnectorError } from "@azure/connectors";
 
 try {
-    await client.sendEmailAsync(email);
+    await client.sendEmail(email);
 } catch (error) {
-    if (error instanceof ConnectorException) {
+    if (error instanceof ConnectorError) {
         console.error(`Operation: '${error.message}'.`);
         console.error(`Status code: '${error.statusCode}'.`);
         console.error(`Response: '${error.responseBody}'.`);
@@ -462,7 +492,7 @@ try {
 │   ├── clientBase.ts               # Base connector client
 │   ├── connectorHttpClient.ts      # Azure Core HTTP pipeline
 │   ├── options.ts                  # Configuration options
-│   ├── connectorException.ts       # Exception types
+│   ├── connectorError.ts            # Connector error type
 │   └── triggerPayload.ts           # Trigger callback types
 ├── src/generated/                  # Auto-generated connector clients
 │   ├── ArmExtensions.ts           # Azure Resource Manager client

@@ -15,7 +15,7 @@
 
 "use strict";
 
-const { ManagedIdentityTokenProvider, ConnectorException } = require("@azure/connectors");
+const { ManagedIdentityTokenProvider, ConnectorError } = require("@azure/connectors");
 const { FreshserviceClient } = require("@azure/connectors/generated/FreshserviceExtensions");
 
 const CONNECTION_URL = process.env.FRESHSERVICE_CONNECTION_URL ?? "";
@@ -31,7 +31,7 @@ async function main() {
 
     // Example 1: Create a support ticket.
     try {
-        const ticket = await client.createTicketAsync({
+        const ticket = await client.createTicket({
             email: "requester@example.com",
             subject: "Cannot access email",
             status: "Open",
@@ -40,7 +40,7 @@ async function main() {
         });
         console.log("Ticket:", JSON.stringify(ticket, null, 2));
     } catch (error) {
-        if (error instanceof ConnectorException) {
+        if (error instanceof ConnectorError) {
             console.log(`Connector error (${error.statusCode}): ${error.message}`);
         } else {
             throw error;

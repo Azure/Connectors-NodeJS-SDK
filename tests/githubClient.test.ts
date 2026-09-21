@@ -6,7 +6,7 @@ import {
     RepositoryDetails,
     GeneralAPIModel,
 } from "../src/generated/GithubExtensions.ts";
-import { ConnectorException } from "../src/azureConnectors/connectorException.ts";
+import { ConnectorError } from "../src/azureConnectors/connectorError.ts";
 import { ConnectorNames } from "../src/generated/connectorNames.ts";
 import { availableConnectors } from "../src/generated/ManagedConnectors.ts";
 
@@ -44,7 +44,7 @@ describe("GithubClient — constructor", () => {
     });
 });
 
-describe("GithubClient — getRepositoryByIdAsync", () => {
+describe("GithubClient — getRepositoryById", () => {
     afterEach(() => {
         jest.restoreAllMocks();
     });
@@ -54,7 +54,7 @@ describe("GithubClient — getRepositoryByIdAsync", () => {
         mockFetchResponse(mockResponse);
 
         const client = new GithubClient(TestConnectionUrl, createMockCredential());
-        const result = await client.getRepositoryByIdAsync("123");
+        const result = await client.getRepositoryById(123, "application/vnd.github+json");
 
         expect(result).toEqual(mockResponse);
         const [url, init] = (global.fetch as jest.Mock).mock.calls[0];
@@ -62,15 +62,16 @@ describe("GithubClient — getRepositoryByIdAsync", () => {
         expect(init.method).toBe("GET");
     });
 
-    it("should throw ConnectorException on non-OK response", async () => {
+    it("should throw ConnectorError on non-OK response", async () => {
         mockFetchError(404, '{"error":"NotFound"}');
 
         const client = new GithubClient(TestConnectionUrl, createMockCredential());
-        await expect(client.getRepositoryByIdAsync("123")).rejects.toThrow(ConnectorException);
+        await expect(client.getRepositoryById(123, "application/vnd.github+json"))
+            .rejects.toThrow(ConnectorError);
     });
 });
 
-describe("GithubClient — getPullRequestsAsync", () => {
+describe("GithubClient — getPullRequests", () => {
     afterEach(() => {
         jest.restoreAllMocks();
     });
@@ -80,7 +81,7 @@ describe("GithubClient — getPullRequestsAsync", () => {
         mockFetchResponse(mockResponse);
 
         const client = new GithubClient(TestConnectionUrl, createMockCredential());
-        await client.getPullRequestsAsync("owner", "repo", "open");
+        await client.getPullRequests("owner", "repo", { state: "open" });
 
         const [url] = (global.fetch as jest.Mock).mock.calls[0];
         expect(url).toContain("/repos/owner/repo/pulls");

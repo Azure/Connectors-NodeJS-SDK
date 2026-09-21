@@ -2,7 +2,7 @@
 
 import type { TokenCredential } from "@azure/core-auth";
 import { SigninghubClient } from "../src/generated/SigninghubExtensions.ts";
-import { ConnectorException } from "../src/azureConnectors/connectorException.ts";
+import { ConnectorError } from "../src/azureConnectors/connectorError.ts";
 import { ConnectorNames } from "../src/generated/connectorNames.ts";
 import { availableConnectors } from "../src/generated/ManagedConnectors.ts";
 
@@ -58,7 +58,7 @@ describe("SigninghubClient — constructor", () => {
     });
 });
 
-describe("SigninghubClient — attachmentDownloadAttachmentAsync", () => {
+describe("SigninghubClient — downloadAttachmentAttachment", () => {
     afterEach(() => {
         jest.restoreAllMocks();
     });
@@ -68,7 +68,13 @@ describe("SigninghubClient — attachmentDownloadAttachmentAsync", () => {
         mockFetchResponse(attachment);
 
         const client = new SigninghubClient(TestConnectionUrl, createMockCredential());
-        const result = await client.attachmentDownloadAttachmentAsync("123", "456", "789");
+        const result = await client.downloadAttachmentAttachment(
+            123,
+            456,
+            789,
+            "application/json",
+            "application/pdf",
+        );
 
         expect(result).toEqual(attachment);
         expect(global.fetch).toHaveBeenCalledTimes(1);
@@ -77,16 +83,22 @@ describe("SigninghubClient — attachmentDownloadAttachmentAsync", () => {
         expect(init.headers["Authorization"]).toBe("Bearer mock-bearer-token");
     });
 
-    it("should throw ConnectorException on non-OK response", async () => {
+    it("should throw ConnectorError on non-OK response", async () => {
         mockFetchError(404, "Not Found");
 
         const client = new SigninghubClient(TestConnectionUrl, createMockCredential());
         try {
-            await client.attachmentDownloadAttachmentAsync("123", "456", "789");
-            throw new Error("Expected ConnectorException to be thrown.");
+            await client.downloadAttachmentAttachment(
+                123,
+                456,
+                789,
+                "application/json",
+                "application/pdf",
+            );
+            throw new Error("Expected ConnectorError to be thrown.");
         } catch (error) {
-            expect(error).toBeInstanceOf(ConnectorException);
-            const connectorError = error as ConnectorException;
+            expect(error).toBeInstanceOf(ConnectorError);
+            const connectorError = error as ConnectorError;
             expect(connectorError.statusCode).toBe(404);
             expect(connectorError.responseBody).toBe("Not Found");
         }

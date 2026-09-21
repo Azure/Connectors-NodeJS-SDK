@@ -22,7 +22,7 @@
 
 "use strict";
 
-const { ManagedIdentityTokenProvider, ConnectorException } = require("@azure/connectors");
+const { ManagedIdentityTokenProvider, ConnectorError } = require("@azure/connectors");
 const { MqClient } = require("@azure/connectors/generated/MqExtensions");
 
 const CONNECTION_URL = process.env.MQ_CONNECTION_URL ?? "";
@@ -44,7 +44,7 @@ async function main() {
     console.log("\n--- Send Message ---");
     let sentMessageId;
     try {
-        const sendResult = await client.sendAsync({
+        const sendResult = await client.send({
             Queue: QUEUE_NAME,
             Message: `Hello from SDK sample! (${new Date().toISOString()})`,
         });
@@ -53,7 +53,7 @@ async function main() {
         console.log(`  MessageId: ${sentMessageId ?? "unknown"}`);
         console.log(`  CorrelationId: ${sendResult.CorrelationId ?? "none"}`);
     } catch (error) {
-        if (error instanceof ConnectorException) {
+        if (error instanceof ConnectorError) {
             console.log(`Connector error (${error.statusCode}): ${error.message}`);
         } else {
             throw error;
@@ -67,12 +67,12 @@ async function main() {
             Queue: QUEUE_NAME,
             Timeout: "5",
         };
-        const message = await client.readAsync(readOptions);
+        const message = await client.read(readOptions);
         console.log(`Message read successfully:`);
         console.log(`  MessageId: ${message.MessageId ?? "unknown"}`);
         console.log(`  Data: ${message.MessageData ?? "empty"}`);
     } catch (error) {
-        if (error instanceof ConnectorException) {
+        if (error instanceof ConnectorError) {
             console.log(`Connector error (${error.statusCode}): ${error.message}`);
         } else {
             throw error;
@@ -87,14 +87,14 @@ async function main() {
             BatchSize: 5,
             Timeout: "5",
         };
-        const messages = await client.receiveAllAsync(receiveOptions);
+        const messages = await client.receiveAll(receiveOptions);
         const messageList = messages.value ?? [];
         console.log(`Received ${messageList.length} messages:`);
         for (const msg of messageList.slice(0, 5)) {
             console.log(`  - [${msg.MessageId}] ${msg.MessageData ?? "empty"}`);
         }
     } catch (error) {
-        if (error instanceof ConnectorException) {
+        if (error instanceof ConnectorError) {
             console.log(`Connector error (${error.statusCode}): ${error.message}`);
         } else {
             throw error;

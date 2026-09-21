@@ -14,7 +14,7 @@
  *     npm start
  */
 
-import { ManagedIdentityTokenProvider, ConnectorException } from "@azure/connectors";
+import { ManagedIdentityTokenProvider, ConnectorError } from "@azure/connectors";
 import { SendgridClient } from "@azure/connectors/generated/SendgridExtensions";
 
 const CONNECTION_URL = process.env.SENDGRID_CONNECTION_URL ?? "";
@@ -31,10 +31,10 @@ async function main() {
     // Example 1: Look up a global suppression by email address.
     const email = process.env.SENDGRID_EMAIL ?? "user@example.com";
     try {
-        const suppression = await client.getGlobalSuppressionAsync(email);
+        const suppression = await client.getGlobalSuppression(email);
         console.log("Global suppression:", JSON.stringify(suppression, null, 2));
     } catch (error) {
-        if (error instanceof ConnectorException) {
+        if (error instanceof ConnectorError) {
             console.log(`Connector error (${error.statusCode}): ${error.message}`);
         } else {
             throw error;

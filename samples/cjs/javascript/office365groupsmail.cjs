@@ -16,7 +16,7 @@
 
 "use strict";
 
-const { ManagedIdentityTokenProvider, ConnectorException } = require("@azure/connectors");
+const { ManagedIdentityTokenProvider, ConnectorError } = require("@azure/connectors");
 const { Office365groupsmailClient } = require("@azure/connectors/generated/Office365groupsmailExtensions");
 
 const CONNECTION_URL = process.env.OFFICE365GROUPSMAIL_CONNECTION_URL ?? "";
@@ -38,10 +38,10 @@ async function main() {
 
     // Example: List conversations in a group's mailbox.
     try {
-        const conversations = await client.listConversationsAsync(groupId);
+        const conversations = await client.listConversations(groupId);
         console.log("Conversations:", JSON.stringify(conversations, null, 2));
     } catch (error) {
-        if (error instanceof ConnectorException) {
+        if (error instanceof ConnectorError) {
             console.log(`Connector error (${error.statusCode}): ${error.message}`);
             return;
         }

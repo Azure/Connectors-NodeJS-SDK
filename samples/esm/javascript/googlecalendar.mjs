@@ -13,7 +13,7 @@
  *     npm start
  */
 
-import { ManagedIdentityTokenProvider, ConnectorException } from "@azure/connectors";
+import { ManagedIdentityTokenProvider, ConnectorError } from "@azure/connectors";
 import { GooglecalendarClient } from "@azure/connectors/generated/GooglecalendarExtensions";
 
 const CONNECTION_URL = process.env.GOOGLECALENDAR_CONNECTION_URL ?? "";
@@ -29,10 +29,10 @@ async function main() {
 
     // Example: List the calendars available to the connection.
     try {
-        const calendars = await client.listCalendarsAsync();
+        const calendars = await client.listCalendars();
         console.log("Calendars:", JSON.stringify(calendars, null, 2));
     } catch (error) {
-        if (error instanceof ConnectorException) {
+        if (error instanceof ConnectorError) {
             console.log(`Connector error (${error.statusCode}): ${error.message}`);
             return;
         }

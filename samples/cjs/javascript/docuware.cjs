@@ -15,7 +15,7 @@
 
 "use strict";
 
-const { ManagedIdentityTokenProvider, ConnectorException } = require("@azure/connectors");
+const { ManagedIdentityTokenProvider, ConnectorError } = require("@azure/connectors");
 const { DocuwareClient } = require("@azure/connectors/generated/DocuwareExtensions");
 
 const CONNECTION_URL = process.env.DOCUWARE_CONNECTION_URL ?? "";
@@ -31,10 +31,10 @@ async function main() {
 
     // Example 1: Retrieve the organization details.
     try {
-        const organization = await client.getOrganizationAsync();
+        const organization = await client.getOrganization();
         console.log("Organization:", JSON.stringify(organization, null, 2));
     } catch (error) {
-        if (error instanceof ConnectorException) {
+        if (error instanceof ConnectorError) {
             console.log(`Connector error (${error.statusCode}): ${error.message}`);
         } else {
             throw error;

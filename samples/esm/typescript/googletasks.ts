@@ -13,7 +13,7 @@
  *     npx tsx googletasks.ts
  */
 
-import { ManagedIdentityTokenProvider, ConnectorException } from "@azure/connectors";
+import { ManagedIdentityTokenProvider, ConnectorError } from "@azure/connectors";
 import { GoogletasksClient } from "@azure/connectors/generated/GoogletasksExtensions";
 
 const CONNECTION_URL = process.env.GOOGLETASKS_CONNECTION_URL ?? "";
@@ -29,18 +29,18 @@ async function main(): Promise<void> {
 
     // Example: List the task lists, then the tasks in the first one.
     try {
-        const taskLists = await client.listTaskListsAsync();
+        const taskLists = await client.listTaskLists();
         console.log("Task lists:", JSON.stringify(taskLists, null, 2));
 
         const taskListId = process.env.GOOGLETASKS_TASK_LIST_ID;
         if (taskListId) {
-            const tasks = await client.listTasksAsync(taskListId);
+            const tasks = await client.listTasks(taskListId);
             console.log("Tasks:", JSON.stringify(tasks, null, 2));
         } else {
             console.log("Set GOOGLETASKS_TASK_LIST_ID to list tasks in a specific list.");
         }
     } catch (error) {
-        if (error instanceof ConnectorException) {
+        if (error instanceof ConnectorError) {
             console.log(`Connector error (${error.statusCode}): ${error.message}`);
             return;
         }

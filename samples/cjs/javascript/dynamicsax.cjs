@@ -16,7 +16,7 @@
 
 "use strict";
 
-const { ManagedIdentityTokenProvider, ConnectorException } = require("@azure/connectors");
+const { ManagedIdentityTokenProvider, ConnectorError } = require("@azure/connectors");
 const { DynamicsaxClient } = require("@azure/connectors/generated/DynamicsaxExtensions");
 
 const CONNECTION_URL = process.env.DYNAMICSAX_CONNECTION_URL ?? "";
@@ -33,10 +33,10 @@ async function main() {
     // Example 1: List items from a table in the default dataset.
     const table = process.env.DYNAMICSAX_TABLE ?? "Customers";
     try {
-        const items = await client.getItemsAsync("default", table);
+        const items = await client.getItems("default", table);
         console.log("Items:", JSON.stringify(items, null, 2));
     } catch (error) {
-        if (error instanceof ConnectorException) {
+        if (error instanceof ConnectorError) {
             console.log(`Connector error (${error.statusCode}): ${error.message}`);
         } else {
             throw error;

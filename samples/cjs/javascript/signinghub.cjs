@@ -18,7 +18,7 @@
 
 "use strict";
 
-const { ManagedIdentityTokenProvider, ConnectorException } = require("@azure/connectors");
+const { ManagedIdentityTokenProvider, ConnectorError } = require("@azure/connectors");
 const { SigninghubClient } = require("@azure/connectors/generated/SigninghubExtensions");
 
 const CONNECTION_URL = process.env.SIGNINGHUB_CONNECTION_URL ?? "";
@@ -52,10 +52,16 @@ async function main() {
 
     // Example 1: Download a document attachment.
     try {
-        const attachment = await client.attachmentDownloadAttachmentAsync(PACKAGE_ID, DOCUMENT_ID, ATTACHMENT_ID);
+        const attachment = await client.downloadAttachmentAttachment(
+            Number(PACKAGE_ID),
+            Number(DOCUMENT_ID),
+            Number(ATTACHMENT_ID),
+            "application/json",
+            "application/octet-stream",
+        );
         console.log("Attachment:", JSON.stringify(attachment, null, 2));
     } catch (error) {
-        if (error instanceof ConnectorException) {
+        if (error instanceof ConnectorError) {
             console.log(`Connector error (${error.statusCode}): ${error.message}`);
         } else {
             throw error;

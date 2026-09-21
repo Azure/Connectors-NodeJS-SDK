@@ -2,7 +2,7 @@
 
 import type { TokenCredential } from "@azure/core-auth";
 import { MondayClient } from "../src/generated/MondayExtensions.ts";
-import { ConnectorException } from "../src/azureConnectors/connectorException.ts";
+import { ConnectorError } from "../src/azureConnectors/connectorError.ts";
 import { ConnectorNames } from "../src/generated/connectorNames.ts";
 import { availableConnectors } from "../src/generated/ManagedConnectors.ts";
 
@@ -58,7 +58,7 @@ describe("MondayClient — constructor", () => {
     });
 });
 
-describe("MondayClient — createItemAsync", () => {
+describe("MondayClient — createItem", () => {
     afterEach(() => {
         jest.restoreAllMocks();
     });
@@ -68,7 +68,7 @@ describe("MondayClient — createItemAsync", () => {
         mockFetchResponse(response);
 
         const client = new MondayClient(TestConnectionUrl, createMockCredential());
-        const result = await client.createItemAsync({
+        const result = await client.createItem({
             workspaceId: "ws123",
             boardId: "board123",
             groupId: "group123",
@@ -82,21 +82,21 @@ describe("MondayClient — createItemAsync", () => {
         expect(init.headers["Authorization"]).toBe("Bearer mock-bearer-token");
     });
 
-    it("should throw ConnectorException on non-OK response", async () => {
+    it("should throw ConnectorError on non-OK response", async () => {
         mockFetchError(400, "Bad Request");
 
         const client = new MondayClient(TestConnectionUrl, createMockCredential());
         try {
-            await client.createItemAsync({
+            await client.createItem({
                 workspaceId: "ws123",
                 boardId: "board123",
                 groupId: "group123",
                 itemName: "New item",
             });
-            throw new Error("Expected ConnectorException to be thrown.");
+            throw new Error("Expected ConnectorError to be thrown.");
         } catch (error) {
-            expect(error).toBeInstanceOf(ConnectorException);
-            const connectorError = error as ConnectorException;
+            expect(error).toBeInstanceOf(ConnectorError);
+            const connectorError = error as ConnectorError;
             expect(connectorError.statusCode).toBe(400);
             expect(connectorError.responseBody).toBe("Bad Request");
         }

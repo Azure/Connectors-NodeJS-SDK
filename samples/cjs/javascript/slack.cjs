@@ -6,7 +6,7 @@
 
 "use strict";
 
-const { ManagedIdentityTokenProvider, ConnectorException } = require("@azure/connectors");
+const { ManagedIdentityTokenProvider, ConnectorError } = require("@azure/connectors");
 const { SlackClient } = require("@azure/connectors/generated/SlackExtensions");
 
 const CONNECTION_URL = process.env.SLACK_CONNECTION_URL ?? "";
@@ -22,14 +22,14 @@ async function main() {
 
     try {
         let channelCount = 0;
-        for await (const channel of client.listChannelsAsync()) {
+        for await (const channel of client.listChannels()) {
             console.log(`  - ${channel.name ?? channel.id ?? "Unknown"}`);
             channelCount++;
         }
 
         console.log(`Channels returned: ${channelCount}`);
     } catch (error) {
-        if (error instanceof ConnectorException) {
+        if (error instanceof ConnectorError) {
             console.log(`Connector error (${error.statusCode}): ${error.message}`);
             return;
         }

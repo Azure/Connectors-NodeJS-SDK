@@ -1,7 +1,7 @@
 // Copyright (c) Microsoft Corporation.  All rights reserved.
 
 /** Starmind Connector SDK Sample - ESM TypeScript. */
-import { ConnectorException, ManagedIdentityTokenProvider } from "@azure/connectors";
+import { ConnectorError, ManagedIdentityTokenProvider } from "@azure/connectors";
 import { StarmindClient } from "@azure/connectors/generated/StarmindExtensions";
 
 const CONNECTION_URL = process.env.STARMIND_CONNECTION_URL ?? "";
@@ -9,10 +9,12 @@ if (!CONNECTION_URL) throw new Error("STARMIND_CONNECTION_URL is required.");
 
 async function main(): Promise<void> {
     try {
-        const questions = await new StarmindClient(CONNECTION_URL, new ManagedIdentityTokenProvider()).findQuestionsAsync(process.env.STARMIND_QUERY);
+        const questions = await new StarmindClient(CONNECTION_URL, new ManagedIdentityTokenProvider()).findQuestions({
+            query: process.env.STARMIND_QUERY,
+        });
         console.log("Questions:", JSON.stringify(questions, null, 2));
     } catch (error) {
-        if (error instanceof ConnectorException) console.error(`Connector error (${error.statusCode}): ${error.message}`);
+        if (error instanceof ConnectorError) console.error(`Connector error (${error.statusCode}): ${error.message}`);
         else throw error;
     }
 }

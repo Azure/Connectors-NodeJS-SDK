@@ -14,7 +14,7 @@
  *     npx tsx rss.ts
  */
 
-import { ManagedIdentityTokenProvider, ConnectorException } from "@azure/connectors";
+import { ManagedIdentityTokenProvider, ConnectorError } from "@azure/connectors";
 import { RssClient } from "@azure/connectors/generated/RssExtensions";
 
 const CONNECTION_URL = process.env.RSS_CONNECTION_URL ?? "";
@@ -32,10 +32,14 @@ async function main(): Promise<void> {
 
     // Example: List the items in an RSS feed.
     try {
-        const items = await client.listFeedItemsAsync(feedUrl);
-        console.log(`Found ${items.length} feed item(s) from ${feedUrl}.`);
+        let itemCount = 0;
+        for await (const _item of client.listFeedItems(feedUrl)) {
+            itemCount++;
+        }
+
+        console.log(`Found ${itemCount} feed item(s) from ${feedUrl}.`);
     } catch (error) {
-        if (error instanceof ConnectorException) {
+        if (error instanceof ConnectorError) {
             console.log(`Connector error (${error.statusCode}): ${error.message}`);
             return;
         }

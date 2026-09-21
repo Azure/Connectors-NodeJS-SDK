@@ -8,8 +8,9 @@ describe("azureConnectors index exports", () => {
         expect(sdk.DefaultConnectorClientOptions).toBeDefined();
         expect(sdk.ManagedIdentityTokenProvider).toBeDefined();
         expect(sdk.ConnectionStringTokenProvider).toBeDefined();
-        expect(sdk.ConnectorException).toBeDefined();
+        expect(sdk.ConnectorError).toBeDefined();
         expect(sdk.ConnectorHttpClient).toBeDefined();
+        expect(sdk.logger).toBeDefined();
     });
 
     it("should include expected runtime export keys", () => {
@@ -19,8 +20,9 @@ describe("azureConnectors index exports", () => {
                 "DefaultConnectorClientOptions",
                 "ManagedIdentityTokenProvider",
                 "ConnectionStringTokenProvider",
-                "ConnectorException",
+                "ConnectorError",
                 "ConnectorHttpClient",
+                "logger",
             ]),
         );
     });

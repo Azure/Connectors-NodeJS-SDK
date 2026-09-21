@@ -20,7 +20,7 @@ import {
     Subscription,
     SubscriptionListResult,
 } from "../src/generated/ArmExtensions.ts";
-import { ConnectorException } from "../src/azureConnectors/connectorException.ts";
+import { ConnectorError } from "../src/azureConnectors/connectorError.ts";
 import { ConnectorNames } from "../src/generated/connectorNames.ts";
 import { availableConnectors } from "../src/generated/ManagedConnectors.ts";
 
@@ -31,6 +31,7 @@ import { availableConnectors } from "../src/generated/ManagedConnectors.ts";
 const TestConnectionUrl = "https://connection-runtime.azure.com/apim/arm/abc123";
 const TestSubscriptionId = "sub-12345";
 const TestResourceGroupName = "rg-test";
+const TestApiVersion = "2021-04-01";
 
 function createMockCredential(): TokenCredential {
     return {
@@ -109,7 +110,7 @@ describe("ArmClient — constructor", () => {
     });
 });
 
-describe("ArmClient — subscriptionsListAsync", () => {
+describe("ArmClient — listSubscriptions", () => {
     afterEach(() => {
         jest.restoreAllMocks();
     });
@@ -121,7 +122,7 @@ describe("ArmClient — subscriptionsListAsync", () => {
         mockFetchResponse(mockResponse);
 
         const client = new ArmClient(TestConnectionUrl, createMockCredential());
-        const result = await client.subscriptionsListAsync(TestSubscriptionId).byPage().next();
+        const result = await client.listSubscriptions(TestApiVersion).byPage().next();
 
         expect(result.value).toEqual(mockResponse.value);
         const [url, init] = (global.fetch as jest.Mock).mock.calls[0];
@@ -131,7 +132,7 @@ describe("ArmClient — subscriptionsListAsync", () => {
     });
 });
 
-describe("ArmClient — subscriptionsGetAsync", () => {
+describe("ArmClient — getSubscription", () => {
     afterEach(() => {
         jest.restoreAllMocks();
     });
@@ -144,7 +145,7 @@ describe("ArmClient — subscriptionsGetAsync", () => {
         mockFetchResponse(mockSubscription);
 
         const client = new ArmClient(TestConnectionUrl, createMockCredential());
-        const result = await client.subscriptionsGetAsync(TestSubscriptionId);
+        const result = await client.getSubscription(TestSubscriptionId, TestApiVersion);
 
         expect(result).toEqual(mockSubscription);
         const [url] = (global.fetch as jest.Mock).mock.calls[0];
@@ -152,7 +153,7 @@ describe("ArmClient — subscriptionsGetAsync", () => {
     });
 });
 
-describe("ArmClient — subscriptionsListLocationsAsync", () => {
+describe("ArmClient — listSubscriptionsLocations", () => {
     afterEach(() => {
         jest.restoreAllMocks();
     });
@@ -164,15 +165,15 @@ describe("ArmClient — subscriptionsListLocationsAsync", () => {
         mockFetchResponse(mockLocations);
 
         const client = new ArmClient(TestConnectionUrl, createMockCredential());
-        const result = await client.subscriptionsListLocationsAsync(TestSubscriptionId);
+        const result = await client.listSubscriptionsLocations(TestSubscriptionId, TestApiVersion).byPage().next();
 
-        expect(result).toEqual(mockLocations);
+        expect(result.value).toEqual(mockLocations.value);
         const [url] = (global.fetch as jest.Mock).mock.calls[0];
         expect(url).toContain(`/subscriptions/${TestSubscriptionId}/locations`);
     });
 });
 
-describe("ArmClient — resourceGroupsListAsync", () => {
+describe("ArmClient — listResourceGroups", () => {
     afterEach(() => {
         jest.restoreAllMocks();
     });
@@ -184,7 +185,7 @@ describe("ArmClient — resourceGroupsListAsync", () => {
         mockFetchResponse(mockResponse);
 
         const client = new ArmClient(TestConnectionUrl, createMockCredential());
-        const result = await client.resourceGroupsListAsync(TestSubscriptionId).byPage().next();
+        const result = await client.listResourceGroups(TestSubscriptionId, TestApiVersion).byPage().next();
 
         expect(result.value).toEqual(mockResponse.value);
         const [url, init] = (global.fetch as jest.Mock).mock.calls[0];
@@ -193,7 +194,7 @@ describe("ArmClient — resourceGroupsListAsync", () => {
     });
 });
 
-describe("ArmClient — resourceGroupsGetAsync", () => {
+describe("ArmClient — getResourceGroup", () => {
     afterEach(() => {
         jest.restoreAllMocks();
     });
@@ -203,7 +204,7 @@ describe("ArmClient — resourceGroupsGetAsync", () => {
         mockFetchResponse(mockGroup);
 
         const client = new ArmClient(TestConnectionUrl, createMockCredential());
-        const result = await client.resourceGroupsGetAsync(TestSubscriptionId, TestResourceGroupName);
+        const result = await client.getResourceGroup(TestSubscriptionId, TestResourceGroupName, TestApiVersion);
 
         expect(result).toEqual(mockGroup);
         const [url] = (global.fetch as jest.Mock).mock.calls[0];
@@ -211,7 +212,7 @@ describe("ArmClient — resourceGroupsGetAsync", () => {
     });
 });
 
-describe("ArmClient — resourceGroupsCreateOrUpdateAsync", () => {
+describe("ArmClient — upsertResourceGroup", () => {
     afterEach(() => {
         jest.restoreAllMocks();
     });
@@ -222,10 +223,11 @@ describe("ArmClient — resourceGroupsCreateOrUpdateAsync", () => {
         mockFetchResponse(mockResponse);
 
         const client = new ArmClient(TestConnectionUrl, createMockCredential());
-        const result = await client.resourceGroupsCreateOrUpdateAsync(
+        const result = await client.upsertResourceGroup(
             input,
             TestSubscriptionId,
             TestResourceGroupName,
+            TestApiVersion,
         );
 
         expect(result).toEqual(mockResponse);
@@ -236,7 +238,7 @@ describe("ArmClient — resourceGroupsCreateOrUpdateAsync", () => {
     });
 });
 
-describe("ArmClient — resourceGroupsDeleteAsync", () => {
+describe("ArmClient — deleteResourceGroup", () => {
     afterEach(() => {
         jest.restoreAllMocks();
     });
@@ -245,14 +247,14 @@ describe("ArmClient — resourceGroupsDeleteAsync", () => {
         mockFetchResponse(null);
 
         const client = new ArmClient(TestConnectionUrl, createMockCredential());
-        await client.resourceGroupsDeleteAsync(TestSubscriptionId, TestResourceGroupName);
+        await client.deleteResourceGroup(TestSubscriptionId, TestResourceGroupName, TestApiVersion);
 
         const [, init] = (global.fetch as jest.Mock).mock.calls[0];
         expect(init.method).toBe("DELETE");
     });
 });
 
-describe("ArmClient — deploymentsCreateOrUpdateAsync", () => {
+describe("ArmClient — upsertDeployment", () => {
     afterEach(() => {
         jest.restoreAllMocks();
     });
@@ -263,11 +265,12 @@ describe("ArmClient — deploymentsCreateOrUpdateAsync", () => {
         mockFetchResponse(mockResponse);
 
         const client = new ArmClient(TestConnectionUrl, createMockCredential());
-        const result = await client.deploymentsCreateOrUpdateAsync(
+        const result = await client.upsertDeployment(
             input,
             TestSubscriptionId,
             TestResourceGroupName,
             "deploy-1",
+            TestApiVersion,
         );
 
         expect(result).toEqual(mockResponse);
@@ -278,7 +281,7 @@ describe("ArmClient — deploymentsCreateOrUpdateAsync", () => {
     });
 });
 
-describe("ArmClient — deploymentsGetAsync", () => {
+describe("ArmClient — getDeployment", () => {
     afterEach(() => {
         jest.restoreAllMocks();
     });
@@ -288,10 +291,11 @@ describe("ArmClient — deploymentsGetAsync", () => {
         mockFetchResponse(mockDeployment);
 
         const client = new ArmClient(TestConnectionUrl, createMockCredential());
-        const result = await client.deploymentsGetAsync(
+        const result = await client.getDeployment(
             TestSubscriptionId,
             TestResourceGroupName,
             "deploy-1",
+            TestApiVersion,
         );
 
         expect(result).toEqual(mockDeployment);
@@ -300,7 +304,7 @@ describe("ArmClient — deploymentsGetAsync", () => {
     });
 });
 
-describe("ArmClient — providersListAsync", () => {
+describe("ArmClient — listProviders", () => {
     afterEach(() => {
         jest.restoreAllMocks();
     });
@@ -312,7 +316,7 @@ describe("ArmClient — providersListAsync", () => {
         mockFetchResponse(mockResponse);
 
         const client = new ArmClient(TestConnectionUrl, createMockCredential());
-        const result = await client.providersListAsync(TestSubscriptionId).byPage().next();
+        const result = await client.listProviders(TestSubscriptionId, TestApiVersion).byPage().next();
 
         expect(result.value).toEqual(mockResponse.value);
         const [url] = (global.fetch as jest.Mock).mock.calls[0];
@@ -325,14 +329,14 @@ describe("ArmClient — error handling", () => {
         jest.restoreAllMocks();
     });
 
-    it("should throw ConnectorException on non-OK response", async () => {
+    it("should throw ConnectorError on non-OK response", async () => {
         mockFetchError(403, '{"error": "Forbidden"}');
 
         const client = new ArmClient(TestConnectionUrl, createMockCredential());
 
         await expect(
-            client.subscriptionsListAsync(TestSubscriptionId).byPage().next(),
-        ).rejects.toThrow(ConnectorException);
+            client.listSubscriptions(TestApiVersion).byPage().next(),
+        ).rejects.toThrow(ConnectorError);
     });
 
     it("should include status code and response body in error", async () => {
@@ -342,14 +346,15 @@ describe("ArmClient — error handling", () => {
         const client = new ArmClient(TestConnectionUrl, createMockCredential());
 
         try {
-            await client.subscriptionsGetAsync(TestSubscriptionId);
-            throw new Error("Expected ConnectorException to be thrown.");
+            await client.getSubscription(TestSubscriptionId, TestApiVersion);
+            throw new Error("Expected ConnectorError to be thrown.");
         } catch (error) {
-            expect(error).toBeInstanceOf(ConnectorException);
-            const connectorError = error as ConnectorException;
+            expect(error).toBeInstanceOf(ConnectorError);
+            const connectorError = error as ConnectorError;
             expect(connectorError.statusCode).toBe(404);
             expect(connectorError.responseBody).toBe(errorBody);
-            expect(connectorError.operation).toContain("GET");
+            expect(connectorError.operation).toBe("Subscriptions_Get");
+            expect(connectorError.request.url).toContain(`/subscriptions/${TestSubscriptionId}`);
         }
     });
 });

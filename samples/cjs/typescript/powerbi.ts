@@ -4,7 +4,7 @@
  * Power BI Connector SDK Sample - CJS TypeScript
  */
 
-import { ManagedIdentityTokenProvider, ConnectorException } from "@azure/connectors";
+import { ManagedIdentityTokenProvider, ConnectorError } from "@azure/connectors";
 import { PowerbiClient, ListedScorecards } from "@azure/connectors/generated/PowerbiExtensions";
 
 const CONNECTION_URL = process.env.POWERBI_CONNECTION_URL ?? "";
@@ -20,10 +20,10 @@ async function main(): Promise<void> {
     const client = new PowerbiClient(CONNECTION_URL, tokenProvider);
 
     try {
-        const result: ListedScorecards = await client.getScorecardsAsync(POWERBI_GROUP_ID, "firstparty");
+        const result: ListedScorecards = await client.getScorecards(POWERBI_GROUP_ID, { pbiSource: "firstparty" });
         console.log(`Scorecard payload keys: ${Object.keys(result as Record<string, unknown>).join(", ")}`);
     } catch (error) {
-        if (error instanceof ConnectorException) {
+        if (error instanceof ConnectorError) {
             console.log(`Connector error (${error.statusCode}): ${error.message}`);
             return;
         }

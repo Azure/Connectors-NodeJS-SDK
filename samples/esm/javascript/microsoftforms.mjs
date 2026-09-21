@@ -4,7 +4,7 @@
  * Microsoft Forms Connector SDK Sample - ESM JavaScript
  */
 
-import { ManagedIdentityTokenProvider, ConnectorException } from "@azure/connectors";
+import { ManagedIdentityTokenProvider, ConnectorError } from "@azure/connectors";
 import { MicrosoftformsClient } from "@azure/connectors/generated/MicrosoftformsExtensions";
 
 const CONNECTION_URL = process.env.MICROSOFTFORMS_CONNECTION_URL ?? "";
@@ -20,10 +20,10 @@ async function main() {
     const client = new MicrosoftformsClient(CONNECTION_URL, tokenProvider);
 
     try {
-        const result = await client.getFormDetailsByIdAsync(MICROSOFTFORMS_FORM_ID, "id,title");
+        const result = await client.getFormDetailsById(MICROSOFTFORMS_FORM_ID, "id,title");
         console.log(`Form details keys: ${Object.keys(result).join(", ")}`);
     } catch (error) {
-        if (error instanceof ConnectorException) {
+        if (error instanceof ConnectorError) {
             console.log(`Connector error (${error.statusCode}): ${error.message}`);
             return;
         }

@@ -4,7 +4,7 @@
  * GitHub Connector SDK Sample - ESM JavaScript
  */
 
-import { ManagedIdentityTokenProvider, ConnectorException } from "@azure/connectors";
+import { ManagedIdentityTokenProvider, ConnectorError } from "@azure/connectors";
 import { GithubClient } from "@azure/connectors/generated/GithubExtensions";
 
 const CONNECTION_URL = process.env.GITHUB_CONNECTION_URL ?? "";
@@ -20,10 +20,13 @@ async function main() {
     const client = new GithubClient(CONNECTION_URL, tokenProvider);
 
     try {
-        const result = await client.getRepositoryByIdAsync(GITHUB_REPOSITORY_ID);
+        const result = await client.getRepositoryById(
+            Number(GITHUB_REPOSITORY_ID),
+            "application/vnd.github+json",
+        );
         console.log(`Repository id: ${String(result.id ?? "unknown")}`);
     } catch (error) {
-        if (error instanceof ConnectorException) {
+        if (error instanceof ConnectorError) {
             console.log(`Connector error (${error.statusCode}): ${error.message}`);
             return;
         }
