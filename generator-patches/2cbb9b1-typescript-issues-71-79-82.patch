@@ -1,8 +1,8 @@
 diff --git a/src/tools/CodefulSdkGenerator.Tests/DirectClientGeneratorBaseTests.cs b/src/tools/CodefulSdkGenerator.Tests/DirectClientGeneratorBaseTests.cs
-index 4c8cdd11316fdb84a009fbba0a7f75795f26aeee..eb986064d2ac38124fff8d0fe6ab06ab435371cb 100644
+index 4c8cdd11316fdb84a009fbba0a7f75795f26aeee..dfa3eada08c1749e3b846dcbee448832e4656768 100644
 --- a/src/tools/CodefulSdkGenerator.Tests/DirectClientGeneratorBaseTests.cs
 +++ b/src/tools/CodefulSdkGenerator.Tests/DirectClientGeneratorBaseTests.cs
-@@ -1712,6 +1712,104 @@ namespace LogicApps.Tests
+@@ -1712,6 +1712,153 @@ namespace LogicApps.Tests
                  message: "Operations with formData parameters must remain excluded.");
          }
  
@@ -104,14 +104,63 @@ index 4c8cdd11316fdb84a009fbba0a7f75795f26aeee..eb986064d2ac38124fff8d0fe6ab06ab
 +                message: "TypeScript should resolve and emit referenced form-data parameters.");
 +        }
 +
++        [TestMethod]
++        [Owner("swapnilnagar")]
++        public void Generate_DanglingParameterReference_SkipsOnlyInvalidOperation()
++        {
++            var swagger = JsonObject.Parse("""
++            {
++                "swagger": "2.0",
++                "info": { "title": "MultipartConnector", "version": "1.0" },
++                "host": "management.azure.com",
++                "basePath": "/",
++                "schemes": ["https"],
++                "paths": {
++                    "/invalid": {
++                        "delete": {
++                            "operationId": "DeleteWithMissingPayload",
++                            "consumes": ["multipart/mixed"],
++                            "parameters": [
++                                { "$ref": "#/parameters/MissingPayload" }
++                            ],
++                            "responses": { "204": { "description": "Deleted" } }
++                        }
++                    },
++                    "/valid": {
++                        "delete": {
++                            "operationId": "DeleteWithoutPayload",
++                            "consumes": ["multipart/form-data"],
++                            "parameters": [],
++                            "responses": { "204": { "description": "Deleted" } }
++                        }
++                    }
++                },
++                "parameters": {},
++                "definitions": {}
++            }
++            """).AsObject();
++            var generator = new DirectClientTypeScriptGenerator();
++            using var writer = new StringWriter();
++
++            generator.Generate(swagger, "multipartconnector", writer);
++
++            var output = writer.ToString();
++            Assert.IsFalse(
++                output.Contains("deleteWithMissingPayload", StringComparison.Ordinal),
++                message: "A dangling shared parameter reference must not bypass multipart filtering.");
++            Assert.IsTrue(
++                output.Contains("deleteWithoutPayload", StringComparison.Ordinal),
++                message: "A valid neighboring operation should still be generated.");
++        }
++
          #endregion Multipart operation skip tests
  
          [TestMethod]
 diff --git a/src/tools/CodefulSdkGenerator.Tests/DirectClientTypeScriptOutputFormatTests.cs b/src/tools/CodefulSdkGenerator.Tests/DirectClientTypeScriptOutputFormatTests.cs
-index 9f5a9a3155a7a8fa52d7ee9cd421554a3b8f56e3..219a18c89d387295c04cb234c492f7c0c8a94eb8 100644
+index 9f5a9a3155a7a8fa52d7ee9cd421554a3b8f56e3..476247fa0a743ebcffdc717a12340436f19a7314 100644
 --- a/src/tools/CodefulSdkGenerator.Tests/DirectClientTypeScriptOutputFormatTests.cs
 +++ b/src/tools/CodefulSdkGenerator.Tests/DirectClientTypeScriptOutputFormatTests.cs
-@@ -760,6 +760,311 @@ namespace LogicApps.Tests
+@@ -760,6 +760,389 @@ namespace LogicApps.Tests
                  message: "The collision error should identify the Swagger model and generated payload owners.");
          }
  
@@ -418,6 +467,84 @@ index 9f5a9a3155a7a8fa52d7ee9cd421554a3b8f56e3..219a18c89d387295c04cb234c492f7c0
 +            Assert.IsFalse(
 +                output.Contains("uploadFileArray", StringComparison.Ordinal),
 +                message: "Swagger 2.0 file arrays are unsupported and should not emit an unusable operation.");
++        }
++
++        /// <summary>
++        /// Verifies an unsupported form-data collection format skips only the invalid operation.
++        /// </summary>
++        [TestMethod]
++        [Owner("swapnilnagar")]
++        public void Generate_UnsupportedFormDataCollectionFormat_SkipsOnlyInvalidOperation()
++        {
++            var swagger = JsonObject.Parse(FormatTestSwagger).AsObject();
++            var paths = swagger[SchemaPropertyNames.Paths].AsObject();
++            paths["/{connectionId}/invalid-array"] = new JsonObject
++            {
++                ["post"] = new JsonObject
++                {
++                    [SchemaPropertyNames.OperationId] = "UploadMatrixValues",
++                    [SchemaPropertyNames.Consumes] = new JsonArray(SchemaPropertyNames.MultipartFormDataContentType),
++                    [SchemaPropertyNames.Parameters] = new JsonArray
++                    {
++                        new JsonObject
++                        {
++                            [SchemaPropertyNames.Name] = "values",
++                            [SchemaPropertyNames.In] = "formData",
++                            [SchemaPropertyNames.Required] = true,
++                            [SchemaPropertyNames.Type] = SchemaTypeNames.Array,
++                            [SchemaPropertyNames.CollectionFormat] = "matrix",
++                            [SchemaPropertyNames.Items] = new JsonObject
++                            {
++                                [SchemaPropertyNames.Type] = SchemaTypeNames.String,
++                            },
++                        },
++                    },
++                    [SchemaPropertyNames.Responses] = new JsonObject
++                    {
++                        ["204"] = new JsonObject
++                        {
++                            [SchemaPropertyNames.Description] = "Uploaded",
++                        },
++                    },
++                },
++            };
++            paths["/{connectionId}/valid-form"] = new JsonObject
++            {
++                ["post"] = new JsonObject
++                {
++                    [SchemaPropertyNames.OperationId] = "UploadDescription",
++                    [SchemaPropertyNames.Consumes] = new JsonArray(SchemaPropertyNames.MultipartFormDataContentType),
++                    [SchemaPropertyNames.Parameters] = new JsonArray
++                    {
++                        new JsonObject
++                        {
++                            [SchemaPropertyNames.Name] = "description",
++                            [SchemaPropertyNames.In] = "formData",
++                            [SchemaPropertyNames.Required] = true,
++                            [SchemaPropertyNames.Type] = SchemaTypeNames.String,
++                        },
++                    },
++                    [SchemaPropertyNames.Responses] = new JsonObject
++                    {
++                        ["204"] = new JsonObject
++                        {
++                            [SchemaPropertyNames.Description] = "Uploaded",
++                        },
++                    },
++                },
++            };
++            var generator = new DirectClientTypeScriptGenerator();
++            using var writer = new StringWriter();
++
++            generator.Generate(swagger, "formattest", writer);
++
++            var output = writer.ToString();
++            Assert.IsFalse(
++                output.Contains("uploadMatrixValues", StringComparison.Ordinal),
++                message: "An unsupported form-data collection format should skip its operation.");
++            Assert.IsTrue(
++                output.Contains("uploadDescription", StringComparison.Ordinal),
++                message: "A valid neighboring form-data operation should still be generated.");
 +        }
 +
          /// <summary>
