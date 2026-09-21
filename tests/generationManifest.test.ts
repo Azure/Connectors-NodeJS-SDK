@@ -10,6 +10,7 @@ import * as path from "node:path";
 
 const RepositoryRoot = process.cwd();
 const ManifestPath = path.join(RepositoryRoot, "generation.manifest.json");
+const GenerationGuidePath = path.join(RepositoryRoot, "GENERATION.md");
 
 /**
  * A single connector provenance entry recorded in the generation manifest.
@@ -192,6 +193,20 @@ describe("generation.manifest.json provenance", () => {
         )).toBe(true);
         expect(changedPaths.some(changedPath => changedPath.includes("CodefulSdkGenerator.Tests/"))).toBe(true);
         expect(changedPaths.some(changedPath => changedPath.includes("DirectClient/"))).toBe(true);
+    });
+
+    it("should capture source identity before checking out the provenance base", () => {
+        const generationGuide = fs.readFileSync(GenerationGuidePath, "utf8").replace(/\r\n/g, "\n");
+        const headCaptureIndex = generationGuide.indexOf("$sourceHeadCommit = (git -C $bpmRepoRoot rev-parse HEAD)");
+        const branchCaptureIndex = generationGuide.indexOf("$sourceBranch = (git -C $bpmRepoRoot branch --show-current)");
+        const baseCheckoutIndex = generationGuide.indexOf("git -C $bpmRepoRoot checkout $manifest.generator.bpmBaseCommit");
+
+        expect(headCaptureIndex).toBeGreaterThan(-1);
+        expect(branchCaptureIndex).toBeGreaterThan(-1);
+        expect(baseCheckoutIndex).toBeGreaterThan(branchCaptureIndex);
+        expect(generationGuide).toContain("$manifest.generator.bpmHeadCommit = $sourceHeadCommit");
+        expect(generationGuide).toContain("$manifest.generator.bpmBranch = $sourceBranch");
+        expect(generationGuide).not.toContain("$manifest.generator.bpmHeadCommit = (git -C $bpmRepoRoot rev-parse HEAD)");
     });
 
     it("should list at least one connector", () => {

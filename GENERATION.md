@@ -119,16 +119,27 @@ snapshot into `swagger-cache/`, populate the manifest from the repo root:
 When `generator.sourcePatch` is present, reproduce the generator source before building:
 
 ```powershell
-git -C <BPM-repo-root> checkout <bpmBaseCommit>
-git -C <BPM-repo-root> apply --index --unidiff-zero <SDK-repo-root>/<sourcePatch.path>
-git -C <BPM-repo-root> diff --exit-code --cached <bpmHeadCommit> -- src/tools/CodefulSdkGenerator src/tools/CodefulSdkGenerator.Tests
-git -C <BPM-repo-root> diff --exit-code -- src/tools/CodefulSdkGenerator src/tools/CodefulSdkGenerator.Tests
+$bpmRepoRoot = "<BPM-repo-root>"
+$sdkRepoRoot = (Get-Location).Path
+$manifest = Get-Content generation.manifest.json -Raw | ConvertFrom-Json
+$sourceHeadCommit = (git -C $bpmRepoRoot rev-parse HEAD)
+$sourceBranch = (git -C $bpmRepoRoot branch --show-current)
+if ([string]::IsNullOrWhiteSpace($sourceBranch)) {
+  throw "The BPM source must be on the branch used for generation before provenance replay."
+}
+
+git -C $bpmRepoRoot checkout $manifest.generator.bpmBaseCommit
+git -C $bpmRepoRoot apply --index --unidiff-zero (Join-Path $sdkRepoRoot $manifest.generator.sourcePatch.path)
+git -C $bpmRepoRoot diff --exit-code --cached $sourceHeadCommit -- src/tools/CodefulSdkGenerator src/tools/CodefulSdkGenerator.Tests
+git -C $bpmRepoRoot diff --exit-code -- src/tools/CodefulSdkGenerator src/tools/CodefulSdkGenerator.Tests
 ```
 
 Both final commands must report no differences. `--index` is required so added and
 deleted files participate in the comparison with `bpmHeadCommit`. When a connector
 records `generatorCommit`, it must also record `sourcePatch`; replay that composition
 with the same indexed apply and cached/unstaged checks before regenerating the connector.
+Continue in the same PowerShell session when recording the manifest so the source identity
+captured before checkout is retained.
 
 ```powershell
 function Get-CanonicalTextSha256 {
@@ -146,13 +157,10 @@ function Get-CanonicalTextSha256 {
   }
 }
 
-$bpmRepoRoot = "<BPM-repo-root>"
-$manifest = Get-Content generation.manifest.json -Raw | ConvertFrom-Json
-
 $manifest.status = "generated"
 $manifest.generatedAtUtc = [DateTime]::UtcNow.ToString("yyyy-MM-ddTHH:mm:ssZ")
-$manifest.generator.bpmHeadCommit = (git -C $bpmRepoRoot rev-parse HEAD)
-$manifest.generator.bpmBranch = (git -C $bpmRepoRoot rev-parse --abbrev-ref HEAD)
+$manifest.generator.bpmHeadCommit = $sourceHeadCommit
+$manifest.generator.bpmBranch = $sourceBranch
 $manifest.generator.sourcePatch.sha256 = Get-CanonicalTextSha256 -Path $manifest.generator.sourcePatch.path
 
 $dll = Join-Path $bpmRepoRoot "src/tools/CodefulSdkGenerator/bin/Release/Microsoft.Azure.Workflows.CodefulSdkGenerator.dll"
