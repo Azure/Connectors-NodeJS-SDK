@@ -160,11 +160,31 @@ describe("generation.manifest.json provenance", () => {
             path.join(RepositoryRoot, manifest.generator.sourcePatch.path),
             "utf8",
         ).replace(/\r\n/g, "\n");
-        const changedPaths = [...patch.matchAll(/^diff --git a\/(.+) b\/(.+)$/gm)]
-            .map(match => {
-                expect(match[1]).toBe(match[2]);
-                return match[2];
-            });
+        const patchSections = patch
+            .split(/(?=^diff --git )/gm)
+            .filter(section => section.startsWith("diff --git "));
+        const changedPaths = patchSections.map(section => {
+            const header = section.match(/^diff --git a\/(.+) b\/(.+)$/m);
+            expect(header).not.toBeNull();
+            expect(header![1]).toBe(header![2]);
+
+            const changedPath = header![2];
+            const isAdded = /^new file mode \d+$/m.test(section);
+            const isDeleted = /^deleted file mode \d+$/m.test(section);
+            expect(Number(isAdded) + Number(isDeleted)).toBeLessThanOrEqual(1);
+            if (isAdded) {
+                expect(section).toContain("--- /dev/null");
+                expect(section).toContain(`+++ b/${changedPath}`);
+            } else if (isDeleted) {
+                expect(section).toContain(`--- a/${changedPath}`);
+                expect(section).toContain("+++ /dev/null");
+            } else {
+                expect(section).toContain(`--- a/${changedPath}`);
+                expect(section).toContain(`+++ b/${changedPath}`);
+            }
+
+            return changedPath;
+        });
         expect(changedPaths.length).toBeGreaterThan(0);
         expect(new Set(changedPaths).size).toBe(changedPaths.length);
         expect(changedPaths.every(changedPath =>

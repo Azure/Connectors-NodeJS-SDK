@@ -120,13 +120,15 @@ When `generator.sourcePatch` is present, reproduce the generator source before b
 
 ```powershell
 git -C <BPM-repo-root> checkout <bpmBaseCommit>
-git -C <BPM-repo-root> apply --unidiff-zero <SDK-repo-root>/<sourcePatch.path>
-git -C <BPM-repo-root> diff --exit-code <bpmHeadCommit> -- src/tools/CodefulSdkGenerator
+git -C <BPM-repo-root> apply --index --unidiff-zero <SDK-repo-root>/<sourcePatch.path>
+git -C <BPM-repo-root> diff --exit-code --cached <bpmHeadCommit> -- src/tools/CodefulSdkGenerator src/tools/CodefulSdkGenerator.Tests
+git -C <BPM-repo-root> diff --exit-code -- src/tools/CodefulSdkGenerator src/tools/CodefulSdkGenerator.Tests
 ```
 
-The final command must report no differences. When a connector records
-`generatorCommit`, it must also record `sourcePatch`; apply that composition instead
-of the top-level generator source before regenerating that connector.
+Both final commands must report no differences. `--index` is required so added and
+deleted files participate in the comparison with `bpmHeadCommit`. When a connector
+records `generatorCommit`, it must also record `sourcePatch`; replay that composition
+with the same indexed apply and cached/unstaged checks before regenerating the connector.
 
 ```powershell
 function Get-CanonicalTextSha256 {
