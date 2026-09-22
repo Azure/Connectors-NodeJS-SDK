@@ -26,6 +26,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- Added generated multipart/form-data actions for Cloudmersive Document
+  Conversion and DocuWare, including typed `Blob`/string form inputs and the
+  previously omitted DocuWare `deleteFile` action
+  ([#79](https://github.com/Azure/Connectors-NodeJS-SDK/issues/79)).
 - Added opt-in structured request, response, retry, and error diagnostics under
   the `azure:connectors` namespace using `@azure/logger`.
 - Added the generated Microsoft Dataverse client with automatic async iteration
@@ -114,6 +118,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+- Preserved root array aliases, numeric enum primitives, and inherited/inline
+  `allOf` properties in generated TypeScript models
+  ([#71](https://github.com/Azure/Connectors-NodeJS-SDK/issues/71)).
+- Confirmed the regenerated Google Tasks client exposes `createTask` for the
+  misspelled Swagger operation ID `CraeteTask`, while preserving its route and
+  request payload ([#82](https://github.com/Azure/Connectors-NodeJS-SDK/issues/82)).
 - Corrected generated pagination requests so continuation URLs use GET by
   default, honor explicit continuation operation methods, and never replay the
   first-page request body.

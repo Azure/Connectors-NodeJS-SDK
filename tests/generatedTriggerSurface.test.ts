@@ -3,7 +3,10 @@
 import type { TokenCredential } from "@azure/core-auth";
 import * as fs from "node:fs";
 import * as path from "node:path";
+import type { HandSignature } from "../src/generated/SigninghubExtensions.ts";
 import {
+    type ChannelWithOwnerTeamId,
+    type ChatMessageList,
     TeamsClient,
     TeamsTriggerOperations,
     TeamsTriggerParameters,
@@ -273,6 +276,42 @@ describe("Generated clients — no trigger operation is invoked as a data-plane 
         ]));
         expect(extractClientMethodNames(googleTasks!.content)).toContain("getTask");
         expect(extractClientMethodNames(sendGrid!.content)).toContain("checkEmailIsInUnsubscribesList");
+    });
+
+    it("should preserve root arrays, numeric enums, and allOf properties", () => {
+        const messages: ChatMessageList = [{ id: "message1" }];
+        const handSignature: HandSignature = 2;
+        const channel: ChannelWithOwnerTeamId = { ownerTeamId: "team1" };
+        const teams = generatedFiles.find(file => file.connector === "Teams");
+        const signingHub = generatedFiles.find(file => file.connector === "Signinghub");
+
+        expect(messages[0].id).toBe("message1");
+        expect(JSON.stringify({ handSignature })).toBe('{"handSignature":2}');
+        expect(channel.ownerTeamId).toBe("team1");
+        expect(teams!.content).toContain("export type ChatMessageList = Array<ChatMessage>;");
+        expect(teams!.content).toContain("ownerTeamId?: string;");
+        expect(signingHub!.content).toContain("export type HandSignature = 0 | 1 | 2 | 3 | 4;");
+    });
+
+    it("should emit every pinned multipart form-data operation", () => {
+        for (const connector of ["Cloudmersiveconvert", "Docuware"]) {
+            const generated = generatedFiles.find(file => file.connector === connector);
+            const apiName = connector.toLowerCase();
+            const swagger = JSON.parse(
+                fs.readFileSync(path.join(process.cwd(), "swagger-cache", `${apiName}.swagger.json`), "utf8"),
+            ) as { paths: Record<string, Record<string, { parameters?: Array<{ in?: string }> }>> };
+            const multipartOperationCount = Object.values(swagger.paths)
+                .flatMap(pathItem => Object.values(pathItem))
+                .filter(operation => operation.parameters?.some(parameter => parameter.in === "formData"))
+                .length;
+
+            expect(generated).toBeDefined();
+            expect(generated!.content.match(/const formData = new FormData\(\);/g) ?? [])
+                .toHaveLength(multipartOperationCount);
+        }
+
+        const docuware = generatedFiles.find(file => file.connector === "Docuware");
+        expect(docuware!.content).toContain("public async deleteFile(");
     });
 
     it("should project CreateOrUpdate operations as upserts", () => {

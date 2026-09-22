@@ -22,9 +22,23 @@ export interface ConvertDataJsonToXmlInput {
 }
 
 /**
+ * Response for Merge Two Text (TXT) Files Together
+ */
+export interface MergeDocumentTxtResponse {
+    [key: string]: unknown;
+}
+
+/**
  * Response for Convert HTML string to PNG screenshot
  */
 export interface ConvertWebHtmlToPngResponse {
+    [key: string]: unknown;
+}
+
+/**
+ * Response for Convert XML to JSON conversion
+ */
+export interface ConvertDataXmlToJsonResponse {
     [key: string]: unknown;
 }
 
@@ -2391,6 +2405,820 @@ export interface ZipFile {
     /** Name of this file */
     FileName?: string;
 }
+
+/**
+ * Multipart form data for the getConvertDocumentAutodetectInfo operation.
+ */
+export interface GetConvertDocumentAutodetectInfoFormData {
+    /** Input file to perform the operation on. */
+    inputFile: Blob;
+}
+
+/**
+ * Multipart form data for the convertDocumentAutodetectToPdf operation.
+ */
+export interface ConvertDocumentAutodetectToPdfFormData {
+    /** Input file to perform the operation on. */
+    inputFile: Blob;
+}
+
+/**
+ * Multipart form data for the convertDocumentAutodetectToPngArray operation.
+ */
+export interface ConvertDocumentAutodetectToPngArrayFormData {
+    /** Input file to perform the operation on. */
+    inputFile: Blob;
+}
+
+/**
+ * Multipart form data for the convertDocumentAutodetectToTxt operation.
+ */
+export interface ConvertDocumentAutodetectToTxtFormData {
+    /** Input file to perform the operation on. */
+    inputFile: Blob;
+}
+
+/**
+ * Multipart form data for the compareDocumentDocx operation.
+ */
+export interface CompareDocumentDocxFormData {
+    /** First input file to perform the operation on. */
+    inputFile1: Blob;
+    /** Second input file to perform the operation on (more than 2 can be supplied). */
+    inputFile2: Blob;
+}
+
+/**
+ * Multipart form data for the convertDataCsvToJson operation.
+ */
+export interface ConvertDataCsvToJsonFormData {
+    /** Input file to perform the operation on. */
+    inputFile: Blob;
+}
+
+/**
+ * Multipart form data for the convertDocumentCsvToXlsx operation.
+ */
+export interface ConvertDocumentCsvToXlsxFormData {
+    /** Input file to perform the operation on. */
+    inputFile: Blob;
+}
+
+/**
+ * Multipart form data for the convertDocumentDocToDocx operation.
+ */
+export interface ConvertDocumentDocToDocxFormData {
+    /** Input file to perform the operation on. */
+    inputFile: Blob;
+}
+
+/**
+ * Multipart form data for the convertDocumentDocToPdf operation.
+ */
+export interface ConvertDocumentDocToPdfFormData {
+    /** Input file to perform the operation on. */
+    inputFile: Blob;
+}
+
+/**
+ * Multipart form data for the convertDocumentDocToTxt operation.
+ */
+export interface ConvertDocumentDocToTxtFormData {
+    /** Input file to perform the operation on. */
+    inputFile: Blob;
+}
+
+/**
+ * Multipart form data for the convertDocumentDocxToPdf operation.
+ */
+export interface ConvertDocumentDocxToPdfFormData {
+    /** Input file to perform the operation on. */
+    inputFile: Blob;
+}
+
+/**
+ * Multipart form data for the convertDocumentDocxToTxt operation.
+ */
+export interface ConvertDocumentDocxToTxtFormData {
+    /** Input file to perform the operation on. */
+    inputFile: Blob;
+}
+
+/**
+ * Multipart form data for the editDocumentBeginEditing operation.
+ */
+export interface EditDocumentBeginEditingFormData {
+    /** Input file to perform the operation on. */
+    inputFile: Blob;
+}
+
+/**
+ * Multipart form data for the convertDocumentHtmlToPdf operation.
+ */
+export interface ConvertDocumentHtmlToPdfFormData {
+    /** Input file to perform the operation on. */
+    inputFile: Blob;
+}
+
+/**
+ * Multipart form data for the convertDocumentHtmlToPng operation.
+ */
+export interface ConvertDocumentHtmlToPngFormData {
+    /** Input file to perform the operation on. */
+    inputFile: Blob;
+}
+
+/**
+ * Multipart form data for the convertDocumentHtmlToTxt operation.
+ */
+export interface ConvertDocumentHtmlToTxtFormData {
+    /** Input file to perform the operation on. */
+    inputFile: Blob;
+}
+
+/**
+ * Multipart form data for the convertImageMultipageImageFormatConvert operation.
+ */
+export interface ConvertImageMultipageImageFormatConvertFormData {
+    /** Input file to perform the operation on. */
+    inputFile: Blob;
+}
+
+/**
+ * Multipart form data for the getConvertImageImageInfo operation.
+ */
+export interface GetConvertImageImageInfoFormData {
+    /** Input file to perform the operation on. */
+    inputFile: Blob;
+}
+
+/**
+ * Multipart form data for the setConvertImageImageDPI operation.
+ */
+export interface SetConvertImageImageDPIFormData {
+    /** Input file to perform the operation on. */
+    inputFile: Blob;
+}
+
+/**
+ * Multipart form data for the convertImageImageFormatConvert operation.
+ */
+export interface ConvertImageImageFormatConvertFormData {
+    /** Input file to perform the operation on. */
+    inputFile: Blob;
+}
+
+/**
+ * Multipart form data for the mergeDocumentDocx operation.
+ */
+export interface MergeDocumentDocxFormData {
+    /** First input file to perform the operation on. */
+    inputFile1: Blob;
+    /** Second input file to perform the operation on (more than 2 can be supplied). */
+    inputFile2: Blob;
+}
+
+/**
+ * Multipart form data for the mergeDocumentDocxMulti operation.
+ */
+export interface MergeDocumentDocxMultiFormData {
+    /** First input file to perform the operation on. */
+    inputFile1: Blob;
+    /** Second input file to perform the operation on. */
+    inputFile2: Blob;
+    /** Third input file to perform the operation on. */
+    inputFile3?: Blob;
+    /** Fourth input file to perform the operation on. */
+    inputFile4?: Blob;
+    /** Fifth input file to perform the operation on. */
+    inputFile5?: Blob;
+    /** Sixth input file to perform the operation on. */
+    inputFile6?: Blob;
+    /** Seventh input file to perform the operation on. */
+    inputFile7?: Blob;
+    /** Eighth input file to perform the operation on. */
+    inputFile8?: Blob;
+    /** Ninth input file to perform the operation on. */
+    inputFile9?: Blob;
+    /** Tenth input file to perform the operation on. */
+    inputFile10?: Blob;
+}
+
+/**
+ * Multipart form data for the mergeDocumentPdf operation.
+ */
+export interface MergeDocumentPdfFormData {
+    /** First input file to perform the operation on. */
+    inputFile1: Blob;
+    /** Second input file to perform the operation on (more than 2 can be supplied). */
+    inputFile2: Blob;
+}
+
+/**
+ * Multipart form data for the mergeDocumentPdfMulti operation.
+ */
+export interface MergeDocumentPdfMultiFormData {
+    /** First input file to perform the operation on. */
+    inputFile1: Blob;
+    /** Second input file to perform the operation on. */
+    inputFile2: Blob;
+    /** Third input file to perform the operation on. */
+    inputFile3?: Blob;
+    /** Fourth input file to perform the operation on. */
+    inputFile4?: Blob;
+    /** Fifth input file to perform the operation on. */
+    inputFile5?: Blob;
+    /** Sixth input file to perform the operation on. */
+    inputFile6?: Blob;
+    /** Seventh input file to perform the operation on. */
+    inputFile7?: Blob;
+    /** Eighth input file to perform the operation on. */
+    inputFile8?: Blob;
+    /** Ninth input file to perform the operation on. */
+    inputFile9?: Blob;
+    /** Tenth input file to perform the operation on. */
+    inputFile10?: Blob;
+}
+
+/**
+ * Multipart form data for the mergeDocumentPng operation.
+ */
+export interface MergeDocumentPngFormData {
+    /** First input file to perform the operation on. */
+    inputFile1: Blob;
+    /** Second input file to perform the operation on (more than 2 can be supplied). */
+    inputFile2: Blob;
+}
+
+/**
+ * Multipart form data for the mergeDocumentPptx operation.
+ */
+export interface MergeDocumentPptxFormData {
+    /** First input file to perform the operation on. */
+    inputFile1: Blob;
+    /** Second input file to perform the operation on (more than 2 can be supplied). */
+    inputFile2: Blob;
+}
+
+/**
+ * Multipart form data for the mergeDocumentPptxMulti operation.
+ */
+export interface MergeDocumentPptxMultiFormData {
+    /** First input file to perform the operation on. */
+    inputFile1: Blob;
+    /** Second input file to perform the operation on. */
+    inputFile2: Blob;
+    /** Third input file to perform the operation on. */
+    inputFile3?: Blob;
+    /** Fourth input file to perform the operation on. */
+    inputFile4?: Blob;
+    /** Fifth input file to perform the operation on. */
+    inputFile5?: Blob;
+    /** Sixth input file to perform the operation on. */
+    inputFile6?: Blob;
+    /** Seventh input file to perform the operation on. */
+    inputFile7?: Blob;
+    /** Eighth input file to perform the operation on. */
+    inputFile8?: Blob;
+    /** Ninth input file to perform the operation on. */
+    inputFile9?: Blob;
+    /** Tenth input file to perform the operation on. */
+    inputFile10?: Blob;
+}
+
+/**
+ * Multipart form data for the mergeDocumentTxt operation.
+ */
+export interface MergeDocumentTxtFormData {
+    /** First input file to perform the operation on. */
+    inputFile1: Blob;
+    /** Second input file to perform the operation on (more than 2 can be supplied). */
+    inputFile2: Blob;
+}
+
+/**
+ * Multipart form data for the mergeDocumentTxtMulti operation.
+ */
+export interface MergeDocumentTxtMultiFormData {
+    /** First input file to perform the operation on. */
+    inputFile1: Blob;
+    /** Second input file to perform the operation on. */
+    inputFile2: Blob;
+    /** Third input file to perform the operation on. */
+    inputFile3?: Blob;
+    /** Fourth input file to perform the operation on. */
+    inputFile4?: Blob;
+    /** Fifth input file to perform the operation on. */
+    inputFile5?: Blob;
+    /** Sixth input file to perform the operation on. */
+    inputFile6?: Blob;
+    /** Seventh input file to perform the operation on. */
+    inputFile7?: Blob;
+    /** Eighth input file to perform the operation on. */
+    inputFile8?: Blob;
+    /** Ninth input file to perform the operation on. */
+    inputFile9?: Blob;
+    /** Tenth input file to perform the operation on. */
+    inputFile10?: Blob;
+}
+
+/**
+ * Multipart form data for the mergeDocumentXlsx operation.
+ */
+export interface MergeDocumentXlsxFormData {
+    /** First input file to perform the operation on. */
+    inputFile1: Blob;
+    /** Second input file to perform the operation on (more than 2 can be supplied). */
+    inputFile2: Blob;
+}
+
+/**
+ * Multipart form data for the mergeDocumentXlsxMulti operation.
+ */
+export interface MergeDocumentXlsxMultiFormData {
+    /** First input file to perform the operation on. */
+    inputFile1: Blob;
+    /** Second input file to perform the operation on. */
+    inputFile2: Blob;
+    /** Third input file to perform the operation on. */
+    inputFile3?: Blob;
+    /** Fourth input file to perform the operation on. */
+    inputFile4?: Blob;
+    /** Fifth input file to perform the operation on. */
+    inputFile5?: Blob;
+    /** Sixth input file to perform the operation on. */
+    inputFile6?: Blob;
+    /** Seventh input file to perform the operation on. */
+    inputFile7?: Blob;
+    /** Eighth input file to perform the operation on. */
+    inputFile8?: Blob;
+    /** Ninth input file to perform the operation on. */
+    inputFile9?: Blob;
+    /** Tenth input file to perform the operation on. */
+    inputFile10?: Blob;
+}
+
+/**
+ * Multipart form data for the convertDocumentPdfToDocx operation.
+ */
+export interface ConvertDocumentPdfToDocxFormData {
+    /** Input file to perform the operation on. */
+    inputFile: Blob;
+}
+
+/**
+ * Multipart form data for the convertDocumentPdfToDocxRasterize operation.
+ */
+export interface ConvertDocumentPdfToDocxRasterizeFormData {
+    /** Input file to perform the operation on. */
+    inputFile: Blob;
+}
+
+/**
+ * Multipart form data for the convertDocumentPdfToPngArray operation.
+ */
+export interface ConvertDocumentPdfToPngArrayFormData {
+    /** Input file to perform the operation on. */
+    inputFile: Blob;
+}
+
+/**
+ * Multipart form data for the convertDocumentPdfToPngSingle operation.
+ */
+export interface ConvertDocumentPdfToPngSingleFormData {
+    /** Input file to perform the operation on. */
+    inputFile: Blob;
+}
+
+/**
+ * Multipart form data for the convertDocumentPdfToPptx operation.
+ */
+export interface ConvertDocumentPdfToPptxFormData {
+    /** Input file to perform the operation on. */
+    inputFile: Blob;
+}
+
+/**
+ * Multipart form data for the convertDocumentPdfToTxt operation.
+ */
+export interface ConvertDocumentPdfToTxtFormData {
+    /** Input file to perform the operation on. */
+    inputFile: Blob;
+}
+
+/**
+ * Multipart form data for the convertDocumentPngArrayToPdf operation.
+ */
+export interface ConvertDocumentPngArrayToPdfFormData {
+    /** First input file to perform the operation on. */
+    inputFile1: Blob;
+    /** Second input file to perform the operation on. */
+    inputFile2: Blob;
+    /** Third input file to perform the operation on. */
+    inputFile3?: Blob;
+    /** Fourth input file to perform the operation on. */
+    inputFile4?: Blob;
+    /** Fifth input file to perform the operation on. */
+    inputFile5?: Blob;
+    /** Sixth input file to perform the operation on. */
+    inputFile6?: Blob;
+    /** Seventh input file to perform the operation on. */
+    inputFile7?: Blob;
+    /** Eighth input file to perform the operation on. */
+    inputFile8?: Blob;
+    /** Ninth input file to perform the operation on. */
+    inputFile9?: Blob;
+    /** Tenth input file to perform the operation on. */
+    inputFile10?: Blob;
+}
+
+/**
+ * Multipart form data for the convertDocumentPptToPdf operation.
+ */
+export interface ConvertDocumentPptToPdfFormData {
+    /** Input file to perform the operation on. */
+    inputFile: Blob;
+}
+
+/**
+ * Multipart form data for the convertDocumentPptToPptx operation.
+ */
+export interface ConvertDocumentPptToPptxFormData {
+    /** Input file to perform the operation on. */
+    inputFile: Blob;
+}
+
+/**
+ * Multipart form data for the convertDocumentPptxToPdf operation.
+ */
+export interface ConvertDocumentPptxToPdfFormData {
+    /** Input file to perform the operation on. */
+    inputFile: Blob;
+}
+
+/**
+ * Multipart form data for the convertDocumentPptxToTxt operation.
+ */
+export interface ConvertDocumentPptxToTxtFormData {
+    /** Input file to perform the operation on. */
+    inputFile: Blob;
+}
+
+/**
+ * Multipart form data for the splitDocumentDocx operation.
+ */
+export interface SplitDocumentDocxFormData {
+    /** Input file to perform the operation on. */
+    inputFile: Blob;
+}
+
+/**
+ * Multipart form data for the splitDocumentPdfByPage operation.
+ */
+export interface SplitDocumentPdfByPageFormData {
+    /** Input file to perform the operation on. */
+    inputFile: Blob;
+}
+
+/**
+ * Multipart form data for the splitDocumentPptx operation.
+ */
+export interface SplitDocumentPptxFormData {
+    /** Input file to perform the operation on. */
+    inputFile: Blob;
+}
+
+/**
+ * Multipart form data for the splitDocumentTxtByLine operation.
+ */
+export interface SplitDocumentTxtByLineFormData {
+    /** Input file to perform the operation on. */
+    inputFile: Blob;
+}
+
+/**
+ * Multipart form data for the splitDocumentTxtByString operation.
+ */
+export interface SplitDocumentTxtByStringFormData {
+    /** Input file to perform the operation on. */
+    inputFile: Blob;
+}
+
+/**
+ * Multipart form data for the splitDocumentXlsx operation.
+ */
+export interface SplitDocumentXlsxFormData {
+    /** Input file to perform the operation on. */
+    inputFile: Blob;
+}
+
+/**
+ * Multipart form data for the validateDocumentAutodetectValidation operation.
+ */
+export interface ValidateDocumentAutodetectValidationFormData {
+    /** Input file to perform the operation on. */
+    inputFile: Blob;
+}
+
+/**
+ * Multipart form data for the validateDocumentDocxValidation operation.
+ */
+export interface ValidateDocumentDocxValidationFormData {
+    /** Input file to perform the operation on. */
+    inputFile: Blob;
+}
+
+/**
+ * Multipart form data for the validateDocumentJsonValidation operation.
+ */
+export interface ValidateDocumentJsonValidationFormData {
+    /** Input file to perform the operation on. */
+    inputFile: Blob;
+}
+
+/**
+ * Multipart form data for the validateDocumentPdfValidation operation.
+ */
+export interface ValidateDocumentPdfValidationFormData {
+    /** Input file to perform the operation on. */
+    inputFile: Blob;
+}
+
+/**
+ * Multipart form data for the validateDocumentPptxValidation operation.
+ */
+export interface ValidateDocumentPptxValidationFormData {
+    /** Input file to perform the operation on. */
+    inputFile: Blob;
+}
+
+/**
+ * Multipart form data for the validateDocumentXlsxValidation operation.
+ */
+export interface ValidateDocumentXlsxValidationFormData {
+    /** Input file to perform the operation on. */
+    inputFile: Blob;
+}
+
+/**
+ * Multipart form data for the validateDocumentXmlValidation operation.
+ */
+export interface ValidateDocumentXmlValidationFormData {
+    /** Input file to perform the operation on. */
+    inputFile: Blob;
+}
+
+/**
+ * Multipart form data for the convertWebMdToHtml operation.
+ */
+export interface ConvertWebMdToHtmlFormData {
+    /** Input file to perform the operation on. */
+    inputFile: Blob;
+}
+
+/**
+ * Multipart form data for the convertDocumentXlsToCsv operation.
+ */
+export interface ConvertDocumentXlsToCsvFormData {
+    /** Input file to perform the operation on. */
+    inputFile: Blob;
+}
+
+/**
+ * Multipart form data for the convertDataXlsToJson operation.
+ */
+export interface ConvertDataXlsToJsonFormData {
+    /** Input file to perform the operation on. */
+    inputFile: Blob;
+}
+
+/**
+ * Multipart form data for the convertDocumentXlsToPdf operation.
+ */
+export interface ConvertDocumentXlsToPdfFormData {
+    /** Input file to perform the operation on. */
+    inputFile: Blob;
+}
+
+/**
+ * Multipart form data for the convertDocumentXlsToXlsx operation.
+ */
+export interface ConvertDocumentXlsToXlsxFormData {
+    /** Input file to perform the operation on. */
+    inputFile: Blob;
+}
+
+/**
+ * Multipart form data for the convertDocumentXlsxToCsv operation.
+ */
+export interface ConvertDocumentXlsxToCsvFormData {
+    /** Input file to perform the operation on. */
+    inputFile: Blob;
+}
+
+/**
+ * Multipart form data for the convertDataXlsxToJson operation.
+ */
+export interface ConvertDataXlsxToJsonFormData {
+    /** Input file to perform the operation on. */
+    inputFile: Blob;
+}
+
+/**
+ * Multipart form data for the convertDocumentXlsxToPdf operation.
+ */
+export interface ConvertDocumentXlsxToPdfFormData {
+    /** Input file to perform the operation on. */
+    inputFile: Blob;
+}
+
+/**
+ * Multipart form data for the convertDocumentXlsxToTxt operation.
+ */
+export interface ConvertDocumentXlsxToTxtFormData {
+    /** Input file to perform the operation on. */
+    inputFile: Blob;
+}
+
+/**
+ * Multipart form data for the addConvertDataXmlEditAttributeWithXPath operation.
+ */
+export interface AddConvertDataXmlEditAttributeWithXPathFormData {
+    /** Input XML file to perform the operation on. */
+    inputFile: Blob;
+}
+
+/**
+ * Multipart form data for the addConvertDataXmlEditChildWithXPath operation.
+ */
+export interface AddConvertDataXmlEditChildWithXPathFormData {
+    /** Input XML file to perform the operation on. */
+    inputFile: Blob;
+}
+
+/**
+ * Multipart form data for the removeConvertDataXmlWithXPath operation.
+ */
+export interface RemoveConvertDataXmlWithXPathFormData {
+    /** Input file to perform the operation on. */
+    inputFile: Blob;
+}
+
+/**
+ * Multipart form data for the removeConvertDataXmlEditAllChildNodesWithXPath operation.
+ */
+export interface RemoveConvertDataXmlEditAllChildNodesWithXPathFormData {
+    /** Input XML file to perform the operation on. */
+    inputFile: Blob;
+}
+
+/**
+ * Multipart form data for the replaceConvertDataXmlEditWithXPath operation.
+ */
+export interface ReplaceConvertDataXmlEditWithXPathFormData {
+    /** Input XML file to perform the operation on. */
+    inputFile: Blob;
+}
+
+/**
+ * Multipart form data for the setConvertDataXmlEditValueWithXPath operation.
+ */
+export interface SetConvertDataXmlEditValueWithXPathFormData {
+    /** Input XML file to perform the operation on. */
+    inputFile: Blob;
+}
+
+/**
+ * Multipart form data for the convertDataXmlQueryWithXQuery operation.
+ */
+export interface ConvertDataXmlQueryWithXQueryFormData {
+    /** Input XML file to perform the operation on. */
+    inputFile: Blob;
+}
+
+/**
+ * Multipart form data for the convertDataXmlQueryWithXQueryMulti operation.
+ */
+export interface ConvertDataXmlQueryWithXQueryMultiFormData {
+    /** First input XML file to perform the operation on. */
+    inputFile1: Blob;
+    /** Second input XML file to perform the operation on. */
+    inputFile2?: Blob;
+    /** Third input XML file to perform the operation on. */
+    inputFile3?: Blob;
+    /** Fourth input XML file to perform the operation on. */
+    inputFile4?: Blob;
+    /** Fifth input XML file to perform the operation on. */
+    inputFile5?: Blob;
+    /** Sixth input XML file to perform the operation on. */
+    inputFile6?: Blob;
+    /** Seventh input XML file to perform the operation on. */
+    inputFile7?: Blob;
+    /** Eighth input XML file to perform the operation on. */
+    inputFile8?: Blob;
+    /** Ninth input XML file to perform the operation on. */
+    inputFile9?: Blob;
+    /** Tenth input XML file to perform the operation on. */
+    inputFile10?: Blob;
+}
+
+/**
+ * Multipart form data for the convertDataXmlFilterWithXPath operation.
+ */
+export interface ConvertDataXmlFilterWithXPathFormData {
+    /** Input file to perform the operation on. */
+    inputFile: Blob;
+}
+
+/**
+ * Multipart form data for the convertDataXmlToJson operation.
+ */
+export interface ConvertDataXmlToJsonFormData {
+    /** Input file to perform the operation on. */
+    inputFile: Blob;
+}
+
+/**
+ * Multipart form data for the convertDataXmlTransformWithXsltToXml operation.
+ */
+export interface ConvertDataXmlTransformWithXsltToXmlFormData {
+    /** Input XML file to perform the operation on. */
+    inputFile: Blob;
+    /** Input XSLT file to use to transform the input XML file. */
+    transformFile: Blob;
+}
+
+/**
+ * Options for the convertDocumentAutodetectToTxt operation.
+ */
+export interface ConvertDocumentAutodetectToTxtOptions extends ConnectorOperationOptions {
+    /** Optional; specify how whitespace should be handled when converting the */
+    textFormattingMode?: string;
+}
+
+/**
+ * Options for the convertDocumentDocxToTxt operation.
+ */
+export interface ConvertDocumentDocxToTxtOptions extends ConnectorOperationOptions {
+    /** Optional; specify how whitespace should be handled when converting the */
+    textFormattingMode?: string;
+}
+
+/**
+ * Options for the convertDocumentPdfToTxt operation.
+ */
+export interface ConvertDocumentPdfToTxtOptions extends ConnectorOperationOptions {
+    /** Optional; specify how whitespace should be handled when converting PDF */
+    textFormattingMode?: string;
+}
+
+/**
+ * Options for the splitDocumentDocx operation.
+ */
+export interface SplitDocumentDocxOptions extends ConnectorOperationOptions {
+    /** Set to true to return the contents of each Worksheet directly, set to */
+    returnDocumentContents?: boolean;
+}
+
+/**
+ * Options for the splitDocumentPdfByPage operation.
+ */
+export interface SplitDocumentPdfByPageOptions extends ConnectorOperationOptions {
+    /** Set to true to directly return all of the document contents in the Doc */
+    returnDocumentContents?: boolean;
+}
+
+/**
+ * Options for the splitDocumentPptx operation.
+ */
+export interface SplitDocumentPptxOptions extends ConnectorOperationOptions {
+    /** Set to true to return the contents of each presentation directly, set */
+    returnDocumentContents?: boolean;
+}
+
+/**
+ * Options for the splitDocumentTxtByString operation.
+ */
+export interface SplitDocumentTxtByStringOptions extends ConnectorOperationOptions {
+    /** Optional; If true, empty elements will be skipped in the output */
+    skipEmptyElements?: boolean;
+}
+
+/**
+ * Options for the splitDocumentXlsx operation.
+ */
+export interface SplitDocumentXlsxOptions extends ConnectorOperationOptions {
+    /** Set to true to return the contents of each Worksheet directly, set to */
+    returnDocumentContents?: boolean;
+}
+
+/**
+ * Options for the convertDocumentXlsxToCsv operation.
+ */
+export interface ConvertDocumentXlsxToCsvOptions extends ConnectorOperationOptions {
+    /** Optional, set the output text encoding for the result; possible values */
+    outputEncoding?: string;
+}
 // #endregion Types
 
 // #region Client
@@ -2415,6 +3243,210 @@ export class CloudmersiveconvertClient extends ConnectorClientBase {
     }
 
     /**
+     * Get document type information
+     * @remarks Auto-detects a document's type information; does not require file extension.  Analyzes file contents to confirm file type.  Even if no file extension is present, the auto-detect system will reliably analyze the contents of the file and identify its file type.  Supports over 100 image file formats, Office document file formats, PDF, and more.
+     */
+    public async getConvertDocumentAutodetectInfo(input: GetConvertDocumentAutodetectInfoFormData, options: ConnectorOperationOptions = {}): Promise<AutodetectGetInfoResult> {
+        const requestPath = `/convert/autodetect/get-info`;
+        const formData = new FormData();
+        formData.append("inputFile", input.inputFile);
+
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.sendWithTracingAsync<AutodetectGetInfoResult>("Cloudmersiveconvert.getConvertDocumentAutodetectInfo", "ConvertDocument_AutodetectGetInfo", "POST", requestUrl, formData, options);
+
+        return httpResponse.value as AutodetectGetInfoResult;
+    }
+
+    /**
+     * Convert Document to PDF
+     * @remarks Automatically detect file type and convert it to PDF.  Supports all of the major Office document file formats including Word (DOCX, DOC), Excel (XLSX, XLS), PowerPoint (PPTX, PPT), over 100 image formats, HTML files, and even multi-page TIFF files.
+     */
+    public async convertDocumentAutodetectToPdf(input: ConvertDocumentAutodetectToPdfFormData, options: ConnectorOperationOptions = {}): Promise<Blob> {
+        const requestPath = `/convert/autodetect/to/pdf`;
+        const formData = new FormData();
+        formData.append("inputFile", input.inputFile);
+
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.sendWithTracingAsync<Blob>("Cloudmersiveconvert.convertDocumentAutodetectToPdf", "ConvertDocument_AutodetectToPdf", "POST", requestUrl, formData, options, undefined, true);
+
+        return httpResponse.value as Blob;
+    }
+
+    /**
+     * Convert Document to PNG array
+     * @remarks Automatically detect file type and convert it to an array of PNG images.  Supports all of the major Office document file formats, over 100 image formats, and even multi-page TIFF files.
+     */
+    public async convertDocumentAutodetectToPngArray(input: ConvertDocumentAutodetectToPngArrayFormData, options: ConnectorOperationOptions = {}): Promise<AutodetectToPngResult> {
+        const requestPath = `/convert/autodetect/to/png`;
+        const formData = new FormData();
+        formData.append("inputFile", input.inputFile);
+
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.sendWithTracingAsync<AutodetectToPngResult>("Cloudmersiveconvert.convertDocumentAutodetectToPngArray", "ConvertDocument_AutodetectToPngArray", "POST", requestUrl, formData, options);
+
+        return httpResponse.value as AutodetectToPngResult;
+    }
+
+    /**
+     * Convert Document to Text (txt)
+     * @remarks Automatically detect file type and convert it to Text.  Supports all of the major Office document file formats including Word (DOCX, DOC), Excel (XLSX, XLS), PowerPoint (PPTX, PPT) and PDF files.  For spreadsheets, all worksheets will be included.  If you wish to exclude certain pages, worksheets, slides, etc. use the Split document API first, or the delete pages/slides/worksheet APIs first to adjust the document to the target state prior to converting to text.
+     */
+    public async convertDocumentAutodetectToTxt(input: ConvertDocumentAutodetectToTxtFormData, options: ConvertDocumentAutodetectToTxtOptions = {}): Promise<TextConversionResult> {
+        const requestPath = `/convert/autodetect/to/txt`;
+        const requestHeaders: Record<string, string> = {};
+        if (options.textFormattingMode !== undefined) {
+            requestHeaders["textFormattingMode"] = String(options.textFormattingMode);
+        }
+        const formData = new FormData();
+        formData.append("inputFile", input.inputFile);
+
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.sendWithTracingAsync<TextConversionResult>("Cloudmersiveconvert.convertDocumentAutodetectToTxt", "ConvertDocument_AutodetectToTxt", "POST", requestUrl, formData, options, requestHeaders);
+
+        return httpResponse.value as TextConversionResult;
+    }
+
+    /**
+     * Compare Two Word DOCX
+     * @remarks Compare two Office Word Documents (docx) files and highlight the differences
+     */
+    public async compareDocumentDocx(input: CompareDocumentDocxFormData, options: ConnectorOperationOptions = {}): Promise<Blob> {
+        const requestPath = `/convert/compare/docx`;
+        const formData = new FormData();
+        formData.append("inputFile1", input.inputFile1);
+        formData.append("inputFile2", input.inputFile2);
+
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.sendWithTracingAsync<Blob>("Cloudmersiveconvert.compareDocumentDocx", "CompareDocument_Docx", "POST", requestUrl, formData, options, undefined, true);
+
+        return httpResponse.value as Blob;
+    }
+
+    /**
+     * Convert CSV to JSON conversion
+     * @remarks Convert a CSV file to a JSON object array
+     */
+    public async convertDataCsvToJson(input: ConvertDataCsvToJsonFormData, options: ConnectorOperationOptions = {}): Promise<Array<Record<string, unknown>>> {
+        const requestPath = `/convert/csv/to/json`;
+        const formData = new FormData();
+        formData.append("inputFile", input.inputFile);
+
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.sendWithTracingAsync<Array<Record<string, unknown>>>("Cloudmersiveconvert.convertDataCsvToJson", "ConvertData_CsvToJson", "POST", requestUrl, formData, options);
+
+        return httpResponse.value as Array<Record<string, unknown>>;
+    }
+
+    /**
+     * Convert CSV to Excel XLSX Spreadsheet
+     * @remarks Convert CSV file to Office Excel XLSX Workbooks file format.
+     */
+    public async convertDocumentCsvToXlsx(input: ConvertDocumentCsvToXlsxFormData, options: ConnectorOperationOptions = {}): Promise<Blob> {
+        const requestPath = `/convert/csv/to/xlsx`;
+        const formData = new FormData();
+        formData.append("inputFile", input.inputFile);
+
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.sendWithTracingAsync<Blob>("Cloudmersiveconvert.convertDocumentCsvToXlsx", "ConvertDocument_CsvToXlsx", "POST", requestUrl, formData, options, undefined, true);
+
+        return httpResponse.value as Blob;
+    }
+
+    /**
+     * Convert Word DOC (97-03) Document to DOCX
+     * @remarks Convert/upgrade Office Word (97-2003 Format) Documents (doc) to the modern DOCX format
+     */
+    public async convertDocumentDocToDocx(input: ConvertDocumentDocToDocxFormData, options: ConnectorOperationOptions = {}): Promise<Blob> {
+        const requestPath = `/convert/doc/to/docx`;
+        const formData = new FormData();
+        formData.append("inputFile", input.inputFile);
+
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.sendWithTracingAsync<Blob>("Cloudmersiveconvert.convertDocumentDocToDocx", "ConvertDocument_DocToDocx", "POST", requestUrl, formData, options, undefined, true);
+
+        return httpResponse.value as Blob;
+    }
+
+    /**
+     * Convert Word DOC (97-03) Document to PDF
+     * @remarks Convert Office Word (97-2003 Format) Documents (doc) to standard PDF
+     */
+    public async convertDocumentDocToPdf(input: ConvertDocumentDocToPdfFormData, options: ConnectorOperationOptions = {}): Promise<Blob> {
+        const requestPath = `/convert/doc/to/pdf`;
+        const formData = new FormData();
+        formData.append("inputFile", input.inputFile);
+
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.sendWithTracingAsync<Blob>("Cloudmersiveconvert.convertDocumentDocToPdf", "ConvertDocument_DocToPdf", "POST", requestUrl, formData, options, undefined, true);
+
+        return httpResponse.value as Blob;
+    }
+
+    /**
+     * Convert Word DOC (97-03) Document to Text (txt)
+     * @remarks Convert Office Word DOC (97-03) Document (doc) to text
+     */
+    public async convertDocumentDocToTxt(input: ConvertDocumentDocToTxtFormData, options: ConnectorOperationOptions = {}): Promise<TextConversionResult> {
+        const requestPath = `/convert/doc/to/txt`;
+        const formData = new FormData();
+        formData.append("inputFile", input.inputFile);
+
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.sendWithTracingAsync<TextConversionResult>("Cloudmersiveconvert.convertDocumentDocToTxt", "ConvertDocument_DocToTxt", "POST", requestUrl, formData, options);
+
+        return httpResponse.value as TextConversionResult;
+    }
+
+    /**
+     * Convert Word DOCX Document to PDF
+     * @remarks Convert Office Word Documents (docx) to standard PDF
+     */
+    public async convertDocumentDocxToPdf(input: ConvertDocumentDocxToPdfFormData, options: ConnectorOperationOptions = {}): Promise<Blob> {
+        const requestPath = `/convert/docx/to/pdf`;
+        const formData = new FormData();
+        formData.append("inputFile", input.inputFile);
+
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.sendWithTracingAsync<Blob>("Cloudmersiveconvert.convertDocumentDocxToPdf", "ConvertDocument_DocxToPdf", "POST", requestUrl, formData, options, undefined, true);
+
+        return httpResponse.value as Blob;
+    }
+
+    /**
+     * Convert Word DOCX Document to Text (txt)
+     * @remarks Convert Office Word Documents (docx) to text
+     */
+    public async convertDocumentDocxToTxt(input: ConvertDocumentDocxToTxtFormData, options: ConvertDocumentDocxToTxtOptions = {}): Promise<TextConversionResult> {
+        const requestPath = `/convert/docx/to/txt`;
+        const requestHeaders: Record<string, string> = {};
+        if (options.textFormattingMode !== undefined) {
+            requestHeaders["textFormattingMode"] = String(options.textFormattingMode);
+        }
+        const formData = new FormData();
+        formData.append("inputFile", input.inputFile);
+
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.sendWithTracingAsync<TextConversionResult>("Cloudmersiveconvert.convertDocumentDocxToTxt", "ConvertDocument_DocxToTxt", "POST", requestUrl, formData, options, requestHeaders);
+
+        return httpResponse.value as TextConversionResult;
+    }
+
+    /**
+     * Begin editing a document
+     * @remarks Uploads a document to Cloudmersive to begin a series of one or more editing operations.  To edit a document, first call Begin Editing on the document.  Then perform operations on the document using the secure URL returned from BeginEditing, such as Word DOCX Delete Pages and Insert Table.  Finally, perform finish editing on the URL to return the resulting edited document.  The editing URL is temporary and only stored in-memory cache, and will automatically expire from the cache after 30 minutes, and cannot be directly accessed.
+     */
+    public async editDocumentBeginEditing(input: EditDocumentBeginEditingFormData, options: ConnectorOperationOptions = {}): Promise<string> {
+        const requestPath = `/convert/edit/begin-editing`;
+        const formData = new FormData();
+        formData.append("inputFile", input.inputFile);
+
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.sendWithTracingAsync<string>("Cloudmersiveconvert.editDocumentBeginEditing", "EditDocument_BeginEditing", "POST", requestUrl, formData, options);
+
+        return httpResponse.value as string;
+    }
+
+    /**
      * Create a blank Word DOCX document
      * @remarks Returns a blank Word DOCX Document format file.  The file is blank, with no contents.  Use additional editing commands such as Insert Paragraph or Insert Table or Insert Image to populate the document.
      */
@@ -2433,7 +3465,7 @@ export class CloudmersiveconvertClient extends ConnectorClientBase {
     public async deleteEditDocumentDocxPages(input: RemoveDocxPagesRequest, options: ConnectorOperationOptions = {}): Promise<Blob> {
         const requestPath = `/convert/edit/docx/delete-pages`;
         const requestUrl = this.resolveUrl(requestPath);
-        const httpResponse = await this.sendWithTracingAsync<Blob>("Cloudmersiveconvert.deleteEditDocumentDocxPages", "EditDocument_DocxDeletePages", "POST", requestUrl, input, options);
+        const httpResponse = await this.sendWithTracingAsync<Blob>("Cloudmersiveconvert.deleteEditDocumentDocxPages", "EditDocument_DocxDeletePages", "POST", requestUrl, input, options, undefined, true);
 
         return httpResponse.value as Blob;
     }
@@ -2673,7 +3705,7 @@ export class CloudmersiveconvertClient extends ConnectorClientBase {
     public async replaceEditDocumentDocx(input: ReplaceStringRequest, options: ConnectorOperationOptions = {}): Promise<Blob> {
         const requestPath = `/convert/edit/docx/replace-all`;
         const requestUrl = this.resolveUrl(requestPath);
-        const httpResponse = await this.sendWithTracingAsync<Blob>("Cloudmersiveconvert.replaceEditDocumentDocx", "EditDocument_DocxReplace", "POST", requestUrl, input, options);
+        const httpResponse = await this.sendWithTracingAsync<Blob>("Cloudmersiveconvert.replaceEditDocumentDocx", "EditDocument_DocxReplace", "POST", requestUrl, input, options, undefined, true);
 
         return httpResponse.value as Blob;
     }
@@ -2745,7 +3777,7 @@ export class CloudmersiveconvertClient extends ConnectorClientBase {
     public async finishEditDocumentEditing(input: FinishEditingRequest, options: ConnectorOperationOptions = {}): Promise<Blob> {
         const requestPath = `/convert/edit/finish-editing`;
         const requestUrl = this.resolveUrl(requestPath);
-        const httpResponse = await this.sendWithTracingAsync<Blob>("Cloudmersiveconvert.finishEditDocumentEditing", "EditDocument_FinishEditing", "POST", requestUrl, input, options);
+        const httpResponse = await this.sendWithTracingAsync<Blob>("Cloudmersiveconvert.finishEditDocumentEditing", "EditDocument_FinishEditing", "POST", requestUrl, input, options, undefined, true);
 
         return httpResponse.value as Blob;
     }
@@ -2757,7 +3789,7 @@ export class CloudmersiveconvertClient extends ConnectorClientBase {
     public async deleteEditDocumentPptxSlides(input: RemovePptxSlidesRequest, options: ConnectorOperationOptions = {}): Promise<Blob> {
         const requestPath = `/convert/edit/pptx/delete-slides`;
         const requestUrl = this.resolveUrl(requestPath);
-        const httpResponse = await this.sendWithTracingAsync<Blob>("Cloudmersiveconvert.deleteEditDocumentPptxSlides", "EditDocument_PptxDeleteSlides", "POST", requestUrl, input, options);
+        const httpResponse = await this.sendWithTracingAsync<Blob>("Cloudmersiveconvert.deleteEditDocumentPptxSlides", "EditDocument_PptxDeleteSlides", "POST", requestUrl, input, options, undefined, true);
 
         return httpResponse.value as Blob;
     }
@@ -2769,7 +3801,7 @@ export class CloudmersiveconvertClient extends ConnectorClientBase {
     public async replaceEditDocumentPptx(input: ReplaceStringRequest, options: ConnectorOperationOptions = {}): Promise<Blob> {
         const requestPath = `/convert/edit/pptx/replace-all`;
         const requestUrl = this.resolveUrl(requestPath);
-        const httpResponse = await this.sendWithTracingAsync<Blob>("Cloudmersiveconvert.replaceEditDocumentPptx", "EditDocument_PptxReplace", "POST", requestUrl, input, options);
+        const httpResponse = await this.sendWithTracingAsync<Blob>("Cloudmersiveconvert.replaceEditDocumentPptx", "EditDocument_PptxReplace", "POST", requestUrl, input, options, undefined, true);
 
         return httpResponse.value as Blob;
     }
@@ -2949,7 +3981,112 @@ export class CloudmersiveconvertClient extends ConnectorClientBase {
     public async convertWebHtmlToDocx(input: HtmlToOfficeRequest, options: ConnectorOperationOptions = {}): Promise<Blob> {
         const requestPath = `/convert/html/to/docx`;
         const requestUrl = this.resolveUrl(requestPath);
-        const httpResponse = await this.sendWithTracingAsync<Blob>("Cloudmersiveconvert.convertWebHtmlToDocx", "ConvertWeb_HtmlToDocx", "POST", requestUrl, input, options);
+        const httpResponse = await this.sendWithTracingAsync<Blob>("Cloudmersiveconvert.convertWebHtmlToDocx", "ConvertWeb_HtmlToDocx", "POST", requestUrl, input, options, undefined, true);
+
+        return httpResponse.value as Blob;
+    }
+
+    /**
+     * Convert HTML document file to PDF Document
+     * @remarks Convert standard HTML, with full support for CSS, JavaScript, Images, and other complex behavior to PDF.  To use external files such as images, use an absolute URL to the file.
+     */
+    public async convertDocumentHtmlToPdf(input: ConvertDocumentHtmlToPdfFormData, options: ConnectorOperationOptions = {}): Promise<Blob> {
+        const requestPath = `/convert/html/to/pdf`;
+        const formData = new FormData();
+        formData.append("inputFile", input.inputFile);
+
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.sendWithTracingAsync<Blob>("Cloudmersiveconvert.convertDocumentHtmlToPdf", "ConvertDocument_HtmlToPdf", "POST", requestUrl, formData, options, undefined, true);
+
+        return httpResponse.value as Blob;
+    }
+
+    /**
+     * Convert HTML document file to PNG image array
+     * @remarks Convert standard HTML, with full support for CSS, JavaScript, Images, and other complex behavior to an array of PNG images, one for each page.  To use external files in your HTML such as images, use an absolute URL to the file.
+     */
+    public async convertDocumentHtmlToPng(input: ConvertDocumentHtmlToPngFormData, options: ConnectorOperationOptions = {}): Promise<PdfToPngResult> {
+        const requestPath = `/convert/html/to/png`;
+        const formData = new FormData();
+        formData.append("inputFile", input.inputFile);
+
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.sendWithTracingAsync<PdfToPngResult>("Cloudmersiveconvert.convertDocumentHtmlToPng", "ConvertDocument_HtmlToPng", "POST", requestUrl, formData, options);
+
+        return httpResponse.value as PdfToPngResult;
+    }
+
+    /**
+     * HTML Document file to Text (txt)
+     * @remarks HTML document to text
+     */
+    public async convertDocumentHtmlToTxt(input: ConvertDocumentHtmlToTxtFormData, options: ConnectorOperationOptions = {}): Promise<TextConversionResult> {
+        const requestPath = `/convert/html/to/txt`;
+        const formData = new FormData();
+        formData.append("inputFile", input.inputFile);
+
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.sendWithTracingAsync<TextConversionResult>("Cloudmersiveconvert.convertDocumentHtmlToTxt", "ConvertDocument_HtmlToTxt", "POST", requestUrl, formData, options);
+
+        return httpResponse.value as TextConversionResult;
+    }
+
+    /**
+     * Multi-page image format conversion
+     * @remarks Convert between over 100 file formats, including support for Multiple-Page formats (e.g. PDFs, TIFFs, etc. with multiple pages).
+     */
+    public async convertImageMultipageImageFormatConvert(input: ConvertImageMultipageImageFormatConvertFormData, format1: string, format2: string, options: ConnectorOperationOptions = {}): Promise<MultipageImageFormatConversionResult> {
+        const requestPath = `/convert/image-multipage/${encodeURIComponent(String(format1))}/to/${encodeURIComponent(String(format2))}`;
+        const formData = new FormData();
+        formData.append("inputFile", input.inputFile);
+
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.sendWithTracingAsync<MultipageImageFormatConversionResult>("Cloudmersiveconvert.convertImageMultipageImageFormatConvert", "ConvertImage_MultipageImageFormatConvert", "POST", requestUrl, formData, options);
+
+        return httpResponse.value as MultipageImageFormatConversionResult;
+    }
+
+    /**
+     * Get information about an image
+     * @remarks Get details from an image such as size, format and MIME type, compression, EXIF data such as location, DPI, unique colors, transparency information, and more
+     */
+    public async getConvertImageImageInfo(input: GetConvertImageImageInfoFormData, options: ConnectorOperationOptions = {}): Promise<GetImageInfoResult> {
+        const requestPath = `/convert/image/get-info`;
+        const formData = new FormData();
+        formData.append("inputFile", input.inputFile);
+
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.sendWithTracingAsync<GetImageInfoResult>("Cloudmersiveconvert.getConvertImageImageInfo", "ConvertImage_GetImageInfo", "POST", requestUrl, formData, options);
+
+        return httpResponse.value as GetImageInfoResult;
+    }
+
+    /**
+     * Change image DPI
+     * @remarks Resize an image to have a different DPI
+     */
+    public async setConvertImageImageDPI(input: SetConvertImageImageDPIFormData, dpi: number, options: ConnectorOperationOptions = {}): Promise<Blob> {
+        const requestPath = `/convert/image/set-dpi/${encodeURIComponent(String(dpi))}`;
+        const formData = new FormData();
+        formData.append("inputFile", input.inputFile);
+
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.sendWithTracingAsync<Blob>("Cloudmersiveconvert.setConvertImageImageDPI", "ConvertImage_ImageSetDPI", "POST", requestUrl, formData, options, undefined, true);
+
+        return httpResponse.value as Blob;
+    }
+
+    /**
+     * Image format conversion
+     * @remarks Convert between over 100 file formats, including key formats such as Photoshop (PSD), PNG, JPG, GIF, NEF, and BMP.
+     */
+    public async convertImageImageFormatConvert(input: ConvertImageImageFormatConvertFormData, format1: string, format2: string, options: ConnectorOperationOptions = {}): Promise<Blob> {
+        const requestPath = `/convert/image/${encodeURIComponent(String(format1))}/to/${encodeURIComponent(String(format2))}`;
+        const formData = new FormData();
+        formData.append("inputFile", input.inputFile);
+
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.sendWithTracingAsync<Blob>("Cloudmersiveconvert.convertImageImageFormatConvert", "ConvertImage_ImageFormatConvert", "POST", requestUrl, formData, options, undefined, true);
 
         return httpResponse.value as Blob;
     }
@@ -2967,6 +4104,609 @@ export class CloudmersiveconvertClient extends ConnectorClientBase {
     }
 
     /**
+     * Merge Two Word DOCX Together
+     * @remarks Combine two Office Word Documents (docx) into one single Office Word document
+     */
+    public async mergeDocumentDocx(input: MergeDocumentDocxFormData, options: ConnectorOperationOptions = {}): Promise<Blob> {
+        const requestPath = `/convert/merge/docx`;
+        const formData = new FormData();
+        formData.append("inputFile1", input.inputFile1);
+        formData.append("inputFile2", input.inputFile2);
+
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.sendWithTracingAsync<Blob>("Cloudmersiveconvert.mergeDocumentDocx", "MergeDocument_Docx", "POST", requestUrl, formData, options, undefined, true);
+
+        return httpResponse.value as Blob;
+    }
+
+    /**
+     * Merge Multple Word DOCX Together
+     * @remarks Combine multiple Office Word Documents (docx) into one single Office Word document
+     */
+    public async mergeDocumentDocxMulti(input: MergeDocumentDocxMultiFormData, options: ConnectorOperationOptions = {}): Promise<Blob> {
+        const requestPath = `/convert/merge/docx/multi`;
+        const formData = new FormData();
+        formData.append("inputFile1", input.inputFile1);
+        formData.append("inputFile2", input.inputFile2);
+        if (input.inputFile3 !== undefined) {
+            formData.append("inputFile3", input.inputFile3);
+        }
+        if (input.inputFile4 !== undefined) {
+            formData.append("inputFile4", input.inputFile4);
+        }
+        if (input.inputFile5 !== undefined) {
+            formData.append("inputFile5", input.inputFile5);
+        }
+        if (input.inputFile6 !== undefined) {
+            formData.append("inputFile6", input.inputFile6);
+        }
+        if (input.inputFile7 !== undefined) {
+            formData.append("inputFile7", input.inputFile7);
+        }
+        if (input.inputFile8 !== undefined) {
+            formData.append("inputFile8", input.inputFile8);
+        }
+        if (input.inputFile9 !== undefined) {
+            formData.append("inputFile9", input.inputFile9);
+        }
+        if (input.inputFile10 !== undefined) {
+            formData.append("inputFile10", input.inputFile10);
+        }
+
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.sendWithTracingAsync<Blob>("Cloudmersiveconvert.mergeDocumentDocxMulti", "MergeDocument_DocxMulti", "POST", requestUrl, formData, options, undefined, true);
+
+        return httpResponse.value as Blob;
+    }
+
+    /**
+     * Merge Two PDF Files Together
+     * @remarks Combine two PDF files (pdf) into a single PDF document, preserving the order of the input documents in the combined document
+     */
+    public async mergeDocumentPdf(input: MergeDocumentPdfFormData, options: ConnectorOperationOptions = {}): Promise<Blob> {
+        const requestPath = `/convert/merge/pdf`;
+        const formData = new FormData();
+        formData.append("inputFile1", input.inputFile1);
+        formData.append("inputFile2", input.inputFile2);
+
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.sendWithTracingAsync<Blob>("Cloudmersiveconvert.mergeDocumentPdf", "MergeDocument_Pdf", "POST", requestUrl, formData, options, undefined, true);
+
+        return httpResponse.value as Blob;
+    }
+
+    /**
+     * Merge Multple PDF Files Together
+     * @remarks Combine multiple PDF files (pdf) into a single PDF document, preserving the order of the input documents in the combined document
+     */
+    public async mergeDocumentPdfMulti(input: MergeDocumentPdfMultiFormData, options: ConnectorOperationOptions = {}): Promise<Blob> {
+        const requestPath = `/convert/merge/pdf/multi`;
+        const formData = new FormData();
+        formData.append("inputFile1", input.inputFile1);
+        formData.append("inputFile2", input.inputFile2);
+        if (input.inputFile3 !== undefined) {
+            formData.append("inputFile3", input.inputFile3);
+        }
+        if (input.inputFile4 !== undefined) {
+            formData.append("inputFile4", input.inputFile4);
+        }
+        if (input.inputFile5 !== undefined) {
+            formData.append("inputFile5", input.inputFile5);
+        }
+        if (input.inputFile6 !== undefined) {
+            formData.append("inputFile6", input.inputFile6);
+        }
+        if (input.inputFile7 !== undefined) {
+            formData.append("inputFile7", input.inputFile7);
+        }
+        if (input.inputFile8 !== undefined) {
+            formData.append("inputFile8", input.inputFile8);
+        }
+        if (input.inputFile9 !== undefined) {
+            formData.append("inputFile9", input.inputFile9);
+        }
+        if (input.inputFile10 !== undefined) {
+            formData.append("inputFile10", input.inputFile10);
+        }
+
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.sendWithTracingAsync<Blob>("Cloudmersiveconvert.mergeDocumentPdfMulti", "MergeDocument_PdfMulti", "POST", requestUrl, formData, options, undefined, true);
+
+        return httpResponse.value as Blob;
+    }
+
+    /**
+     * Merge Multple PNG Files Together
+     * @remarks Combine multiple PNG files into a single PNG document, preserving the order of the input documents in the combined document by stacking them vertically
+     */
+    public async mergeDocumentPng(input: MergeDocumentPngFormData, options: ConnectorOperationOptions = {}): Promise<Blob> {
+        const requestPath = `/convert/merge/png/vertical`;
+        const formData = new FormData();
+        formData.append("inputFile1", input.inputFile1);
+        formData.append("inputFile2", input.inputFile2);
+
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.sendWithTracingAsync<Blob>("Cloudmersiveconvert.mergeDocumentPng", "MergeDocument_Png", "POST", requestUrl, formData, options, undefined, true);
+
+        return httpResponse.value as Blob;
+    }
+
+    /**
+     * Merge Two PowerPoint PPTX Together
+     * @remarks Combine two Office PowerPoint presentations (pptx) into one single Office PowerPoint presentation
+     */
+    public async mergeDocumentPptx(input: MergeDocumentPptxFormData, options: ConnectorOperationOptions = {}): Promise<Blob> {
+        const requestPath = `/convert/merge/pptx`;
+        const formData = new FormData();
+        formData.append("inputFile1", input.inputFile1);
+        formData.append("inputFile2", input.inputFile2);
+
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.sendWithTracingAsync<Blob>("Cloudmersiveconvert.mergeDocumentPptx", "MergeDocument_Pptx", "POST", requestUrl, formData, options, undefined, true);
+
+        return httpResponse.value as Blob;
+    }
+
+    /**
+     * Merge Multple PowerPoint PPTX Together
+     * @remarks Combine multiple Office PowerPoint presentations (pptx) into one single Office PowerPoint presentation
+     */
+    public async mergeDocumentPptxMulti(input: MergeDocumentPptxMultiFormData, options: ConnectorOperationOptions = {}): Promise<Blob> {
+        const requestPath = `/convert/merge/pptx/multi`;
+        const formData = new FormData();
+        formData.append("inputFile1", input.inputFile1);
+        formData.append("inputFile2", input.inputFile2);
+        if (input.inputFile3 !== undefined) {
+            formData.append("inputFile3", input.inputFile3);
+        }
+        if (input.inputFile4 !== undefined) {
+            formData.append("inputFile4", input.inputFile4);
+        }
+        if (input.inputFile5 !== undefined) {
+            formData.append("inputFile5", input.inputFile5);
+        }
+        if (input.inputFile6 !== undefined) {
+            formData.append("inputFile6", input.inputFile6);
+        }
+        if (input.inputFile7 !== undefined) {
+            formData.append("inputFile7", input.inputFile7);
+        }
+        if (input.inputFile8 !== undefined) {
+            formData.append("inputFile8", input.inputFile8);
+        }
+        if (input.inputFile9 !== undefined) {
+            formData.append("inputFile9", input.inputFile9);
+        }
+        if (input.inputFile10 !== undefined) {
+            formData.append("inputFile10", input.inputFile10);
+        }
+
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.sendWithTracingAsync<Blob>("Cloudmersiveconvert.mergeDocumentPptxMulti", "MergeDocument_PptxMulti", "POST", requestUrl, formData, options, undefined, true);
+
+        return httpResponse.value as Blob;
+    }
+
+    /**
+     * Merge Two Text (TXT) Files Together
+     * @remarks Combine two Text (.TXT) files into a single text document, preserving the order of the input documents in the combined document by stacking them vertically.
+     */
+    public async mergeDocumentTxt(input: MergeDocumentTxtFormData, options: ConnectorOperationOptions = {}): Promise<MergeDocumentTxtResponse> {
+        const requestPath = `/convert/merge/txt`;
+        const formData = new FormData();
+        formData.append("inputFile1", input.inputFile1);
+        formData.append("inputFile2", input.inputFile2);
+
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.sendWithTracingAsync<MergeDocumentTxtResponse>("Cloudmersiveconvert.mergeDocumentTxt", "MergeDocument_Txt", "POST", requestUrl, formData, options);
+
+        return httpResponse.value as MergeDocumentTxtResponse;
+    }
+
+    /**
+     * Merge Multple Text (TXT) Files Together
+     * @remarks Combine multiple Text (.TXT) files into a single text document, preserving the order of the input documents in the combined document by stacking them vertically.
+     */
+    public async mergeDocumentTxtMulti(input: MergeDocumentTxtMultiFormData, options: ConnectorOperationOptions = {}): Promise<Blob> {
+        const requestPath = `/convert/merge/txt/multi`;
+        const formData = new FormData();
+        formData.append("inputFile1", input.inputFile1);
+        formData.append("inputFile2", input.inputFile2);
+        if (input.inputFile3 !== undefined) {
+            formData.append("inputFile3", input.inputFile3);
+        }
+        if (input.inputFile4 !== undefined) {
+            formData.append("inputFile4", input.inputFile4);
+        }
+        if (input.inputFile5 !== undefined) {
+            formData.append("inputFile5", input.inputFile5);
+        }
+        if (input.inputFile6 !== undefined) {
+            formData.append("inputFile6", input.inputFile6);
+        }
+        if (input.inputFile7 !== undefined) {
+            formData.append("inputFile7", input.inputFile7);
+        }
+        if (input.inputFile8 !== undefined) {
+            formData.append("inputFile8", input.inputFile8);
+        }
+        if (input.inputFile9 !== undefined) {
+            formData.append("inputFile9", input.inputFile9);
+        }
+        if (input.inputFile10 !== undefined) {
+            formData.append("inputFile10", input.inputFile10);
+        }
+
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.sendWithTracingAsync<Blob>("Cloudmersiveconvert.mergeDocumentTxtMulti", "MergeDocument_TxtMulti", "POST", requestUrl, formData, options, undefined, true);
+
+        return httpResponse.value as Blob;
+    }
+
+    /**
+     * Merge Two Excel XLSX Together
+     * @remarks Combine two Office Excel spreadsheets (xlsx) into a single Office Excel spreadsheet
+     */
+    public async mergeDocumentXlsx(input: MergeDocumentXlsxFormData, options: ConnectorOperationOptions = {}): Promise<Blob> {
+        const requestPath = `/convert/merge/xlsx`;
+        const formData = new FormData();
+        formData.append("inputFile1", input.inputFile1);
+        formData.append("inputFile2", input.inputFile2);
+
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.sendWithTracingAsync<Blob>("Cloudmersiveconvert.mergeDocumentXlsx", "MergeDocument_Xlsx", "POST", requestUrl, formData, options, undefined, true);
+
+        return httpResponse.value as Blob;
+    }
+
+    /**
+     * Merge Multple Excel XLSX Together
+     * @remarks Combine multiple Office Excel spreadsheets (xlsx) into a single Office Excel spreadsheet
+     */
+    public async mergeDocumentXlsxMulti(input: MergeDocumentXlsxMultiFormData, options: ConnectorOperationOptions = {}): Promise<Blob> {
+        const requestPath = `/convert/merge/xlsx/multi`;
+        const formData = new FormData();
+        formData.append("inputFile1", input.inputFile1);
+        formData.append("inputFile2", input.inputFile2);
+        if (input.inputFile3 !== undefined) {
+            formData.append("inputFile3", input.inputFile3);
+        }
+        if (input.inputFile4 !== undefined) {
+            formData.append("inputFile4", input.inputFile4);
+        }
+        if (input.inputFile5 !== undefined) {
+            formData.append("inputFile5", input.inputFile5);
+        }
+        if (input.inputFile6 !== undefined) {
+            formData.append("inputFile6", input.inputFile6);
+        }
+        if (input.inputFile7 !== undefined) {
+            formData.append("inputFile7", input.inputFile7);
+        }
+        if (input.inputFile8 !== undefined) {
+            formData.append("inputFile8", input.inputFile8);
+        }
+        if (input.inputFile9 !== undefined) {
+            formData.append("inputFile9", input.inputFile9);
+        }
+        if (input.inputFile10 !== undefined) {
+            formData.append("inputFile10", input.inputFile10);
+        }
+
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.sendWithTracingAsync<Blob>("Cloudmersiveconvert.mergeDocumentXlsxMulti", "MergeDocument_XlsxMulti", "POST", requestUrl, formData, options, undefined, true);
+
+        return httpResponse.value as Blob;
+    }
+
+    /**
+     * Convert PDF to Word DOCX Document
+     * @remarks Convert standard PDF to Office Word Documents (docx).    Converts a PDF at high fidelity into Word format, where it can be easily edited and processed.
+     */
+    public async convertDocumentPdfToDocx(input: ConvertDocumentPdfToDocxFormData, options: ConnectorOperationOptions = {}): Promise<Blob> {
+        const requestPath = `/convert/pdf/to/docx`;
+        const formData = new FormData();
+        formData.append("inputFile", input.inputFile);
+
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.sendWithTracingAsync<Blob>("Cloudmersiveconvert.convertDocumentPdfToDocx", "ConvertDocument_PdfToDocx", "POST", requestUrl, formData, options, undefined, true);
+
+        return httpResponse.value as Blob;
+    }
+
+    /**
+     * Convert PDF to Word DOCX Document based on rasterized version of the PDF
+     * @remarks Convert standard PDF to Office Word Documents (docx), but first rasterize the PDF.    Converts a PDF at high fidelity into Word format.
+     */
+    public async convertDocumentPdfToDocxRasterize(input: ConvertDocumentPdfToDocxRasterizeFormData, options: ConnectorOperationOptions = {}): Promise<Blob> {
+        const requestPath = `/convert/pdf/to/docx/rasterize`;
+        const formData = new FormData();
+        formData.append("inputFile", input.inputFile);
+
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.sendWithTracingAsync<Blob>("Cloudmersiveconvert.convertDocumentPdfToDocxRasterize", "ConvertDocument_PdfToDocxRasterize", "POST", requestUrl, formData, options, undefined, true);
+
+        return httpResponse.value as Blob;
+    }
+
+    /**
+     * Convert PDF to PNG Image Array
+     * @remarks Convert PDF document to PNG array, one image per page.
+     */
+    public async convertDocumentPdfToPngArray(input: ConvertDocumentPdfToPngArrayFormData, options: ConnectorOperationOptions = {}): Promise<PdfToPngResult> {
+        const requestPath = `/convert/pdf/to/png`;
+        const formData = new FormData();
+        formData.append("inputFile", input.inputFile);
+
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.sendWithTracingAsync<PdfToPngResult>("Cloudmersiveconvert.convertDocumentPdfToPngArray", "ConvertDocument_PdfToPngArray", "POST", requestUrl, formData, options);
+
+        return httpResponse.value as PdfToPngResult;
+    }
+
+    /**
+     * Convert PDF to Single PNG image
+     * @remarks Convert PDF document to a single tall PNG image, by stacking/concatenating the images vertically into a single "tall" image
+     */
+    public async convertDocumentPdfToPngSingle(input: ConvertDocumentPdfToPngSingleFormData, options: ConnectorOperationOptions = {}): Promise<Blob> {
+        const requestPath = `/convert/pdf/to/png/merge-single`;
+        const formData = new FormData();
+        formData.append("inputFile", input.inputFile);
+
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.sendWithTracingAsync<Blob>("Cloudmersiveconvert.convertDocumentPdfToPngSingle", "ConvertDocument_PdfToPngSingle", "POST", requestUrl, formData, options, undefined, true);
+
+        return httpResponse.value as Blob;
+    }
+
+    /**
+     * Convert PDF to PowerPoint PPTX Presentation
+     * @remarks Convert standard PDF to Office PowerPoint Presentation (pptx).  Converts a PDF file at high fidelity into PowerPoint format, where it can be easily edited and processed.
+     */
+    public async convertDocumentPdfToPptx(input: ConvertDocumentPdfToPptxFormData, options: ConnectorOperationOptions = {}): Promise<Blob> {
+        const requestPath = `/convert/pdf/to/pptx`;
+        const formData = new FormData();
+        formData.append("inputFile", input.inputFile);
+
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.sendWithTracingAsync<Blob>("Cloudmersiveconvert.convertDocumentPdfToPptx", "ConvertDocument_PdfToPptx", "POST", requestUrl, formData, options, undefined, true);
+
+        return httpResponse.value as Blob;
+    }
+
+    /**
+     * Convert PDF Document to Text (txt)
+     * @remarks PDF document to text
+     */
+    public async convertDocumentPdfToTxt(input: ConvertDocumentPdfToTxtFormData, options: ConvertDocumentPdfToTxtOptions = {}): Promise<TextConversionResult> {
+        const requestPath = `/convert/pdf/to/txt`;
+        const requestHeaders: Record<string, string> = {};
+        if (options.textFormattingMode !== undefined) {
+            requestHeaders["textFormattingMode"] = String(options.textFormattingMode);
+        }
+        const formData = new FormData();
+        formData.append("inputFile", input.inputFile);
+
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.sendWithTracingAsync<TextConversionResult>("Cloudmersiveconvert.convertDocumentPdfToTxt", "ConvertDocument_PdfToTxt", "POST", requestUrl, formData, options, requestHeaders);
+
+        return httpResponse.value as TextConversionResult;
+    }
+
+    /**
+     * Convert PNG Array to PDF
+     * @remarks Convert an array of PNG images, one image per page, into a newly-created PDF.  Supports images of different sizes as input.
+     */
+    public async convertDocumentPngArrayToPdf(input: ConvertDocumentPngArrayToPdfFormData, options: ConnectorOperationOptions = {}): Promise<Blob> {
+        const requestPath = `/convert/png/to/pdf`;
+        const formData = new FormData();
+        formData.append("inputFile1", input.inputFile1);
+        formData.append("inputFile2", input.inputFile2);
+        if (input.inputFile3 !== undefined) {
+            formData.append("inputFile3", input.inputFile3);
+        }
+        if (input.inputFile4 !== undefined) {
+            formData.append("inputFile4", input.inputFile4);
+        }
+        if (input.inputFile5 !== undefined) {
+            formData.append("inputFile5", input.inputFile5);
+        }
+        if (input.inputFile6 !== undefined) {
+            formData.append("inputFile6", input.inputFile6);
+        }
+        if (input.inputFile7 !== undefined) {
+            formData.append("inputFile7", input.inputFile7);
+        }
+        if (input.inputFile8 !== undefined) {
+            formData.append("inputFile8", input.inputFile8);
+        }
+        if (input.inputFile9 !== undefined) {
+            formData.append("inputFile9", input.inputFile9);
+        }
+        if (input.inputFile10 !== undefined) {
+            formData.append("inputFile10", input.inputFile10);
+        }
+
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.sendWithTracingAsync<Blob>("Cloudmersiveconvert.convertDocumentPngArrayToPdf", "ConvertDocument_PngArrayToPdf", "POST", requestUrl, formData, options, undefined, true);
+
+        return httpResponse.value as Blob;
+    }
+
+    /**
+     * Convert PowerPoint PPT (97-03) Presentation to PDF
+     * @remarks Convert Office PowerPoint (97-2003) Documents (ppt) to standard PDF
+     */
+    public async convertDocumentPptToPdf(input: ConvertDocumentPptToPdfFormData, options: ConnectorOperationOptions = {}): Promise<Blob> {
+        const requestPath = `/convert/ppt/to/pdf`;
+        const formData = new FormData();
+        formData.append("inputFile", input.inputFile);
+
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.sendWithTracingAsync<Blob>("Cloudmersiveconvert.convertDocumentPptToPdf", "ConvertDocument_PptToPdf", "POST", requestUrl, formData, options, undefined, true);
+
+        return httpResponse.value as Blob;
+    }
+
+    /**
+     * Convert PowerPoint PPT (97-03) Presentation to PPTX
+     * @remarks Convert/upgrade Office PowerPoint (97-2003) Documents (ppt) to modern PPTX
+     */
+    public async convertDocumentPptToPptx(input: ConvertDocumentPptToPptxFormData, options: ConnectorOperationOptions = {}): Promise<Blob> {
+        const requestPath = `/convert/ppt/to/pptx`;
+        const formData = new FormData();
+        formData.append("inputFile", input.inputFile);
+
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.sendWithTracingAsync<Blob>("Cloudmersiveconvert.convertDocumentPptToPptx", "ConvertDocument_PptToPptx", "POST", requestUrl, formData, options, undefined, true);
+
+        return httpResponse.value as Blob;
+    }
+
+    /**
+     * Convert PowerPoint PPTX Presentation to PDF
+     * @remarks Convert Office PowerPoint Documents (pptx) to standard PDF
+     */
+    public async convertDocumentPptxToPdf(input: ConvertDocumentPptxToPdfFormData, options: ConnectorOperationOptions = {}): Promise<Blob> {
+        const requestPath = `/convert/pptx/to/pdf`;
+        const formData = new FormData();
+        formData.append("inputFile", input.inputFile);
+
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.sendWithTracingAsync<Blob>("Cloudmersiveconvert.convertDocumentPptxToPdf", "ConvertDocument_PptxToPdf", "POST", requestUrl, formData, options, undefined, true);
+
+        return httpResponse.value as Blob;
+    }
+
+    /**
+     * Convert PowerPoint PPTX Presentation to Text (txt)
+     * @remarks Convert Office PowerPoint Documents (pptx) to standard Text
+     */
+    public async convertDocumentPptxToTxt(input: ConvertDocumentPptxToTxtFormData, options: ConnectorOperationOptions = {}): Promise<TextConversionResult> {
+        const requestPath = `/convert/pptx/to/txt`;
+        const formData = new FormData();
+        formData.append("inputFile", input.inputFile);
+
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.sendWithTracingAsync<TextConversionResult>("Cloudmersiveconvert.convertDocumentPptxToTxt", "ConvertDocument_PptxToTxt", "POST", requestUrl, formData, options);
+
+        return httpResponse.value as TextConversionResult;
+    }
+
+    /**
+     * Split a single Word Document DOCX into Separate Documents by Page
+     * @remarks Split a Word DOCX Document, comprised of multiple pages into separate Word DOCX document files, with each containing exactly one page.
+     */
+    public async splitDocumentDocx(input: SplitDocumentDocxFormData, options: SplitDocumentDocxOptions = {}): Promise<SplitDocxDocumentResult> {
+        const requestPath = `/convert/split/docx`;
+        const requestHeaders: Record<string, string> = {};
+        if (options.returnDocumentContents !== undefined) {
+            requestHeaders["returnDocumentContents"] = String(options.returnDocumentContents);
+        }
+        const formData = new FormData();
+        formData.append("inputFile", input.inputFile);
+
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.sendWithTracingAsync<SplitDocxDocumentResult>("Cloudmersiveconvert.splitDocumentDocx", "SplitDocument_Docx", "POST", requestUrl, formData, options, requestHeaders);
+
+        return httpResponse.value as SplitDocxDocumentResult;
+    }
+
+    /**
+     * Split a PDF file into separate PDF files, one per page
+     * @remarks Split an input PDF file into separate pages, comprised of one PDF file per page.
+     */
+    public async splitDocumentPdfByPage(input: SplitDocumentPdfByPageFormData, options: SplitDocumentPdfByPageOptions = {}): Promise<SplitPdfResult> {
+        const requestPath = `/convert/split/pdf`;
+        const requestHeaders: Record<string, string> = {};
+        if (options.returnDocumentContents !== undefined) {
+            requestHeaders["returnDocumentContents"] = String(options.returnDocumentContents);
+        }
+        const formData = new FormData();
+        formData.append("inputFile", input.inputFile);
+
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.sendWithTracingAsync<SplitPdfResult>("Cloudmersiveconvert.splitDocumentPdfByPage", "SplitDocument_PdfByPage", "POST", requestUrl, formData, options, requestHeaders);
+
+        return httpResponse.value as SplitPdfResult;
+    }
+
+    /**
+     * Split a single PowerPoint Presentation PPTX into Separate Slides
+     * @remarks Split an PowerPoint PPTX Presentation, comprised of multiple slides into separate PowerPoint PPTX presentation files, with each containing exactly one slide.
+     */
+    public async splitDocumentPptx(input: SplitDocumentPptxFormData, options: SplitDocumentPptxOptions = {}): Promise<SplitPptxPresentationResult> {
+        const requestPath = `/convert/split/pptx`;
+        const requestHeaders: Record<string, string> = {};
+        if (options.returnDocumentContents !== undefined) {
+            requestHeaders["returnDocumentContents"] = String(options.returnDocumentContents);
+        }
+        const formData = new FormData();
+        formData.append("inputFile", input.inputFile);
+
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.sendWithTracingAsync<SplitPptxPresentationResult>("Cloudmersiveconvert.splitDocumentPptx", "SplitDocument_Pptx", "POST", requestUrl, formData, options, requestHeaders);
+
+        return httpResponse.value as SplitPptxPresentationResult;
+    }
+
+    /**
+     * Split a single Text file (txt) into lines
+     * @remarks Split a Text (txt) Document by line, returning each line separately in order.  Supports multiple types of newlines.
+     */
+    public async splitDocumentTxtByLine(input: SplitDocumentTxtByLineFormData, options: ConnectorOperationOptions = {}): Promise<SplitTextDocumentByLinesResult> {
+        const requestPath = `/convert/split/txt/by-line`;
+        const formData = new FormData();
+        formData.append("inputFile", input.inputFile);
+
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.sendWithTracingAsync<SplitTextDocumentByLinesResult>("Cloudmersiveconvert.splitDocumentTxtByLine", "SplitDocument_TxtByLine", "POST", requestUrl, formData, options);
+
+        return httpResponse.value as SplitTextDocumentByLinesResult;
+    }
+
+    /**
+     * Split a single Text file (txt) by a string delimiter
+     * @remarks Split a Text (txt) Document by a string delimiter, returning each component of the string as an array of strings.
+     */
+    public async splitDocumentTxtByString(input: SplitDocumentTxtByStringFormData, splitDelimiter: string, options: SplitDocumentTxtByStringOptions = {}): Promise<SplitTextDocumentByStringResult> {
+        const requestPath = `/convert/split/txt/by-string`;
+        const requestHeaders: Record<string, string> = {};
+        if (splitDelimiter !== undefined) {
+            requestHeaders["splitDelimiter"] = String(splitDelimiter);
+        }
+        if (options.skipEmptyElements !== undefined) {
+            requestHeaders["skipEmptyElements"] = String(options.skipEmptyElements);
+        }
+        const formData = new FormData();
+        formData.append("inputFile", input.inputFile);
+
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.sendWithTracingAsync<SplitTextDocumentByStringResult>("Cloudmersiveconvert.splitDocumentTxtByString", "SplitDocument_TxtByString", "POST", requestUrl, formData, options, requestHeaders);
+
+        return httpResponse.value as SplitTextDocumentByStringResult;
+    }
+
+    /**
+     * Split a single Excel XLSX into Separate Worksheets
+     * @remarks Split an Excel XLSX Spreadsheet, comprised of multiple Worksheets (or Tabs) into separate Excel XLSX spreadsheet files, with each containing exactly one Worksheet.
+     */
+    public async splitDocumentXlsx(input: SplitDocumentXlsxFormData, options: SplitDocumentXlsxOptions = {}): Promise<SplitXlsxWorksheetResult> {
+        const requestPath = `/convert/split/xlsx`;
+        const requestHeaders: Record<string, string> = {};
+        if (options.returnDocumentContents !== undefined) {
+            requestHeaders["returnDocumentContents"] = String(options.returnDocumentContents);
+        }
+        const formData = new FormData();
+        formData.append("inputFile", input.inputFile);
+
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.sendWithTracingAsync<SplitXlsxWorksheetResult>("Cloudmersiveconvert.splitDocumentXlsx", "SplitDocument_Xlsx", "POST", requestUrl, formData, options, requestHeaders);
+
+        return httpResponse.value as SplitXlsxWorksheetResult;
+    }
+
+    /**
      * Apply HTML template
      * @remarks Apply operations to fill in an HTML template, generating a final HTML result
      */
@@ -2979,13 +4719,118 @@ export class CloudmersiveconvertClient extends ConnectorClientBase {
     }
 
     /**
+     * Autodetect content type and validate
+     * @remarks Automatically detect the type of content, verify and validate that the content is indeed fully valid at depth, and then report the validation result.
+     */
+    public async validateDocumentAutodetectValidation(input: ValidateDocumentAutodetectValidationFormData, options: ConnectorOperationOptions = {}): Promise<AutodetectDocumentValidationResult> {
+        const requestPath = `/convert/validate/autodetect`;
+        const formData = new FormData();
+        formData.append("inputFile", input.inputFile);
+
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.sendWithTracingAsync<AutodetectDocumentValidationResult>("Cloudmersiveconvert.validateDocumentAutodetectValidation", "ValidateDocument_AutodetectValidation", "POST", requestUrl, formData, options);
+
+        return httpResponse.value as AutodetectDocumentValidationResult;
+    }
+
+    /**
+     * Validate a Word document (DOCX)
+     * @remarks Validate a Word document (DOCX); if the document is not valid, identifies the errors in the document
+     */
+    public async validateDocumentDocxValidation(input: ValidateDocumentDocxValidationFormData, options: ConnectorOperationOptions = {}): Promise<DocumentValidationResult> {
+        const requestPath = `/convert/validate/docx`;
+        const formData = new FormData();
+        formData.append("inputFile", input.inputFile);
+
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.sendWithTracingAsync<DocumentValidationResult>("Cloudmersiveconvert.validateDocumentDocxValidation", "ValidateDocument_DocxValidation", "POST", requestUrl, formData, options);
+
+        return httpResponse.value as DocumentValidationResult;
+    }
+
+    /**
+     * Validate a JSON file
+     * @remarks Validate a JSON (JavaScript Object Notation) document file; if the document is not valid, identifies the errors in the document
+     */
+    public async validateDocumentJsonValidation(input: ValidateDocumentJsonValidationFormData, options: ConnectorOperationOptions = {}): Promise<DocumentValidationResult> {
+        const requestPath = `/convert/validate/json`;
+        const formData = new FormData();
+        formData.append("inputFile", input.inputFile);
+
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.sendWithTracingAsync<DocumentValidationResult>("Cloudmersiveconvert.validateDocumentJsonValidation", "ValidateDocument_JsonValidation", "POST", requestUrl, formData, options);
+
+        return httpResponse.value as DocumentValidationResult;
+    }
+
+    /**
+     * Validate a PDF document file
+     * @remarks Validate a PDF document; if the document is not valid, identifies the errors in the document
+     */
+    public async validateDocumentPdfValidation(input: ValidateDocumentPdfValidationFormData, options: ConnectorOperationOptions = {}): Promise<DocumentValidationResult> {
+        const requestPath = `/convert/validate/pdf`;
+        const formData = new FormData();
+        formData.append("inputFile", input.inputFile);
+
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.sendWithTracingAsync<DocumentValidationResult>("Cloudmersiveconvert.validateDocumentPdfValidation", "ValidateDocument_PdfValidation", "POST", requestUrl, formData, options);
+
+        return httpResponse.value as DocumentValidationResult;
+    }
+
+    /**
+     * Validate a PowerPoint presentation (PPTX)
+     * @remarks Validate a PowerPoint presentation (PPTX); if the document is not valid, identifies the errors in the document
+     */
+    public async validateDocumentPptxValidation(input: ValidateDocumentPptxValidationFormData, options: ConnectorOperationOptions = {}): Promise<DocumentValidationResult> {
+        const requestPath = `/convert/validate/pptx`;
+        const formData = new FormData();
+        formData.append("inputFile", input.inputFile);
+
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.sendWithTracingAsync<DocumentValidationResult>("Cloudmersiveconvert.validateDocumentPptxValidation", "ValidateDocument_PptxValidation", "POST", requestUrl, formData, options);
+
+        return httpResponse.value as DocumentValidationResult;
+    }
+
+    /**
+     * Validate a Excel document (XLSX)
+     * @remarks Validate a Excel document (XLSX); if the document is not valid, identifies the errors in the document
+     */
+    public async validateDocumentXlsxValidation(input: ValidateDocumentXlsxValidationFormData, options: ConnectorOperationOptions = {}): Promise<DocumentValidationResult> {
+        const requestPath = `/convert/validate/xlsx`;
+        const formData = new FormData();
+        formData.append("inputFile", input.inputFile);
+
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.sendWithTracingAsync<DocumentValidationResult>("Cloudmersiveconvert.validateDocumentXlsxValidation", "ValidateDocument_XlsxValidation", "POST", requestUrl, formData, options);
+
+        return httpResponse.value as DocumentValidationResult;
+    }
+
+    /**
+     * Validate an XML file
+     * @remarks Validate an XML document file; if the document is not valid, identifies the errors in the document
+     */
+    public async validateDocumentXmlValidation(input: ValidateDocumentXmlValidationFormData, options: ConnectorOperationOptions = {}): Promise<DocumentValidationResult> {
+        const requestPath = `/convert/validate/xml`;
+        const formData = new FormData();
+        formData.append("inputFile", input.inputFile);
+
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.sendWithTracingAsync<DocumentValidationResult>("Cloudmersiveconvert.validateDocumentXmlValidation", "ValidateDocument_XmlValidation", "POST", requestUrl, formData, options);
+
+        return httpResponse.value as DocumentValidationResult;
+    }
+
+    /**
      * Convert HTML string to PDF
      * @remarks Fully renders a website and returns a PDF of the HTML.  Javascript, HTML5, CSS and other advanced features are all supported.
      */
     public async convertWebHtmlToPdf(input: HtmlToPdfRequest, options: ConnectorOperationOptions = {}): Promise<Blob> {
         const requestPath = `/convert/web/html/to/pdf`;
         const requestUrl = this.resolveUrl(requestPath);
-        const httpResponse = await this.sendWithTracingAsync<Blob>("Cloudmersiveconvert.convertWebHtmlToPdf", "ConvertWeb_HtmlToPdf", "POST", requestUrl, input, options);
+        const httpResponse = await this.sendWithTracingAsync<Blob>("Cloudmersiveconvert.convertWebHtmlToPdf", "ConvertWeb_HtmlToPdf", "POST", requestUrl, input, options, undefined, true);
 
         return httpResponse.value as Blob;
     }
@@ -3015,13 +4860,28 @@ export class CloudmersiveconvertClient extends ConnectorClientBase {
     }
 
     /**
+     * Convert Markdown to HTML
+     * @remarks Convert a markdown file (.md) to HTML
+     */
+    public async convertWebMdToHtml(input: ConvertWebMdToHtmlFormData, options: ConnectorOperationOptions = {}): Promise<HtmlMdResult> {
+        const requestPath = `/convert/web/md/to/html`;
+        const formData = new FormData();
+        formData.append("inputFile", input.inputFile);
+
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.sendWithTracingAsync<HtmlMdResult>("Cloudmersiveconvert.convertWebMdToHtml", "ConvertWeb_MdToHtml", "POST", requestUrl, formData, options);
+
+        return httpResponse.value as HtmlMdResult;
+    }
+
+    /**
      * Convert a URL to PDF
      * @remarks Fully renders a website and returns a PDF of the full page.  Javascript, HTML5, CSS and other advanced features are all supported.
      */
     public async convertWebUrlToPdf(input: ScreenshotRequest, options: ConnectorOperationOptions = {}): Promise<Blob> {
         const requestPath = `/convert/web/url/to/pdf`;
         const requestUrl = this.resolveUrl(requestPath);
-        const httpResponse = await this.sendWithTracingAsync<Blob>("Cloudmersiveconvert.convertWebUrlToPdf", "ConvertWeb_UrlToPdf", "POST", requestUrl, input, options);
+        const httpResponse = await this.sendWithTracingAsync<Blob>("Cloudmersiveconvert.convertWebUrlToPdf", "ConvertWeb_UrlToPdf", "POST", requestUrl, input, options, undefined, true);
 
         return httpResponse.value as Blob;
     }
@@ -3033,7 +4893,7 @@ export class CloudmersiveconvertClient extends ConnectorClientBase {
     public async convertWebUrlToScreenshot(input: ScreenshotRequest, options: ConnectorOperationOptions = {}): Promise<Blob> {
         const requestPath = `/convert/web/url/to/screenshot`;
         const requestUrl = this.resolveUrl(requestPath);
-        const httpResponse = await this.sendWithTracingAsync<Blob>("Cloudmersiveconvert.convertWebUrlToScreenshot", "ConvertWeb_UrlToScreenshot", "POST", requestUrl, input, options);
+        const httpResponse = await this.sendWithTracingAsync<Blob>("Cloudmersiveconvert.convertWebUrlToScreenshot", "ConvertWeb_UrlToScreenshot", "POST", requestUrl, input, options, undefined, true);
 
         return httpResponse.value as Blob;
     }
@@ -3048,6 +4908,374 @@ export class CloudmersiveconvertClient extends ConnectorClientBase {
         const httpResponse = await this.sendWithTracingAsync<UrlToTextResponse>("Cloudmersiveconvert.convertWebUrlToTxt", "ConvertWeb_UrlToTxt", "POST", requestUrl, input, options);
 
         return httpResponse.value as UrlToTextResponse;
+    }
+
+    /**
+     * Convert Excel XLS (97-03) Spreadsheet to CSV
+     * @remarks Convert/upgrade Office Excel (97-2003) Workbooks (xls) to standard CSV format.
+     */
+    public async convertDocumentXlsToCsv(input: ConvertDocumentXlsToCsvFormData, options: ConnectorOperationOptions = {}): Promise<Blob> {
+        const requestPath = `/convert/xls/to/csv`;
+        const formData = new FormData();
+        formData.append("inputFile", input.inputFile);
+
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.sendWithTracingAsync<Blob>("Cloudmersiveconvert.convertDocumentXlsToCsv", "ConvertDocument_XlsToCsv", "POST", requestUrl, formData, options, undefined, true);
+
+        return httpResponse.value as Blob;
+    }
+
+    /**
+     * Convert Excel (97-2003) XLS to JSON conversion
+     * @remarks Convert an Excel (97-2003) XLS file to a JSON object array
+     */
+    public async convertDataXlsToJson(input: ConvertDataXlsToJsonFormData, options: ConnectorOperationOptions = {}): Promise<Array<Record<string, unknown>>> {
+        const requestPath = `/convert/xls/to/json`;
+        const formData = new FormData();
+        formData.append("inputFile", input.inputFile);
+
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.sendWithTracingAsync<Array<Record<string, unknown>>>("Cloudmersiveconvert.convertDataXlsToJson", "ConvertData_XlsToJson", "POST", requestUrl, formData, options);
+
+        return httpResponse.value as Array<Record<string, unknown>>;
+    }
+
+    /**
+     * Convert Excel XLS (97-03) Spreadsheet to PDF
+     * @remarks Convert Office Excel (97-2003) Workbooks (xls) to standard PDF.  Converts all worksheets in the workbook to PDF.
+     */
+    public async convertDocumentXlsToPdf(input: ConvertDocumentXlsToPdfFormData, options: ConnectorOperationOptions = {}): Promise<Blob> {
+        const requestPath = `/convert/xls/to/pdf`;
+        const formData = new FormData();
+        formData.append("inputFile", input.inputFile);
+
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.sendWithTracingAsync<Blob>("Cloudmersiveconvert.convertDocumentXlsToPdf", "ConvertDocument_XlsToPdf", "POST", requestUrl, formData, options, undefined, true);
+
+        return httpResponse.value as Blob;
+    }
+
+    /**
+     * Convert Excel XLS (97-03) Spreadsheet to XLSX
+     * @remarks Convert/upgrade Office Excel (97-2003) Workbooks (xls) to modern XLSX format.
+     */
+    public async convertDocumentXlsToXlsx(input: ConvertDocumentXlsToXlsxFormData, options: ConnectorOperationOptions = {}): Promise<Blob> {
+        const requestPath = `/convert/xls/to/xlsx`;
+        const formData = new FormData();
+        formData.append("inputFile", input.inputFile);
+
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.sendWithTracingAsync<Blob>("Cloudmersiveconvert.convertDocumentXlsToXlsx", "ConvertDocument_XlsToXlsx", "POST", requestUrl, formData, options, undefined, true);
+
+        return httpResponse.value as Blob;
+    }
+
+    /**
+     * Convert Excel XLSX Spreadsheet to CSV
+     * @remarks Convert Office Excel Workbooks (XLSX) to standard Comma-Separated Values (CSV) format.  Supports both XLSX and XLSB file Excel formats.
+     */
+    public async convertDocumentXlsxToCsv(input: ConvertDocumentXlsxToCsvFormData, options: ConvertDocumentXlsxToCsvOptions = {}): Promise<Blob> {
+        const requestPath = `/convert/xlsx/to/csv`;
+        const requestHeaders: Record<string, string> = {};
+        if (options.outputEncoding !== undefined) {
+            requestHeaders["outputEncoding"] = String(options.outputEncoding);
+        }
+        const formData = new FormData();
+        formData.append("inputFile", input.inputFile);
+
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.sendWithTracingAsync<Blob>("Cloudmersiveconvert.convertDocumentXlsxToCsv", "ConvertDocument_XlsxToCsv", "POST", requestUrl, formData, options, requestHeaders, true);
+
+        return httpResponse.value as Blob;
+    }
+
+    /**
+     * Convert Excel XLSX to JSON conversion
+     * @remarks Convert an Excel XLSX file to a JSON object array
+     */
+    public async convertDataXlsxToJson(input: ConvertDataXlsxToJsonFormData, options: ConnectorOperationOptions = {}): Promise<Array<Record<string, unknown>>> {
+        const requestPath = `/convert/xlsx/to/json`;
+        const formData = new FormData();
+        formData.append("inputFile", input.inputFile);
+
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.sendWithTracingAsync<Array<Record<string, unknown>>>("Cloudmersiveconvert.convertDataXlsxToJson", "ConvertData_XlsxToJson", "POST", requestUrl, formData, options);
+
+        return httpResponse.value as Array<Record<string, unknown>>;
+    }
+
+    /**
+     * Convert Excel XLSX Spreadsheet to PDF
+     * @remarks Convert Office Excel Workbooks (XLSX) to standard PDF.  Converts all worksheets in the workbook to PDF.  Supports both XLSX and XLSB Excel file formats.
+     */
+    public async convertDocumentXlsxToPdf(input: ConvertDocumentXlsxToPdfFormData, options: ConnectorOperationOptions = {}): Promise<Blob> {
+        const requestPath = `/convert/xlsx/to/pdf`;
+        const formData = new FormData();
+        formData.append("inputFile", input.inputFile);
+
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.sendWithTracingAsync<Blob>("Cloudmersiveconvert.convertDocumentXlsxToPdf", "ConvertDocument_XlsxToPdf", "POST", requestUrl, formData, options, undefined, true);
+
+        return httpResponse.value as Blob;
+    }
+
+    /**
+     * Convert Excel XLSX Spreadsheet to Text (txt)
+     * @remarks Convert Office Excel Workbooks (XLSX) to standard Text.  Converts all worksheets in the workbook to Text.  Supports both XLSX and XLSB file formats.  When a spreadsheet contains multiple worksheets, will export all of the text from all of the worksheets.  If you wish to export the text from only one worksheet, try using the Split XLSX API to split the spreadsheet into multiple worksheet files, and then run XLSX to Text on the individual worksheet file that you need to extract the text from.
+     */
+    public async convertDocumentXlsxToTxt(input: ConvertDocumentXlsxToTxtFormData, options: ConnectorOperationOptions = {}): Promise<TextConversionResult> {
+        const requestPath = `/convert/xlsx/to/txt`;
+        const formData = new FormData();
+        formData.append("inputFile", input.inputFile);
+
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.sendWithTracingAsync<TextConversionResult>("Cloudmersiveconvert.convertDocumentXlsxToTxt", "ConvertDocument_XlsxToTxt", "POST", requestUrl, formData, options);
+
+        return httpResponse.value as TextConversionResult;
+    }
+
+    /**
+     * Adds an attribute to all XML nodes matching XPath expression
+     * @remarks Return the reuslts of editing an XML document by adding an attribute to all of the nodes that match an input XPath expression.
+     */
+    public async addConvertDataXmlEditAttributeWithXPath(input: AddConvertDataXmlEditAttributeWithXPathFormData, xPathExpression: string, xmlAttributeName: string, xmlAttributeValue: string, options: ConnectorOperationOptions = {}): Promise<XmlAddAttributeWithXPathResult> {
+        const requestPath = `/convert/xml/edit/xpath/add-attribute`;
+        const requestHeaders: Record<string, string> = {};
+        if (xPathExpression !== undefined) {
+            requestHeaders["XPathExpression"] = String(xPathExpression);
+        }
+        if (xmlAttributeName !== undefined) {
+            requestHeaders["XmlAttributeName"] = String(xmlAttributeName);
+        }
+        if (xmlAttributeValue !== undefined) {
+            requestHeaders["XmlAttributeValue"] = String(xmlAttributeValue);
+        }
+        const formData = new FormData();
+        formData.append("inputFile", input.inputFile);
+
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.sendWithTracingAsync<XmlAddAttributeWithXPathResult>("Cloudmersiveconvert.addConvertDataXmlEditAttributeWithXPath", "ConvertData_XmlEditAddAttributeWithXPath", "POST", requestUrl, formData, options, requestHeaders);
+
+        return httpResponse.value as XmlAddAttributeWithXPathResult;
+    }
+
+    /**
+     * Adds an XML node as a child to XML nodes matching XPath expression
+     * @remarks Return the reuslts of editing an XML document by adding an XML node as a child to all of the nodes that match an input XPath expression.
+     */
+    public async addConvertDataXmlEditChildWithXPath(input: AddConvertDataXmlEditChildWithXPathFormData, xPathExpression: string, xmlNodeToAdd: string, options: ConnectorOperationOptions = {}): Promise<XmlAddChildWithXPathResult> {
+        const requestPath = `/convert/xml/edit/xpath/add-child`;
+        const requestHeaders: Record<string, string> = {};
+        if (xPathExpression !== undefined) {
+            requestHeaders["XPathExpression"] = String(xPathExpression);
+        }
+        if (xmlNodeToAdd !== undefined) {
+            requestHeaders["XmlNodeToAdd"] = String(xmlNodeToAdd);
+        }
+        const formData = new FormData();
+        formData.append("inputFile", input.inputFile);
+
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.sendWithTracingAsync<XmlAddChildWithXPathResult>("Cloudmersiveconvert.addConvertDataXmlEditChildWithXPath", "ConvertData_XmlEditAddChildWithXPath", "POST", requestUrl, formData, options, requestHeaders);
+
+        return httpResponse.value as XmlAddChildWithXPathResult;
+    }
+
+    /**
+     * Remove, delete XML nodes and items matching XPath expression
+     * @remarks Return the reuslts of editing an XML document by removing all of the nodes that match an input XPath expression
+     */
+    public async removeConvertDataXmlWithXPath(input: RemoveConvertDataXmlWithXPathFormData, xPathExpression: string, options: ConnectorOperationOptions = {}): Promise<XmlRemoveWithXPathResult> {
+        const requestPath = `/convert/xml/edit/xpath/remove`;
+        const requestHeaders: Record<string, string> = {};
+        if (xPathExpression !== undefined) {
+            requestHeaders["XPathExpression"] = String(xPathExpression);
+        }
+        const formData = new FormData();
+        formData.append("inputFile", input.inputFile);
+
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.sendWithTracingAsync<XmlRemoveWithXPathResult>("Cloudmersiveconvert.removeConvertDataXmlWithXPath", "ConvertData_XmlRemoveWithXPath", "POST", requestUrl, formData, options, requestHeaders);
+
+        return httpResponse.value as XmlRemoveWithXPathResult;
+    }
+
+    /**
+     * Removes, deletes all children of nodes matching XPath expression, but
+     * @remarks Return the reuslts of editing an XML document by removing all child nodes of the nodes that match an input XPath expression.
+     */
+    public async removeConvertDataXmlEditAllChildNodesWithXPath(input: RemoveConvertDataXmlEditAllChildNodesWithXPathFormData, xPathExpression: string, options: ConnectorOperationOptions = {}): Promise<XmlRemoveAllChildrenWithXPathResult> {
+        const requestPath = `/convert/xml/edit/xpath/remove-all-children`;
+        const requestHeaders: Record<string, string> = {};
+        if (xPathExpression !== undefined) {
+            requestHeaders["XPathExpression"] = String(xPathExpression);
+        }
+        const formData = new FormData();
+        formData.append("inputFile", input.inputFile);
+
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.sendWithTracingAsync<XmlRemoveAllChildrenWithXPathResult>("Cloudmersiveconvert.removeConvertDataXmlEditAllChildNodesWithXPath", "ConvertData_XmlEditRemoveAllChildNodesWithXPath", "POST", requestUrl, formData, options, requestHeaders);
+
+        return httpResponse.value as XmlRemoveAllChildrenWithXPathResult;
+    }
+
+    /**
+     * Replaces XML nodes matching XPath expression with new node
+     * @remarks Return the reuslts of editing an XML document by replacing all of the nodes that match an input XPath expression with a new XML node expression.
+     */
+    public async replaceConvertDataXmlEditWithXPath(input: ReplaceConvertDataXmlEditWithXPathFormData, xPathExpression: string, xmlNodeReplacement: string, options: ConnectorOperationOptions = {}): Promise<XmlReplaceWithXPathResult> {
+        const requestPath = `/convert/xml/edit/xpath/replace`;
+        const requestHeaders: Record<string, string> = {};
+        if (xPathExpression !== undefined) {
+            requestHeaders["XPathExpression"] = String(xPathExpression);
+        }
+        if (xmlNodeReplacement !== undefined) {
+            requestHeaders["XmlNodeReplacement"] = String(xmlNodeReplacement);
+        }
+        const formData = new FormData();
+        formData.append("inputFile", input.inputFile);
+
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.sendWithTracingAsync<XmlReplaceWithXPathResult>("Cloudmersiveconvert.replaceConvertDataXmlEditWithXPath", "ConvertData_XmlEditReplaceWithXPath", "POST", requestUrl, formData, options, requestHeaders);
+
+        return httpResponse.value as XmlReplaceWithXPathResult;
+    }
+
+    /**
+     * Sets the value contents of XML nodes matching XPath expression
+     * @remarks Return the reuslts of editing an XML document by setting the contents of all of the nodes that match an input XPath expression.  Supports elements and attributes.
+     */
+    public async setConvertDataXmlEditValueWithXPath(input: SetConvertDataXmlEditValueWithXPathFormData, xPathExpression: string, xmlValue: string, options: ConnectorOperationOptions = {}): Promise<XmlSetValueWithXPathResult> {
+        const requestPath = `/convert/xml/edit/xpath/set-value`;
+        const requestHeaders: Record<string, string> = {};
+        if (xPathExpression !== undefined) {
+            requestHeaders["XPathExpression"] = String(xPathExpression);
+        }
+        if (xmlValue !== undefined) {
+            requestHeaders["XmlValue"] = String(xmlValue);
+        }
+        const formData = new FormData();
+        formData.append("inputFile", input.inputFile);
+
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.sendWithTracingAsync<XmlSetValueWithXPathResult>("Cloudmersiveconvert.setConvertDataXmlEditValueWithXPath", "ConvertData_XmlEditSetValueWithXPath", "POST", requestUrl, formData, options, requestHeaders);
+
+        return httpResponse.value as XmlSetValueWithXPathResult;
+    }
+
+    /**
+     * Query an XML file using XQuery query, get results
+     * @remarks Return the reuslts of querying a single XML document with an XQuery expression.  Supports XQuery 3.1 and earlier.  This API is optimized for a single XML document as input.  Provided XML document is automatically loaded as the default context; to access elements in the document, simply refer to them without a document reference, such as bookstore/book
+     */
+    public async convertDataXmlQueryWithXQuery(input: ConvertDataXmlQueryWithXQueryFormData, xQuery: string, options: ConnectorOperationOptions = {}): Promise<XmlQueryWithXQueryResult> {
+        const requestPath = `/convert/xml/query/xquery`;
+        const requestHeaders: Record<string, string> = {};
+        if (xQuery !== undefined) {
+            requestHeaders["XQuery"] = String(xQuery);
+        }
+        const formData = new FormData();
+        formData.append("inputFile", input.inputFile);
+
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.sendWithTracingAsync<XmlQueryWithXQueryResult>("Cloudmersiveconvert.convertDataXmlQueryWithXQuery", "ConvertData_XmlQueryWithXQuery", "POST", requestUrl, formData, options, requestHeaders);
+
+        return httpResponse.value as XmlQueryWithXQueryResult;
+    }
+
+    /**
+     * Query multiple XML files using XQuery query, get results
+     * @remarks Return the reuslts of querying an XML document with an XQuery expression.  Supports XQuery 3.1 and earlier.  This API is optimized for multiple XML documents as input.  You can refer to the contents of a given document by name, for example doc("books.xml") or doc("restaurants.xml") if you included two input files named books.xml and restaurants.xml.  If input files contain no file name, they will default to file names input1.xml, input2.xml and so on.
+     */
+    public async convertDataXmlQueryWithXQueryMulti(input: ConvertDataXmlQueryWithXQueryMultiFormData, xQuery: string, options: ConnectorOperationOptions = {}): Promise<XmlQueryWithXQueryMultiResult> {
+        const requestPath = `/convert/xml/query/xquery/multi`;
+        const requestHeaders: Record<string, string> = {};
+        if (xQuery !== undefined) {
+            requestHeaders["XQuery"] = String(xQuery);
+        }
+        const formData = new FormData();
+        formData.append("inputFile1", input.inputFile1);
+        if (input.inputFile2 !== undefined) {
+            formData.append("inputFile2", input.inputFile2);
+        }
+        if (input.inputFile3 !== undefined) {
+            formData.append("inputFile3", input.inputFile3);
+        }
+        if (input.inputFile4 !== undefined) {
+            formData.append("inputFile4", input.inputFile4);
+        }
+        if (input.inputFile5 !== undefined) {
+            formData.append("inputFile5", input.inputFile5);
+        }
+        if (input.inputFile6 !== undefined) {
+            formData.append("inputFile6", input.inputFile6);
+        }
+        if (input.inputFile7 !== undefined) {
+            formData.append("inputFile7", input.inputFile7);
+        }
+        if (input.inputFile8 !== undefined) {
+            formData.append("inputFile8", input.inputFile8);
+        }
+        if (input.inputFile9 !== undefined) {
+            formData.append("inputFile9", input.inputFile9);
+        }
+        if (input.inputFile10 !== undefined) {
+            formData.append("inputFile10", input.inputFile10);
+        }
+
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.sendWithTracingAsync<XmlQueryWithXQueryMultiResult>("Cloudmersiveconvert.convertDataXmlQueryWithXQueryMulti", "ConvertData_XmlQueryWithXQueryMulti", "POST", requestUrl, formData, options, requestHeaders);
+
+        return httpResponse.value as XmlQueryWithXQueryMultiResult;
+    }
+
+    /**
+     * Filter, select XML nodes using XPath expression, get results
+     * @remarks Return the reuslts of filtering, selecting an XML document with an XPath expression
+     */
+    public async convertDataXmlFilterWithXPath(input: ConvertDataXmlFilterWithXPathFormData, xPathExpression: string, options: ConnectorOperationOptions = {}): Promise<XmlFilterWithXPathResult> {
+        const requestPath = `/convert/xml/select/xpath`;
+        const requestHeaders: Record<string, string> = {};
+        if (xPathExpression !== undefined) {
+            requestHeaders["XPathExpression"] = String(xPathExpression);
+        }
+        const formData = new FormData();
+        formData.append("inputFile", input.inputFile);
+
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.sendWithTracingAsync<XmlFilterWithXPathResult>("Cloudmersiveconvert.convertDataXmlFilterWithXPath", "ConvertData_XmlFilterWithXPath", "POST", requestUrl, formData, options, requestHeaders);
+
+        return httpResponse.value as XmlFilterWithXPathResult;
+    }
+
+    /**
+     * Convert XML to JSON conversion
+     * @remarks Convert an XML string or file into JSON
+     */
+    public async convertDataXmlToJson(input: ConvertDataXmlToJsonFormData, options: ConnectorOperationOptions = {}): Promise<ConvertDataXmlToJsonResponse> {
+        const requestPath = `/convert/xml/to/json`;
+        const formData = new FormData();
+        formData.append("inputFile", input.inputFile);
+
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.sendWithTracingAsync<ConvertDataXmlToJsonResponse>("Cloudmersiveconvert.convertDataXmlToJson", "ConvertData_XmlToJson", "POST", requestUrl, formData, options);
+
+        return httpResponse.value as ConvertDataXmlToJsonResponse;
+    }
+
+    /**
+     * Transform XML document file with XSLT into a new XML document
+     * @remarks Convert an XML string or file into JSON
+     */
+    public async convertDataXmlTransformWithXsltToXml(input: ConvertDataXmlTransformWithXsltToXmlFormData, options: ConnectorOperationOptions = {}): Promise<string> {
+        const requestPath = `/convert/xml/transform/xslt/to/xml`;
+        const formData = new FormData();
+        formData.append("inputFile", input.inputFile);
+        formData.append("transformFile", input.transformFile);
+
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.sendWithTracingAsync<string>("Cloudmersiveconvert.convertDataXmlTransformWithXsltToXml", "ConvertData_XmlTransformWithXsltToXml", "POST", requestUrl, formData, options);
+
+        return httpResponse.value as string;
     }
 
 }

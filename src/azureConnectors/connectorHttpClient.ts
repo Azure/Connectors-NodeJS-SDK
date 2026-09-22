@@ -103,6 +103,9 @@ export class ConnectorHttpClient {
         "x-api-key",
     ]);
     private static readonly SafeHttpMethods = new Set<HttpMethods>(["GET", "HEAD", "OPTIONS", "TRACE"]);
+    private static readonly SuccessfulResponseStatusCodes = new Set(
+        Array.from({ length: 100 }, (_value, index) => index + 200),
+    );
 
     private readonly credential: TokenCredential;
     private readonly httpClient: HttpClient;
@@ -135,10 +138,11 @@ export class ConnectorHttpClient {
      * @param method The HTTP method.
      * @param url The request URL.
      * @param scopes The authentication scopes. Defaults to API Hub scopes.
-     * @param body Optional request body (will be JSON-serialized).
+    * @param body Optional JSON or multipart form-data request body.
      * @param abortSignal Optional abort signal for caller-initiated cancellation.
     * @param tracingOptions Optional tracing context for the HTTP span.
     * @param requestHeaders Service-specific request headers.
+    * @param responseAsBlob Whether successful response content should be returned as a Blob.
      */
     public async sendAsync<TValue = unknown>(
         method: string,
@@ -148,20 +152,29 @@ export class ConnectorHttpClient {
         abortSignal?: AbortSignalLike,
         tracingOptions?: OperationTracingOptions,
         requestHeaders?: Readonly<Record<string, string>>,
+        responseAsBlob = false,
     ): Promise<ConnectorResponse<TValue>> {
         const effectiveScopes = scopes ?? ConnectorHttpClient.ApiHubScopes;
         const logUrl = ConnectorHttpClient.sanitizeUrlForLogging(url);
+        const isFormDataBody = typeof FormData !== "undefined" && body instanceof FormData;
         logger.info(`Request ${method} ${logUrl}`);
         const request = createPipelineRequest({
             url,
             method: method as HttpMethods,
-            body: body === undefined ? undefined : JSON.stringify(body),
+            body: body === undefined
+                ? undefined
+                : isFormDataBody
+                    ? body
+                    : JSON.stringify(body),
             abortSignal,
             tracingOptions,
+            streamResponseStatusCodes: responseAsBlob
+                ? ConnectorHttpClient.SuccessfulResponseStatusCodes
+                : undefined,
         });
         request.headers.set("Accept", "application/json, */*;q=0.8");
 
-        if (body !== undefined) {
+        if (body !== undefined && !isFormDataBody) {
             request.headers.set("Content-Type", "application/json");
         }
 
@@ -171,7 +184,7 @@ export class ConnectorHttpClient {
 
         try {
             const response = await this.getPipeline(effectiveScopes).sendRequest(this.httpClient, request);
-            return ConnectorHttpClient.createConnectorResponse<TValue>(response);
+            return await ConnectorHttpClient.createConnectorResponse<TValue>(response, responseAsBlob);
         } catch (error) {
             if (abortSignal?.aborted || error instanceof Error && error.name === "AbortError") {
                 logger.info(`${method} ${logUrl} canceled`);
@@ -316,10 +329,15 @@ export class ConnectorHttpClient {
             .replace(/https?:\/\/[^\s)'"\]]+/g, url => ConnectorHttpClient.sanitizeUrlForLogging(url));
     }
 
-    private static createConnectorResponse<TValue>(response: PipelineResponse): ConnectorResponse<TValue> {
+    private static async createConnectorResponse<TValue>(
+        response: PipelineResponse,
+        responseAsBlob: boolean,
+    ): Promise<ConnectorResponse<TValue>> {
         const text = response.bodyAsText ?? "";
         let value: TValue | undefined;
-        if (text) {
+        if (responseAsBlob && response.status >= 200 && response.status < 300) {
+            value = await ConnectorHttpClient.createResponseBlob(response) as TValue | undefined;
+        } else if (text) {
             try {
                 value = JSON.parse(text) as TValue;
             } catch {
@@ -335,5 +353,24 @@ export class ConnectorHttpClient {
             isSuccessStatusCode: response.status >= 200 && response.status < 300,
             rawResponse: response,
         };
+    }
+
+    private static async createResponseBlob(response: PipelineResponse): Promise<Blob | undefined> {
+        if (response.blobBody) {
+            return await response.blobBody;
+        }
+
+        const stream = response.browserStreamBody ?? response.readableStreamBody;
+        if (stream) {
+            return await new Response(stream as ConstructorParameters<typeof Response>[0], {
+                headers: response.headers.toJSON(),
+            }).blob();
+        }
+
+        return response.bodyAsText === undefined || response.bodyAsText === null
+            ? undefined
+            : new Blob([response.bodyAsText], {
+                type: response.headers.get("Content-Type") ?? "application/octet-stream",
+            });
     }
 }

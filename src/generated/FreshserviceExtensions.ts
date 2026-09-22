@@ -206,9 +206,7 @@ export interface AddNoteResponse {
 /**
  * Definition: ListUsers_Response
  */
-export interface ListUsersResponse {
-    [key: string]: unknown;
-}
+export type ListUsersResponse = Array<Record<string, unknown>>;
 
 /**
  * Typed callback payload for trigger operation 'OnTicketCreatedV2'.

@@ -33,9 +33,7 @@ export interface CreateOrgHookEnvelopeResponse {
 /**
  * Update document generation form fields from envelope
  */
-export interface UpdateDocgenFormFieldsInput {
-    [key: string]: unknown;
-}
+export type UpdateDocgenFormFieldsInput = Array<Record<string, unknown>>;
 
 /**
  * Response for Get document generation form fields from template (bulk send templates only)
@@ -47,9 +45,7 @@ export interface GetDocGenTemplateTabsResponse {
 /**
  * Update envelope prefill tabs
  */
-export interface UpdateEnvelopePrefillTabsInput {
-    [key: string]: unknown;
-}
+export type UpdateEnvelopePrefillTabsInput = Array<Record<string, unknown>>;
 
 /**
  * Response for Create envelope using composite templates
@@ -100,9 +96,7 @@ export interface AddDocumentsToEnvelopeInput {
 /**
  * Update recipient tab values on an envelope
  */
-export interface UpdateRecipientTabsValuesInput {
-    [key: string]: unknown;
-}
+export type UpdateRecipientTabsValuesInput = Array<Record<string, unknown>>;
 
 /**
  * Response for Show build Number (For reference only. Do not include in a flow for execution)
@@ -2085,7 +2079,7 @@ export class DocusignClient extends ConnectorClientBase {
         }
         const requestPath = `/accounts/${encodeURIComponent(String(accountId))}/envelopes/${encodeURIComponent(String(envelopeId))}/documents/${encodeURIComponent(String(documentId))}/documentsDownload` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
-        const httpResponse = await this.sendWithTracingAsync<Blob>("Docusign.getDocuments", "GetDocumentsV2", "GET", requestUrl, undefined, options);
+        const httpResponse = await this.sendWithTracingAsync<Blob>("Docusign.getDocuments", "GetDocumentsV2", "GET", requestUrl, undefined, options, undefined, true);
 
         return httpResponse.value as Blob;
     }

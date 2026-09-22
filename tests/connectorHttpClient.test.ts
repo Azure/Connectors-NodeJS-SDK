@@ -147,6 +147,50 @@ describe("ConnectorHttpClient", () => {
         expect(JSON.parse(request.body as string)).toEqual({ name: "test" });
     });
 
+    it("should send native FormData through the multipart pipeline", async () => {
+        const httpClient = new MockHttpClient(async request => createMockResponse(request, 201));
+        const client = new ConnectorHttpClient(new MockTokenCredential(), { httpClient });
+        const formData = new FormData();
+        formData.append("description", "test document");
+        formData.append("file", new Blob(["file content"], { type: "text/plain" }), "test.txt");
+
+        await client.sendAsync("POST", "https://example.com/api/files", undefined, formData);
+
+        const request = httpClient.requests.at(0)!;
+        expect(request.headers.get("Content-Type")).toMatch(/^multipart\/form-data; boundary=/);
+        expect(request.body).toBeDefined();
+        expect(request.body).not.toBe(JSON.stringify(formData));
+        expect(request.formData).toBeUndefined();
+        expect(request.multipartBody).toBeUndefined();
+    });
+
+    it("should materialize a streamed binary response as a Blob", async () => {
+        const responseBody = new Blob(["converted content"], { type: "application/pdf" });
+        const httpClient = new MockHttpClient(async request => ({
+            request,
+            status: 200,
+            headers: createHttpHeaders({ "Content-Type": "application/pdf" }),
+            blobBody: Promise.resolve(responseBody),
+        }));
+        const client = new ConnectorHttpClient(new MockTokenCredential(), { httpClient });
+
+        const response = await client.sendAsync<Blob>(
+            "POST",
+            "https://example.com/api/convert",
+            undefined,
+            new FormData(),
+            undefined,
+            undefined,
+            undefined,
+            true,
+        );
+
+        expect(response.value).toBe(responseBody);
+        expect(await response.value?.text()).toBe("converted content");
+        expect(httpClient.requests[0].streamResponseStatusCodes?.has(200)).toBe(true);
+        expect(httpClient.requests[0].streamResponseStatusCodes?.has(299)).toBe(true);
+    });
+
     it("should apply service-specific request headers", async () => {
         const httpClient = new MockHttpClient(async request => createMockResponse(request, 200));
         const client = new ConnectorHttpClient(new MockTokenCredential(), { httpClient });

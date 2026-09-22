@@ -12,9 +12,7 @@ import { TriggerCallbackPayload } from "../azureConnectors/triggerPayload.ts";
 /**
  * Assign a category to multiple emails
  */
-export interface AssignCategoryBulkInput {
-    [key: string]: unknown;
-}
+export type AssignCategoryBulkInput = Array<string>;
 
 /**
  * Update my contact's photo
@@ -1853,9 +1851,7 @@ export interface DirectForwardMessage {
 /**
  * Definition: MeetingTimeSuggestions
  */
-export interface MeetingTimeSuggestions {
-    [key: string]: unknown;
-}
+export type MeetingTimeSuggestions = Array<Record<string, unknown>>;
 
 /**
  * Definition: LocationConstraint
@@ -3288,7 +3284,7 @@ export class Office365Client extends ConnectorClientBase {
         }
         const requestPath = `/codeless/beta/me/messages/${encodeURIComponent(String(messageId))}/$value` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
-        const httpResponse = await this.sendWithTracingAsync<Blob>("Office365.exportEmail", "ExportEmail_V2", "GET", requestUrl, undefined, options);
+        const httpResponse = await this.sendWithTracingAsync<Blob>("Office365.exportEmail", "ExportEmail_V2", "GET", requestUrl, undefined, options, undefined, true);
 
         return httpResponse.value as Blob;
     }

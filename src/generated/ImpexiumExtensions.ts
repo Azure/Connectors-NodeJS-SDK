@@ -61,9 +61,7 @@ export interface GetCourseAttendeesResponse {
 /**
  * Add Exam Scores
  */
-export interface AddExamScoresInput {
-    [key: string]: unknown;
-}
+export type AddExamScoresInput = Array<ExamScoreData>;
 
 /**
  * Response for Find Members by Name
@@ -88,9 +86,7 @@ export interface GetPurchasesForAnIndividualResponse {
 /**
  * Add or Update a List of Custom Fields Per Organization
  */
-export interface AddOrUpdateAListOfCustomFieldsPerOrganizationInput {
-    [key: string]: unknown;
-}
+export type AddOrUpdateAListOfCustomFieldsPerOrganizationInput = Array<CustomFieldValueData>;
 
 /**
  * Response for List All Event Cancellations by Event
@@ -165,9 +161,7 @@ export interface ListAllExhibitsResponse {
 /**
  * Add Categories for an Organization
  */
-export interface AddCategoriesForAnOrganizationInput {
-    [key: string]: unknown;
-}
+export type AddCategoriesForAnOrganizationInput = Array<SaveCategoryBasicData>;
 
 /**
  * Response for List of Customer Relationships
@@ -192,9 +186,7 @@ export interface ListAllOpenCustomerRequestResponse {
 /**
  * Add Categories for an Individual
  */
-export interface AddCategoriesForAnIndividualInput {
-    [key: string]: unknown;
-}
+export type AddCategoriesForAnIndividualInput = Array<SaveCategoryBasicData>;
 
 /**
  * Response for List of All Organization Members
@@ -239,9 +231,7 @@ export interface GetListOfActiveCertificationsForAnIndividualResponse {
 /**
  * Register an Individual for a Free Session
  */
-export interface RegisterAnIndividualForAFreeSessionInput {
-    [key: string]: unknown;
-}
+export type RegisterAnIndividualForAFreeSessionInput = Array<SessionRegistrationData>;
 
 /**
  * Response for Get a List of Licenses
@@ -356,9 +346,7 @@ export interface GetOrganizationsRelationshipsResponse {
 /**
  * Add or Update a List of Custom Fields Per Individual
  */
-export interface AddOrUpdateAListOfCustomFieldsPerIndividualInput {
-    [key: string]: unknown;
-}
+export type AddOrUpdateAListOfCustomFieldsPerIndividualInput = Array<Record<string, unknown>>;
 
 /**
  * Response for Get Upcoming Events
@@ -673,9 +661,7 @@ export interface FindCustomerPhoneResponse {
 /**
  * Mark Registrant as Attended
  */
-export interface MarkRegistrantAttendedInput {
-    [key: string]: unknown;
-}
+export type MarkRegistrantAttendedInput = Array<Record<string, unknown>>;
 
 /**
  * Response for List Award Individual Recipients

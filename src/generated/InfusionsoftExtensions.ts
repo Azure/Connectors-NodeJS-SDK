@@ -41,16 +41,12 @@ export interface ListTasksResponse {
 /**
  * Definition: OnNewTask_Response
  */
-export interface OnNewTaskResponse {
-    [key: string]: unknown;
-}
+export type OnNewTaskResponse = Array<TaskResponse>;
 
 /**
  * Definition: ListOrders_Response
  */
-export interface ListOrdersResponse {
-    [key: string]: unknown;
-}
+export type ListOrdersResponse = Array<Record<string, unknown>>;
 
 /**
  * Definition: CreateTask_Request

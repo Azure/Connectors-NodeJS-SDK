@@ -697,9 +697,7 @@ export interface GetMessagesFromConversationResponse {
 /**
  * Definition: OnGroupMemberChange_Response
  */
-export interface OnGroupMemberChangeResponse {
-    [key: string]: unknown;
-}
+export type OnGroupMemberChangeResponse = Array<Record<string, unknown>>;
 
 /**
  * Definition: ChatMessage
@@ -742,9 +740,7 @@ export interface ChatMessage {
 /**
  * Definition: ChatMessageList
  */
-export interface ChatMessageList {
-    [key: string]: unknown;
-}
+export type ChatMessageList = Array<ChatMessage>;
 
 /**
  * Definition: GetTeamResponse
@@ -1174,9 +1170,7 @@ export type ThemeEditor = "white" | "blue" | "green" | "purple" | "pink" | "yell
 /**
  * Definition: Activities
  */
-export interface Activities {
-    [key: string]: unknown;
-}
+export type Activities = Array<Record<string, unknown>>;
 
 /**
  * Definition: SchedulingGroupResponse
@@ -2765,7 +2759,7 @@ export class TeamsClient extends ConnectorClientBase {
     public async getMeetingRecordingContent(meetingId: string, recordingId: string, options: ConnectorOperationOptions = {}): Promise<Blob> {
         const requestPath = `/v1.0/me/onlineMeetings/${encodeURIComponent(String(meetingId))}/recordings/${encodeURIComponent(String(recordingId))}/content`;
         const requestUrl = this.resolveUrl(requestPath);
-        const httpResponse = await this.sendWithTracingAsync<Blob>("Teams.getMeetingRecordingContent", "GetMeetingRecordingContent", "GET", requestUrl, undefined, options);
+        const httpResponse = await this.sendWithTracingAsync<Blob>("Teams.getMeetingRecordingContent", "GetMeetingRecordingContent", "GET", requestUrl, undefined, options, undefined, true);
 
         return httpResponse.value as Blob;
     }
@@ -3051,7 +3045,7 @@ export class TeamsClient extends ConnectorClientBase {
     public async getCallRecordingContent(callId: string, recordingId: string, options: ConnectorOperationOptions = {}): Promise<Blob> {
         const requestPath = `/v1.0/me/adhocCalls/${encodeURIComponent(String(callId))}/recordings/${encodeURIComponent(String(recordingId))}/content`;
         const requestUrl = this.resolveUrl(requestPath);
-        const httpResponse = await this.sendWithTracingAsync<Blob>("Teams.getCallRecordingContent", "GetCallRecordingContent", "GET", requestUrl, undefined, options);
+        const httpResponse = await this.sendWithTracingAsync<Blob>("Teams.getCallRecordingContent", "GetCallRecordingContent", "GET", requestUrl, undefined, options, undefined, true);
 
         return httpResponse.value as Blob;
     }

@@ -325,7 +325,7 @@ export class BoxClient extends ConnectorClientBase {
         }
         const requestPath = `/datasets/default/GetFileContentByPath` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
-        const httpResponse = await this.sendWithTracingAsync<Blob>("Box.getFileContentByPath", "GetFileContentByPath", "GET", requestUrl, undefined, options);
+        const httpResponse = await this.sendWithTracingAsync<Blob>("Box.getFileContentByPath", "GetFileContentByPath", "GET", requestUrl, undefined, options, undefined, true);
 
         return httpResponse.value as Blob;
     }
@@ -341,7 +341,7 @@ export class BoxClient extends ConnectorClientBase {
         }
         const requestPath = `/datasets/default/files/${encodeURIComponent(encodeURIComponent(String(id)))}/content` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
-        const httpResponse = await this.sendWithTracingAsync<Blob>("Box.getFileContent", "GetFileContent", "GET", requestUrl, undefined, options);
+        const httpResponse = await this.sendWithTracingAsync<Blob>("Box.getFileContent", "GetFileContent", "GET", requestUrl, undefined, options, undefined, true);
 
         return httpResponse.value as Blob;
     }

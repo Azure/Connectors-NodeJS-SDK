@@ -57,9 +57,7 @@ export interface SingleSearchFetchModel {
 /**
  * Definition: MultipleFetchModel
  */
-export interface MultipleFetchModel {
-    [key: string]: unknown;
-}
+export type MultipleFetchModel = Array<GeneralAPIModel>;
 
 /**
  * Definition: GeneralAPIModel

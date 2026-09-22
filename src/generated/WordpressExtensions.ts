@@ -50,16 +50,12 @@ export interface Site {
 /**
  * Definition: SiteModel
  */
-export interface SiteModel {
-    [key: string]: unknown;
-}
+export type SiteModel = Array<Record<string, unknown>>;
 
 /**
  * Definition: SiteStatsChartModel
  */
-export interface SiteStatsChartModel {
-    [key: string]: unknown;
-}
+export type SiteStatsChartModel = Array<Record<string, unknown>>;
 
 /**
  * Definition: SiteInsightsModel
@@ -102,9 +98,7 @@ export interface SiteStatsModel {
 /**
  * Definition: TopPostModel
  */
-export interface TopPostModel {
-    [key: string]: unknown;
-}
+export type TopPostModel = Array<Record<string, unknown>>;
 
 /**
  * Definition: ListPostsResponse
@@ -134,9 +128,7 @@ export interface PostResponse {
 /**
  * Definition: PostsModel
  */
-export interface PostsModel {
-    [key: string]: unknown;
-}
+export type PostsModel = Array<Record<string, unknown>>;
 
 /**
  * Definition: PostModel

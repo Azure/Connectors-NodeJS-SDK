@@ -20,9 +20,7 @@ export interface NewResponseWebhookInput {
 /**
  * Definition: ListFormsResponse-Old
  */
-export interface ListFormsResponseOld {
-    [key: string]: unknown;
-}
+export type ListFormsResponseOld = Array<Record<string, unknown>>;
 
 /**
  * Definition: ResponseList

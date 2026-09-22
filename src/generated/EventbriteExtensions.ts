@@ -25,16 +25,12 @@ export interface GetMyVenuesResponse {
 /**
  * Definition: GetEventsForOrganizer_Response
  */
-export interface GetEventsForOrganizerResponse {
-    [key: string]: unknown;
-}
+export type GetEventsForOrganizerResponse = Array<Record<string, unknown>>;
 
 /**
  * Definition: GetOrders_Response
  */
-export interface GetOrdersResponse {
-    [key: string]: unknown;
-}
+export type GetOrdersResponse = Array<Record<string, unknown>>;
 
 /**
  * Definition: GetMyEvents_Response
@@ -81,16 +77,12 @@ export interface CreateEventResponse {
 /**
  * Definition: GetOrganizations_Response
  */
-export interface GetOrganizationsResponse {
-    [key: string]: unknown;
-}
+export type GetOrganizationsResponse = Array<Record<string, unknown>>;
 
 /**
  * Definition: GetEventsForOrganization_Response
  */
-export interface GetEventsForOrganizationResponse {
-    [key: string]: unknown;
-}
+export type GetEventsForOrganizationResponse = Array<Record<string, unknown>>;
 
 /**
  * Options for the createEvent operation.

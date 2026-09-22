@@ -220,7 +220,7 @@ export class MeetingroommapClient extends ConnectorClientBase {
         }
         const requestPath = `/api/CustomLocations/createimage/${encodeURIComponent(String(locationId))}` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
-        const httpResponse = await this.sendWithTracingAsync<Blob>("Meetingroommap.getCustomLocationImage", "GetCustomLocationImage", "GET", requestUrl, undefined, options);
+        const httpResponse = await this.sendWithTracingAsync<Blob>("Meetingroommap.getCustomLocationImage", "GetCustomLocationImage", "GET", requestUrl, undefined, options, undefined, true);
 
         return httpResponse.value as Blob;
     }
@@ -248,7 +248,7 @@ export class MeetingroommapClient extends ConnectorClientBase {
         }
         const requestPath = `/api/MapImage/create/${encodeURIComponent(String(roomName))}` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
-        const httpResponse = await this.sendWithTracingAsync<Blob>("Meetingroommap.getMeetingRoomImage", "GetMeetingRoomImage", "GET", requestUrl, undefined, options);
+        const httpResponse = await this.sendWithTracingAsync<Blob>("Meetingroommap.getMeetingRoomImage", "GetMeetingRoomImage", "GET", requestUrl, undefined, options, undefined, true);
 
         return httpResponse.value as Blob;
     }
@@ -334,7 +334,7 @@ export class MeetingroommapClient extends ConnectorClientBase {
         }
         const requestPath = `/api/officelocationimage/create/${encodeURIComponent(String(officeLocationName))}` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
-        const httpResponse = await this.sendWithTracingAsync<Blob>("Meetingroommap.getOfficeLocationImage", "GetOfficeLocationImage", "GET", requestUrl, undefined, options);
+        const httpResponse = await this.sendWithTracingAsync<Blob>("Meetingroommap.getOfficeLocationImage", "GetOfficeLocationImage", "GET", requestUrl, undefined, options, undefined, true);
 
         return httpResponse.value as Blob;
     }

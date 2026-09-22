@@ -1795,7 +1795,7 @@ export class SharepointonlineClient extends ConnectorClientBase {
         }
         const requestPath = `/datasets/${encodeURIComponent(encodeURIComponent(String(dataset)))}/files/${encodeURIComponent(String(id))}/content` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
-        const httpResponse = await this.sendWithTracingAsync<Blob>("Sharepointonline.getFileContent", "GetFileContent", "GET", requestUrl, undefined, options);
+        const httpResponse = await this.sendWithTracingAsync<Blob>("Sharepointonline.getFileContent", "GetFileContent", "GET", requestUrl, undefined, options, undefined, true);
 
         return httpResponse.value as Blob;
     }
@@ -1872,7 +1872,7 @@ export class SharepointonlineClient extends ConnectorClientBase {
         }
         const requestPath = `/datasets/${encodeURIComponent(encodeURIComponent(String(dataset)))}/GetFileContentByPath` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
-        const httpResponse = await this.sendWithTracingAsync<Blob>("Sharepointonline.getFileContentByPath", "GetFileContentByPath", "GET", requestUrl, undefined, options);
+        const httpResponse = await this.sendWithTracingAsync<Blob>("Sharepointonline.getFileContentByPath", "GetFileContentByPath", "GET", requestUrl, undefined, options, undefined, true);
 
         return httpResponse.value as Blob;
     }
@@ -2403,7 +2403,7 @@ export class SharepointonlineClient extends ConnectorClientBase {
     public async getAttachmentContent(dataset: string, table: string, itemId: number, attachmentId: string, options: ConnectorOperationOptions = {}): Promise<Blob> {
         const requestPath = `/datasets/${encodeURIComponent(encodeURIComponent(String(dataset)))}/tables/${encodeURIComponent(encodeURIComponent(String(table)))}/items/${encodeURIComponent(encodeURIComponent(String(itemId)))}/attachments/${encodeURIComponent(String(attachmentId))}/$value`;
         const requestUrl = this.resolveUrl(requestPath);
-        const httpResponse = await this.sendWithTracingAsync<Blob>("Sharepointonline.getAttachmentContent", "GetAttachmentContent", "GET", requestUrl, undefined, options);
+        const httpResponse = await this.sendWithTracingAsync<Blob>("Sharepointonline.getAttachmentContent", "GetAttachmentContent", "GET", requestUrl, undefined, options, undefined, true);
 
         return httpResponse.value as Blob;
     }

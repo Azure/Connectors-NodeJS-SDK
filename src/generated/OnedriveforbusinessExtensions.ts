@@ -531,7 +531,7 @@ export class OnedriveforbusinessClient extends ConnectorClientBase {
         }
         const requestPath = `/datasets/default/GetFileContentByPath` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
-        const httpResponse = await this.sendWithTracingAsync<Blob>("Onedriveforbusiness.getFileContentByPath", "GetFileContentByPath", "GET", requestUrl, undefined, options);
+        const httpResponse = await this.sendWithTracingAsync<Blob>("Onedriveforbusiness.getFileContentByPath", "GetFileContentByPath", "GET", requestUrl, undefined, options, undefined, true);
 
         return httpResponse.value as Blob;
     }
@@ -547,7 +547,7 @@ export class OnedriveforbusinessClient extends ConnectorClientBase {
         }
         const requestPath = `/datasets/default/files/${encodeURIComponent(encodeURIComponent(String(id)))}/content` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
-        const httpResponse = await this.sendWithTracingAsync<Blob>("Onedriveforbusiness.getFileContent", "GetFileContent", "GET", requestUrl, undefined, options);
+        const httpResponse = await this.sendWithTracingAsync<Blob>("Onedriveforbusiness.getFileContent", "GetFileContent", "GET", requestUrl, undefined, options, undefined, true);
 
         return httpResponse.value as Blob;
     }
@@ -686,7 +686,7 @@ export class OnedriveforbusinessClient extends ConnectorClientBase {
         }
         const requestPath = `/datasets/default/files/${encodeURIComponent(encodeURIComponent(String(id)))}/convert` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
-        const httpResponse = await this.sendWithTracingAsync<Blob>("Onedriveforbusiness.convertFile", "ConvertFile", "GET", requestUrl, undefined, options);
+        const httpResponse = await this.sendWithTracingAsync<Blob>("Onedriveforbusiness.convertFile", "ConvertFile", "GET", requestUrl, undefined, options, undefined, true);
 
         return httpResponse.value as Blob;
     }
@@ -705,7 +705,7 @@ export class OnedriveforbusinessClient extends ConnectorClientBase {
         }
         const requestPath = `/datasets/default/ConvertFileByPath` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
-        const httpResponse = await this.sendWithTracingAsync<Blob>("Onedriveforbusiness.convertFileByPath", "ConvertFileByPath", "GET", requestUrl, undefined, options);
+        const httpResponse = await this.sendWithTracingAsync<Blob>("Onedriveforbusiness.convertFileByPath", "ConvertFileByPath", "GET", requestUrl, undefined, options, undefined, true);
 
         return httpResponse.value as Blob;
     }

@@ -9,6 +9,58 @@ import type { ConnectorClientOptions, ConnectorOperationOptions } from "../azure
 // #region Types
 
 /**
+ * Response for Store to file cabinet
+ */
+export interface StoreToFileCabinetResponse {
+    /** Sections */
+    Sections?: Array<Record<string, unknown>>;
+    /** DocumentId */
+    DocumentId?: number;
+    /** IndexFields */
+    IndexFields?: Record<string, unknown>;
+    /** DocumentTitle */
+    DocumentTitle?: string;
+    /** FileCabinetId */
+    FileCabinetId?: string;
+    /** TotalPages */
+    TotalPages?: number;
+    /** FileSize */
+    FileSize?: number;
+    /** ContentType */
+    ContentType?: string;
+    /** VersionStatus */
+    VersionStatus?: string;
+    /** DocumentFlags */
+    DocumentFlags?: Record<string, unknown>;
+}
+
+/**
+ * Response for Import to document tray
+ */
+export interface ImportToDocumentTrayResponse {
+    /** Sections */
+    Sections?: Array<Record<string, unknown>>;
+    /** DocumentId */
+    DocumentId?: number;
+    /** IndexFields */
+    IndexFields?: Record<string, unknown>;
+    /** DocumentTitle */
+    DocumentTitle?: string;
+    /** FileCabinetId */
+    FileCabinetId?: string;
+    /** TotalPages */
+    TotalPages?: number;
+    /** FileSize */
+    FileSize?: number;
+    /** ContentType */
+    ContentType?: string;
+    /** VersionStatus */
+    VersionStatus?: string;
+    /** DocumentFlags */
+    DocumentFlags?: Record<string, unknown>;
+}
+
+/**
  * Search in file cabinet
  */
 export interface SearchForDocumentsInFileCabinetInput {
@@ -70,9 +122,7 @@ export interface GetDocumentInformationResponse {
 /**
  * Update index fields
  */
-export interface UpdateIndexFieldsInput {
-    [key: string]: unknown;
-}
+export type UpdateIndexFieldsInput = Array<Record<string, unknown>>;
 
 /**
  * Response for Update index fields
@@ -173,6 +223,58 @@ export interface GetDialogsResponse {
 }
 
 /**
+ * Response for Append a file
+ */
+export interface AppendFileResponse {
+    /** SignatureStatus */
+    SignatureStatus?: Array<string>;
+    /** SectionId */
+    SectionId?: string;
+    /** ContentType */
+    ContentType?: string;
+    /** HaveMorePages */
+    HaveMorePages?: boolean;
+    /** PageCount */
+    PageCount?: number;
+    /** FileSize */
+    FileSize?: number;
+    /** OriginalFileName */
+    OriginalFileName?: string;
+    /** ContentModified */
+    ContentModified?: string;
+    /** HasTextAnnotation */
+    HasTextAnnotation?: boolean;
+    /** AnnotationsPreview */
+    AnnotationsPreview?: boolean;
+}
+
+/**
+ * Response for Replace a file
+ */
+export interface ReplaceFileResponse {
+    /** SignatureStatus */
+    SignatureStatus?: Array<string>;
+    /** SectionId */
+    SectionId?: string;
+    /** ContentType */
+    ContentType?: string;
+    /** HaveMorePages */
+    HaveMorePages?: boolean;
+    /** PageCount */
+    PageCount?: number;
+    /** FileSize */
+    FileSize?: number;
+    /** OriginalFileName */
+    OriginalFileName?: string;
+    /** ContentModified */
+    ContentModified?: string;
+    /** HasTextAnnotation */
+    HasTextAnnotation?: boolean;
+    /** AnnotationsPreview */
+    AnnotationsPreview?: boolean;
+}
+
+/**
  * Response for Get stamps
  */
 export interface GetStampsResponse {
@@ -211,6 +313,50 @@ export interface ListDocumentsInDocumentTrayResponse {
     /** Count */
     Count?: number;
     Documents?: Array<Record<string, unknown>>;
+}
+
+/**
+ * Multipart form data for the storeToFileCabinet operation.
+ */
+export interface StoreToFileCabinetFormData {
+    /** Specify the index data for the document. */
+    index?: string;
+    /** Specify the contents of the file to store. */
+    file?: Blob;
+}
+
+/**
+ * Multipart form data for the importToDocumentTray operation.
+ */
+export interface ImportToDocumentTrayFormData {
+    /** Specify the index data for the document. */
+    index?: string;
+    /** Specify the contents of the file to import. */
+    file?: Blob;
+}
+
+/**
+ * Multipart form data for the appendFile operation.
+ */
+export interface AppendFileFormData {
+    /** Specify the contents of the file to store. */
+    file?: Blob;
+}
+
+/**
+ * Multipart form data for the replaceFile operation.
+ */
+export interface ReplaceFileFormData {
+    /** Specify the contents of the file to store. */
+    file?: Blob;
+}
+
+/**
+ * Options for the importToDocumentTray operation.
+ */
+export interface ImportToDocumentTrayOptions extends ConnectorOperationOptions {
+    /** Select the store dialog to use during import. */
+    storeDialogId?: string;
 }
 
 /**
@@ -257,6 +403,56 @@ export class DocuwareClient extends ConnectorClientBase {
 
     public get connectorName(): string {
         return "docuware";
+    }
+
+    /**
+     * Store to file cabinet
+     * @remarks Stores a new document to a file cabinet.
+     */
+    public async storeToFileCabinet(input: StoreToFileCabinetFormData, fileCabinet: string, storeDialogId: string, options: ConnectorOperationOptions = {}): Promise<StoreToFileCabinetResponse> {
+        const queryParams: string[] = [];
+        if (storeDialogId !== undefined) {
+            queryParams.push(`StoreDialogId=${encodeURIComponent(String(storeDialogId))}`);
+        }
+        const requestPath = `/FileCabinets/${encodeURIComponent(String(fileCabinet))}/Documents` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
+        const formData = new FormData();
+        if (input.index !== undefined) {
+            formData.append("index", String(input.index));
+        }
+        if (input.file !== undefined) {
+            formData.append("file", input.file);
+        }
+        formData.append("Default", "{}");
+
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.sendWithTracingAsync<StoreToFileCabinetResponse>("Docuware.storeToFileCabinet", "StoreToFileCabinet", "POST", requestUrl, formData, options);
+
+        return httpResponse.value as StoreToFileCabinetResponse;
+    }
+
+    /**
+     * Import to document tray
+     * @remarks Import a new document into a document tray.
+     */
+    public async importToDocumentTray(input: ImportToDocumentTrayFormData, documentTray: string, options: ImportToDocumentTrayOptions = {}): Promise<ImportToDocumentTrayResponse> {
+        const queryParams: string[] = [];
+        if (options.storeDialogId !== undefined) {
+            queryParams.push(`StoreDialogId=${encodeURIComponent(String(options.storeDialogId))}`);
+        }
+        const requestPath = `/DocumentTrays/${encodeURIComponent(String(documentTray))}/Documents` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
+        const formData = new FormData();
+        if (input.index !== undefined) {
+            formData.append("index", String(input.index));
+        }
+        if (input.file !== undefined) {
+            formData.append("file", input.file);
+        }
+        formData.append("Default", "{}");
+
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.sendWithTracingAsync<ImportToDocumentTrayResponse>("Docuware.importToDocumentTray", "ImportToDocumentTray", "POST", requestUrl, formData, options);
+
+        return httpResponse.value as ImportToDocumentTrayResponse;
     }
 
     /**
@@ -343,7 +539,7 @@ export class DocuwareClient extends ConnectorClientBase {
             requestHeaders["Accept-Encoding"] = String(acceptEncoding);
         }
         const requestUrl = this.resolveUrl(requestPath);
-        const httpResponse = await this.sendWithTracingAsync<Blob>("Docuware.downloadFile", "DownloadFile", "GET", requestUrl, undefined, options, requestHeaders);
+        const httpResponse = await this.sendWithTracingAsync<Blob>("Docuware.downloadFile", "DownloadFile", "GET", requestUrl, undefined, options, requestHeaders, true);
 
         return httpResponse.value as Blob;
     }
@@ -366,7 +562,7 @@ export class DocuwareClient extends ConnectorClientBase {
             requestHeaders["Accept-Encoding"] = String(acceptEncoding);
         }
         const requestUrl = this.resolveUrl(requestPath);
-        const httpResponse = await this.sendWithTracingAsync<Blob>("Docuware.downloadDocument", "DownloadDocument", "GET", requestUrl, undefined, options, requestHeaders);
+        const httpResponse = await this.sendWithTracingAsync<Blob>("Docuware.downloadDocument", "DownloadDocument", "GET", requestUrl, undefined, options, requestHeaders, true);
 
         return httpResponse.value as Blob;
     }
@@ -425,6 +621,54 @@ export class DocuwareClient extends ConnectorClientBase {
         const httpResponse = await this.sendWithTracingAsync<GetDialogsResponse>("Docuware.getDialogs", "GetDialogs", "GET", requestUrl, undefined, options);
 
         return httpResponse.value as GetDialogsResponse;
+    }
+
+    /**
+     * Append a file
+     * @remarks Appends a file/section to an existing document.
+     */
+    public async appendFile(input: AppendFileFormData, fileCabinet: string, docId: string, options: ConnectorOperationOptions = {}): Promise<AppendFileResponse> {
+        const queryParams: string[] = [];
+        if (docId !== undefined) {
+            queryParams.push(`DocID=${encodeURIComponent(String(docId))}`);
+        }
+        const requestPath = `/FileCabinets/${encodeURIComponent(String(fileCabinet))}/Sections` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
+        const formData = new FormData();
+        if (input.file !== undefined) {
+            formData.append("file", input.file);
+        }
+
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.sendWithTracingAsync<AppendFileResponse>("Docuware.appendFile", "AppendFile", "POST", requestUrl, formData, options);
+
+        return httpResponse.value as AppendFileResponse;
+    }
+
+    /**
+     * Delete a file
+     * @remarks Deletes a file/section from an existing document.
+     */
+    public async deleteFile(fileCabinet: string, documentId: number, fileNumber: number, options: ConnectorOperationOptions = {}): Promise<void> {
+        const requestPath = `/FileCabinets/${encodeURIComponent(String(fileCabinet))}/Documents/${encodeURIComponent(String(documentId))}/Sections/${encodeURIComponent(String(fileNumber))}/Data`;
+        const requestUrl = this.resolveUrl(requestPath);
+        await this.sendWithTracingAsync<void>("Docuware.deleteFile", "DeleteFile", "DELETE", requestUrl, undefined, options);
+    }
+
+    /**
+     * Replace a file
+     * @remarks Replaces a file/section in an existing document.
+     */
+    public async replaceFile(input: ReplaceFileFormData, fileCabinet: string, documentId: number, fileNumber: number, options: ConnectorOperationOptions = {}): Promise<ReplaceFileResponse> {
+        const requestPath = `/FileCabinets/${encodeURIComponent(String(fileCabinet))}/Documents/${encodeURIComponent(String(documentId))}/Sections/${encodeURIComponent(String(fileNumber))}/Data`;
+        const formData = new FormData();
+        if (input.file !== undefined) {
+            formData.append("file", input.file);
+        }
+
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.sendWithTracingAsync<ReplaceFileResponse>("Docuware.replaceFile", "ReplaceFile", "POST", requestUrl, formData, options);
+
+        return httpResponse.value as ReplaceFileResponse;
     }
 
     /**

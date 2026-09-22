@@ -36,6 +36,22 @@ function mockFetchError(status: number, errorBody: string): void {
     } as Response);
 }
 
+async function readRequestBody(body: unknown): Promise<string> {
+    const bodyValue = typeof body === "function"
+        ? (body as () => unknown)()
+        : body;
+    if (bodyValue instanceof Blob) {
+        return await bodyValue.text();
+    }
+
+    const chunks = new Array<Buffer>();
+    for await (const chunk of bodyValue as AsyncIterable<Uint8Array | string>) {
+        chunks.push(Buffer.isBuffer(chunk) ? chunk : Buffer.from(chunk));
+    }
+
+    return Buffer.concat(chunks).toString("utf8");
+}
+
 // ──────────────────────────────────────────────
 // Runtime tests
 // ──────────────────────────────────────────────
@@ -90,6 +106,48 @@ describe("DocuwareClient — getOrganization", () => {
             expect(connectorError.statusCode).toBe(404);
             expect(connectorError.responseBody).toBe("Not Found");
         }
+    });
+});
+
+describe("DocuwareClient — multipart files", () => {
+    afterEach(() => {
+        jest.restoreAllMocks();
+    });
+
+    it("should POST multipart fields to a file cabinet", async () => {
+        mockFetchResponse({ Id: 42 });
+        const client = new DocuwareClient(TestConnectionUrl, createMockCredential());
+
+        await client.storeToFileCabinet(
+            {
+                index: "index data",
+                file: new Blob(["document content"], { type: "application/pdf" }),
+            },
+            "cabinet1",
+            "dialog1",
+        );
+
+        const [url, init] = (global.fetch as jest.Mock).mock.calls[0];
+        expect(url).toContain("/FileCabinets/cabinet1/Documents?StoreDialogId=dialog1");
+        expect(init.method).toBe("POST");
+        expect(init.headers["Content-Type"]).toMatch(/^multipart\/form-data; boundary=/);
+        expect(init.body).toBeDefined();
+        const requestBody = await readRequestBody(init.body);
+        expect(requestBody).toContain('name="Default"');
+        expect(requestBody).toContain("\r\n\r\n{}\r\n");
+        expect(requestBody).not.toContain("true");
+    });
+
+    it("should expose bodyless deleteFile despite its irrelevant consumes declaration", async () => {
+        mockFetchResponse(undefined, 204);
+        const client = new DocuwareClient(TestConnectionUrl, createMockCredential());
+
+        await client.deleteFile("cabinet1", 42, 3);
+
+        const [url, init] = (global.fetch as jest.Mock).mock.calls[0];
+        expect(url).toContain("/FileCabinets/cabinet1/Documents/42/Sections/3/Data");
+        expect(init.method).toBe("DELETE");
+        expect(init.body).toBeUndefined();
     });
 });
 

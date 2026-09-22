@@ -433,9 +433,7 @@ export type Theme = "white" | "blue" | "green" | "purple" | "pink" | "yellow" | 
 /**
  * Definition: Activities
  */
-export interface Activities {
-    [key: string]: unknown;
-}
+export type Activities = Array<Record<string, unknown>>;
 
 /**
  * Definition: SchedulingGroupResponse
