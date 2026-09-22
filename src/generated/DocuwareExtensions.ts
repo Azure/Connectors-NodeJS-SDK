@@ -323,8 +323,6 @@ export interface StoreToFileCabinetFormData {
     index?: string;
     /** Specify the contents of the file to store. */
     file?: Blob;
-    /** The 'Default' form field. */
-    default_: string;
 }
 
 /**
@@ -335,8 +333,6 @@ export interface ImportToDocumentTrayFormData {
     index?: string;
     /** Specify the contents of the file to import. */
     file?: Blob;
-    /** The 'Default' form field. */
-    default_: string;
 }
 
 /**
@@ -426,7 +422,7 @@ export class DocuwareClient extends ConnectorClientBase {
         if (input.file !== undefined) {
             formData.append("file", input.file);
         }
-        formData.append("Default", String(input.default_));
+        formData.append("Default", "{}");
 
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.sendWithTracingAsync<StoreToFileCabinetResponse>("Docuware.storeToFileCabinet", "StoreToFileCabinet", "POST", requestUrl, formData, options);
@@ -451,7 +447,7 @@ export class DocuwareClient extends ConnectorClientBase {
         if (input.file !== undefined) {
             formData.append("file", input.file);
         }
-        formData.append("Default", String(input.default_));
+        formData.append("Default", "{}");
 
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.sendWithTracingAsync<ImportToDocumentTrayResponse>("Docuware.importToDocumentTray", "ImportToDocumentTray", "POST", requestUrl, formData, options);
