@@ -17,7 +17,7 @@
 
 "use strict";
 
-const { ManagedIdentityTokenProvider, ConnectorException } = require("@azure/connectors");
+const { ManagedIdentityTokenProvider, ConnectorError } = require("@azure/connectors");
 const { TextrequestClient } = require("@azure/connectors/generated/TextrequestExtensions");
 
 const CONNECTION_URL = process.env.TEXTREQUEST_CONNECTION_URL ?? "";
@@ -40,10 +40,10 @@ async function main() {
     // Example 1: List messages exchanged with a contact phone number.
     const phoneNumber = process.env.TEXTREQUEST_PHONE ?? "+15555550100";
     try {
-        const messages = await client.getMessagesByContactPhoneAsync(DASHBOARD_ID, phoneNumber);
+        const messages = await client.getMessagesByContactPhone(Number(DASHBOARD_ID), phoneNumber, 0, 50);
         console.log("Messages:", JSON.stringify(messages, null, 2));
     } catch (error) {
-        if (error instanceof ConnectorException) {
+        if (error instanceof ConnectorError) {
             console.log(`Connector error (${error.statusCode}): ${error.message}`);
         } else {
             throw error;

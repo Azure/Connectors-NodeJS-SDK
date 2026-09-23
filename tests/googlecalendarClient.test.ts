@@ -2,7 +2,7 @@
 
 import type { TokenCredential } from "@azure/core-auth";
 import { GooglecalendarClient } from "../src/generated/GooglecalendarExtensions.ts";
-import { ConnectorException } from "../src/azureConnectors/connectorException.ts";
+import { ConnectorError } from "../src/azureConnectors/connectorError.ts";
 import { ConnectorNames } from "../src/generated/connectorNames.ts";
 import { availableConnectors } from "../src/generated/ManagedConnectors.ts";
 
@@ -50,7 +50,7 @@ describe("GooglecalendarClient — constructor", () => {
     it("should strip trailing slashes from connection URL", async () => {
         mockFetchResponse({});
         const client = new GooglecalendarClient(TestConnectionUrl + "///", createMockCredential());
-        await client.getEventAsync("cal1", "evt1");
+        await client.getEvent("cal1", "evt1");
         const [url] = (global.fetch as jest.Mock).mock.calls[0];
         // NOTE: Confirms the trailing slashes were stripped by inspecting the
         //       outbound URL: after the scheme, no `//` should remain.
@@ -69,7 +69,7 @@ describe("GooglecalendarClient — constructor", () => {
     });
 });
 
-describe("GooglecalendarClient — getEventAsync", () => {
+describe("GooglecalendarClient — getEvent", () => {
     afterEach(() => {
         jest.restoreAllMocks();
     });
@@ -79,7 +79,7 @@ describe("GooglecalendarClient — getEventAsync", () => {
         mockFetchResponse(event);
 
         const client = new GooglecalendarClient(TestConnectionUrl, createMockCredential());
-        const result = await client.getEventAsync("cal1", "evt1");
+        const result = await client.getEvent("cal1", "evt1");
 
         expect(result).toEqual(event);
         expect(global.fetch).toHaveBeenCalledTimes(1);
@@ -90,19 +90,20 @@ describe("GooglecalendarClient — getEventAsync", () => {
         expect(url).toContain("/events/evt1");
     });
 
-    it("should throw ConnectorException on non-OK response", async () => {
+    it("should throw ConnectorError on non-OK response", async () => {
         mockFetchError(404, "Not Found");
 
         const client = new GooglecalendarClient(TestConnectionUrl, createMockCredential());
         try {
-            await client.getEventAsync("cal1", "missing");
-            throw new Error("Expected ConnectorException to be thrown.");
+            await client.getEvent("cal1", "missing");
+            throw new Error("Expected ConnectorError to be thrown.");
         } catch (error) {
-            expect(error).toBeInstanceOf(ConnectorException);
-            const connectorError = error as ConnectorException;
+            expect(error).toBeInstanceOf(ConnectorError);
+            const connectorError = error as ConnectorError;
             expect(connectorError.statusCode).toBe(404);
             expect(connectorError.responseBody).toBe("Not Found");
-            expect(connectorError.operation).toBe("GET /calendars/cal1/events/missing");
+            expect(connectorError.operation).toBe("GetEvent");
+            expect(connectorError.request.url).toContain("/calendars/cal1/events/missing");
         }
     });
 });

@@ -4,7 +4,7 @@
  * Shifts Connector SDK Sample - ESM TypeScript
  */
 
-import { ManagedIdentityTokenProvider, ConnectorException } from "@azure/connectors";
+import { ManagedIdentityTokenProvider, ConnectorError } from "@azure/connectors";
 import { ShiftsClient, ScheduleResponse } from "@azure/connectors/generated/ShiftsExtensions";
 
 const CONNECTION_URL = process.env.SHIFTS_CONNECTION_URL ?? "";
@@ -20,10 +20,10 @@ async function main(): Promise<void> {
     const client = new ShiftsClient(CONNECTION_URL, tokenProvider);
 
     try {
-        const result: ScheduleResponse = await client.getScheduleAsync(SHIFTS_TEAM_ID);
+        const result: ScheduleResponse = await client.getSchedule(SHIFTS_TEAM_ID);
         console.log(`Schedule keys: ${Object.keys(result as Record<string, unknown>).join(", ")}`);
     } catch (error) {
-        if (error instanceof ConnectorException) {
+        if (error instanceof ConnectorError) {
             console.log(`Connector error (${error.statusCode}): ${error.message}`);
             return;
         }

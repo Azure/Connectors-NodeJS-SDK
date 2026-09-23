@@ -24,12 +24,14 @@
  *     node dist/azuremonitorlogs.js
  */
 
-import { ManagedIdentityTokenProvider, ConnectorException } from "@azure/connectors";
+import { ManagedIdentityTokenProvider, ConnectorError } from "@azure/connectors";
 import { AzuremonitorlogsClient, QueryDataInput, Table, VisualizeQueryInput, VisualizeResults } from "@azure/connectors/generated/AzuremonitorlogsExtensions";
 
 const CONNECTION_URL = process.env.AZUREMONITOR_CONNECTION_URL ?? "";
 const SUBSCRIPTIONS = process.env.AZUREMONITOR_SUBSCRIPTIONS ?? "";
 const RESOURCE_GROUPS = process.env.AZUREMONITOR_RESOURCE_GROUPS ?? "";
+const RESOURCE_TYPE = process.env.AZUREMONITOR_RESOURCE_TYPE ?? "";
+const RESOURCE_NAME = process.env.AZUREMONITOR_RESOURCE_NAME ?? "";
 
 if (!CONNECTION_URL) {
     console.error("Error: AZUREMONITOR_CONNECTION_URL environment variable is not set.");
@@ -54,10 +56,12 @@ async function main(): Promise<void> {
             timerange: {},
         };
 
-        const result: Table = await client.queryDataAsync(
+        const result: Table = await client.queryData(
             input,
-            SUBSCRIPTIONS || undefined,
-            RESOURCE_GROUPS || undefined,
+            SUBSCRIPTIONS,
+            RESOURCE_GROUPS,
+            RESOURCE_TYPE,
+            RESOURCE_NAME,
         );
 
         const rows = result.value ?? [];
@@ -70,7 +74,7 @@ async function main(): Promise<void> {
             console.log("Result:", JSON.stringify(result, null, 2));
         }
     } catch (error) {
-        if (error instanceof ConnectorException) {
+        if (error instanceof ConnectorError) {
             console.log(`Connector error (${error.statusCode}): ${error.message}`);
         } else {
             throw error;
@@ -86,18 +90,18 @@ async function main(): Promise<void> {
             timerange: {},
         };
 
-        const visResult: VisualizeResults = await client.visualizeQueryAsync(
+        const visResult: VisualizeResults = await client.visualizeQuery(
             visInput,
-            SUBSCRIPTIONS || undefined,
-            RESOURCE_GROUPS || undefined,
-            undefined,
-            undefined,
+            SUBSCRIPTIONS,
+            RESOURCE_GROUPS,
+            RESOURCE_TYPE,
+            RESOURCE_NAME,
             "piechart",
         );
         const visRecord = visResult;
         console.log("Visualization result keys:", Object.keys(visRecord).join(", "));
     } catch (error) {
-        if (error instanceof ConnectorException) {
+        if (error instanceof ConnectorError) {
             console.log(`Connector error (${error.statusCode}): ${error.message}`);
         } else {
             throw error;

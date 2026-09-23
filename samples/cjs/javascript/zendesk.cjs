@@ -16,7 +16,7 @@
 
 "use strict";
 
-const { ManagedIdentityTokenProvider, ConnectorException } = require("@azure/connectors");
+const { ManagedIdentityTokenProvider, ConnectorError } = require("@azure/connectors");
 const { ZendeskClient } = require("@azure/connectors/generated/ZendeskExtensions");
 
 const CONNECTION_URL = process.env.ZENDESK_CONNECTION_URL ?? "";
@@ -32,10 +32,10 @@ async function main() {
 
     // Example 1: List the available tables.
     try {
-        const tables = await client.getTablesAsync();
+        const tables = await client.getTables();
         console.log("Tables:", JSON.stringify(tables, null, 2));
     } catch (error) {
-        if (error instanceof ConnectorException) {
+        if (error instanceof ConnectorError) {
             console.log(`Connector error (${error.statusCode}): ${error.message}`);
         } else {
             throw error;
@@ -46,11 +46,11 @@ async function main() {
     const table = process.env.ZENDESK_TABLE;
     if (table) {
         try {
-            const items = await client.getItemsAsync(table);
+            const items = await client.getItems(table);
             console.log(`Retrieved items from table '${table}'.`);
             console.log(JSON.stringify(items, null, 2));
         } catch (error) {
-            if (error instanceof ConnectorException) {
+            if (error instanceof ConnectorError) {
                 console.log(`Connector error (${error.statusCode}): ${error.message}`);
             } else {
                 throw error;

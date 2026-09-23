@@ -16,7 +16,7 @@
 
 "use strict";
 
-const { ManagedIdentityTokenProvider, ConnectorException } = require("@azure/connectors");
+const { ManagedIdentityTokenProvider, ConnectorError } = require("@azure/connectors");
 const { PdfcoClient } = require("@azure/connectors/generated/PdfcoExtensions");
 
 const CONNECTION_URL = process.env.PDFCO_CONNECTION_URL ?? "";
@@ -33,10 +33,10 @@ async function main() {
     // Example 1: Convert a web page to a PDF document.
     const sourceUrl = process.env.PDFCO_SOURCE_URL ?? "https://example.com";
     try {
-        const result = await client.urlToPdfAsync({ url: sourceUrl });
+        const result = await client.urlToPdf({ url: sourceUrl });
         console.log("PDF result:", JSON.stringify(result, null, 2));
     } catch (error) {
-        if (error instanceof ConnectorException) {
+        if (error instanceof ConnectorError) {
             console.log(`Connector error (${error.statusCode}): ${error.message}`);
         } else {
             throw error;

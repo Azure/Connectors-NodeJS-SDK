@@ -20,7 +20,7 @@
  *     npm start
  */
 
-import { ManagedIdentityTokenProvider, ConnectorException } from "@azure/connectors";
+import { ManagedIdentityTokenProvider, ConnectorError } from "@azure/connectors";
 import { SharepointonlineClient } from "@azure/connectors/generated/SharepointonlineExtensions";
 
 const CONNECTION_URL = process.env.SHAREPOINT_CONNECTION_URL ?? "";
@@ -47,7 +47,7 @@ async function main() {
     // Example 1: Get all lists and libraries
     console.log("\n--- Get All Lists and Libraries ---");
     try {
-        const tables = await client.getAllTablesAsync(SITE_URL);
+        const tables = await client.getAllTables(SITE_URL);
         const lists = tables.value ?? [];
 
         if (lists.length > 0) {
@@ -59,7 +59,7 @@ async function main() {
             console.log("No lists found.");
         }
     } catch (error) {
-        if (error instanceof ConnectorException) {
+        if (error instanceof ConnectorError) {
             console.log(`Connector error: ${error.message}`);
         } else {
             throw error;
@@ -69,19 +69,24 @@ async function main() {
     // Example 2: Get list items
     console.log(`\n--- Get List Items (${listName}) ---`);
     try {
-        const items = await client.getItemsAsync(SITE_URL, listName);
-        const itemValues = items.value ?? [];
+        const itemValues = [];
+        for await (const item of client.getItems(SITE_URL, listName)) {
+            itemValues.push(item);
+            if (itemValues.length >= 5) {
+                break;
+            }
+        }
 
         if (itemValues.length > 0) {
             console.log(`Found ${itemValues.length} items:`);
-            for (const item of itemValues.slice(0, 5)) {
+            for (const item of itemValues) {
                 console.log(`  - [${item.dynamicProperties?.ID ?? "?"}] ${item.dynamicProperties?.Title ?? item.dynamicProperties?.FileLeafRef ?? "No Title"}`);
             }
         } else {
             console.log(`No items found in '${listName}'.`);
         }
     } catch (error) {
-        if (error instanceof ConnectorException) {
+        if (error instanceof ConnectorError) {
             console.log(`Connector error (${error.statusCode}): ${error.message}`);
         } else {
             throw error;
@@ -91,19 +96,24 @@ async function main() {
     // Example 3: Get files (properties only) from a library
     console.log(`\n--- Get File Properties (${listName}) ---`);
     try {
-        const files = await client.getFileItemsAsync(SITE_URL, listName);
-        const fileValues = files.value ?? [];
+        const fileValues = [];
+        for await (const file of client.getFileItems(SITE_URL, listName)) {
+            fileValues.push(file);
+            if (fileValues.length >= 5) {
+                break;
+            }
+        }
 
         if (fileValues.length > 0) {
             console.log(`Found ${fileValues.length} files:`);
-            for (const file of fileValues.slice(0, 5)) {
+            for (const file of fileValues) {
                 console.log(`  - ${file.dynamicProperties?.FileLeafRef ?? file.dynamicProperties?.Title ?? "Unknown"} (ID: ${file.dynamicProperties?.ID ?? "?"})`);
             }
         } else {
             console.log(`No files found in '${listName}'.`);
         }
     } catch (error) {
-        if (error instanceof ConnectorException) {
+        if (error instanceof ConnectorError) {
             console.log(`Connector error (${error.statusCode}): ${error.message}`);
         } else {
             throw error;
@@ -113,7 +123,7 @@ async function main() {
     // Example 4: Get root folder metadata
     console.log("\n--- Get Root Folder Metadata ---");
     try {
-        const rootFolder = await client.getFolderMetadataByPathAsync(SITE_URL);
+        const rootFolder = await client.getFolderMetadataByPath(SITE_URL, "/");
 
         if (rootFolder) {
             console.log(`Root folder metadata:`);
@@ -124,7 +134,7 @@ async function main() {
             console.log("No items in root folder.");
         }
     } catch (error) {
-        if (error instanceof ConnectorException) {
+        if (error instanceof ConnectorError) {
             console.log(`Connector error (${error.statusCode}): ${error.message}`);
         } else {
             throw error;
@@ -138,38 +148,41 @@ async function main() {
         try {
             // CREATE
             console.log("Creating item...");
-            const created = await client.postItemAsync(
+            const created = await client.postItem(
                 { Title: `SDK Test ${new Date().toISOString()}` },
                 SITE_URL,
                 crudListName,
             );
-            const itemId = String(created.ID);
+            const itemId = Number(created.ID);
+            if (!Number.isInteger(itemId)) {
+                throw new Error("The created item response did not include a numeric ID.");
+            }
             console.log(`  Created item ${itemId}: ${created.Title}`);
 
             // READ
             console.log("Reading item...");
-            const item = await client.getItemAsync(SITE_URL, crudListName, itemId);
+            const item = await client.getItem(SITE_URL, crudListName, itemId);
             console.log(`  Read item ${itemId}: ${item.Title}`);
 
             // UPDATE
             console.log("Updating item...");
-            await client.patchItemAsync(
+            await client.patchItem(
                 { Title: "Updated by SDK" },
                 SITE_URL,
                 crudListName,
                 itemId,
             );
-            const updated = await client.getItemAsync(SITE_URL, crudListName, itemId);
+            const updated = await client.getItem(SITE_URL, crudListName, itemId);
             console.log(`  Updated item ${itemId}: ${updated.Title}`);
 
             // DELETE
             console.log("Deleting item...");
-            await client.deleteItemAsync(SITE_URL, crudListName, itemId);
+            await client.deleteItem(SITE_URL, crudListName, itemId);
             console.log(`  Deleted item ${itemId}`);
 
             console.log("Full CRUD cycle completed successfully!");
         } catch (error) {
-            if (error instanceof ConnectorException) {
+            if (error instanceof ConnectorError) {
                 console.log(`Connector error (${error.statusCode}): ${error.message}`);
             } else {
                 throw error;
@@ -183,10 +196,10 @@ async function main() {
     // Example 6: Error handling
     console.log("\n--- Error Handling ---");
     try {
-        await client.getItemsAsync(SITE_URL, "NonExistentList_12345");
+        await client.getItems(SITE_URL, "NonExistentList_12345");
         console.log("Unexpected success.");
     } catch (error) {
-        if (error instanceof ConnectorException) {
+        if (error instanceof ConnectorError) {
             console.log("Expected error caught:");
             console.log(`  Message: ${error.message}`);
             console.log(`  Status: ${error.statusCode}`);

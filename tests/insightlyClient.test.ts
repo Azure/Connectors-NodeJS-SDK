@@ -2,7 +2,7 @@
 
 import type { TokenCredential } from "@azure/core-auth";
 import { InsightlyClient } from "../src/generated/InsightlyExtensions.ts";
-import { ConnectorException } from "../src/azureConnectors/connectorException.ts";
+import { ConnectorError } from "../src/azureConnectors/connectorError.ts";
 import { ConnectorNames } from "../src/generated/connectorNames.ts";
 import { availableConnectors } from "../src/generated/ManagedConnectors.ts";
 
@@ -58,35 +58,35 @@ describe("InsightlyClient — constructor", () => {
     });
 });
 
-describe("InsightlyClient — listTasksAsync", () => {
+describe("InsightlyClient — listTasks", () => {
     afterEach(() => {
         jest.restoreAllMocks();
     });
 
     it("should GET the tasks list and return the deserialized response", async () => {
-        const tasks = { value: [{ TASK_ID: 1, TITLE: "Follow up", STATUS: "NOT STARTED" }] };
+        const tasks = { tasks: [{ TASK_ID: 1, TITLE: "Follow up", STATUS: "NOT STARTED" }] };
         mockFetchResponse(tasks);
 
         const client = new InsightlyClient(TestConnectionUrl, createMockCredential());
-        const result = await client.listTasksAsync();
+        const result = await client.listTasks().byPage().next();
 
-        expect(result).toEqual(tasks);
+        expect(result.value).toEqual(tasks.tasks);
         expect(global.fetch).toHaveBeenCalledTimes(1);
         const [, init] = (global.fetch as jest.Mock).mock.calls[0];
         expect(init.method).toBe("GET");
         expect(init.headers["Authorization"]).toBe("Bearer mock-bearer-token");
     });
 
-    it("should throw ConnectorException on non-OK response", async () => {
+    it("should throw ConnectorError on non-OK response", async () => {
         mockFetchError(404, "Not Found");
 
         const client = new InsightlyClient(TestConnectionUrl, createMockCredential());
         try {
-            await client.listTasksAsync();
-            throw new Error("Expected ConnectorException to be thrown.");
+            await client.listTasks().byPage().next();
+            throw new Error("Expected ConnectorError to be thrown.");
         } catch (error) {
-            expect(error).toBeInstanceOf(ConnectorException);
-            const connectorError = error as ConnectorException;
+            expect(error).toBeInstanceOf(ConnectorError);
+            const connectorError = error as ConnectorError;
             expect(connectorError.statusCode).toBe(404);
             expect(connectorError.responseBody).toBe("Not Found");
         }

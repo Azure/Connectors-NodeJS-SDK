@@ -6,7 +6,7 @@ import {
     ScheduleResponse,
     ListTimesOffResponse,
 } from "../src/generated/ShiftsExtensions.ts";
-import { ConnectorException } from "../src/azureConnectors/connectorException.ts";
+import { ConnectorError } from "../src/azureConnectors/connectorError.ts";
 import { ConnectorNames } from "../src/generated/connectorNames.ts";
 import { availableConnectors } from "../src/generated/ManagedConnectors.ts";
 
@@ -44,7 +44,7 @@ describe("ShiftsClient — constructor", () => {
     });
 });
 
-describe("ShiftsClient — getScheduleAsync", () => {
+describe("ShiftsClient — getSchedule", () => {
     afterEach(() => {
         jest.restoreAllMocks();
     });
@@ -54,7 +54,7 @@ describe("ShiftsClient — getScheduleAsync", () => {
         mockFetchResponse(mockResponse);
 
         const client = new ShiftsClient(TestConnectionUrl, createMockCredential());
-        const result = await client.getScheduleAsync("team-1");
+        const result = await client.getSchedule("team-1");
 
         expect(result).toEqual(mockResponse);
         const [url, init] = (global.fetch as jest.Mock).mock.calls[0];
@@ -62,15 +62,15 @@ describe("ShiftsClient — getScheduleAsync", () => {
         expect(init.method).toBe("GET");
     });
 
-    it("should throw ConnectorException on non-OK response", async () => {
+    it("should throw ConnectorError on non-OK response", async () => {
         mockFetchError(404, '{"error":"NotFound"}');
 
         const client = new ShiftsClient(TestConnectionUrl, createMockCredential());
-        await expect(client.getScheduleAsync("team-1")).rejects.toThrow(ConnectorException);
+        await expect(client.getSchedule("team-1")).rejects.toThrow(ConnectorError);
     });
 });
 
-describe("ShiftsClient — listTimesOffAsync", () => {
+describe("ShiftsClient — listTimesOff", () => {
     afterEach(() => {
         jest.restoreAllMocks();
     });
@@ -80,7 +80,11 @@ describe("ShiftsClient — listTimesOffAsync", () => {
         mockFetchResponse(mockResponse);
 
         const client = new ShiftsClient(TestConnectionUrl, createMockCredential());
-        await client.listTimesOffAsync("team-1", "2026-01-01", "2026-01-31", "10");
+        await client.listTimesOff("team-1", {
+            startTime: "2026-01-01",
+            endTime: "2026-01-31",
+            top: 10,
+        }).byPage().next();
 
         const [url] = (global.fetch as jest.Mock).mock.calls[0];
         expect(url).toContain("startTime=2026-01-01");

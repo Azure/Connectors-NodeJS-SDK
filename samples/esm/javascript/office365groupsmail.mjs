@@ -14,7 +14,7 @@
  *     npm start
  */
 
-import { ManagedIdentityTokenProvider, ConnectorException } from "@azure/connectors";
+import { ManagedIdentityTokenProvider, ConnectorError } from "@azure/connectors";
 import { Office365groupsmailClient } from "@azure/connectors/generated/Office365groupsmailExtensions";
 
 const CONNECTION_URL = process.env.OFFICE365GROUPSMAIL_CONNECTION_URL ?? "";
@@ -36,10 +36,10 @@ async function main() {
 
     // Example: List conversations in a group's mailbox.
     try {
-        const conversations = await client.listConversationsAsync(groupId);
+        const conversations = await client.listConversations(groupId);
         console.log("Conversations:", JSON.stringify(conversations, null, 2));
     } catch (error) {
-        if (error instanceof ConnectorException) {
+        if (error instanceof ConnectorError) {
             console.log(`Connector error (${error.statusCode}): ${error.message}`);
             return;
         }

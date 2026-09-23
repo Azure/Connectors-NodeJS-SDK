@@ -10,6 +10,7 @@ import * as path from "node:path";
 
 const RepositoryRoot = process.cwd();
 const ManifestPath = path.join(RepositoryRoot, "generation.manifest.json");
+const GenerationGuidePath = path.join(RepositoryRoot, "GENERATION.md");
 
 /**
  * A single connector provenance entry recorded in the generation manifest.
@@ -53,6 +54,8 @@ interface GenerationManifest {
     status: string;
     generator: {
         bpmBaseCommit: string | null;
+        bpmHeadCommit: string | null;
+        assemblyVersion: string | null;
         sourcePatch: {
             path: string;
             sha256: string;
@@ -126,12 +129,18 @@ describe("generation.manifest.json provenance", () => {
         expect(manifest.status).toBe("generated");
     });
 
-    it("should use the source-patch-aware manifest schema", () => {
-        expect(manifest.manifestVersion).toBe(2);
+    it("should use the verified source-composition manifest schema", () => {
+        expect(manifest.manifestVersion).toBe(3);
     });
 
-    it("should record the BPM generator base commit as a 40-character hex SHA", () => {
+    it("should record distinct BPM generator base and head commits", () => {
         expect(manifest.generator.bpmBaseCommit ?? "").toMatch(/^[0-9a-f]{40}$/);
+        expect(manifest.generator.bpmHeadCommit ?? "").toMatch(/^[0-9a-f]{40}$/);
+        expect(manifest.generator.bpmHeadCommit).not.toBe(manifest.generator.bpmBaseCommit);
+    });
+
+    it("should record a concrete four-part generator assembly version", () => {
+        expect(manifest.generator.assemblyVersion ?? "").toMatch(/^\d+\.\d+\.\d+\.\d+$/);
     });
 
     it("should match the recorded generator source patch hash", () => {
@@ -140,6 +149,64 @@ describe("generation.manifest.json provenance", () => {
         expect(fs.existsSync(path.join(RepositoryRoot, manifest.generator.sourcePatch.path))).toBe(true);
         expect(computeCanonicalTextSha256(manifest.generator.sourcePatch.path))
             .toBe(manifest.generator.sourcePatch.sha256);
+    });
+
+    it("should bind the generator patch to its recorded head and source paths", () => {
+        const patchName = path.basename(manifest.generator.sourcePatch.path);
+        const headPrefix = patchName.match(/^([0-9a-f]{7,40})-/)?.[1];
+        expect(headPrefix).toBeDefined();
+        expect(manifest.generator.bpmHeadCommit?.startsWith(headPrefix!)).toBe(true);
+
+        const patch = fs.readFileSync(
+            path.join(RepositoryRoot, manifest.generator.sourcePatch.path),
+            "utf8",
+        ).replace(/\r\n/g, "\n");
+        const patchSections = patch
+            .split(/(?=^diff --git )/gm)
+            .filter(section => section.startsWith("diff --git "));
+        const changedPaths = patchSections.map(section => {
+            const header = section.match(/^diff --git a\/(.+) b\/(.+)$/m);
+            expect(header).not.toBeNull();
+            expect(header![1]).toBe(header![2]);
+
+            const changedPath = header![2];
+            const isAdded = /^new file mode \d+$/m.test(section);
+            const isDeleted = /^deleted file mode \d+$/m.test(section);
+            expect(Number(isAdded) + Number(isDeleted)).toBeLessThanOrEqual(1);
+            if (isAdded) {
+                expect(section).toContain("--- /dev/null");
+                expect(section).toContain(`+++ b/${changedPath}`);
+            } else if (isDeleted) {
+                expect(section).toContain(`--- a/${changedPath}`);
+                expect(section).toContain("+++ /dev/null");
+            } else {
+                expect(section).toContain(`--- a/${changedPath}`);
+                expect(section).toContain(`+++ b/${changedPath}`);
+            }
+
+            return changedPath;
+        });
+        expect(changedPaths.length).toBeGreaterThan(0);
+        expect(new Set(changedPaths).size).toBe(changedPaths.length);
+        expect(changedPaths.every(changedPath =>
+            changedPath.startsWith("src/tools/CodefulSdkGenerator"),
+        )).toBe(true);
+        expect(changedPaths.some(changedPath => changedPath.includes("CodefulSdkGenerator.Tests/"))).toBe(true);
+        expect(changedPaths.some(changedPath => changedPath.includes("DirectClient/"))).toBe(true);
+    });
+
+    it("should capture source identity before checking out the provenance base", () => {
+        const generationGuide = fs.readFileSync(GenerationGuidePath, "utf8").replace(/\r\n/g, "\n");
+        const headCaptureIndex = generationGuide.indexOf("$sourceHeadCommit = (git -C $bpmRepoRoot rev-parse HEAD)");
+        const branchCaptureIndex = generationGuide.indexOf("$sourceBranch = (git -C $bpmRepoRoot branch --show-current)");
+        const baseCheckoutIndex = generationGuide.indexOf("git -C $bpmRepoRoot checkout $manifest.generator.bpmBaseCommit");
+
+        expect(headCaptureIndex).toBeGreaterThan(-1);
+        expect(branchCaptureIndex).toBeGreaterThan(-1);
+        expect(baseCheckoutIndex).toBeGreaterThan(branchCaptureIndex);
+        expect(generationGuide).toContain("$manifest.generator.bpmHeadCommit = $sourceHeadCommit");
+        expect(generationGuide).toContain("$manifest.generator.bpmBranch = $sourceBranch");
+        expect(generationGuide).not.toContain("$manifest.generator.bpmHeadCommit = (git -C $bpmRepoRoot rev-parse HEAD)");
     });
 
     it("should list at least one connector", () => {
@@ -174,6 +241,7 @@ describe("generation.manifest.json provenance", () => {
         (_apiName: string, connector: ManifestConnectorEntry) => {
             if (connector.generatorCommit !== undefined) {
                 expect(connector.generatorCommit).toMatch(/^[0-9a-f]{40}$/);
+                expect(connector.sourcePatch).toBeDefined();
             }
         },
     );

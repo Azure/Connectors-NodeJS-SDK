@@ -4,7 +4,7 @@
  * Slack Connector SDK Sample - ESM TypeScript
  */
 
-import { ManagedIdentityTokenProvider, ConnectorException } from "@azure/connectors";
+import { ManagedIdentityTokenProvider, ConnectorError } from "@azure/connectors";
 import { SlackClient } from "@azure/connectors/generated/SlackExtensions";
 
 const CONNECTION_URL = process.env.SLACK_CONNECTION_URL ?? "";
@@ -20,14 +20,14 @@ async function main(): Promise<void> {
 
     try {
         let channelCount = 0;
-        for await (const channel of client.listChannelsAsync()) {
+        for await (const channel of client.listChannels()) {
             console.log(`  - ${channel.name ?? channel.id ?? "Unknown"}`);
             channelCount++;
         }
 
         console.log(`Channels returned: ${channelCount}`);
     } catch (error) {
-        if (error instanceof ConnectorException) {
+        if (error instanceof ConnectorError) {
             console.log(`Connector error (${error.statusCode}): ${error.message}`);
             return;
         }

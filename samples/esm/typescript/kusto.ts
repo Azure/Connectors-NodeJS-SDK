@@ -25,7 +25,7 @@
  *     node dist/kusto.js
  */
 
-import { ManagedIdentityTokenProvider, ConnectorException } from "@azure/connectors";
+import { ManagedIdentityTokenProvider, ConnectorError } from "@azure/connectors";
 import { KustoClient, Table, QueryAndListSchema, ControlCommandAndListSchema, ClusterName, Query, DatabaseName } from "@azure/connectors/generated/KustoExtensions";
 
 const CONNECTION_URL = process.env.KUSTO_CONNECTION_URL ?? "";
@@ -59,19 +59,22 @@ async function main(): Promise<void> {
             csl: kqlQuery as unknown as Query,
             db: DATABASE as unknown as DatabaseName,
         };
-        const result: Table = await client.listKustoResultsAsync(input);
-
-        const rows = result.value ?? [];
-        if (rows.length > 0) {
-            console.log(`Returned ${rows.length} rows:`);
-            for (const row of rows.slice(0, 10)) {
+        let rowCount = 0;
+        for await (const row of client.listKustoResults(input)) {
+            if (rowCount < 10) {
                 console.log(`  ${JSON.stringify(row)}`);
             }
+
+            rowCount++;
+        }
+
+        if (rowCount === 0) {
+            console.log("No rows returned.");
         } else {
-            console.log("Result:", JSON.stringify(result, null, 2));
+            console.log(`Returned ${rowCount} rows.`);
         }
     } catch (error) {
-        if (error instanceof ConnectorException) {
+        if (error instanceof ConnectorError) {
             console.log(`Connector error (${error.statusCode}): ${error.message}`);
         } else {
             throw error;
@@ -86,20 +89,23 @@ async function main(): Promise<void> {
             csl: ".show databases",
             db: DATABASE as unknown as DatabaseName,
         };
-        const controlResult: Table = await client.listKustoShowCommandResultsAsync(controlInput);
-
-        const controlRows = controlResult.value ?? [];
-        if (controlRows.length > 0) {
-            console.log(`Found ${controlRows.length} databases:`);
-            for (const row of controlRows.slice(0, 10)) {
+        let controlRowCount = 0;
+        for await (const row of client.listKustoShowCommandResults(controlInput)) {
+            if (controlRowCount < 10) {
                 const rowRecord = row as Record<string, unknown>;
                 console.log(`  - ${rowRecord.DatabaseName ?? rowRecord.Name ?? JSON.stringify(row)}`);
             }
+
+            controlRowCount++;
+        }
+
+        if (controlRowCount === 0) {
+            console.log("No databases found.");
         } else {
-            console.log("Result:", JSON.stringify(controlResult, null, 2));
+            console.log(`Found ${controlRowCount} databases.`);
         }
     } catch (error) {
-        if (error instanceof ConnectorException) {
+        if (error instanceof ConnectorError) {
             console.log(`Connector error (${error.statusCode}): ${error.message}`);
         } else {
             throw error;
@@ -114,10 +120,10 @@ async function main(): Promise<void> {
             csl: "INVALID_QUERY_!!!" as unknown as Query,
             db: DATABASE as unknown as DatabaseName,
         };
-        await client.listKustoResultsAsync(badInput);
+        await client.listKustoResults(badInput);
         console.log("Unexpected success.");
     } catch (error) {
-        if (error instanceof ConnectorException) {
+        if (error instanceof ConnectorError) {
             console.log("Expected error caught:");
             console.log(`  Message: ${error.message}`);
             console.log(`  Status: ${error.statusCode}`);

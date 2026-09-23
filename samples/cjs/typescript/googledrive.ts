@@ -14,7 +14,7 @@
  *     npx tsx googledrive.ts
  */
 
-import { ManagedIdentityTokenProvider, ConnectorException } from "@azure/connectors";
+import { ManagedIdentityTokenProvider, ConnectorError } from "@azure/connectors";
 import { GoogledriveClient } from "@azure/connectors/generated/GoogledriveExtensions";
 
 const CONNECTION_URL = process.env.GOOGLEDRIVE_CONNECTION_URL ?? "";
@@ -30,10 +30,14 @@ async function main(): Promise<void> {
 
     // Example 1: List the root folder.
     try {
-        const files = await client.listRootFolderAsync();
-        console.log(`Found ${files.length} item(s) in the root folder.`);
+        let fileCount = 0;
+        for await (const _file of client.listRootFolder()) {
+            fileCount++;
+        }
+
+        console.log(`Found ${fileCount} item(s) in the root folder.`);
     } catch (error) {
-        if (error instanceof ConnectorException) {
+        if (error instanceof ConnectorError) {
             console.log(`Connector error (${error.statusCode}): ${error.message}`);
         } else {
             throw error;
@@ -44,10 +48,10 @@ async function main(): Promise<void> {
     const fileId = process.env.GOOGLEDRIVE_TEST_FILE_ID;
     if (fileId) {
         try {
-            const metadata = await client.getFileMetadataAsync(fileId);
+            const metadata = await client.getFileMetadata(fileId);
             console.log("File metadata:", JSON.stringify(metadata, null, 2));
         } catch (error) {
-            if (error instanceof ConnectorException) {
+            if (error instanceof ConnectorError) {
                 console.log(`Connector error (${error.statusCode}): ${error.message}`);
             } else {
                 throw error;

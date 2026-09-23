@@ -14,7 +14,7 @@
  *     npm start
  */
 
-import { ManagedIdentityTokenProvider, ConnectorException } from "@azure/connectors";
+import { ManagedIdentityTokenProvider, ConnectorError } from "@azure/connectors";
 import { ProjectplaceClient } from "@azure/connectors/generated/ProjectplaceExtensions";
 
 const CONNECTION_URL = process.env.PROJECTPLACE_CONNECTION_URL ?? "";
@@ -36,10 +36,10 @@ async function main() {
 
     // Example 1: Create a card on a board.
     try {
-        const card = await client.createCardAsync({ title: "Design review" }, BOARD_ID);
+        const card = await client.createCard({ title: "Design review" }, Number(BOARD_ID));
         console.log("Card:", JSON.stringify(card, null, 2));
     } catch (error) {
-        if (error instanceof ConnectorException) {
+        if (error instanceof ConnectorError) {
             console.log(`Connector error (${error.statusCode}): ${error.message}`);
         } else {
             throw error;

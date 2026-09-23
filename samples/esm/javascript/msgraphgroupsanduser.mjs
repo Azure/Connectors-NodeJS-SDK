@@ -18,7 +18,7 @@
  *     npm start
  */
 
-import { ManagedIdentityTokenProvider, ConnectorException } from "@azure/connectors";
+import { ManagedIdentityTokenProvider, ConnectorError } from "@azure/connectors";
 import { MsgraphgroupsanduserClient } from "@azure/connectors/generated/MsgraphgroupsanduserExtensions";
 
 const CONNECTION_URL = process.env.MSGRAPH_CONNECTION_URL ?? "";
@@ -38,19 +38,22 @@ async function main() {
     // Example 1: List users
     console.log("\n--- List Users ---");
     try {
-        const usersResponse = await client.listUsersAsync();
-        const users = usersResponse.value ?? [];
-
-        if (users.length > 0) {
-            console.log(`Found ${users.length} users:`);
-            for (const user of users.slice(0, 5)) {
-                console.log(`  - ${user.displayName ?? "Unknown"} (${user.userPrincipalName ?? "no UPN"})`);
+        let userCount = 0;
+        for await (const user of client.listUsers()) {
+            if (userCount < 5) {
+                console.log(`  - ${String(user.displayName ?? "Unknown")} (${String(user.userPrincipalName ?? "no UPN")})`);
             }
-        } else {
+
+            userCount++;
+        }
+
+        if (userCount === 0) {
             console.log("No users found.");
+        } else {
+            console.log(`Found ${userCount} users.`);
         }
     } catch (error) {
-        if (error instanceof ConnectorException) {
+        if (error instanceof ConnectorError) {
             console.log(`Connector error: ${error.message}`);
         } else {
             throw error;
@@ -61,21 +64,22 @@ async function main() {
     const searchTerm = process.env.MSGRAPH_GROUP_SEARCH ?? "Engineering";
     console.log(`\n--- Search Groups ("${searchTerm}") ---`);
     try {
-        const groupsResponse = await client.listGroupsByDisplayNameSearchAsync(
-            searchTerm,
-        );
-        const groups = groupsResponse.value ?? [];
-
-        if (groups.length > 0) {
-            console.log(`Found ${groups.length} groups:`);
-            for (const group of groups.slice(0, 5)) {
-                console.log(`  - ${group.displayName ?? "Unknown"} (${group.id})`);
+        let groupCount = 0;
+        for await (const group of client.listGroupsByDisplayNameSearch("true", "eventual", { search: searchTerm })) {
+            if (groupCount < 5) {
+                console.log(`  - ${String(group.displayName ?? "Unknown")} (${String(group.id ?? "no ID")})`);
             }
-        } else {
+
+            groupCount++;
+        }
+
+        if (groupCount === 0) {
             console.log("No groups found.");
+        } else {
+            console.log(`Found ${groupCount} groups.`);
         }
     } catch (error) {
-        if (error instanceof ConnectorException) {
+        if (error instanceof ConnectorError) {
             console.log(`Connector error (${error.statusCode}): ${error.message}`);
         } else {
             throw error;
@@ -85,19 +89,22 @@ async function main() {
     // Example 3: List subscribed SKUs (organization licenses)
     console.log("\n--- List Subscribed SKUs ---");
     try {
-        const skusResponse = await client.listSubscribedSkusAsync();
-        const skus = skusResponse.value ?? [];
-
-        if (skus.length > 0) {
-            console.log(`Found ${skus.length} subscribed SKUs:`);
-            for (const sku of skus.slice(0, 5)) {
-                console.log(`  - ${sku.skuPartNumber ?? "Unknown"} (consumed: ${sku.consumedUnits ?? "?"})`);
+        let skuCount = 0;
+        for await (const sku of client.listSubscribedSkus()) {
+            if (skuCount < 5) {
+                console.log(`  - ${String(sku.skuPartNumber ?? "Unknown")} (consumed: ${String(sku.consumedUnits ?? "?")})`);
             }
-        } else {
+
+            skuCount++;
+        }
+
+        if (skuCount === 0) {
             console.log("No SKUs found.");
+        } else {
+            console.log(`Found ${skuCount} subscribed SKUs.`);
         }
     } catch (error) {
-        if (error instanceof ConnectorException) {
+        if (error instanceof ConnectorError) {
             console.log(`Connector error (${error.statusCode}): ${error.message}`);
         } else {
             throw error;

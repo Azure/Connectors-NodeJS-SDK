@@ -2,6 +2,7 @@
 
 import { createHttpHeaders } from "@azure/core-rest-pipeline";
 import type { HttpClient, PipelineRequest, PipelineResponse } from "@azure/core-rest-pipeline";
+import { AzureLogger, getLogLevel, setLogLevel } from "@azure/logger";
 import { ConnectorHttpClient } from "../src/azureConnectors/connectorHttpClient.ts";
 import type { AbortSignalLike, TokenCredential } from "../src/azureConnectors/index.ts";
 
@@ -83,6 +84,24 @@ function createPlainAbortSignal(): { signal: AbortSignalLike; abort: () => void 
     };
 }
 
+async function captureConnectorLogs(action: () => Promise<void>): Promise<string[]> {
+    const originalLog = AzureLogger.log;
+    const originalLogLevel = getLogLevel();
+    const messages = new Array<string>();
+    AzureLogger.log = (...args: unknown[]): void => {
+        messages.push(args.map(argument => String(argument)).join(" "));
+    };
+    setLogLevel("verbose");
+
+    try {
+        await action();
+        return messages;
+    } finally {
+        setLogLevel(originalLogLevel);
+        AzureLogger.log = originalLog;
+    }
+}
+
 describe("ConnectorHttpClient", () => {
     it("should reject a null credential", () => {
         expect(() => new ConnectorHttpClient(null as unknown as TokenCredential))
@@ -126,6 +145,72 @@ describe("ConnectorHttpClient", () => {
         expect(request.method).toBe("POST");
         expect(request.headers.get("Content-Type")).toBe("application/json");
         expect(JSON.parse(request.body as string)).toEqual({ name: "test" });
+    });
+
+    it("should send native FormData through the multipart pipeline", async () => {
+        const httpClient = new MockHttpClient(async request => createMockResponse(request, 201));
+        const client = new ConnectorHttpClient(new MockTokenCredential(), { httpClient });
+        const formData = new FormData();
+        formData.append("description", "test document");
+        formData.append("file", new Blob(["file content"], { type: "text/plain" }), "test.txt");
+
+        await client.sendAsync("POST", "https://example.com/api/files", undefined, formData);
+
+        const request = httpClient.requests.at(0)!;
+        expect(request.headers.get("Content-Type")).toMatch(/^multipart\/form-data; boundary=/);
+        expect(request.body).toBeDefined();
+        expect(request.body).not.toBe(JSON.stringify(formData));
+        expect(request.formData).toBeUndefined();
+        expect(request.multipartBody).toBeUndefined();
+    });
+
+    it("should materialize a streamed binary response as a Blob", async () => {
+        const responseBody = new Blob(["converted content"], { type: "application/pdf" });
+        const httpClient = new MockHttpClient(async request => ({
+            request,
+            status: 200,
+            headers: createHttpHeaders({ "Content-Type": "application/pdf" }),
+            blobBody: Promise.resolve(responseBody),
+        }));
+        const client = new ConnectorHttpClient(new MockTokenCredential(), { httpClient });
+
+        const response = await client.sendAsync<Blob>(
+            "POST",
+            "https://example.com/api/convert",
+            undefined,
+            new FormData(),
+            undefined,
+            undefined,
+            undefined,
+            true,
+        );
+
+        expect(response.value).toBe(responseBody);
+        expect(await response.value?.text()).toBe("converted content");
+        expect(httpClient.requests[0].streamResponseStatusCodes?.has(200)).toBe(true);
+        expect(httpClient.requests[0].streamResponseStatusCodes?.has(299)).toBe(true);
+    });
+
+    it("should apply service-specific request headers", async () => {
+        const httpClient = new MockHttpClient(async request => createMockResponse(request, 200));
+        const client = new ConnectorHttpClient(new MockTokenCredential(), { httpClient });
+
+        await client.sendAsync(
+            "GET",
+            "https://example.com/api/items",
+            undefined,
+            undefined,
+            undefined,
+            undefined,
+            {
+                Accept: "text/vtt",
+                "x-service-option": "service-value",
+            },
+        );
+
+        const request = httpClient.requests.at(0)!;
+        expect(request.headers.get("Accept")).toBe("text/vtt");
+        expect(request.headers.get("x-service-option")).toBe("service-value");
     });
 
     it("should request a token for custom scopes", async () => {
@@ -303,13 +388,19 @@ describe("ConnectorHttpClient", () => {
             retryOptions: { maxRetries: 0 },
         });
 
-        await expect(client.sendAsync(
-            "GET",
-            "https://example.com/api/items",
-            undefined,
-            undefined,
-            controller.signal,
-        )).rejects.toMatchObject({ name: "AbortError" });
+        const messages = await captureConnectorLogs(async () => {
+            await expect(client.sendAsync(
+                "GET",
+                "https://example.com/api/items",
+                undefined,
+                undefined,
+                controller.signal,
+            )).rejects.toMatchObject({ name: "AbortError" });
+        });
+
+        expect(messages).toContain("azure:connectors:info GET https://example.com canceled");
+        expect(messages.some(message => message.includes("azure:connectors:warning"))).toBe(false);
+        expect(messages.some(message => message.includes("azure:connectors:error"))).toBe(false);
     });
 
     it("should propagate a plain-object AbortSignalLike during an in-flight request", async () => {
@@ -344,5 +435,137 @@ describe("ConnectorHttpClient", () => {
         callerAbort.abort();
 
         await expect(sendPromise).rejects.toMatchObject({ name: "AbortError" });
+    });
+
+    it("should log request and response metadata without customer-controlled URL paths", async () => {
+        const httpClient = new MockHttpClient(async request => createMockResponse(request, 200));
+        const client = new ConnectorHttpClient(new MockTokenCredential(), { httpClient });
+
+        const messages = await captureConnectorLogs(async () => {
+            await client.sendAsync("GET", "https://example.com/api/messages/customer-message-id?sig=secret");
+        });
+
+        expect(messages).toEqual(expect.arrayContaining([
+            expect.stringMatching(/^azure:connectors:info Request GET https:\/\/example\.com$/),
+            expect.stringMatching(/^azure:connectors:info Response 200 GET https:\/\/example\.com \(\d+ms\)$/),
+        ]));
+        expect(messages.join("\n")).not.toMatch(/customer-message-id|secret/);
+    });
+
+    it("should log allowlisted headers and redact sensitive values", async () => {
+        const httpClient = new MockHttpClient(async request => createMockResponse(
+            request,
+            200,
+            "",
+            {
+                "set-cookie": "response-secret",
+                "x-ms-request-id": "response-request-id",
+            },
+        ));
+        const client = new ConnectorHttpClient(new MockTokenCredential(), { httpClient });
+
+        const messages = await captureConnectorLogs(async () => {
+            await client.sendAsync(
+                "GET",
+                "https://example.com/api/items",
+                undefined,
+                undefined,
+                undefined,
+                undefined,
+                {
+                    "x-service-safe": "safe-service-value",
+                    "x-service-secret": "request-secret",
+                },
+            );
+        });
+        const combinedMessages = messages.join("\n");
+
+        expect(combinedMessages).toMatch(/Request headers: .*"authorization":"REDACTED"/);
+        expect(combinedMessages).toMatch(/Request headers: .*"x-ms-client-request-id":"[^"]+"/);
+        expect(combinedMessages).toMatch(/Request headers: .*"x-service-safe":"REDACTED"/);
+        expect(combinedMessages).toMatch(/Request headers: .*"x-service-secret":"REDACTED"/);
+        expect(combinedMessages).toMatch(/Response headers: .*"x-ms-request-id":"response-request-id"/);
+        expect(combinedMessages).toMatch(/Response headers: .*"set-cookie":"REDACTED"/);
+        expect(combinedMessages).not.toMatch(/mock-bearer-token|safe-service-value|request-secret|response-secret/);
+    });
+
+    it("should log each retry attempt", async () => {
+        const httpClient = new MockHttpClient(async (request, attempt) => attempt < 3
+            ? createMockResponse(request, 503, "Unavailable")
+            : createMockResponse(request, 200));
+        const client = new ConnectorHttpClient(new MockTokenCredential(), {
+            httpClient,
+            retryOptions: { maxRetries: 2, retryDelayInMs: 1, maxRetryDelayInMs: 1 },
+        });
+
+        const messages = await captureConnectorLogs(async () => {
+            await client.sendAsync("GET", "https://example.com/api/items");
+        });
+
+        expect(messages.filter(message => message.includes("azure:connectors:info Retry"))).toEqual([
+            expect.stringMatching(/Retry 1\/2 for GET https:\/\/example\.com after \d+ms/),
+            expect.stringMatching(/Retry 2\/2 for GET https:\/\/example\.com after \d+ms/),
+        ]);
+    });
+
+    it("should log non-success response metadata at Info", async () => {
+        const httpClient = new MockHttpClient(async request => createMockResponse(request, 404, "Not found"));
+        const client = new ConnectorHttpClient(new MockTokenCredential(), { httpClient });
+
+        const messages = await captureConnectorLogs(async () => {
+            await client.sendAsync("GET", "https://example.com/api/customers/customer-id");
+        });
+
+        expect(messages).toEqual(expect.arrayContaining([
+            expect.stringMatching(/^azure:connectors:info Response 404 GET https:\/\/example\.com \(\d+ms\)$/),
+        ]));
+        expect(messages.join("\n")).not.toContain("customer-id");
+    });
+
+    it("should log terminal request errors", async () => {
+        const httpClient = new MockHttpClient(async () => {
+            throw new TypeError("invalid request");
+        });
+        const client = new ConnectorHttpClient(new MockTokenCredential(), {
+            httpClient,
+            retryOptions: { maxRetries: 0 },
+        });
+
+        const messages = await captureConnectorLogs(async () => {
+            await expect(client.sendAsync("GET", "https://example.com/api/items"))
+                .rejects.toThrow("invalid request");
+        });
+
+        expect(messages).toContain("azure:connectors:warning GET https://example.com failed with TypeError");
+        expect(messages.some(message => message.startsWith("azure:connectors:verbose TypeError\n"))).toBe(true);
+        expect(messages.join("\n")).not.toContain("invalid request");
+    });
+
+    it("should redact malformed request URLs from logs", async () => {
+        const client = new ConnectorHttpClient(new MockTokenCredential());
+
+        const messages = await captureConnectorLogs(async () => {
+            await expect(client.sendAsync("GET", "not a URL")).rejects.toThrow();
+        });
+
+        expect(messages).toContain("azure:connectors:info Request GET <invalid URL>");
+        expect(messages.some(message => message.startsWith("azure:connectors:warning GET <invalid URL> failed with")))
+            .toBe(true);
+    });
+
+    it("should log non-Error transport failures", async () => {
+        const httpClient = new MockHttpClient(async () => Promise.reject("transport failed"));
+        const client = new ConnectorHttpClient(new MockTokenCredential(), {
+            httpClient,
+            retryOptions: { maxRetries: 0 },
+        });
+
+        const messages = await captureConnectorLogs(async () => {
+            await expect(client.sendAsync("GET", "https://example.com/api/items"))
+                .rejects.toBe("transport failed");
+        });
+
+        expect(messages).toContain("azure:connectors:warning GET https://example.com failed with UnknownError");
+        expect(messages.join("\n")).not.toContain("transport failed");
     });
 });

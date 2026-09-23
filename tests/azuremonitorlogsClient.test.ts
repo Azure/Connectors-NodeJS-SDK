@@ -8,7 +8,7 @@ import {
     VisualizeQueryInput,
     VisualizeResults,
 } from "../src/generated/AzuremonitorlogsExtensions.ts";
-import { ConnectorException } from "../src/azureConnectors/connectorException.ts";
+import { ConnectorError } from "../src/azureConnectors/connectorError.ts";
 import { ConnectorNames } from "../src/generated/connectorNames.ts";
 import { availableConnectors } from "../src/generated/ManagedConnectors.ts";
 
@@ -17,6 +17,10 @@ import { availableConnectors } from "../src/generated/ManagedConnectors.ts";
 // ──────────────────────────────────────────────
 
 const TestConnectionUrl = "https://connection-runtime.azure.com/apim/azuremonitorlogs/abc123";
+const TestSubscriptions = "sub-123";
+const TestResourceGroups = "rg-test";
+const TestResourceType = "Microsoft.Compute/virtualMachines";
+const TestResourceName = "vm-test";
 
 function createMockCredential(): TokenCredential {
     return {
@@ -94,7 +98,7 @@ describe("AzuremonitorlogsClient — constructor", () => {
     });
 });
 
-describe("AzuremonitorlogsClient — queryDataAsync", () => {
+describe("AzuremonitorlogsClient — queryData", () => {
     afterEach(() => {
         jest.restoreAllMocks();
     });
@@ -110,7 +114,13 @@ describe("AzuremonitorlogsClient — queryDataAsync", () => {
             timerange: {},
         };
 
-        const result = await client.queryDataAsync(input);
+        const result = await client.queryData(
+            input,
+            TestSubscriptions,
+            TestResourceGroups,
+            TestResourceType,
+            TestResourceName,
+        );
 
         expect(result).toEqual(mockTable);
         expect(global.fetch).toHaveBeenCalledTimes(1);
@@ -127,9 +137,12 @@ describe("AzuremonitorlogsClient — queryDataAsync", () => {
         mockFetchResponse({});
 
         const client = new AzuremonitorlogsClient(TestConnectionUrl, createMockCredential());
-        await client.queryDataAsync(
+        await client.queryData(
             { query: "test", timerangetype: "Last hour", timerange: {} },
-            "sub-123",
+            TestSubscriptions,
+            TestResourceGroups,
+            TestResourceType,
+            TestResourceName,
         );
 
         const [url] = (global.fetch as jest.Mock).mock.calls[0];
@@ -137,7 +150,7 @@ describe("AzuremonitorlogsClient — queryDataAsync", () => {
     });
 });
 
-describe("AzuremonitorlogsClient — visualizeQueryAsync", () => {
+describe("AzuremonitorlogsClient — visualizeQuery", () => {
     afterEach(() => {
         jest.restoreAllMocks();
     });
@@ -153,7 +166,14 @@ describe("AzuremonitorlogsClient — visualizeQueryAsync", () => {
             timerange: {},
         };
 
-        const result = await client.visualizeQueryAsync(input);
+        const result = await client.visualizeQuery(
+            input,
+            TestSubscriptions,
+            TestResourceGroups,
+            TestResourceType,
+            TestResourceName,
+            "timechart",
+        );
 
         expect(result).toEqual(mockResult);
         const [url, init] = (global.fetch as jest.Mock).mock.calls[0];
@@ -166,12 +186,12 @@ describe("AzuremonitorlogsClient — visualizeQueryAsync", () => {
         mockFetchResponse({});
 
         const client = new AzuremonitorlogsClient(TestConnectionUrl, createMockCredential());
-        await client.visualizeQueryAsync(
+        await client.visualizeQuery(
             { query: "test", timerangetype: "Last hour", timerange: {} },
-            undefined,
-            undefined,
-            undefined,
-            undefined,
+            TestSubscriptions,
+            TestResourceGroups,
+            TestResourceType,
+            TestResourceName,
             "piechart",
         );
 
@@ -185,14 +205,20 @@ describe("AzuremonitorlogsClient — error handling", () => {
         jest.restoreAllMocks();
     });
 
-    it("should throw ConnectorException on non-OK response", async () => {
+    it("should throw ConnectorError on non-OK response", async () => {
         mockFetchError(400, '{"error": "BadRequest"}');
 
         const client = new AzuremonitorlogsClient(TestConnectionUrl, createMockCredential());
 
         await expect(
-            client.queryDataAsync({ query: "invalid", timerangetype: "Last hour", timerange: {} }),
-        ).rejects.toThrow(ConnectorException);
+            client.queryData(
+                { query: "invalid", timerangetype: "Last hour", timerange: {} },
+                TestSubscriptions,
+                TestResourceGroups,
+                TestResourceType,
+                TestResourceName,
+            ),
+        ).rejects.toThrow(ConnectorError);
     });
 
     it("should include status code and response body in error", async () => {
@@ -202,14 +228,20 @@ describe("AzuremonitorlogsClient — error handling", () => {
         const client = new AzuremonitorlogsClient(TestConnectionUrl, createMockCredential());
 
         try {
-            await client.queryDataAsync({ query: "test", timerangetype: "Last hour", timerange: {} });
-            throw new Error("Expected ConnectorException to be thrown.");
+            await client.queryData(
+                { query: "test", timerangetype: "Last hour", timerange: {} },
+                TestSubscriptions,
+                TestResourceGroups,
+                TestResourceType,
+                TestResourceName,
+            );
+            throw new Error("Expected ConnectorError to be thrown.");
         } catch (error) {
-            expect(error).toBeInstanceOf(ConnectorException);
-            const connectorError = error as ConnectorException;
+            expect(error).toBeInstanceOf(ConnectorError);
+            const connectorError = error as ConnectorError;
             expect(connectorError.statusCode).toBe(401);
             expect(connectorError.responseBody).toBe(errorBody);
-            expect(connectorError.operation).toContain("POST");
+            expect(connectorError.operation).toBe("QueryDataV2");
         }
     });
 });

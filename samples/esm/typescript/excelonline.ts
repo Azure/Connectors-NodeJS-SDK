@@ -15,7 +15,7 @@
  *     npx tsx excelonline.ts
  */
 
-import { ManagedIdentityTokenProvider, ConnectorException } from "@azure/connectors";
+import { ManagedIdentityTokenProvider, ConnectorError } from "@azure/connectors";
 import { ExcelonlineClient } from "@azure/connectors/generated/ExcelonlineExtensions";
 
 const CONNECTION_URL = process.env.EXCELONLINE_CONNECTION_URL ?? "";
@@ -31,17 +31,18 @@ async function main(): Promise<void> {
 
     const driveId = process.env.EXCEL_DRIVE_ID;
     const fileId = process.env.EXCEL_FILE_ID;
-    if (!driveId || !fileId) {
-        console.log("Set EXCEL_DRIVE_ID and EXCEL_FILE_ID to list workbook tables.");
+    const source = process.env.EXCEL_SOURCE;
+    if (!driveId || !fileId || !source) {
+        console.log("Set EXCEL_DRIVE_ID, EXCEL_FILE_ID, and EXCEL_SOURCE to list workbook tables.");
         return;
     }
 
     // Example: List the tables in a workbook.
     try {
-        const tables = await client.getTablesAsync(driveId, fileId);
+        const tables = await client.getTables(driveId, fileId, source);
         console.log("Tables:", JSON.stringify(tables, null, 2));
     } catch (error) {
-        if (error instanceof ConnectorException) {
+        if (error instanceof ConnectorError) {
             console.log(`Connector error (${error.statusCode}): ${error.message}`);
             return;
         }

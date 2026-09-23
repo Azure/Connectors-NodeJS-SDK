@@ -2,7 +2,7 @@
 
 import type { TokenCredential } from "@azure/core-auth";
 import { CloudmersiveconvertClient } from "../src/generated/CloudmersiveconvertExtensions.ts";
-import { ConnectorException } from "../src/azureConnectors/connectorException.ts";
+import { ConnectorError } from "../src/azureConnectors/connectorError.ts";
 import { ConnectorNames } from "../src/generated/connectorNames.ts";
 import { availableConnectors } from "../src/generated/ManagedConnectors.ts";
 
@@ -58,7 +58,7 @@ describe("CloudmersiveconvertClient — constructor", () => {
     });
 });
 
-describe("CloudmersiveconvertClient — editDocumentDocxCreateBlankDocumentAsync", () => {
+describe("CloudmersiveconvertClient — createEditDocumentDocxBlankDocument", () => {
     afterEach(() => {
         jest.restoreAllMocks();
     });
@@ -68,7 +68,7 @@ describe("CloudmersiveconvertClient — editDocumentDocxCreateBlankDocumentAsync
         mockFetchResponse(response);
 
         const client = new CloudmersiveconvertClient(TestConnectionUrl, createMockCredential());
-        const result = await client.editDocumentDocxCreateBlankDocumentAsync({ InitialText: "Hello world" });
+        const result = await client.createEditDocumentDocxBlankDocument({ InitialText: "Hello world" });
 
         expect(result).toEqual(response);
         expect(global.fetch).toHaveBeenCalledTimes(1);
@@ -77,19 +77,42 @@ describe("CloudmersiveconvertClient — editDocumentDocxCreateBlankDocumentAsync
         expect(init.headers["Authorization"]).toBe("Bearer mock-bearer-token");
     });
 
-    it("should throw ConnectorException on non-OK response", async () => {
+    it("should throw ConnectorError on non-OK response", async () => {
         mockFetchError(400, "Bad Request");
 
         const client = new CloudmersiveconvertClient(TestConnectionUrl, createMockCredential());
         try {
-            await client.editDocumentDocxCreateBlankDocumentAsync({ InitialText: "Hello world" });
-            throw new Error("Expected ConnectorException to be thrown.");
+            await client.createEditDocumentDocxBlankDocument({ InitialText: "Hello world" });
+            throw new Error("Expected ConnectorError to be thrown.");
         } catch (error) {
-            expect(error).toBeInstanceOf(ConnectorException);
-            const connectorError = error as ConnectorException;
+            expect(error).toBeInstanceOf(ConnectorError);
+            const connectorError = error as ConnectorError;
             expect(connectorError.statusCode).toBe(400);
             expect(connectorError.responseBody).toBe("Bad Request");
         }
+    });
+});
+
+describe("CloudmersiveconvertClient — multipart conversion", () => {
+    afterEach(() => {
+        jest.restoreAllMocks();
+    });
+
+    it("should POST a multipart file through the generated operation", async () => {
+        mockFetchResponse({});
+        const client = new CloudmersiveconvertClient(TestConnectionUrl, createMockCredential());
+
+        const result = await client.convertDocumentAutodetectToPdf({
+            inputFile: new Blob(["document content"], { type: "text/plain" }),
+        });
+
+        expect(result).toBeInstanceOf(Blob);
+        expect(await result.text()).toBe("{}");
+        const [url, init] = (global.fetch as jest.Mock).mock.calls[0];
+        expect(url).toContain("/convert/autodetect/to/pdf");
+        expect(init.method).toBe("POST");
+        expect(init.headers["Content-Type"]).toMatch(/^multipart\/form-data; boundary=/);
+        expect(init.body).toBeDefined();
     });
 });
 

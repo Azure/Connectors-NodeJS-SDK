@@ -6,7 +6,7 @@
 
 "use strict";
 
-const { ManagedIdentityTokenProvider, ConnectorException } = require("@azure/connectors");
+const { ManagedIdentityTokenProvider, ConnectorError } = require("@azure/connectors");
 const { PowerbiClient } = require("@azure/connectors/generated/PowerbiExtensions");
 
 const CONNECTION_URL = process.env.POWERBI_CONNECTION_URL ?? "";
@@ -22,10 +22,10 @@ async function main() {
     const client = new PowerbiClient(CONNECTION_URL, tokenProvider);
 
     try {
-        const result = await client.getScorecardsAsync(POWERBI_GROUP_ID, "firstparty");
+        const result = await client.getScorecards(POWERBI_GROUP_ID, { pbiSource: "firstparty" });
         console.log(`Scorecard payload keys: ${Object.keys(result).join(", ")}`);
     } catch (error) {
-        if (error instanceof ConnectorException) {
+        if (error instanceof ConnectorError) {
             console.log(`Connector error (${error.statusCode}): ${error.message}`);
             return;
         }

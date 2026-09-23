@@ -2,7 +2,7 @@
 
 import type { TokenCredential } from "@azure/core-auth";
 import { MailchimpClient } from "../src/generated/MailchimpExtensions.ts";
-import { ConnectorException } from "../src/azureConnectors/connectorException.ts";
+import { ConnectorError } from "../src/azureConnectors/connectorError.ts";
 import { ConnectorNames } from "../src/generated/connectorNames.ts";
 import { availableConnectors } from "../src/generated/ManagedConnectors.ts";
 
@@ -58,7 +58,7 @@ describe("MailchimpClient — constructor", () => {
     });
 });
 
-describe("MailchimpClient — getCampaignsAsync", () => {
+describe("MailchimpClient — getCampaigns", () => {
     afterEach(() => {
         jest.restoreAllMocks();
     });
@@ -68,25 +68,25 @@ describe("MailchimpClient — getCampaignsAsync", () => {
         mockFetchResponse(campaigns);
 
         const client = new MailchimpClient(TestConnectionUrl, createMockCredential());
-        const result = await client.getCampaignsAsync();
+        const result = await client.getCampaigns().byPage().next();
 
-        expect(result).toEqual(campaigns);
+        expect(result.value).toEqual(campaigns.campaigns);
         expect(global.fetch).toHaveBeenCalledTimes(1);
         const [, init] = (global.fetch as jest.Mock).mock.calls[0];
         expect(init.method).toBe("GET");
         expect(init.headers["Authorization"]).toBe("Bearer mock-bearer-token");
     });
 
-    it("should throw ConnectorException on non-OK response", async () => {
+    it("should throw ConnectorError on non-OK response", async () => {
         mockFetchError(404, "Not Found");
 
         const client = new MailchimpClient(TestConnectionUrl, createMockCredential());
         try {
-            await client.getCampaignsAsync();
-            throw new Error("Expected ConnectorException to be thrown.");
+            await client.getCampaigns().byPage().next();
+            throw new Error("Expected ConnectorError to be thrown.");
         } catch (error) {
-            expect(error).toBeInstanceOf(ConnectorException);
-            const connectorError = error as ConnectorException;
+            expect(error).toBeInstanceOf(ConnectorError);
+            const connectorError = error as ConnectorError;
             expect(connectorError.statusCode).toBe(404);
             expect(connectorError.responseBody).toBe("Not Found");
         }

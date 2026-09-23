@@ -8,16 +8,39 @@
 
 import type { TokenCredential } from "@azure/core-auth";
 import { getPagedAsyncIterator, type PagedAsyncIterableIterator } from "@azure/core-paging";
+import { createTracingClient, type TracingClient } from "@azure/core-tracing";
+import { ConnectorError } from "./connectorError.ts";
 import { ConnectorHttpClient } from "./connectorHttpClient.ts";
-import type { ConnectorClientOptions } from "./options.ts";
+import type { ConnectorResponse } from "./connectorHttpClient.ts";
+import type { ConnectorClientOptions, ConnectorOperationOptions } from "./options.ts";
+
+interface InitialPageLink {
+    readonly url: string;
+}
+
+/** Settings supported when iterating connector results by page. */
+export interface ConnectorPageSettings {
+    /** The token identifying the page from which iteration should resume. */
+    continuationToken?: string;
+}
+
+/** A connector item iterator whose page API accepts only supported connector settings. */
+export type ConnectorPagedAsyncIterableIterator<TItem> =
+    PagedAsyncIterableIterator<TItem, TItem[], ConnectorPageSettings>;
 
 /**
  * Abstract base class for generated connector clients.
  */
 export abstract class ConnectorClientBase {
+    private static readonly PackageName = "@azure/connectors";
+    private static readonly PackageVersion = "0.3.0-preview";
+    private static readonly TracingNamespace = "Microsoft.Azure.Connectors";
+
     protected readonly connectionRuntimeUrl: string;
     protected readonly httpClient: ConnectorHttpClient;
     protected readonly options: ConnectorClientOptions;
+
+    private readonly tracingClient: TracingClient;
 
     /**
      * Initializes a ConnectorClientBase.
@@ -42,6 +65,11 @@ export abstract class ConnectorClientBase {
         this.connectionRuntimeUrl = connectionRuntimeUrl.slice(0, connectionRuntimeUrlEnd);
         this.options = options ?? {};
         this.httpClient = new ConnectorHttpClient(credential, this.options);
+        this.tracingClient = createTracingClient({
+            namespace: ConnectorClientBase.TracingNamespace,
+            packageName: ConnectorClientBase.PackageName,
+            packageVersion: ConnectorClientBase.PackageVersion,
+        });
     }
 
     /**
@@ -50,25 +78,73 @@ export abstract class ConnectorClientBase {
     public abstract get connectorName(): string;
 
     /**
+     * Sends one connector request under a public-operation tracing span.
+     * @param spanName The public client and method name used for the operation span.
+     * @param operationName The stable connector operation identifier used in errors.
+     * @param method The HTTP method.
+     * @param url The resolved request URL.
+     * @param body Optional request body.
+     * @param options Operation cancellation and tracing options.
+    * @param requestHeaders Service-specific request headers generated from operation options.
+    * @param responseAsBlob Whether successful response content should be returned as a Blob.
+     */
+    protected async sendWithTracingAsync<TValue>(
+        spanName: string,
+        operationName: string,
+        method: string,
+        url: string,
+        body: unknown,
+        options: ConnectorOperationOptions,
+        requestHeaders?: Readonly<Record<string, string>>,
+        responseAsBlob = false,
+    ): Promise<ConnectorResponse<TValue>> {
+        return this.tracingClient.withSpan(spanName, options, async updatedOptions => {
+            const response = await this.httpClient.sendAsync<TValue>(
+                method,
+                url,
+                undefined,
+                body,
+                updatedOptions.abortSignal,
+                updatedOptions.tracingOptions,
+                requestHeaders,
+                responseAsBlob,
+            );
+            if (!response.isSuccessStatusCode) {
+                const error = new ConnectorError(this.connectorName, operationName, response.rawResponse);
+                options.onResponse?.(response.rawResponse, response.value, error);
+                throw error;
+            }
+
+            options.onResponse?.(response.rawResponse, response.value);
+            return response;
+        });
+    }
+
+    /**
      * Creates a lazy iterator that resolves and fetches connector response pages on demand.
      * @param firstPageLink The relative or absolute link for the first page.
-     * @param fetchPage Fetches one page from an already resolved URL.
+    * @param fetchPage Fetches one page from an already resolved URL and identifies the initial request.
      * @param itemPropertyName The response property containing page items.
      * @param nextLinkPropertyName The response property containing the next-page URL.
      */
     protected createPageable<TPage extends object, TItem>(
         firstPageLink: string,
-        fetchPage: (url: string) => Promise<TPage>,
-        itemPropertyName = "value",
+        fetchPage: (url: string, isFirstPage: boolean) => Promise<TPage>,
+        itemPropertyName: string | null = "value",
         nextLinkPropertyName?: string,
-    ): PagedAsyncIterableIterator<TItem> {
-        return getPagedAsyncIterator<TItem>({
-            firstPageLink,
+    ): ConnectorPagedAsyncIterableIterator<TItem> {
+        const initialPageLink: InitialPageLink = { url: firstPageLink };
+        return getPagedAsyncIterator<TItem, TItem[], ConnectorPageSettings, string | InitialPageLink>({
+            firstPageLink: initialPageLink,
             getPage: async (pageLink) => {
-                const resolvedPageLink = this.resolvePageLink(pageLink, firstPageLink);
-                const response = await fetchPage(this.resolveUrl(resolvedPageLink));
+                const isFirstPage = typeof pageLink !== "string";
+                const unresolvedPageLink = isFirstPage ? pageLink.url : pageLink;
+                const resolvedPageLink = this.resolvePageLink(unresolvedPageLink, firstPageLink);
+                const response = await fetchPage(this.resolveUrl(resolvedPageLink), isFirstPage);
                 const page = response as unknown as Record<string, unknown>;
-                const items = page[itemPropertyName];
+                const items = itemPropertyName === null && Array.isArray(response)
+                    ? response
+                    : page[itemPropertyName ?? "value"];
                 const nextPageLinkValue = nextLinkPropertyName === undefined
                     ? page.nextLink ?? page["@odata.nextLink"]
                     : page[nextLinkPropertyName];

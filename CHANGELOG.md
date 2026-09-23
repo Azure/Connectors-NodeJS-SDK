@@ -9,6 +9,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Breaking Changes
 
+- Generated optional query and header parameters now live in method-specific
+  `<MethodName>Options` interfaces that extend `ConnectorOperationOptions`.
+  Required service parameters remain explicit method arguments.
+- Additional semantic list operations, including Teams channel/chat APIs, now
+  return `ConnectorPagedAsyncIterableIterator<T>` even when the service returns
+  a single page.
+- Generated action names now consistently move supported action verbs such as
+  `export`, `patch`, `register`, `replace`, `unregister`, and `validate` before
+  resource nouns.
 - Seismic Planner `CustomPropertyValues.localizations` now exposes
   `Record<string, CustomPropertyDataDisplay>` instead of `Record<string, unknown>`.
   Callers can access typed localization values directly, such as
@@ -18,6 +27,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - Added the generated Zoho ZeptoMail client with five public mail-agent, send-mail, template-mail, and analytics actions. `SendTemplateMailInput.merge_key_detail` remains `Array<Record<string, unknown>>` so fixed string fields and arbitrary non-string merge values stay representable. The malformed Swagger type `ReplyToAddresss` is exposed as `ReplyToAddress` without changing the `reply_to` wire field ([BPM PR 17131877](https://msazure.visualstudio.com/One/_git/AzureUX-BPM/pullrequest/17131877)).
+- Added generated multipart/form-data actions for Cloudmersive Document
+  Conversion and DocuWare, including typed `Blob`/string form inputs and the
+  previously omitted DocuWare `deleteFile` action
+  ([#79](https://github.com/Azure/Connectors-NodeJS-SDK/issues/79)).
+- Added opt-in structured request, response, retry, and error diagnostics under
+  the `azure:connectors` namespace using `@azure/logger`.
 - Added the generated Microsoft Dataverse client with automatic async iteration
   over `@odata.nextLink` pages ([Azure/Connectors-NET-SDK#208](https://github.com/Azure/Connectors-NET-SDK/issues/208),
   [BPM PR 17086991](https://msazure.visualstudio.com/One/_git/AzureUX-BPM/pullrequest/17086991)).
@@ -71,8 +86,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   tracing, logging, and transport composition. Retries apply only to safe HTTP
   methods by default; callers can explicitly enable retries for mutating
   connector operations with `retryUnsafeHttpMethods`.
-- Widened cancellation parameters on `ConnectorHttpClient` and generated
-  connector methods from the DOM `AbortSignal` type to `AbortSignalLike`.
+- Added `ConnectorOperationOptions` to generated actions for cancellation and
+  parent tracing context. Method-specific options extend this shared contract,
+  and generated service headers are forwarded through the request pipeline.
 - Updated generated registries and reproducibility metadata for all 74 connector
   clients. The Orderful input uses the checked-in AzureUX-BPM Swagger fixture
   because the retired connector is no longer returned by regional ARM catalogs.
@@ -103,9 +119,26 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+- Preserved root array aliases, numeric enum primitives, and inherited/inline
+  `allOf` properties in generated TypeScript models
+  ([#71](https://github.com/Azure/Connectors-NodeJS-SDK/issues/71)).
+- Confirmed the regenerated Google Tasks client exposes `createTask` for the
+  misspelled Swagger operation ID `CraeteTask`, while preserving its route and
+  request payload ([#82](https://github.com/Azure/Connectors-NodeJS-SDK/issues/82)).
+- Corrected generated pagination requests so continuation URLs use GET by
+  default, honor explicit continuation operation methods, and never replay the
+  first-page request body.
+- Preserved singular resource names ending in `sis`; Rev.ai now exposes
+  `getAnalysis` and `deleteAnalysis` instead of truncated method names.
+- Aligned TypeScript compiler settings with Azure SDK guidance by using `tslib`
+  helpers, synthetic default imports, target-derived libraries, and embedded
+  source content in both ESM and CommonJS source maps.
 - Changed `AbortSignalLike` imports in generated clients and
   `ConnectorHttpClient` to type-only imports so `verbatimModuleSyntax` does not
   preserve a runtime import for the interface.
+- Redacted customer-controlled URL paths from SDK logs, classified retries,
+  cancellations, HTTP failures, and transport exceptions at Azure SDK log
+  levels, and exported the logger from the package root.
 - Regenerated the 21 TypeScript connector clients under `src/generated/` against
   the AzureUX-BPM `CodefulSdkGenerator` fix for [issue #70](https://github.com/Azure/Connectors-NodeJS-SDK/issues/70)
   (`bpmCommit e5d44a0a0cd`, `assemblyVersion 1.186.0.10`). The previous
@@ -118,14 +151,23 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed (BREAKING)
 
-- Paginated list operations now return
-  `PagedAsyncIterableIterator<TItem>` instead of `Promise<TPage>` and
-  automatically follow SSRF-protected `nextLink` and `@odata.nextLink` values.
-  Consume items with `for await...of` or pages with `.byPage()`.
+- Renamed `ConnectorException` to `ConnectorError`; the new built-in `Error`
+  retains connector details and the complete originating pipeline request and
+  response, including URL, query, headers, status, and body.
+- Renamed generated TypeScript action methods to verb-noun camelCase without an
+  `Async` suffix, such as `listSubscriptions`, `getSubscription`, and `sendMail`.
+- List operations now return `ConnectorPagedAsyncIterableIterator<TItem>` for
+  both paginated and single-page services. Pagination automatically follows
+  SSRF-protected links; `.byPage()` accepts only `continuationToken`.
+- Generated actions now accept `ConnectorOperationOptions` instead of a
+  positional abort signal and create a public operation span that parents each
+  Azure Core HTTP span.
+- Curated the SharePoint copy collision to stable `copyFileLegacy` and
+  `copyFile` method names; future uncurated generated-name collisions fail.
 - `ConnectorClientOptions` now extends Azure Core `PipelineOptions`. Replace
   `maxRetryAttempts`, `initialRetryDelayMs`, and `useExponentialBackoff` with
   `retryOptions`; client-wide `timeoutMs` is removed in favor of request
-  cancellation through `AbortSignalLike`.
+  cancellation through `ConnectorOperationOptions.abortSignal`.
 - Replaced the custom `TokenProvider` interface with Azure Core
   `TokenCredential`. Generated client, `ConnectorClientBase`, and
   `ConnectorHttpClient` constructors now accept `credential`; custom

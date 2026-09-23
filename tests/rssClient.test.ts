@@ -2,7 +2,7 @@
 
 import type { TokenCredential } from "@azure/core-auth";
 import { RssClient } from "../src/generated/RssExtensions.ts";
-import { ConnectorException } from "../src/azureConnectors/connectorException.ts";
+import { ConnectorError } from "../src/azureConnectors/connectorError.ts";
 import { ConnectorNames } from "../src/generated/connectorNames.ts";
 import { availableConnectors } from "../src/generated/ManagedConnectors.ts";
 
@@ -50,7 +50,7 @@ describe("RssClient — constructor", () => {
     it("should strip trailing slashes from connection URL", async () => {
         mockFetchResponse([]);
         const client = new RssClient(TestConnectionUrl + "///", createMockCredential());
-        await client.listFeedItemsAsync("https://example.com/feed.xml");
+        await client.listFeedItems("https://example.com/feed.xml").byPage().next();
         const [url] = (global.fetch as jest.Mock).mock.calls[0];
         // NOTE: Confirms the trailing slashes were stripped by inspecting the
         //       outbound URL: after the scheme, no `//` should remain.
@@ -69,7 +69,7 @@ describe("RssClient — constructor", () => {
     });
 });
 
-describe("RssClient — listFeedItemsAsync", () => {
+describe("RssClient — listFeedItems", () => {
     afterEach(() => {
         jest.restoreAllMocks();
     });
@@ -82,9 +82,9 @@ describe("RssClient — listFeedItemsAsync", () => {
         mockFetchResponse(feedItems);
 
         const client = new RssClient(TestConnectionUrl, createMockCredential());
-        const result = await client.listFeedItemsAsync("https://example.com/feed.xml");
+        const result = await client.listFeedItems("https://example.com/feed.xml").byPage().next();
 
-        expect(result).toEqual(feedItems);
+        expect(result.value).toEqual(feedItems);
         expect(global.fetch).toHaveBeenCalledTimes(1);
         const [url, init] = (global.fetch as jest.Mock).mock.calls[0];
         expect(init.method).toBe("GET");
@@ -92,21 +92,20 @@ describe("RssClient — listFeedItemsAsync", () => {
         expect(url).toContain("?");
     });
 
-    it("should throw ConnectorException on non-OK response", async () => {
+    it("should throw ConnectorError on non-OK response", async () => {
         mockFetchError(400, "Bad Request");
 
         const client = new RssClient(TestConnectionUrl, createMockCredential());
         try {
-            await client.listFeedItemsAsync("https://example.com/feed.xml");
-            throw new Error("Expected ConnectorException to be thrown.");
+            await client.listFeedItems("https://example.com/feed.xml").byPage().next();
+            throw new Error("Expected ConnectorError to be thrown.");
         } catch (error) {
-            expect(error).toBeInstanceOf(ConnectorException);
-            const connectorError = error as ConnectorException;
+            expect(error).toBeInstanceOf(ConnectorError);
+            const connectorError = error as ConnectorError;
             expect(connectorError.statusCode).toBe(400);
             expect(connectorError.responseBody).toBe("Bad Request");
-            expect(connectorError.operation).toBe(
-                "GET /ListFeedItems?feedUrl=https%3A%2F%2Fexample.com%2Ffeed.xml",
-            );
+            expect(connectorError.operation).toBe("ListFeedItems");
+            expect(connectorError.request.url).toContain("feedUrl=https%3A%2F%2Fexample.com%2Ffeed.xml");
         }
     });
 });

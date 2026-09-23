@@ -3,6 +3,7 @@
 import type { TokenCredential } from "@azure/core-auth";
 import type { PagedAsyncIterableIterator } from "@azure/core-paging";
 import { ConnectorClientBase } from "../src/azureConnectors/clientBase.ts";
+import type { ConnectorPageSettings } from "../src/azureConnectors/clientBase.ts";
 import type { ConnectorClientOptions } from "../src/azureConnectors/options.ts";
 
 interface TestItem {
@@ -45,11 +46,11 @@ class TestConnectorClient extends ConnectorClientBase {
 
     public testCreatePageable(
         firstPageLink: string,
-        fetchPage: (url: string) => Promise<TestPage>,
-        itemPropertyName?: string,
+        fetchPage: (url: string, isFirstPage: boolean) => Promise<TestPage | TestItem[]>,
+        itemPropertyName?: string | null,
         nextLinkPropertyName?: string,
     ): PagedAsyncIterableIterator<TestItem> {
-        return this.createPageable<TestPage, TestItem>(
+        return this.createPageable<TestPage | TestItem[], TestItem>(
             firstPageLink,
             fetchPage,
             itemPropertyName,
@@ -248,12 +249,22 @@ describe("ConnectorClientBase", () => {
     describe("createPageable", () => {
         const baseUrl = "https://proxy.azure-apihub.net/apim/arm/conn123";
 
+        it("should expose only continuation tokens as page settings", () => {
+            const settings: ConnectorPageSettings = { continuationToken: "?page=2" };
+
+            // @ts-expect-error Connector paging does not support maxPageSize.
+            const unsupportedSettings: ConnectorPageSettings = { maxPageSize: 10 };
+
+            expect(settings.continuationToken).toBe("?page=2");
+            expect(unsupportedSettings).toEqual({ maxPageSize: 10 });
+        });
+
         it("should lazily yield items and route a foreign nextLink through the connection URL", async () => {
             const client = new TestConnectorClient(baseUrl, createMockCredential());
-            const requestedUrls: string[] = [];
-            const pageable = client.testCreatePageable("/items", async (url) => {
-                requestedUrls.push(url);
-                return requestedUrls.length === 1
+            const requests: Array<{ url: string; isFirstPage: boolean }> = [];
+            const pageable = client.testCreatePageable("/items", async (url, isFirstPage) => {
+                requests.push({ url, isFirstPage });
+                return requests.length === 1
                     ? {
                         value: [{ id: "first" }],
                         nextLink: "https://management.azure.com/items?$skiptoken=second",
@@ -261,7 +272,7 @@ describe("ConnectorClientBase", () => {
                     : { value: [{ id: "second" }] };
             });
 
-            expect(requestedUrls).toEqual([]);
+            expect(requests).toEqual([]);
 
             const items: TestItem[] = [];
             for await (const item of pageable) {
@@ -269,18 +280,18 @@ describe("ConnectorClientBase", () => {
             }
 
             expect(items).toEqual([{ id: "first" }, { id: "second" }]);
-            expect(requestedUrls).toEqual([
-                `${baseUrl}/items`,
-                `${baseUrl}/items?$skiptoken=second`,
+            expect(requests).toEqual([
+                { url: `${baseUrl}/items`, isFirstPage: true },
+                { url: `${baseUrl}/items?$skiptoken=second`, isFirstPage: false },
             ]);
         });
 
         it("should start byPage from a query-only continuation token and follow an OData next link", async () => {
             const client = new TestConnectorClient(baseUrl, createMockCredential());
-            const requestedUrls: string[] = [];
-            const pageable = client.testCreatePageable("/items?page=1", async (url) => {
-                requestedUrls.push(url);
-                return requestedUrls.length === 1
+            const requests: Array<{ url: string; isFirstPage: boolean }> = [];
+            const pageable = client.testCreatePageable("/items?page=1", async (url, isFirstPage) => {
+                requests.push({ url, isFirstPage });
+                return requests.length === 1
                     ? { value: [{ id: "second" }], "@odata.nextLink": "?page=3" }
                     : { value: [{ id: "third" }] };
             });
@@ -294,10 +305,24 @@ describe("ConnectorClientBase", () => {
                 [{ id: "second" }],
                 [{ id: "third" }],
             ]);
-            expect(requestedUrls).toEqual([
-                `${baseUrl}/items?page=2`,
-                `${baseUrl}/items?page=3`,
+            expect(requests).toEqual([
+                { url: `${baseUrl}/items?page=2`, isFirstPage: false },
+                { url: `${baseUrl}/items?page=3`, isFirstPage: false },
             ]);
+        });
+
+        it("should identify the initial request for each byPage iterator", async () => {
+            const client = new TestConnectorClient(baseUrl, createMockCredential());
+            const firstPageStates: boolean[] = [];
+            const pageable = client.testCreatePageable("/items", async (_url, isFirstPage) => {
+                firstPageStates.push(isFirstPage);
+                return { value: [{ id: "first" }] };
+            });
+
+            await pageable.byPage().next();
+            await pageable.byPage().next();
+
+            expect(firstPageStates).toEqual([true, true]);
         });
 
         it("should resolve a path-relative next link against the current page", async () => {
@@ -318,6 +343,22 @@ describe("ConnectorClientBase", () => {
                 `${baseUrl}/collections/items?page=1`,
                 `${baseUrl}/collections/next?page=2`,
             ]);
+        });
+
+        it("should expose a root-array response as one page", async () => {
+            const client = new TestConnectorClient(baseUrl, createMockCredential());
+            const pageable = client.testCreatePageable(
+                "/items",
+                async () => [{ id: "first" }, { id: "second" }],
+                null,
+            );
+
+            const pages: TestItem[][] = [];
+            for await (const page of pageable.byPage()) {
+                pages.push(page);
+            }
+
+            expect(pages).toEqual([[{ id: "first" }, { id: "second" }]]);
         });
 
         it("should read custom item and next-link properties", async () => {

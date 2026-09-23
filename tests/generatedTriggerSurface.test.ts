@@ -3,7 +3,10 @@
 import type { TokenCredential } from "@azure/core-auth";
 import * as fs from "node:fs";
 import * as path from "node:path";
+import type { HandSignature } from "../src/generated/SigninghubExtensions.ts";
 import {
+    type ChannelWithOwnerTeamId,
+    type ChatMessageList,
     TeamsClient,
     TeamsTriggerOperations,
     TeamsTriggerParameters,
@@ -15,6 +18,15 @@ import {
 
 const TeamsConnectionUrl = "https://connection-runtime.azure.com/apim/teams/abc123";
 const GeneratedDirectory = path.join(process.cwd(), "src", "generated");
+const StandardActionVerbs = new Set([
+    "add", "approve", "cancel", "copy", "create", "decline", "delete", "disable", "download", "enable",
+    "execute", "export", "finish", "forward", "get", "list", "move", "patch", "register", "reject",
+    "remove", "rename", "replace", "resume", "rerun", "run", "search", "send", "set", "start", "stop",
+    "submit", "test", "unregister", "update", "upload", "upsert", "validate",
+]);
+const CuratedActionMethodNames = new Set([
+    "Sendgrid.checkEmailIsInUnsubscribesList",
+]);
 
 /**
  * A single generated connector extension file paired with its raw source text.
@@ -47,27 +59,27 @@ function loadGeneratedExtensionFiles(): GeneratedExtensionFile[] {
  * Converts a swagger operation identifier to the client method name the generator would emit for it.
  */
 function toClientMethodName(operationId: string): string {
-    const camelCased = operationId.length > 0
+    return operationId.length > 0
         ? operationId.charAt(0).toLowerCase() + operationId.slice(1)
         : operationId;
-
-    return camelCased.endsWith("Async")
-        ? camelCased
-        : `${camelCased}Async`;
 }
 
 /**
- * Extracts the names of every generated <c>public async</c> client method in the source text.
+ * Extracts the names of every generated public client method in the source text.
  */
 function extractClientMethodNames(content: string): string[] {
     const methodNames: string[] = [];
-    const methodRegex = /public\s+async\s+(\w+)\s*\(/g;
+    const methodRegex = /public\s+(?:async\s+)?(\w+)\s*\(/g;
     let match: RegExpExecArray | null;
     while ((match = methodRegex.exec(content)) !== null) {
         methodNames.push(match[1]);
     }
 
     return methodNames;
+}
+
+function splitIdentifierWords(identifier: string): string[] {
+    return identifier.match(/[A-Z]+(?=[A-Z][a-z]|\d|$)|[A-Z]?[a-z]+|[A-Z]?\d+/g) ?? [];
 }
 
 /**
@@ -140,12 +152,12 @@ describe("Teams generated surface — trigger parameter metadata", () => {
 // ──────────────────────────────────────────────
 
 describe("Teams generated surface — triggers are not data-plane methods", () => {
-    it("should not expose onNewChannelMessageAsync on TeamsClient", () => {
+    it("should not expose onNewChannelMessage on TeamsClient", () => {
         const client = new TeamsClient(TeamsConnectionUrl, createMockCredential());
         const clientMembers = client as unknown as Record<string, unknown>;
 
-        expect(clientMembers.onNewChannelMessageAsync).toBeUndefined();
-        expect(Object.getOwnPropertyNames(Object.getPrototypeOf(client))).not.toContain("onNewChannelMessageAsync");
+        expect(clientMembers.onNewChannelMessage).toBeUndefined();
+        expect(Object.getOwnPropertyNames(Object.getPrototypeOf(client))).not.toContain("onNewChannelMessage");
     });
 
     it("should not expose any Teams trigger operation as a client method", () => {
@@ -174,6 +186,156 @@ describe("Generated clients — no trigger operation is invoked as a data-plane 
         expect(generatedFiles.length).toBeGreaterThanOrEqual(10);
     });
 
+    it("should discover Promise and pageable client methods", () => {
+        const arm = generatedFiles.find(file => file.connector === "Arm");
+        expect(arm).toBeDefined();
+
+        const methodNames = extractClientMethodNames(arm!.content);
+        expect(methodNames).toEqual(expect.arrayContaining(["getSubscription", "listSubscriptions"]));
+    });
+
+    it("should project standardized action verbs before resource nouns", () => {
+        const violations = generatedFiles.flatMap(file => extractClientMethodNames(file.content).flatMap(methodName => {
+            if (CuratedActionMethodNames.has(`${file.connector}.${methodName}`)) {
+                return [];
+            }
+
+            const words = splitIdentifierWords(methodName).map(word => word.toLowerCase());
+            if (StandardActionVerbs.has(words[0])) {
+                return [];
+            }
+
+            const actionVerb = words.slice(1).find(word => StandardActionVerbs.has(word));
+            return actionVerb === undefined
+                ? []
+                : [`${file.connector}.${methodName} contains '${actionVerb}' after its resource noun`];
+        }));
+
+        expect(violations).toEqual([]);
+    });
+
+    it("should collect optional service parameters in method-specific options bags", () => {
+        const violations = generatedFiles.flatMap(file => {
+            const methodRegex = /public\s+(?:async\s+)?(\w+)\s*\(([^)]*)\)/g;
+            const fileViolations: string[] = [];
+            let match: RegExpExecArray | null;
+            while ((match = methodRegex.exec(file.content)) !== null) {
+                if (/\b\w+\?:/.test(match[2])) {
+                    fileViolations.push(`${file.connector}.${match[1]} has a positional optional parameter`);
+                }
+            }
+
+            return fileViolations;
+        });
+
+        expect(violations).toEqual([]);
+    });
+
+    it("should expose semantic Teams list operations as iterators", () => {
+        const teams = generatedFiles.find(file => file.connector === "Teams");
+        expect(teams).toBeDefined();
+        expect(teams!.content).toMatch(
+            /public getAllChannelsForTeam\([^)]*\): ConnectorPagedAsyncIterableIterator<ChannelWithOwnerTeamId>/,
+        );
+        expect(teams!.content).toMatch(
+            /public getChats\([^)]*\): ConnectorPagedAsyncIterableIterator<Record<string, unknown>>/,
+        );
+    });
+
+    it("should emit query and header service options without leaking transport types", () => {
+        const arm = generatedFiles.find(file => file.connector === "Arm");
+        const revai = generatedFiles.find(file => file.connector === "Revai");
+        expect(arm).toBeDefined();
+        expect(revai).toBeDefined();
+        expect(arm!.content).toContain("export interface ListResourceGroupsOptions extends ConnectorOperationOptions");
+        expect(arm!.content).toContain("options.filter");
+        expect(revai!.content).toContain("export interface GetCaptionsOptions extends ConnectorOperationOptions");
+        expect(revai!.content).toContain("requestHeaders[\"Accept\"] = String(options.accept);");
+    });
+
+    it("should preserve named empty-object model references", () => {
+        const commonDataService = generatedFiles.find(file => file.connector === "Commondataservice");
+        expect(commonDataService).toBeDefined();
+        expect(commonDataService!.content).toContain("schema?: ObjectEntity;");
+        expect(commonDataService!.content).toContain("export interface ObjectEntity");
+    });
+
+    it("should preserve curated connector action names", () => {
+        const clickSend = generatedFiles.find(file => file.connector === "Clicksendsms");
+        const googleTasks = generatedFiles.find(file => file.connector === "Googletasks");
+        const sendGrid = generatedFiles.find(file => file.connector === "Sendgrid");
+        expect(clickSend).toBeDefined();
+        expect(googleTasks).toBeDefined();
+        expect(sendGrid).toBeDefined();
+
+        expect(extractClientMethodNames(clickSend!.content)).toEqual(expect.arrayContaining([
+            "createList",
+            "deleteList",
+            "createListContact",
+            "deleteListContact",
+        ]));
+        expect(extractClientMethodNames(googleTasks!.content)).toContain("getTask");
+        expect(extractClientMethodNames(sendGrid!.content)).toContain("checkEmailIsInUnsubscribesList");
+    });
+
+    it("should preserve root arrays, numeric enums, and allOf properties", () => {
+        const messages: ChatMessageList = [{ id: "message1" }];
+        const handSignature: HandSignature = 2;
+        const channel: ChannelWithOwnerTeamId = { ownerTeamId: "team1" };
+        const teams = generatedFiles.find(file => file.connector === "Teams");
+        const signingHub = generatedFiles.find(file => file.connector === "Signinghub");
+
+        expect(messages[0].id).toBe("message1");
+        expect(JSON.stringify({ handSignature })).toBe('{"handSignature":2}');
+        expect(channel.ownerTeamId).toBe("team1");
+        expect(teams!.content).toContain("export type ChatMessageList = Array<ChatMessage>;");
+        expect(teams!.content).toContain("ownerTeamId?: string;");
+        expect(signingHub!.content).toContain("export type HandSignature = 0 | 1 | 2 | 3 | 4;");
+    });
+
+    it("should emit every pinned multipart form-data operation", () => {
+        for (const connector of ["Cloudmersiveconvert", "Docuware"]) {
+            const generated = generatedFiles.find(file => file.connector === connector);
+            const apiName = connector.toLowerCase();
+            const swagger = JSON.parse(
+                fs.readFileSync(path.join(process.cwd(), "swagger-cache", `${apiName}.swagger.json`), "utf8"),
+            ) as { paths: Record<string, Record<string, { parameters?: Array<{ in?: string }> }>> };
+            const multipartOperationCount = Object.values(swagger.paths)
+                .flatMap(pathItem => Object.values(pathItem))
+                .filter(operation => operation.parameters?.some(parameter => parameter.in === "formData"))
+                .length;
+
+            expect(generated).toBeDefined();
+            expect(generated!.content.match(/const formData = new FormData\(\);/g) ?? [])
+                .toHaveLength(multipartOperationCount);
+        }
+
+        const docuware = generatedFiles.find(file => file.connector === "Docuware");
+        expect(docuware!.content).toContain("public async deleteFile(");
+    });
+
+    it("should project CreateOrUpdate operations as upserts", () => {
+        const arm = generatedFiles.find(file => file.connector === "Arm");
+        expect(arm).toBeDefined();
+        expect(extractClientMethodNames(arm!.content)).toEqual(expect.arrayContaining([
+            "upsertDeployment",
+            "upsertResourceGroup",
+            "upsertResourceById",
+            "upsertTag",
+            "upsertTagValue",
+        ]));
+        expect(arm!.content).not.toMatch(/public async create\w+OrUpdate/);
+    });
+
+    it("should not emit self-extending operation options types", () => {
+        const violations = generatedFiles.flatMap(file => {
+            const selfExtendingInterface = /export interface (\w+) extends \1\b/g;
+            return [...file.content.matchAll(selfExtendingInterface)].map(match => `${file.connector}.${match[1]}`);
+        });
+
+        expect(violations).toEqual([]);
+    });
+
     it.each(generatedFiles)(
         "should not expose a trigger operation as a client method in $connector",
         (file: GeneratedExtensionFile) => {
@@ -185,7 +347,7 @@ describe("Generated clients — no trigger operation is invoked as a data-plane 
         },
     );
 
-    // NOTE(swapnilnagar): Docusign's 'triggerMaestroFlowAsync' is a real action on a '/trigger/' path,
+    // NOTE(swapnilnagar): Docusign's 'triggerMaestroFlow' is a real action on a '/trigger/' path,
     // so the guard cross-references trigger operation IDs instead of substring-matching the route.
     it("should treat the Docusign Maestro action as an action, not a trigger", () => {
         const docusign = generatedFiles.find(file => file.connector === "Docusign");
@@ -198,7 +360,7 @@ describe("Generated clients — no trigger operation is invoked as a data-plane 
         // toClientMethodName must land on a real emitted method. Otherwise a convention drift leaves
         // triggerMethodCandidates matching nothing and the violations check passes vacuously.
         expect(methodNames.has(toClientMethodName("TriggerMaestroFlow"))).toBe(true);
-        expect(methodNames.has("triggerMaestroFlowAsync")).toBe(true);
-        expect(triggerMethodCandidates).not.toContain("triggerMaestroFlowAsync");
+        expect(methodNames.has("triggerMaestroFlow")).toBe(true);
+        expect(triggerMethodCandidates).not.toContain("triggerMaestroFlow");
     });
 });

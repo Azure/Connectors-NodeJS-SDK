@@ -7,7 +7,7 @@ import {
     CreateScorecardRequest,
     CreatedScorecard,
 } from "../src/generated/PowerbiExtensions.ts";
-import { ConnectorException } from "../src/azureConnectors/connectorException.ts";
+import { ConnectorError } from "../src/azureConnectors/connectorError.ts";
 import { ConnectorNames } from "../src/generated/connectorNames.ts";
 import { availableConnectors } from "../src/generated/ManagedConnectors.ts";
 
@@ -45,7 +45,7 @@ describe("PowerbiClient — constructor", () => {
     });
 });
 
-describe("PowerbiClient — getScorecardsAsync", () => {
+describe("PowerbiClient — getScorecards", () => {
     afterEach(() => {
         jest.restoreAllMocks();
     });
@@ -55,7 +55,7 @@ describe("PowerbiClient — getScorecardsAsync", () => {
         mockFetchResponse(mockResponse);
 
         const client = new PowerbiClient(TestConnectionUrl, createMockCredential());
-        const result = await client.getScorecardsAsync("group-1", "firstparty");
+        const result = await client.getScorecards("group-1", { pbiSource: "firstparty" });
 
         expect(result).toEqual(mockResponse);
         const [url, init] = (global.fetch as jest.Mock).mock.calls[0];
@@ -64,15 +64,15 @@ describe("PowerbiClient — getScorecardsAsync", () => {
         expect(init.method).toBe("GET");
     });
 
-    it("should throw ConnectorException on non-OK response", async () => {
+    it("should throw ConnectorError on non-OK response", async () => {
         mockFetchError(401, '{"error":"Unauthorized"}');
 
         const client = new PowerbiClient(TestConnectionUrl, createMockCredential());
-        await expect(client.getScorecardsAsync("group-1")).rejects.toThrow(ConnectorException);
+        await expect(client.getScorecards("group-1")).rejects.toThrow(ConnectorError);
     });
 });
 
-describe("PowerbiClient — createScorecardAsync", () => {
+describe("PowerbiClient — createScorecard", () => {
     afterEach(() => {
         jest.restoreAllMocks();
     });
@@ -83,7 +83,7 @@ describe("PowerbiClient — createScorecardAsync", () => {
         mockFetchResponse(mockResponse);
 
         const client = new PowerbiClient(TestConnectionUrl, createMockCredential());
-        const result = await client.createScorecardAsync(input, "group-1");
+        const result = await client.createScorecard(input, "group-1");
 
         expect(result).toEqual(mockResponse);
         const [url, init] = (global.fetch as jest.Mock).mock.calls[0];
