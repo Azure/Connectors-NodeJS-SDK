@@ -4,7 +4,7 @@
 import type { AbortSignalLike } from "@azure/abort-controller";
 import type { TokenCredential } from "@azure/core-auth";
 import { ConnectorClientBase } from "../azureConnectors/clientBase.ts";
-import { ConnectorException } from "../azureConnectors/connectorException.ts";
+import { ConnectorError } from "../azureConnectors/connectorError.ts";
 import { ConnectorClientOptions } from "../azureConnectors/options.ts";
 
 // #region Types
@@ -171,7 +171,7 @@ export class ZeptomailClient extends ConnectorClientBase {
         const httpResponse = await this.httpClient.sendAsync<GetMailAgentResponse>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `GET ${requestPath}`, httpResponse.rawResponse);
         }
 
         return httpResponse.value as GetMailAgentResponse;
@@ -213,7 +213,7 @@ export class ZeptomailClient extends ConnectorClientBase {
         const httpResponse = await this.httpClient.sendAsync<GetProcessedEmailsResponse>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `GET ${requestPath}`, httpResponse.rawResponse);
         }
 
         return httpResponse.value as GetProcessedEmailsResponse;
@@ -229,7 +229,7 @@ export class ZeptomailClient extends ConnectorClientBase {
         const httpResponse = await this.httpClient.sendAsync<SuccessMessage>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `POST ${requestPath}`, httpResponse.rawResponse);
         }
 
         return httpResponse.value as SuccessMessage;
@@ -245,7 +245,7 @@ export class ZeptomailClient extends ConnectorClientBase {
         const httpResponse = await this.httpClient.sendAsync<SuccessMessage>("POST", requestUrl, undefined, input, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `POST ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `POST ${requestPath}`, httpResponse.rawResponse);
         }
 
         return httpResponse.value as SuccessMessage;
@@ -269,7 +269,7 @@ export class ZeptomailClient extends ConnectorClientBase {
         const httpResponse = await this.httpClient.sendAsync<ProcessedMailStatsResponse>("GET", requestUrl, undefined, undefined, abortSignal);
 
         if (!httpResponse.isSuccessStatusCode) {
-            throw new ConnectorException(this.connectorName, `GET ${requestPath}`, httpResponse.statusCode, httpResponse.text);
+            throw new ConnectorError(this.connectorName, `GET ${requestPath}`, httpResponse.rawResponse);
         }
 
         return httpResponse.value as ProcessedMailStatsResponse;

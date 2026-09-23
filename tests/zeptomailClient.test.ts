@@ -1,7 +1,7 @@
 // Copyright (c) Microsoft Corporation.  All rights reserved.
 
 import type { TokenCredential } from "@azure/core-auth";
-import { ConnectorException } from "../src/azureConnectors/connectorException.ts";
+import { ConnectorError } from "../src/azureConnectors/connectorError.ts";
 import { ConnectorNames } from "../src/generated/connectorNames.ts";
 import { availableConnectors } from "../src/generated/ManagedConnectors.ts";
 import {
@@ -92,7 +92,7 @@ describe("Zoho ZeptoMail generated client", () => {
         expect(init.method).toBe("GET");
     });
 
-    it("should expose ConnectorException details for a non-OK response", async () => {
+    it("should expose ConnectorError details for a non-OK response", async () => {
         mockFetchError(422, "Invalid template payload");
         const client = new ZeptomailClient(TestConnectionUrl, createMockCredential());
 
@@ -102,10 +102,10 @@ describe("Zoho ZeptoMail generated client", () => {
                 mail_template_key: "template",
                 from: { "from-detail": { address: "sender@example.com" }, name: "Sender" },
             });
-            throw new Error("Expected ConnectorException to be thrown.");
+            throw new Error("Expected ConnectorError to be thrown.");
         } catch (error) {
-            expect(error).toBeInstanceOf(ConnectorException);
-            const connectorError = error as ConnectorException;
+            expect(error).toBeInstanceOf(ConnectorError);
+            const connectorError = error as ConnectorError;
             expect(connectorError.connectorName).toBe("zeptomail");
             expect(connectorError.operation).toBe("POST /v1.0/email/template");
             expect(connectorError.statusCode).toBe(422);
