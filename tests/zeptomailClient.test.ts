@@ -48,13 +48,16 @@ describe("Zoho ZeptoMail generated client", () => {
         const model: SendTemplateMailInput = {
             mailagent_key: "agent",
             mail_template_key: "template",
-            from: { "from-detail": { address: "sender@example.com" }, name: "Sender" },
+            from: {
+                "from-detail": { "from-prefix": "sender", "from-domain": "example.com" },
+                name: "Sender",
+            },
             merge_key_detail: [{ key: "customer", value: "Ada", rank: 2 }],
             reply_to: [{ address: "reply@example.com", name: "Reply" }],
         };
         const client = new ZeptomailClient(TestConnectionUrl, createMockCredential());
 
-        const result = await client.sendTemplateMailAsync(model);
+        const result = await client.sendTemplateMail(model);
 
         expect(result).toEqual(response);
         expect(global.fetch).toHaveBeenCalledTimes(1);
@@ -69,24 +72,23 @@ describe("Zoho ZeptoMail generated client", () => {
         mockFetchResponse(response);
         const client = new ZeptomailClient(TestConnectionUrl, createMockCredential());
 
-        const result = await client.getProcessedEmailsAsync(
-            "agent+key",
-            "Quarterly report",
-            "sender@example.com",
-            "recipient@example.com",
-            "2026-09-01/00:00",
-            "2026-09-02/00:00",
-            "request/42",
-            true,
-            false,
-        );
+        const result = await client.getProcessedEmails("agent+key", {
+            subject: "Quarterly report",
+            from: "sender@example.com",
+            to: "recipient@example.com",
+            dateFrom: "2026-09-01T00:00:00+00:00",
+            dateTo: "2026-09-02T00:00:00+00:00",
+            requestId: "request/42",
+            isHb: true,
+            isSb: false,
+        });
 
         expect(result).toEqual(response);
         const [url, init] = (global.fetch as jest.Mock).mock.calls[0];
         expect(url).toBe(
             `${TestConnectionUrl}/v1.0/email?mailagent_key=agent%2Bkey&subject=Quarterly%20report` +
             "&from=sender%40example.com&to=recipient%40example.com" +
-            "&date_from=2026-09-01%2F00%3A00&date_to=2026-09-02%2F00%3A00" +
+            "&date_from=2026-09-01T00%3A00%3A00%2B00%3A00&date_to=2026-09-02T00%3A00%3A00%2B00%3A00" +
             "&request_id=request%2F42&is_hb=true&is_sb=false",
         );
         expect(init.method).toBe("GET");
@@ -97,17 +99,20 @@ describe("Zoho ZeptoMail generated client", () => {
         const client = new ZeptomailClient(TestConnectionUrl, createMockCredential());
 
         try {
-            await client.sendTemplateMailAsync({
+            await client.sendTemplateMail({
                 mailagent_key: "agent",
                 mail_template_key: "template",
-                from: { "from-detail": { address: "sender@example.com" }, name: "Sender" },
+                from: {
+                    "from-detail": { "from-prefix": "sender", "from-domain": "example.com" },
+                    name: "Sender",
+                },
             });
             throw new Error("Expected ConnectorError to be thrown.");
         } catch (error) {
             expect(error).toBeInstanceOf(ConnectorError);
             const connectorError = error as ConnectorError;
             expect(connectorError.connectorName).toBe("zeptomail");
-            expect(connectorError.operation).toBe("POST /v1.0/email/template");
+            expect(connectorError.operation).toBe("SendTemplateMail");
             expect(connectorError.statusCode).toBe(422);
             expect(connectorError.responseBody).toBe("Invalid template payload");
         }

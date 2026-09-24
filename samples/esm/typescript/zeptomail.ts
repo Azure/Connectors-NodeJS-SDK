@@ -1,7 +1,7 @@
 // Copyright (c) Microsoft Corporation.  All rights reserved.
 
 /** Zoho ZeptoMail Connector SDK Sample - ESM TypeScript. */
-import { ConnectorException, ManagedIdentityTokenProvider } from "@azure/connectors";
+import { ConnectorError, ManagedIdentityTokenProvider } from "@azure/connectors";
 import { ZeptomailClient } from "@azure/connectors/generated/ZeptomailExtensions";
 
 const CONNECTION_URL = process.env.ZEPTOMAIL_CONNECTION_URL ?? "";
@@ -11,10 +11,10 @@ if (!CONNECTION_URL || !MAIL_AGENT_KEY) throw new Error("ZEPTOMAIL_CONNECTION_UR
 async function main(): Promise<void> {
     try {
         const emails = await new ZeptomailClient(CONNECTION_URL, new ManagedIdentityTokenProvider())
-            .getProcessedEmailsAsync(MAIL_AGENT_KEY);
+            .getProcessedEmails(MAIL_AGENT_KEY);
         console.log("Processed emails:", JSON.stringify(emails, null, 2));
     } catch (error) {
-        if (error instanceof ConnectorException) console.error(`Connector error (${error.statusCode}): ${error.message}`);
+        if (error instanceof ConnectorError) console.error(`Connector error (${error.statusCode}): ${error.message}`);
         else throw error;
     }
 }
