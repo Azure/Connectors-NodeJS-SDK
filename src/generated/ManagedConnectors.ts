@@ -75,6 +75,7 @@
 //   import { WebexClient } from './WebexExtensions.ts';
 //   import { WordpressClient } from './WordpressExtensions.ts';
 //   import { ZendeskClient } from './ZendeskExtensions.ts';
+//   import { ZeptomailClient } from './ZeptomailExtensions.ts';
 //   import { ZohosignClient } from './ZohosignExtensions.ts';
 
 /**
@@ -154,6 +155,7 @@ export const availableConnectors: string[] = [
     "webex",
     "wordpress",
     "zendesk",
+    "zeptomail",
     "zohosign",
 ];
 
@@ -230,4 +232,5 @@ export { WaywedoClient } from './WaywedoExtensions.ts';
 export { WebexClient } from './WebexExtensions.ts';
 export { WordpressClient } from './WordpressExtensions.ts';
 export { ZendeskClient } from './ZendeskExtensions.ts';
+export { ZeptomailClient } from './ZeptomailExtensions.ts';
 export { ZohosignClient } from './ZohosignExtensions.ts';

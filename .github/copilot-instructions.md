@@ -297,6 +297,14 @@ test("methodName should return expected result when given valid input", async ()
 - Never push directly to main
 - Always create PR for review
 
+## Generated Code Ownership — Critical
+
+- Everything under `src/generated/` is owned by the BPM `CodefulSdkGenerator`. Never hand-edit generated clients, registries, barrel exports, imports, method signatures, error handling, or formatting, even to fix a build, lint, merge, or review failure.
+- When a generated file fails after merging or rebasing `main`, first compare it with sibling generated files and the generator revision recorded in `generation.manifest.json`. Runtime contract changes such as renamed errors, response fields, method conventions, and options must be fixed in BPM when the current generator is wrong, then regenerated here from pinned Swagger.
+- Replace generated files only with generator output. Update `generation.manifest.json` with the actual generator composition, Swagger hash, and canonical output hash; do not make the manifest legitimize a manual generated-file edit.
+- Hand-authored tests, samples, documentation, and runtime infrastructure may be updated directly to consume a regenerated API.
+- If the BPM generator or pinned Swagger is unavailable, stop and report the blocker. Do not patch `src/generated/` as a fallback.
+
 ## Releasing a New Version
 
 The release workflow (`.github/workflows/release.yml`) builds, tests, packs, and publishes the npm package. There is no version file to update — the version comes from the git tag.
