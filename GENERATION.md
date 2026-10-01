@@ -34,6 +34,32 @@ dotnet build .\src\tools\CodefulSdkGenerator\LogicAppsCompiler.Cli\LogicAppsComp
 
 ## Generation Commands
 
+Refreshes and reviews must fetch live definitions. Set `AZURE_SUBSCRIPTION_ID`
+and `AZURE_LOCATION` explicitly. Each run uses its own empty temporary
+`ARMCACHE_PATH`; never seed it from fixtures or the producer's responses.
+
+```powershell
+$env:AZURE_SUBSCRIPTION_ID = "<live-subscription-id>"
+$env:AZURE_LOCATION = "<region>"
+$outputDirectory = "<output-directory>"
+$connectorNames = "<comma-separated-existing-api-names>"
+$previousCachePath = $env:ARMCACHE_PATH
+$liveCachePath = Join-Path $env:TEMP ("connector-live-" + [guid]::NewGuid())
+New-Item -ItemType Directory -Path $liveCachePath, $outputDirectory -Force | Out-Null
+try {
+  $env:ARMCACHE_PATH = $liveCachePath
+  LogicAppsCompiler.exe $outputDirectory --directClient --language=typescript "--connectors=$connectorNames"
+}
+finally {
+  $env:ARMCACHE_PATH = $previousCachePath
+  Remove-Item $liveCachePath -Recurse -Force
+}
+```
+
+The command examples below show argument forms; execute them inside this live-download
+workflow. Reviewers must make a separate live download and compare outputs; matching
+fixture hashes does not prove current service parity.
+
 ### Generate TypeScript DirectClient SDK
 
 ```powershell
@@ -83,9 +109,10 @@ byte-for-byte once either source changes, and a cross-language surface delta (fo
 example, an operation present in the .NET SDK but missing here) cannot be attributed to
 a specific cause — stale output, a newer Swagger snapshot, or a generator divergence.
 
-To make regenerations reviewable, every run records provenance in
-[`generation.manifest.json`](generation.manifest.json) and persists the exact Swagger
-inputs it consumed.
+The existing [`generation.manifest.json`](generation.manifest.json) and Swagger
+snapshots record fixture provenance for tests. They are not refresh or review
+inputs. Generate and review from live metadata independently; do not introduce
+new cache folders, catalogs, or offline replay workflows for a client refresh.
 
 ### Manifest schema
 
@@ -113,8 +140,9 @@ inputs it consumed.
 
 ### Recording provenance for a run
 
-After generating (with the complete connector set) and saving each connector's Swagger
-snapshot into `swagger-cache/`, populate the manifest from the repo root:
+After live generation with the complete connector set, populate the existing
+manifest from the repo root. Update an existing test fixture from the live response
+when its tested contract changes, but do not use fixtures as generation inputs:
 
 For a merged generator revision, omit `generator.sourcePatch` and use equal base/head
 commits. Detached checkouts are supported. When a patch is present, capture its source
@@ -196,8 +224,8 @@ $manifest | ConvertTo-Json -Depth 6 | Set-Content generation.manifest.json -Enco
 
 - **Commit `generation.manifest.json` in the same PR as the regenerated clients.** A
   regeneration PR without an updated manifest is not reviewable for reproducibility.
-- **Persist the Swagger snapshots** referenced by the manifest (the content-addressed
-  cache) so the recorded `swaggerSha256` values are verifiable by a reviewer.
+- Existing Swagger snapshots are **test fixtures**, not an input cache for refreshes
+  or reviews. Reviewers independently fetch live metadata to detect stale output.
 - **Do not hand-edit** the manifest's generated values; let the tooling write them so
   they always match the actual run.
 - **The `tests/generationManifest.test.ts` guard runs in CI** and fails the build unless
@@ -209,14 +237,13 @@ $manifest | ConvertTo-Json -Depth 6 | Set-Content generation.manifest.json -Enco
 
 ## Post-Generation Validation
 
-Offline replay uses committed Swagger snapshots plus the projected managed-API catalog
-(only shipped connector names and display names, hashed by
-`swaggerSource.managedApisSha256`). Cache filenames are uppercase SHA-1 of each full
-ARM URL's UTF-8 bytes: the regional `managedApis?api-version=...` list URL and each
-`managedApis/{apiName}?api-version=...&export=true` URL. Set the source subscription,
-region, and `ARMCACHE_PATH` from the manifest, create an output directory, and generate
-the complete allowlist with network access blocked. Require all client hashes to match
-and check per-connector failures as well as the CLI exit code.
+Validate against a separate fresh live download. A network or authorization failure
+is a blocker, not a reason to fall back to fixtures. Check each connector's failures,
+not only the process exit code, and preserve the full shipped inventory.
+
+Capture known response data in semantic variables without redundant aliases. For
+pageable consumers, test empty and nonempty results and assert the continuation
+request and final termination, not just method signatures or iterator construction.
 
 Run these checks from the `Connectors-NodeJS-SDK` repo root:
 

@@ -20,9 +20,7 @@
     "location": "westus",
     "apiVersion": "2018-07-01-preview",
     "capturedAtUtc": "2026-10-01T16:17:37.7216935Z",
-    "swaggerCacheDirectory": "swagger-cache/",
-    "managedApisSnapshot": "swagger-cache/managedApis.json",
-    "managedApisSha256": "e455964ea5ec3b26fbc60dda43a84b95c47cb075169c071edfb2ad1877d74fec"
+    "swaggerCacheDirectory": "swagger-cache/"
   },
   "connectors": [
     {

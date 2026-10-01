@@ -62,10 +62,6 @@ interface GenerationManifest {
         };
     };
     connectors: ManifestConnectorEntry[];
-    swaggerSource: {
-        managedApisSnapshot: string;
-        managedApisSha256: string;
-    };
     routeIdentityLoss?: {
         droppedTriggerRoutes: ManifestDroppedTriggerRoute[];
     };
@@ -127,22 +123,6 @@ function loadSwaggerTriggerRoutes(swaggerSnapshot: string): SwaggerTriggerRoute[
 // ──────────────────────────────────────────────
 
 describe("generation.manifest.json provenance", () => {
-    test("catalog contains only shipped names and display metadata and matches its hash", () => {
-        const manifest = loadManifest();
-        expect(computeCanonicalTextSha256(manifest.swaggerSource.managedApisSnapshot))
-            .toBe(manifest.swaggerSource.managedApisSha256);
-        const catalog = JSON.parse(fs.readFileSync(
-            path.join(RepositoryRoot, manifest.swaggerSource.managedApisSnapshot), "utf8",
-        )) as { value: Array<{ name: string; properties: { generalInformation: { displayName: string } } }> };
-        expect(catalog.value.map(entry => entry.name).sort())
-            .toEqual(manifest.connectors.map(connector => connector.apiName).sort());
-        for (const entry of catalog.value) {
-            expect(Object.keys(entry).sort()).toEqual(["name", "properties"]);
-            expect(Object.keys(entry.properties)).toEqual(["generalInformation"]);
-            expect(Object.keys(entry.properties.generalInformation)).toEqual(["displayName"]);
-        }
-    });
-
     const manifest = loadManifest();
 
     it("should mark the run as generated", () => {
