@@ -555,9 +555,7 @@ export class Office365groupsmailClient extends ConnectorClientBase {
      */
     public async getThread(groupId: string, threadId: string, postId: string, expand: string, options: ConnectorOperationOptions = {}): Promise<Post> {
         const queryParams: string[] = [];
-        if (expand !== undefined) {
-            queryParams.push(`$expand=${encodeURIComponent(String(expand))}`);
-        }
+        queryParams.push(`$expand=${encodeURIComponent(String(expand))}`);
         const requestPath = `/v1.0/groups/${encodeURIComponent(String(groupId))}/threads/${encodeURIComponent(String(threadId))}/posts/${encodeURIComponent(String(postId))}` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.sendWithTracingAsync<Post>("Office365groupsmail.getThread", "GetThreadPost", "GET", requestUrl, undefined, options);

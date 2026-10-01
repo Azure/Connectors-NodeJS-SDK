@@ -670,9 +670,7 @@ export class InsightlyClient extends ConnectorClientBase {
      */
     public async updateTask(input: TaskRequest, id: string, options: ConnectorOperationOptions = {}): Promise<TaskObject> {
         const queryParams: string[] = [];
-        if (id !== undefined) {
-            queryParams.push(`id=${encodeURIComponent(String(id))}`);
-        }
+        queryParams.push(`id=${encodeURIComponent(String(id))}`);
         const requestPath = `/Tasks` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.sendWithTracingAsync<TaskObject>("Insightly.updateTask", "UpdateTask", "PUT", requestUrl, input, options);
@@ -716,9 +714,7 @@ export class InsightlyClient extends ConnectorClientBase {
      */
     public async updateProject(input: ProjectRequest, id: string, options: ConnectorOperationOptions = {}): Promise<Project> {
         const queryParams: string[] = [];
-        if (id !== undefined) {
-            queryParams.push(`id=${encodeURIComponent(String(id))}`);
-        }
+        queryParams.push(`id=${encodeURIComponent(String(id))}`);
         const requestPath = `/Projects` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.sendWithTracingAsync<Project>("Insightly.updateProject", "UpdateProject", "PUT", requestUrl, input, options);
@@ -762,9 +758,7 @@ export class InsightlyClient extends ConnectorClientBase {
      */
     public async updateLead(input: LeadRequest, id: string, options: ConnectorOperationOptions = {}): Promise<Lead> {
         const queryParams: string[] = [];
-        if (id !== undefined) {
-            queryParams.push(`id=${encodeURIComponent(String(id))}`);
-        }
+        queryParams.push(`id=${encodeURIComponent(String(id))}`);
         const requestPath = `/Leads` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.sendWithTracingAsync<Lead>("Insightly.updateLead", "UpdateLead", "PUT", requestUrl, input, options);
@@ -808,9 +802,7 @@ export class InsightlyClient extends ConnectorClientBase {
      */
     public async updateContact(input: ContactRequest, id: string, options: ConnectorOperationOptions = {}): Promise<Contact> {
         const queryParams: string[] = [];
-        if (id !== undefined) {
-            queryParams.push(`id=${encodeURIComponent(String(id))}`);
-        }
+        queryParams.push(`id=${encodeURIComponent(String(id))}`);
         const requestPath = `/Contacts` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.sendWithTracingAsync<Contact>("Insightly.updateContact", "UpdateContact", "PUT", requestUrl, input, options);

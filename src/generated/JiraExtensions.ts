@@ -859,12 +859,8 @@ export class JiraClient extends ConnectorClientBase {
      */
     public async createIssue(input: CreateIssueInput, projectKey: string, issueTypeIds: string, xRequestJirainstance: string, options: ConnectorOperationOptions = {}): Promise<CreateIssueResponse> {
         const queryParams: string[] = [];
-        if (projectKey !== undefined) {
-            queryParams.push(`projectKey=${encodeURIComponent(String(projectKey))}`);
-        }
-        if (issueTypeIds !== undefined) {
-            queryParams.push(`issueTypeIds=${encodeURIComponent(String(issueTypeIds))}`);
-        }
+        queryParams.push(`projectKey=${encodeURIComponent(String(projectKey))}`);
+        queryParams.push(`issueTypeIds=${encodeURIComponent(String(issueTypeIds))}`);
         const requestPath = `/v3/issue` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestHeaders: Record<string, string> = {};
         if (xRequestJirainstance !== undefined) {
@@ -1006,9 +1002,7 @@ export class JiraClient extends ConnectorClientBase {
      */
     public async getUser(accountId: string, xRequestJirainstance: string, options: GetUserOptions = {}): Promise<GetUserResponse> {
         const queryParams: string[] = [];
-        if (accountId !== undefined) {
-            queryParams.push(`accountId=${encodeURIComponent(String(accountId))}`);
-        }
+        queryParams.push(`accountId=${encodeURIComponent(String(accountId))}`);
         if (options.expand !== undefined) {
             queryParams.push(`expand=${encodeURIComponent(String(options.expand))}`);
         }
@@ -1073,9 +1067,7 @@ export class JiraClient extends ConnectorClientBase {
      */
     public listProjectUsers(projectKey: string, xRequestJirainstance: string, options: ConnectorOperationOptions = {}): ConnectorPagedAsyncIterableIterator<Record<string, unknown>> {
         const queryParams: string[] = [];
-        if (projectKey !== undefined) {
-            queryParams.push(`projectKey=${encodeURIComponent(String(projectKey))}`);
-        }
+        queryParams.push(`projectKey=${encodeURIComponent(String(projectKey))}`);
         const requestPath = `/v2/user/permission/search` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestHeaders: Record<string, string> = {};
         if (xRequestJirainstance !== undefined) {

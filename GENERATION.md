@@ -116,7 +116,9 @@ inputs it consumed.
 After generating (with the complete connector set) and saving each connector's Swagger
 snapshot into `swagger-cache/`, populate the manifest from the repo root:
 
-When `generator.sourcePatch` is present, reproduce the generator source before building:
+For a merged generator revision, omit `generator.sourcePatch` and use equal base/head
+commits. Detached checkouts are supported. When a patch is present, capture its source
+identity before checking out the baseline and verify the composed tree before building:
 
 ```powershell
 $bpmRepoRoot = "<BPM-repo-root>"
@@ -124,12 +126,14 @@ $sdkRepoRoot = (Get-Location).Path
 $manifest = Get-Content generation.manifest.json -Raw | ConvertFrom-Json
 $sourceHeadCommit = (git -C $bpmRepoRoot rev-parse HEAD)
 $sourceBranch = (git -C $bpmRepoRoot branch --show-current)
-if ([string]::IsNullOrWhiteSpace($sourceBranch)) {
+if ($manifest.generator.sourcePatch -and [string]::IsNullOrWhiteSpace($sourceBranch)) {
   throw "The BPM source must be on the branch used for generation before provenance replay."
 }
 
 git -C $bpmRepoRoot checkout $manifest.generator.bpmBaseCommit
-git -C $bpmRepoRoot apply --index --unidiff-zero (Join-Path $sdkRepoRoot $manifest.generator.sourcePatch.path)
+if ($manifest.generator.sourcePatch) {
+  git -C $bpmRepoRoot apply --index --unidiff-zero (Join-Path $sdkRepoRoot $manifest.generator.sourcePatch.path)
+}
 git -C $bpmRepoRoot diff --exit-code --cached $sourceHeadCommit -- src/tools/CodefulSdkGenerator src/tools/CodefulSdkGenerator.Tests
 git -C $bpmRepoRoot diff --exit-code -- src/tools/CodefulSdkGenerator src/tools/CodefulSdkGenerator.Tests
 ```
@@ -161,7 +165,9 @@ $manifest.status = "generated"
 $manifest.generatedAtUtc = [DateTime]::UtcNow.ToString("yyyy-MM-ddTHH:mm:ssZ")
 $manifest.generator.bpmHeadCommit = $sourceHeadCommit
 $manifest.generator.bpmBranch = $sourceBranch
-$manifest.generator.sourcePatch.sha256 = Get-CanonicalTextSha256 -Path $manifest.generator.sourcePatch.path
+if ($manifest.generator.sourcePatch) {
+  $manifest.generator.sourcePatch.sha256 = Get-CanonicalTextSha256 -Path $manifest.generator.sourcePatch.path
+}
 
 $dll = Join-Path $bpmRepoRoot "src/tools/CodefulSdkGenerator/bin/Release/Microsoft.Azure.Workflows.CodefulSdkGenerator.dll"
 if (-not (Test-Path $dll)) {
@@ -195,13 +201,22 @@ $manifest | ConvertTo-Json -Depth 6 | Set-Content generation.manifest.json -Enco
 - **Do not hand-edit** the manifest's generated values; let the tooling write them so
   they always match the actual run.
 - **The `tests/generationManifest.test.ts` guard runs in CI** and fails the build unless
-  `status` is `generated`, the base/head/assembly source composition and hashed unified
-  patch are populated consistently, connector-specific commits have their own patch, and every
+  `status` is `generated`, the base/head/assembly source composition and any declared
+  hashed patch are populated consistently, connector-specific commits have their own patch, and every
   `connectors[].swaggerSha256` and `connectors[].outputSha256` matches the SHA-256 of
   its committed `swagger-cache/` snapshot and canonical UTF-8/LF generated output.
   Regenerate rather than hand-editing so the guard stays green.
 
 ## Post-Generation Validation
+
+Offline replay uses committed Swagger snapshots plus the projected managed-API catalog
+(only shipped connector names and display names, hashed by
+`swaggerSource.managedApisSha256`). Cache filenames are uppercase SHA-1 of each full
+ARM URL's UTF-8 bytes: the regional `managedApis?api-version=...` list URL and each
+`managedApis/{apiName}?api-version=...&export=true` URL. Set the source subscription,
+region, and `ARMCACHE_PATH` from the manifest, create an output directory, and generate
+the complete allowlist with network access blocked. Require all client hashes to match
+and check per-connector failures as well as the CLI exit code.
 
 Run these checks from the `Connectors-NodeJS-SDK` repo root:
 

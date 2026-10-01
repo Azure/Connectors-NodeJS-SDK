@@ -204,12 +204,8 @@ export class CampfireClient extends ConnectorClientBase {
      */
     public async createMessage(roomId: string, account: string, message: string, options: ConnectorOperationOptions = {}): Promise<CreateMessageResponse> {
         const queryParams: string[] = [];
-        if (account !== undefined) {
-            queryParams.push(`account=${encodeURIComponent(String(account))}`);
-        }
-        if (message !== undefined) {
-            queryParams.push(`message=${encodeURIComponent(String(message))}`);
-        }
+        queryParams.push(`account=${encodeURIComponent(String(account))}`);
+        queryParams.push(`message=${encodeURIComponent(String(message))}`);
         const requestPath = `/room/${encodeURIComponent(String(roomId))}/speak.json` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.sendWithTracingAsync<CreateMessageResponse>("Campfire.createMessage", "CreateMessage", "POST", requestUrl, undefined, options);
@@ -223,9 +219,7 @@ export class CampfireClient extends ConnectorClientBase {
      */
     public async getUser(userId: number, account: string, options: ConnectorOperationOptions = {}): Promise<UserResponse> {
         const queryParams: string[] = [];
-        if (account !== undefined) {
-            queryParams.push(`account=${encodeURIComponent(String(account))}`);
-        }
+        queryParams.push(`account=${encodeURIComponent(String(account))}`);
         const requestPath = `/users/${encodeURIComponent(String(userId))}.json` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.sendWithTracingAsync<UserResponse>("Campfire.getUser", "GetUser", "GET", requestUrl, undefined, options);

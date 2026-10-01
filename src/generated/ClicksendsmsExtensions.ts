@@ -515,9 +515,7 @@ export class ClicksendsmsClient extends ConnectorClientBase {
      */
     public async uploadMedia(input: UploadMediaInput, convert: string, options: ConnectorOperationOptions = {}): Promise<UploadMediaResponse> {
         const queryParams: string[] = [];
-        if (convert !== undefined) {
-            queryParams.push(`convert=${encodeURIComponent(String(convert))}`);
-        }
+        queryParams.push(`convert=${encodeURIComponent(String(convert))}`);
         const requestPath = `/uploads` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.sendWithTracingAsync<UploadMediaResponse>("Clicksendsms.uploadMedia", "upload_media", "POST", requestUrl, input, options);
@@ -531,9 +529,7 @@ export class ClicksendsmsClient extends ConnectorClientBase {
      */
     public async listSearchContact(q: string, options: ConnectorOperationOptions = {}): Promise<SearchContactListResponse> {
         const queryParams: string[] = [];
-        if (q !== undefined) {
-            queryParams.push(`q=${encodeURIComponent(String(q))}`);
-        }
+        queryParams.push(`q=${encodeURIComponent(String(q))}`);
         const requestPath = `/search/contacts-lists` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.sendWithTracingAsync<SearchContactListResponse>("Clicksendsms.listSearchContact", "search_contact_list", "GET", requestUrl, undefined, options);

@@ -56,12 +56,16 @@ interface GenerationManifest {
         bpmBaseCommit: string | null;
         bpmHeadCommit: string | null;
         assemblyVersion: string | null;
-        sourcePatch: {
+        sourcePatch?: {
             path: string;
             sha256: string;
         };
     };
     connectors: ManifestConnectorEntry[];
+    swaggerSource: {
+        managedApisSnapshot: string;
+        managedApisSha256: string;
+    };
     routeIdentityLoss?: {
         droppedTriggerRoutes: ManifestDroppedTriggerRoute[];
     };
@@ -123,6 +127,22 @@ function loadSwaggerTriggerRoutes(swaggerSnapshot: string): SwaggerTriggerRoute[
 // ──────────────────────────────────────────────
 
 describe("generation.manifest.json provenance", () => {
+    test("catalog contains only shipped names and display metadata and matches its hash", () => {
+        const manifest = loadManifest();
+        expect(computeCanonicalTextSha256(manifest.swaggerSource.managedApisSnapshot))
+            .toBe(manifest.swaggerSource.managedApisSha256);
+        const catalog = JSON.parse(fs.readFileSync(
+            path.join(RepositoryRoot, manifest.swaggerSource.managedApisSnapshot), "utf8",
+        )) as { value: Array<{ name: string; properties: { generalInformation: { displayName: string } } }> };
+        expect(catalog.value.map(entry => entry.name).sort())
+            .toEqual(manifest.connectors.map(connector => connector.apiName).sort());
+        for (const entry of catalog.value) {
+            expect(Object.keys(entry).sort()).toEqual(["name", "properties"]);
+            expect(Object.keys(entry.properties)).toEqual(["generalInformation"]);
+            expect(Object.keys(entry.properties.generalInformation)).toEqual(["displayName"]);
+        }
+    });
+
     const manifest = loadManifest();
 
     it("should mark the run as generated", () => {
@@ -133,17 +153,25 @@ describe("generation.manifest.json provenance", () => {
         expect(manifest.manifestVersion).toBe(3);
     });
 
-    it("should record distinct BPM generator base and head commits", () => {
+    it("should record BPM generator base and head commits matching the composition", () => {
         expect(manifest.generator.bpmBaseCommit ?? "").toMatch(/^[0-9a-f]{40}$/);
         expect(manifest.generator.bpmHeadCommit ?? "").toMatch(/^[0-9a-f]{40}$/);
-        expect(manifest.generator.bpmHeadCommit).not.toBe(manifest.generator.bpmBaseCommit);
+        if (manifest.generator.sourcePatch === undefined) {
+            expect(manifest.generator.bpmHeadCommit).toBe(manifest.generator.bpmBaseCommit);
+        } else {
+            expect(manifest.generator.bpmHeadCommit).not.toBe(manifest.generator.bpmBaseCommit);
+        }
     });
 
     it("should record a concrete four-part generator assembly version", () => {
         expect(manifest.generator.assemblyVersion ?? "").toMatch(/^\d+\.\d+\.\d+\.\d+$/);
     });
 
-    it("should match the recorded generator source patch hash", () => {
+    it("should match the recorded generator source patch hash when present", () => {
+        if (manifest.generator.sourcePatch === undefined) {
+            return;
+        }
+
         expect(manifest.generator.sourcePatch.path).toBeTruthy();
         expect(manifest.generator.sourcePatch.sha256).toMatch(/^[0-9a-f]{64}$/);
         expect(fs.existsSync(path.join(RepositoryRoot, manifest.generator.sourcePatch.path))).toBe(true);
@@ -151,7 +179,11 @@ describe("generation.manifest.json provenance", () => {
             .toBe(manifest.generator.sourcePatch.sha256);
     });
 
-    it("should bind the generator patch to its recorded head and source paths", () => {
+    it("should bind a recorded generator patch to its head and source paths", () => {
+        if (manifest.generator.sourcePatch === undefined) {
+            return;
+        }
+
         const patchName = path.basename(manifest.generator.sourcePatch.path);
         const headPrefix = patchName.match(/^([0-9a-f]{7,40})-/)?.[1];
         expect(headPrefix).toBeDefined();
