@@ -156,9 +156,7 @@ export class ZohosignClient extends ConnectorClientBase {
      */
     public async invokeAPI(input: InvokeAPIInput, url: string, method: string, options: ConnectorOperationOptions = {}): Promise<InvokeAPIResponse> {
         const queryParams: string[] = [];
-        if (method !== undefined) {
-            queryParams.push(`method=${encodeURIComponent(String(method))}`);
-        }
+        queryParams.push(`method=${encodeURIComponent(String(method))}`);
         const requestPath = `/${encodeURIComponent(String(url))}` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.sendWithTracingAsync<InvokeAPIResponse>("Zohosign.invokeAPI", "InvokeAPI", "POST", requestUrl, input, options);

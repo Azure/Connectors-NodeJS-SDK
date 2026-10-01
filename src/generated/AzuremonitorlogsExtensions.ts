@@ -190,18 +190,10 @@ export class AzuremonitorlogsClient extends ConnectorClientBase {
      */
     public async queryData(input: QueryDataInput, subscriptions: string, resourcegroups: string, resourcetype: string, resourcename: string, options: ConnectorOperationOptions = {}): Promise<Table> {
         const queryParams: string[] = [];
-        if (subscriptions !== undefined) {
-            queryParams.push(`subscriptions=${encodeURIComponent(String(subscriptions))}`);
-        }
-        if (resourcegroups !== undefined) {
-            queryParams.push(`resourcegroups=${encodeURIComponent(String(resourcegroups))}`);
-        }
-        if (resourcetype !== undefined) {
-            queryParams.push(`resourcetype=${encodeURIComponent(String(resourcetype))}`);
-        }
-        if (resourcename !== undefined) {
-            queryParams.push(`resourcename=${encodeURIComponent(String(resourcename))}`);
-        }
+        queryParams.push(`subscriptions=${encodeURIComponent(String(subscriptions))}`);
+        queryParams.push(`resourcegroups=${encodeURIComponent(String(resourcegroups))}`);
+        queryParams.push(`resourcetype=${encodeURIComponent(String(resourcetype))}`);
+        queryParams.push(`resourcename=${encodeURIComponent(String(resourcename))}`);
         const requestPath = `/queryDataV2` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.sendWithTracingAsync<Table>("Azuremonitorlogs.queryData", "QueryDataV2", "POST", requestUrl, input, options);
@@ -215,21 +207,11 @@ export class AzuremonitorlogsClient extends ConnectorClientBase {
      */
     public async visualizeQuery(input: VisualizeQueryInput, subscriptions: string, resourcegroups: string, resourcetype: string, resourcename: string, visType: string, options: ConnectorOperationOptions = {}): Promise<VisualizeResults> {
         const queryParams: string[] = [];
-        if (subscriptions !== undefined) {
-            queryParams.push(`subscriptions=${encodeURIComponent(String(subscriptions))}`);
-        }
-        if (resourcegroups !== undefined) {
-            queryParams.push(`resourcegroups=${encodeURIComponent(String(resourcegroups))}`);
-        }
-        if (resourcetype !== undefined) {
-            queryParams.push(`resourcetype=${encodeURIComponent(String(resourcetype))}`);
-        }
-        if (resourcename !== undefined) {
-            queryParams.push(`resourcename=${encodeURIComponent(String(resourcename))}`);
-        }
-        if (visType !== undefined) {
-            queryParams.push(`visType=${encodeURIComponent(String(visType))}`);
-        }
+        queryParams.push(`subscriptions=${encodeURIComponent(String(subscriptions))}`);
+        queryParams.push(`resourcegroups=${encodeURIComponent(String(resourcegroups))}`);
+        queryParams.push(`resourcetype=${encodeURIComponent(String(resourcetype))}`);
+        queryParams.push(`resourcename=${encodeURIComponent(String(resourcename))}`);
+        queryParams.push(`visType=${encodeURIComponent(String(visType))}`);
         const requestPath = `/visualizeQueryV2` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.sendWithTracingAsync<VisualizeResults>("Azuremonitorlogs.visualizeQuery", "VisualizeQueryV2", "POST", requestUrl, input, options);

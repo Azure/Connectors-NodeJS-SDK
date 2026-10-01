@@ -701,12 +701,8 @@ export class TextrequestClient extends ConnectorClientBase {
      */
     public async getMessagesByContactPhone(dashboardId: number, phoneNumber: string, page: number, pageSize: number, options: ConnectorOperationOptions = {}): Promise<GetMessagesByContactPhoneResponse> {
         const queryParams: string[] = [];
-        if (page !== undefined) {
-            queryParams.push(`page=${encodeURIComponent(String(page))}`);
-        }
-        if (pageSize !== undefined) {
-            queryParams.push(`page_size=${encodeURIComponent(String(pageSize))}`);
-        }
+        queryParams.push(`page=${encodeURIComponent(String(page))}`);
+        queryParams.push(`page_size=${encodeURIComponent(String(pageSize))}`);
         const requestPath = `/dashboards/${encodeURIComponent(String(dashboardId))}/contacts/${encodeURIComponent(String(phoneNumber))}/messages` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.sendWithTracingAsync<GetMessagesByContactPhoneResponse>("Textrequest.getMessagesByContactPhone", "GetMessagesByContactPhone", "GET", requestUrl, undefined, options);
@@ -858,12 +854,8 @@ export class TextrequestClient extends ConnectorClientBase {
         if (options.customFieldValue3 !== undefined) {
             queryParams.push(`custom_field_value_3=${encodeURIComponent(String(options.customFieldValue3))}`);
         }
-        if (page !== undefined) {
-            queryParams.push(`page=${encodeURIComponent(String(page))}`);
-        }
-        if (pageSize !== undefined) {
-            queryParams.push(`page_size=${encodeURIComponent(String(pageSize))}`);
-        }
+        queryParams.push(`page=${encodeURIComponent(String(page))}`);
+        queryParams.push(`page_size=${encodeURIComponent(String(pageSize))}`);
         const requestPath = `/dashboards/${encodeURIComponent(String(dashboardId))}/contacts` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.sendWithTracingAsync<GetContactsResponse>("Textrequest.getContacts", "GetContacts", "GET", requestUrl, undefined, options);
@@ -925,12 +917,8 @@ export class TextrequestClient extends ConnectorClientBase {
      */
     public async getGroups(dashboardId: number, page: number, pageSize: number, options: ConnectorOperationOptions = {}): Promise<GetGroupsResponse> {
         const queryParams: string[] = [];
-        if (page !== undefined) {
-            queryParams.push(`page=${encodeURIComponent(String(page))}`);
-        }
-        if (pageSize !== undefined) {
-            queryParams.push(`page_size=${encodeURIComponent(String(pageSize))}`);
-        }
+        queryParams.push(`page=${encodeURIComponent(String(page))}`);
+        queryParams.push(`page_size=${encodeURIComponent(String(pageSize))}`);
         const requestPath = `/dashboards/${encodeURIComponent(String(dashboardId))}/groups` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.sendWithTracingAsync<GetGroupsResponse>("Textrequest.getGroups", "GetGroups", "GET", requestUrl, undefined, options);
@@ -956,12 +944,8 @@ export class TextrequestClient extends ConnectorClientBase {
      */
     public async getTags(dashboardId: number, page: number, pageSize: number, options: ConnectorOperationOptions = {}): Promise<GetTagsResponse> {
         const queryParams: string[] = [];
-        if (page !== undefined) {
-            queryParams.push(`page=${encodeURIComponent(String(page))}`);
-        }
-        if (pageSize !== undefined) {
-            queryParams.push(`page_size=${encodeURIComponent(String(pageSize))}`);
-        }
+        queryParams.push(`page=${encodeURIComponent(String(page))}`);
+        queryParams.push(`page_size=${encodeURIComponent(String(pageSize))}`);
         const requestPath = `/dashboards/${encodeURIComponent(String(dashboardId))}/tags` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.sendWithTracingAsync<GetTagsResponse>("Textrequest.getTags", "GetTags", "GET", requestUrl, undefined, options);
@@ -1047,12 +1031,8 @@ export class TextrequestClient extends ConnectorClientBase {
         if (options.sortDirection !== undefined) {
             queryParams.push(`sort_direction=${encodeURIComponent(String(options.sortDirection))}`);
         }
-        if (page !== undefined) {
-            queryParams.push(`page=${encodeURIComponent(String(page))}`);
-        }
-        if (pageSize !== undefined) {
-            queryParams.push(`page_size=${encodeURIComponent(String(pageSize))}`);
-        }
+        queryParams.push(`page=${encodeURIComponent(String(page))}`);
+        queryParams.push(`page_size=${encodeURIComponent(String(pageSize))}`);
         const requestPath = `/dashboards/${encodeURIComponent(String(dashboardId))}/payments` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.sendWithTracingAsync<GetPaymentsResponse>("Textrequest.getPayments", "GetPayments", "GET", requestUrl, undefined, options);

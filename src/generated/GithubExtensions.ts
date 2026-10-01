@@ -1826,9 +1826,7 @@ export class GithubClient extends ConnectorClientBase {
      */
     public async searchIssues(q: string, options: SearchIssuesOptions = {}): Promise<MultipleSearchFetchModel> {
         const queryParams: string[] = [];
-        if (q !== undefined) {
-            queryParams.push(`q=${encodeURIComponent(String(q))}`);
-        }
+        queryParams.push(`q=${encodeURIComponent(String(q))}`);
         if (options.sort !== undefined) {
             queryParams.push(`sort=${encodeURIComponent(String(options.sort))}`);
         }

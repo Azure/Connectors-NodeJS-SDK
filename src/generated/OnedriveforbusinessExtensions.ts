@@ -507,9 +507,7 @@ export class OnedriveforbusinessClient extends ConnectorClientBase {
      */
     public async getFileMetadataByPath(path: string, options: ConnectorOperationOptions = {}): Promise<BlobMetadata> {
         const queryParams: string[] = [];
-        if (path !== undefined) {
-            queryParams.push(`path=${encodeURIComponent(String(path))}`);
-        }
+        queryParams.push(`path=${encodeURIComponent(String(path))}`);
         const requestPath = `/datasets/default/GetFileByPath` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.sendWithTracingAsync<BlobMetadata>("Onedriveforbusiness.getFileMetadataByPath", "GetFileMetadataByPath", "GET", requestUrl, undefined, options);
@@ -523,9 +521,7 @@ export class OnedriveforbusinessClient extends ConnectorClientBase {
      */
     public async getFileContentByPath(path: string, options: GetFileContentByPathOptions = {}): Promise<Blob> {
         const queryParams: string[] = [];
-        if (path !== undefined) {
-            queryParams.push(`path=${encodeURIComponent(String(path))}`);
-        }
+        queryParams.push(`path=${encodeURIComponent(String(path))}`);
         if (options.inferContentType !== undefined) {
             queryParams.push(`inferContentType=${encodeURIComponent(String(options.inferContentType))}`);
         }
@@ -558,12 +554,8 @@ export class OnedriveforbusinessClient extends ConnectorClientBase {
      */
     public async createFile(input: CreateFileInput, folderPath: string, name: string, options: ConnectorOperationOptions = {}): Promise<BlobMetadata> {
         const queryParams: string[] = [];
-        if (folderPath !== undefined) {
-            queryParams.push(`folderPath=${encodeURIComponent(String(folderPath))}`);
-        }
-        if (name !== undefined) {
-            queryParams.push(`name=${encodeURIComponent(String(name))}`);
-        }
+        queryParams.push(`folderPath=${encodeURIComponent(String(folderPath))}`);
+        queryParams.push(`name=${encodeURIComponent(String(name))}`);
         const requestPath = `/datasets/default/files` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.sendWithTracingAsync<BlobMetadata>("Onedriveforbusiness.createFile", "CreateFile", "POST", requestUrl, input, options);
@@ -577,12 +569,8 @@ export class OnedriveforbusinessClient extends ConnectorClientBase {
      */
     public async copyFile(source: string, destination: string, options: CopyFileOptions = {}): Promise<BlobMetadata> {
         const queryParams: string[] = [];
-        if (source !== undefined) {
-            queryParams.push(`source=${encodeURIComponent(String(source))}`);
-        }
-        if (destination !== undefined) {
-            queryParams.push(`destination=${encodeURIComponent(String(destination))}`);
-        }
+        queryParams.push(`source=${encodeURIComponent(String(source))}`);
+        queryParams.push(`destination=${encodeURIComponent(String(destination))}`);
         if (options.overwrite !== undefined) {
             queryParams.push(`overwrite=${encodeURIComponent(String(options.overwrite))}`);
         }
@@ -599,9 +587,7 @@ export class OnedriveforbusinessClient extends ConnectorClientBase {
      */
     public async copyDriveFile(id: string, destination: string, options: CopyDriveFileOptions = {}): Promise<BlobMetadata> {
         const queryParams: string[] = [];
-        if (destination !== undefined) {
-            queryParams.push(`destination=${encodeURIComponent(String(destination))}`);
-        }
+        queryParams.push(`destination=${encodeURIComponent(String(destination))}`);
         if (options.overwrite !== undefined) {
             queryParams.push(`overwrite=${encodeURIComponent(String(options.overwrite))}`);
         }
@@ -618,12 +604,8 @@ export class OnedriveforbusinessClient extends ConnectorClientBase {
      */
     public async copyDriveFileByPath(source: string, destination: string, options: CopyDriveFileByPathOptions = {}): Promise<BlobMetadata> {
         const queryParams: string[] = [];
-        if (source !== undefined) {
-            queryParams.push(`source=${encodeURIComponent(String(source))}`);
-        }
-        if (destination !== undefined) {
-            queryParams.push(`destination=${encodeURIComponent(String(destination))}`);
-        }
+        queryParams.push(`source=${encodeURIComponent(String(source))}`);
+        queryParams.push(`destination=${encodeURIComponent(String(destination))}`);
         if (options.overwrite !== undefined) {
             queryParams.push(`overwrite=${encodeURIComponent(String(options.overwrite))}`);
         }
@@ -640,9 +622,7 @@ export class OnedriveforbusinessClient extends ConnectorClientBase {
      */
     public async moveFile(id: string, destination: string, options: MoveFileOptions = {}): Promise<BlobMetadata> {
         const queryParams: string[] = [];
-        if (destination !== undefined) {
-            queryParams.push(`destination=${encodeURIComponent(String(destination))}`);
-        }
+        queryParams.push(`destination=${encodeURIComponent(String(destination))}`);
         if (options.overwrite !== undefined) {
             queryParams.push(`overwrite=${encodeURIComponent(String(options.overwrite))}`);
         }
@@ -659,12 +639,8 @@ export class OnedriveforbusinessClient extends ConnectorClientBase {
      */
     public async moveFileByPath(source: string, destination: string, options: MoveFileByPathOptions = {}): Promise<BlobMetadata> {
         const queryParams: string[] = [];
-        if (source !== undefined) {
-            queryParams.push(`source=${encodeURIComponent(String(source))}`);
-        }
-        if (destination !== undefined) {
-            queryParams.push(`destination=${encodeURIComponent(String(destination))}`);
-        }
+        queryParams.push(`source=${encodeURIComponent(String(source))}`);
+        queryParams.push(`destination=${encodeURIComponent(String(destination))}`);
         if (options.overwrite !== undefined) {
             queryParams.push(`overwrite=${encodeURIComponent(String(options.overwrite))}`);
         }
@@ -697,9 +673,7 @@ export class OnedriveforbusinessClient extends ConnectorClientBase {
      */
     public async convertFileByPath(path: string, options: ConvertFileByPathOptions = {}): Promise<Blob> {
         const queryParams: string[] = [];
-        if (path !== undefined) {
-            queryParams.push(`path=${encodeURIComponent(String(path))}`);
-        }
+        queryParams.push(`path=${encodeURIComponent(String(path))}`);
         if (options.type !== undefined) {
             queryParams.push(`type=${encodeURIComponent(String(options.type))}`);
         }
@@ -716,9 +690,7 @@ export class OnedriveforbusinessClient extends ConnectorClientBase {
      */
     public async getFileThumbnail(id: string, size: string, options: ConnectorOperationOptions = {}): Promise<Thumbnail> {
         const queryParams: string[] = [];
-        if (size !== undefined) {
-            queryParams.push(`size=${encodeURIComponent(String(size))}`);
-        }
+        queryParams.push(`size=${encodeURIComponent(String(size))}`);
         const requestPath = `/datasets/default/files/${encodeURIComponent(encodeURIComponent(String(id)))}/thumbnail` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.sendWithTracingAsync<Thumbnail>("Onedriveforbusiness.getFileThumbnail", "GetFileThumbnail", "GET", requestUrl, undefined, options);
@@ -750,12 +722,8 @@ export class OnedriveforbusinessClient extends ConnectorClientBase {
      */
     public async findFiles(id: string, query: string, findMode: string, options: FindFilesOptions = {}): Promise<Array<BlobMetadata>> {
         const queryParams: string[] = [];
-        if (query !== undefined) {
-            queryParams.push(`query=${encodeURIComponent(String(query))}`);
-        }
-        if (findMode !== undefined) {
-            queryParams.push(`findMode=${encodeURIComponent(String(findMode))}`);
-        }
+        queryParams.push(`query=${encodeURIComponent(String(query))}`);
+        queryParams.push(`findMode=${encodeURIComponent(String(findMode))}`);
         if (options.maxFileCount !== undefined) {
             queryParams.push(`maxFileCount=${encodeURIComponent(String(options.maxFileCount))}`);
         }
@@ -772,15 +740,9 @@ export class OnedriveforbusinessClient extends ConnectorClientBase {
      */
     public async findFilesByPath(query: string, path: string, findMode: string, options: FindFilesByPathOptions = {}): Promise<Array<BlobMetadata>> {
         const queryParams: string[] = [];
-        if (query !== undefined) {
-            queryParams.push(`query=${encodeURIComponent(String(query))}`);
-        }
-        if (path !== undefined) {
-            queryParams.push(`path=${encodeURIComponent(String(path))}`);
-        }
-        if (findMode !== undefined) {
-            queryParams.push(`findMode=${encodeURIComponent(String(findMode))}`);
-        }
+        queryParams.push(`query=${encodeURIComponent(String(query))}`);
+        queryParams.push(`path=${encodeURIComponent(String(path))}`);
+        queryParams.push(`findMode=${encodeURIComponent(String(findMode))}`);
         if (options.maxFileCount !== undefined) {
             queryParams.push(`maxFileCount=${encodeURIComponent(String(options.maxFileCount))}`);
         }
@@ -797,9 +759,7 @@ export class OnedriveforbusinessClient extends ConnectorClientBase {
      */
     public async createShareLink(id: string, type: string, options: CreateShareLinkOptions = {}): Promise<SharingLink> {
         const queryParams: string[] = [];
-        if (type !== undefined) {
-            queryParams.push(`type=${encodeURIComponent(String(type))}`);
-        }
+        queryParams.push(`type=${encodeURIComponent(String(type))}`);
         if (options.scope !== undefined) {
             queryParams.push(`scope=${encodeURIComponent(String(options.scope))}`);
         }
@@ -816,12 +776,8 @@ export class OnedriveforbusinessClient extends ConnectorClientBase {
      */
     public async createShareLinkByPath(path: string, type: string, options: CreateShareLinkByPathOptions = {}): Promise<SharingLink> {
         const queryParams: string[] = [];
-        if (path !== undefined) {
-            queryParams.push(`path=${encodeURIComponent(String(path))}`);
-        }
-        if (type !== undefined) {
-            queryParams.push(`type=${encodeURIComponent(String(type))}`);
-        }
+        queryParams.push(`path=${encodeURIComponent(String(path))}`);
+        queryParams.push(`type=${encodeURIComponent(String(type))}`);
         if (options.scope !== undefined) {
             queryParams.push(`scope=${encodeURIComponent(String(options.scope))}`);
         }
@@ -838,12 +794,8 @@ export class OnedriveforbusinessClient extends ConnectorClientBase {
      */
     public async extractFolder(source: string, destination: string, options: ExtractFolderOptions = {}): Promise<Array<BlobMetadata>> {
         const queryParams: string[] = [];
-        if (source !== undefined) {
-            queryParams.push(`source=${encodeURIComponent(String(source))}`);
-        }
-        if (destination !== undefined) {
-            queryParams.push(`destination=${encodeURIComponent(String(destination))}`);
-        }
+        queryParams.push(`source=${encodeURIComponent(String(source))}`);
+        queryParams.push(`destination=${encodeURIComponent(String(destination))}`);
         if (options.overwrite !== undefined) {
             queryParams.push(`overwrite=${encodeURIComponent(String(options.overwrite))}`);
         }

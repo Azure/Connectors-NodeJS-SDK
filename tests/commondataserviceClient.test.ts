@@ -42,13 +42,13 @@ describe("CommondataserviceClient — getItems", () => {
         jest.restoreAllMocks();
     });
 
-    it("should return items from every page and request the absolute same-host next link", async () => {
+    it.each([false, true])("should follow the next link when the first page is empty: %s", async (isFirstPageEmpty) => {
         const firstItem: Item = { dynamicProperties: { accountid: { value: "account-1" } } };
         const secondItem: Item = { dynamicProperties: { accountid: { value: "account-2" } } };
         const nextLink = `${TestConnectionUrl}/v2/datasets/default/tables/accounts/items?$skiptoken=page-2`;
         global.fetch = jest.fn()
             .mockResolvedValueOnce(createFetchResponse({
-                value: [firstItem],
+                value: isFirstPageEmpty ? [] : [firstItem],
                 "@odata.nextLink": nextLink,
             }))
             .mockResolvedValueOnce(createFetchResponse({ value: [secondItem] }));
@@ -59,9 +59,11 @@ describe("CommondataserviceClient — getItems", () => {
             items.push(item);
         }
 
-        expect(items).toEqual([firstItem, secondItem]);
+        expect(items).toEqual(isFirstPageEmpty ? [secondItem] : [firstItem, secondItem]);
         expect(global.fetch).toHaveBeenCalledTimes(2);
+        expect((global.fetch as jest.Mock).mock.calls[0][1].method).toBe("GET");
         expect((global.fetch as jest.Mock).mock.calls[1][0]).toBe(nextLink);
+        expect((global.fetch as jest.Mock).mock.calls[1][1].method).toBe("GET");
     });
 
     it.each([

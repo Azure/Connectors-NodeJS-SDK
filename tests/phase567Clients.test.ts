@@ -22,6 +22,7 @@ import {
 import { StarmindClient } from "../src/generated/StarmindExtensions.ts";
 import { Starrezrestv1Client } from "../src/generated/Starrezrestv1Extensions.ts";
 import { TallyfyClient } from "../src/generated/TallyfyExtensions.ts";
+import { TextrequestClient } from "../src/generated/TextrequestExtensions.ts";
 import { TicketmasterClient } from "../src/generated/TicketmasterExtensions.ts";
 import { TwitterClient } from "../src/generated/TwitterExtensions.ts";
 import { TypeformClient, TypeformTriggerOperations } from "../src/generated/TypeformExtensions.ts";
@@ -138,6 +139,55 @@ describe("Phase 5-7 connector clients", () => {
         expect(JSON.parse(JSON.stringify(model))).toEqual({
             localizations: { "en-US": { name: "English" } },
         });
+    });
+
+    it("should serialize an empty required string and omit absent optional queries", async () => {
+        mockFetchResponse({});
+        const client = new ImpexiumClient(TestConnectionUrl, createMockCredential());
+
+        await client.getAbandonedCheckouts(1, "", "application/json");
+
+        const requestUrl = new URL((global.fetch as jest.Mock).mock.calls[0][0]);
+        expect(requestUrl.searchParams.has("abandonedFrom")).toBe(true);
+        expect(requestUrl.searchParams.get("abandonedFrom")).toBe("");
+        expect(requestUrl.searchParams.has("productCode")).toBe(false);
+        expect(requestUrl.searchParams.has("customerRecordNumber")).toBe(false);
+    });
+
+    it("should serialize false for a required boolean query", async () => {
+        mockFetchResponse({});
+        const client = new ImpexiumClient(TestConnectionUrl, createMockCredential());
+
+        await client.findIndividualIdOrEmail("individual", 1, false, "application/json");
+
+        const requestUrl = new URL((global.fetch as jest.Mock).mock.calls[0][0]);
+        expect(requestUrl.searchParams.has("IncludeDetails")).toBe(true);
+        expect(requestUrl.searchParams.get("IncludeDetails")).toBe("false");
+    });
+
+    it("should serialize zero for required numeric queries", async () => {
+        mockFetchResponse({});
+        const client = new TextrequestClient(TestConnectionUrl, createMockCredential());
+
+        await client.getMessagesByContactPhone(1, "sample-phone", 0, 0);
+
+        const requestUrl = new URL((global.fetch as jest.Mock).mock.calls[0][0]);
+        expect(requestUrl.searchParams.has("page")).toBe(true);
+        expect(requestUrl.searchParams.get("page")).toBe("0");
+        expect(requestUrl.searchParams.has("page_size")).toBe(true);
+        expect(requestUrl.searchParams.get("page_size")).toBe("0");
+    });
+
+    it("should serialize an empty required collection and preserve an optional false value", async () => {
+        mockFetchResponse({});
+        const client = new SeismicplannerClient(TestConnectionUrl, createMockCredential());
+
+        await client.deleteProjects("space", [], { deleteTasks: false });
+
+        const requestUrl = new URL((global.fetch as jest.Mock).mock.calls[0][0]);
+        expect(requestUrl.searchParams.has("ids")).toBe(true);
+        expect(requestUrl.searchParams.get("ids")).toBe("");
+        expect(requestUrl.searchParams.get("deleteTasks")).toBe("false");
     });
 
     it.each(ActionConnectorCases)("should invoke an authenticated $displayName action", async connector => {

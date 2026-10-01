@@ -56,7 +56,7 @@ interface GenerationManifest {
         bpmBaseCommit: string | null;
         bpmHeadCommit: string | null;
         assemblyVersion: string | null;
-        sourcePatch: {
+        sourcePatch?: {
             path: string;
             sha256: string;
         };
@@ -133,17 +133,25 @@ describe("generation.manifest.json provenance", () => {
         expect(manifest.manifestVersion).toBe(3);
     });
 
-    it("should record distinct BPM generator base and head commits", () => {
+    it("should record BPM generator base and head commits matching the composition", () => {
         expect(manifest.generator.bpmBaseCommit ?? "").toMatch(/^[0-9a-f]{40}$/);
         expect(manifest.generator.bpmHeadCommit ?? "").toMatch(/^[0-9a-f]{40}$/);
-        expect(manifest.generator.bpmHeadCommit).not.toBe(manifest.generator.bpmBaseCommit);
+        if (manifest.generator.sourcePatch === undefined) {
+            expect(manifest.generator.bpmHeadCommit).toBe(manifest.generator.bpmBaseCommit);
+        } else {
+            expect(manifest.generator.bpmHeadCommit).not.toBe(manifest.generator.bpmBaseCommit);
+        }
     });
 
     it("should record a concrete four-part generator assembly version", () => {
         expect(manifest.generator.assemblyVersion ?? "").toMatch(/^\d+\.\d+\.\d+\.\d+$/);
     });
 
-    it("should match the recorded generator source patch hash", () => {
+    it("should match the recorded generator source patch hash when present", () => {
+        if (manifest.generator.sourcePatch === undefined) {
+            return;
+        }
+
         expect(manifest.generator.sourcePatch.path).toBeTruthy();
         expect(manifest.generator.sourcePatch.sha256).toMatch(/^[0-9a-f]{64}$/);
         expect(fs.existsSync(path.join(RepositoryRoot, manifest.generator.sourcePatch.path))).toBe(true);
@@ -151,7 +159,11 @@ describe("generation.manifest.json provenance", () => {
             .toBe(manifest.generator.sourcePatch.sha256);
     });
 
-    it("should bind the generator patch to its recorded head and source paths", () => {
+    it("should bind a recorded generator patch to its head and source paths", () => {
+        if (manifest.generator.sourcePatch === undefined) {
+            return;
+        }
+
         const patchName = path.basename(manifest.generator.sourcePatch.path);
         const headPrefix = patchName.match(/^([0-9a-f]{7,40})-/)?.[1];
         expect(headPrefix).toBeDefined();
