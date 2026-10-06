@@ -444,7 +444,7 @@ export interface ListIssuesOptions extends ConnectorOperationOptions {
     jql?: string;
     /** The expand query parameter to consider. Default selects all. */
     expand?: string;
-    /** The fields query parameter to consider. Default selects all. */
+    /** Optional comma-separated list of Jira field IDs or keys to return, for example summary,status,attachment. For custom fields, use the field ID, such as customfield_10042. Also supports *all, *navigable, and exclusions such as *all,-attachment. If omitted, all fields are returned. */
     fields?: string;
     /** The token for the next page of results. Copy the 'nextPageToken' from a previous response here to fetch the next page. */
     nextPageToken?: string;
