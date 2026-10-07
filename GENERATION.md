@@ -114,6 +114,10 @@ snapshots record fixture provenance for tests. They are not refresh or review
 inputs. Generate and review from live metadata independently; do not introduce
 new cache folders, catalogs, or offline replay workflows for a client refresh.
 
+For paired generator/SDK PRs, publish the generated result from the linked active
+BPM PR and record its exact source commit and unmerged status. Upstream integration
+is a separate final merge gate, not a prerequisite for showing the paired output.
+
 ### Manifest schema
 
 | Field | Meaning |

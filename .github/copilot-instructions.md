@@ -299,6 +299,7 @@ test("methodName should return expected result when given valid input", async ()
 
 ## Generated Code Ownership — Critical
 
+- Paired generator/SDK PRs may publish output from the linked active BPM PR. Record its exact source commit and active/unmerged status. Showing the generated outcome does not wait for upstream merge; upstream integration remains a separate final SDK merge gate.
 - Refreshes follow [GENERATION.md](../GENERATION.md): fetch live definitions with an explicit subscription/region and a new empty temporary `ARMCACHE_PATH`. Reviewers make a separate live download; never seed either run from repository fixtures or producer responses.
 - Do not expand repository structure with caches, catalogs, or replay scaffolding unless explicitly requested. Existing Swagger snapshots are test fixtures, not refresh/review inputs. Remove temporary response stores after the run.
 - Capture known response data in semantic variables without redundant aliases or repeated conditions. Execute changed consumers with empty/nonempty results, and exercise actual continuation requests and termination, including an empty first page with a next link.
