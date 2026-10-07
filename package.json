@@ -44,7 +44,7 @@
         "azure",
         "cloud",
         "logic-apps",
-        "connector-namespaces"
+        "connector-namespaces",
         "connectors",
         "sdk",
         "typescript",
