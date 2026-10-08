@@ -245,27 +245,13 @@ export class EventbriteClient extends ConnectorClientBase {
      */
     public async createEvent(organizationId: string, eventNameHtml: string, eventDescriptionHtml: string, eventStartUtc: string, eventEndUtc: string, eventStartTimezone: string, eventEndTimezone: string, eventCurrency: string, options: CreateEventOptions = {}): Promise<CreateEventResponse> {
         const queryParams: string[] = [];
-        if (eventNameHtml !== undefined) {
-            queryParams.push(`event.name.html=${encodeURIComponent(String(eventNameHtml))}`);
-        }
-        if (eventDescriptionHtml !== undefined) {
-            queryParams.push(`event.description.html=${encodeURIComponent(String(eventDescriptionHtml))}`);
-        }
-        if (eventStartUtc !== undefined) {
-            queryParams.push(`event.start.utc=${encodeURIComponent(String(eventStartUtc))}`);
-        }
-        if (eventEndUtc !== undefined) {
-            queryParams.push(`event.end.utc=${encodeURIComponent(String(eventEndUtc))}`);
-        }
-        if (eventStartTimezone !== undefined) {
-            queryParams.push(`event.start.timezone=${encodeURIComponent(String(eventStartTimezone))}`);
-        }
-        if (eventEndTimezone !== undefined) {
-            queryParams.push(`event.end.timezone=${encodeURIComponent(String(eventEndTimezone))}`);
-        }
-        if (eventCurrency !== undefined) {
-            queryParams.push(`event.currency=${encodeURIComponent(String(eventCurrency))}`);
-        }
+        queryParams.push(`event.name.html=${encodeURIComponent(String(eventNameHtml))}`);
+        queryParams.push(`event.description.html=${encodeURIComponent(String(eventDescriptionHtml))}`);
+        queryParams.push(`event.start.utc=${encodeURIComponent(String(eventStartUtc))}`);
+        queryParams.push(`event.end.utc=${encodeURIComponent(String(eventEndUtc))}`);
+        queryParams.push(`event.start.timezone=${encodeURIComponent(String(eventStartTimezone))}`);
+        queryParams.push(`event.end.timezone=${encodeURIComponent(String(eventEndTimezone))}`);
+        queryParams.push(`event.currency=${encodeURIComponent(String(eventCurrency))}`);
         if (options.eventOrganizerId !== undefined) {
             queryParams.push(`event.organizer_id=${encodeURIComponent(String(options.eventOrganizerId))}`);
         }
@@ -315,9 +301,7 @@ export class EventbriteClient extends ConnectorClientBase {
      */
     public async updateEvent(id: string, organizationId: string, eventStartTimezone: string, eventEndTimezone: string, eventCurrency: string, options: UpdateEventOptions = {}): Promise<CreateEventResponse> {
         const queryParams: string[] = [];
-        if (organizationId !== undefined) {
-            queryParams.push(`organization_id=${encodeURIComponent(String(organizationId))}`);
-        }
+        queryParams.push(`organization_id=${encodeURIComponent(String(organizationId))}`);
         if (options.eventNameHtml !== undefined) {
             queryParams.push(`event.name.html=${encodeURIComponent(String(options.eventNameHtml))}`);
         }
@@ -330,15 +314,9 @@ export class EventbriteClient extends ConnectorClientBase {
         if (options.eventEndUtc !== undefined) {
             queryParams.push(`event.end.utc=${encodeURIComponent(String(options.eventEndUtc))}`);
         }
-        if (eventStartTimezone !== undefined) {
-            queryParams.push(`event.start.timezone=${encodeURIComponent(String(eventStartTimezone))}`);
-        }
-        if (eventEndTimezone !== undefined) {
-            queryParams.push(`event.end.timezone=${encodeURIComponent(String(eventEndTimezone))}`);
-        }
-        if (eventCurrency !== undefined) {
-            queryParams.push(`event.currency=${encodeURIComponent(String(eventCurrency))}`);
-        }
+        queryParams.push(`event.start.timezone=${encodeURIComponent(String(eventStartTimezone))}`);
+        queryParams.push(`event.end.timezone=${encodeURIComponent(String(eventEndTimezone))}`);
+        queryParams.push(`event.currency=${encodeURIComponent(String(eventCurrency))}`);
         if (options.eventOrganizerId !== undefined) {
             queryParams.push(`event.organizer_id=${encodeURIComponent(String(options.eventOrganizerId))}`);
         }

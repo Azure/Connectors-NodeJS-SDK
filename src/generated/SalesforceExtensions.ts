@@ -1168,9 +1168,7 @@ export class SalesforceClient extends ConnectorClientBase {
      */
     public async getJobRecordResults(jobId: string, resultType: string, options: ConnectorOperationOptions = {}): Promise<string> {
         const queryParams: string[] = [];
-        if (resultType !== undefined) {
-            queryParams.push(`resultType=${encodeURIComponent(String(resultType))}`);
-        }
+        queryParams.push(`resultType=${encodeURIComponent(String(resultType))}`);
         const requestPath = `/codeless/jobs/ingest/${encodeURIComponent(String(jobId))}/results` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.sendWithTracingAsync<string>("Salesforce.getJobRecordResults", "GetJobRecordResults", "GET", requestUrl, undefined, options);
@@ -1184,9 +1182,7 @@ export class SalesforceClient extends ConnectorClientBase {
      */
     public async executeSOSLQuery(q: string, options: ConnectorOperationOptions = {}): Promise<SOSLSearchQueryResponse> {
         const queryParams: string[] = [];
-        if (q !== undefined) {
-            queryParams.push(`q=${encodeURIComponent(String(q))}`);
-        }
+        queryParams.push(`q=${encodeURIComponent(String(q))}`);
         const requestPath = `/codeless/search` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.sendWithTracingAsync<SOSLSearchQueryResponse>("Salesforce.executeSOSLQuery", "ExecuteSOSLQuery", "GET", requestUrl, undefined, options);

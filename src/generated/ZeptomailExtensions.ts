@@ -209,9 +209,7 @@ export class ZeptomailClient extends ConnectorClientBase {
      */
     public async getProcessedEmails(mailagentKey: string, options: GetProcessedEmailsOptions = {}): Promise<GetProcessedEmailsResponse> {
         const queryParams: string[] = [];
-        if (mailagentKey !== undefined) {
-            queryParams.push(`mailagent_key=${encodeURIComponent(String(mailagentKey))}`);
-        }
+        queryParams.push(`mailagent_key=${encodeURIComponent(String(mailagentKey))}`);
         if (options.subject !== undefined) {
             queryParams.push(`subject=${encodeURIComponent(String(options.subject))}`);
         }
@@ -273,9 +271,7 @@ export class ZeptomailClient extends ConnectorClientBase {
      */
     public async processedMailStats(mailagent: string, options: ProcessedMailStatsOptions = {}): Promise<ProcessedMailStatsResponse> {
         const queryParams: string[] = [];
-        if (mailagent !== undefined) {
-            queryParams.push(`mailagent=${encodeURIComponent(String(mailagent))}`);
-        }
+        queryParams.push(`mailagent=${encodeURIComponent(String(mailagent))}`);
         if (options.fromTime !== undefined) {
             queryParams.push(`from_time=${encodeURIComponent(String(options.fromTime))}`);
         }

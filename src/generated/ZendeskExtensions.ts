@@ -412,9 +412,7 @@ export class ZendeskClient extends ConnectorClientBase {
      */
     public async searchArticles(query: string, options: SearchArticlesOptions = {}): Promise<SearchResult> {
         const queryParams: string[] = [];
-        if (query !== undefined) {
-            queryParams.push(`query=${encodeURIComponent(String(query))}`);
-        }
+        queryParams.push(`query=${encodeURIComponent(String(query))}`);
         if (options.locale !== undefined) {
             queryParams.push(`locale=${encodeURIComponent(String(options.locale))}`);
         }

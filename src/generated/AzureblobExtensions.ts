@@ -447,12 +447,8 @@ export class AzureblobClient extends ConnectorClientBase {
      */
     public async copyFile(dataset: string, source: string, destination: string, options: CopyFileOptions = {}): Promise<BlobMetadata> {
         const queryParams: string[] = [];
-        if (source !== undefined) {
-            queryParams.push(`source=${encodeURIComponent(String(source))}`);
-        }
-        if (destination !== undefined) {
-            queryParams.push(`destination=${encodeURIComponent(String(destination))}`);
-        }
+        queryParams.push(`source=${encodeURIComponent(String(source))}`);
+        queryParams.push(`destination=${encodeURIComponent(String(destination))}`);
         if (options.overwrite !== undefined) {
             queryParams.push(`overwrite=${encodeURIComponent(String(options.overwrite))}`);
         }
@@ -476,12 +472,8 @@ export class AzureblobClient extends ConnectorClientBase {
      */
     public async createBlockBlob(input: CreateBlockBlobInput, storageAccountName: string, folderPath: string, name: string, options: CreateBlockBlobOptions = {}): Promise<void> {
         const queryParams: string[] = [];
-        if (folderPath !== undefined) {
-            queryParams.push(`folderPath=${encodeURIComponent(String(folderPath))}`);
-        }
-        if (name !== undefined) {
-            queryParams.push(`name=${encodeURIComponent(String(name))}`);
-        }
+        queryParams.push(`folderPath=${encodeURIComponent(String(folderPath))}`);
+        queryParams.push(`name=${encodeURIComponent(String(name))}`);
         const requestPath = `/v2/codeless/datasets/${encodeURIComponent(String(storageAccountName))}/CreateBlockBlob` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestHeaders: Record<string, string> = {};
         if (options.contentType !== undefined) {
@@ -497,12 +489,8 @@ export class AzureblobClient extends ConnectorClientBase {
      */
     public async createFile(input: CreateFileInput, dataset: string, folderPath: string, name: string, options: CreateFileOptions = {}): Promise<BlobMetadata> {
         const queryParams: string[] = [];
-        if (folderPath !== undefined) {
-            queryParams.push(`folderPath=${encodeURIComponent(String(folderPath))}`);
-        }
-        if (name !== undefined) {
-            queryParams.push(`name=${encodeURIComponent(String(name))}`);
-        }
+        queryParams.push(`folderPath=${encodeURIComponent(String(folderPath))}`);
+        queryParams.push(`name=${encodeURIComponent(String(name))}`);
         if (options.queryParametersSingleEncoded !== undefined) {
             queryParams.push(`queryParametersSingleEncoded=${encodeURIComponent(String(options.queryParametersSingleEncoded))}`);
         }
@@ -526,9 +514,7 @@ export class AzureblobClient extends ConnectorClientBase {
      */
     public async createShareLinkByPath(input: SharedAccessSignatureBlobPolicy, storageAccountName: string, path: string, options: ConnectorOperationOptions = {}): Promise<SharedAccessSignature> {
         const queryParams: string[] = [];
-        if (path !== undefined) {
-            queryParams.push(`path=${encodeURIComponent(String(path))}`);
-        }
+        queryParams.push(`path=${encodeURIComponent(String(path))}`);
         const requestPath = `/v2/datasets/${encodeURIComponent(String(storageAccountName))}/CreateSharedLinkByPath` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.sendWithTracingAsync<SharedAccessSignature>("Azureblob.createShareLinkByPath", "CreateShareLinkByPath_V2", "POST", requestUrl, input, options);
@@ -556,12 +542,8 @@ export class AzureblobClient extends ConnectorClientBase {
      */
     public async extractFolder(dataset: string, source: string, destination: string, options: ExtractFolderOptions = {}): Promise<Array<BlobMetadata>> {
         const queryParams: string[] = [];
-        if (source !== undefined) {
-            queryParams.push(`source=${encodeURIComponent(String(source))}`);
-        }
-        if (destination !== undefined) {
-            queryParams.push(`destination=${encodeURIComponent(String(destination))}`);
-        }
+        queryParams.push(`source=${encodeURIComponent(String(source))}`);
+        queryParams.push(`destination=${encodeURIComponent(String(destination))}`);
         if (options.overwrite !== undefined) {
             queryParams.push(`overwrite=${encodeURIComponent(String(options.overwrite))}`);
         }
@@ -581,9 +563,7 @@ export class AzureblobClient extends ConnectorClientBase {
      */
     public async getAccessPolicies(storageAccountName: string, path: string, options: ConnectorOperationOptions = {}): Promise<Array<SharedAccessSignatureBlobPolicy>> {
         const queryParams: string[] = [];
-        if (path !== undefined) {
-            queryParams.push(`path=${encodeURIComponent(String(path))}`);
-        }
+        queryParams.push(`path=${encodeURIComponent(String(path))}`);
         const requestPath = `/v2/datasets/${encodeURIComponent(String(storageAccountName))}/policies` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.sendWithTracingAsync<Array<SharedAccessSignatureBlobPolicy>>("Azureblob.getAccessPolicies", "GetAccessPolicies_V2", "GET", requestUrl, undefined, options);
@@ -619,9 +599,7 @@ export class AzureblobClient extends ConnectorClientBase {
      */
     public async getFileContentByPath(dataset: string, path: string, options: GetFileContentByPathOptions = {}): Promise<Blob> {
         const queryParams: string[] = [];
-        if (path !== undefined) {
-            queryParams.push(`path=${encodeURIComponent(String(path))}`);
-        }
+        queryParams.push(`path=${encodeURIComponent(String(path))}`);
         if (options.inferContentType !== undefined) {
             queryParams.push(`inferContentType=${encodeURIComponent(String(options.inferContentType))}`);
         }
@@ -666,9 +644,7 @@ export class AzureblobClient extends ConnectorClientBase {
      */
     public async getFileMetadataByPath(dataset: string, path: string, options: GetFileMetadataByPathOptions = {}): Promise<DataWithSensitivityLabelInfo> {
         const queryParams: string[] = [];
-        if (path !== undefined) {
-            queryParams.push(`path=${encodeURIComponent(String(path))}`);
-        }
+        queryParams.push(`path=${encodeURIComponent(String(path))}`);
         if (options.queryParametersSingleEncoded !== undefined) {
             queryParams.push(`queryParametersSingleEncoded=${encodeURIComponent(String(options.queryParametersSingleEncoded))}`);
         }
@@ -749,12 +725,8 @@ export class AzureblobClient extends ConnectorClientBase {
      */
     public async setBlobTierByPath(storageAccountName: string, path: string, newTier: string, options: ConnectorOperationOptions = {}): Promise<void> {
         const queryParams: string[] = [];
-        if (path !== undefined) {
-            queryParams.push(`path=${encodeURIComponent(String(path))}`);
-        }
-        if (newTier !== undefined) {
-            queryParams.push(`newTier=${encodeURIComponent(String(newTier))}`);
-        }
+        queryParams.push(`path=${encodeURIComponent(String(path))}`);
+        queryParams.push(`newTier=${encodeURIComponent(String(newTier))}`);
         const requestPath = `/v2/datasets/${encodeURIComponent(String(storageAccountName))}/SetBlobTierByPath` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
         await this.sendWithTracingAsync<void>("Azureblob.setBlobTierByPath", "SetBlobTierByPath_V2", "POST", requestUrl, undefined, options);

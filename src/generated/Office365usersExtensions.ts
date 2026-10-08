@@ -514,9 +514,7 @@ export class Office365usersClient extends ConnectorClientBase {
      */
     public async userPhotoMetadata(userId: string, options: ConnectorOperationOptions = {}): Promise<ClientPhotoMetadata> {
         const queryParams: string[] = [];
-        if (userId !== undefined) {
-            queryParams.push(`userId=${encodeURIComponent(String(userId))}`);
-        }
+        queryParams.push(`userId=${encodeURIComponent(String(userId))}`);
         const requestPath = `/users/photo` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.sendWithTracingAsync<ClientPhotoMetadata>("Office365users.userPhotoMetadata", "UserPhotoMetadata", "GET", requestUrl, undefined, options);

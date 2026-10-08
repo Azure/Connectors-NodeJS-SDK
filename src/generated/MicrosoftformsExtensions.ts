@@ -106,9 +106,7 @@ export class MicrosoftformsClient extends ConnectorClientBase {
      */
     public async getFormResponseById(formId: string, responseId: number, options: ConnectorOperationOptions = {}): Promise<GetFormResponseByIdResult> {
         const queryParams: string[] = [];
-        if (responseId !== undefined) {
-            queryParams.push(`response_id=${encodeURIComponent(String(responseId))}`);
-        }
+        queryParams.push(`response_id=${encodeURIComponent(String(responseId))}`);
         const requestPath = `/formapi/api/forms('${encodeURIComponent(String(formId))}')/responses` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.sendWithTracingAsync<GetFormResponseByIdResult>("Microsoftforms.getFormResponseById", "GetFormResponseById", "GET", requestUrl, undefined, options);
@@ -122,9 +120,7 @@ export class MicrosoftformsClient extends ConnectorClientBase {
      */
     public async getFormDetailsById(formId: string, select: string, options: ConnectorOperationOptions = {}): Promise<GetFormDetailsByIdResult> {
         const queryParams: string[] = [];
-        if (select !== undefined) {
-            queryParams.push(`$select=${encodeURIComponent(String(select))}`);
-        }
+        queryParams.push(`$select=${encodeURIComponent(String(select))}`);
         const requestPath = `/formapi/api/forms('${encodeURIComponent(String(formId))}')` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.sendWithTracingAsync<GetFormDetailsByIdResult>("Microsoftforms.getFormDetailsById", "GetFormDetailsById", "GET", requestUrl, undefined, options);

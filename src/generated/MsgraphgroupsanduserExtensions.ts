@@ -227,9 +227,7 @@ export class MsgraphgroupsanduserClient extends ConnectorClientBase {
         if (options.search !== undefined) {
             queryParams.push(`$search=${encodeURIComponent(String(options.search))}`);
         }
-        if (count !== undefined) {
-            queryParams.push(`$count=${encodeURIComponent(String(count))}`);
-        }
+        queryParams.push(`$count=${encodeURIComponent(String(count))}`);
         const requestPath = `/v1.0/groups` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestHeaders: Record<string, string> = {};
         if (consistencyLevel !== undefined) {
@@ -277,9 +275,7 @@ export class MsgraphgroupsanduserClient extends ConnectorClientBase {
         if (options.select !== undefined) {
             queryParams.push(`$select=${encodeURIComponent(String(options.select))}`);
         }
-        if (count !== undefined) {
-            queryParams.push(`$count=${encodeURIComponent(String(count))}`);
-        }
+        queryParams.push(`$count=${encodeURIComponent(String(count))}`);
         const requestPath = `/v1.0/groups/${encodeURIComponent(String(groupId))}/members` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestHeaders: Record<string, string> = {};
         if (consistencyLevel !== undefined) {

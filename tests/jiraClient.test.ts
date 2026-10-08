@@ -74,6 +74,25 @@ describe("JiraClient — listIssues", () => {
         jest.restoreAllMocks();
     });
 
+    it.each([
+        [undefined, null],
+        ["summary,folder/a", "summary,folder/a"],
+        ["", ""],
+    ])("should preserve the optional fields query contract for %s", async (fields, expectedValue) => {
+        mockFetchResponse({});
+        const client = new JiraClient(TestConnectionUrl, createMockCredential());
+
+        await client.listIssues("jira.example.com", { fields }).byPage().next();
+
+        const requestUrl = new URL((global.fetch as jest.Mock).mock.calls[0][0]);
+        expect(requestUrl.searchParams.get("fields")).toBe(expectedValue);
+        expect(requestUrl.searchParams.has("fields")).toBe(fields !== undefined);
+        if (fields === "summary,folder/a") {
+            expect(requestUrl.search).toContain("fields=summary%2Cfolder%2Fa");
+        }
+        expect(requestUrl.searchParams.get("fields")).not.toBe("*all");
+    });
+
     it("should include jql query parameter when provided", async () => {
         const mockResponse: ListIssuesResponse = {};
         mockFetchResponse(mockResponse);

@@ -2906,9 +2906,7 @@ export class Office365Client extends ConnectorClientBase {
      */
     public async updateDraftEmail(input: DraftEmailInput, messageId: string, options: ConnectorOperationOptions = {}): Promise<void> {
         const queryParams: string[] = [];
-        if (messageId !== undefined) {
-            queryParams.push(`messageId=${encodeURIComponent(String(messageId))}`);
-        }
+        queryParams.push(`messageId=${encodeURIComponent(String(messageId))}`);
         const requestPath = `/Draft` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
         await this.sendWithTracingAsync<void>("Office365.updateDraftEmail", "UpdateDraftEmail", "PATCH", requestUrl, input, options);
@@ -2930,12 +2928,8 @@ export class Office365Client extends ConnectorClientBase {
      */
     public async assignCategory(messageId: string, category: string, options: ConnectorOperationOptions = {}): Promise<void> {
         const queryParams: string[] = [];
-        if (messageId !== undefined) {
-            queryParams.push(`messageId=${encodeURIComponent(String(messageId))}`);
-        }
-        if (category !== undefined) {
-            queryParams.push(`category=${encodeURIComponent(String(category))}`);
-        }
+        queryParams.push(`messageId=${encodeURIComponent(String(messageId))}`);
+        queryParams.push(`category=${encodeURIComponent(String(category))}`);
         const requestPath = `/Mail/Category` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
         await this.sendWithTracingAsync<void>("Office365.assignCategory", "AssignCategory", "POST", requestUrl, undefined, options);
@@ -3446,15 +3440,9 @@ export class Office365Client extends ConnectorClientBase {
      */
     public async getEventsCalendarView(calendarId: string, startDateTimeUtc: string, endDateTimeUtc: string, options: GetEventsCalendarViewOptions = {}): Promise<EntityListResponseGraphCalendarEventClientReceive> {
         const queryParams: string[] = [];
-        if (calendarId !== undefined) {
-            queryParams.push(`calendarId=${encodeURIComponent(String(calendarId))}`);
-        }
-        if (startDateTimeUtc !== undefined) {
-            queryParams.push(`startDateTimeUtc=${encodeURIComponent(String(startDateTimeUtc))}`);
-        }
-        if (endDateTimeUtc !== undefined) {
-            queryParams.push(`endDateTimeUtc=${encodeURIComponent(String(endDateTimeUtc))}`);
-        }
+        queryParams.push(`calendarId=${encodeURIComponent(String(calendarId))}`);
+        queryParams.push(`startDateTimeUtc=${encodeURIComponent(String(startDateTimeUtc))}`);
+        queryParams.push(`endDateTimeUtc=${encodeURIComponent(String(endDateTimeUtc))}`);
         if (options.filter !== undefined) {
             queryParams.push(`$filter=${encodeURIComponent(String(options.filter))}`);
         }
@@ -3545,9 +3533,7 @@ export class Office365Client extends ConnectorClientBase {
      */
     public async move(messageId: string, folderPath: string, options: MoveOptions = {}): Promise<GraphClientReceiveMessage> {
         const queryParams: string[] = [];
-        if (folderPath !== undefined) {
-            queryParams.push(`folderPath=${encodeURIComponent(String(folderPath))}`);
-        }
+        queryParams.push(`folderPath=${encodeURIComponent(String(folderPath))}`);
         if (options.mailboxAddress !== undefined) {
             queryParams.push(`mailboxAddress=${encodeURIComponent(String(options.mailboxAddress))}`);
         }

@@ -615,9 +615,7 @@ export class WebexClient extends ConnectorClientBase {
      */
     public async getMessages(roomId: string, options: GetMessagesOptions = {}): Promise<GetMessagesResponse> {
         const queryParams: string[] = [];
-        if (roomId !== undefined) {
-            queryParams.push(`roomId=${encodeURIComponent(String(roomId))}`);
-        }
+        queryParams.push(`roomId=${encodeURIComponent(String(roomId))}`);
         if (options.mentionedPeople !== undefined) {
             queryParams.push(`mentionedPeople=${encodeURIComponent(String(options.mentionedPeople))}`);
         }

@@ -299,11 +299,15 @@ test("methodName should return expected result when given valid input", async ()
 
 ## Generated Code Ownership — Critical
 
+- Paired generator/SDK PRs may publish output from the linked active BPM PR. Record its exact source commit and active/unmerged status. Showing the generated outcome does not wait for upstream merge; upstream integration remains a separate final SDK merge gate.
+- Refreshes follow [GENERATION.md](../GENERATION.md): fetch live definitions with an explicit subscription/region and a new empty temporary `ARMCACHE_PATH`. Reviewers make a separate live download; never seed either run from repository fixtures or producer responses.
+- Do not expand repository structure with caches, catalogs, or replay scaffolding unless explicitly requested. Existing Swagger snapshots are test fixtures, not refresh/review inputs. Remove temporary response stores after the run.
+- Capture known response data in semantic variables without redundant aliases or repeated conditions. Execute changed consumers with empty/nonempty results, and exercise actual continuation requests and termination, including an empty first page with a next link.
 - Everything under `src/generated/` is owned by the BPM `CodefulSdkGenerator`. Never hand-edit generated clients, registries, barrel exports, imports, method signatures, error handling, or formatting, even to fix a build, lint, merge, or review failure.
-- When a generated file fails after merging or rebasing `main`, first compare it with sibling generated files and the generator revision recorded in `generation.manifest.json`. Runtime contract changes such as renamed errors, response fields, method conventions, and options must be fixed in BPM when the current generator is wrong, then regenerated here from pinned Swagger.
+- When a generated file fails after merging or rebasing `main`, first compare it with sibling generated files and the generator revision recorded in `generation.manifest.json`. Runtime contract changes such as renamed errors, response fields, method conventions, and options must be fixed in BPM when the current generator is wrong, then regenerated here from fresh live Swagger.
 - Replace generated files only with generator output. Update `generation.manifest.json` with the actual generator composition, Swagger hash, and canonical output hash; do not make the manifest legitimize a manual generated-file edit.
 - Hand-authored tests, samples, documentation, and runtime infrastructure may be updated directly to consume a regenerated API.
-- If the BPM generator or pinned Swagger is unavailable, stop and report the blocker. Do not patch `src/generated/` as a fallback.
+- If the BPM generator or live Swagger is unavailable, stop and report the blocker. Do not patch `src/generated/` or fall back to cached inputs.
 
 ## Releasing a New Version
 
