@@ -109,10 +109,16 @@ byte-for-byte once either source changes, and a cross-language surface delta (fo
 example, an operation present in the .NET SDK but missing here) cannot be attributed to
 a specific cause — stale output, a newer Swagger snapshot, or a generator divergence.
 
-The existing [`generation.manifest.json`](generation.manifest.json) and Swagger
-snapshots record fixture provenance for tests. They are not refresh or review
-inputs. Generate and review from live metadata independently; do not introduce
-new cache folders, catalogs, or offline replay workflows for a client refresh.
+Schema v4 of [`generation.manifest.json`](generation.manifest.json) separates
+hashes of consumed live definitions from hashes of repository test fixtures.
+Fixtures are not refresh or review inputs. Generate and review from live metadata
+independently; do not introduce new cache folders, catalogs, or offline replay workflows.
+
+`swaggerInputSha256` identifies the actual definition consumed by the run.
+`swaggerFixtureSha256` identifies the existing test fixture, which may differ.
+Fixture hash checks do not establish fixture origin, live freshness, or generation
+input identity. No capture time is inferred for an old fixture. Because temporary
+responses are deleted, input hashes provide attribution, not a retained replay artifact.
 
 For paired generator/SDK PRs, publish the generated result from the linked active
 BPM PR and record its exact source commit and unmerged status. Upstream integration
@@ -122,8 +128,10 @@ is a separate final merge gate, not a prerequisite for showing the paired output
 
 | Field | Meaning |
 |-------|---------|
+| `manifestVersion` | `4`, separating live-input metadata from repository fixture hashes. |
 | `status` | `template` until a run records real values; `generated` for a captured run. |
-| `generatedAtUtc` | ISO 8601 UTC timestamp of the generation run. |
+| `captureStartedAtUtc` | Start of the complete live capture, before any request is made. |
+| `generatedAtUtc` | End of the complete generation run; not earlier than any input capture. |
 | `generator.bpmBaseCommit` | Immutable, reachable BPM commit SHA used as the generator source baseline. |
 | `generator.bpmHeadCommit` | Immutable BPM commit whose generator tree the base-plus-patch composition must reproduce. |
 | `generator.bpmBranch` | BPM branch the commit was on (informational). |
@@ -133,10 +141,10 @@ is a separate final merge gate, not a prerequisite for showing the paired output
 | `swaggerSource.subscriptionId` | Azure subscription whose regional managed-connector metadata was read (`AZURE_SUBSCRIPTION_ID`). |
 | `swaggerSource.location` | Azure region whose `managedApis` endpoint was read (`AZURE_LOCATION`). |
 | `swaggerSource.apiVersion` | Managed-connector API version used to read metadata. |
-| `swaggerSource.capturedAtUtc` | UTC time the Swagger snapshots were pulled. |
-| `swaggerSource.swaggerCacheDirectory` | Directory holding the content-addressed Swagger snapshots. |
-| `connectors[].swaggerSnapshot` | Path to the persisted Swagger the run consumed for that connector. |
-| `connectors[].swaggerSha256` | SHA-256 of the snapshot as UTF-8 text with CRLF normalized to LF, so provenance is platform-independent. |
+| `connectors[].swaggerInputSha256` | SHA-256 of the freshly fetched definition actually consumed, as canonical UTF-8/LF text. |
+| `connectors[].capturedAtUtc` | Actual live response time, bounded by this run's capture start and generation end. |
+| `connectors[].swaggerFixture` | Repository-relative test fixture path; not a claimed generation input. |
+| `connectors[].swaggerFixtureSha256` | Canonical SHA-256 of that fixture, independent of the live-input hash. |
 | `connectors[].outputSha256` | SHA-256 of the generated `outputFile` as UTF-8 text with CRLF normalized to LF, so provenance is platform-independent. |
 | `connectors[].generatorCommit` | Optional immutable BPM baseline used instead of `generator.bpmBaseCommit` for one connector; requires `sourcePatch`. |
 | `connectors[].sourcePatch.path` | Repository-relative patch required with a connector-specific `generatorCommit`. |
@@ -144,9 +152,15 @@ is a separate final merge gate, not a prerequisite for showing the paired output
 
 ### Recording provenance for a run
 
-After live generation with the complete connector set, populate the existing
-manifest from the repo root. Update an existing test fixture from the live response
-when its tested contract changes, but do not use fixtures as generation inputs:
+The recipe below generates the complete manifest allowlist and populates provenance
+from the actual live responses. Partial runs must not relabel untouched entries as
+fresh captures. Update a fixture only when its tested contract changes; its hash is
+not substituted for a missing live-input hash. Use PowerShell 7.5 or later so
+`ConvertFrom-Json -DateKind String` preserves canonical timestamp strings.
+
+This recipe expects a schema-v4 manifest. Legacy `swaggerSnapshot` and
+`swaggerSha256` fields migrate to fixture fields, not live-input provenance;
+new input hashes and capture times must come from a fresh complete run.
 
 For a merged generator revision, omit `generator.sourcePatch` and use equal base/head
 commits. Detached checkouts are supported. When a patch is present, capture its source
@@ -155,19 +169,27 @@ identity before checking out the baseline and verify the composed tree before bu
 ```powershell
 $bpmRepoRoot = "<BPM-repo-root>"
 $sdkRepoRoot = (Get-Location).Path
-$manifest = Get-Content generation.manifest.json -Raw | ConvertFrom-Json
+$manifest = Get-Content generation.manifest.json -Raw | ConvertFrom-Json -DateKind String
 $sourceHeadCommit = (git -C $bpmRepoRoot rev-parse HEAD)
 $sourceBranch = (git -C $bpmRepoRoot branch --show-current)
 if ($manifest.generator.sourcePatch -and [string]::IsNullOrWhiteSpace($sourceBranch)) {
   throw "The BPM source must be on the branch used for generation before provenance replay."
 }
 
-git -C $bpmRepoRoot checkout $manifest.generator.bpmBaseCommit
 if ($manifest.generator.sourcePatch) {
+  git -C $bpmRepoRoot checkout $manifest.generator.bpmBaseCommit
   git -C $bpmRepoRoot apply --index --unidiff-zero (Join-Path $sdkRepoRoot $manifest.generator.sourcePatch.path)
+  if ($LASTEXITCODE -ne 0) { throw "Generator source patch could not be applied." }
+}
+else {
+  git -C $bpmRepoRoot checkout $sourceHeadCommit
+  if ($LASTEXITCODE -ne 0) { throw "The captured generator revision could not be checked out." }
+  $manifest.generator.bpmBaseCommit = $sourceHeadCommit
 }
 git -C $bpmRepoRoot diff --exit-code --cached $sourceHeadCommit -- src/tools/CodefulSdkGenerator src/tools/CodefulSdkGenerator.Tests
+if ($LASTEXITCODE -ne 0) { throw "Staged generator source differs from the captured revision." }
 git -C $bpmRepoRoot diff --exit-code -- src/tools/CodefulSdkGenerator src/tools/CodefulSdkGenerator.Tests
+if ($LASTEXITCODE -ne 0) { throw "Unstaged generator changes remain." }
 ```
 
 Both final commands must report no differences. `--index` is required so added and
@@ -175,7 +197,8 @@ deleted files participate in the comparison with `bpmHeadCommit`. When a connect
 records `generatorCommit`, it must also record `sourcePatch`; replay that composition
 with the same indexed apply and cached/unstaged checks before regenerating the connector.
 Continue in the same PowerShell session when recording the manifest so the source identity
-captured before checkout is retained.
+captured before checkout is retained. Rebuild the CLI in Release configuration from
+that verified composition before continuing. Do not rely on an existing binary.
 
 ```powershell
 function Get-CanonicalTextSha256 {
@@ -194,40 +217,59 @@ function Get-CanonicalTextSha256 {
 }
 
 $manifest.status = "generated"
-$manifest.generatedAtUtc = [DateTime]::UtcNow.ToString("yyyy-MM-ddTHH:mm:ssZ")
+$manifest.manifestVersion = 4
 $manifest.generator.bpmHeadCommit = $sourceHeadCommit
 $manifest.generator.bpmBranch = $sourceBranch
 if ($manifest.generator.sourcePatch) {
   $manifest.generator.sourcePatch.sha256 = Get-CanonicalTextSha256 -Path $manifest.generator.sourcePatch.path
 }
 
-$dll = Join-Path $bpmRepoRoot "src/tools/CodefulSdkGenerator/bin/Release/Microsoft.Azure.Workflows.CodefulSdkGenerator.dll"
+$dll = Join-Path $bpmRepoRoot "src/tools/CodefulSdkGenerator/LogicAppsCompiler.Cli/bin/Release/LogicAppsCompiler.dll"
 if (-not (Test-Path $dll)) {
   throw "Generator assembly '$dll' was not found. Build the Release configuration before recording provenance."
 }
 
 $manifest.generator.assemblyVersion = (Get-Item $dll).VersionInfo.FileVersion
 
-$manifest.swaggerSource.subscriptionId = if ($env:AZURE_SUBSCRIPTION_ID) { $env:AZURE_SUBSCRIPTION_ID } else { "f34b22a3-2202-4fb1-b040-1332bd928c84" }
-$manifest.swaggerSource.location = if ($env:AZURE_LOCATION) { $env:AZURE_LOCATION } else { "westus" }
-$manifest.swaggerSource.capturedAtUtc = $manifest.generatedAtUtc
-foreach ($connector in $manifest.connectors) {
-    if (Test-Path $connector.swaggerSnapshot) {
-        $connector.swaggerSha256 = Get-CanonicalTextSha256 -Path $connector.swaggerSnapshot
-    }
-
-    if (Test-Path $connector.outputFile) {
+if (-not $env:AZURE_SUBSCRIPTION_ID -or -not $env:AZURE_LOCATION) {
+  throw "Set an explicit live subscription and region before generation."
+}
+$manifest.swaggerSource.subscriptionId = $env:AZURE_SUBSCRIPTION_ID
+$manifest.swaggerSource.location = $env:AZURE_LOCATION
+$previousCachePath = $env:ARMCACHE_PATH
+$liveCachePath = Join-Path $env:TEMP ("connector-live-" + [guid]::NewGuid())
+$outputDirectory = Join-Path $sdkRepoRoot "src/generated"
+New-Item -ItemType Directory -Path $liveCachePath, $outputDirectory -Force | Out-Null
+try {
+  $env:ARMCACHE_PATH = $liveCachePath
+  $manifest.captureStartedAtUtc = [DateTime]::UtcNow.ToString("yyyy-MM-ddTHH:mm:ss.fffZ")
+  $generationOutput = dotnet $dll $outputDirectory --directClient --language=typescript ("--connectors=" + ($manifest.connectors.apiName -join ","))
+  if ($LASTEXITCODE -ne 0 -or $generationOutput -match "' failed:") {
+    throw "One or more connectors failed generation."
+  }
+  foreach ($connector in $manifest.connectors) {
+    $url = "https://management.azure.com/subscriptions/$env:AZURE_SUBSCRIPTION_ID/providers/Microsoft.Web/locations/$env:AZURE_LOCATION/managedApis/$($connector.apiName)?api-version=$($manifest.swaggerSource.apiVersion)&export=true"
+    $key = [Convert]::ToHexString([Security.Cryptography.SHA1]::HashData([Text.Encoding]::UTF8.GetBytes($url)))
+    $responsePath = Join-Path $liveCachePath $key
+    if (-not (Test-Path $responsePath)) { throw "A consumed live definition is missing." }
+    $connector.swaggerInputSha256 = Get-CanonicalTextSha256 -Path $responsePath
+    $connector.capturedAtUtc = (Get-Item $responsePath).LastWriteTimeUtc.ToString("yyyy-MM-ddTHH:mm:ss.fffZ")
+    $connector.swaggerFixtureSha256 = Get-CanonicalTextSha256 -Path $connector.swaggerFixture
         $connector.outputSha256 = Get-CanonicalTextSha256 -Path $connector.outputFile
     }
+  $manifest.generatedAtUtc = [DateTime]::UtcNow.ToString("yyyy-MM-ddTHH:mm:ss.fffZ")
+  $manifest | ConvertTo-Json -Depth 12 | Set-Content generation.manifest.json -Encoding utf8
 }
-
-$manifest | ConvertTo-Json -Depth 6 | Set-Content generation.manifest.json -Encoding utf8
+finally {
+  $env:ARMCACHE_PATH = $previousCachePath
+  Remove-Item $liveCachePath -Recurse -Force
+}
 ```
 
 ### Rules
 
 - **Commit `generation.manifest.json` in the same PR as the regenerated clients.** A
-  regeneration PR without an updated manifest is not reviewable for reproducibility.
+  regeneration PR must identify the exact generator and consumed live-input hashes.
 - Existing Swagger snapshots are **test fixtures**, not an input cache for refreshes
   or reviews. Reviewers independently fetch live metadata to detect stale output.
 - **Do not hand-edit** the manifest's generated values; let the tooling write them so
@@ -235,8 +277,9 @@ $manifest | ConvertTo-Json -Depth 6 | Set-Content generation.manifest.json -Enco
 - **The `tests/generationManifest.test.ts` guard runs in CI** and fails the build unless
   `status` is `generated`, the base/head/assembly source composition and any declared
   hashed patch are populated consistently, connector-specific commits have their own patch, and every
-  `connectors[].swaggerSha256` and `connectors[].outputSha256` matches the SHA-256 of
-  its committed `swagger-cache/` snapshot and canonical UTF-8/LF generated output.
+  live-input hash/capture timestamp is present and bounded by the generation window.
+  Fixture and output hashes are independently checked against repository files;
+  `swaggerFixtureSha256` is never presented as the live definition consumed.
   Regenerate rather than hand-editing so the guard stays green.
 
 ## Post-Generation Validation

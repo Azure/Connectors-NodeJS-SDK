@@ -18,8 +18,10 @@ const GenerationGuidePath = path.join(RepositoryRoot, "GENERATION.md");
 interface ManifestConnectorEntry {
     apiName: string;
     outputFile: string;
-    swaggerSnapshot: string;
-    swaggerSha256: string;
+    swaggerFixture: string;
+    swaggerFixtureSha256: string;
+    swaggerInputSha256: string;
+    capturedAtUtc: string;
     outputSha256: string;
     generatorCommit?: string;
     sourcePatch?: {
@@ -52,6 +54,8 @@ interface SwaggerTriggerRoute {
 interface GenerationManifest {
     manifestVersion: number;
     status: string;
+    captureStartedAtUtc: string;
+    generatedAtUtc: string;
     generator: {
         bpmBaseCommit: string | null;
         bpmHeadCommit: string | null;
@@ -85,6 +89,36 @@ function computeCanonicalTextSha256(relativePath: string): string {
     return createHash("sha256")
         .update(canonicalContent, "utf8")
         .digest("hex");
+}
+
+/**
+ * Parses a canonical UTC timestamp without accepting normalized invalid calendar dates.
+ */
+function parseUtcTimestamp(value: unknown): number {
+    if (typeof value !== "string" ||
+        !/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{3}Z$/.test(value)) {
+        throw new Error("Manifest timestamps must use canonical UTC ISO 8601 with millisecond precision.");
+    }
+
+    const timestamp = Date.parse(value);
+    if (!Number.isFinite(timestamp) || new Date(timestamp).toISOString() !== value) {
+        throw new Error("Manifest timestamp contains an invalid calendar date.");
+    }
+
+    return timestamp;
+}
+
+/**
+ * Requires an actual input capture to fall within this complete live generation run.
+ */
+function validateCaptureWindow(start: unknown, end: unknown, captured: unknown): void {
+    const startedAt = parseUtcTimestamp(start);
+    const generatedAt = parseUtcTimestamp(end);
+    const capturedAt = parseUtcTimestamp(captured);
+    if (startedAt > generatedAt || generatedAt > Date.now() ||
+        capturedAt < startedAt || capturedAt > generatedAt) {
+        throw new Error("Connector input capture must fall within the nonfuture generation window.");
+    }
 }
 
 /**
@@ -130,7 +164,46 @@ describe("generation.manifest.json provenance", () => {
     });
 
     it("should use the verified source-composition manifest schema", () => {
-        expect(manifest.manifestVersion).toBe(3);
+        expect(manifest.manifestVersion).toBe(4);
+    });
+
+    it.each(manifest.connectors)("should record bounded live input capture metadata for $apiName", connector => {
+        expect(connector.swaggerInputSha256).toMatch(/^[0-9a-f]{64}$/);
+        validateCaptureWindow(manifest.captureStartedAtUtc, manifest.generatedAtUtc, connector.capturedAtUtc);
+        expect(connector).not.toHaveProperty("swaggerSnapshot");
+        expect(connector).not.toHaveProperty("swaggerSha256");
+    });
+
+    it.each([
+        "", null, "not-a-date", "2026-02-30T10:00:00.000Z",
+        "2026-01-01T10:00:00.000+01:00", "2026-01-01T10:00:00Z",
+    ])("should reject invalid UTC timestamps: %s", value => {
+        expect(() => parseUtcTimestamp(value)).toThrow();
+    });
+
+    it.each([
+        "2026-01-01T09:59:59.999Z", "2026-01-01T10:10:00.001Z",
+    ])("should reject stale or later-than-generation captures: %s", captured => {
+        expect(() => validateCaptureWindow(
+            "2026-01-01T10:00:00.000Z", "2026-01-01T10:10:00.000Z", captured,
+        )).toThrow();
+    });
+
+    it("should accept valid capture boundaries", () => {
+        for (const captured of ["2026-01-01T10:00:00.000Z", "2026-01-01T10:10:00.000Z"]) {
+            expect(() => validateCaptureWindow(
+                "2026-01-01T10:00:00.000Z", "2026-01-01T10:10:00.000Z", captured,
+            )).not.toThrow();
+        }
+    });
+
+    it("should reject future and reversed generation windows", () => {
+        const future = new Date(Date.now() + 60000).toISOString();
+        expect(() => validateCaptureWindow(future, future, future)).toThrow();
+        expect(() => validateCaptureWindow(
+            "2026-01-01T10:10:00.000Z", "2026-01-01T10:00:00.000Z",
+            "2026-01-01T10:05:00.000Z",
+        )).toThrow();
     });
 
     it("should record BPM generator base and head commits matching the composition", () => {
@@ -218,6 +291,8 @@ describe("generation.manifest.json provenance", () => {
         expect(baseCheckoutIndex).toBeGreaterThan(branchCaptureIndex);
         expect(generationGuide).toContain("$manifest.generator.bpmHeadCommit = $sourceHeadCommit");
         expect(generationGuide).toContain("$manifest.generator.bpmBranch = $sourceBranch");
+        expect(generationGuide).toContain("git -C $bpmRepoRoot checkout $sourceHeadCommit");
+        expect(generationGuide).toContain("$manifest.generator.bpmBaseCommit = $sourceHeadCommit");
         expect(generationGuide).not.toContain("$manifest.generator.bpmHeadCommit = (git -C $bpmRepoRoot rev-parse HEAD)");
     });
 
@@ -230,11 +305,11 @@ describe("generation.manifest.json provenance", () => {
     );
 
     it.each(connectorCases)(
-        "should match the committed swagger snapshot hash for '%s'",
+        "should match the committed swagger test fixture hash for '%s'",
         (_apiName: string, connector: ManifestConnectorEntry) => {
-            expect(fs.existsSync(path.join(RepositoryRoot, connector.swaggerSnapshot))).toBe(true);
+            expect(fs.existsSync(path.join(RepositoryRoot, connector.swaggerFixture))).toBe(true);
             expect(fs.existsSync(path.join(RepositoryRoot, connector.outputFile))).toBe(true);
-            expect(computeCanonicalTextSha256(connector.swaggerSnapshot)).toBe(connector.swaggerSha256);
+            expect(computeCanonicalTextSha256(connector.swaggerFixture)).toBe(connector.swaggerFixtureSha256);
         },
     );
 
@@ -295,7 +370,7 @@ describe("generation.manifest.json provenance", () => {
                 throw new Error(`Connector '${droppedRoute.connector}' is missing from the generation manifest.`);
             }
 
-            const triggerRoutes = loadSwaggerTriggerRoutes(connector.swaggerSnapshot);
+            const triggerRoutes = loadSwaggerTriggerRoutes(connector.swaggerFixture);
             const droppedMatches = triggerRoutes.filter(
                 triggerRoute => triggerRoute.operationId === droppedRoute.droppedOperationId,
             );
