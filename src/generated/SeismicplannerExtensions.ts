@@ -1183,9 +1183,7 @@ export class SeismicplannerClient extends ConnectorClientBase {
      */
     public async deleteProjects(spaceId: string, ids: Array<string>, options: DeleteProjectsOptions = {}): Promise<AsyncOperationResponse> {
         const queryParams: string[] = [];
-        if (ids !== undefined) {
-            queryParams.push(`ids=${encodeURIComponent(String(ids))}`);
-        }
+        queryParams.push(`ids=${encodeURIComponent(String(ids))}`);
         if (options.deleteTasks !== undefined) {
             queryParams.push(`deleteTasks=${encodeURIComponent(String(options.deleteTasks))}`);
         }

@@ -2956,9 +2956,7 @@ export class ImpexiumClient extends ConnectorClientBase {
      */
     public async getAbandonedCheckouts(pageNumber: number, abandonedFrom: string, contentType: string, options: GetAbandonedCheckoutsOptions = {}): Promise<GetAbandonedCheckoutsResponse> {
         const queryParams: string[] = [];
-        if (abandonedFrom !== undefined) {
-            queryParams.push(`abandonedFrom=${encodeURIComponent(String(abandonedFrom))}`);
-        }
+        queryParams.push(`abandonedFrom=${encodeURIComponent(String(abandonedFrom))}`);
         if (options.productCode !== undefined) {
             queryParams.push(`productCode=${encodeURIComponent(String(options.productCode))}`);
         }
@@ -4509,9 +4507,7 @@ export class ImpexiumClient extends ConnectorClientBase {
      */
     public async findIndividualIdOrEmail(idOrRecordNumberOrEmail: string, pageNumber: number, includeDetails: boolean, contentType: string, options: ConnectorOperationOptions = {}): Promise<FindIndividualIdOrEmailResponse> {
         const queryParams: string[] = [];
-        if (includeDetails !== undefined) {
-            queryParams.push(`IncludeDetails=${encodeURIComponent(String(includeDetails))}`);
-        }
+        queryParams.push(`IncludeDetails=${encodeURIComponent(String(includeDetails))}`);
         const requestPath = `/api/v1/Individuals/Profile/${encodeURIComponent(String(idOrRecordNumberOrEmail))}/${encodeURIComponent(String(pageNumber))}/` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestHeaders: Record<string, string> = {};
         if (contentType !== undefined) {
@@ -4571,12 +4567,8 @@ export class ImpexiumClient extends ConnectorClientBase {
      */
     public async individualsLookupByName(pageNumber: number, name: string, includeOrgAddresses: boolean, contentType: string, options: ConnectorOperationOptions = {}): Promise<IndividualsLookupByNameResponse> {
         const queryParams: string[] = [];
-        if (name !== undefined) {
-            queryParams.push(`name=${encodeURIComponent(String(name))}`);
-        }
-        if (includeOrgAddresses !== undefined) {
-            queryParams.push(`includeOrgAddresses=${encodeURIComponent(String(includeOrgAddresses))}`);
-        }
+        queryParams.push(`name=${encodeURIComponent(String(name))}`);
+        queryParams.push(`includeOrgAddresses=${encodeURIComponent(String(includeOrgAddresses))}`);
         const requestPath = `/api/v1/Individuals/Lookup/${encodeURIComponent(String(pageNumber))}` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestHeaders: Record<string, string> = {};
         if (contentType !== undefined) {
@@ -4656,9 +4648,7 @@ export class ImpexiumClient extends ConnectorClientBase {
      */
     public async getOrganizationProfile(idOrRecordnumber: string, pageNumber: number, includeDescription: boolean, contentType: string, options: ConnectorOperationOptions = {}): Promise<OrganizationData> {
         const queryParams: string[] = [];
-        if (includeDescription !== undefined) {
-            queryParams.push(`includeDescription=${encodeURIComponent(String(includeDescription))}`);
-        }
+        queryParams.push(`includeDescription=${encodeURIComponent(String(includeDescription))}`);
         const requestPath = `/api/v1/Organizations/Profile/${encodeURIComponent(String(idOrRecordnumber))}/${encodeURIComponent(String(pageNumber))}` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestHeaders: Record<string, string> = {};
         if (contentType !== undefined) {
@@ -4690,12 +4680,8 @@ export class ImpexiumClient extends ConnectorClientBase {
      */
     public async organizationLookupByName(pageNumber: number, name: string, includeAddresses: boolean, contentType: string, options: ConnectorOperationOptions = {}): Promise<OrganizationLookupByNameResponse> {
         const queryParams: string[] = [];
-        if (name !== undefined) {
-            queryParams.push(`name=${encodeURIComponent(String(name))}`);
-        }
-        if (includeAddresses !== undefined) {
-            queryParams.push(`includeAddresses=${encodeURIComponent(String(includeAddresses))}`);
-        }
+        queryParams.push(`name=${encodeURIComponent(String(name))}`);
+        queryParams.push(`includeAddresses=${encodeURIComponent(String(includeAddresses))}`);
         const requestPath = `/api/v1/Organizations/Lookup/${encodeURIComponent(String(pageNumber))}` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestHeaders: Record<string, string> = {};
         if (contentType !== undefined) {
@@ -4822,18 +4808,10 @@ export class ImpexiumClient extends ConnectorClientBase {
      */
     public async findCustomerPhone(pageNumber: string, phoneNumber: string, includeAddress: boolean, includePhone: boolean, includeEmail: boolean, contentType: string, options: ConnectorOperationOptions = {}): Promise<FindCustomerPhoneResponse> {
         const queryParams: string[] = [];
-        if (phoneNumber !== undefined) {
-            queryParams.push(`phoneNumber=${encodeURIComponent(String(phoneNumber))}`);
-        }
-        if (includeAddress !== undefined) {
-            queryParams.push(`includeAddress=${encodeURIComponent(String(includeAddress))}`);
-        }
-        if (includePhone !== undefined) {
-            queryParams.push(`includePhone=${encodeURIComponent(String(includePhone))}`);
-        }
-        if (includeEmail !== undefined) {
-            queryParams.push(`includeEmail=${encodeURIComponent(String(includeEmail))}`);
-        }
+        queryParams.push(`phoneNumber=${encodeURIComponent(String(phoneNumber))}`);
+        queryParams.push(`includeAddress=${encodeURIComponent(String(includeAddress))}`);
+        queryParams.push(`includePhone=${encodeURIComponent(String(includePhone))}`);
+        queryParams.push(`includeEmail=${encodeURIComponent(String(includeEmail))}`);
         const requestPath = `/api/v1/Customers/${encodeURIComponent(String(pageNumber))}` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestHeaders: Record<string, string> = {};
         if (contentType !== undefined) {
@@ -4893,9 +4871,7 @@ export class ImpexiumClient extends ConnectorClientBase {
      */
     public getAwardIndividualAwardRecipients(pageNumber: number, id: string, includeDetails: boolean, contentType: string, options: ConnectorOperationOptions = {}): ConnectorPagedAsyncIterableIterator<AwardRecipientIndividualData> {
         const queryParams: string[] = [];
-        if (includeDetails !== undefined) {
-            queryParams.push(`includeDetails=${encodeURIComponent(String(includeDetails))}`);
-        }
+        queryParams.push(`includeDetails=${encodeURIComponent(String(includeDetails))}`);
         const requestPath = `/api/v1/Awards/${encodeURIComponent(String(id))}/Recipients/Individuals/${encodeURIComponent(String(pageNumber))}` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestHeaders: Record<string, string> = {};
         if (contentType !== undefined) {
@@ -4919,9 +4895,7 @@ export class ImpexiumClient extends ConnectorClientBase {
      */
     public getAwardOrganizationAwardRecipients(pageNumber: number, id: string, includeDetails: boolean, contentType: string, options: ConnectorOperationOptions = {}): ConnectorPagedAsyncIterableIterator<AwardRecipientOrganizationData> {
         const queryParams: string[] = [];
-        if (includeDetails !== undefined) {
-            queryParams.push(`includeDetails=${encodeURIComponent(String(includeDetails))}`);
-        }
+        queryParams.push(`includeDetails=${encodeURIComponent(String(includeDetails))}`);
         const requestPath = `/api/v1/Awards/${encodeURIComponent(String(id))}/Recipients/Organizations/${encodeURIComponent(String(pageNumber))}` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestHeaders: Record<string, string> = {};
         if (contentType !== undefined) {

@@ -290,9 +290,7 @@ export class TwitterClient extends ConnectorClientBase {
      */
     public async userTimeline(userName: string, options: UserTimelineOptions = {}): Promise<Array<TweetModel>> {
         const queryParams: string[] = [];
-        if (userName !== undefined) {
-            queryParams.push(`userName=${encodeURIComponent(String(userName))}`);
-        }
+        queryParams.push(`userName=${encodeURIComponent(String(userName))}`);
         if (options.maxResults !== undefined) {
             queryParams.push(`maxResults=${encodeURIComponent(String(options.maxResults))}`);
         }
@@ -325,9 +323,7 @@ export class TwitterClient extends ConnectorClientBase {
      */
     public async searchTweet(searchQuery: string, options: SearchTweetOptions = {}): Promise<Array<TweetModel>> {
         const queryParams: string[] = [];
-        if (searchQuery !== undefined) {
-            queryParams.push(`searchQuery=${encodeURIComponent(String(searchQuery))}`);
-        }
+        queryParams.push(`searchQuery=${encodeURIComponent(String(searchQuery))}`);
         if (options.maxResults !== undefined) {
             queryParams.push(`maxResults=${encodeURIComponent(String(options.maxResults))}`);
         }
@@ -347,9 +343,7 @@ export class TwitterClient extends ConnectorClientBase {
      */
     public async followers(userName: string, options: FollowersOptions = {}): Promise<Array<UserDetailsModel>> {
         const queryParams: string[] = [];
-        if (userName !== undefined) {
-            queryParams.push(`userName=${encodeURIComponent(String(userName))}`);
-        }
+        queryParams.push(`userName=${encodeURIComponent(String(userName))}`);
         if (options.maxResults !== undefined) {
             queryParams.push(`maxResults=${encodeURIComponent(String(options.maxResults))}`);
         }
@@ -382,9 +376,7 @@ export class TwitterClient extends ConnectorClientBase {
      */
     public async following(userName: string, options: FollowingOptions = {}): Promise<Array<UserDetailsModel>> {
         const queryParams: string[] = [];
-        if (userName !== undefined) {
-            queryParams.push(`userName=${encodeURIComponent(String(userName))}`);
-        }
+        queryParams.push(`userName=${encodeURIComponent(String(userName))}`);
         if (options.maxResults !== undefined) {
             queryParams.push(`maxResults=${encodeURIComponent(String(options.maxResults))}`);
         }
@@ -417,9 +409,7 @@ export class TwitterClient extends ConnectorClientBase {
      */
     public async user(userName: string, options: ConnectorOperationOptions = {}): Promise<UserDetailsModel> {
         const queryParams: string[] = [];
-        if (userName !== undefined) {
-            queryParams.push(`userName=${encodeURIComponent(String(userName))}`);
-        }
+        queryParams.push(`userName=${encodeURIComponent(String(userName))}`);
         const requestPath = `/user` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.sendWithTracingAsync<UserDetailsModel>("Twitter.user", "User", "GET", requestUrl, undefined, options);
@@ -449,9 +439,7 @@ export class TwitterClient extends ConnectorClientBase {
      */
     public async retweet(tweetId: string, options: RetweetOptions = {}): Promise<TweetResponseModel> {
         const queryParams: string[] = [];
-        if (tweetId !== undefined) {
-            queryParams.push(`tweetId=${encodeURIComponent(String(tweetId))}`);
-        }
+        queryParams.push(`tweetId=${encodeURIComponent(String(tweetId))}`);
         if (options.trimUser !== undefined) {
             queryParams.push(`trimUser=${encodeURIComponent(String(options.trimUser))}`);
         }

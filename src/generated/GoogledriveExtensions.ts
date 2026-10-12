@@ -346,9 +346,7 @@ export class GoogledriveClient extends ConnectorClientBase {
      */
     public async getFileMetadataByPath(path: string, options: GetFileMetadataByPathOptions = {}): Promise<BlobMetadata> {
         const queryParams: string[] = [];
-        if (path !== undefined) {
-            queryParams.push(`path=${encodeURIComponent(String(path))}`);
-        }
+        queryParams.push(`path=${encodeURIComponent(String(path))}`);
         if (options.queryParametersSingleEncoded !== undefined) {
             queryParams.push(`queryParametersSingleEncoded=${encodeURIComponent(String(options.queryParametersSingleEncoded))}`);
         }
@@ -365,9 +363,7 @@ export class GoogledriveClient extends ConnectorClientBase {
      */
     public async getFileContentByPath(path: string, options: GetFileContentByPathOptions = {}): Promise<Blob> {
         const queryParams: string[] = [];
-        if (path !== undefined) {
-            queryParams.push(`path=${encodeURIComponent(String(path))}`);
-        }
+        queryParams.push(`path=${encodeURIComponent(String(path))}`);
         if (options.inferContentType !== undefined) {
             queryParams.push(`inferContentType=${encodeURIComponent(String(options.inferContentType))}`);
         }
@@ -403,12 +399,8 @@ export class GoogledriveClient extends ConnectorClientBase {
      */
     public async copyFile(source: string, destination: string, options: CopyFileOptions = {}): Promise<BlobMetadata> {
         const queryParams: string[] = [];
-        if (source !== undefined) {
-            queryParams.push(`source=${encodeURIComponent(String(source))}`);
-        }
-        if (destination !== undefined) {
-            queryParams.push(`destination=${encodeURIComponent(String(destination))}`);
-        }
+        queryParams.push(`source=${encodeURIComponent(String(source))}`);
+        queryParams.push(`destination=${encodeURIComponent(String(destination))}`);
         if (options.overwrite !== undefined) {
             queryParams.push(`overwrite=${encodeURIComponent(String(options.overwrite))}`);
         }
@@ -464,12 +456,8 @@ export class GoogledriveClient extends ConnectorClientBase {
      */
     public async createFile(input: CreateFileInput, folderId: string, name: string, options: CreateFileOptions = {}): Promise<BlobMetadata> {
         const queryParams: string[] = [];
-        if (folderId !== undefined) {
-            queryParams.push(`folderId=${encodeURIComponent(String(folderId))}`);
-        }
-        if (name !== undefined) {
-            queryParams.push(`name=${encodeURIComponent(String(name))}`);
-        }
+        queryParams.push(`folderId=${encodeURIComponent(String(folderId))}`);
+        queryParams.push(`name=${encodeURIComponent(String(name))}`);
         if (options.queryParametersSingleEncoded !== undefined) {
             queryParams.push(`queryParametersSingleEncoded=${encodeURIComponent(String(options.queryParametersSingleEncoded))}`);
         }
@@ -486,12 +474,8 @@ export class GoogledriveClient extends ConnectorClientBase {
      */
     public async extractFolder(source: string, destination: string, options: ExtractFolderOptions = {}): Promise<Array<BlobMetadata>> {
         const queryParams: string[] = [];
-        if (source !== undefined) {
-            queryParams.push(`source=${encodeURIComponent(String(source))}`);
-        }
-        if (destination !== undefined) {
-            queryParams.push(`destination=${encodeURIComponent(String(destination))}`);
-        }
+        queryParams.push(`source=${encodeURIComponent(String(source))}`);
+        queryParams.push(`destination=${encodeURIComponent(String(destination))}`);
         if (options.overwrite !== undefined) {
             queryParams.push(`overwrite=${encodeURIComponent(String(options.overwrite))}`);
         }

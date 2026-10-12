@@ -306,9 +306,7 @@ export class RepliconClient extends ConnectorClientBase {
      */
     public async getBulkProjectDetails3(input: BulkGetProjectDetails3Input, hostUrl: string, options: ConnectorOperationOptions = {}): Promise<ProjectDetailsResponse> {
         const queryParams: string[] = [];
-        if (hostUrl !== undefined) {
-            queryParams.push(`hostUrl=${encodeURIComponent(String(hostUrl))}`);
-        }
+        queryParams.push(`hostUrl=${encodeURIComponent(String(hostUrl))}`);
         const requestPath = `/services/ProjectService1.svc/BulkGetProjectDetails3` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.sendWithTracingAsync<ProjectDetailsResponse>("Replicon.getBulkProjectDetails3", "BulkGetProjectDetails3", "POST", requestUrl, input, options);
@@ -322,9 +320,7 @@ export class RepliconClient extends ConnectorClientBase {
      */
     public async createProjectOrApplyModifications(input: CreateProjectOrApplyModificationsInput, hostUrl: string, options: ConnectorOperationOptions = {}): Promise<CreateProjectOrApplyModificationsResponse> {
         const queryParams: string[] = [];
-        if (hostUrl !== undefined) {
-            queryParams.push(`hostUrl=${encodeURIComponent(String(hostUrl))}`);
-        }
+        queryParams.push(`hostUrl=${encodeURIComponent(String(hostUrl))}`);
         const requestPath = `/services/ProjectService1.svc/CreateProjectOrApplyModifications` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.sendWithTracingAsync<CreateProjectOrApplyModificationsResponse>("Replicon.createProjectOrApplyModifications", "CreateProjectOrApplyModifications", "POST", requestUrl, input, options);
@@ -338,9 +334,7 @@ export class RepliconClient extends ConnectorClientBase {
      */
     public async getUserListServiceData(input: UserListServiceGetDataInput, hostUrl: string, options: ConnectorOperationOptions = {}): Promise<UserListServiceGetDataResponse> {
         const queryParams: string[] = [];
-        if (hostUrl !== undefined) {
-            queryParams.push(`hostUrl=${encodeURIComponent(String(hostUrl))}`);
-        }
+        queryParams.push(`hostUrl=${encodeURIComponent(String(hostUrl))}`);
         const requestPath = `/services/UserListService1.svc/GetData` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.sendWithTracingAsync<UserListServiceGetDataResponse>("Replicon.getUserListServiceData", "UserListServiceGetData", "POST", requestUrl, input, options);
@@ -354,9 +348,7 @@ export class RepliconClient extends ConnectorClientBase {
      */
     public async getDescendantTaskDetails(input: GetDescendantTaskDetailsInput, hostUrl: string, options: ConnectorOperationOptions = {}): Promise<GetDescendantTaskDetailsResponse> {
         const queryParams: string[] = [];
-        if (hostUrl !== undefined) {
-            queryParams.push(`hostUrl=${encodeURIComponent(String(hostUrl))}`);
-        }
+        queryParams.push(`hostUrl=${encodeURIComponent(String(hostUrl))}`);
         const requestPath = `/services/TaskService1.svc/GetDescendantTaskDetails` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.sendWithTracingAsync<GetDescendantTaskDetailsResponse>("Replicon.getDescendantTaskDetails", "GetDescendantTaskDetails", "POST", requestUrl, input, options);
@@ -370,9 +362,7 @@ export class RepliconClient extends ConnectorClientBase {
      */
     public async createTaskHierarchyOrApplyModifications(input: CreateTaskHierarchyOrApplyModificationsInput, hostUrl: string, options: ConnectorOperationOptions = {}): Promise<CreateTaskHierarchyOrApplyModificationsResponse> {
         const queryParams: string[] = [];
-        if (hostUrl !== undefined) {
-            queryParams.push(`hostUrl=${encodeURIComponent(String(hostUrl))}`);
-        }
+        queryParams.push(`hostUrl=${encodeURIComponent(String(hostUrl))}`);
         const requestPath = `/services/TaskService1.svc/CreateTaskHierarchyOrApplyModifications` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.sendWithTracingAsync<CreateTaskHierarchyOrApplyModificationsResponse>("Replicon.createTaskHierarchyOrApplyModifications", "CreateTaskHierarchyOrApplyModifications", "POST", requestUrl, input, options);
@@ -386,9 +376,7 @@ export class RepliconClient extends ConnectorClientBase {
      */
     public async moveTask(input: MoveTaskInput, hostUrl: string, options: ConnectorOperationOptions = {}): Promise<void> {
         const queryParams: string[] = [];
-        if (hostUrl !== undefined) {
-            queryParams.push(`hostUrl=${encodeURIComponent(String(hostUrl))}`);
-        }
+        queryParams.push(`hostUrl=${encodeURIComponent(String(hostUrl))}`);
         const requestPath = `/services/TaskService1.svc/MoveTask` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
         await this.sendWithTracingAsync<void>("Replicon.moveTask", "MoveTask", "POST", requestUrl, input, options);
@@ -400,9 +388,7 @@ export class RepliconClient extends ConnectorClientBase {
      */
     public async getTaskListServiceData(input: TaskListServiceGetDataInput, hostUrl: string, options: ConnectorOperationOptions = {}): Promise<TaskListServiceGetDataResponse> {
         const queryParams: string[] = [];
-        if (hostUrl !== undefined) {
-            queryParams.push(`hostUrl=${encodeURIComponent(String(hostUrl))}`);
-        }
+        queryParams.push(`hostUrl=${encodeURIComponent(String(hostUrl))}`);
         const requestPath = `/services/TaskListService1.svc/GetData` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.sendWithTracingAsync<TaskListServiceGetDataResponse>("Replicon.getTaskListServiceData", "TaskListServiceGetData", "POST", requestUrl, input, options);
@@ -416,9 +402,7 @@ export class RepliconClient extends ConnectorClientBase {
      */
     public async getTimesheetSummary(input: GetTimesheetSummaryInput, hostUrl: string, options: ConnectorOperationOptions = {}): Promise<GetTimesheetSummaryResponse> {
         const queryParams: string[] = [];
-        if (hostUrl !== undefined) {
-            queryParams.push(`hostUrl=${encodeURIComponent(String(hostUrl))}`);
-        }
+        queryParams.push(`hostUrl=${encodeURIComponent(String(hostUrl))}`);
         const requestPath = `/services/TimesheetService1.svc/GetTimesheetSummary` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.sendWithTracingAsync<GetTimesheetSummaryResponse>("Replicon.getTimesheetSummary", "GetTimesheetSummary", "POST", requestUrl, input, options);
@@ -432,9 +416,7 @@ export class RepliconClient extends ConnectorClientBase {
      */
     public async getBulkTimeEnteredSummary(input: BulkGetTimeEnteredSummaryInput, hostUrl: string, options: ConnectorOperationOptions = {}): Promise<BulkGetTimeEnteredSummaryResponse> {
         const queryParams: string[] = [];
-        if (hostUrl !== undefined) {
-            queryParams.push(`hostUrl=${encodeURIComponent(String(hostUrl))}`);
-        }
+        queryParams.push(`hostUrl=${encodeURIComponent(String(hostUrl))}`);
         const requestPath = `/services/TaskService1.svc/BulkGetTimeEnteredSummary` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.sendWithTracingAsync<BulkGetTimeEnteredSummaryResponse>("Replicon.getBulkTimeEnteredSummary", "BulkGetTimeEnteredSummary", "POST", requestUrl, input, options);
@@ -448,9 +430,7 @@ export class RepliconClient extends ConnectorClientBase {
      */
     public async putProjectTeamMemberAssignments(input: PutProjectTeamMemberAssignmentsInput, hostUrl: string, options: ConnectorOperationOptions = {}): Promise<void> {
         const queryParams: string[] = [];
-        if (hostUrl !== undefined) {
-            queryParams.push(`hostUrl=${encodeURIComponent(String(hostUrl))}`);
-        }
+        queryParams.push(`hostUrl=${encodeURIComponent(String(hostUrl))}`);
         const requestPath = `/services/ProjectService1.svc/PutProjectTeamMemberAssignments` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
         await this.sendWithTracingAsync<void>("Replicon.putProjectTeamMemberAssignments", "PutProjectTeamMemberAssignments", "POST", requestUrl, input, options);
@@ -462,9 +442,7 @@ export class RepliconClient extends ConnectorClientBase {
      */
     public async putResourceAssignments(input: PutResourceAssignmentsInput, hostUrl: string, options: ConnectorOperationOptions = {}): Promise<void> {
         const queryParams: string[] = [];
-        if (hostUrl !== undefined) {
-            queryParams.push(`hostUrl=${encodeURIComponent(String(hostUrl))}`);
-        }
+        queryParams.push(`hostUrl=${encodeURIComponent(String(hostUrl))}`);
         const requestPath = `/services/TaskService1.svc/PutResourceAssignments` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
         await this.sendWithTracingAsync<void>("Replicon.putResourceAssignments", "PutResourceAssignments", "POST", requestUrl, input, options);

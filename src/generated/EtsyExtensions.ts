@@ -2024,12 +2024,8 @@ export class EtsyClient extends ConnectorClientBase {
      */
     public async paymentLedgerEntries(shopId: number, minCreated: number, maxCreated: number, options: PaymentLedgerEntriesOptions = {}): Promise<PaymentAccountLedgerEntries> {
         const queryParams: string[] = [];
-        if (minCreated !== undefined) {
-            queryParams.push(`min_created=${encodeURIComponent(String(minCreated))}`);
-        }
-        if (maxCreated !== undefined) {
-            queryParams.push(`max_created=${encodeURIComponent(String(maxCreated))}`);
-        }
+        queryParams.push(`min_created=${encodeURIComponent(String(minCreated))}`);
+        queryParams.push(`max_created=${encodeURIComponent(String(maxCreated))}`);
         if (options.limit !== undefined) {
             queryParams.push(`limit=${encodeURIComponent(String(options.limit))}`);
         }
@@ -2049,9 +2045,7 @@ export class EtsyClient extends ConnectorClientBase {
      */
     public async getPaymentEntryId(shopId: number, ledgerEntryIds: string, options: ConnectorOperationOptions = {}): Promise<Payments> {
         const queryParams: string[] = [];
-        if (ledgerEntryIds !== undefined) {
-            queryParams.push(`ledger_entry_ids=${encodeURIComponent(String(ledgerEntryIds))}`);
-        }
+        queryParams.push(`ledger_entry_ids=${encodeURIComponent(String(ledgerEntryIds))}`);
         const requestPath = `/shops/${encodeURIComponent(String(shopId))}/payment-account/ledger-entries/payments` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.sendWithTracingAsync<Payments>("Etsy.getPaymentEntryId", "PaymentGetEntryID", "GET", requestUrl, undefined, options);
@@ -2077,9 +2071,7 @@ export class EtsyClient extends ConnectorClientBase {
      */
     public async getPayments(shopId: number, paymentIds: string, options: ConnectorOperationOptions = {}): Promise<Payments> {
         const queryParams: string[] = [];
-        if (paymentIds !== undefined) {
-            queryParams.push(`payment-ids=${encodeURIComponent(String(paymentIds))}`);
-        }
+        queryParams.push(`payment-ids=${encodeURIComponent(String(paymentIds))}`);
         const requestPath = `/shops/${encodeURIComponent(String(shopId))}/payments` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.sendWithTracingAsync<Payments>("Etsy.getPayments", "PaymentsGet", "GET", requestUrl, undefined, options);
@@ -2239,9 +2231,7 @@ export class EtsyClient extends ConnectorClientBase {
      */
     public async shippingCarriers(originCountryIso: string, options: ConnectorOperationOptions = {}): Promise<ShippingCarriers> {
         const queryParams: string[] = [];
-        if (originCountryIso !== undefined) {
-            queryParams.push(`origin_country_iso=${encodeURIComponent(String(originCountryIso))}`);
-        }
+        queryParams.push(`origin_country_iso=${encodeURIComponent(String(originCountryIso))}`);
         const requestPath = `/shipping-carriers` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.sendWithTracingAsync<ShippingCarriers>("Etsy.shippingCarriers", "ShippingCarriers", "GET", requestUrl, undefined, options);
@@ -2464,9 +2454,7 @@ export class EtsyClient extends ConnectorClientBase {
      */
     public async searchShop(shopName: string, options: SearchShopOptions = {}): Promise<Shops> {
         const queryParams: string[] = [];
-        if (shopName !== undefined) {
-            queryParams.push(`shop_name=${encodeURIComponent(String(shopName))}`);
-        }
+        queryParams.push(`shop_name=${encodeURIComponent(String(shopName))}`);
         if (options.limit !== undefined) {
             queryParams.push(`limit=${encodeURIComponent(String(options.limit))}`);
         }
@@ -2723,9 +2711,7 @@ export class EtsyClient extends ConnectorClientBase {
      */
     public async getListingById(listingIds: string, options: GetListingByIdOptions = {}): Promise<ShopListingsWithAssociations> {
         const queryParams: string[] = [];
-        if (listingIds !== undefined) {
-            queryParams.push(`listing_ids=${encodeURIComponent(String(listingIds))}`);
-        }
+        queryParams.push(`listing_ids=${encodeURIComponent(String(listingIds))}`);
         if (options.includes !== undefined) {
             queryParams.push(`includes=${encodeURIComponent(String(options.includes))}`);
         }
@@ -2846,9 +2832,7 @@ export class EtsyClient extends ConnectorClientBase {
      */
     public async getListingBySectionId(shopId: number, shopSectionIds: string, options: GetListingBySectionIdOptions = {}): Promise<ShopListings> {
         const queryParams: string[] = [];
-        if (shopSectionIds !== undefined) {
-            queryParams.push(`shop_section_ids=${encodeURIComponent(String(shopSectionIds))}`);
-        }
+        queryParams.push(`shop_section_ids=${encodeURIComponent(String(shopSectionIds))}`);
         if (options.limit !== undefined) {
             queryParams.push(`limit=${encodeURIComponent(String(options.limit))}`);
         }

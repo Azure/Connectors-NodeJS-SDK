@@ -681,15 +681,9 @@ export class MondayClient extends ConnectorClientBase {
      */
     public async getSubitems(workspaceId: string, boardId: string, itemId: string, options: ConnectorOperationOptions = {}): Promise<GetSubitemColumnNamesForGetSubitems> {
         const queryParams: string[] = [];
-        if (workspaceId !== undefined) {
-            queryParams.push(`workspaceId=${encodeURIComponent(String(workspaceId))}`);
-        }
-        if (boardId !== undefined) {
-            queryParams.push(`boardId=${encodeURIComponent(String(boardId))}`);
-        }
-        if (itemId !== undefined) {
-            queryParams.push(`itemId=${encodeURIComponent(String(itemId))}`);
-        }
+        queryParams.push(`workspaceId=${encodeURIComponent(String(workspaceId))}`);
+        queryParams.push(`boardId=${encodeURIComponent(String(boardId))}`);
+        queryParams.push(`itemId=${encodeURIComponent(String(itemId))}`);
         const requestPath = `/getData/getSubitems` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.sendWithTracingAsync<GetSubitemColumnNamesForGetSubitems>("Monday.getSubitems", "GetSubitems", "GET", requestUrl, undefined, options);
@@ -715,15 +709,9 @@ export class MondayClient extends ConnectorClientBase {
      */
     public async getItemById(itemId: string, workspaceId: string, boardId: string, options: ConnectorOperationOptions = {}): Promise<DynamicResponseGetListSchemaGet> {
         const queryParams: string[] = [];
-        if (itemId !== undefined) {
-            queryParams.push(`itemId=${encodeURIComponent(String(itemId))}`);
-        }
-        if (workspaceId !== undefined) {
-            queryParams.push(`workspaceId=${encodeURIComponent(String(workspaceId))}`);
-        }
-        if (boardId !== undefined) {
-            queryParams.push(`boardId=${encodeURIComponent(String(boardId))}`);
-        }
+        queryParams.push(`itemId=${encodeURIComponent(String(itemId))}`);
+        queryParams.push(`workspaceId=${encodeURIComponent(String(workspaceId))}`);
+        queryParams.push(`boardId=${encodeURIComponent(String(boardId))}`);
         const requestPath = `/getData/getItemById` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.sendWithTracingAsync<DynamicResponseGetListSchemaGet>("Monday.getItemById", "GetItemById", "GET", requestUrl, undefined, options);
@@ -749,15 +737,9 @@ export class MondayClient extends ConnectorClientBase {
      */
     public async getItems(workspaceId: string, boardId: string, groupId: string, options: GetItemsOptions = {}): Promise<DynamicGetGetItemsSchema> {
         const queryParams: string[] = [];
-        if (workspaceId !== undefined) {
-            queryParams.push(`workspaceId=${encodeURIComponent(String(workspaceId))}`);
-        }
-        if (boardId !== undefined) {
-            queryParams.push(`boardId=${encodeURIComponent(String(boardId))}`);
-        }
-        if (groupId !== undefined) {
-            queryParams.push(`groupId=${encodeURIComponent(String(groupId))}`);
-        }
+        queryParams.push(`workspaceId=${encodeURIComponent(String(workspaceId))}`);
+        queryParams.push(`boardId=${encodeURIComponent(String(boardId))}`);
+        queryParams.push(`groupId=${encodeURIComponent(String(groupId))}`);
         if (options.filter1Column !== undefined) {
             queryParams.push(`filter1Column=${encodeURIComponent(String(options.filter1Column))}`);
         }

@@ -992,9 +992,7 @@ export class PowerbiClient extends ConnectorClientBase {
      */
     public async getMultipleGoals(groupid: string, scorecardId: string, expand: string, options: GetMultipleGoalsOptions = {}): Promise<FetchedGoals> {
         const queryParams: string[] = [];
-        if (expand !== undefined) {
-            queryParams.push(`$expand=${encodeURIComponent(String(expand))}`);
-        }
+        queryParams.push(`$expand=${encodeURIComponent(String(expand))}`);
         if (options.pbiSource !== undefined) {
             queryParams.push(`pbi_source=${encodeURIComponent(String(options.pbiSource))}`);
         }
@@ -1030,9 +1028,7 @@ export class PowerbiClient extends ConnectorClientBase {
         if (options.pbiSource !== undefined) {
             queryParams.push(`pbi_source=${encodeURIComponent(String(options.pbiSource))}`);
         }
-        if (expand !== undefined) {
-            queryParams.push(`$expand=${encodeURIComponent(String(expand))}`);
-        }
+        queryParams.push(`$expand=${encodeURIComponent(String(expand))}`);
         const requestPath = `/v1.0/myOrg/groups/${encodeURIComponent(String(groupid))}/internalScorecards(${encodeURIComponent(String(scorecardId))})/goals(${encodeURIComponent(String(goalId))})` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.sendWithTracingAsync<FetchedGoal>("Powerbi.getGoal", "GetGoal", "GET", requestUrl, undefined, options);
@@ -1137,9 +1133,7 @@ export class PowerbiClient extends ConnectorClientBase {
         if (options.pbiSource !== undefined) {
             queryParams.push(`pbi_source=${encodeURIComponent(String(options.pbiSource))}`);
         }
-        if (expand !== undefined) {
-            queryParams.push(`$expand=${encodeURIComponent(String(expand))}`);
-        }
+        queryParams.push(`$expand=${encodeURIComponent(String(expand))}`);
         const requestPath = `/v1.0/myorg/groups/${encodeURIComponent(String(groupid))}/internalScorecards(${encodeURIComponent(String(scorecardId))})/goals(${encodeURIComponent(String(goalId))})/goalValues` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.sendWithTracingAsync<GetGoalCheckinsResponse>("Powerbi.getGoalCheckins", "GetGoalCheckins", "GET", requestUrl, undefined, options);
@@ -1170,9 +1164,7 @@ export class PowerbiClient extends ConnectorClientBase {
         if (options.pbiSource !== undefined) {
             queryParams.push(`pbi_source=${encodeURIComponent(String(options.pbiSource))}`);
         }
-        if (expand !== undefined) {
-            queryParams.push(`$expand=${encodeURIComponent(String(expand))}`);
-        }
+        queryParams.push(`$expand=${encodeURIComponent(String(expand))}`);
         const requestPath = `/v1.0/myorg/groups/${encodeURIComponent(String(groupid))}/internalScorecards(${encodeURIComponent(String(scorecardId))})/goals(${encodeURIComponent(String(goalId))})/goalValues(${encodeURIComponent(String(goalCheckin))})` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.sendWithTracingAsync<GetGoalCheckinResponse>("Powerbi.getGoalCheckin", "GetGoalCheckin", "GET", requestUrl, undefined, options);

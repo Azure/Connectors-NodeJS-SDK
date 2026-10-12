@@ -411,9 +411,7 @@ export class DocuwareClient extends ConnectorClientBase {
      */
     public async storeToFileCabinet(input: StoreToFileCabinetFormData, fileCabinet: string, storeDialogId: string, options: ConnectorOperationOptions = {}): Promise<StoreToFileCabinetResponse> {
         const queryParams: string[] = [];
-        if (storeDialogId !== undefined) {
-            queryParams.push(`StoreDialogId=${encodeURIComponent(String(storeDialogId))}`);
-        }
+        queryParams.push(`StoreDialogId=${encodeURIComponent(String(storeDialogId))}`);
         const requestPath = `/FileCabinets/${encodeURIComponent(String(fileCabinet))}/Documents` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const formData = new FormData();
         if (input.index !== undefined) {
@@ -461,9 +459,7 @@ export class DocuwareClient extends ConnectorClientBase {
      */
     public async searchForDocumentsInFileCabinet(input: SearchForDocumentsInFileCabinetInput, fileCabinet: string, searchDialogId: string, options: ConnectorOperationOptions = {}): Promise<SearchForDocumentsInFileCabinetResponse> {
         const queryParams: string[] = [];
-        if (searchDialogId !== undefined) {
-            queryParams.push(`SearchDialogId=${encodeURIComponent(String(searchDialogId))}`);
-        }
+        queryParams.push(`SearchDialogId=${encodeURIComponent(String(searchDialogId))}`);
         const requestPath = `/FileCabinets/${encodeURIComponent(String(fileCabinet))}/Search` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.sendWithTracingAsync<SearchForDocumentsInFileCabinetResponse>("Docuware.searchForDocumentsInFileCabinet", "SearchForDocumentsInFileCabinet", "POST", requestUrl, input, options);
@@ -489,9 +485,7 @@ export class DocuwareClient extends ConnectorClientBase {
      */
     public async getFileCabinets(fileCabinetType: string, options: ConnectorOperationOptions = {}): Promise<GetFileCabinetsResponse> {
         const queryParams: string[] = [];
-        if (fileCabinetType !== undefined) {
-            queryParams.push(`FileCabinetType=${encodeURIComponent(String(fileCabinetType))}`);
-        }
+        queryParams.push(`FileCabinetType=${encodeURIComponent(String(fileCabinetType))}`);
         const requestPath = `/FileCabinets` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.sendWithTracingAsync<GetFileCabinetsResponse>("Docuware.getFileCabinets", "GetFileCabinets", "GET", requestUrl, undefined, options);
@@ -527,9 +521,7 @@ export class DocuwareClient extends ConnectorClientBase {
      */
     public async downloadFile(fileCabinetId: string, documentId: number, fileNumber: string, documentFormat: string, accept: string, acceptEncoding: string, options: ConnectorOperationOptions = {}): Promise<Blob> {
         const queryParams: string[] = [];
-        if (documentFormat !== undefined) {
-            queryParams.push(`DocumentFormat=${encodeURIComponent(String(documentFormat))}`);
-        }
+        queryParams.push(`DocumentFormat=${encodeURIComponent(String(documentFormat))}`);
         const requestPath = `/FileCabinets/${encodeURIComponent(String(fileCabinetId))}/Documents/${encodeURIComponent(String(documentId))}/Sections/${encodeURIComponent(String(fileNumber))}/Download` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestHeaders: Record<string, string> = {};
         if (accept !== undefined) {
@@ -550,9 +542,7 @@ export class DocuwareClient extends ConnectorClientBase {
      */
     public async downloadDocument(fileCabinetId: string, documentId: number, documentFormat: string, accept: string, acceptEncoding: string, options: ConnectorOperationOptions = {}): Promise<Blob> {
         const queryParams: string[] = [];
-        if (documentFormat !== undefined) {
-            queryParams.push(`DocumentFormat=${encodeURIComponent(String(documentFormat))}`);
-        }
+        queryParams.push(`DocumentFormat=${encodeURIComponent(String(documentFormat))}`);
         const requestPath = `/FileCabinets/${encodeURIComponent(String(fileCabinetId))}/Documents/${encodeURIComponent(String(documentId))}/Download` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestHeaders: Record<string, string> = {};
         if (accept !== undefined) {
@@ -629,9 +619,7 @@ export class DocuwareClient extends ConnectorClientBase {
      */
     public async appendFile(input: AppendFileFormData, fileCabinet: string, docId: string, options: ConnectorOperationOptions = {}): Promise<AppendFileResponse> {
         const queryParams: string[] = [];
-        if (docId !== undefined) {
-            queryParams.push(`DocID=${encodeURIComponent(String(docId))}`);
-        }
+        queryParams.push(`DocID=${encodeURIComponent(String(docId))}`);
         const requestPath = `/FileCabinets/${encodeURIComponent(String(fileCabinet))}/Sections` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const formData = new FormData();
         if (input.file !== undefined) {

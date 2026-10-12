@@ -903,9 +903,7 @@ export class PlumsailClient extends ConnectorClientBase {
      */
     public async flowV1DocumentsJobsSplitPdfV2(input: FlowV1DocumentsJobsSplitPdfV2Input, type: string, options: ConnectorOperationOptions = {}): Promise<DocumentsWithFilenamesResponse> {
         const queryParams: string[] = [];
-        if (type !== undefined) {
-            queryParams.push(`type=${encodeURIComponent(String(type))}`);
-        }
+        queryParams.push(`type=${encodeURIComponent(String(type))}`);
         const requestPath = `/flow/v1/Documents/jobs/SplitPdfV2` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.sendWithTracingAsync<DocumentsWithFilenamesResponse>("Plumsail.flowV1DocumentsJobsSplitPdfV2", "FlowV1DocumentsJobsSplitPdfV2Post", "POST", requestUrl, input, options);
@@ -1027,9 +1025,7 @@ export class PlumsailClient extends ConnectorClientBase {
      */
     public async addFlowV1DocumentsJobsWatermarkToPdf(input: FlowV1DocumentsJobsAddWatermarkToPdfInput, type: string, options: ConnectorOperationOptions = {}): Promise<DocumentProcessingResponse> {
         const queryParams: string[] = [];
-        if (type !== undefined) {
-            queryParams.push(`type=${encodeURIComponent(String(type))}`);
-        }
+        queryParams.push(`type=${encodeURIComponent(String(type))}`);
         const requestPath = `/flow/v1/Documents/jobs/AddWatermarkToPdf` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.sendWithTracingAsync<DocumentProcessingResponse>("Plumsail.addFlowV1DocumentsJobsWatermarkToPdf", "FlowV1DocumentsJobsAddWatermarkToPdfPost", "POST", requestUrl, input, options);
@@ -1175,9 +1171,7 @@ export class PlumsailClient extends ConnectorClientBase {
      */
     public async executeFlowV1ProcessesFlowJobsProcess(input: FlowV1ProcessesFlowJobsExecuteProcessInput, processId: string, options: ConnectorOperationOptions = {}): Promise<Blob> {
         const queryParams: string[] = [];
-        if (processId !== undefined) {
-            queryParams.push(`processId=${encodeURIComponent(String(processId))}`);
-        }
+        queryParams.push(`processId=${encodeURIComponent(String(processId))}`);
         const requestPath = `/flow/v1/ProcessesFlow/jobs/ExecuteProcess` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.sendWithTracingAsync<Blob>("Plumsail.executeFlowV1ProcessesFlowJobsProcess", "FlowV1ProcessesFlowJobsExecuteProcessPost", "POST", requestUrl, input, options, undefined, true);
@@ -1191,9 +1185,7 @@ export class PlumsailClient extends ConnectorClientBase {
      */
     public async executeFlowV1ProcessesFlowJobsProcessWithGeneratedData(input: ProcessJsonData, processId: string, options: ConnectorOperationOptions = {}): Promise<Blob> {
         const queryParams: string[] = [];
-        if (processId !== undefined) {
-            queryParams.push(`processId=${encodeURIComponent(String(processId))}`);
-        }
+        queryParams.push(`processId=${encodeURIComponent(String(processId))}`);
         const requestPath = `/flow/v1/ProcessesFlow/jobs/ExecuteProcessWithGeneratedData` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.sendWithTracingAsync<Blob>("Plumsail.executeFlowV1ProcessesFlowJobsProcessWithGeneratedData", "FlowV1ProcessesFlowJobsExecuteProcessWithGeneratedDataPost", "POST", requestUrl, input, options, undefined, true);

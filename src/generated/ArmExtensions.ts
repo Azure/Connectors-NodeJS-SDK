@@ -675,9 +675,7 @@ export class ArmClient extends ConnectorClientBase {
      */
     public listSubscriptionsLocations(subscriptionId: string, xMsApiVersion: string, options: ConnectorOperationOptions = {}): ConnectorPagedAsyncIterableIterator<Location> {
         const queryParams: string[] = [];
-        if (xMsApiVersion !== undefined) {
-            queryParams.push(`x-ms-api-version=${encodeURIComponent(String(xMsApiVersion))}`);
-        }
+        queryParams.push(`x-ms-api-version=${encodeURIComponent(String(xMsApiVersion))}`);
         const requestPath = `/subscriptions/${encodeURIComponent(String(subscriptionId))}/locations` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         return this.createPageable<LocationListResult, Location>(
             requestPath,
@@ -697,9 +695,7 @@ export class ArmClient extends ConnectorClientBase {
      */
     public async getSubscription(subscriptionId: string, xMsApiVersion: string, options: ConnectorOperationOptions = {}): Promise<Subscription> {
         const queryParams: string[] = [];
-        if (xMsApiVersion !== undefined) {
-            queryParams.push(`x-ms-api-version=${encodeURIComponent(String(xMsApiVersion))}`);
-        }
+        queryParams.push(`x-ms-api-version=${encodeURIComponent(String(xMsApiVersion))}`);
         const requestPath = `/subscriptions/${encodeURIComponent(String(subscriptionId))}` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.sendWithTracingAsync<Subscription>("Arm.getSubscription", "Subscriptions_Get", "GET", requestUrl, undefined, options);
@@ -713,9 +709,7 @@ export class ArmClient extends ConnectorClientBase {
      */
     public listSubscriptions(xMsApiVersion: string, options: ConnectorOperationOptions = {}): ConnectorPagedAsyncIterableIterator<Subscription> {
         const queryParams: string[] = [];
-        if (xMsApiVersion !== undefined) {
-            queryParams.push(`x-ms-api-version=${encodeURIComponent(String(xMsApiVersion))}`);
-        }
+        queryParams.push(`x-ms-api-version=${encodeURIComponent(String(xMsApiVersion))}`);
         const requestPath = `/subscriptions` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         return this.createPageable<SubscriptionListResult, Subscription>(
             requestPath,
@@ -736,9 +730,7 @@ export class ArmClient extends ConnectorClientBase {
      */
     public async getDeployment(subscriptionId: string, resourceGroupName: string, deploymentName: string, xMsApiVersion: string, options: GetDeploymentOptions = {}): Promise<DeploymentExtended> {
         const queryParams: string[] = [];
-        if (xMsApiVersion !== undefined) {
-            queryParams.push(`x-ms-api-version=${encodeURIComponent(String(xMsApiVersion))}`);
-        }
+        queryParams.push(`x-ms-api-version=${encodeURIComponent(String(xMsApiVersion))}`);
         if (options.wait !== undefined) {
             queryParams.push(`wait=${encodeURIComponent(String(options.wait))}`);
         }
@@ -755,9 +747,7 @@ export class ArmClient extends ConnectorClientBase {
      */
     public async upsertDeployment(input: Deployment, subscriptionId: string, resourceGroupName: string, deploymentName: string, xMsApiVersion: string, options: UpsertDeploymentOptions = {}): Promise<DeploymentExtended> {
         const queryParams: string[] = [];
-        if (xMsApiVersion !== undefined) {
-            queryParams.push(`x-ms-api-version=${encodeURIComponent(String(xMsApiVersion))}`);
-        }
+        queryParams.push(`x-ms-api-version=${encodeURIComponent(String(xMsApiVersion))}`);
         if (options.wait !== undefined) {
             queryParams.push(`wait=${encodeURIComponent(String(options.wait))}`);
         }
@@ -774,9 +764,7 @@ export class ArmClient extends ConnectorClientBase {
      */
     public async deleteDeployment(subscriptionId: string, resourceGroupName: string, deploymentName: string, xMsApiVersion: string, options: ConnectorOperationOptions = {}): Promise<void> {
         const queryParams: string[] = [];
-        if (xMsApiVersion !== undefined) {
-            queryParams.push(`x-ms-api-version=${encodeURIComponent(String(xMsApiVersion))}`);
-        }
+        queryParams.push(`x-ms-api-version=${encodeURIComponent(String(xMsApiVersion))}`);
         const requestPath = `/subscriptions/${encodeURIComponent(String(subscriptionId))}/resourcegroups/${encodeURIComponent(String(resourceGroupName))}/providers/Microsoft.Resources/deployments/${encodeURIComponent(String(deploymentName))}` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
         await this.sendWithTracingAsync<void>("Arm.deleteDeployment", "Deployments_Delete", "DELETE", requestUrl, undefined, options);
@@ -788,9 +776,7 @@ export class ArmClient extends ConnectorClientBase {
      */
     public async cancelDeployments(subscriptionId: string, resourceGroupName: string, deploymentName: string, xMsApiVersion: string, options: ConnectorOperationOptions = {}): Promise<void> {
         const queryParams: string[] = [];
-        if (xMsApiVersion !== undefined) {
-            queryParams.push(`x-ms-api-version=${encodeURIComponent(String(xMsApiVersion))}`);
-        }
+        queryParams.push(`x-ms-api-version=${encodeURIComponent(String(xMsApiVersion))}`);
         const requestPath = `/subscriptions/${encodeURIComponent(String(subscriptionId))}/resourcegroups/${encodeURIComponent(String(resourceGroupName))}/providers/Microsoft.Resources/deployments/${encodeURIComponent(String(deploymentName))}/cancel` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
         await this.sendWithTracingAsync<void>("Arm.cancelDeployments", "Deployments_Cancel", "POST", requestUrl, undefined, options);
@@ -802,9 +788,7 @@ export class ArmClient extends ConnectorClientBase {
      */
     public async validateDeployments(input: Deployment, subscriptionId: string, resourceGroupName: string, deploymentName: string, xMsApiVersion: string, options: ConnectorOperationOptions = {}): Promise<DeploymentValidateResult> {
         const queryParams: string[] = [];
-        if (xMsApiVersion !== undefined) {
-            queryParams.push(`x-ms-api-version=${encodeURIComponent(String(xMsApiVersion))}`);
-        }
+        queryParams.push(`x-ms-api-version=${encodeURIComponent(String(xMsApiVersion))}`);
         const requestPath = `/subscriptions/${encodeURIComponent(String(subscriptionId))}/resourcegroups/${encodeURIComponent(String(resourceGroupName))}/providers/Microsoft.Resources/deployments/${encodeURIComponent(String(deploymentName))}/validate` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.sendWithTracingAsync<DeploymentValidateResult>("Arm.validateDeployments", "Deployments_Validate", "POST", requestUrl, input, options);
@@ -818,9 +802,7 @@ export class ArmClient extends ConnectorClientBase {
      */
     public async exportDeploymentsTemplate(subscriptionId: string, resourceGroupName: string, deploymentName: string, xMsApiVersion: string, options: ConnectorOperationOptions = {}): Promise<DeploymentExportResult> {
         const queryParams: string[] = [];
-        if (xMsApiVersion !== undefined) {
-            queryParams.push(`x-ms-api-version=${encodeURIComponent(String(xMsApiVersion))}`);
-        }
+        queryParams.push(`x-ms-api-version=${encodeURIComponent(String(xMsApiVersion))}`);
         const requestPath = `/subscriptions/${encodeURIComponent(String(subscriptionId))}/resourcegroups/${encodeURIComponent(String(resourceGroupName))}/providers/Microsoft.Resources/deployments/${encodeURIComponent(String(deploymentName))}/exportTemplate` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.sendWithTracingAsync<DeploymentExportResult>("Arm.exportDeploymentsTemplate", "Deployments_ExportTemplate", "POST", requestUrl, undefined, options);
@@ -840,9 +822,7 @@ export class ArmClient extends ConnectorClientBase {
         if (options.top !== undefined) {
             queryParams.push(`$top=${encodeURIComponent(String(options.top))}`);
         }
-        if (xMsApiVersion !== undefined) {
-            queryParams.push(`x-ms-api-version=${encodeURIComponent(String(xMsApiVersion))}`);
-        }
+        queryParams.push(`x-ms-api-version=${encodeURIComponent(String(xMsApiVersion))}`);
         const requestPath = `/subscriptions/${encodeURIComponent(String(subscriptionId))}/resourcegroups/${encodeURIComponent(String(resourceGroupName))}/providers/Microsoft.Resources/deployments` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         return this.createPageable<DeploymentListResult, DeploymentExtended>(
             requestPath,
@@ -863,9 +843,7 @@ export class ArmClient extends ConnectorClientBase {
      */
     public async getDeploymentOperation(subscriptionId: string, resourceGroupName: string, deploymentName: string, operationId: string, xMsApiVersion: string, options: ConnectorOperationOptions = {}): Promise<DeploymentOperation> {
         const queryParams: string[] = [];
-        if (xMsApiVersion !== undefined) {
-            queryParams.push(`x-ms-api-version=${encodeURIComponent(String(xMsApiVersion))}`);
-        }
+        queryParams.push(`x-ms-api-version=${encodeURIComponent(String(xMsApiVersion))}`);
         const requestPath = `/subscriptions/${encodeURIComponent(String(subscriptionId))}/resourcegroups/${encodeURIComponent(String(resourceGroupName))}/deployments/${encodeURIComponent(String(deploymentName))}/operations/${encodeURIComponent(String(operationId))}` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.sendWithTracingAsync<DeploymentOperation>("Arm.getDeploymentOperation", "DeploymentOperations_Get", "GET", requestUrl, undefined, options);
@@ -882,9 +860,7 @@ export class ArmClient extends ConnectorClientBase {
         if (options.top !== undefined) {
             queryParams.push(`$top=${encodeURIComponent(String(options.top))}`);
         }
-        if (xMsApiVersion !== undefined) {
-            queryParams.push(`x-ms-api-version=${encodeURIComponent(String(xMsApiVersion))}`);
-        }
+        queryParams.push(`x-ms-api-version=${encodeURIComponent(String(xMsApiVersion))}`);
         const requestPath = `/subscriptions/${encodeURIComponent(String(subscriptionId))}/resourcegroups/${encodeURIComponent(String(resourceGroupName))}/deployments/${encodeURIComponent(String(deploymentName))}/operations` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         return this.createPageable<DeploymentOperationsListResult, DeploymentOperation>(
             requestPath,
@@ -905,9 +881,7 @@ export class ArmClient extends ConnectorClientBase {
      */
     public async unregisterProviders(subscriptionId: string, resourceProviderNamespace: string, xMsApiVersion: string, options: ConnectorOperationOptions = {}): Promise<Provider> {
         const queryParams: string[] = [];
-        if (xMsApiVersion !== undefined) {
-            queryParams.push(`x-ms-api-version=${encodeURIComponent(String(xMsApiVersion))}`);
-        }
+        queryParams.push(`x-ms-api-version=${encodeURIComponent(String(xMsApiVersion))}`);
         const requestPath = `/subscriptions/${encodeURIComponent(String(subscriptionId))}/providers/${encodeURIComponent(String(resourceProviderNamespace))}/unregister` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.sendWithTracingAsync<Provider>("Arm.unregisterProviders", "Providers_Unregister", "POST", requestUrl, undefined, options);
@@ -921,9 +895,7 @@ export class ArmClient extends ConnectorClientBase {
      */
     public async registerProviders(subscriptionId: string, resourceProviderNamespace: string, xMsApiVersion: string, options: ConnectorOperationOptions = {}): Promise<Provider> {
         const queryParams: string[] = [];
-        if (xMsApiVersion !== undefined) {
-            queryParams.push(`x-ms-api-version=${encodeURIComponent(String(xMsApiVersion))}`);
-        }
+        queryParams.push(`x-ms-api-version=${encodeURIComponent(String(xMsApiVersion))}`);
         const requestPath = `/subscriptions/${encodeURIComponent(String(subscriptionId))}/providers/${encodeURIComponent(String(resourceProviderNamespace))}/register` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.sendWithTracingAsync<Provider>("Arm.registerProviders", "Providers_Register", "POST", requestUrl, undefined, options);
@@ -943,9 +915,7 @@ export class ArmClient extends ConnectorClientBase {
         if (options.expand !== undefined) {
             queryParams.push(`$expand=${encodeURIComponent(String(options.expand))}`);
         }
-        if (xMsApiVersion !== undefined) {
-            queryParams.push(`x-ms-api-version=${encodeURIComponent(String(xMsApiVersion))}`);
-        }
+        queryParams.push(`x-ms-api-version=${encodeURIComponent(String(xMsApiVersion))}`);
         const requestPath = `/subscriptions/${encodeURIComponent(String(subscriptionId))}/providers` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         return this.createPageable<ProviderListResult, Provider>(
             requestPath,
@@ -969,9 +939,7 @@ export class ArmClient extends ConnectorClientBase {
         if (options.expand !== undefined) {
             queryParams.push(`$expand=${encodeURIComponent(String(options.expand))}`);
         }
-        if (xMsApiVersion !== undefined) {
-            queryParams.push(`x-ms-api-version=${encodeURIComponent(String(xMsApiVersion))}`);
-        }
+        queryParams.push(`x-ms-api-version=${encodeURIComponent(String(xMsApiVersion))}`);
         const requestPath = `/subscriptions/${encodeURIComponent(String(subscriptionId))}/providers/${encodeURIComponent(String(resourceProviderNamespace))}` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.sendWithTracingAsync<Provider>("Arm.getProvider", "Providers_Get", "GET", requestUrl, undefined, options);
@@ -985,9 +953,7 @@ export class ArmClient extends ConnectorClientBase {
      */
     public listResourceGroupsResources(subscriptionId: string, resourceGroupName: string, xMsApiVersion: string, options: ListResourceGroupsResourcesOptions = {}): ConnectorPagedAsyncIterableIterator<GenericResource> {
         const queryParams: string[] = [];
-        if (xMsApiVersion !== undefined) {
-            queryParams.push(`x-ms-api-version=${encodeURIComponent(String(xMsApiVersion))}`);
-        }
+        queryParams.push(`x-ms-api-version=${encodeURIComponent(String(xMsApiVersion))}`);
         if (options.filter !== undefined) {
             queryParams.push(`$filter=${encodeURIComponent(String(options.filter))}`);
         }
@@ -1017,9 +983,7 @@ export class ArmClient extends ConnectorClientBase {
      */
     public async getResourceGroup(subscriptionId: string, resourceGroupName: string, xMsApiVersion: string, options: ConnectorOperationOptions = {}): Promise<ResourceGroup> {
         const queryParams: string[] = [];
-        if (xMsApiVersion !== undefined) {
-            queryParams.push(`x-ms-api-version=${encodeURIComponent(String(xMsApiVersion))}`);
-        }
+        queryParams.push(`x-ms-api-version=${encodeURIComponent(String(xMsApiVersion))}`);
         const requestPath = `/subscriptions/${encodeURIComponent(String(subscriptionId))}/resourcegroups/${encodeURIComponent(String(resourceGroupName))}` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.sendWithTracingAsync<ResourceGroup>("Arm.getResourceGroup", "ResourceGroups_Get", "GET", requestUrl, undefined, options);
@@ -1033,9 +997,7 @@ export class ArmClient extends ConnectorClientBase {
      */
     public async upsertResourceGroup(input: ResourceGroup, subscriptionId: string, resourceGroupName: string, xMsApiVersion: string, options: ConnectorOperationOptions = {}): Promise<ResourceGroup> {
         const queryParams: string[] = [];
-        if (xMsApiVersion !== undefined) {
-            queryParams.push(`x-ms-api-version=${encodeURIComponent(String(xMsApiVersion))}`);
-        }
+        queryParams.push(`x-ms-api-version=${encodeURIComponent(String(xMsApiVersion))}`);
         const requestPath = `/subscriptions/${encodeURIComponent(String(subscriptionId))}/resourcegroups/${encodeURIComponent(String(resourceGroupName))}` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.sendWithTracingAsync<ResourceGroup>("Arm.upsertResourceGroup", "ResourceGroups_CreateOrUpdate", "PUT", requestUrl, input, options);
@@ -1049,9 +1011,7 @@ export class ArmClient extends ConnectorClientBase {
      */
     public async deleteResourceGroup(subscriptionId: string, resourceGroupName: string, xMsApiVersion: string, options: ConnectorOperationOptions = {}): Promise<void> {
         const queryParams: string[] = [];
-        if (xMsApiVersion !== undefined) {
-            queryParams.push(`x-ms-api-version=${encodeURIComponent(String(xMsApiVersion))}`);
-        }
+        queryParams.push(`x-ms-api-version=${encodeURIComponent(String(xMsApiVersion))}`);
         const requestPath = `/subscriptions/${encodeURIComponent(String(subscriptionId))}/resourcegroups/${encodeURIComponent(String(resourceGroupName))}` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
         await this.sendWithTracingAsync<void>("Arm.deleteResourceGroup", "ResourceGroups_Delete", "DELETE", requestUrl, undefined, options);
@@ -1063,9 +1023,7 @@ export class ArmClient extends ConnectorClientBase {
      */
     public async patchResourceGroups(input: ResourceGroup, subscriptionId: string, resourceGroupName: string, xMsApiVersion: string, options: ConnectorOperationOptions = {}): Promise<ResourceGroup> {
         const queryParams: string[] = [];
-        if (xMsApiVersion !== undefined) {
-            queryParams.push(`x-ms-api-version=${encodeURIComponent(String(xMsApiVersion))}`);
-        }
+        queryParams.push(`x-ms-api-version=${encodeURIComponent(String(xMsApiVersion))}`);
         const requestPath = `/subscriptions/${encodeURIComponent(String(subscriptionId))}/resourcegroups/${encodeURIComponent(String(resourceGroupName))}` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.sendWithTracingAsync<ResourceGroup>("Arm.patchResourceGroups", "ResourceGroups_Patch", "PATCH", requestUrl, input, options);
@@ -1079,9 +1037,7 @@ export class ArmClient extends ConnectorClientBase {
      */
     public async exportResourceGroupsTemplate(input: ExportTemplateRequest, subscriptionId: string, resourceGroupName: string, xMsApiVersion: string, options: ConnectorOperationOptions = {}): Promise<ResourceGroupExportResult> {
         const queryParams: string[] = [];
-        if (xMsApiVersion !== undefined) {
-            queryParams.push(`x-ms-api-version=${encodeURIComponent(String(xMsApiVersion))}`);
-        }
+        queryParams.push(`x-ms-api-version=${encodeURIComponent(String(xMsApiVersion))}`);
         const requestPath = `/subscriptions/${encodeURIComponent(String(subscriptionId))}/resourcegroups/${encodeURIComponent(String(resourceGroupName))}/exportTemplate` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.sendWithTracingAsync<ResourceGroupExportResult>("Arm.exportResourceGroupsTemplate", "ResourceGroups_ExportTemplate", "POST", requestUrl, input, options);
@@ -1095,9 +1051,7 @@ export class ArmClient extends ConnectorClientBase {
      */
     public listResourceGroups(subscriptionId: string, xMsApiVersion: string, options: ListResourceGroupsOptions = {}): ConnectorPagedAsyncIterableIterator<ResourceGroup> {
         const queryParams: string[] = [];
-        if (xMsApiVersion !== undefined) {
-            queryParams.push(`x-ms-api-version=${encodeURIComponent(String(xMsApiVersion))}`);
-        }
+        queryParams.push(`x-ms-api-version=${encodeURIComponent(String(xMsApiVersion))}`);
         if (options.filter !== undefined) {
             queryParams.push(`$filter=${encodeURIComponent(String(options.filter))}`);
         }
@@ -1133,9 +1087,7 @@ export class ArmClient extends ConnectorClientBase {
         if (options.top !== undefined) {
             queryParams.push(`$top=${encodeURIComponent(String(options.top))}`);
         }
-        if (xMsApiVersion !== undefined) {
-            queryParams.push(`x-ms-api-version=${encodeURIComponent(String(xMsApiVersion))}`);
-        }
+        queryParams.push(`x-ms-api-version=${encodeURIComponent(String(xMsApiVersion))}`);
         const requestPath = `/subscriptions/${encodeURIComponent(String(subscriptionId))}/resources` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         return this.createPageable<ResourceListResult, GenericResource>(
             requestPath,
@@ -1156,9 +1108,7 @@ export class ArmClient extends ConnectorClientBase {
      */
     public async getResourceById(subscriptionId: string, resourceGroupName: string, resourceProviderNamespace: string, shortResourceId: string, xMsApiVersion: string, options: ConnectorOperationOptions = {}): Promise<GenericResource> {
         const queryParams: string[] = [];
-        if (xMsApiVersion !== undefined) {
-            queryParams.push(`x-ms-api-version=${encodeURIComponent(String(xMsApiVersion))}`);
-        }
+        queryParams.push(`x-ms-api-version=${encodeURIComponent(String(xMsApiVersion))}`);
         const requestPath = `/subscriptions/${encodeURIComponent(String(subscriptionId))}/resourcegroups/${encodeURIComponent(String(resourceGroupName))}/providers/${encodeURIComponent(String(resourceProviderNamespace))}/${encodeURIComponent(String(shortResourceId))}` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.sendWithTracingAsync<GenericResource>("Arm.getResourceById", "Resources_GetById", "GET", requestUrl, undefined, options);
@@ -1172,9 +1122,7 @@ export class ArmClient extends ConnectorClientBase {
      */
     public async upsertResourceById(input: GenericResource, subscriptionId: string, resourceGroupName: string, resourceProviderNamespace: string, shortResourceId: string, xMsApiVersion: string, options: ConnectorOperationOptions = {}): Promise<GenericResource> {
         const queryParams: string[] = [];
-        if (xMsApiVersion !== undefined) {
-            queryParams.push(`x-ms-api-version=${encodeURIComponent(String(xMsApiVersion))}`);
-        }
+        queryParams.push(`x-ms-api-version=${encodeURIComponent(String(xMsApiVersion))}`);
         const requestPath = `/subscriptions/${encodeURIComponent(String(subscriptionId))}/resourcegroups/${encodeURIComponent(String(resourceGroupName))}/providers/${encodeURIComponent(String(resourceProviderNamespace))}/${encodeURIComponent(String(shortResourceId))}` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.sendWithTracingAsync<GenericResource>("Arm.upsertResourceById", "Resources_CreateOrUpdateById", "PUT", requestUrl, input, options);
@@ -1188,9 +1136,7 @@ export class ArmClient extends ConnectorClientBase {
      */
     public async deleteResourceById(subscriptionId: string, resourceGroupName: string, resourceProviderNamespace: string, shortResourceId: string, xMsApiVersion: string, options: ConnectorOperationOptions = {}): Promise<void> {
         const queryParams: string[] = [];
-        if (xMsApiVersion !== undefined) {
-            queryParams.push(`x-ms-api-version=${encodeURIComponent(String(xMsApiVersion))}`);
-        }
+        queryParams.push(`x-ms-api-version=${encodeURIComponent(String(xMsApiVersion))}`);
         const requestPath = `/subscriptions/${encodeURIComponent(String(subscriptionId))}/resourcegroups/${encodeURIComponent(String(resourceGroupName))}/providers/${encodeURIComponent(String(resourceProviderNamespace))}/${encodeURIComponent(String(shortResourceId))}` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
         await this.sendWithTracingAsync<void>("Arm.deleteResourceById", "Resources_DeleteById", "DELETE", requestUrl, undefined, options);
@@ -1202,9 +1148,7 @@ export class ArmClient extends ConnectorClientBase {
      */
     public async resourcesInvoke(input: ResourcesInvokeInput, subscriptionId: string, resourceGroupName: string, resourceProviderNamespace: string, shortResourceId: string, actionName: string, xMsApiVersion: string, options: ConnectorOperationOptions = {}): Promise<ResourcesInvokeResponse> {
         const queryParams: string[] = [];
-        if (xMsApiVersion !== undefined) {
-            queryParams.push(`x-ms-api-version=${encodeURIComponent(String(xMsApiVersion))}`);
-        }
+        queryParams.push(`x-ms-api-version=${encodeURIComponent(String(xMsApiVersion))}`);
         const requestPath = `/subscriptions/${encodeURIComponent(String(subscriptionId))}/resourcegroups/${encodeURIComponent(String(resourceGroupName))}/providers/${encodeURIComponent(String(resourceProviderNamespace))}/${encodeURIComponent(String(shortResourceId))}/${encodeURIComponent(String(actionName))}` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.sendWithTracingAsync<ResourcesInvokeResponse>("Arm.resourcesInvoke", "Resources_Invoke", "POST", requestUrl, input, options);
@@ -1218,9 +1162,7 @@ export class ArmClient extends ConnectorClientBase {
      */
     public async getProviderResourceById(subscriptionId: string, resourceProviderNamespace: string, shortResourceId: string, xMsApiVersion: string, options: ConnectorOperationOptions = {}): Promise<GenericResource> {
         const queryParams: string[] = [];
-        if (xMsApiVersion !== undefined) {
-            queryParams.push(`x-ms-api-version=${encodeURIComponent(String(xMsApiVersion))}`);
-        }
+        queryParams.push(`x-ms-api-version=${encodeURIComponent(String(xMsApiVersion))}`);
         const requestPath = `/subscriptions/${encodeURIComponent(String(subscriptionId))}/providers/${encodeURIComponent(String(resourceProviderNamespace))}/${encodeURIComponent(String(shortResourceId))}` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.sendWithTracingAsync<GenericResource>("Arm.getProviderResourceById", "Provider_Resources_GetById", "GET", requestUrl, undefined, options);
@@ -1234,9 +1176,7 @@ export class ArmClient extends ConnectorClientBase {
      */
     public async providerResourcesInvoke(input: ProviderResourcesInvokeInput, subscriptionId: string, resourceProviderNamespace: string, shortResourceId: string, xMsApiVersion: string, options: ConnectorOperationOptions = {}): Promise<ProviderResourcesInvokeResponse> {
         const queryParams: string[] = [];
-        if (xMsApiVersion !== undefined) {
-            queryParams.push(`x-ms-api-version=${encodeURIComponent(String(xMsApiVersion))}`);
-        }
+        queryParams.push(`x-ms-api-version=${encodeURIComponent(String(xMsApiVersion))}`);
         const requestPath = `/subscriptions/${encodeURIComponent(String(subscriptionId))}/providers/${encodeURIComponent(String(resourceProviderNamespace))}/${encodeURIComponent(String(shortResourceId))}` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.sendWithTracingAsync<ProviderResourcesInvokeResponse>("Arm.providerResourcesInvoke", "Provider_Resources_Invoke", "POST", requestUrl, input, options);
@@ -1250,9 +1190,7 @@ export class ArmClient extends ConnectorClientBase {
      */
     public async upsertTagValue(subscriptionId: string, tagName: string, tagValue: string, xMsApiVersion: string, options: ConnectorOperationOptions = {}): Promise<TagValue> {
         const queryParams: string[] = [];
-        if (xMsApiVersion !== undefined) {
-            queryParams.push(`x-ms-api-version=${encodeURIComponent(String(xMsApiVersion))}`);
-        }
+        queryParams.push(`x-ms-api-version=${encodeURIComponent(String(xMsApiVersion))}`);
         const requestPath = `/subscriptions/${encodeURIComponent(String(subscriptionId))}/tagNames/${encodeURIComponent(String(tagName))}/tagValues/${encodeURIComponent(String(tagValue))}` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.sendWithTracingAsync<TagValue>("Arm.upsertTagValue", "Tags_CreateOrUpdateValue", "PUT", requestUrl, undefined, options);
@@ -1266,9 +1204,7 @@ export class ArmClient extends ConnectorClientBase {
      */
     public async deleteTagValue(subscriptionId: string, tagName: string, tagValue: string, xMsApiVersion: string, options: ConnectorOperationOptions = {}): Promise<void> {
         const queryParams: string[] = [];
-        if (xMsApiVersion !== undefined) {
-            queryParams.push(`x-ms-api-version=${encodeURIComponent(String(xMsApiVersion))}`);
-        }
+        queryParams.push(`x-ms-api-version=${encodeURIComponent(String(xMsApiVersion))}`);
         const requestPath = `/subscriptions/${encodeURIComponent(String(subscriptionId))}/tagNames/${encodeURIComponent(String(tagName))}/tagValues/${encodeURIComponent(String(tagValue))}` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
         await this.sendWithTracingAsync<void>("Arm.deleteTagValue", "Tags_DeleteValue", "DELETE", requestUrl, undefined, options);
@@ -1280,9 +1216,7 @@ export class ArmClient extends ConnectorClientBase {
      */
     public async upsertTag(subscriptionId: string, tagName: string, xMsApiVersion: string, options: ConnectorOperationOptions = {}): Promise<TagDetails> {
         const queryParams: string[] = [];
-        if (xMsApiVersion !== undefined) {
-            queryParams.push(`x-ms-api-version=${encodeURIComponent(String(xMsApiVersion))}`);
-        }
+        queryParams.push(`x-ms-api-version=${encodeURIComponent(String(xMsApiVersion))}`);
         const requestPath = `/subscriptions/${encodeURIComponent(String(subscriptionId))}/tagNames/${encodeURIComponent(String(tagName))}` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.sendWithTracingAsync<TagDetails>("Arm.upsertTag", "Tags_CreateOrUpdate", "PUT", requestUrl, undefined, options);
@@ -1296,9 +1230,7 @@ export class ArmClient extends ConnectorClientBase {
      */
     public async deleteTag(subscriptionId: string, tagName: string, xMsApiVersion: string, options: ConnectorOperationOptions = {}): Promise<void> {
         const queryParams: string[] = [];
-        if (xMsApiVersion !== undefined) {
-            queryParams.push(`x-ms-api-version=${encodeURIComponent(String(xMsApiVersion))}`);
-        }
+        queryParams.push(`x-ms-api-version=${encodeURIComponent(String(xMsApiVersion))}`);
         const requestPath = `/subscriptions/${encodeURIComponent(String(subscriptionId))}/tagNames/${encodeURIComponent(String(tagName))}` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
         await this.sendWithTracingAsync<void>("Arm.deleteTag", "Tags_Delete", "DELETE", requestUrl, undefined, options);
@@ -1310,9 +1242,7 @@ export class ArmClient extends ConnectorClientBase {
      */
     public listTags(subscriptionId: string, xMsApiVersion: string, options: ConnectorOperationOptions = {}): ConnectorPagedAsyncIterableIterator<TagDetails> {
         const queryParams: string[] = [];
-        if (xMsApiVersion !== undefined) {
-            queryParams.push(`x-ms-api-version=${encodeURIComponent(String(xMsApiVersion))}`);
-        }
+        queryParams.push(`x-ms-api-version=${encodeURIComponent(String(xMsApiVersion))}`);
         const requestPath = `/subscriptions/${encodeURIComponent(String(subscriptionId))}/tagNames` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         return this.createPageable<TagsListResult, TagDetails>(
             requestPath,

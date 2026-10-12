@@ -1642,9 +1642,7 @@ export class SharepointonlineClient extends ConnectorClientBase {
      */
     public async approveHubSiteJoin(dataset: string, joiningSiteId: string, options: ConnectorOperationOptions = {}): Promise<ApproveHubSiteJoinResponse> {
         const queryParams: string[] = [];
-        if (joiningSiteId !== undefined) {
-            queryParams.push(`joiningSiteId=${encodeURIComponent(String(joiningSiteId))}`);
-        }
+        queryParams.push(`joiningSiteId=${encodeURIComponent(String(joiningSiteId))}`);
         const requestPath = `/datasets/${encodeURIComponent(encodeURIComponent(String(dataset)))}/approvehubsitejoin` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.sendWithTracingAsync<ApproveHubSiteJoinResponse>("Sharepointonline.approveHubSiteJoin", "ApproveHubSiteJoin", "POST", requestUrl, undefined, options);
@@ -1685,12 +1683,8 @@ export class SharepointonlineClient extends ConnectorClientBase {
      */
     public async copyFileLegacy(dataset: string, source: string, destination: string, options: CopyFileLegacyOptions = {}): Promise<BlobMetadata> {
         const queryParams: string[] = [];
-        if (source !== undefined) {
-            queryParams.push(`source=${encodeURIComponent(String(source))}`);
-        }
-        if (destination !== undefined) {
-            queryParams.push(`destination=${encodeURIComponent(String(destination))}`);
-        }
+        queryParams.push(`source=${encodeURIComponent(String(source))}`);
+        queryParams.push(`destination=${encodeURIComponent(String(destination))}`);
         if (options.overwrite !== undefined) {
             queryParams.push(`overwrite=${encodeURIComponent(String(options.overwrite))}`);
         }
@@ -1734,12 +1728,8 @@ export class SharepointonlineClient extends ConnectorClientBase {
      */
     public async createFile(input: CreateFileInput, dataset: string, folderPath: string, name: string, options: CreateFileOptions = {}): Promise<SPBlobMetadataResponse> {
         const queryParams: string[] = [];
-        if (folderPath !== undefined) {
-            queryParams.push(`folderPath=${encodeURIComponent(String(folderPath))}`);
-        }
-        if (name !== undefined) {
-            queryParams.push(`name=${encodeURIComponent(String(name))}`);
-        }
+        queryParams.push(`folderPath=${encodeURIComponent(String(folderPath))}`);
+        queryParams.push(`name=${encodeURIComponent(String(name))}`);
         if (options.queryParametersSingleEncoded !== undefined) {
             queryParams.push(`queryParametersSingleEncoded=${encodeURIComponent(String(options.queryParametersSingleEncoded))}`);
         }
@@ -1801,6 +1791,20 @@ export class SharepointonlineClient extends ConnectorClientBase {
     }
 
     /**
+     * Get file thumbnail
+     * @remarks Gets the thumbnail of a file by its file identifier.
+     */
+    public async getFileThumbnail(dataset: string, id: string, size: string, options: ConnectorOperationOptions = {}): Promise<Blob> {
+        const queryParams: string[] = [];
+        queryParams.push(`size=${encodeURIComponent(String(size))}`);
+        const requestPath = `/datasets/${encodeURIComponent(encodeURIComponent(String(dataset)))}/files/${encodeURIComponent(String(id))}/thumbnail` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.sendWithTracingAsync<Blob>("Sharepointonline.getFileThumbnail", "GetFileThumbnail", "GET", requestUrl, undefined, options, undefined, true);
+
+        return httpResponse.value as Blob;
+    }
+
+    /**
      * List root folder
      * @remarks Returns files in the root SharePoint folder.
      */
@@ -1842,9 +1846,7 @@ export class SharepointonlineClient extends ConnectorClientBase {
      */
     public async getFileMetadataByPath(dataset: string, path: string, options: GetFileMetadataByPathOptions = {}): Promise<SPBlobMetadataResponse> {
         const queryParams: string[] = [];
-        if (path !== undefined) {
-            queryParams.push(`path=${encodeURIComponent(String(path))}`);
-        }
+        queryParams.push(`path=${encodeURIComponent(String(path))}`);
         if (options.queryParametersSingleEncoded !== undefined) {
             queryParams.push(`queryParametersSingleEncoded=${encodeURIComponent(String(options.queryParametersSingleEncoded))}`);
         }
@@ -1861,9 +1863,7 @@ export class SharepointonlineClient extends ConnectorClientBase {
      */
     public async getFileContentByPath(dataset: string, path: string, options: GetFileContentByPathOptions = {}): Promise<Blob> {
         const queryParams: string[] = [];
-        if (path !== undefined) {
-            queryParams.push(`path=${encodeURIComponent(String(path))}`);
-        }
+        queryParams.push(`path=${encodeURIComponent(String(path))}`);
         if (options.inferContentType !== undefined) {
             queryParams.push(`inferContentType=${encodeURIComponent(String(options.inferContentType))}`);
         }
@@ -1883,9 +1883,7 @@ export class SharepointonlineClient extends ConnectorClientBase {
      */
     public async getFolderMetadata(dataset: string, id: string, options: ConnectorOperationOptions = {}): Promise<SPBlobMetadataResponse> {
         const queryParams: string[] = [];
-        if (id !== undefined) {
-            queryParams.push(`id=${encodeURIComponent(String(id))}`);
-        }
+        queryParams.push(`id=${encodeURIComponent(String(id))}`);
         const requestPath = `/datasets/${encodeURIComponent(encodeURIComponent(String(dataset)))}/GetFolder` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.sendWithTracingAsync<SPBlobMetadataResponse>("Sharepointonline.getFolderMetadata", "GetFolderMetadata", "GET", requestUrl, undefined, options);
@@ -1899,9 +1897,7 @@ export class SharepointonlineClient extends ConnectorClientBase {
      */
     public async getFolderMetadataByPath(dataset: string, path: string, options: GetFolderMetadataByPathOptions = {}): Promise<SPBlobMetadataResponse> {
         const queryParams: string[] = [];
-        if (path !== undefined) {
-            queryParams.push(`path=${encodeURIComponent(String(path))}`);
-        }
+        queryParams.push(`path=${encodeURIComponent(String(path))}`);
         if (options.queryParametersSingleEncoded !== undefined) {
             queryParams.push(`queryParametersSingleEncoded=${encodeURIComponent(String(options.queryParametersSingleEncoded))}`);
         }
@@ -1928,9 +1924,7 @@ export class SharepointonlineClient extends ConnectorClientBase {
      */
     public async joinHubSite(dataset: string, hubSiteId: string, options: JoinHubSiteOptions = {}): Promise<void> {
         const queryParams: string[] = [];
-        if (hubSiteId !== undefined) {
-            queryParams.push(`hubSiteId=${encodeURIComponent(String(hubSiteId))}`);
-        }
+        queryParams.push(`hubSiteId=${encodeURIComponent(String(hubSiteId))}`);
         if (options.approvalToken !== undefined) {
             queryParams.push(`approvalToken=${encodeURIComponent(String(options.approvalToken))}`);
         }
@@ -2026,9 +2020,7 @@ export class SharepointonlineClient extends ConnectorClientBase {
      */
     public async searchForUser(dataset: string, table: string, entityId: string, searchValue: string, options: SearchForUserOptions = {}): Promise<SPListExpandedUser> {
         const queryParams: string[] = [];
-        if (searchValue !== undefined) {
-            queryParams.push(`searchValue=${encodeURIComponent(String(searchValue))}`);
-        }
+        queryParams.push(`searchValue=${encodeURIComponent(String(searchValue))}`);
         if (options.view !== undefined) {
             queryParams.push(`view=${encodeURIComponent(String(options.view))}`);
         }
@@ -2207,9 +2199,7 @@ export class SharepointonlineClient extends ConnectorClientBase {
      */
     public async createApprovalRequest(input: CreateApprovalRequestInput, dataset: string, table: string, id: number, approvalType: number, options: ConnectorOperationOptions = {}): Promise<ApprovalData> {
         const queryParams: string[] = [];
-        if (approvalType !== undefined) {
-            queryParams.push(`approvalType=${encodeURIComponent(String(approvalType))}`);
-        }
+        queryParams.push(`approvalType=${encodeURIComponent(String(approvalType))}`);
         const requestPath = `/datasets/${encodeURIComponent(encodeURIComponent(String(dataset)))}/tables/${encodeURIComponent(encodeURIComponent(String(table)))}/items/${encodeURIComponent(encodeURIComponent(String(id)))}/approval` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.sendWithTracingAsync<ApprovalData>("Sharepointonline.createApprovalRequest", "CreateApprovalRequest", "POST", requestUrl, input, options);
@@ -2223,9 +2213,7 @@ export class SharepointonlineClient extends ConnectorClientBase {
      */
     public async getItemChanges(dataset: string, table: string, id: number, since: string, options: GetItemChangesOptions = {}): Promise<GetItemChangesResponse> {
         const queryParams: string[] = [];
-        if (since !== undefined) {
-            queryParams.push(`since=${encodeURIComponent(String(since))}`);
-        }
+        queryParams.push(`since=${encodeURIComponent(String(since))}`);
         if (options.until !== undefined) {
             queryParams.push(`until=${encodeURIComponent(String(options.until))}`);
         }
@@ -2332,9 +2320,7 @@ export class SharepointonlineClient extends ConnectorClientBase {
      */
     public async setApprovalStatus(dataset: string, table: string, id: number, approvalAction: string, options: SetApprovalStatusOptions = {}): Promise<SetApprovalStatusOutput> {
         const queryParams: string[] = [];
-        if (approvalAction !== undefined) {
-            queryParams.push(`approvalAction=${encodeURIComponent(String(approvalAction))}`);
-        }
+        queryParams.push(`approvalAction=${encodeURIComponent(String(approvalAction))}`);
         if (options.comments !== undefined) {
             queryParams.push(`comments=${encodeURIComponent(String(options.comments))}`);
         }
@@ -2376,9 +2362,7 @@ export class SharepointonlineClient extends ConnectorClientBase {
      */
     public async createAttachment(input: CreateAttachmentInput, dataset: string, table: string, itemId: number, displayName: string, options: ConnectorOperationOptions = {}): Promise<SPListItemAttachment> {
         const queryParams: string[] = [];
-        if (displayName !== undefined) {
-            queryParams.push(`displayName=${encodeURIComponent(String(displayName))}`);
-        }
+        queryParams.push(`displayName=${encodeURIComponent(String(displayName))}`);
         const requestPath = `/datasets/${encodeURIComponent(encodeURIComponent(String(dataset)))}/tables/${encodeURIComponent(encodeURIComponent(String(table)))}/items/${encodeURIComponent(encodeURIComponent(String(itemId)))}/attachments` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.sendWithTracingAsync<SPListItemAttachment>("Sharepointonline.createAttachment", "CreateAttachment", "POST", requestUrl, input, options);
@@ -2448,12 +2432,8 @@ export class SharepointonlineClient extends ConnectorClientBase {
      */
     public async extractFolder(dataset: string, source: string, destination: string, options: ExtractFolderOptions = {}): Promise<Array<BlobMetadata>> {
         const queryParams: string[] = [];
-        if (source !== undefined) {
-            queryParams.push(`source=${encodeURIComponent(String(source))}`);
-        }
-        if (destination !== undefined) {
-            queryParams.push(`destination=${encodeURIComponent(String(destination))}`);
-        }
+        queryParams.push(`source=${encodeURIComponent(String(source))}`);
+        queryParams.push(`destination=${encodeURIComponent(String(destination))}`);
         if (options.overwrite !== undefined) {
             queryParams.push(`overwrite=${encodeURIComponent(String(options.overwrite))}`);
         }

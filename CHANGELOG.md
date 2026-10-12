@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed
+
+- Required query parameters are always serialized, including empty strings,
+  `false`, zero, and empty collections. Optional parameters retain their existing
+  presence checks.
+
 ### Breaking Changes
 
 - Generated optional query and header parameters now live in method-specific

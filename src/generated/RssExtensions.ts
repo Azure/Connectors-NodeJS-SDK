@@ -112,9 +112,7 @@ export class RssClient extends ConnectorClientBase {
      */
     public listFeedItems(feedUrl: string, options: ListFeedItemsOptions = {}): ConnectorPagedAsyncIterableIterator<FeedItem> {
         const queryParams: string[] = [];
-        if (feedUrl !== undefined) {
-            queryParams.push(`feedUrl=${encodeURIComponent(String(feedUrl))}`);
-        }
+        queryParams.push(`feedUrl=${encodeURIComponent(String(feedUrl))}`);
         if (options.since !== undefined) {
             queryParams.push(`since=${encodeURIComponent(String(options.since))}`);
         }

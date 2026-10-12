@@ -472,9 +472,7 @@ export class WaywedoClient extends ConnectorClientBase {
         if (options.query !== undefined) {
             queryParams.push(`query=${encodeURIComponent(String(options.query))}`);
         }
-        if (type !== undefined) {
-            queryParams.push(`type=${encodeURIComponent(String(type))}`);
-        }
+        queryParams.push(`type=${encodeURIComponent(String(type))}`);
         const requestPath = `/v1/Procedures` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.sendWithTracingAsync<Array<Procedure>>("Waywedo.findChecklist", "Find_Checklist", "GET", requestUrl, undefined, options);
