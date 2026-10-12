@@ -28,6 +28,7 @@ import type {
 } from "@azure/core-rest-pipeline";
 import { logger } from "./logger.ts";
 import type { ConnectorClientOptions } from "./options.ts";
+import { SDK_USER_AGENT_PREFIX } from "./sdkInfo.ts";
 
 /**
  * Represents a response from a connector operation.
@@ -126,7 +127,17 @@ export class ConnectorHttpClient {
         this.credential = credential;
         this.httpClient = options?.httpClient ?? createDefaultHttpClient();
         this.retryUnsafeHttpMethods = options?.retryUnsafeHttpMethods ?? false;
-        const pipelineOptions: ConnectorClientOptions = { ...options };
+        const callerUserAgentPrefix = options?.userAgentOptions?.userAgentPrefix;
+        const userAgentPrefix = callerUserAgentPrefix
+            ? `${callerUserAgentPrefix} ${SDK_USER_AGENT_PREFIX}`
+            : SDK_USER_AGENT_PREFIX;
+        const pipelineOptions: ConnectorClientOptions = {
+            ...options,
+            userAgentOptions: {
+                ...options?.userAgentOptions,
+                userAgentPrefix,
+            },
+        };
         delete pipelineOptions.baseUri;
         delete pipelineOptions.httpClient;
         delete pipelineOptions.retryUnsafeHttpMethods;

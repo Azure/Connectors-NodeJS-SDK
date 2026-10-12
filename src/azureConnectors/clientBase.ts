@@ -13,6 +13,7 @@ import { ConnectorError } from "./connectorError.ts";
 import { ConnectorHttpClient } from "./connectorHttpClient.ts";
 import type { ConnectorResponse } from "./connectorHttpClient.ts";
 import type { ConnectorClientOptions, ConnectorOperationOptions } from "./options.ts";
+import { SDK_PACKAGE_NAME, SDK_VERSION } from "./sdkInfo.ts";
 
 interface InitialPageLink {
     readonly url: string;
@@ -32,8 +33,6 @@ export type ConnectorPagedAsyncIterableIterator<TItem> =
  * Abstract base class for generated connector clients.
  */
 export abstract class ConnectorClientBase {
-    private static readonly PackageName = "@azure/connectors";
-    private static readonly PackageVersion = "0.3.0-preview";
     private static readonly TracingNamespace = "Microsoft.Azure.Connectors";
 
     protected readonly connectionRuntimeUrl: string;
@@ -67,8 +66,8 @@ export abstract class ConnectorClientBase {
         this.httpClient = new ConnectorHttpClient(credential, this.options);
         this.tracingClient = createTracingClient({
             namespace: ConnectorClientBase.TracingNamespace,
-            packageName: ConnectorClientBase.PackageName,
-            packageVersion: ConnectorClientBase.PackageVersion,
+            packageName: SDK_PACKAGE_NAME,
+            packageVersion: SDK_VERSION,
         });
     }
 

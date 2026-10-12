@@ -311,34 +311,18 @@ test("methodName should return expected result when given valid input", async ()
 
 ## Releasing a New Version
 
-The release workflow (`.github/workflows/release.yml`) builds, tests, packs, and publishes the npm package. There is no version file to update — the version comes from the git tag.
+Queue `azure-pipelines/library-release.yml` with the desired `libraryVersion`
+(for example, `1.2.3` or `1.2.3-preview.1`). Do not create the release branch
+or tag manually as the normal release path.
 
-### Standard Release (tag push)
+The pipeline creates `release/<version>`, updates `package.json` and
+`package-lock.json`, pauses for validation, builds the package, tags the release
+branch as `v<version>`, creates a draft GitHub release with the `.tgz` asset,
+and uploads the artifact to the Azure SDK partner drop after approval.
 
-Creates a GitHub Release with auto-generated notes, publishes to GitHub Packages, and attempts npm registry:
-
-```shell
-git checkout main
-git pull origin main
-git tag v1.2.3
-git push origin v1.2.3
-```
-
-### Pre-release
-
-Use SemVer pre-release suffixes:
-
-```shell
-git tag v1.2.3-preview.1
-git push origin v1.2.3-preview.1
-```
-
-### Manual Dispatch (packages only, no GitHub Release)
-
-Use when you need to publish without creating a tag or GitHub Release:
-
-1. Go to Actions → Release → Run workflow
-2. Enter the version (e.g., `1.2.3`)
+The `prebuild` script regenerates `src/azureConnectors/sdkInfo.ts` from the final
+package metadata, and `prepack` rebuilds after any pipeline version change. Do
+not edit `sdkInfo.ts` directly.
 
 ### Re-releasing a Version
 
@@ -349,27 +333,18 @@ example the next patch version, or a new pre-release such as
 `v1.2.4-preview.1`) and release from the current reviewed `main` commit.
 
 If a failed release left only a draft GitHub Release and no package was
-published, clean up the draft release if needed, then create a new version tag.
-Deleting or retagging an existing remote tag should be treated as break-glass
-admin work, not the standard process.
-
-Standard retry shape:
-
-```shell
-git checkout main
-git pull origin main
-git tag v1.2.4                     # or v1.2.4-preview.1 for a pre-release retry
-git push origin v1.2.4             # push to trigger release
-```
+published, clean up the draft release if needed, then queue the pipeline with a
+new version. Deleting or retagging an existing remote tag should be treated as
+break-glass admin work, not the standard process.
 
 ### What the Release Workflow Does
 
-1. Builds and tests the package
-2. Sets the package version from the tag (strips the `v` prefix)
-3. Uploads `.tgz` as a build artifact
-4. Pushes to GitHub Packages (`npm.pkg.github.com/Azure`)
-5. Attempts push to npm registry (requires `NPM_TOKEN` secret, continues on error)
-6. Creates a GitHub Release with the `.tgz` attached (tag push only)
+1. Creates and validates the versioned release branch.
+2. Builds and packs the npm package from that branch.
+3. Creates and pushes the `v<version>` tag.
+4. Creates a draft GitHub release and attaches the `.tgz` artifact.
+5. Pauses for release-note review.
+6. Uploads the artifact to the Azure SDK partner drop.
 
 ## Adding a New Connector
 

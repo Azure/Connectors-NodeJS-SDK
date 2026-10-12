@@ -32,6 +32,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- Added the default `azsdk-js-connectors/<version>` Azure SDK user-agent
+  identifier. Custom `ConnectorClientOptions.userAgentOptions.userAgentPrefix`
+  values are prepended without replacing the connector SDK identity.
 - Added the generated Zoho ZeptoMail client with five public mail-agent, send-mail, template-mail, and analytics actions. `SendTemplateMailInput.merge_key_detail` remains `Array<Record<string, unknown>>` so fixed string fields and arbitrary non-string merge values stay representable. The malformed Swagger type `ReplyToAddresss` is exposed as `ReplyToAddress` without changing the `reply_to` wire field ([BPM PR 17131877](https://msazure.visualstudio.com/One/_git/AzureUX-BPM/pullrequest/17131877)).
 - Added generated multipart/form-data actions for Cloudmersive Document
   Conversion and DocuWare, including typed `Blob`/string form inputs and the
