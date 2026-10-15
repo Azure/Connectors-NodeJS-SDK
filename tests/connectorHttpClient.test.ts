@@ -5,6 +5,7 @@ import type { HttpClient, PipelineRequest, PipelineResponse } from "@azure/core-
 import { AzureLogger, getLogLevel, setLogLevel } from "@azure/logger";
 import { ConnectorHttpClient } from "../src/azureConnectors/connectorHttpClient.ts";
 import type { AbortSignalLike, TokenCredential } from "../src/azureConnectors/index.ts";
+import { SDK_VERSION } from "../src/azureConnectors/sdkInfo.ts";
 
 type MockRequestHandler = (
     request: PipelineRequest,
@@ -133,6 +134,31 @@ describe("ConnectorHttpClient", () => {
         expect(response.statusCode).toBe(200);
         expect(response.headers["x-response-header"]).toBe("response-value");
         expect(response.value?.id).toBe("123");
+    });
+
+    it("should identify requests with the connector SDK user agent by default", async () => {
+        const httpClient = new MockHttpClient(async request => createMockResponse(request, 204));
+        const client = new ConnectorHttpClient(new MockTokenCredential(), { httpClient });
+
+        await client.sendAsync("GET", "https://example.com/api/items");
+
+        const userAgent = httpClient.requests.at(0)!.headers.get("User-Agent");
+        expect(userAgent?.startsWith(`azsdk-js-connectors/${SDK_VERSION}`)).toBe(true);
+        expect(userAgent?.match(/azsdk-js-connectors\//g)).toHaveLength(1);
+    });
+
+    it("should prepend a caller user-agent prefix without dropping the connector SDK identity", async () => {
+        const httpClient = new MockHttpClient(async request => createMockResponse(request, 204));
+        const client = new ConnectorHttpClient(new MockTokenCredential(), {
+            httpClient,
+            userAgentOptions: { userAgentPrefix: "contoso-app/1.0.0" },
+        });
+
+        await client.sendAsync("GET", "https://example.com/api/items");
+
+        const userAgent = httpClient.requests.at(0)!.headers.get("User-Agent");
+        expect(userAgent?.startsWith(`contoso-app/1.0.0 azsdk-js-connectors/${SDK_VERSION}`)).toBe(true);
+        expect(userAgent?.match(/azsdk-js-connectors\//g)).toHaveLength(1);
     });
 
     it("should send POST request with a JSON body", async () => {

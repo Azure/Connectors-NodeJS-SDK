@@ -414,6 +414,9 @@ const options: ConnectorClientOptions = {
     telemetryOptions: {
         clientRequestIdHeaderName: "x-custom-request-id",
     },
+    userAgentOptions: {
+        userAgentPrefix: "contoso-app/1.0.0",
+    },
 };
 
 const client = new Office365Client(connectionUrl, credential, options);
@@ -428,8 +431,16 @@ const client = new Office365Client(connectionUrl, credential, {
         retryDelayInMs: 1000,
         maxRetryDelayInMs: 60000,
     },
+    userAgentOptions: {
+        userAgentPrefix: "contoso-app/1.0.0",
+    },
 });
 ```
+
+Connector requests include the Azure SDK identifier
+`azsdk-js-connectors/<version>` by default. A custom
+`userAgentOptions.userAgentPrefix` is prepended to that identifier, so
+application identification does not replace the connector SDK identity.
 
 For testing or a custom host transport, set `httpClient` to an implementation
 of `HttpClient` from `@azure/core-rest-pipeline`. Authentication, retries,
