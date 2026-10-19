@@ -16,6 +16,7 @@ import {
     createPipelineRequest,
     defaultRetryPolicy,
     logPolicyName,
+    userAgentPolicyName,
 } from "@azure/core-rest-pipeline";
 import type {
     HttpClient,
@@ -28,6 +29,7 @@ import type {
 } from "@azure/core-rest-pipeline";
 import { logger } from "./logger.ts";
 import type { ConnectorClientOptions } from "./options.ts";
+import { SDK_USER_AGENT_PREFIX } from "./sdkInfo.ts";
 
 /**
  * Represents a response from a connector operation.
@@ -60,6 +62,7 @@ export class ConnectorHttpClient {
     private static readonly DefaultMaxRetries = 3;
     private static readonly DefaultRetryPolicyName = "defaultRetryPolicy";
     private static readonly LoggingPolicyName = "connectorLoggingPolicy";
+    private static readonly MaxApplicationIdLength = 24;
     private static readonly RedactedHeaderValue = "REDACTED";
     private static readonly RetryLoggingPolicyName = "connectorRetryLoggingPolicy";
     private static readonly SafeLoggedHeaderNames = new Set([
@@ -112,6 +115,7 @@ export class ConnectorHttpClient {
     private readonly pipelineOptions: PipelineOptions;
     private readonly pipelines = new Map<string, Pipeline>();
     private readonly retryUnsafeHttpMethods: boolean;
+    private readonly telemetryEnabled: boolean;
 
     /**
      * Initializes a ConnectorHttpClient.
@@ -126,10 +130,37 @@ export class ConnectorHttpClient {
         this.credential = credential;
         this.httpClient = options?.httpClient ?? createDefaultHttpClient();
         this.retryUnsafeHttpMethods = options?.retryUnsafeHttpMethods ?? false;
-        const pipelineOptions: ConnectorClientOptions = { ...options };
+        const telemetryDisabled = typeof process !== "undefined"
+            ? process.env.AZURE_TELEMETRY_DISABLED?.trim().toLowerCase()
+            : undefined;
+        this.telemetryEnabled = options?.telemetryEnabled ??
+            (telemetryDisabled !== "true" && telemetryDisabled !== "1");
+        if (options?.applicationId !== undefined &&
+            (options.applicationId.length > ConnectorHttpClient.MaxApplicationIdLength ||
+                /\s/.test(options.applicationId))) {
+            throw new Error(
+                `Option 'applicationId' must contain at most ${ConnectorHttpClient.MaxApplicationIdLength} ` +
+                "characters and no whitespace. Use 'userAgentOptions.userAgentPrefix' for wrapping SDK identifiers.",
+            );
+        }
+
+        const userAgentPrefix = [
+            options?.applicationId,
+            options?.userAgentOptions?.userAgentPrefix,
+            SDK_USER_AGENT_PREFIX,
+        ].filter(Boolean).join(" ");
+        const pipelineOptions: ConnectorClientOptions = {
+            ...options,
+            userAgentOptions: {
+                ...options?.userAgentOptions,
+                userAgentPrefix,
+            },
+        };
+        delete pipelineOptions.applicationId;
         delete pipelineOptions.baseUri;
         delete pipelineOptions.httpClient;
         delete pipelineOptions.retryUnsafeHttpMethods;
+        delete pipelineOptions.telemetryEnabled;
         this.pipelineOptions = pipelineOptions;
     }
 
@@ -206,6 +237,11 @@ export class ConnectorHttpClient {
         let pipeline = this.pipelines.get(key);
         if (!pipeline) {
             pipeline = createPipelineFromOptions(this.pipelineOptions);
+            if (!this.telemetryEnabled) {
+                // NOTE(swapnil-nagar): Core adds SDK/platform information even with an empty prefix; leave caller headers intact.
+                pipeline.removePolicy({ name: userAgentPolicyName });
+            }
+
             pipeline.removePolicy({ name: logPolicyName });
             pipeline.removePolicy({ name: ConnectorHttpClient.DefaultRetryPolicyName });
             const retryPolicy = defaultRetryPolicy(this.pipelineOptions.retryOptions);
