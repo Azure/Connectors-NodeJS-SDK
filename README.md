@@ -414,9 +414,7 @@ const options: ConnectorClientOptions = {
     telemetryOptions: {
         clientRequestIdHeaderName: "x-custom-request-id",
     },
-    userAgentOptions: {
-        userAgentPrefix: "contoso-app/1.0.0",
-    },
+    applicationId: "contoso-app/1.0.0",
 };
 
 const client = new Office365Client(connectionUrl, credential, options);
@@ -431,16 +429,40 @@ const client = new Office365Client(connectionUrl, credential, {
         retryDelayInMs: 1000,
         maxRetryDelayInMs: 60000,
     },
-    userAgentOptions: {
-        userAgentPrefix: "contoso-app/1.0.0",
-    },
+    applicationId: "contoso-app/1.0.0",
 });
 ```
 
 Connector requests include the Azure SDK identifier
-`azsdk-js-connectors/<version>` by default. A custom
-`userAgentOptions.userAgentPrefix` is prepended to that identifier, so
-application identification does not replace the connector SDK identity.
+`azsdk-js-connectors/<version>` and Azure Core's runtime/platform information by
+default. Set `applicationId` to an optional application identifier of at most
+24 characters with no whitespace (for example, `contoso-app/1.0.0`). Invalid
+values throw during client construction; they are never silently truncated.
+The application ID is prepended to, not substituted for, the connector SDK identity.
+
+For wrapping SDK chains, `userAgentOptions.userAgentPrefix` remains a generic
+prefix with no application-ID length limit. When both are set, the order is
+application ID, custom prefix, connector SDK identity, then Azure Core/platform
+information. The 24-character limit applies only to `applicationId`, not the
+custom prefix or the complete header.
+
+To opt out of automatic SDK-identification telemetry, pass
+`{ telemetryEnabled: false }` in the client options. Configuration is resolved
+once when the client is constructed, in this order:
+
+1. An explicit `telemetryEnabled` value wins, including `true` to override an
+    environment opt-out.
+2. Otherwise, `AZURE_TELEMETRY_DISABLED=true` (case-insensitive) or `1` disables
+    identification. Surrounding whitespace is ignored; other values do not disable it.
+3. With neither configured, identification stays enabled.
+
+Opting out prevents the SDK from adding identification headers, including its
+application ID, custom prefix, and Core/platform information. Caller-supplied
+`User-Agent` or `x-ms-useragent` request headers are preserved. Authentication,
+retries, request correlation (`telemetryOptions.clientRequestIdHeaderName`), and
+independently configured tracing and logging remain enabled according to their
+own settings. This option does not configure telemetry in a separately supplied
+credential or custom HTTP transport.
 
 For testing or a custom host transport, set `httpClient` to an implementation
 of `HttpClient` from `@azure/core-rest-pipeline`. Authentication, retries,

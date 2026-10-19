@@ -104,6 +104,21 @@ async function captureConnectorLogs(action: () => Promise<void>): Promise<string
 }
 
 describe("ConnectorHttpClient", () => {
+    let originalTelemetryDisabled: string | undefined;
+
+    beforeEach(() => {
+        originalTelemetryDisabled = process.env.AZURE_TELEMETRY_DISABLED;
+        delete process.env.AZURE_TELEMETRY_DISABLED;
+    });
+
+    afterEach(() => {
+        if (originalTelemetryDisabled === undefined) {
+            delete process.env.AZURE_TELEMETRY_DISABLED;
+        } else {
+            process.env.AZURE_TELEMETRY_DISABLED = originalTelemetryDisabled;
+        }
+    });
+
     it("should reject a null credential", () => {
         expect(() => new ConnectorHttpClient(null as unknown as TokenCredential))
             .toThrow("credential cannot be null or undefined.");
@@ -145,6 +160,166 @@ describe("ConnectorHttpClient", () => {
         const userAgent = httpClient.requests.at(0)!.headers.get("User-Agent");
         expect(userAgent?.startsWith(`azsdk-js-connectors/${SDK_VERSION}`)).toBe(true);
         expect(userAgent?.match(/azsdk-js-connectors\//g)).toHaveLength(1);
+        expect(userAgent).toContain("core-rest-pipeline/");
+        expect(userAgent).toContain("Node/");
+    });
+
+    it.each([
+        { environment: undefined, telemetryEnabled: false, enabled: false },
+        { environment: "true", telemetryEnabled: undefined, enabled: false },
+        { environment: " TRUE ", telemetryEnabled: undefined, enabled: false },
+        { environment: "1", telemetryEnabled: undefined, enabled: false },
+        { environment: "false", telemetryEnabled: undefined, enabled: true },
+        { environment: "0", telemetryEnabled: undefined, enabled: true },
+        { environment: "", telemetryEnabled: undefined, enabled: true },
+        { environment: "unrecognized", telemetryEnabled: undefined, enabled: true },
+        { environment: "true", telemetryEnabled: true, enabled: true },
+        { environment: "false", telemetryEnabled: false, enabled: false },
+    ])("should resolve telemetry setting $telemetryEnabled over environment '$environment'", async ({
+        environment,
+        telemetryEnabled,
+        enabled,
+    }) => {
+        if (environment !== undefined) {
+            process.env.AZURE_TELEMETRY_DISABLED = environment;
+        }
+
+        const httpClient = new MockHttpClient(async request => createMockResponse(request, 204));
+        const client = new ConnectorHttpClient(new MockTokenCredential(), {
+            httpClient,
+            telemetryEnabled,
+            applicationId: "contoso/1.0",
+            userAgentOptions: { userAgentPrefix: "azsdk-js-wrapper/1.0" },
+        });
+
+        await client.sendAsync("GET", "https://example.com/api/items");
+
+        const headers = httpClient.requests.at(0)!.headers;
+        if (enabled) {
+            expect(headers.get("User-Agent")).toContain(
+                `contoso/1.0 azsdk-js-wrapper/1.0 azsdk-js-connectors/${SDK_VERSION}`,
+            );
+        } else {
+            expect(headers.get("User-Agent")).toBeUndefined();
+            expect(headers.get("x-ms-useragent")).toBeUndefined();
+        }
+    });
+
+    it("should resolve the environment at construction for every subsequently created scope pipeline", async () => {
+        process.env.AZURE_TELEMETRY_DISABLED = "true";
+        const httpClient = new MockHttpClient(async request => createMockResponse(request, 204));
+        const client = new ConnectorHttpClient(new MockTokenCredential(), { httpClient });
+        delete process.env.AZURE_TELEMETRY_DISABLED;
+
+        await client.sendAsync("GET", "https://example.com/api/first");
+        await client.sendAsync("GET", "https://example.com/api/second", ["custom-scope"]);
+        await client.sendAsync("GET", "https://example.com/api/third");
+
+        expect(httpClient.requests).toHaveLength(3);
+        for (const request of httpClient.requests) {
+            expect(request.headers.get("User-Agent")).toBeUndefined();
+            expect(request.headers.get("x-ms-useragent")).toBeUndefined();
+        }
+    });
+
+    it.each([true, false])("should preserve explicit identification request headers with telemetryEnabled=%s", async telemetryEnabled => {
+        const httpClient = new MockHttpClient(async request => createMockResponse(request, 204));
+        const client = new ConnectorHttpClient(new MockTokenCredential(), { httpClient, telemetryEnabled });
+
+        await client.sendAsync("GET", "https://example.com/api/items", undefined, undefined, undefined, undefined, {
+            "uSeR-aGeNt": "custom-request-agent/1.0",
+            "x-ms-useragent": "custom-browser-agent/1.0",
+        });
+
+        const headers = httpClient.requests.at(0)!.headers;
+        expect(headers.get("User-Agent")).toBe("custom-request-agent/1.0");
+        expect(headers.get("x-ms-useragent")).toBe("custom-browser-agent/1.0");
+    });
+
+    it.each([true, false])("should preserve retries, authentication, correlation and logging with telemetryEnabled=%s", async telemetryEnabled => {
+        const attempts = new Array<Record<string, string>>();
+        const httpClient = new MockHttpClient(async (request, attempt) => {
+            attempts.push(request.headers.toJSON());
+            return createMockResponse(request, attempt < 3 ? 503 : 200, JSON.stringify({ ok: true }));
+        });
+        const credential = new MockTokenCredential();
+        const client = new ConnectorHttpClient(credential, {
+            httpClient,
+            telemetryEnabled,
+            retryOptions: { maxRetries: 2, retryDelayInMs: 1, maxRetryDelayInMs: 1 },
+            telemetryOptions: { clientRequestIdHeaderName: "x-custom-request-id" },
+        });
+
+        const messages = await captureConnectorLogs(async () => {
+            const response = await client.sendAsync<{ ok: boolean }>("GET", "https://example.com/api/items");
+            expect(response.value).toEqual({ ok: true });
+        });
+
+        expect(attempts).toHaveLength(3);
+        for (const headers of attempts) {
+            expect(headers.authorization).toBe("Bearer mock-bearer-token");
+            expect(headers["x-custom-request-id"]).toBe(httpClient.requests.at(0)!.requestId);
+            if (telemetryEnabled) {
+                expect(headers["user-agent"]).toContain(`azsdk-js-connectors/${SDK_VERSION}`);
+                expect(headers["user-agent"]?.match(/azsdk-js-connectors\//g)).toHaveLength(1);
+            } else {
+                expect(headers["user-agent"]).toBeUndefined();
+                expect(headers["x-ms-useragent"]).toBeUndefined();
+            }
+        }
+
+        expect(credential.requestedScopes).toEqual([["https://apihub.azure.com/.default"]]);
+        expect(messages.some(message => message.includes("Retry 1/2"))).toBe(true);
+        expect(messages.some(message => message.includes("Retry 2/2"))).toBe(true);
+        expect(messages.some(message => message.includes("Response 200 GET"))).toBe(true);
+    });
+
+    it.each([undefined, "", "contoso-app/123456789012"])("should accept optional applicationId '%s'", async applicationId => {
+        const httpClient = new MockHttpClient(async request => createMockResponse(request, 204));
+        const client = new ConnectorHttpClient(new MockTokenCredential(), { httpClient, applicationId });
+
+        await client.sendAsync("GET", "https://example.com/api/items");
+
+        const expectedPrefix = applicationId ? `${applicationId} ` : "";
+        expect(httpClient.requests.at(0)!.headers.get("User-Agent")?.startsWith(
+            `${expectedPrefix}azsdk-js-connectors/${SDK_VERSION}`,
+        )).toBe(true);
+    });
+
+    it.each([true, false])("should reject a 25-character application ID even with telemetryEnabled=%s", telemetryEnabled => {
+        const credential = new MockTokenCredential();
+        const httpClient = new MockHttpClient(async request => createMockResponse(request, 204));
+
+        expect(() => new ConnectorHttpClient(credential, {
+            httpClient,
+            telemetryEnabled,
+            applicationId: "contoso-app/1234567890123",
+        })).toThrow("Option 'applicationId' must contain at most 24 characters and no whitespace.");
+        expect(credential.requestedScopes).toHaveLength(0);
+        expect(httpClient.requests).toHaveLength(0);
+    });
+
+    it.each(["contoso app", "contoso\tapp", "contoso\napp"])("should reject whitespace in applicationId '%s'", applicationId => {
+        expect(() => new ConnectorHttpClient(new MockTokenCredential(), { applicationId }))
+            .toThrow("no whitespace");
+    });
+
+    it("should prepend the application ID to a wrapping SDK chain without limiting the composed prefix", async () => {
+        const userAgentPrefix = "azsdk-js-contoso-wrapper/1.0.0 azsdk-js-another-wrapper/2.0.0";
+        const userAgentOptions = Object.freeze({ userAgentPrefix });
+        const httpClient = new MockHttpClient(async request => createMockResponse(request, 204));
+        const client = new ConnectorHttpClient(new MockTokenCredential(), Object.freeze({
+            httpClient,
+            applicationId: "contoso/1.0",
+            userAgentOptions,
+        }));
+
+        await client.sendAsync("GET", "https://example.com/api/items");
+
+        expect(httpClient.requests.at(0)!.headers.get("User-Agent")?.startsWith(
+            `contoso/1.0 ${userAgentPrefix} azsdk-js-connectors/${SDK_VERSION}`,
+        )).toBe(true);
+        expect(userAgentOptions).toEqual({ userAgentPrefix });
     });
 
     it("should prepend a caller user-agent prefix without dropping the connector SDK identity", async () => {

@@ -173,12 +173,16 @@ describe("ConnectorClientBase tracing", () => {
         useInstrumenter(new TestInstrumenter());
     });
 
-    it("should create a public operation span and pass its context to the HTTP span", async () => {
+    it.each([undefined, false])("should create operation and HTTP spans with telemetryEnabled=%s", async telemetryEnabled => {
         const instrumenter = new TestInstrumenter();
+        jest.spyOn(instrumenter, "createRequestHeaders").mockReturnValue({
+            traceparent: "00-0123456789abcdef0123456789abcdef-0123456789abcdef-01",
+        });
         useInstrumenter(instrumenter);
         const httpClient = new TestHttpClient(200);
         const client = new TestClient("https://example.com/runtime", createCredential(), {
             httpClient,
+            telemetryEnabled,
             retryOptions: { maxRetries: 0 },
         });
 
@@ -191,6 +195,8 @@ describe("ConnectorClientBase tracing", () => {
         expect((instrumenter.spans[1].parentContext as TestTracingContext).lineageId)
             .toBe((instrumenter.spans[0].tracingContext as TestTracingContext).lineageId);
         expect(instrumenter.spans.every(entry => entry.span.ended)).toBe(true);
+        expect(httpClient.request?.headers.get("traceparent"))
+            .toBe("00-0123456789abcdef0123456789abcdef-0123456789abcdef-01");
     });
 
     it("should expose the complete successful response through operation options", async () => {

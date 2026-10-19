@@ -33,11 +33,24 @@ export interface ConnectorOperationOptions {
  * Configuration options for connector clients.
  */
 export interface ConnectorClientOptions extends PipelineOptions {
+    /**
+     * Optional application identifier prepended to the SDK user agent. Maximum 24 characters, with no whitespace.
+     * Use userAgentOptions.userAgentPrefix for wrapping SDK identifiers; that prefix is not an application ID.
+     */
+    applicationId?: string;
+
     /** The base URI for the connector endpoint. */
     baseUri?: string;
 
     /** The HTTP transport used by the request pipeline. */
     httpClient?: HttpClient;
+
+    /**
+     * Whether SDK and platform identification is added to requests. Explicit values override AZURE_TELEMETRY_DISABLED.
+     * Defaults to true unless that environment variable is 'true' (case-insensitive) or '1' at client construction.
+     * Does not disable authentication, retries, correlation, tracing, logging, or caller-supplied request headers.
+     */
+    telemetryEnabled?: boolean;
 
     /**
      * Whether retries are allowed for unsafe HTTP methods such as POST, PUT, PATCH, and DELETE.
