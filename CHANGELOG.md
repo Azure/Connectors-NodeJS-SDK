@@ -32,6 +32,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- Added consumer test coverage for scalar-union maps using a synthetic generator
+  fixture for [#110](https://github.com/Azure/Connectors-NodeJS-SDK/issues/110).
+  This does not ship a production connector feature or refresh generated clients.
 - Added the default `azsdk-js-connectors/<version>` Azure SDK user-agent
   identifier. Custom `ConnectorClientOptions.userAgentOptions.userAgentPrefix`
   values are prepended without replacing the connector SDK identity.
