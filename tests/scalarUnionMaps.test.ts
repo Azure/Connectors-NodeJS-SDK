@@ -13,6 +13,79 @@ const VirtualFile = path.join(SdkRoot, "src", "generated", "ScalarunionfixtureEx
 const GeneratedText = readFileSync(path.join(__dirname, "fixtures", "ScalarunionfixtureExtensions.ts.txt"), "utf8");
 const FixtureSha256 = "35eeee02f46b9990ab25b11402842a7aed7b5d2c0f04a77f78bf9ba465673712";
 const ConnectionUrl = "https://scalar-maps.example.test/connection";
+const ReviewGeneratedText = readFileSync(path.join(__dirname, "fixtures", "ScalarunionreviewExtensions.ts.txt"), "utf8");
+const ReviewFixtureSha256 = "11db365b03cc02bfffcd4c8a94d71abf506c901672d535d01d75c6af1a2454c7";
+const ReviewItemCases = [
+    { name: "Scalar", type: "string | boolean", values: ["text", false, "", true] },
+    { name: "Nullable", type: "string | boolean | null", values: [null, "text", false] },
+    { name: "Nested", type: "Array<string | boolean>", values: [[], ["text", false], ["", true]] },
+    { name: "Referenced", type: "UnionItem", values: [false, null, "text"] },
+    { name: "Structured", type: "StructuredValue", values: [{ "wire-name": "text" }, { "wire-name": "" }] },
+] as const;
+const ReviewListCases = ["Root", "Wrapped", "Pageable"].flatMap(shape =>
+    ReviewItemCases.map(item => ({ ...item, shape, operation: `List${shape}${item.name}`, method: `list${shape}${item.name}` })));
+const ReviewResponseCases = ["EmptyFirst", "SchemaFirst"].flatMap(order =>
+    ["Inline", "Reusable"].map(source => ({ operation: `Get${order}${source}`, method: `get${order}${source}` })));
+const ReviewMapCases = ["DeclaredMap", "InheritedMap"].map(name => ({ name, operation: `Get${name}`, method: `get${name}` }));
+
+const ReviewRuntimeConsumer = `
+export async function exerciseMaps(
+    httpClient: NonNullable<ConnectorClientOptions["httpClient"]>,
+    minimal: boolean,
+): Promise<Record<string, unknown>> {
+    const client = new ScalarunionfixtureClient("${ConnectionUrl}", {
+        getToken: async () => ({ token: "synthetic-token", expiresOnTimestamp: Number.MAX_SAFE_INTEGER }),
+    }, { httpClient });
+    const results: Record<string, unknown> = {};
+    ${ReviewListCases.map(({ operation, method }) => `
+    results.${operation} = [];
+    for await (const item of client.${method}()) {
+        (results.${operation} as unknown[]).push(item);
+    }`).join("\n")}
+    ${[...ReviewResponseCases, ...ReviewMapCases].map(({ operation, method }) =>
+        `results.${operation} = await client.${method}();`).join("\n")}
+    return results;
+}
+`;
+
+const ReviewPositiveConsumers = `
+declare const generatedClient: ScalarunionfixtureClient;
+${ReviewListCases.map(({ operation, method, type }) => `
+const ${method}Iterator: ConnectorPagedAsyncIterableIterator<${type}> = generatedClient.${method}();
+const ${method}Pages: AsyncIterable<Array<${type}>> = generatedClient.${method}().byPage();
+type ${operation}Item = ReturnType<ScalarunionfixtureClient["${method}"]> extends AsyncIterable<infer Item> ? Item : never;
+`).join("\n")}
+${ReviewResponseCases.map(({ method }) =>
+        `const ${method}Response: Promise<Array<string | boolean>> = generatedClient.${method}();`).join("\n")}
+${ReviewMapCases.map(({ name, method }) => `
+const ${method}Value: ${name} = { "wire-name": "text" };
+const ${method}Alias: ${name}Alias = ${method}Value;
+const ${method}Response: Promise<${name}Alias> = generatedClient.${method}();
+`).join("\n")}
+`;
+
+const ReviewInvalidConsumers: ReadonlyArray<readonly [string, string]> = [
+    ...ReviewListCases.flatMap(({ operation, method }) => [
+        [`${method} rejects numeric items`, `const invalid: ${operation}Item = 42;`] as const,
+        [`${method} rejects numeric narrowing`, `const invalid: AsyncIterable<number> = generatedClient.${method}();`] as const,
+    ]),
+    ...ReviewResponseCases.flatMap(({ method }) => [
+        [`${method} response narrowing`, `const invalid: Promise<string[]> = generatedClient.${method}();`] as const,
+        [`${method} rejects object response`, `const invalid: Promise<Record<string, unknown>> = generatedClient.${method}();`] as const,
+    ]),
+    ...ReviewMapCases.flatMap(({ name, method }) => [
+        ...[name, `${name}Alias`].flatMap(type => [
+            [`${type} required property`, `const invalid: ${type} = {};`] as const,
+            [`${type} required string`, `const invalid: ${type} = { "wire-name": false };`] as const,
+            [`${type} exact wire name`, `const invalid: ${type} = { wire_name: "text" };`] as const,
+        ]),
+        [`${method} response shape`, `const invalid: Promise<Record<string, boolean>> = generatedClient.${method}();`] as const,
+    ]),
+    ["nested items reject numbers", 'const invalid: ListRootNestedResponse = [[42]];'],
+    ["nonnullable items reject null", 'const invalid: ListRootScalarResponse = [null];'],
+    ["wrapped nested items reject numbers", 'const invalid: ListWrappedNestedResponse = { value: [[42]] };'],
+    ["pageable nested items reject numbers", 'const invalid: ListPageableNestedResponse = { value: [[42]] };'],
+];
 
 const RuntimeConsumer = `
 export async function exerciseMaps(
@@ -129,8 +202,11 @@ function formatDiagnostics(diagnostics: readonly ts.Diagnostic[]): string[] {
 }
 
 /** Loads the generated class against the real SDK base, keeping its imports unchanged. */
-function loadRuntimeConsumer(): (httpClient: HttpClient, minimal: boolean) => Promise<unknown> {
-    const compiled = ts.transpileModule(GeneratedText + RuntimeConsumer, {
+function loadRuntimeConsumer(
+    generatedText = GeneratedText,
+    runtimeConsumer = RuntimeConsumer,
+): (httpClient: HttpClient, minimal: boolean) => Promise<unknown> {
+    const compiled = ts.transpileModule(generatedText + runtimeConsumer, {
         fileName: VirtualFile,
         compilerOptions: { target: ts.ScriptTarget.ES2023, module: ts.ModuleKind.CommonJS, strict: true },
         reportDiagnostics: true,
@@ -149,6 +225,25 @@ function loadRuntimeConsumer(): (httpClient: HttpClient, minimal: boolean) => Pr
     return moduleExports.exerciseMaps as (httpClient: HttpClient, minimal: boolean) => Promise<unknown>;
 }
 
+/** Checks every rejection independently by removing its expected-error directive. */
+function expectConsumerContracts(prefix: string, invalidConsumers: ReadonlyArray<readonly [string, string]>): void {
+    const guarded = invalidConsumers.map(([, source]) => `// @ts-expect-error\n{ ${source} }`).join("\n");
+    expect(formatDiagnostics(compileConsumer(`${prefix}\n${guarded}`))).toEqual([]);
+
+    const unguarded = invalidConsumers.map(([, source]) => `{ ${source} }`).join("\n");
+    const diagnostics = compileConsumer(`${prefix}\n${unguarded}`);
+    const firstInvalidLine = prefix.split("\n").length;
+    expect(diagnostics).toHaveLength(invalidConsumers.length);
+    invalidConsumers.forEach(([name], index) => {
+        const matching = diagnostics.filter(diagnostic =>
+            diagnostic.file !== undefined &&
+            path.resolve(diagnostic.file.fileName).toLowerCase() === VirtualFile.toLowerCase() &&
+            diagnostic.start !== undefined &&
+            diagnostic.file.getLineAndCharacterOfPosition(diagnostic.start).line === firstInvalidLine + index);
+        expect({ name, errors: matching.length }).toEqual({ name, errors: 1 });
+    });
+}
+
 describe("generated scalar-union map consumers (issue #110)", () => {
     it("should retain the exact synthetic generator output", () => {
         const bytes = readFileSync(path.join(__dirname, "fixtures", "ScalarunionfixtureExtensions.ts.txt"));
@@ -156,23 +251,7 @@ describe("generated scalar-union map consumers (issue #110)", () => {
     });
 
     it("should accept valid consumers and reject every invalid consumer with a negative control", () => {
-        const prefix = GeneratedText + RuntimeConsumer + PositiveConsumers;
-        const guarded = InvalidConsumers.map(([, source]) => `// @ts-expect-error\n{ ${source} }`).join("\n");
-        expect(formatDiagnostics(compileConsumer(`${prefix}\n${guarded}`))).toEqual([]);
-
-        const unguarded = InvalidConsumers.map(([, source]) => `{ ${source} }`).join("\n");
-        const controlSource = `${prefix}\n${unguarded}`;
-        const diagnostics = compileConsumer(controlSource);
-        const firstInvalidLine = prefix.split("\n").length;
-        expect(diagnostics).toHaveLength(InvalidConsumers.length);
-        InvalidConsumers.forEach(([name], index) => {
-            const matching = diagnostics.filter(diagnostic =>
-                diagnostic.file !== undefined &&
-                path.resolve(diagnostic.file.fileName).toLowerCase() === VirtualFile.toLowerCase() &&
-                diagnostic.start !== undefined &&
-                diagnostic.file.getLineAndCharacterOfPosition(diagnostic.start).line === firstInvalidLine + index);
-            expect({ name, errors: matching.length }).toEqual({ name, errors: 1 });
-        });
+        expectConsumerContracts(GeneratedText + RuntimeConsumer + PositiveConsumers, InvalidConsumers);
     });
 
     it.each([false, true])("should preserve JSON maps through generated updateMaps/getMaps (minimal: %s)", async minimal => {
@@ -225,5 +304,76 @@ describe("generated scalar-union map consumers (issue #110)", () => {
             { method: "POST", body: expected },
             { method: "GET", body: undefined },
         ]);
+    });
+});
+
+describe("generated scalar-union review regressions (issue #110)", () => {
+    it("should retain exact generator output for all 21 review scenarios", () => {
+        const bytes = readFileSync(path.join(__dirname, "fixtures", "ScalarunionreviewExtensions.ts.txt"));
+        expect(createHash("sha256").update(bytes).digest("hex")).toBe(ReviewFixtureSha256);
+        const operations = [...ReviewListCases, ...ReviewResponseCases, ...ReviewMapCases];
+        expect(operations).toHaveLength(21);
+        expect([...ReviewGeneratedText.matchAll(/public (?:async )?(\w+)\(/g)].map(match => match[1]))
+            .toEqual(operations.map(({ method }) => method));
+    });
+
+    it("should compile exact iterator, response, and inherited-property contracts with negative controls", () => {
+        expectConsumerContracts(ReviewGeneratedText + ReviewRuntimeConsumer + ReviewPositiveConsumers, ReviewInvalidConsumers);
+    });
+
+    it.each([false, true])("should preserve all review shapes and follow empty first pages (minimal: %s)", async minimal => {
+        const expected: Record<string, unknown> = {};
+        const expectedRequests: string[] = [];
+        const responses = new Map<string, unknown>();
+        for (const { operation, shape, values } of ReviewListCases) {
+            const items = minimal ? [] : values;
+            const firstUrl = `${ConnectionUrl}/${operation}`;
+            expected[operation] = items;
+            expectedRequests.push(firstUrl);
+            if (shape === "Pageable") {
+                const nextUrl = `${firstUrl}?page=2`;
+                responses.set(firstUrl, { value: [], nextLink: nextUrl });
+                responses.set(nextUrl, { value: items });
+                expectedRequests.push(nextUrl);
+            } else {
+                responses.set(firstUrl, shape === "Root" ? items : { value: items });
+            }
+        }
+
+        for (const { operation } of ReviewResponseCases) {
+            const url = `${ConnectionUrl}/${operation}`;
+            expected[operation] = minimal ? [] : ["text", false, "", true];
+            responses.set(url, expected[operation]);
+            expectedRequests.push(url);
+        }
+
+        for (const { operation } of ReviewMapCases) {
+            const url = `${ConnectionUrl}/${operation}`;
+            expected[operation] = { "wire-name": minimal ? "" : "text" };
+            responses.set(url, expected[operation]);
+            expectedRequests.push(url);
+        }
+
+        const requests: string[] = [];
+        const httpClient: HttpClient = {
+            sendRequest: async request => {
+                expect(request.method).toBe("GET");
+                expect(request.body).toBeUndefined();
+                expect(request.headers.get("Authorization")).toBe("Bearer synthetic-token");
+                expect(responses.has(request.url)).toBe(true);
+                expect(requests.length).toBeLessThan(expectedRequests.length);
+                requests.push(request.url);
+                return {
+                    request,
+                    status: 200,
+                    headers: createHttpHeaders({ "content-type": "application/json" }),
+                    bodyAsText: JSON.stringify(responses.get(request.url)),
+                };
+            },
+        };
+
+        expect(await loadRuntimeConsumer(ReviewGeneratedText, ReviewRuntimeConsumer)(httpClient, minimal)).toStrictEqual(expected);
+        expect(requests).toStrictEqual(expectedRequests);
+        expect(requests).toHaveLength(26);
     });
 });
