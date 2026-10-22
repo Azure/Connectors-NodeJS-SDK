@@ -2,6 +2,7 @@
 
 import type { TokenCredential } from "@azure/core-auth";
 import { DynamicsaxClient } from "../src/generated/DynamicsaxExtensions.ts";
+import type { AxOnlineProcedureResult } from "../src/generated/DynamicsaxExtensions.ts";
 import { ConnectorError } from "../src/azureConnectors/connectorError.ts";
 import { ConnectorNames } from "../src/generated/connectorNames.ts";
 import { availableConnectors } from "../src/generated/ManagedConnectors.ts";
@@ -90,6 +91,29 @@ describe("DynamicsaxClient — getItems", () => {
             expect(connectorError.statusCode).toBe(404);
             expect(connectorError.responseBody).toBe("Not Found");
         }
+    });
+});
+
+describe("DynamicsaxClient — dynamic procedure results", () => {
+    afterEach(() => { jest.restoreAllMocks(); });
+
+    it.each([false, true])("should preserve empty and mixed dynamic output maps (empty: %s)", async empty => {
+        const response: AxOnlineProcedureResult = {
+            OutputParameters: empty ? {} : {
+                text: "value", count: 0, enabled: false, missing: null, values: [1, "two"], nested: { key: "value" },
+            },
+        };
+        mockFetchResponse(response);
+
+        const result = await new DynamicsaxClient(TestConnectionUrl, createMockCredential())
+            .executeProcedure({ count: 0, enabled: false }, "default", "RunAction");
+
+        expect(result).toStrictEqual(response);
+        expect(global.fetch).toHaveBeenCalledTimes(1);
+        const [url, init] = (global.fetch as jest.Mock).mock.calls[0];
+        expect(url).toBe(`${TestConnectionUrl}/datasets/default/procedures/RunAction`);
+        expect(init.method).toBe("POST");
+        expect(JSON.parse(init.body)).toStrictEqual({ count: 0, enabled: false });
     });
 });
 

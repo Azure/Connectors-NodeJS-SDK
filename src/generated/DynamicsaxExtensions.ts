@@ -253,7 +253,7 @@ export interface AxOnlineProcedureResult {
     /** Output parameter values */
     value?: string;
     /** Output parameter values */
-    OutputParameters?: Record<string, ObjectEntity>;
+    OutputParameters?: Record<string, unknown>;
 }
 
 /**

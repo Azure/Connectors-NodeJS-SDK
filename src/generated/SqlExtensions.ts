@@ -296,7 +296,7 @@ export interface PassThroughNativeQueryBody {
     /** Formal Parameters */
     formalParameters?: Record<string, string>;
     /** Actual parameters */
-    actualParameters?: Record<string, ObjectEntity>;
+    actualParameters?: Record<string, unknown>;
 }
 
 /**
@@ -421,7 +421,7 @@ export interface SqlItemsList {
  */
 export interface SqlPassThroughNativeQueryBody {
     /** Actual parameters */
-    actualParameters?: Record<string, ObjectEntity>;
+    actualParameters?: Record<string, unknown>;
     /** Query Text */
     query?: string;
     /** Formal Parameters */
