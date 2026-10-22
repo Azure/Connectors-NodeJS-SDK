@@ -37,6 +37,9 @@ the returned text directly here, without edits. The pinned output hash is unchan
 Generated file SHA-256 (raw bytes):
 `35eeee02f46b9990ab25b11402842a7aed7b5d2c0f04a77f78bf9ba465673712`.
 
+Canonical UTF-8/LF SHA-256 used by the consumer tests:
+`ece5dacfe1b1cec92e1bd49128c89365c0b0675192c60e1d32f3ef810bf083ed`.
+
 ## Review regression fixture
 
 `ScalarunionreviewExtensions.ts.txt` adds the 21 cases from the committed BPM
@@ -88,7 +91,14 @@ its alias in a 200 response with description `OK`.
 Review generated file SHA-256 (raw bytes):
 `11db365b03cc02bfffcd4c8a94d71abf506c901672d535d01d75c6af1a2454c7`.
 
-The consumer tests verify both output hashes and compile each fixture at a
+Canonical UTF-8/LF SHA-256 used by the consumer tests:
+`fc336f56f5f5166382223f577e9878f60d8808a9eeaaa946c999597f2b4481b4`.
+
+The raw hashes above record the original Windows generator output. The consumer
+tests normalize CRLF to LF before hashing, check both line-ending forms, and
+reject changed source text. They do not change either generated fixture.
+
+The consumer tests verify both canonical output hashes and compile each fixture at a
 virtual SDK generated-source path. Valid consumers check iterator, page, response,
 and required-property contracts. Expected-error directives must cover every
 invalid consumer; removing them must produce one error per consumer as a negative

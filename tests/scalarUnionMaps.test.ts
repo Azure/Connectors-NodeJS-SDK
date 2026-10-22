@@ -11,10 +11,10 @@ import { ConnectorClientBase } from "../src/azureConnectors/clientBase.ts";
 const SdkRoot = path.resolve(__dirname, "..");
 const VirtualFile = path.join(SdkRoot, "src", "generated", "ScalarunionfixtureExtensions.ts");
 const GeneratedText = readFileSync(path.join(__dirname, "fixtures", "ScalarunionfixtureExtensions.ts.txt"), "utf8");
-const FixtureSha256 = "35eeee02f46b9990ab25b11402842a7aed7b5d2c0f04a77f78bf9ba465673712";
+const FixtureSha256 = "ece5dacfe1b1cec92e1bd49128c89365c0b0675192c60e1d32f3ef810bf083ed";
 const ConnectionUrl = "https://scalar-maps.example.test/connection";
 const ReviewGeneratedText = readFileSync(path.join(__dirname, "fixtures", "ScalarunionreviewExtensions.ts.txt"), "utf8");
-const ReviewFixtureSha256 = "11db365b03cc02bfffcd4c8a94d71abf506c901672d535d01d75c6af1a2454c7";
+const ReviewFixtureSha256 = "fc336f56f5f5166382223f577e9878f60d8808a9eeaaa946c999597f2b4481b4";
 const ReviewItemCases = [
     { name: "Scalar", type: "string | boolean", values: ["text", false, "", true] },
     { name: "Nullable", type: "string | boolean | null", values: [null, "text", false] },
@@ -244,10 +244,16 @@ function expectConsumerContracts(prefix: string, invalidConsumers: ReadonlyArray
     });
 }
 
+/** Hashes generated text with LF endings so Git checkout settings do not change its identity. */
+function computeCanonicalTextSha256(text: string): string {
+    return createHash("sha256").update(text.replace(/\r\n/g, "\n"), "utf8").digest("hex");
+}
+
 describe("generated scalar-union map consumers (issue #110)", () => {
-    it("should retain the exact synthetic generator output", () => {
-        const bytes = readFileSync(path.join(__dirname, "fixtures", "ScalarunionfixtureExtensions.ts.txt"));
-        expect(createHash("sha256").update(bytes).digest("hex")).toBe(FixtureSha256);
+    it.each(["\n", "\r\n"])("should retain the synthetic generator output with %j line endings", lineEnding => {
+        const text = GeneratedText.replace(/\r\n/g, "\n").replace(/\n/g, lineEnding);
+        expect(computeCanonicalTextSha256(text)).toBe(FixtureSha256);
+        expect(computeCanonicalTextSha256(text.replace("export class", "export abstract class"))).not.toBe(FixtureSha256);
     });
 
     it("should accept valid consumers and reject every invalid consumer with a negative control", () => {
@@ -308,9 +314,10 @@ describe("generated scalar-union map consumers (issue #110)", () => {
 });
 
 describe("generated scalar-union review regressions (issue #110)", () => {
-    it("should retain exact generator output for all 21 review scenarios", () => {
-        const bytes = readFileSync(path.join(__dirname, "fixtures", "ScalarunionreviewExtensions.ts.txt"));
-        expect(createHash("sha256").update(bytes).digest("hex")).toBe(ReviewFixtureSha256);
+    it.each(["\n", "\r\n"])("should retain generator output for all 21 review scenarios with %j line endings", lineEnding => {
+        const text = ReviewGeneratedText.replace(/\r\n/g, "\n").replace(/\n/g, lineEnding);
+        expect(computeCanonicalTextSha256(text)).toBe(ReviewFixtureSha256);
+        expect(computeCanonicalTextSha256(text.replace("export class", "export abstract class"))).not.toBe(ReviewFixtureSha256);
         const operations = [...ReviewListCases, ...ReviewResponseCases, ...ReviewMapCases];
         expect(operations).toHaveLength(21);
         expect([...ReviewGeneratedText.matchAll(/public (?:async )?(\w+)\(/g)].map(match => match[1]))
