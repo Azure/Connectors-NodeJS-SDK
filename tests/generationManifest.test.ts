@@ -23,6 +23,13 @@ interface ManifestConnectorEntry {
     swaggerInputSha256: string;
     capturedAtUtc: string;
     outputSha256: string;
+    runId?: string;
+    validation?: {
+        runId: string;
+        capturedAtUtc: string;
+        swaggerInputSha256: string;
+        outputSha256: string;
+    };
     generatorCommit?: string;
     sourcePatch?: {
         path: string;
@@ -66,9 +73,108 @@ interface GenerationManifest {
         };
     };
     connectors: ManifestConnectorEntry[];
+    generationRuns: Record<string, GenerationRun>;
+    refresh: {
+        runId: string;
+        refreshedConnectors: string[];
+        retainedConnectors: Array<{ apiName: string; reason: string }>;
+        sharedFiles: Array<{ outputFile: string; outputSha256: string }>;
+    };
     routeIdentityLoss?: {
         droppedTriggerRoutes: ManifestDroppedTriggerRoute[];
     };
+}
+
+/**
+ * Source and capture bounds for a partial refresh and its independent live validation.
+ */
+interface GenerationRun {
+    captureStartedAtUtc: string;
+    generatedAtUtc: string;
+    generator: GenerationManifest["generator"] & {
+        assemblySha256: string;
+        upstreamStatus: string;
+        pullRequest: string;
+        pullRequestSourceCommit: string;
+    };
+    swaggerSource: { kind: string; subscriptionId: string; location: string; apiVersion: string };
+    connectorListInputSha256: string;
+    validation: { runId: string; captureStartedAtUtc: string; generatedAtUtc: string; connectorListInputSha256: string };
+}
+
+/**
+ * Rejects incomplete or inconsistent source composition for a partial run.
+ */
+function validateRunSource(run: GenerationRun): void {
+    const generator = run.generator;
+    if (!/^[0-9a-f]{40}$/.test(generator.bpmBaseCommit ?? "") ||
+        !/^[0-9a-f]{40}$/.test(generator.bpmHeadCommit ?? "") ||
+        !/^\d+\.\d+\.\d+\.\d+$/.test(generator.assemblyVersion ?? "") ||
+        (generator.sourcePatch === undefined && generator.bpmBaseCommit !== generator.bpmHeadCommit)) {
+        throw new Error("Run generator source composition is incomplete.");
+    }
+
+    if (generator.sourcePatch !== undefined &&
+        (generator.bpmBaseCommit === generator.bpmHeadCommit ||
+        !path.basename(generator.sourcePatch.path).startsWith(generator.bpmHeadCommit!.slice(0, 7) + "-") ||
+        !/^[0-9a-f]{64}$/.test(generator.sourcePatch.sha256) ||
+        computeCanonicalTextSha256(generator.sourcePatch.path) !== generator.sourcePatch.sha256)) {
+        throw new Error("Run source patch does not match its recorded head or hash.");
+    }
+
+    if (generator.sourcePatch !== undefined) {
+        const patch = fs.readFileSync(path.join(RepositoryRoot, generator.sourcePatch.path), "utf8").replace(/\r\n/g, "\n");
+        const sections = patch.split(/(?=^diff --git )/gm).filter(section => section.startsWith("diff --git "));
+        const paths = sections.map(section => {
+            const header = section.match(/^diff --git a\/(.+) b\/(.+)$/m);
+            if (header === null || header[1] !== header[2] ||
+                !/^src\/tools\/CodefulSdkGenerator(?:\.Tests)?\//.test(header[2])) {
+                throw new Error("Run patch must contain only generator and generator-test source paths.");
+            }
+
+            return header[2];
+        });
+        if (paths.length === 0 || new Set(paths).size !== paths.length ||
+            !paths.some(changedPath => changedPath.includes("CodefulSdkGenerator.Tests/")) ||
+            !paths.some(changedPath => changedPath.includes("DirectClient/"))) {
+            throw new Error("Run patch must include generator behavior and its tests without duplicate paths.");
+        }
+    }
+}
+
+/**
+ * Requires each refreshed connector to match its own run and independent live validation.
+ */
+function validateConnectorRun(manifest: GenerationManifest, connector: ManifestConnectorEntry): void {
+    if (connector.runId === undefined) {
+        if (manifest.refresh.refreshedConnectors.includes(connector.apiName)) {
+            throw new Error("A refreshed connector must identify its live run.");
+        }
+
+        validateCaptureWindow(manifest.captureStartedAtUtc, manifest.generatedAtUtc, connector.capturedAtUtc);
+        return;
+    }
+
+    const run = manifest.generationRuns[connector.runId];
+    const validation = connector.validation;
+    if (!/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/.test(connector.runId) ||
+        run === undefined || connector.runId !== manifest.refresh.runId ||
+        !manifest.refresh.refreshedConnectors.includes(connector.apiName) ||
+        validation === undefined || validation.runId !== run.validation.runId ||
+        !/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/.test(validation.runId) ||
+        validation.runId === connector.runId ||
+        validation.swaggerInputSha256 !== connector.swaggerInputSha256 ||
+        validation.outputSha256 !== connector.outputSha256 ||
+        connector.generatorCommit !== undefined || connector.sourcePatch !== undefined) {
+        throw new Error("Connector provenance does not match its live run and independent validation.");
+    }
+
+    validateRunSource(run);
+    validateCaptureWindow(run.captureStartedAtUtc, run.generatedAtUtc, connector.capturedAtUtc);
+    validateCaptureWindow(run.validation.captureStartedAtUtc, run.validation.generatedAtUtc, validation.capturedAtUtc);
+    if (parseUtcTimestamp(run.validation.captureStartedAtUtc) < parseUtcTimestamp(run.generatedAtUtc)) {
+        throw new Error("Independent validation must start after generation completes.");
+    }
 }
 
 /**
@@ -164,12 +270,12 @@ describe("generation.manifest.json provenance", () => {
     });
 
     it("should use the verified source-composition manifest schema", () => {
-        expect(manifest.manifestVersion).toBe(4);
+        expect(manifest.manifestVersion).toBe(5);
     });
 
     it.each(manifest.connectors)("should record bounded live input capture metadata for $apiName", connector => {
         expect(connector.swaggerInputSha256).toMatch(/^[0-9a-f]{64}$/);
-        validateCaptureWindow(manifest.captureStartedAtUtc, manifest.generatedAtUtc, connector.capturedAtUtc);
+        validateConnectorRun(manifest, connector);
         expect(connector).not.toHaveProperty("swaggerSnapshot");
         expect(connector).not.toHaveProperty("swaggerSha256");
     });
@@ -298,6 +404,75 @@ describe("generation.manifest.json provenance", () => {
 
     it("should list at least one connector", () => {
         expect(manifest.connectors.length).toBeGreaterThan(0);
+    });
+
+    it("should refresh exactly 74 connectors and retain only Orderful with its original provenance", () => {
+        expect(manifest.connectors).toHaveLength(75);
+        expect(manifest.refresh.refreshedConnectors).toHaveLength(74);
+        expect(new Set(manifest.refresh.refreshedConnectors).size).toBe(74);
+        expect(manifest.refresh.refreshedConnectors.slice().sort()).toEqual(
+            manifest.connectors.filter(connector => connector.apiName !== "orderful").map(connector => connector.apiName).sort(),
+        );
+        expect(manifest.refresh.retainedConnectors).toHaveLength(1);
+        expect(manifest.refresh.retainedConnectors[0].apiName).toBe("orderful");
+        expect(manifest.refresh.retainedConnectors[0].reason).toContain("ApiNotFound");
+        const retained = manifest.connectors.find(connector => connector.apiName === "orderful")!;
+        expect(retained.runId).toBeUndefined();
+        expect(retained.validation).toBeUndefined();
+        expect(retained.generatorCommit).toBeUndefined();
+        expect(retained.sourcePatch).toBeUndefined();
+        expect(retained.capturedAtUtc).toBe("2026-10-08T23:40:06.593Z");
+        expect(retained.outputSha256).toBe("847421915c1cb5ab7cd35df65354dcb5edb86f7f9359b4fb86a1fa290d7655e1");
+        expect(retained.swaggerInputSha256).toBe("b8382ee707badc592068578bcb292639aca3bbbaec050e877f343a95ea4a26ba");
+        expect(manifest.generator.bpmBaseCommit).toBe("7c26edf742318d57c473947e02a006487582c8fd");
+        expect(manifest.generator.bpmHeadCommit).toBe(manifest.generator.bpmBaseCommit);
+        expect(manifest.refresh.sharedFiles.map(file => file.outputFile).sort()).toEqual([
+            "src/generated/ManagedConnectors.ts", "src/generated/connectorNames.ts", "src/generated/index.ts",
+        ]);
+        for (const file of manifest.refresh.sharedFiles) {
+            expect(computeCanonicalTextSha256(file.outputFile)).toBe(file.outputSha256);
+        }
+    });
+
+    it("should distinguish local unpushed generator source from the paired PR and record the live endpoint", () => {
+        const run = manifest.generationRuns[manifest.refresh.runId];
+        validateRunSource(run);
+        expect(run.generator.bpmBaseCommit).toBe("e2d2073a07d88d1fbb1a65a61df27b41b0ed5627");
+        expect(run.generator.bpmHeadCommit).toBe("ae43130532c83c922aea4ad9d39bc44a86f71f5c");
+        expect(run.generator.assemblySha256).toMatch(/^[0-9a-f]{64}$/);
+        expect(run.generator.upstreamStatus).toBe("local-committed-unpushed");
+        expect(run.generator.pullRequest).toContain("17586353");
+        expect(run.generator.pullRequestSourceCommit).toBe("c995a1a7cf144f9211305f078ec5610938872321");
+        expect(run.swaggerSource.kind).toBe("live-arm-metadata");
+        expect(run.swaggerSource.subscriptionId).toMatch(/^[0-9a-f-]{36}$/);
+        expect(run.swaggerSource.location).toBe("westus");
+        expect(run.swaggerSource.apiVersion).toBe("2018-07-01-preview");
+        expect(run.connectorListInputSha256).toMatch(/^[0-9a-f]{64}$/);
+        expect(run.validation.connectorListInputSha256).toBe(run.connectorListInputSha256);
+    });
+
+    it.each(["missing-run", "unknown-run", "stale-capture", "validation-run", "validation-input", "validation-output", "validation-stale", "old-source"])(
+        "should reject false per-connector freshness: %s", mutation => {
+            const changed = structuredClone(manifest);
+            const connector = changed.connectors.find(entry => entry.apiName === "arm")!;
+            if (mutation === "missing-run") delete connector.runId;
+            if (mutation === "unknown-run") connector.runId = "unknown";
+            if (mutation === "stale-capture") connector.capturedAtUtc = manifest.connectors.find(entry => entry.apiName === "orderful")!.capturedAtUtc;
+            if (mutation === "validation-run") connector.validation!.runId = connector.runId!;
+            if (mutation === "validation-input") connector.validation!.swaggerInputSha256 = "0".repeat(64);
+            if (mutation === "validation-output") connector.validation!.outputSha256 = "0".repeat(64);
+            if (mutation === "validation-stale") connector.validation!.capturedAtUtc = connector.capturedAtUtc;
+            if (mutation === "old-source") connector.generatorCommit = manifest.generator.bpmBaseCommit!;
+            expect(() => validateConnectorRun(changed, connector)).toThrow();
+        },
+    );
+
+    it.each(["missing-patch", "wrong-head", "wrong-hash"])("should reject false run source composition: %s", mutation => {
+        const run = structuredClone(manifest.generationRuns[manifest.refresh.runId]);
+        if (mutation === "missing-patch") delete run.generator.sourcePatch;
+        if (mutation === "wrong-head") run.generator.bpmHeadCommit = "0".repeat(40);
+        if (mutation === "wrong-hash") run.generator.sourcePatch!.sha256 = "0".repeat(64);
+        expect(() => validateRunSource(run)).toThrow();
     });
 
     const connectorCases: Array<[string, ManifestConnectorEntry]> = manifest.connectors.map(

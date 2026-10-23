@@ -109,10 +109,59 @@ byte-for-byte once either source changes, and a cross-language surface delta (fo
 example, an operation present in the .NET SDK but missing here) cannot be attributed to
 a specific cause — stale output, a newer Swagger snapshot, or a generator divergence.
 
-Schema v4 of [`generation.manifest.json`](generation.manifest.json) separates
+Schema v5 of [`generation.manifest.json`](generation.manifest.json) separates
 hashes of consumed live definitions from hashes of repository test fixtures.
 Fixtures are not refresh or review inputs. Generate and review from live metadata
 independently; do not introduce new cache folders, catalogs, or offline replay workflows.
+
+### Partial live refreshes
+
+Schema v5 keeps the original top-level source and capture window as the default
+for retained clients. Each refreshed connector names a `runId` in `generationRuns`.
+That run records its own source composition, live endpoint, capture window, and
+independent validation window. Never update the default source or timestamps to
+make an untouched client appear fresh. Existing connector-specific source patches
+still apply to retained clients; refreshed entries use their run's source instead.
+
+`refresh.refreshedConnectors` names the exact refreshed set.
+`refresh.retainedConnectors` names every retained client and explains why it was
+not refreshed. Each refreshed entry's `validation` records the second run's ID,
+capture time, input hash, and output hash. Both runs must independently fetch live
+metadata into new empty GUID-named temporary caches. Compare all 74 input hashes
+and all generated client and shared-file hashes before replacing output. Delete
+both response stores, even on failure. Input hashes identify consumed raw ARM
+response text with CRLF normalized to LF, not reordered JSON.
+
+The October refresh retains Orderful because fresh probes returned `ApiNotFound`
+in westus, eastus, westcentralus, and westeurope. Its client bytes and October 8
+provenance remain unchanged. The other 74 clients use BPM source
+`ae43130532c83c922aea4ad9d39bc44a86f71f5c` on `swapnil/issue110` in the paired,
+active, unmerged
+[BPM PR 17586353](https://msazure.visualstudio.com/One/_git/AzureUX-BPM/pullrequest/17586353)
+which must integrate before the SDK PR merges. The dynamic-schema guard fix preserves open dynamic
+payloads, including SharePoint item inputs, while keeping typed dictionary values.
+The manifest retains the publication state observed during capture: the source
+was then locally committed but unpushed, and the PR still pointed to
+`c995a1a7cf144f9211305f078ec5610938872321`. These historical fields do not
+describe the current remote branch. Synthetic scalar-union fixture provenance
+also remains at `c995a1a7cf144f9211305f078ec5610938872321`.
+The patch comes directly from the Git diff against
+`e2d2073a07d88d1fbb1a65a61df27b41b0ed5627`. Indexed replay in a disposable
+worktree must match the target generator and test trees, with no unstaged changes.
+Build the actual verified source in Release; an existing binary is not evidence.
+The run records the assembly bytes used for both downloads. BPM embeds the local
+build time in `AssemblyInformationalVersion`, so later builds can have different
+assembly hashes without source changes. Do not replace a captured run's assembly
+hash with the hash of a later test build.
+
+For the complete 75-entry registries, call the built generator's
+`GenerateNavigatorClass` and `GenerateAuxiliaryFiles` methods in a disposable
+process. Supply the 74 freshly generated client class names and live ARM-list
+display names, plus Orderful's retained `OrderfulClient`/`Orderful` metadata.
+These methods need class metadata, not Swagger. Do not fetch an old Orderful
+schema, generate its client, or claim that its metadata was captured in this run.
+Record hashes for all three shared files in `refresh.sharedFiles`. Keep the
+disposable harness and response stores outside the repository.
 
 `swaggerInputSha256` identifies the actual definition consumed by the run.
 `swaggerFixtureSha256` identifies the existing test fixture, which may differ.
@@ -128,7 +177,7 @@ is a separate final merge gate, not a prerequisite for showing the paired output
 
 | Field | Meaning |
 |-------|---------|
-| `manifestVersion` | `4`, separating live-input metadata from repository fixture hashes. |
+| `manifestVersion` | `5`, adding explicit partial-run provenance without relabeling retained clients. |
 | `status` | `template` until a run records real values; `generated` for a captured run. |
 | `captureStartedAtUtc` | Start of the complete live capture, before any request is made. |
 | `generatedAtUtc` | End of the complete generation run; not earlier than any input capture. |
@@ -136,6 +185,9 @@ is a separate final merge gate, not a prerequisite for showing the paired output
 | `generator.bpmHeadCommit` | Immutable BPM commit whose generator tree the base-plus-patch composition must reproduce. |
 | `generator.bpmBranch` | BPM branch the commit was on (informational). |
 | `generator.assemblyVersion` | File version of the built `Microsoft.Azure.Workflows.CodefulSdkGenerator.dll`. |
+| `generationRuns[].generator.assemblySha256` | Byte SHA-256 of the generator assembly used by both fresh runs. |
+| `generationRuns[].generator.upstreamStatus` | Source publication state observed during capture, not a current remote-state claim. |
+| `generationRuns[].generator.pullRequestSourceCommit` | Remote branch commit observed for the paired PR during capture. |
 | `generator.sourcePatch.path` | Repository-relative patch applied to `bpmBaseCommit` before building the generator. |
 | `generator.sourcePatch.sha256` | SHA-256 of the source patch as canonical UTF-8/LF text. |
 | `swaggerSource.subscriptionId` | Azure subscription whose regional managed-connector metadata was read (`AZURE_SUBSCRIPTION_ID`). |
@@ -149,6 +201,10 @@ is a separate final merge gate, not a prerequisite for showing the paired output
 | `connectors[].generatorCommit` | Optional immutable BPM baseline used instead of `generator.bpmBaseCommit` for one connector; requires `sourcePatch`. |
 | `connectors[].sourcePatch.path` | Repository-relative patch required with a connector-specific `generatorCommit`. |
 | `connectors[].sourcePatch.sha256` | SHA-256 of the connector-specific patch as canonical UTF-8/LF text. |
+| `connectors[].runId` | Optional key into `generationRuns`; required for each client named in the current refresh. |
+| `generationRuns` | Run-scoped generator, live endpoint, capture bounds, ARM-list hash, and independent validation bounds. |
+| `connectors[].validation` | Independent live run ID, capture time, input hash, and output hash; must match the refreshed client. |
+| `refresh` | Exact refreshed/retained inventory, retention reasons, and generator-emitted shared-file hashes. |
 
 ### Recording provenance for a run
 
@@ -158,7 +214,11 @@ fresh captures. Update a fixture only when its tested contract changes; its hash
 not substituted for a missing live-input hash. Use PowerShell 7.5 or later so
 `ConvertFrom-Json -DateKind String` preserves canonical timestamp strings.
 
-This recipe expects a schema-v4 manifest. Legacy `swaggerSnapshot` and
+The complete-run recipe below describes the schema-v4 default fields. For schema
+v5 partial runs, write those values into the new run, add each refreshed entry's
+`runId` and independent `validation`, and leave all default fields and retained
+entries unchanged. Do not run the complete-run recipe over a partial allowlist.
+Legacy `swaggerSnapshot` and
 `swaggerSha256` fields migrate to fixture fields, not live-input provenance;
 new input hashes and capture times must come from a fresh complete run.
 

@@ -1,0 +1,1150 @@
+diff --git a/src/tools/CodefulSdkGenerator.Tests/DirectClientAdditionalPropertiesMapTests.cs b/src/tools/CodefulSdkGenerator.Tests/DirectClientAdditionalPropertiesMapTests.cs
+index 48f432c0f9a91003a3520e143f4180cc712945b6..78ce63d340e7d8327a1bfdf44f5065606317fbb4 100644
+--- a/src/tools/CodefulSdkGenerator.Tests/DirectClientAdditionalPropertiesMapTests.cs
++++ b/src/tools/CodefulSdkGenerator.Tests/DirectClientAdditionalPropertiesMapTests.cs
+@@ -140,6 +140,147 @@ namespace LogicApps.Tests
+         }
+         """;
+ 
++        /// <summary>
++        /// Models SharePoint's unresolved body schema and static map controls from the live export.
++        /// </summary>
++        private static readonly string DynamicItemSwagger = """
++        {
++            "swagger": "2.0",
++            "info": { "title": "Dynamic item fixture", "version": "1.0" },
++            "host": "example.invalid", "basePath": "/", "schemes": ["https"],
++            "paths": {
++                "/datasets/{dataset}/tables/{table}/items": {
++                    "post": {
++                        "operationId": "PostItem", "summary": "Create item",
++                        "parameters": [
++                            { "name": "dataset", "in": "path", "required": true, "type": "string" },
++                            { "name": "table", "in": "path", "required": true, "type": "string" },
++                            { "name": "view", "in": "query", "type": "string" },
++                            { "name": "item", "in": "body", "required": true, "schema": {
++                                "type": "object", "additionalProperties": { "$ref": "#/definitions/Item" },
++                                "x-ms-dynamic-schema": {
++                                    "operationId": "GetTable", "value-path": "Schema/Items",
++                                    "parameters": {
++                                        "dataset": { "parameter": "dataset" },
++                                        "table": { "parameter": "table" },
++                                        "view": { "parameter": "view" }
++                                    }
++                                }
++                            } }
++                        ],
++                        "responses": { "200": { "description": "OK", "schema": { "$ref": "#/definitions/DynamicBody" } } }
++                    }
++                },
++                "/datasets/{dataset}/tables/{table}/items/{id}": {
++                    "patch": {
++                        "operationId": "PatchItem", "summary": "Update item",
++                        "parameters": [
++                            { "name": "dataset", "in": "path", "required": true, "type": "string" },
++                            { "name": "table", "in": "path", "required": true, "type": "string" },
++                            { "name": "id", "in": "path", "required": true, "type": "integer" },
++                            { "name": "item", "in": "body", "required": true, "schema": { "$ref": "#/definitions/DynamicBody" } }
++                        ],
++                        "responses": { "200": { "description": "OK", "schema": { "$ref": "#/definitions/DynamicBody" } } }
++                    }
++                }
++            },
++            "definitions": {
++                "DynamicBody": {
++                    "type": "object", "additionalProperties": { "$ref": "#/definitions/Item" },
++                    "x-ms-dynamic-schema": {
++                        "operationId": "GetTable", "value-path": "Schema/Items",
++                        "parameters": {
++                            "dataset": { "parameter": "dataset" },
++                            "table": { "parameter": "table" },
++                            "view": { "parameter": "view" }
++                        }
++                    }
++                },
++                "Item": {
++                    "type": "object",
++                    "properties": { "dynamicProperties": { "type": "object", "additionalProperties": { "$ref": "#/definitions/Object" } } },
++                    "additionalProperties": { "$ref": "#/definitions/Object" },
++                    "x-ms-dynamic-schema": {
++                        "operationId": "GetTable", "value-path": "Schema/Items",
++                        "parameters": {
++                            "dataset": { "parameter": "dataset" },
++                            "table": { "parameter": "table" },
++                            "view": { "parameter": "view" }
++                        }
++                    }
++                },
++                "Object": { "type": "object" },
++                "StaticValue": { "type": "object", "required": ["name"], "properties": { "name": { "type": "string" } } },
++                "StaticMap": { "type": "object", "additionalProperties": { "$ref": "#/definitions/StaticValue" } },
++                "Controls": {
++                    "type": "object",
++                    "properties": {
++                        "structuredMap": { "type": "object", "additionalProperties": { "$ref": "#/definitions/StaticValue" } },
++                        "scalarMap": { "type": "object", "additionalProperties": { "type": ["string", "number", "boolean"] } },
++                        "dynamicMap": {
++                            "type": "object", "additionalProperties": { "$ref": "#/definitions/Item" },
++                            "x-ms-dynamic-schema": { "operationId": "GetTable", "parameters": {}, "value-path": "Schema/Items" }
++                        },
++                        "dynamicValuesOnly": {
++                            "type": "object", "additionalProperties": { "$ref": "#/definitions/StaticValue" },
++                            "x-ms-dynamic-values": { "operationId": "GetValues", "parameters": {} }
++                        },
++                        "mapOfDynamicBodies": { "type": "object", "additionalProperties": { "$ref": "#/definitions/DynamicBody" } }
++                    }
++                }
++            }
++        }
++        """;
++
++        /// <summary>
++        /// Keeps unresolved inline and referenced dynamic bodies open without widening static maps.
++        /// </summary>
++        [TestMethod]
++        [Owner("swapnilnagar")]
++        public void Generate_TypeScriptDynamicSchema_PreservesFlatBodiesAndStaticControls()
++        {
++            var output = DirectClientAdditionalPropertiesMapTests.GenerateTypeScript(
++                JsonObject.Parse(DirectClientAdditionalPropertiesMapTests.DynamicItemSwagger).AsObject());
++
++            foreach (var typeName in new[] { "PostItemInput", "DynamicBody" })
++            {
++                StringAssert.Contains(
++                    value: output,
++                    substring: $"export interface {typeName} {{{Environment.NewLine}    [key: string]: unknown;{Environment.NewLine}}}",
++                    comparisonType: StringComparison.Ordinal);
++            }
++
++            StringAssert.Contains(value: output, substring: "input: PostItemInput", comparisonType: StringComparison.Ordinal);
++            StringAssert.Contains(value: output, substring: "input: DynamicBody", comparisonType: StringComparison.Ordinal);
++            StringAssert.Contains(value: output, substring: "dynamicMap?: Record<string, unknown>;", comparisonType: StringComparison.Ordinal);
++            StringAssert.Contains(value: output, substring: "structuredMap?: Record<string, StaticValue>;", comparisonType: StringComparison.Ordinal);
++            StringAssert.Contains(value: output, substring: "scalarMap?: Record<string, string | number | boolean>;", comparisonType: StringComparison.Ordinal);
++            StringAssert.Contains(value: output, substring: "dynamicValuesOnly?: Record<string, StaticValue>;", comparisonType: StringComparison.Ordinal);
++            StringAssert.Contains(value: output, substring: "mapOfDynamicBodies?: Record<string, DynamicBody>;", comparisonType: StringComparison.Ordinal);
++            StringAssert.Contains(value: output, substring: "export type StaticMap = Record<string, StaticValue>;", comparisonType: StringComparison.Ordinal);
++            StringAssert.Contains(value: output, substring: "name: string;", comparisonType: StringComparison.Ordinal);
++        }
++
++        /// <summary>
++        /// Requires the dynamic marker rather than inferring dynamic semantics from optional object references.
++        /// </summary>
++        [TestMethod]
++        [Owner("swapnilnagar")]
++        public void Generate_TypeScriptWithoutDynamicSchema_PreservesTypedItemMaps()
++        {
++            var document = JsonObject.Parse(DirectClientAdditionalPropertiesMapTests.DynamicItemSwagger).AsObject();
++            document["paths"]["/datasets/{dataset}/tables/{table}/items"]["post"]["parameters"].AsArray()
++                .Single(parameter => string.Equals((string)parameter["in"], "body", StringComparison.Ordinal))
++                ["schema"].AsObject().Remove("x-ms-dynamic-schema");
++            document["definitions"]["DynamicBody"].AsObject().Remove("x-ms-dynamic-schema");
++            document["definitions"]["Controls"]["properties"]["dynamicMap"].AsObject().Remove("x-ms-dynamic-schema");
++            var output = DirectClientAdditionalPropertiesMapTests.GenerateTypeScript(document);
++
++            StringAssert.Contains(value: output, substring: "export type PostItemInput = Record<string, Item>;", comparisonType: StringComparison.Ordinal);
++            StringAssert.Contains(value: output, substring: "export type DynamicBody = Record<string, Item>;", comparisonType: StringComparison.Ordinal);
++            StringAssert.Contains(value: output, substring: "dynamicMap?: Record<string, Item>;", comparisonType: StringComparison.Ordinal);
++        }
++
+         /// <summary>
+         /// Verifies typed map value schemas participate in model reachability without cycling.
+         /// </summary>
+diff --git a/src/tools/CodefulSdkGenerator.Tests/DirectClientTypeScriptScalarUnionTests.cs b/src/tools/CodefulSdkGenerator.Tests/DirectClientTypeScriptScalarUnionTests.cs
+new file mode 100644
+index 0000000000000000000000000000000000000000..fbe60ccb67eedfb4b3be0a3cb4e4ace05254f229
+--- /dev/null
++++ b/src/tools/CodefulSdkGenerator.Tests/DirectClientTypeScriptScalarUnionTests.cs
+@@ -0,0 +1,357 @@
++//------------------------------------------------------------
++// Copyright (c) Microsoft Corporation.  All rights reserved.
++//------------------------------------------------------------
++
++namespace LogicApps.Tests
++{
++    using System;
++    using System.Diagnostics.CodeAnalysis;
++    using System.IO;
++    using System.Linq;
++    using System.Text.Json.Nodes;
++    using System.Text.RegularExpressions;
++    using Microsoft.Azure.Workflows.CodefulSdkGenerator.DirectClient;
++    using Microsoft.VisualStudio.TestTools.UnitTesting;
++
++    /// <summary>
++    /// Generates clients from pinned scalar-union schemas and verifies strict rejection of unsafe alternatives.
++    /// </summary>
++    [TestClass]
++    [TestCategory("CheckInTests")]
++    [ExcludeFromCodeCoverage]
++    public class DirectClientTypeScriptScalarUnionTests
++    {
++        /// <summary>
++        /// Pinned synthetic Swagger shared with downstream SDK fixture generation through reflection.
++        /// </summary>
++        public const string ScalarUnionSwagger = """
++        {
++          "swagger": "2.0",
++          "info": { "title": "Scalar union fixture", "version": "1.0" },
++          "host": "example.invalid", "basePath": "/", "schemes": ["https"],
++          "paths": {
++            "/maps": {
++              "get": {
++                "operationId": "GetMaps", "summary": "Get maps",
++                "responses": { "200": { "description": "OK", "schema": { "$ref": "#/definitions/Envelope" } } }
++              },
++              "post": {
++                "operationId": "UpdateMaps", "summary": "Update maps",
++                "parameters": [{ "name": "body", "in": "body", "required": true, "schema": { "$ref": "#/definitions/Envelope" } }],
++                "responses": { "200": { "description": "OK", "schema": { "$ref": "#/definitions/Envelope" } } }
++              }
++            }
++          },
++          "definitions": {
++            "Envelope": {
++              "type": "object",
++              "required": ["scalar-map", "nullableMap"],
++              "properties": {
++                "scalar-map": { "type": "object", "additionalProperties": { "type": ["string", "number", "boolean"] } },
++                "scalar_map": { "type": "object", "additionalProperties": { "anyOf": [{ "type": "string" }, { "type": "integer" }, { "type": "boolean" }] } },
++                "oneOfMap": { "type": "object", "additionalProperties": { "oneOf": [{ "$ref": "#/definitions/Text" }, { "type": "number" }, { "type": "boolean" }] } },
++                "nullableMap": { "type": "object", "additionalProperties": { "type": ["string", "number", "boolean", "null"] } },
++                "nullableAnyOf": { "type": "object", "additionalProperties": { "anyOf": [{ "type": "string" }, { "type": "null" }] } },
++                "nullableOneOf": { "type": "object", "additionalProperties": { "oneOf": [{ "type": "boolean" }, { "type": "null" }] } },
++                "numericMap": { "type": "object", "additionalProperties": { "anyOf": [{ "type": "integer" }, { "type": "number" }] } },
++                "implicitMap": { "additionalProperties": { "type": ["string", "boolean"] } },
++                "arrayMap": { "type": "object", "additionalProperties": { "type": "array", "items": { "type": ["string", "boolean"] } } },
++                "structuredMap": { "type": "object", "additionalProperties": { "$ref": "#/definitions/StructuredValue" } },
++                "structuredArray": { "type": "array", "items": { "$ref": "#/definitions/StructuredValue" } },
++                "emptyObject": { "type": "object" },
++                "emptyMap": { "type": "object", "additionalProperties": {} }
++              }
++            },
++            "Text": { "type": "string" },
++            "StructuredValue": { "type": "object", "required": ["wire-name"], "properties": { "wire-name": { "type": "string" } } }
++          }
++        }
++        """;
++
++        /// <summary>
++        /// Verifies concrete map values, independent nullability, reference models, and exact wire names.
++        /// </summary>
++        [TestMethod]
++        [Owner("swapnilnagar")]
++        public void Generate_PinnedScalarUnions_PreservesConcreteMapsAndInventory()
++        {
++            var document = JsonNode.Parse(DirectClientTypeScriptScalarUnionTests.ScalarUnionSwagger).AsObject();
++            var output = DirectClientTypeScriptScalarUnionTests.GenerateFixture();
++            foreach (var declaration in new[]
++            {
++                "\"scalar-map\": Record<string, string | number | boolean>;",
++                "scalar_map?: Record<string, string | number | boolean>;",
++                "oneOfMap?: Record<string, string | number | boolean>;",
++                "nullableMap: Record<string, string | number | boolean | null>;",
++                "nullableAnyOf?: Record<string, string | null>;",
++                "nullableOneOf?: Record<string, boolean | null>;",
++                "numericMap?: Record<string, number>;",
++                "implicitMap?: Record<string, string | boolean>;",
++                "arrayMap?: Record<string, Array<string | boolean>>;",
++                "structuredMap?: Record<string, StructuredValue>;",
++                "structuredArray?: Array<StructuredValue>;",
++                "emptyObject?: Record<string, unknown>;",
++                "emptyMap?: Record<string, unknown>;",
++                "\"wire-name\": string;",
++            })
++            {
++                StringAssert.Contains(value: output, substring: declaration, comparisonType: StringComparison.Ordinal);
++            }
++
++            var envelopeBody = Regex.Match(output, @"export interface Envelope \{(?<body>.*?)\r?\n\}", RegexOptions.Singleline).Groups["body"].Value;
++            var emittedProperties = Regex.Matches(envelopeBody, @"^    (?<name>\""[^\""\r\n]+\""|[\w$]+)\??:", RegexOptions.Multiline)
++                .Select(match => match.Groups["name"].Value.Trim('"')).ToArray();
++            CollectionAssert.AreEquivalent(
++                expected: document["definitions"]["Envelope"]["properties"].AsObject().Select(property => property.Key).ToArray(),
++                actual: emittedProperties);
++            var emittedOperations = Regex.Matches(output, @"public async (?<operation>\w+)\(")
++                .Select(match => match.Groups["operation"].Value).ToArray();
++            var expectedOperations = document["paths"]["/maps"].AsObject()
++                .Select(operation => (string)operation.Value["operationId"])
++                .Select(operationId => char.ToLowerInvariant(operationId[0]) + operationId.Substring(1)).ToArray();
++            CollectionAssert.AreEquivalent(expected: expectedOperations, actual: emittedOperations);
++        }
++
++        /// <summary>
++        /// Verifies unions at response, body, named definition, and array item boundaries survive shared parsing.
++        /// </summary>
++        [TestMethod]
++        [Owner("swapnilnagar")]
++        public void Generate_RootAndReferencedUnions_DoesNotWidenOrDropOperations()
++        {
++            foreach (var schemaText in new[]
++            {
++                """{"type":["string","number","null"]}""",
++                """{"anyOf":[{"type":"string"},{"type":"boolean"}]}""",
++                """{"type":"array","items":{"type":["string","boolean"]}}""",
++            })
++            {
++                var document = JsonNode.Parse(DirectClientTypeScriptScalarUnionTests.ScalarUnionSwagger).AsObject();
++                document["paths"]["/maps"]["get"]["responses"]["200"]["schema"] = JsonNode.Parse(schemaText);
++                document["paths"]["/maps"]["post"]["parameters"][0]["schema"] = JsonNode.Parse(schemaText);
++                document["definitions"]["UnionValue"] = JsonNode.Parse(schemaText);
++                document["paths"]["/maps"]["post"]["responses"]["200"]["schema"] = JsonNode.Parse("""{"$ref":"#/definitions/UnionValue"}""");
++                var output = DirectClientTypeScriptScalarUnionTests.Generate(document);
++                var expectedType = schemaText.Contains("array", StringComparison.Ordinal)
++                    ? "Array<string | boolean>"
++                    : schemaText.Contains("number", StringComparison.Ordinal) ? "string | number | null" : "string | boolean";
++                StringAssert.Contains(value: output, substring: $"= {expectedType};", comparisonType: StringComparison.Ordinal);
++                Assert.IsFalse(condition: output.Contains("Array<Record<string, unknown>>", StringComparison.Ordinal));
++                StringAssert.Contains(value: output, substring: $"export type GetMapsResponse = {expectedType};", comparisonType: StringComparison.Ordinal);
++                StringAssert.Contains(value: output, substring: "getMaps(options: ConnectorOperationOptions = {}): Promise<GetMapsResponse>", comparisonType: StringComparison.Ordinal);
++                StringAssert.Contains(value: output, substring: $"export type UpdateMapsInput = {expectedType};", comparisonType: StringComparison.Ordinal);
++                StringAssert.Contains(value: output, substring: "updateMaps(input: UpdateMapsInput,", comparisonType: StringComparison.Ordinal);
++            }
++        }
++
++        /// <summary>
++        /// Verifies explicit null alternatives remain independent of map optionality.
++        /// </summary>
++        [TestMethod]
++        [Owner("swapnilnagar")]
++        public void Generate_ExplicitNullAlternatives_PreservesIndependentNullability()
++        {
++            var output = DirectClientTypeScriptScalarUnionTests.GenerateFixture();
++            StringAssert.Contains(value: output, substring: "\"scalar-map\": Record<string, string | number | boolean>;", comparisonType: StringComparison.Ordinal);
++            StringAssert.Contains(value: output, substring: "nullableMap: Record<string, string | number | boolean | null>;", comparisonType: StringComparison.Ordinal);
++            StringAssert.Contains(value: output, substring: "nullableAnyOf?: Record<string, string | null>;", comparisonType: StringComparison.Ordinal);
++            StringAssert.Contains(value: output, substring: "nullableOneOf?: Record<string, boolean | null>;", comparisonType: StringComparison.Ordinal);
++        }
++
++        /// <summary>
++        /// Rejects unsupported constraints, unresolved references, and unsafe unions before partial output is written.
++        /// </summary>
++        /// <param name="schemaText">The unsupported schema.</param>
++        /// <param name="diagnostic">The expected actionable diagnostic detail.</param>
++        [TestMethod]
++        [DataRow("{\"type\":[\"string\",\"object\"]}", "non-scalar type 'object'")]
++        [DataRow("{\"type\":[\"string\",\"array\"]}", "non-scalar type 'array'")]
++        [DataRow("{\"type\":[]}", "empty type array")]
++        [DataRow("{\"type\":[\"string\",42]}", "non-string scalar type")]
++        [DataRow("{\"type\":[\"string\",\"number\"],\"enum\":[\"a\"]}", "keyword 'enum'")]
++        [DataRow("{\"type\":[\"string\",\"number\"],\"nullable\":true}", "keyword 'nullable'")]
++        [DataRow("{\"type\":[\"string\",\"number\"],\"$schema\":\"https://json-schema.org/draft/2020-12/schema\"}", "dialect")]
++        [DataRow("{\"anyOf\":[{}, {\"type\":\"string\"}]}", "missing or non-string")]
++        [DataRow("{\"oneOf\":[{\"type\":\"number\"},{\"type\":\"integer\"}]}", "overlapping oneOf")]
++        [DataRow("{\"oneOf\":[{\"type\":\"string\"},{\"type\":\"string\"}]}", "overlapping oneOf")]
++        [DataRow("{\"anyOf\":[{\"type\":\"string\",\"pattern\":\"a\"},{\"type\":\"boolean\"}]}", "keyword 'pattern'")]
++        [DataRow("{\"anyOf\":[{\"type\":\"number\",\"minimum\":0},{\"type\":\"boolean\"}]}", "keyword 'minimum'")]
++        [DataRow("{\"anyOf\":[{\"type\":\"string\",\"format\":\"binary\"},{\"type\":\"boolean\"}]}", "keyword 'format'")]
++        [DataRow("{\"anyOf\":[]}", "empty union")]
++        [DataRow("{\"anyOf\":[true]}", "non-object union branch")]
++        [DataRow("{\"anyOf\":[{\"$ref\":\"#/definitions/Missing\"},{\"type\":\"boolean\"}]}", "Missing")]
++        [DataRow("{\"anyOf\":[{\"$ref\":\"other.json#/Thing\"},{\"type\":\"boolean\"}]}", "external")]
++        [DataRow("{\"anyOf\":[{\"$ref\":\"#/definitions/CyclicValue\"},{\"type\":\"boolean\"}]}", "cyclic")]
++        [DataRow("{\"anyOf\":[{\"$ref\":\"#/definitions/StructuredValue\"},{\"type\":\"boolean\"}]}", "keyword 'required'")]
++        [DataRow("{\"allOf\":[{\"type\":[\"string\",\"boolean\"]}]}", "allOf")]
++        [DataRow("{\"not\":{\"type\":[\"string\",\"boolean\"]}}", "unsupported not")]
++        [DataRow("{\"x-codeful-typescript-scalar-union\":\"unknown\"}", "reserved internal union annotation")]
++        [Owner("swapnilnagar")]
++        public void Generate_UnsupportedUnion_FailsBeforeWritingClient(string schemaText, string diagnostic)
++        {
++            var document = JsonNode.Parse(DirectClientTypeScriptScalarUnionTests.ScalarUnionSwagger).AsObject();
++            document["definitions"]["CyclicValue"] = JsonNode.Parse("""{"$ref":"#/definitions/CyclicValue"}""");
++            document["definitions"]["Envelope"]["properties"]["scalar-map"]["additionalProperties"] = JsonNode.Parse(schemaText);
++            using var writer = new StringWriter();
++            var exception = Assert.ThrowsExactly<NotSupportedException>(() => new DirectClientTypeScriptGenerator().Generate(document, "scalarunionfixture", writer));
++            StringAssert.Contains(value: exception.Message, substring: "TypeScript scalar union at '$.definitions.", comparisonType: StringComparison.Ordinal);
++            StringAssert.Contains(value: exception.Message, substring: diagnostic, comparisonType: StringComparison.Ordinal);
++            StringAssert.Contains(value: exception.Message, substring: "Use explicit unconstrained", comparisonType: StringComparison.Ordinal);
++            Assert.AreEqual(expected: string.Empty, actual: writer.ToString());
++        }
++
++        /// <summary>
++        /// Keeps declared properties when a typed map also inherits its object shape.
++        /// </summary>
++        /// <param name="inherited">Whether the required property comes from an allOf reference.</param>
++        [TestMethod]
++        [DataRow(false)]
++        [DataRow(true)]
++        [Owner("swapnilnagar")]
++        public void Generate_TypedMapWithDeclaredProperties_PreservesRequiredShape(bool inherited)
++        {
++            var document = JsonNode.Parse(DirectClientTypeScriptScalarUnionTests.ScalarUnionSwagger).AsObject();
++            var schema = JsonNode.Parse("""{"type":"object","additionalProperties":{"type":["string","boolean"]}}""").AsObject();
++            if (inherited)
++            {
++                schema["allOf"] = JsonNode.Parse("""[{"$ref":"#/definitions/StructuredValue"}]""");
++            }
++            else
++            {
++                schema["required"] = JsonNode.Parse("""["wire-name"]""");
++                schema["properties"] = JsonNode.Parse("""{"wire-name":{"type":"string"}}""");
++            }
++
++            document["definitions"]["MixedMap"] = schema;
++            document["definitions"]["MixedMapAlias"] = JsonNode.Parse("""{"$ref":"#/definitions/MixedMap"}""");
++            document["paths"]["/maps"]["get"]["responses"]["200"]["schema"] = JsonNode.Parse("""{"$ref":"#/definitions/MixedMapAlias"}""");
++            var output = DirectClientTypeScriptScalarUnionTests.Generate(document);
++            foreach (var typeName in new[] { "MixedMap", "MixedMapAlias" })
++            {
++                StringAssert.Contains(value: output, substring: $"export interface {typeName} {{\n    \"wire-name\": string;\n}}".Replace("\n", Environment.NewLine, StringComparison.Ordinal), comparisonType: StringComparison.Ordinal);
++                Assert.IsFalse(condition: output.Contains($"export type {typeName} = Record<", StringComparison.Ordinal));
++            }
++        }
++
++        /// <summary>
++        /// Selects the first successful response with a schema, including reusable responses.
++        /// </summary>
++        /// <param name="emptyFirst">Whether the schema-less success precedes the array response.</param>
++        /// <param name="reusable">Whether the schema comes from a reusable response reference.</param>
++        [TestMethod]
++        [DataRow(true, false)]
++        [DataRow(false, false)]
++        [DataRow(true, true)]
++        [DataRow(false, true)]
++        [Owner("swapnilnagar")]
++        public void Generate_SuccessResponseOrdering_PreservesUnionArray(bool emptyFirst, bool reusable)
++        {
++            var document = JsonNode.Parse(DirectClientTypeScriptScalarUnionTests.ScalarUnionSwagger).AsObject();
++            var response = JsonNode.Parse("""{"description":"OK","schema":{"type":"array","items":{"type":["string","boolean"]}}}""");
++            if (reusable)
++            {
++                document["responses"] = new JsonObject { ["UnionArray"] = response };
++                response = JsonNode.Parse("""{"$ref":"#/responses/UnionArray"}""");
++            }
++
++            var responses = new JsonObject();
++            if (emptyFirst)
++            {
++                responses["204"] = JsonNode.Parse("""{"description":"No content"}""");
++            }
++
++            responses["200"] = response;
++            if (!emptyFirst)
++            {
++                responses["204"] = JsonNode.Parse("""{"description":"No content"}""");
++            }
++
++            document["paths"]["/maps"]["get"]["responses"] = responses;
++            var output = DirectClientTypeScriptScalarUnionTests.Generate(document);
++            StringAssert.Contains(value: output, substring: "export type GetMapsResponse = Array<string | boolean>;", comparisonType: StringComparison.Ordinal);
++            StringAssert.Contains(value: output, substring: "getMaps(options: ConnectorOperationOptions = {}): Promise<GetMapsResponse>", comparisonType: StringComparison.Ordinal);
++            StringAssert.Contains(value: output, substring: "this.sendWithTracingAsync<GetMapsResponse>", comparisonType: StringComparison.Ordinal);
++            Assert.IsFalse(condition: output.Contains("Array<Record<string, unknown>>", StringComparison.Ordinal));
++        }
++
++        /// <summary>
++        /// Carries typed list items through method signatures, pageable calls, and reference registration.
++        /// </summary>
++        /// <param name="shape">The root, single-page envelope, or continuing envelope shape.</param>
++        /// <param name="itemSchemaText">The inline or referenced item schema.</param>
++        /// <param name="expectedType">The exact TypeScript iterator element type.</param>
++        [TestMethod]
++        [DataRow("root", "{\"type\":[\"string\",\"boolean\"]}", "string | boolean")]
++        [DataRow("root", "{\"type\":[\"string\",\"boolean\",\"null\"]}", "string | boolean | null")]
++        [DataRow("root", "{\"type\":\"array\",\"items\":{\"type\":[\"string\",\"boolean\"]}}", "Array<string | boolean>")]
++        [DataRow("root", "{\"$ref\":\"#/definitions/UnionItem\"}", "UnionItem")]
++        [DataRow("root", "{\"$ref\":\"#/definitions/StructuredValue\"}", "StructuredValue")]
++        [DataRow("wrapped", "{\"type\":[\"string\",\"boolean\"]}", "string | boolean")]
++        [DataRow("wrapped", "{\"type\":[\"string\",\"boolean\",\"null\"]}", "string | boolean | null")]
++        [DataRow("wrapped", "{\"type\":\"array\",\"items\":{\"type\":[\"string\",\"boolean\"]}}", "Array<string | boolean>")]
++        [DataRow("wrapped", "{\"$ref\":\"#/definitions/UnionItem\"}", "UnionItem")]
++        [DataRow("wrapped", "{\"$ref\":\"#/definitions/StructuredValue\"}", "StructuredValue")]
++        [DataRow("pageable", "{\"type\":[\"string\",\"boolean\"]}", "string | boolean")]
++        [DataRow("pageable", "{\"type\":[\"string\",\"boolean\",\"null\"]}", "string | boolean | null")]
++        [DataRow("pageable", "{\"type\":\"array\",\"items\":{\"type\":[\"string\",\"boolean\"]}}", "Array<string | boolean>")]
++        [DataRow("pageable", "{\"$ref\":\"#/definitions/UnionItem\"}", "UnionItem")]
++        [DataRow("pageable", "{\"$ref\":\"#/definitions/StructuredValue\"}", "StructuredValue")]
++        [Owner("swapnilnagar")]
++        public void Generate_ListItemSchemas_PreservesExactIteratorTypes(string shape, string itemSchemaText, string expectedType)
++        {
++            var document = JsonNode.Parse(DirectClientTypeScriptScalarUnionTests.ScalarUnionSwagger).AsObject();
++            document["definitions"]["UnionItem"] = JsonNode.Parse("""{"type":["string","boolean","null"]}""");
++            var operation = document["paths"]["/maps"]["get"].AsObject();
++            operation["operationId"] = "ListMaps";
++            operation["summary"] = "List maps";
++            var array = new JsonObject { ["type"] = "array", ["items"] = JsonNode.Parse(itemSchemaText) };
++            if (string.Equals(shape, "root", StringComparison.Ordinal))
++            {
++                operation["responses"]["200"]["schema"] = array;
++            }
++            else
++            {
++                var properties = new JsonObject { ["value"] = array };
++                if (string.Equals(shape, "pageable", StringComparison.Ordinal))
++                {
++                    properties["nextLink"] = JsonNode.Parse("""{"type":"string"}""");
++                }
++
++                operation["responses"]["200"]["schema"] = new JsonObject { ["type"] = "object", ["properties"] = properties };
++            }
++
++            var output = DirectClientTypeScriptScalarUnionTests.Generate(document);
++            StringAssert.Contains(value: output, substring: $"listMaps(options: ConnectorOperationOptions = {{}}): ConnectorPagedAsyncIterableIterator<{expectedType}>", comparisonType: StringComparison.Ordinal);
++            var responseType = string.Equals(shape, "root", StringComparison.Ordinal) && itemSchemaText.Contains("$ref", StringComparison.Ordinal)
++                ? $"Array<{expectedType}>"
++                : "ListMapsResponse";
++            StringAssert.Contains(value: output, substring: $"this.createPageable<{responseType}, {expectedType}>(", comparisonType: StringComparison.Ordinal);
++            StringAssert.Contains(value: output, substring: "export type UnionItem = string | boolean | null;", comparisonType: StringComparison.Ordinal);
++            StringAssert.Contains(value: output, substring: "export interface StructuredValue {", comparisonType: StringComparison.Ordinal);
++            Assert.IsFalse(condition: output.Contains("Unresolved definition:", StringComparison.Ordinal));
++            if (!string.Equals(shape, "root", StringComparison.Ordinal))
++            {
++                StringAssert.Contains(value: output, substring: $"value?: Array<{expectedType}>;", comparisonType: StringComparison.Ordinal);
++            }
++        }
++
++        /// <summary>
++        /// Produces the canonical synthetic client for downstream SDK runtime and type-checking fixtures.
++        /// </summary>
++        public static string GenerateFixture()
++        {
++            return DirectClientTypeScriptScalarUnionTests.Generate(JsonNode.Parse(DirectClientTypeScriptScalarUnionTests.ScalarUnionSwagger).AsObject());
++        }
++
++        /// <summary>
++        /// Generates TypeScript through the complete managed connector entry point.
++        /// </summary>
++        /// <param name="document">The pinned or mutated Swagger document.</param>
++        private static string Generate(JsonObject document)
++        {
++            using var writer = new StringWriter();
++            new DirectClientTypeScriptGenerator().Generate(document, "scalarunionfixture", writer);
++            return writer.ToString();
++        }
++    }
++}
+\ No newline at end of file
+diff --git a/src/tools/CodefulSdkGenerator/DirectClient/DirectClientGeneratorBase.cs b/src/tools/CodefulSdkGenerator/DirectClient/DirectClientGeneratorBase.cs
+index 09b9c8c6401d992c25cdb807f31577821540f1b8..b1ba97be4cbc6f8e71cfd9e8d676f802233e3677 100644
+--- a/src/tools/CodefulSdkGenerator/DirectClient/DirectClientGeneratorBase.cs
++++ b/src/tools/CodefulSdkGenerator/DirectClient/DirectClientGeneratorBase.cs
+@@ -599,17 +599,10 @@ namespace Microsoft.Azure.Workflows.CodefulSdkGenerator.DirectClient
+ 
+             string responseTypeName = null;
+             JsonObject responseSchema = null;
+-            if (methodInfo.TryGetPropertyValue(SchemaPropertyNames.Responses, out var responsesNode))
++            if (methodInfo.ContainsKey(SchemaPropertyNames.Responses))
+             {
+-                var responses = responsesNode.AsObject();
+-                foreach (var (httpCode, responseDescription) in responses)
++                foreach (var responseObject in DirectClientGeneratorBase.GetSuccessfulResponses(methodInfo, context))
+                 {
+-                    if (!httpCode.StartsWith("2", StringComparison.Ordinal))
+-                    {
+-                        continue;
+-                    }
+-
+-                    var responseObject = responseDescription.AsObject();
+                     if (responseObject.TryGetPropertyValue(SchemaPropertyNames.Schema, out var schemaNode))
+                     {
+                         responseSchema = schemaNode.AsObject();
+@@ -784,6 +777,39 @@ namespace Microsoft.Azure.Workflows.CodefulSdkGenerator.DirectClient
+             return result;
+         }
+ 
++        /// <summary>
++        /// Enumerates successful responses with schemas in document order, resolving reusable response references.
++        /// </summary>
++        /// <param name="methodInfo">The operation containing response definitions.</param>
++        /// <param name="context">The Swagger context used to resolve references.</param>
++        protected static IEnumerable<JsonObject> GetSuccessfulResponses(JsonObject methodInfo, SwaggerContext context)
++        {
++            if (methodInfo[SchemaPropertyNames.Responses] is not JsonObject responses)
++            {
++                yield break;
++            }
++
++            foreach (var (httpCode, responseNode) in responses)
++            {
++                if (!httpCode.StartsWith("2", StringComparison.Ordinal) || responseNode is not JsonObject response)
++                {
++                    continue;
++                }
++
++                var visitedReferences = new HashSet<string>(StringComparer.Ordinal);
++                while (response[SchemaPropertyNames.Ref] is JsonValue referenceNode &&
++                    referenceNode.TryGetValue<string>(out var reference) && visitedReferences.Add(reference))
++                {
++                    response = DirectClientGeneratorBase.ResolveRef(reference, context);
++                }
++
++                if (response[SchemaPropertyNames.Schema] is JsonObject)
++                {
++                    yield return response;
++                }
++            }
++        }
++
+         /// <summary>
+         /// Sanitizes a type name using the language-specific collection syntax and connector-specific simplification.
+         /// </summary>
+diff --git a/src/tools/CodefulSdkGenerator/DirectClient/DirectClientMethodInfo.cs b/src/tools/CodefulSdkGenerator/DirectClient/DirectClientMethodInfo.cs
+index 7514dacdb627a5f453fd69b76775db25217e9e5e..65107bd77d25daef6fb259e547558a8278debe13 100644
+--- a/src/tools/CodefulSdkGenerator/DirectClient/DirectClientMethodInfo.cs
++++ b/src/tools/CodefulSdkGenerator/DirectClient/DirectClientMethodInfo.cs
+@@ -114,6 +114,11 @@ namespace Microsoft.Azure.Workflows.CodefulSdkGenerator.DirectClient
+         /// </summary>
+         public string PageItemTypeName { get; set; }
+ 
++        /// <summary>
++        /// Gets or sets the original page item schema for targets that resolve compound value types.
++        /// </summary>
++        public JsonObject PageItemSchema { get; set; }
++
+         /// <summary>
+         /// Gets or sets the wire property that carries the items in a paginated response.
+         /// Only populated when <see cref="IsPaginated"/> is true.
+diff --git a/src/tools/CodefulSdkGenerator/DirectClient/DirectClientTypeScriptCodeGenerator.cs b/src/tools/CodefulSdkGenerator/DirectClient/DirectClientTypeScriptCodeGenerator.cs
+index 7fd58eaeb95a670bd691f969c3fcce5840d45ca4..151113215f67d9b7d80a6af000225ba43df34705 100644
+--- a/src/tools/CodefulSdkGenerator/DirectClient/DirectClientTypeScriptCodeGenerator.cs
++++ b/src/tools/CodefulSdkGenerator/DirectClient/DirectClientTypeScriptCodeGenerator.cs
+@@ -292,14 +292,17 @@ namespace Microsoft.Azure.Workflows.CodefulSdkGenerator.DirectClient
+ 
+             stringBuilder.AppendLine(" */");
+ 
+-            if (string.Equals((string)schema[SchemaPropertyNames.Type], SchemaTypeNames.Array, StringComparison.Ordinal))
++            var properties = new JsonObject();
++            SwaggerRefResolver.CollectProperties(schema, context?.Document, properties);
++            if (schema.ContainsKey(TypeScriptScalarUnionResolver.UnionTypeAnnotation) ||
++                properties.Count == 0 && !schema.ContainsKey(SchemaPropertyNames.MsDynamicSchema) &&
++                    AdditionalPropertiesMapResolver.GetValueSchema(schema) != null ||
++                string.Equals((string)schema[SchemaPropertyNames.Type], SchemaTypeNames.Array, StringComparison.Ordinal))
+             {
+                 stringBuilder.AppendLine($"export type {typeName} = {this.GetTypeScriptType(schema, context)};");
+                 return;
+             }
+ 
+-            var properties = new JsonObject();
+-            SwaggerRefResolver.CollectProperties(schema, context?.Document, properties);
+             if (this._paginationNextLinkNames.TryGetValue(typeName, out var nextLinkName) &&
+                 !properties.ContainsKey(nextLinkName))
+             {
+@@ -456,9 +459,15 @@ namespace Microsoft.Azure.Workflows.CodefulSdkGenerator.DirectClient
+         /// <summary>
+         /// Resolves a paginated response's element type without normalizing TypeScript primitive names.
+         /// </summary>
+-        /// <param name="pageItemTypeName">The detected page element type name.</param>
+-        private string ResolvePageItemTypeName(string pageItemTypeName)
++        /// <param name="method">The method containing the detected item schema and fallback name.</param>
++        private string ResolvePageItemTypeName(DirectClientMethodInfo method)
+         {
++            if (method.PageItemSchema != null)
++            {
++                return this.GetTypeScriptType(method.PageItemSchema, context: null);
++            }
++
++            var pageItemTypeName = method.PageItemTypeName;
+             var retainedTypeName = this._retainedTypeNames?.ResolveTypeName(pageItemTypeName);
+             if (retainedTypeName != null)
+             {
+@@ -716,7 +725,7 @@ namespace Microsoft.Azure.Workflows.CodefulSdkGenerator.DirectClient
+             }
+ 
+             var pageItemTypeName = (method.IsPaginated || method.IsSinglePageList) && method.PageItemTypeName != null
+-                ? this.ResolvePageItemTypeName(method.PageItemTypeName)
++                ? this.ResolvePageItemTypeName(method)
+                 : null;
+             var returnType = pageItemTypeName != null
+                 ? $"{this.GetImportedTypeName("ConnectorPagedAsyncIterableIterator")}<{pageItemTypeName}>"
+@@ -1038,7 +1047,14 @@ namespace Microsoft.Azure.Workflows.CodefulSdkGenerator.DirectClient
+                     }
+                 }
+ 
+-                if (method.PageItemTypeName != null &&
++                if (method.PageItemSchema != null)
++                {
++                    RetainedTypeNameCoordinator.CollectReferencedDefinitions(
++                        schema: method.PageItemSchema,
++                        context: context,
++                        referencedDefinitions: this._referencedDefinitionNames);
++                }
++                else if (method.PageItemTypeName != null &&
+                     !DirectClientTypeScriptCodeGenerator.IsIntrinsicTypeScriptType(method.PageItemTypeName))
+                 {
+                     this._referencedDefinitionNames.Add(method.PageItemTypeName);
+@@ -1633,8 +1649,18 @@ namespace Microsoft.Azure.Workflows.CodefulSdkGenerator.DirectClient
+                 .Replace("\n", "\\n", StringComparison.Ordinal);
+         }
+ 
++        /// <summary>
++        /// Projects a validated schema into a TypeScript value type without inferring empty object domains.
++        /// </summary>
++        /// <param name="schema">The schema to project.</param>
++        /// <param name="context">The context for retained reference names.</param>
+         private string GetTypeScriptType(JsonObject schema, SwaggerContext context)
+         {
++            if (schema[TypeScriptScalarUnionResolver.UnionTypeAnnotation] is JsonValue unionType)
++            {
++                return unionType.GetValue<string>();
++            }
++
+             if (schema.TryGetPropertyValue(SchemaPropertyNames.Ref, out var refNode))
+             {
+                 var refStr = (string)refNode;
+@@ -1651,6 +1677,14 @@ namespace Microsoft.Azure.Workflows.CodefulSdkGenerator.DirectClient
+             var schemaType = (string)schema[SchemaPropertyNames.Type];
+             var format = (string)schema[SchemaPropertyNames.Format];
+ 
++            // NOTE(swapnilnagar): Dynamic schema discovery supplies the fields, not the placeholder map.
++            if ((schemaType == null || string.Equals(schemaType, "object", StringComparison.Ordinal)) &&
++                !schema.ContainsKey(SchemaPropertyNames.MsDynamicSchema) &&
++                AdditionalPropertiesMapResolver.GetValueSchema(schema) is JsonObject mapValueSchema)
++            {
++                return $"Record<string, {this.GetTypeScriptType(mapValueSchema, context)}>";
++            }
++
+             if (string.Equals(schemaType, "array", StringComparison.Ordinal))
+             {
+                 if (schema.TryGetPropertyValue(SchemaPropertyNames.Items, out var itemsNode))
+@@ -1674,9 +1708,7 @@ namespace Microsoft.Azure.Workflows.CodefulSdkGenerator.DirectClient
+                 "integer" => "number",
+                 "number" => "number",
+                 "boolean" => "boolean",
+-                "object" => AdditionalPropertiesMapResolver.GetValueSchema(schema) is JsonObject mapValueSchema
+-                    ? $"Record<string, {this.GetTypeScriptType(mapValueSchema, context)}>"
+-                    : "Record<string, unknown>",
++                "object" => "Record<string, unknown>",
+                 _ => "unknown"
+             };
+         }
+diff --git a/src/tools/CodefulSdkGenerator/DirectClient/DirectClientTypeScriptGenerator.cs b/src/tools/CodefulSdkGenerator/DirectClient/DirectClientTypeScriptGenerator.cs
+index 48aa665f6f3beb9d837f6cb0dba07676764f9bfd..4f7cc942138725a1e7f6786d60b626053486a4d7 100644
+--- a/src/tools/CodefulSdkGenerator/DirectClient/DirectClientTypeScriptGenerator.cs
++++ b/src/tools/CodefulSdkGenerator/DirectClient/DirectClientTypeScriptGenerator.cs
+@@ -55,41 +55,55 @@ namespace Microsoft.Azure.Workflows.CodefulSdkGenerator.DirectClient
+         /// <inheritdoc />
+         protected override bool SupportsUnresolvedResponseReferences => true;
+ 
++        /// <inheritdoc />
++        protected override void PreprocessSwagger(string connectorName, JsonObject swagger)
++        {
++            base.PreprocessSwagger(connectorName, swagger);
++            TypeScriptScalarUnionResolver.Prepare(swagger);
++        }
++
+         /// <inheritdoc />
+         protected override void EnrichMethodInfo(DirectClientMethodInfo result, JsonObject methodInfo, SwaggerContext context)
+         {
+-            base.EnrichMethodInfo(result, methodInfo, context);
+-            if (result.IsPaginated ||
+-                result.ResponseTypeName == null ||
+-                !DirectClientTypeScriptGenerator.IsSemanticListOperation(result))
++            var responseSchema = DirectClientGeneratorBase.GetSuccessfulResponses(methodInfo, context)
++                .FirstOrDefault()?[SchemaPropertyNames.Schema] as JsonObject;
++            var resolvedSchema = responseSchema == null ? null : SwaggerRefResolver.ResolveSchema(responseSchema, context.Document);
++            if (TypeScriptScalarUnionResolver.GetInlineUnionType(resolvedSchema) != null &&
++                string.Equals((string)resolvedSchema?[SchemaPropertyNames.Type], SchemaTypeNames.Array, StringComparison.Ordinal))
+             {
+-                return;
++                result.ResponseTypeName = this.NormalizeTypeName($"{result.OperationId}Response");
++                result.ResponseSchema = resolvedSchema;
+             }
+ 
+-            if (result.ResponseTypeName.StartsWith(this.TypeMap.ArrayTypePrefix, StringComparison.Ordinal) &&
+-                result.ResponseTypeName.EndsWith(this.TypeMap.ArrayTypeSuffix, StringComparison.Ordinal))
++            base.EnrichMethodInfo(result, methodInfo, context);
++            if (result.IsPaginated && resolvedSchema != null)
+             {
+-                result.IsSinglePageList = true;
+-                result.PageItemTypeName = result.ResponseTypeName.Substring(
+-                    this.TypeMap.ArrayTypePrefix.Length,
+-                    result.ResponseTypeName.Length - this.TypeMap.ArrayTypePrefix.Length - this.TypeMap.ArrayTypeSuffix.Length);
+-                return;
++                var properties = new JsonObject();
++                SwaggerRefResolver.CollectProperties(resolvedSchema, context.Document, properties);
++                if (properties[result.PaginationItemName] is JsonObject arraySchema)
++                {
++                    result.PageItemSchema = SwaggerRefResolver.ResolveSchema(arraySchema, context.Document)[SchemaPropertyNames.Items] as JsonObject;
++                }
+             }
+ 
+-            if (result.ResponseSchema == null)
++            if (result.IsPaginated ||
++                result.ResponseTypeName == null ||
++                !DirectClientTypeScriptGenerator.IsSemanticListOperation(result))
+             {
+                 return;
+             }
+ 
+-            if (this.TryDetectSinglePageList(
+-                schema: SwaggerRefResolver.ResolveSchema(result.ResponseSchema, context.Document),
++            if (resolvedSchema != null && this.TryDetectSinglePageList(
++                schema: resolvedSchema,
+                 context: context,
+-                itemTypeName: out var itemTypeName,
+-                itemPropertyName: out var itemPropertyName))
++                itemTypeName: out var resolvedItemTypeName,
++                itemPropertyName: out var resolvedItemPropertyName,
++                itemSchema: out var resolvedItemSchema))
+             {
+                 result.IsSinglePageList = true;
+-                result.PageItemTypeName = itemTypeName;
+-                result.PaginationItemName = itemPropertyName;
++                result.PageItemTypeName = resolvedItemTypeName;
++                result.PageItemSchema = resolvedItemSchema;
++                result.PaginationItemName = resolvedItemPropertyName;
+             }
+         }
+ 
+@@ -114,14 +128,17 @@ namespace Microsoft.Azure.Workflows.CodefulSdkGenerator.DirectClient
+         /// <param name="context">The swagger context.</param>
+         /// <param name="itemTypeName">The target-language item type name.</param>
+         /// <param name="itemPropertyName">The envelope item property, or <c>null</c> for a root array.</param>
++        /// <param name="itemSchema">The original item schema used for typed emission.</param>
+         private bool TryDetectSinglePageList(
+             JsonObject schema,
+             SwaggerContext context,
+             out string itemTypeName,
+-            out string itemPropertyName)
++            out string itemPropertyName,
++            out JsonObject itemSchema)
+         {
+             itemTypeName = null;
+             itemPropertyName = null;
++            itemSchema = null;
+             JsonObject items;
+             if (string.Equals((string)schema[SchemaPropertyNames.Type], SchemaTypeNames.Array, StringComparison.Ordinal) &&
+                 schema[SchemaPropertyNames.Items] is JsonObject rootItems)
+@@ -150,6 +167,7 @@ namespace Microsoft.Azure.Workflows.CodefulSdkGenerator.DirectClient
+                 items = envelopeItems;
+             }
+ 
++            itemSchema = items;
+             if (items.TryGetPropertyValue(SchemaPropertyNames.Ref, out var itemReferenceNode))
+             {
+                 var itemReference = (string)itemReferenceNode;
+@@ -160,7 +178,7 @@ namespace Microsoft.Azure.Workflows.CodefulSdkGenerator.DirectClient
+                 }
+             }
+ 
+-            itemTypeName = (string)items[SchemaPropertyNames.Type] switch
++            itemTypeName = TypeScriptScalarUnionResolver.GetInlineUnionType(items) ?? (string)items[SchemaPropertyNames.Type] switch
+             {
+                 SchemaTypeNames.String => this.TypeMap.StringType,
+                 SchemaTypeNames.Integer => this.TypeMap.IntegerType,
+diff --git a/src/tools/CodefulSdkGenerator/DirectClient/TypeScriptScalarUnionResolver.cs b/src/tools/CodefulSdkGenerator/DirectClient/TypeScriptScalarUnionResolver.cs
+new file mode 100644
+index 0000000000000000000000000000000000000000..15ec8ec2619102fd76586a4d9dac2bad4af872c5
+--- /dev/null
++++ b/src/tools/CodefulSdkGenerator/DirectClient/TypeScriptScalarUnionResolver.cs
+@@ -0,0 +1,319 @@
++//------------------------------------------------------------
++// Copyright (c) Microsoft Corporation.  All rights reserved.
++//------------------------------------------------------------
++
++namespace Microsoft.Azure.Workflows.CodefulSdkGenerator.DirectClient
++{
++    using System;
++    using System.Collections.Generic;
++    using System.Linq;
++    using System.Text.Json.Nodes;
++
++    /// <summary>
++    /// Validates and lowers explicit scalar unions before the shared Swagger parser reads string types.
++    /// </summary>
++    internal static class TypeScriptScalarUnionResolver
++    {
++        /// <summary>
++        /// Carries a validated TypeScript type through schema clones without changing other language targets.
++        /// </summary>
++        internal const string UnionTypeAnnotation = "x-codeful-typescript-scalar-union";
++
++        /// <summary>
++        /// Schema annotations that do not constrain the scalar value domain.
++        /// </summary>
++        private static readonly HashSet<string> AnnotationNames = new(StringComparer.Ordinal)
++        {
++            "title", "description", "default", "example", "examples", "readOnly", "writeOnly", "deprecated",
++        };
++
++        /// <summary>
++        /// Gets a lowered union type, including array wrappers, without widening its item type.
++        /// </summary>
++        /// <param name="schema">The lowered schema.</param>
++        internal static string GetInlineUnionType(JsonObject schema)
++        {
++            if (schema?[TypeScriptScalarUnionResolver.UnionTypeAnnotation] is JsonValue unionType)
++            {
++                return unionType.GetValue<string>();
++            }
++
++            if (schema?["type"] is JsonValue type && type.TryGetValue<string>(out var typeName) &&
++                string.Equals(typeName, "array", StringComparison.Ordinal) && schema["items"] is JsonObject items &&
++                TypeScriptScalarUnionResolver.GetInlineUnionType(items) is string itemType)
++            {
++                return $"Array<{itemType}>";
++            }
++
++            return null;
++        }
++
++        /// <summary>
++        /// Lowers unions in Swagger schema positions, leaving examples and arbitrary extension payloads untouched.
++        /// </summary>
++        /// <param name="document">The TypeScript generator's Swagger document.</param>
++        internal static void Prepare(JsonObject document)
++        {
++            TypeScriptScalarUnionResolver.ValidateInputAnnotations(document);
++            foreach (var collectionName in new[] { "definitions", "parameters", "responses" })
++            {
++                if (document[collectionName] is JsonObject collection)
++                {
++                    foreach (var entry in collection)
++                    {
++                        TypeScriptScalarUnionResolver.VisitSchema(entry.Value as JsonObject, document);
++                    }
++                }
++            }
++
++            foreach (var collectionName in new[] { "paths", "x-ms-paths" })
++            {
++                if (document[collectionName] is not JsonObject paths)
++                {
++                    continue;
++                }
++
++                foreach (var path in paths)
++                {
++                    if (path.Value is not JsonObject operations)
++                    {
++                        continue;
++                    }
++
++                    TypeScriptScalarUnionResolver.VisitParameters(operations, document);
++                    foreach (var operation in operations)
++                    {
++                        if (operation.Value is not JsonObject operationSchema)
++                        {
++                            continue;
++                        }
++
++                        TypeScriptScalarUnionResolver.VisitParameters(operationSchema, document);
++                        if (operationSchema["responses"] is JsonObject responses)
++                        {
++                            foreach (var response in responses)
++                            {
++                                TypeScriptScalarUnionResolver.VisitSchema(response.Value?["schema"] as JsonObject, document);
++                            }
++                        }
++                    }
++                }
++            }
++        }
++
++        /// <summary>
++        /// Rejects input that claims to contain an already validated internal type.
++        /// </summary>
++        /// <param name="node">The input document or child node.</param>
++        private static void ValidateInputAnnotations(JsonNode node)
++        {
++            if (node is JsonObject schema)
++            {
++                if (schema.ContainsKey(TypeScriptScalarUnionResolver.UnionTypeAnnotation))
++                {
++                    throw TypeScriptScalarUnionResolver.Unsupported(schema, "a reserved internal union annotation");
++                }
++
++                foreach (var property in schema)
++                {
++                    TypeScriptScalarUnionResolver.ValidateInputAnnotations(property.Value);
++                }
++            }
++            else if (node is JsonArray children)
++            {
++                foreach (var child in children)
++                {
++                    TypeScriptScalarUnionResolver.ValidateInputAnnotations(child);
++                }
++            }
++        }
++
++        /// <summary>
++        /// Visits inline and reusable parameter schemas.
++        /// </summary>
++        /// <param name="container">The path or operation owning parameters.</param>
++        /// <param name="document">The Swagger document used for scalar references.</param>
++        private static void VisitParameters(JsonObject container, JsonObject document)
++        {
++            if (container["parameters"] is JsonArray parameters)
++            {
++                foreach (var parameter in parameters)
++                {
++                    TypeScriptScalarUnionResolver.VisitSchema(parameter as JsonObject, document);
++                }
++            }
++        }
++
++        /// <summary>
++        /// Validates unions recursively in schema-bearing keywords.
++        /// </summary>
++        /// <param name="schema">The schema to normalize.</param>
++        /// <param name="document">The Swagger document used for scalar references.</param>
++        private static void VisitSchema(JsonObject schema, JsonObject document)
++        {
++            if (schema == null)
++            {
++                return;
++            }
++
++            if (schema["type"] is JsonArray || schema.ContainsKey("anyOf") || schema.ContainsKey("oneOf"))
++            {
++                for (JsonNode ancestor = schema; ancestor != null; ancestor = ancestor.Parent)
++                {
++                    if (ancestor is JsonObject ancestorSchema && (ancestorSchema.ContainsKey("$schema") || ancestorSchema.ContainsKey("openapi")))
++                    {
++                        throw TypeScriptScalarUnionResolver.Unsupported(schema, "an explicit non-Swagger schema dialect");
++                    }
++
++                    if (ancestor.Parent is JsonObject parentSchema &&
++                        (ReferenceEquals(parentSchema["not"], ancestor) ||
++                         ReferenceEquals(parentSchema["patternProperties"], ancestor) ||
++                         ReferenceEquals(parentSchema["$defs"], ancestor)))
++                    {
++                        throw TypeScriptScalarUnionResolver.Unsupported(schema, "a union inside unsupported not, patternProperties, or $defs semantics");
++                    }
++                }
++
++                var scalarTypes = TypeScriptScalarUnionResolver.GetScalarTypes(schema, document, new HashSet<string>(StringComparer.Ordinal));
++                schema[TypeScriptScalarUnionResolver.UnionTypeAnnotation] = string.Join(" | ", scalarTypes.Distinct(StringComparer.Ordinal));
++
++                // NOTE(swapnilnagar): The shared parser requires a string type. An object placeholder retains
++                // response aliases instead of prematurely collapsing their union to a primitive return type.
++                schema["type"] = "object";
++                schema.Remove("anyOf");
++                schema.Remove("oneOf");
++            }
++
++            foreach (var keyword in new[] { "schema", "items", "additionalProperties", "not" })
++            {
++                TypeScriptScalarUnionResolver.VisitSchema(schema[keyword] as JsonObject, document);
++            }
++
++            foreach (var keyword in new[] { "properties", "patternProperties", "$defs", "definitions" })
++            {
++                if (schema[keyword] is JsonObject children)
++                {
++                    foreach (var child in children)
++                    {
++                        TypeScriptScalarUnionResolver.VisitSchema(child.Value as JsonObject, document);
++                    }
++                }
++            }
++
++            if (schema["allOf"] is JsonArray branches)
++            {
++                foreach (var branch in branches)
++                {
++                    TypeScriptScalarUnionResolver.VisitSchema(branch as JsonObject, document);
++                    if (branch is JsonObject branchSchema)
++                    {
++                        var resolvedBranch = SwaggerRefResolver.ResolveSchema(branchSchema, document);
++                        if (resolvedBranch.ContainsKey(TypeScriptScalarUnionResolver.UnionTypeAnnotation) ||
++                            resolvedBranch[SchemaPropertyNames.Type] is JsonArray ||
++                            resolvedBranch.ContainsKey("anyOf") || resolvedBranch.ContainsKey("oneOf"))
++                        {
++                            throw TypeScriptScalarUnionResolver.Unsupported(schema, "allOf intersections with scalar unions");
++                        }
++                    }
++                }
++            }
++        }
++
++        /// <summary>
++        /// Resolves only unconstrained scalar alternatives, rejecting non-disjoint oneOf branches.
++        /// </summary>
++        /// <param name="schema">The union or scalar branch.</param>
++        /// <param name="document">The Swagger document used for scalar references.</param>
++        /// <param name="references">The reference stack used to detect cycles.</param>
++        private static List<string> GetScalarTypes(JsonObject schema, JsonObject document, HashSet<string> references)
++        {
++            if (schema.ContainsKey(TypeScriptScalarUnionResolver.UnionTypeAnnotation))
++            {
++                return ((string)schema[TypeScriptScalarUnionResolver.UnionTypeAnnotation]).Split(" | ", StringSplitOptions.None).ToList();
++            }
++
++            foreach (var keyword in schema.Select(property => property.Key))
++            {
++                if (keyword is not ("type" or "anyOf" or "oneOf" or "$ref") &&
++                    !TypeScriptScalarUnionResolver.AnnotationNames.Contains(keyword))
++                {
++                    throw TypeScriptScalarUnionResolver.Unsupported(schema, $"constraint or dialect keyword '{keyword}'");
++                }
++            }
++
++            if (schema["$ref"] is JsonValue referenceNode && referenceNode.TryGetValue<string>(out var reference))
++            {
++                if (schema.Any(property => property.Key is "type" or "anyOf" or "oneOf") ||
++                    !reference.StartsWith(SchemaPropertyNames.DefinitionsRefPrefix, StringComparison.Ordinal) ||
++                    !references.Add(reference) ||
++                    document["definitions"]?[reference.Substring(SchemaPropertyNames.DefinitionsRefPrefix.Length)] is not JsonObject target)
++                {
++                    throw TypeScriptScalarUnionResolver.Unsupported(schema, $"unresolved, cyclic, external, or constrained reference '{reference}'");
++                }
++
++                var result = TypeScriptScalarUnionResolver.GetScalarTypes(target, document, references);
++                references.Remove(reference);
++                return result;
++            }
++
++            var composition = schema.ContainsKey("oneOf") ? "oneOf" : "anyOf";
++            if (schema.ContainsKey(composition))
++            {
++                if (schema.ContainsKey("type") || schema.ContainsKey("oneOf") && schema.ContainsKey("anyOf") ||
++                    schema[composition] is not JsonArray branches || branches.Count == 0)
++                {
++                    throw TypeScriptScalarUnionResolver.Unsupported(schema, "combined or empty union declarations");
++                }
++
++                var types = new List<string>();
++                foreach (var branch in branches)
++                {
++                    if (branch is not JsonObject branchSchema)
++                    {
++                        throw TypeScriptScalarUnionResolver.Unsupported(schema, "non-object union branch");
++                    }
++
++                    var branchTypes = TypeScriptScalarUnionResolver.GetScalarTypes(branchSchema, document, references);
++                    if (string.Equals(composition, "oneOf", StringComparison.Ordinal) && types.Intersect(branchTypes, StringComparer.Ordinal).Any())
++                    {
++                        throw TypeScriptScalarUnionResolver.Unsupported(schema, "overlapping oneOf branches (including number/integer)");
++                    }
++
++                    types.AddRange(branchTypes);
++                }
++
++                return types;
++            }
++
++            var typeNodes = schema["type"] is JsonArray typeArray
++                ? typeArray.ToArray()
++                : new[] { schema["type"] };
++            if (typeNodes.Length == 0)
++            {
++                throw TypeScriptScalarUnionResolver.Unsupported(schema, "empty type array");
++            }
++
++            return typeNodes.Select(typeNode => typeNode is JsonValue value && value.TryGetValue<string>(out var typeName)
++                ? typeName switch
++                {
++                    "string" => "string",
++                    "integer" or "number" => "number",
++                    "boolean" => "boolean",
++                    "null" => "null",
++                    _ => throw TypeScriptScalarUnionResolver.Unsupported(schema, $"non-scalar type '{typeName}'"),
++                }
++                : throw TypeScriptScalarUnionResolver.Unsupported(schema, "missing or non-string scalar type")).ToList();
++        }
++
++        /// <summary>
++        /// Creates an actionable failure before operation parsing can silently omit an unsupported operation.
++        /// </summary>
++        /// <param name="schema">The unsupported schema.</param>
++        /// <param name="reason">The unsupported union feature.</param>
++        private static NotSupportedException Unsupported(JsonObject schema, string reason)
++        {
++            return new NotSupportedException(
++                message: $"TypeScript scalar union at '{schema.GetPath()}' cannot represent {reason}. Use explicit unconstrained string, number, integer, boolean, or null alternatives; use disjoint oneOf branches or anyOf for overlapping scalars.");
++        }
++    }
++}
+\ No newline at end of file

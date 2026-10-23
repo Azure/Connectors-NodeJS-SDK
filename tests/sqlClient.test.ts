@@ -2,6 +2,7 @@
 
 import type { TokenCredential } from "@azure/core-auth";
 import { SqlClient } from "../src/generated/SqlExtensions.ts";
+import type { PassThroughNativeQueryBody, SqlPassThroughNativeQueryBody } from "../src/generated/SqlExtensions.ts";
 import { ConnectorError } from "../src/azureConnectors/connectorError.ts";
 import { ConnectorNames } from "../src/generated/connectorNames.ts";
 import { availableConnectors } from "../src/generated/ManagedConnectors.ts";
@@ -90,6 +91,30 @@ describe("SqlClient — getItem", () => {
             expect(connectorError.statusCode).toBe(404);
             expect(connectorError.responseBody).toBe("Not Found");
         }
+    });
+});
+
+describe("SqlClient — dynamic query parameters", () => {
+    afterEach(() => { jest.restoreAllMocks(); });
+
+    it.each([false, true])("should preserve empty and mixed dynamic parameter maps (empty: %s)", async empty => {
+        const parameters = empty ? {} : {
+            text: "value", count: 0, enabled: false, missing: null, values: [1, "two"], nested: { key: "value" },
+        };
+        const legacyInput: PassThroughNativeQueryBody = { query: "SELECT @count", actualParameters: parameters };
+        const input: SqlPassThroughNativeQueryBody = legacyInput;
+        const response = empty ? {} : { ResultSets: { Table1: [{ count: 0, enabled: false }] } };
+        mockFetchResponse(response);
+
+        const result = await new SqlClient(TestConnectionUrl, createMockCredential())
+            .executePassThroughNativeQuery(input, "server", "database");
+
+        expect(result).toStrictEqual(response);
+        expect(global.fetch).toHaveBeenCalledTimes(1);
+        const [url, init] = (global.fetch as jest.Mock).mock.calls[0];
+        expect(url).toBe(`${TestConnectionUrl}/v2/datasets/server,database/query/sql`);
+        expect(init.method).toBe("POST");
+        expect(JSON.parse(init.body)).toStrictEqual(input);
     });
 });
 

@@ -12,6 +12,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Required query parameters are always serialized, including empty strings,
   `false`, zero, and empty collections. Optional parameters retain their existing
   presence checks.
+- SQL query `actualParameters` maps and Fin & Ops procedure `OutputParameters`
+  now allow unknown dynamic values instead of requiring object values. Empty and
+  mixed-value consumer tests cover both changed clients. The other 72 refreshed
+  clients and all three shared registries match their prior output.
 
 ### Breaking Changes
 
@@ -32,6 +36,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- Added consumer test coverage for scalar-union maps using a synthetic generator
+  fixture for [#110](https://github.com/Azure/Connectors-NodeJS-SDK/issues/110).
+  Refreshed 74 connector clients from two independent live downloads with the
+  generator at `ae43130532c83c922aea4ad9d39bc44a86f71f5c`, including guards that
+  preserve open dynamic-schema payloads such as SharePoint item inputs. The paired
+  [BPM PR 17586353](https://msazure.visualstudio.com/One/_git/AzureUX-BPM/pullrequest/17586353)
+  must integrate before this SDK PR merges. Orderful remains unchanged because its live API is
+  unavailable; all 75 connector registry entries remain. Run-scoped provenance
+  distinguishes fresh captures from retained output. This refresh has no
+  production scalar-union output changes.
 - Added the default `azsdk-js-connectors/<version>` Azure SDK user-agent
   identifier. Custom `ConnectorClientOptions.userAgentOptions.userAgentPrefix`
   values are prepended without replacing the connector SDK identity.
