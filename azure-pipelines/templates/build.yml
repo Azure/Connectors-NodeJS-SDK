@@ -39,14 +39,6 @@ jobs:
             echo "Using prerelease package version: $prereleaseVersion"
           displayName: Set prerelease package version
 
-      - ${{ if ne(parameters.IsPrerelease, true) }}:
-        - bash: |
-            cd $BUILD_SOURCESDIRECTORY
-            stableVersion=$(node -p "require('./package.json').version.split('-')[0]")
-            npm version "$stableVersion" --no-git-tag-version
-            echo "Using stable package version: $stableVersion"
-          displayName: Set stable package version
-
       - script: npm pack
         displayName: npm pack
 

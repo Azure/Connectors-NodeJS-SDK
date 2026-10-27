@@ -121,8 +121,11 @@ remains separate and unchanged.
 ### Dry Run and Publishing
 
 1. Queue a successful official build with the intended `IsPrerelease` value.
-   Review its packaged version: the official build derives the stable or dated
-   prerelease version from the source package version.
+   With `IsPrerelease: false`, the official build preserves the exact source
+   `package.json` version, including suffixes such as `-preview`. For example,
+   version `0.3.1-preview` produces `azure-connectors-0.3.1-preview.tgz`.
+   With `IsPrerelease: true` (the default), it continues to derive a dated
+   version such as `0.3.1-prerelease.YYYYMMDD` from the source base version.
 2. Queue the release pipeline and explicitly select that build under
    **Resources**. Leave `dryRun: true` (the default) for the first run.
    Both modes check the artifact's identity and run
