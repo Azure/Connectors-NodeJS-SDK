@@ -102,7 +102,9 @@ remains separate and unchanged.
 2. Register the new YAML pipeline in Azure DevOps and authorize access to the
    source pipeline, 1ES templates, agent pool, and ESRP service connection.
    The source build must produce the `drop` artifact containing exactly one
-   `@azure/connectors` npm tarball.
+   `@azure/connectors` npm tarball at its root. Additional build metadata files
+   and directories are ignored; only the validated tarball is copied to the
+   dedicated ESRP publishing folder.
 3. Before a real release, configure these pipeline variables with the
    Connectors team's ESRP onboarding values. Do not copy Durable's identities
    or publisher configuration.

@@ -53,9 +53,9 @@ extends:
               - pwsh: |
                   $ErrorActionPreference = 'Stop'
                   $artifactFolder = Join-Path '$(System.DefaultWorkingDirectory)' 'drop'
-                  $artifacts = @(Get-ChildItem -LiteralPath $artifactFolder -Force)
-                  if ($artifacts.Count -ne 1 -or $artifacts[0].PSIsContainer -or $artifacts[0].Extension -ne '.tgz') {
-                    throw "Release artifact folder must contain exactly one npm '.tgz' package."
+                  $artifacts = @(Get-ChildItem -LiteralPath $artifactFolder -File -Filter '*.tgz')
+                  if ($artifacts.Count -ne 1) {
+                    throw "Release artifact folder '$artifactFolder' must contain exactly one npm '.tgz' package; found '$($artifacts.Count)'."
                   }
 
                   $packagePath = $artifacts[0].FullName
@@ -74,6 +74,10 @@ extends:
                   if ($LASTEXITCODE -ne 0) {
                     throw "npm publish dry run failed for '$packagePath'."
                   }
+
+                  $releaseFolder = Join-Path '$(Build.ArtifactStagingDirectory)' 'npm-release'
+                  New-Item -ItemType Directory -Path $releaseFolder | Out-Null
+                  Copy-Item -LiteralPath $packagePath -Destination $releaseFolder
                 displayName: 'Validate npm release artifact (no publishing)'
 
               - ${{ if eq(parameters.dryRun, true) }}:
@@ -93,7 +97,7 @@ extends:
                     intent: PackageDistribution
                     contenttype: npm
                     contentsource: Folder
-                    folderlocation: $(System.DefaultWorkingDirectory)/drop
+                    folderlocation: $(Build.ArtifactStagingDirectory)/npm-release
                     waitforreleasecompletion: true
                     owners: $(Build.RequestedForEmail)
                     approvers: $(Build.RequestedForEmail)
