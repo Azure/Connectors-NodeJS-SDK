@@ -352,7 +352,48 @@ samples, but have not been validated end to end against live connector services.
 | **Orderful** | `@azure/connectors/generated/OrderfulExtensions` | Mocked SDK tests; retired connector fixture |
 | **Zoho ZeptoMail** | `@azure/connectors/generated/ZeptomailExtensions` | Mocked SDK tests |
 
-**Test coverage:** 1,252 tests across 69 test suites and 75 generated connectors.
+## Additional Generated Connectors
+
+These 24 clients were generated from live West US definitions and have mocked
+request, response, error, and export tests. They have not been validated end to
+end against live connector connections.
+
+| Connector | Connector API ID | Import Path |
+|-----------|------------------|-------------|
+| Azure AD (Microsoft Entra ID) | `azuread` | `@azure/connectors/generated/AzureadExtensions` |
+| Azure Automation | `azureautomation` | `@azure/connectors/generated/AzureautomationExtensions` |
+| Azure Cosmos DB | `documentdb` | `@azure/connectors/generated/DocumentdbExtensions` |
+| Azure Data Factory | `azuredatafactory` | `@azure/connectors/generated/AzuredatafactoryExtensions` |
+| Azure DevOps (VSTS) | `visualstudioteamservices` | `@azure/connectors/generated/VisualstudioteamservicesExtensions` |
+| Azure Digital Twins | `azuredigitaltwins` | `@azure/connectors/generated/AzuredigitaltwinsExtensions` |
+| Azure Event Hubs | `eventhubs` | `@azure/connectors/generated/EventhubsExtensions` |
+| Azure Key Vault | `keyvault` | `@azure/connectors/generated/KeyvaultExtensions` |
+| Azure Queues | `azurequeues` | `@azure/connectors/generated/AzurequeuesExtensions` |
+| Azure Tables | `azuretables` | `@azure/connectors/generated/AzuretablesExtensions` |
+| Azure VM | `azurevm` | `@azure/connectors/generated/AzurevmExtensions` |
+| CloudConvert | `cloudconvert` | `@azure/connectors/generated/CloudconvertExtensions` |
+| Dataflows | `dataflows` | `@azure/connectors/generated/DataflowsExtensions` |
+| Excel Online (Business) | `excelonlinebusiness` | `@azure/connectors/generated/ExcelonlinebusinessExtensions` |
+| Microsoft Bookings | `microsoftbookings` | `@azure/connectors/generated/MicrosoftbookingsExtensions` |
+| Microsoft Defender ATP | `wdatp` | `@azure/connectors/generated/WdatpExtensions` |
+| Office 365 Groups | `office365groups` | `@azure/connectors/generated/Office365groupsExtensions` |
+| OneNote | `onenote` | `@azure/connectors/generated/OnenoteExtensions` |
+| Outlook.com | `outlook` | `@azure/connectors/generated/OutlookExtensions` |
+| Planner | `planner` | `@azure/connectors/generated/PlannerExtensions` |
+| Service Bus | `servicebus` | `@azure/connectors/generated/ServicebusExtensions` |
+| Trello | `trello` | `@azure/connectors/generated/TrelloExtensions` |
+| Word Online (Business) | `wordonlinebusiness` | `@azure/connectors/generated/WordonlinebusinessExtensions` |
+| Yammer | `yammer` | `@azure/connectors/generated/YammerExtensions` |
+
+OneDrive Personal (`onedrive`) and Universal Print (`universalprint`) remain
+blocked in [#117](https://github.com/Azure/Connectors-NodeJS-SDK/issues/117).
+Their live definitions returned `ApiNotFound` in West US, East US, West Central US,
+and West Europe on October 27, 2026. They are not included in the generated inventory.
+
+**Connector coverage:** 99 generated clients. See [GENERATION.md](GENERATION.md)
+for live generation and independent validation provenance.
+
+**Test coverage:** 1,629 tests across 72 test suites.
 
 ## Authentication
 

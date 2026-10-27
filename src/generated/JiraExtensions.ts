@@ -1029,13 +1029,14 @@ export class JiraClient extends ConnectorClientBase {
         }
         return this.createPageable<ListFiltersResponse, Record<string, unknown>>(
             requestPath,
-            async (requestUrl) => {
-                const httpResponse = await this.sendWithTracingAsync<ListFiltersResponse>("Jira.listFilters", "ListFilters_V2", "GET", requestUrl, undefined, options, requestHeaders);
+            async (requestUrl, isFirstPage) => {
+                const requestMethod = isFirstPage ? "GET" : "GET";
+                const httpResponse = await this.sendWithTracingAsync<ListFiltersResponse>("Jira.listFilters", "ListFilters_V2", requestMethod, requestUrl, undefined, options, requestHeaders);
 
                 return httpResponse.value as ListFiltersResponse;
             },
             "values",
-            undefined,
+            "nextPage",
         );
     }
 
@@ -1051,13 +1052,14 @@ export class JiraClient extends ConnectorClientBase {
         }
         return this.createPageable<ListProjectsResponse, Record<string, unknown>>(
             requestPath,
-            async (requestUrl) => {
-                const httpResponse = await this.sendWithTracingAsync<ListProjectsResponse>("Jira.listProjects", "ListProjects_V3", "GET", requestUrl, undefined, options, requestHeaders);
+            async (requestUrl, isFirstPage) => {
+                const requestMethod = isFirstPage ? "GET" : "GET";
+                const httpResponse = await this.sendWithTracingAsync<ListProjectsResponse>("Jira.listProjects", "ListProjects_V3", requestMethod, requestUrl, undefined, options, requestHeaders);
 
                 return httpResponse.value as ListProjectsResponse;
             },
             "values",
-            undefined,
+            "nextPage",
         );
     }
 

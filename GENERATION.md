@@ -132,13 +132,13 @@ and all generated client and shared-file hashes before replacing output. Delete
 both response stores, even on failure. Input hashes identify consumed raw ARM
 response text with CRLF normalized to LF, not reordered JSON.
 
-The October refresh retains Orderful because fresh probes returned `ApiNotFound`
+The October 21 refresh retained Orderful because fresh probes returned `ApiNotFound`
 in westus, eastus, westcentralus, and westeurope. Its client bytes and October 8
-provenance remain unchanged. The other 74 clients use BPM source
+provenance remained unchanged. The other 74 clients used BPM source
 `ae43130532c83c922aea4ad9d39bc44a86f71f5c` on `swapnil/issue110` in the paired,
 active, unmerged
 [BPM PR 17586353](https://msazure.visualstudio.com/One/_git/AzureUX-BPM/pullrequest/17586353)
-which must integrate before the SDK PR merges. The dynamic-schema guard fix preserves open dynamic
+which required integration before the SDK PR could merge. The dynamic-schema guard fix preserves open dynamic
 payloads, including SharePoint item inputs, while keeping typed dictionary values.
 The manifest retains the publication state observed during capture: the source
 was then locally committed but unpushed, and the PR still pointed to
@@ -162,6 +162,46 @@ These methods need class metadata, not Swagger. Do not fetch an old Orderful
 schema, generate its client, or claim that its metadata was captured in this run.
 Record hashes for all three shared files in `refresh.sharedFiles`. Keep the
 disposable harness and response stores outside the repository.
+
+### October 27 connector expansion
+
+The current inventory contains 99 clients: 24 additional connectors from
+[#117](https://github.com/Azure/Connectors-NodeJS-SDK/issues/117), the 74 previously
+available clients, and retained Orderful. The current refresh uses merged BPM
+`master` commit `21a5e28e029a1e58304b3c4d66302cbb528ed1fd`, built in Release
+with assembly version `1.196.0.28`. Its source needs no patch. The earlier
+October 21 run described above remains historical provenance, not the current
+generator publication state.
+
+Both current live runs explicitly use subscription
+`1a839f1f-10b2-4613-95ad-0800a22abbf2`, region `westus`, and managed-API version
+`2018-07-01-preview`. Each run starts with a separate empty temporary response
+store. Compare the 98 available clients' consumed input hashes and generated
+output hashes before accepting the refresh. New Swagger files under
+`swagger-cache` are independently captured test fixtures, not generation or
+validation inputs.
+
+The first run also requested `onedrive` and `universalprint`. Both were absent
+from the live catalog and returned HTTP 404 / `ApiNotFound`; separate probes
+confirmed the same error in `eastus`, `westcentralus`, and `westeurope`.
+The requester approved integrating the other 24 new connectors while tracking
+these two as blocked. Do not generate replacements from old fixtures or silently
+substitute OneDrive for Business. Azure DevOps and Dataflows use the confirmed
+live API IDs `visualstudioteamservices` and `dataflows`.
+
+Generate all three shared files through `GenerateNavigatorClass` and
+`GenerateAuxiliaryFiles`, supplying the complete 99-entry inventory: 98 live
+client class/display names and Orderful's retained metadata. Compare both runs'
+complete shared files as well as the client files. Preserve Orderful's client
+bytes and original provenance; do not imply that it was downloaded in this run.
+
+The requester also approved the live-definition changes to three existing
+clients. ClickSend drops `sendVoice`, `sendFax`, `sendLetter`, and `sendPostcard`
+and adds `sendSmsCampaign`. Jira's filter/project lists and Insightly's project
+list now follow their live continuation fields. These changes have focused
+serialization, failure, and multi-page tests and are documented under breaking
+changes in [CHANGELOG.md](CHANGELOG.md); the other 71 existing live client files
+are unchanged.
 
 `swaggerInputSha256` identifies the actual definition consumed by the run.
 `swaggerFixtureSha256` identifies the existing test fixture, which may differ.

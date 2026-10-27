@@ -112,6 +112,50 @@ describe("JiraClient — listIssues", () => {
     });
 });
 
+describe.each([
+    {
+        operation: "listFilters",
+        route: "/v2/filter/search",
+        createIterator: (client: JiraClient) => client.listFilters("jira.example.com"),
+    },
+    {
+        operation: "listProjects",
+        route: "/v2/project/search",
+        createIterator: (client: JiraClient) => client.listProjects("jira.example.com"),
+    },
+])("JiraClient - $operation continuation", ({ route, createIterator }) => {
+    afterEach(() => {
+        jest.restoreAllMocks();
+    });
+
+    it.each(["empty", "populated"])("should follow nextPage after an %s initial page", async initialPage => {
+        const initialItems = initialPage === "empty" ? [] : [{ id: "first-item" }];
+        const nextPage = `${TestConnectionUrl}${route}?startAt=1`;
+        const fetchMock = jest.spyOn(global, "fetch")
+            .mockReset()
+            .mockResolvedValueOnce(new Response(JSON.stringify({ values: initialItems, nextPage }), { status: 200 }))
+            .mockResolvedValueOnce(new Response(JSON.stringify({ values: [{ id: "later-item" }] }), { status: 200 }));
+        const client = new JiraClient(TestConnectionUrl, createMockCredential());
+        const iterator = createIterator(client);
+        expect(fetchMock).not.toHaveBeenCalled();
+
+        const items = [];
+        for await (const item of iterator) {
+            items.push(item);
+        }
+
+        expect(items).toEqual([...initialItems, { id: "later-item" }]);
+        expect(String(fetchMock.mock.calls[0][0])).toBe(`${TestConnectionUrl}${route}`);
+        expect(String(fetchMock.mock.calls[1][0])).toBe(nextPage);
+        for (const [, request] of fetchMock.mock.calls) {
+            expect(request?.method).toBe("GET");
+            expect(new Headers(request?.headers).get("X-Request-Jirainstance")).toBe("jira.example.com");
+        }
+        expect(await iterator.next()).toEqual({ value: undefined, done: true });
+        expect(fetchMock).toHaveBeenCalledTimes(2);
+    });
+});
+
 describe("Jira — connector registry", () => {
     it("should have jira in ConnectorNames", () => {
         expect(ConnectorNames.Jira).toBe("jira");

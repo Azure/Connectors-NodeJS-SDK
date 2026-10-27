@@ -19,6 +19,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Breaking Changes
 
+- ClickSend's current live definition no longer exposes `sendVoice`, `sendFax`,
+  `sendLetter`, or `sendPostcard`, or their request/response interfaces. These
+  members are therefore absent from the refreshed generated client. Existing
+  applications using them must retain an earlier SDK until a supported service
+  contract is available. The refreshed client adds `sendSmsCampaign` and its
+  typed request/response models.
+- Jira `listFilters` and `listProjects` now follow the live `nextPage` field;
+  Insightly `listProjects` follows `nextLink`. Full iteration can issue additional
+  requests and return more items than before. Page-by-page callers can stop after
+  the initial page when that is the intended behavior.
 - Generated optional query and header parameters now live in method-specific
   `<MethodName>Options` interfaces that extend `ConnectorOperationOptions`.
   Required service parameters remain explicit method arguments.
@@ -36,6 +46,20 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- Added 24 generated TypeScript connector clients with mocked request, response,
+  error, and export tests: Azure AD, Azure Automation, Azure Cosmos DB, Azure Data
+  Factory, Azure DevOps (VSTS), Azure Digital Twins, Azure Event Hubs, Azure Key
+  Vault, Azure Queues, Azure Tables, Azure VM, CloudConvert, Dataflows, Excel Online
+  (Business), Microsoft Bookings, Microsoft Defender ATP, Office 365 Groups,
+  OneNote, Outlook.com, Planner, Service Bus, Trello, Word Online (Business), and
+  Yammer. Complete generated registries now contain 99 connectors, including
+  retained Orderful. OneDrive Personal and Universal Print remain blocked by
+  live `ApiNotFound` responses ([#117](https://github.com/Azure/Connectors-NodeJS-SDK/issues/117)).
+- Refreshed the 98 available clients using merged BPM source
+  `21a5e28e029a1e58304b3c4d66302cbb528ed1fd`, with independently downloaded live
+  definitions and run-scoped provenance. Orderful's original source and capture
+  metadata remain unchanged. Added Digital Twins continuation tests covering
+  empty initial pages, later-page items, and termination.
 - Added consumer test coverage for scalar-union maps using a synthetic generator
   fixture for [#110](https://github.com/Azure/Connectors-NodeJS-SDK/issues/110).
   Refreshed 74 connector clients from two independent live downloads with the
