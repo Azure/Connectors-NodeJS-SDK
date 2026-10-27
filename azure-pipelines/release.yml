@@ -32,11 +32,36 @@ extends:
       - stage: Release
         displayName: 'Release Azure Connectors SDK'
         jobs:
+          - ${{ if eq(parameters.dryRun, false) }}:
+            - job: ApproveRelease
+              displayName: 'Approve production npm release'
+              pool: server
+              timeoutInMinutes: 1500
+              steps:
+                - task: ManualValidation@1
+                  displayName: 'Approve publishing @azure/connectors'
+                  timeoutInMinutes: 1440
+                  inputs:
+                    notifyUsers: '[TEAM FOUNDATION]\David Burg,[TEAM FOUNDATION]\Rama Krishna Rayudu,[TEAM FOUNDATION]\Varad Meru''s Team'
+                    approvers: '[TEAM FOUNDATION]\David Burg,[TEAM FOUNDATION]\Rama Krishna Rayudu,[TEAM FOUNDATION]\Varad Meru''s Team'
+                    allowApproversToApproveTheirOwnRuns: false
+                    onTimeout: reject
+                    instructions: |
+                      Review the selected official build '$(resources.pipeline.ConnectorsSDKCI.runName)' (ID '$(resources.pipeline.ConnectorsSDKCI.runID)').
+                      Verify its source commit '$(resources.pipeline.ConnectorsSDKCI.sourceCommit)', package version, and successful dry-run results.
+                      Approve to validate the artifact and submit it to ESRP for public npm distribution.
+                      Reject if the selected build or package is incorrect or publishing is not intended.
+
           - job: ReleaseConnectorsSDK
             displayName: 'Validate and release @azure/connectors'
+            ${{ if eq(parameters.dryRun, false) }}:
+              dependsOn: ApproveRelease
             templateContext:
               type: releaseJob
-              isProduction: ${{ not(parameters.dryRun) }}
+              ${{ if eq(parameters.dryRun, false) }}:
+                isProduction: true
+              ${{ else }}:
+                isProduction: false
               inputs:
                 - input: pipelineArtifact
                   pipeline: ConnectorsSDKCI
@@ -53,9 +78,9 @@ extends:
               - pwsh: |
                   $ErrorActionPreference = 'Stop'
                   $artifactFolder = Join-Path '$(System.DefaultWorkingDirectory)' 'drop'
-                  $artifacts = @(Get-ChildItem -LiteralPath $artifactFolder -Force)
-                  if ($artifacts.Count -ne 1 -or $artifacts[0].PSIsContainer -or $artifacts[0].Extension -ne '.tgz') {
-                    throw "Release artifact folder must contain exactly one npm '.tgz' package."
+                  $artifacts = @(Get-ChildItem -LiteralPath $artifactFolder -File -Filter '*.tgz')
+                  if ($artifacts.Count -ne 1) {
+                    throw "Release artifact folder '$artifactFolder' must contain exactly one npm '.tgz' package; found '$($artifacts.Count)'."
                   }
 
                   $packagePath = $artifacts[0].FullName
@@ -74,6 +99,10 @@ extends:
                   if ($LASTEXITCODE -ne 0) {
                     throw "npm publish dry run failed for '$packagePath'."
                   }
+
+                  $releaseFolder = Join-Path '$(Build.ArtifactStagingDirectory)' 'npm-release'
+                  New-Item -ItemType Directory -Path $releaseFolder | Out-Null
+                  Copy-Item -LiteralPath $packagePath -Destination $releaseFolder
                 displayName: 'Validate npm release artifact (no publishing)'
 
               - ${{ if eq(parameters.dryRun, true) }}:
@@ -93,7 +122,7 @@ extends:
                     intent: PackageDistribution
                     contenttype: npm
                     contentsource: Folder
-                    folderlocation: $(System.DefaultWorkingDirectory)/drop
+                    folderlocation: $(Build.ArtifactStagingDirectory)/npm-release
                     waitforreleasecompletion: true
                     owners: $(Build.RequestedForEmail)
                     approvers: $(Build.RequestedForEmail)

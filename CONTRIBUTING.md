@@ -102,7 +102,9 @@ remains separate and unchanged.
 2. Register the new YAML pipeline in Azure DevOps and authorize access to the
    source pipeline, 1ES templates, agent pool, and ESRP service connection.
    The source build must produce the `drop` artifact containing exactly one
-   `@azure/connectors` npm tarball.
+   `@azure/connectors` npm tarball at its root. Additional build metadata files
+   and directories are ignored; only the validated tarball is copied to the
+   dedicated ESRP publishing folder.
 3. Before a real release, configure these pipeline variables with the
    Connectors team's ESRP onboarding values. Do not copy Durable's identities
    or publisher configuration.
@@ -119,8 +121,11 @@ remains separate and unchanged.
 ### Dry Run and Publishing
 
 1. Queue a successful official build with the intended `IsPrerelease` value.
-   Review its packaged version: the official build derives the stable or dated
-   prerelease version from the source package version.
+   With `IsPrerelease: false`, the official build preserves the exact source
+   `package.json` version, including suffixes such as `-preview`. For example,
+   version `0.3.1-preview` produces `azure-connectors-0.3.1-preview.tgz`.
+   With `IsPrerelease: true` (the default), it continues to derive a dated
+   version such as `0.3.1-prerelease.YYYYMMDD` from the source base version.
 2. Queue the release pipeline and explicitly select that build under
    **Resources**. Leave `dryRun: true` (the default) for the first run.
    Both modes check the artifact's identity and run
@@ -129,11 +134,20 @@ remains separate and unchanged.
    The validation-only `--tag dry-run` option supports prerelease versions on
    newer npm releases; it does not create a tag or configure ESRP distribution.
 3. Inspect the dry-run logs for the package name, version, and contents.
-   The ESRP task is excluded from dry runs at template expansion time.
+   The approval gate and ESRP task are excluded from dry runs at template
+   expansion time.
 4. To publish, queue again with the **same reviewed source build** selected and
-   `dryRun: false`. ESRP submits the package for distribution and waits for
-   completion. Notifications and approval links go to the queuing user's
-   `Build.RequestedForEmail`, following the upstream template.
+   `dryRun: false`. Before artifact validation and ESRP submission, the pipeline
+   pauses for approval by David Burg, Rama Krishna Rayudu, or a member of
+   Varad Meru's Team, using their configured `[TEAM FOUNDATION]` identities.
+   Approvers are notified, cannot approve their own runs, and must approve
+   within 24 hours; rejection or timeout prevents the release job from running.
+   Review the selected build, commit, package version, and prior dry-run results.
+   Confirm these identities resolve in Azure DevOps during pipeline setup.
+5. After approval, the production release job validates the artifact and submits
+   it to ESRP for distribution, waiting for completion. ESRP notifications and
+   approval links still go to the queuing user's `Build.RequestedForEmail`;
+   this is separate from the preceding Azure DevOps approval gate.
 
 Dry runs do not test ESRP authorization or onboarding. Validate those in Azure
 DevOps before publishing. The pipeline has no automatic CI, PR, or
