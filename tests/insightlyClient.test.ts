@@ -93,6 +93,35 @@ describe("InsightlyClient — listTasks", () => {
     });
 });
 
+describe("InsightlyClient - project continuation", () => {
+    afterEach(() => {
+        jest.restoreAllMocks();
+    });
+
+    it.each(["empty", "populated"])("should follow nextLink after an %s initial page", async initialPage => {
+        const initialProjects = initialPage === "empty" ? [] : [{ PROJECT_ID: 1 }];
+        const nextLink = `${TestConnectionUrl}/Projects?page=2`;
+        const fetchMock = jest.spyOn(global, "fetch")
+            .mockReset()
+            .mockResolvedValueOnce(new Response(JSON.stringify({ projects: initialProjects, nextLink }), { status: 200 }))
+            .mockResolvedValueOnce(new Response(JSON.stringify({ projects: [{ PROJECT_ID: 2 }] }), { status: 200 }));
+        const client = new InsightlyClient(TestConnectionUrl, createMockCredential());
+        const iterator = client.listProjects();
+        expect(fetchMock).not.toHaveBeenCalled();
+
+        const projects = [];
+        for await (const project of iterator) {
+            projects.push(project);
+        }
+
+        expect(projects).toEqual([...initialProjects, { PROJECT_ID: 2 }]);
+        expect(String(fetchMock.mock.calls[0][0])).toBe(`${TestConnectionUrl}/Projects`);
+        expect(String(fetchMock.mock.calls[1][0])).toBe(nextLink);
+        expect(await iterator.next()).toEqual({ value: undefined, done: true });
+        expect(fetchMock).toHaveBeenCalledTimes(2);
+    });
+});
+
 describe("Insightly — connector registry", () => {
     it("should expose Insightly in ConnectorNames", () => {
         expect(ConnectorNames.Insightly).toBe("insightly");

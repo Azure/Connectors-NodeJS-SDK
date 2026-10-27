@@ -1,7 +1,7 @@
 // Copyright (c) Microsoft Corporation.  All rights reserved.
 
 import type { TokenCredential } from "@azure/core-auth";
-import { ClicksendsmsClient } from "../src/generated/ClicksendsmsExtensions.ts";
+import { ClicksendsmsClient, type SmsCampaignSendInput } from "../src/generated/ClicksendsmsExtensions.ts";
 import { ConnectorError } from "../src/azureConnectors/connectorError.ts";
 import { ConnectorNames } from "../src/generated/connectorNames.ts";
 import { availableConnectors } from "../src/generated/ManagedConnectors.ts";
@@ -90,6 +90,45 @@ describe("ClicksendsmsClient — getContactLists", () => {
             expect(connectorError.statusCode).toBe(404);
             expect(connectorError.responseBody).toBe("Not Found");
         }
+    });
+});
+
+describe("ClicksendsmsClient - sendSmsCampaign", () => {
+    const campaign: SmsCampaignSendInput = {
+        list_id: 12,
+        name: "Customer update",
+        body: "Service update. Reply STOP to opt out.",
+        senders: [],
+        source: "sdk-test",
+    };
+
+    afterEach(() => {
+        jest.restoreAllMocks();
+    });
+
+    it("should send the typed campaign to the live-defined route", async () => {
+        const response = { http_code: 200, data: { campaign_id: 123 } };
+        mockFetchResponse(response);
+        const client = new ClicksendsmsClient(TestConnectionUrl, createMockCredential());
+
+        expect(await client.sendSmsCampaign(campaign)).toEqual(response);
+
+        const [requestUrl, request] = (global.fetch as jest.Mock).mock.calls[0];
+        expect(requestUrl).toBe(`${TestConnectionUrl}/sms-campaigns/send`);
+        expect(request.method).toBe("POST");
+        expect(JSON.parse(request.body)).toEqual(campaign);
+    });
+
+    it("should preserve campaign service failures", async () => {
+        mockFetchError(400, '{"error":"Invalid campaign."}');
+        const client = new ClicksendsmsClient(TestConnectionUrl, createMockCredential());
+
+        await expect(client.sendSmsCampaign(campaign)).rejects.toMatchObject({
+            connectorName: "clicksendsms",
+            operation: "sms_campaign_send",
+            statusCode: 400,
+            responseBody: '{"error":"Invalid campaign."}',
+        });
     });
 });
 

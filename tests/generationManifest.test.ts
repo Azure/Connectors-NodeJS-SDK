@@ -80,6 +80,13 @@ interface GenerationManifest {
         retainedConnectors: Array<{ apiName: string; reason: string }>;
         sharedFiles: Array<{ outputFile: string; outputSha256: string }>;
     };
+    blockedConnectors: Array<{
+        apiName: string;
+        errorCode: string;
+        httpStatusCode: number;
+        regions: string[];
+        issue: string;
+    }>;
     routeIdentityLoss?: {
         droppedTriggerRoutes: ManifestDroppedTriggerRoute[];
     };
@@ -94,8 +101,8 @@ interface GenerationRun {
     generator: GenerationManifest["generator"] & {
         assemblySha256: string;
         upstreamStatus: string;
-        pullRequest: string;
-        pullRequestSourceCommit: string;
+        pullRequest?: string;
+        pullRequestSourceCommit?: string;
     };
     swaggerSource: { kind: string; subscriptionId: string; location: string; apiVersion: string };
     connectorListInputSha256: string;
@@ -406,10 +413,10 @@ describe("generation.manifest.json provenance", () => {
         expect(manifest.connectors.length).toBeGreaterThan(0);
     });
 
-    it("should refresh exactly 74 connectors and retain only Orderful with its original provenance", () => {
-        expect(manifest.connectors).toHaveLength(75);
-        expect(manifest.refresh.refreshedConnectors).toHaveLength(74);
-        expect(new Set(manifest.refresh.refreshedConnectors).size).toBe(74);
+    it("should refresh 98 connectors and retain only Orderful with its original provenance", () => {
+        expect(manifest.connectors).toHaveLength(99);
+        expect(manifest.refresh.refreshedConnectors).toHaveLength(98);
+        expect(new Set(manifest.refresh.refreshedConnectors).size).toBe(98);
         expect(manifest.refresh.refreshedConnectors.slice().sort()).toEqual(
             manifest.connectors.filter(connector => connector.apiName !== "orderful").map(connector => connector.apiName).sort(),
         );
@@ -434,8 +441,8 @@ describe("generation.manifest.json provenance", () => {
         }
     });
 
-    it("should distinguish local unpushed generator source from the paired PR and record the live endpoint", () => {
-        const run = manifest.generationRuns[manifest.refresh.runId];
+    it("should retain the historical unpushed source and paired PR capture without relabeling it", () => {
+        const run = manifest.generationRuns["65391f59-b383-4d89-b912-5c90cc89f423"];
         validateRunSource(run);
         expect(run.generator.bpmBaseCommit).toBe("e2d2073a07d88d1fbb1a65a61df27b41b0ed5627");
         expect(run.generator.bpmHeadCommit).toBe("ae43130532c83c922aea4ad9d39bc44a86f71f5c");
@@ -449,6 +456,37 @@ describe("generation.manifest.json provenance", () => {
         expect(run.swaggerSource.apiVersion).toBe("2018-07-01-preview");
         expect(run.connectorListInputSha256).toMatch(/^[0-9a-f]{64}$/);
         expect(run.validation.connectorListInputSha256).toBe(run.connectorListInputSha256);
+    });
+
+    it("should bind the current live run to merged source and independent validation", () => {
+        const run = manifest.generationRuns[manifest.refresh.runId];
+        validateRunSource(run);
+        expect(run.generator.bpmBaseCommit).toBe("21a5e28e029a1e58304b3c4d66302cbb528ed1fd");
+        expect(run.generator.bpmHeadCommit).toBe(run.generator.bpmBaseCommit);
+        expect(run.generator.sourcePatch).toBeUndefined();
+        expect(run.generator.upstreamStatus).toBe("merged");
+        expect(run.generator.assemblySha256).toMatch(/^[0-9a-f]{64}$/);
+        expect(run.swaggerSource).toEqual({
+            kind: "live-arm-metadata",
+            subscriptionId: "1a839f1f-10b2-4613-95ad-0800a22abbf2",
+            location: "westus",
+            apiVersion: "2018-07-01-preview",
+        });
+        expect(run.connectorListInputSha256).toMatch(/^[0-9a-f]{64}$/);
+        expect(run.validation.connectorListInputSha256).toBe(run.connectorListInputSha256);
+    });
+
+    it("should track unavailable additions without shipping fixture-backed replacements", () => {
+        expect(manifest.blockedConnectors.map(connector => connector.apiName).sort()).toEqual([
+            "onedrive", "universalprint",
+        ]);
+        for (const blocked of manifest.blockedConnectors) {
+            expect(blocked.errorCode).toBe("ApiNotFound");
+            expect(blocked.httpStatusCode).toBe(404);
+            expect(blocked.regions).toEqual(["westus", "eastus", "westcentralus", "westeurope"]);
+            expect(blocked.issue).toBe("https://github.com/Azure/Connectors-NodeJS-SDK/issues/117");
+            expect(manifest.connectors.some(connector => connector.apiName === blocked.apiName)).toBe(false);
+        }
     });
 
     it.each(["missing-run", "unknown-run", "stale-capture", "validation-run", "validation-input", "validation-output", "validation-stale", "old-source"])(
@@ -468,7 +506,7 @@ describe("generation.manifest.json provenance", () => {
     );
 
     it.each(["missing-patch", "wrong-head", "wrong-hash"])("should reject false run source composition: %s", mutation => {
-        const run = structuredClone(manifest.generationRuns[manifest.refresh.runId]);
+        const run = structuredClone(manifest.generationRuns["65391f59-b383-4d89-b912-5c90cc89f423"]);
         if (mutation === "missing-patch") delete run.generator.sourcePatch;
         if (mutation === "wrong-head") run.generator.bpmHeadCommit = "0".repeat(40);
         if (mutation === "wrong-hash") run.generator.sourcePatch!.sha256 = "0".repeat(64);

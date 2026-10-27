@@ -30,6 +30,56 @@ export interface SmsSendResponse {
 }
 
 /**
+ * Send SMS Campaign
+ */
+export interface SmsCampaignSendInput {
+    /** The list_id of the contact list to send the campaign to (max 20,000 recipients). You may use the Search Contact List action OR Get Contact List action to get the List ID. */
+    list_id: number;
+    /** The SMS campaign name. */
+    name: string;
+    /** The sender of the message (Sender ID): a shared number, dedicated number (E.164), alpha tag, or your own verified number. */
+    from?: string;
+    /** The message to send. 160 characters (GSM) or 70 (Unicode) per part. Marketing messages must include an opt-out, e.g. 'Reply STOP to opt-out' or StopMsg.me/xxxxx. */
+    body: string;
+    /** Time to send the campaign, as a Unix timestamp. Leave empty to send immediately. */
+    schedule?: number;
+    /** The URL to shorten. The shortened URL is appended to the end of the message body. */
+    url_to_shorten?: string;
+    /** Per-country sender configuration. */
+    senders: Array<Record<string, unknown>>;
+    /** Source */
+    source: string;
+}
+
+/**
+ * Response for Send SMS Campaign
+ */
+export interface SmsCampaignSendResponse {
+    /** Http Code */
+    http_code?: number;
+    /** Response Code */
+    response_code?: string;
+    /** Response Message */
+    response_msg?: string;
+    /** Campaign details */
+    data?: Record<string, unknown>;
+}
+
+/**
+ * Response for Get Contact Lists
+ */
+export interface GetContactListsResponse {
+    /** Http Code */
+    http_code?: number;
+    /** Response Code */
+    response_code?: string;
+    /** Response Message */
+    response_msg?: string;
+    /** data */
+    data?: Record<string, unknown>;
+}
+
+/**
  * Create New Contact List
  */
 export interface CreateListInput {
@@ -52,42 +102,6 @@ export interface CreateListResponse {
 }
 
 /**
- * Response for Get Contact Lists
- */
-export interface GetContactListsResponse {
-    /** Http Code */
-    http_code?: number;
-    /** Response Code */
-    response_code?: string;
-    /** Response Message */
-    response_msg?: string;
-    /** data */
-    data?: Record<string, unknown>;
-}
-
-/**
- * Send Voice Message
- */
-export interface SendVoiceInput {
-    /** Message */
-    messages: Array<Record<string, unknown>>;
-}
-
-/**
- * Response for Send Voice Message
- */
-export interface SendVoiceResponse {
-    /** Http Code */
-    http_code?: number;
-    /** Response Code */
-    response_code?: string;
-    /** Response Message */
-    response_msg?: string;
-    /** data */
-    data?: Record<string, unknown>;
-}
-
-/**
  * Response for Delete List
  */
 export interface DeleteListResponse {
@@ -97,6 +111,20 @@ export interface DeleteListResponse {
     response_code?: string;
     /** Response Message */
     response_msg?: string;
+}
+
+/**
+ * Response for Get Contacts in a List
+ */
+export interface ViewListContactsResponse {
+    /** Http Code */
+    http_code?: number;
+    /** Response Code */
+    response_code?: string;
+    /** Response Message */
+    response_msg?: string;
+    /** data */
+    data?: Record<string, unknown>;
 }
 
 /**
@@ -151,20 +179,6 @@ export interface CreateListContactResponse {
 }
 
 /**
- * Response for Get Contacts in a List
- */
-export interface ViewListContactsResponse {
-    /** Http Code */
-    http_code?: number;
-    /** Response Code */
-    response_code?: string;
-    /** Response Message */
-    response_msg?: string;
-    /** data */
-    data?: Record<string, unknown>;
-}
-
-/**
  * Response for Delete a Contact
  */
 export interface DeleteListContactResponse {
@@ -201,30 +215,6 @@ export interface SendMmsResponse {
 }
 
 /**
- * Send Fax
- */
-export interface SendFaxInput {
-    /** Message */
-    messages: Array<Record<string, unknown>>;
-    /** Maximum file size is 4 MB. All pages should be in portrait. Chat with ClickSend Support for complete specifications */
-    file_url: string;
-}
-
-/**
- * Response for Send Fax
- */
-export interface SendFaxResponse {
-    /** Http Code */
-    http_code?: number;
-    /** Response Code */
-    response_code?: string;
-    /** Response Message */
-    response_msg?: string;
-    /** data */
-    data?: Record<string, unknown>;
-}
-
-/**
  * Convert Media File Format
  */
 export interface UploadMediaInput {
@@ -250,64 +240,6 @@ export interface UploadMediaResponse {
  * Response for Search Contact Lists
  */
 export interface SearchContactListResponse {
-    /** Http Code */
-    http_code?: number;
-    /** Response Code */
-    response_code?: string;
-    /** Response Message */
-    response_msg?: string;
-    /** data */
-    data?: Record<string, unknown>;
-}
-
-/**
- * Send Letter
- */
-export interface SendLetterInput {
-    /** Maximum file size is 10 MB. All pages should be in portrait. Chat with ClickSend Support for complete specifications. */
-    file_url: string;
-    /** Whether using letter template. Flag value must be 1 for yes or 0 for no. */
-    template_used?: number;
-    /** Choose to use colour or B&W printing. (Black & White = 0, Colour = 1) */
-    colour: number;
-    /** Choose to use Duplex = 1 (double-sided) or Simplex = 0(single sided) printing. */
-    duplex: number;
-    /** Whether letter is priority, Flag value must be 1 for yes or 0 for no. */
-    priority_post?: number;
-    /** Recipient */
-    recipients: Array<Record<string, unknown>>;
-    /** Source */
-    source: string;
-}
-
-/**
- * Response for Send Letter
- */
-export interface SendLetterResponse {
-    /** Http Code */
-    http_code?: number;
-    /** Response Code */
-    response_code?: string;
-    /** Response Message */
-    response_msg?: string;
-    /** data */
-    data?: Record<string, unknown>;
-}
-
-/**
- * Send Postcard
- */
-export interface SendPostcardInput {
-    /** item */
-    recipients: Array<Record<string, unknown>>;
-    /** PDF File URL */
-    file_urls: Array<string>;
-}
-
-/**
- * Response for Send Postcard
- */
-export interface SendPostcardResponse {
     /** Http Code */
     http_code?: number;
     /** Response Code */
@@ -391,16 +323,15 @@ export class ClicksendsmsClient extends ConnectorClientBase {
     }
 
     /**
-     * Create New Contact List
-     * @remarks Create New Contact List
-     * @remarks Uses the curated name for operationId 'create_list'.
+     * Send SMS Campaign
+     * @remarks Send an SMS campaign to a contact list (up to 20,000 recipients).
      */
-    public async createList(input: CreateListInput, options: ConnectorOperationOptions = {}): Promise<CreateListResponse> {
-        const requestPath = `/lists`;
+    public async sendSmsCampaign(input: SmsCampaignSendInput, options: ConnectorOperationOptions = {}): Promise<SmsCampaignSendResponse> {
+        const requestPath = `/sms-campaigns/send`;
         const requestUrl = this.resolveUrl(requestPath);
-        const httpResponse = await this.sendWithTracingAsync<CreateListResponse>("Clicksendsms.createList", "create_list", "POST", requestUrl, input, options);
+        const httpResponse = await this.sendWithTracingAsync<SmsCampaignSendResponse>("Clicksendsms.sendSmsCampaign", "sms_campaign_send", "POST", requestUrl, input, options);
 
-        return httpResponse.value as CreateListResponse;
+        return httpResponse.value as SmsCampaignSendResponse;
     }
 
     /**
@@ -423,15 +354,16 @@ export class ClicksendsmsClient extends ConnectorClientBase {
     }
 
     /**
-     * Send Voice Message
-     * @remarks Each 300 characters = 1 voice message. Can send up to 1,200 standard characters
+     * Create New Contact List
+     * @remarks Create New Contact List
+     * @remarks Uses the curated name for operationId 'create_list'.
      */
-    public async sendVoice(input: SendVoiceInput, options: ConnectorOperationOptions = {}): Promise<SendVoiceResponse> {
-        const requestPath = `/voice/send`;
+    public async createList(input: CreateListInput, options: ConnectorOperationOptions = {}): Promise<CreateListResponse> {
+        const requestPath = `/lists`;
         const requestUrl = this.resolveUrl(requestPath);
-        const httpResponse = await this.sendWithTracingAsync<SendVoiceResponse>("Clicksendsms.sendVoice", "send_voice", "POST", requestUrl, input, options);
+        const httpResponse = await this.sendWithTracingAsync<CreateListResponse>("Clicksendsms.createList", "create_list", "POST", requestUrl, input, options);
 
-        return httpResponse.value as SendVoiceResponse;
+        return httpResponse.value as CreateListResponse;
     }
 
     /**
@@ -448,6 +380,18 @@ export class ClicksendsmsClient extends ConnectorClientBase {
     }
 
     /**
+     * Get Contacts in a List
+     * @remarks Get all Contacts in a List
+     */
+    public async listViewContacts(listId: number, options: ConnectorOperationOptions = {}): Promise<ViewListContactsResponse> {
+        const requestPath = `/lists/${encodeURIComponent(String(listId))}/contacts`;
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.sendWithTracingAsync<ViewListContactsResponse>("Clicksendsms.listViewContacts", "view_list_contacts", "GET", requestUrl, undefined, options);
+
+        return httpResponse.value as ViewListContactsResponse;
+    }
+
+    /**
      * Create New Contact
      * @remarks Create New Contact
      * @remarks Uses the curated name for operationId 'create_list_contact'.
@@ -458,18 +402,6 @@ export class ClicksendsmsClient extends ConnectorClientBase {
         const httpResponse = await this.sendWithTracingAsync<CreateListContactResponse>("Clicksendsms.createListContact", "create_list_contact", "POST", requestUrl, input, options);
 
         return httpResponse.value as CreateListContactResponse;
-    }
-
-    /**
-     * Get Contacts in a List
-     * @remarks Get all Contacts in a List
-     */
-    public async listViewContacts(listId: number, options: ConnectorOperationOptions = {}): Promise<ViewListContactsResponse> {
-        const requestPath = `/lists/${encodeURIComponent(String(listId))}/contacts`;
-        const requestUrl = this.resolveUrl(requestPath);
-        const httpResponse = await this.sendWithTracingAsync<ViewListContactsResponse>("Clicksendsms.listViewContacts", "view_list_contacts", "GET", requestUrl, undefined, options);
-
-        return httpResponse.value as ViewListContactsResponse;
     }
 
     /**
@@ -498,18 +430,6 @@ export class ClicksendsmsClient extends ConnectorClientBase {
     }
 
     /**
-     * Send Fax
-     * @remarks Send Fax
-     */
-    public async sendFax(input: SendFaxInput, options: ConnectorOperationOptions = {}): Promise<SendFaxResponse> {
-        const requestPath = `/fax/send`;
-        const requestUrl = this.resolveUrl(requestPath);
-        const httpResponse = await this.sendWithTracingAsync<SendFaxResponse>("Clicksendsms.sendFax", "send_fax", "POST", requestUrl, input, options);
-
-        return httpResponse.value as SendFaxResponse;
-    }
-
-    /**
      * Convert Media File Format
      * @remarks Convert Media File Format
      */
@@ -535,30 +455,6 @@ export class ClicksendsmsClient extends ConnectorClientBase {
         const httpResponse = await this.sendWithTracingAsync<SearchContactListResponse>("Clicksendsms.listSearchContact", "search_contact_list", "GET", requestUrl, undefined, options);
 
         return httpResponse.value as SearchContactListResponse;
-    }
-
-    /**
-     * Send Letter
-     * @remarks Send Letter
-     */
-    public async sendLetter(input: SendLetterInput, options: ConnectorOperationOptions = {}): Promise<SendLetterResponse> {
-        const requestPath = `/post/letters/send`;
-        const requestUrl = this.resolveUrl(requestPath);
-        const httpResponse = await this.sendWithTracingAsync<SendLetterResponse>("Clicksendsms.sendLetter", "send_letter", "POST", requestUrl, input, options);
-
-        return httpResponse.value as SendLetterResponse;
-    }
-
-    /**
-     * Send Postcard
-     * @remarks Send one or more postcards
-     */
-    public async sendPostcard(input: SendPostcardInput, options: ConnectorOperationOptions = {}): Promise<SendPostcardResponse> {
-        const requestPath = `/post/postcards/send`;
-        const requestUrl = this.resolveUrl(requestPath);
-        const httpResponse = await this.sendWithTracingAsync<SendPostcardResponse>("Clicksendsms.sendPostcard", "send_postcard", "POST", requestUrl, input, options);
-
-        return httpResponse.value as SendPostcardResponse;
     }
 
 }

@@ -110,6 +110,8 @@ export interface TaskRequest {
 export interface ListProjectsResponse {
     /** A collection of projects */
     projects?: Array<Project>;
+    /** The URL to retrieve the next page. */
+    nextLink?: string;
 }
 
 /**
@@ -698,13 +700,14 @@ export class InsightlyClient extends ConnectorClientBase {
         const requestPath = `/Projects`;
         return this.createPageable<ListProjectsResponse, Project>(
             requestPath,
-            async (requestUrl) => {
-                const httpResponse = await this.sendWithTracingAsync<ListProjectsResponse>("Insightly.listProjects", "ListProjects", "GET", requestUrl, undefined, options);
+            async (requestUrl, isFirstPage) => {
+                const requestMethod = isFirstPage ? "GET" : "GET";
+                const httpResponse = await this.sendWithTracingAsync<ListProjectsResponse>("Insightly.listProjects", "ListProjects", requestMethod, requestUrl, undefined, options);
 
                 return httpResponse.value as ListProjectsResponse;
             },
             "projects",
-            undefined,
+            "nextLink",
         );
     }
 

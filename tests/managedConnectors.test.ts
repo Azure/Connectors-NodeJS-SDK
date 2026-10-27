@@ -35,8 +35,8 @@ describe("availableConnectors", () => {
         }
     });
 
-    it("should contain exactly 75 connectors", () => {
-        expect(availableConnectors).toHaveLength(75);
+    it("should contain exactly 99 connectors", () => {
+        expect(availableConnectors).toHaveLength(99);
     });
 
     it("should include all ConnectorNames values", () => {
