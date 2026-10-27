@@ -81,6 +81,64 @@ If you find a bug or want to suggest an improvement in the generated code:
 3. You are welcome to include a code suggestion showing the desired output — this helps the team understand the fix
 4. A Microsoft contributor will work your suggestion back into the internal code generator so the fix applies to all generated connectors
 
+## Publishing an npm Release
+
+[azure-pipelines/release.yml](azure-pipelines/release.yml) is a manually queued,
+ESRP-based npm publishing pipeline adapted from the
+[Durable JS release pipeline](https://github.com/Azure/azure-functions-durable-js/blob/v3.x/azure-pipelines/release.yml).
+It publishes an existing official-build artifact; it does not build, change
+versions, create branches or tags, create GitHub releases, or upload partner drops.
+The existing [library-release.yml](azure-pipelines/library-release.yml) workflow
+remains separate and unchanged.
+
+### One-time Setup
+
+1. Register [official-build.yml](azure-pipelines/official-build.yml) in Azure
+   DevOps as `connectors-nodejs-sdk.official`, matching the release pipeline's
+   `source`. If it is already registered, rename it to this name or update
+   `source` to match its existing name. Pipeline names are assigned in Azure
+   DevOps, not by the YAML `name` property (which controls run numbers).
+   Confirm its project (`internal` by default) and branch (`main` by default).
+2. Register the new YAML pipeline in Azure DevOps and authorize access to the
+   source pipeline, 1ES templates, agent pool, and ESRP service connection.
+   The source build must produce the `drop` artifact containing exactly one
+   `@azure/connectors` npm tarball.
+3. Before a real release, configure these pipeline variables with the
+   Connectors team's ESRP onboarding values. Do not copy Durable's identities
+   or publisher configuration.
+
+   | Variable | Value |
+   |----------|-------|
+   | `EsrpServiceConnection` | ESRP service connection name |
+   | `EsrpKeyVaultName` | Key Vault containing the signing certificate |
+   | `EsrpSigningCertificateName` | Signing certificate name |
+   | `EsrpClientId` | Onboarded ESRP client/application ID |
+   | `EsrpPublisher` | Onboarded npm publisher name |
+   | `EsrpTenantId` | ESRP domain tenant ID |
+
+### Dry Run and Publishing
+
+1. Queue a successful official build with the intended `IsPrerelease` value.
+   Review its packaged version: the official build derives the stable or dated
+   prerelease version from the source package version.
+2. Queue the release pipeline and explicitly select that build under
+   **Resources**. Leave `dryRun: true` (the default) for the first run.
+   Both modes check the artifact's identity and run
+   `npm publish --dry-run --ignore-scripts` against the tarball. Lifecycle scripts
+   are disabled; no npm credentials or ESRP variables are needed for dry runs.
+   The validation-only `--tag dry-run` option supports prerelease versions on
+   newer npm releases; it does not create a tag or configure ESRP distribution.
+3. Inspect the dry-run logs for the package name, version, and contents.
+   The ESRP task is excluded from dry runs at template expansion time.
+4. To publish, queue again with the **same reviewed source build** selected and
+   `dryRun: false`. ESRP submits the package for distribution and waits for
+   completion. Notifications and approval links go to the queuing user's
+   `Build.RequestedForEmail`, following the upstream template.
+
+Dry runs do not test ESRP authorization or onboarding. Validate those in Azure
+DevOps before publishing. The pipeline has no automatic CI, PR, or
+pipeline-completion triggers.
+
 ## License
 
 By contributing, you agree that your contributions will be licensed under the [MIT License](LICENSE).

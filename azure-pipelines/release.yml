@@ -1,0 +1,102 @@
+parameters:
+  - name: dryRun
+    type: boolean
+    default: true
+    displayName: 'Dry run (validate the package without publishing through ESRP)'
+
+pr: none
+trigger: none
+
+resources:
+  repositories:
+    - repository: 1es
+      type: git
+      name: 1ESPipelineTemplates/1ESPipelineTemplates
+      ref: refs/tags/release
+  pipelines:
+    - pipeline: ConnectorsSDKCI
+      project: internal
+      source: connectors-nodejs-sdk.official
+      branch: main
+      trigger: none
+
+extends:
+  template: v1/1ES.Official.PipelineTemplate.yml@1es
+  parameters:
+    pool:
+      name: 1es-pool-azfunc
+      image: 1es-ubuntu-22.04
+      os: linux
+
+    stages:
+      - stage: Release
+        displayName: 'Release Azure Connectors SDK'
+        jobs:
+          - job: ReleaseConnectorsSDK
+            displayName: 'Validate and release @azure/connectors'
+            templateContext:
+              type: releaseJob
+              isProduction: ${{ not(parameters.dryRun) }}
+              inputs:
+                - input: pipelineArtifact
+                  pipeline: ConnectorsSDKCI
+                  artifactName: drop
+                  targetPath: $(System.DefaultWorkingDirectory)/drop
+            steps:
+              - checkout: none
+
+              - task: NodeTool@0
+                displayName: 'Install Node.js'
+                inputs:
+                  versionSpec: 22.x
+
+              - pwsh: |
+                  $ErrorActionPreference = 'Stop'
+                  $artifactFolder = Join-Path '$(System.DefaultWorkingDirectory)' 'drop'
+                  $artifacts = @(Get-ChildItem -LiteralPath $artifactFolder -Force)
+                  if ($artifacts.Count -ne 1 -or $artifacts[0].PSIsContainer -or $artifacts[0].Extension -ne '.tgz') {
+                    throw "Release artifact folder must contain exactly one npm '.tgz' package."
+                  }
+
+                  $packagePath = $artifacts[0].FullName
+                  $manifestContent = tar -xOf $packagePath package/package.json
+                  if ($LASTEXITCODE -ne 0) {
+                    throw "Could not read the npm package manifest from '$packagePath'."
+                  }
+
+                  $manifest = ($manifestContent -join "`n") | ConvertFrom-Json
+                  if ($manifest.name -ne '@azure/connectors' -or [string]::IsNullOrWhiteSpace($manifest.version)) {
+                    throw "Release artifact must be '@azure/connectors' with a nonempty version."
+                  }
+
+                  Write-Host "Validating '$($manifest.name)' version '$($manifest.version)'."
+                  npm publish "$packagePath" --dry-run --ignore-scripts --tag dry-run --access public --registry https://registry.npmjs.org/
+                  if ($LASTEXITCODE -ne 0) {
+                    throw "npm publish dry run failed for '$packagePath'."
+                  }
+                displayName: 'Validate npm release artifact (no publishing)'
+
+              - ${{ if eq(parameters.dryRun, true) }}:
+                - pwsh: |
+                    Write-Host 'Dry run completed. No ESRP request was submitted and no package was published.'
+                  displayName: 'Report dry-run completion'
+
+              - ${{ if eq(parameters.dryRun, false) }}:
+                - task: SFP.release-tasks.custom-build-release-task.EsrpRelease@9
+                  displayName: 'ESRP release @azure/connectors'
+                  inputs:
+                    connectedservicename: $(EsrpServiceConnection)
+                    usemanagedidentity: true
+                    keyvaultname: $(EsrpKeyVaultName)
+                    signcertname: $(EsrpSigningCertificateName)
+                    clientid: $(EsrpClientId)
+                    intent: PackageDistribution
+                    contenttype: npm
+                    contentsource: Folder
+                    folderlocation: $(System.DefaultWorkingDirectory)/drop
+                    waitforreleasecompletion: true
+                    owners: $(Build.RequestedForEmail)
+                    approvers: $(Build.RequestedForEmail)
+                    serviceendpointurl: https://api.esrp.microsoft.com
+                    mainpublisher: $(EsrpPublisher)
+                    domaintenantid: $(EsrpTenantId)

@@ -1,6 +1,6 @@
 {
     "name": "@azure/connectors",
-    "version": "0.3.0-preview",
+    "version": "0.3.1-preview",
     "description": "Azure Connectors SDK for Node.js",
     "type": "module",
     "main": "dist/cjs/azureConnectors/index.js",
