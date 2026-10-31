@@ -46,6 +46,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- Added a TypeDoc API reference for SDK infrastructure and all generated
+  connectors, with pull-request coverage validation and GitHub Pages deployment
+  from `main`. See [documentation setup](docs/publishing.md).
 - Added 24 generated TypeScript connector clients with mocked request, response,
   error, and export tests: Azure AD, Azure Automation, Azure Cosmos DB, Azure Data
   Factory, Azure DevOps (VSTS), Azure Digital Twins, Azure Event Hubs, Azure Key

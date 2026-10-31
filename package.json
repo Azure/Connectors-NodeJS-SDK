@@ -40,7 +40,9 @@
         "typecheck": "tsc --noEmit",
         "typecheck:samples": "tsc -p samples/tsconfig.json --noEmit",
         "lint": "eslint --config config/eslint.config.cjs src/",
-        "lint:md": "markdownlint-cli2 **/*.md #node_modules #dist #samples/node_modules"
+        "docs:build": "typedoc && node scripts/validate-api-docs.mjs",
+        "docs:test": "node --test scripts/validate-api-docs.test.mjs",
+        "lint:md": "markdownlint-cli2 **/*.md #node_modules #dist #site #samples/node_modules"
     },
     "keywords": [
         "azure",
@@ -81,6 +83,7 @@
         "jest": "^30.3.0",
         "markdownlint-cli2": "^0.24.0",
         "ts-jest": "^29.4.15",
+        "typedoc": "^0.28.20",
         "typescript": "^6.0.3",
         "typescript-eslint": "^8.71.2"
     },

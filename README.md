@@ -31,6 +31,14 @@ Azure provides a rich ecosystem of [managed connectors](https://learn.microsoft.
 
 > **Note:** This is the Node.js SDK. A [Python SDK](https://github.com/Azure/Connectors-Python-SDK) and [.NET SDK](https://github.com/Azure/Connectors-NET-SDK) are also available.
 
+## Documentation
+
+The [API documentation](https://azure.github.io/Connectors-NodeJS-SDK/) covers
+SDK infrastructure and every generated connector's clients, models, operation
+options, and trigger metadata. It is built from `main`, so it may differ from
+the npm release. For local builds and the one-time GitHub Pages setup, see
+[publishing documentation](docs/publishing.md).
+
 ## How It Works
 
 ```text

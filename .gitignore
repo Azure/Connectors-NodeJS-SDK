@@ -302,6 +302,7 @@ FakesAssemblies/
 node_modules/
 dist/
 coverage/
+site/
 
 # Visual Studio 6 build log
 *.plg
