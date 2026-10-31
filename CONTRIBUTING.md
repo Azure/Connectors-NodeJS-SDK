@@ -27,6 +27,13 @@ npm run build
 npm test
 ```
 
+### Building Documentation
+
+Run `npm run docs:build` to generate and validate the API reference, and
+`npm run docs:test` to test the public API coverage checker. See
+[building and publishing SDK documentation](docs/publishing.md) for the
+one-time GitHub Pages setup and ongoing workflow.
+
 ## How to Contribute
 
 1. Fork the repository
