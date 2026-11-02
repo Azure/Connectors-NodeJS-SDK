@@ -1,0 +1,24 @@
+{
+    "$schema": "https://typedoc.org/schema.json",
+    "entryPoints": [
+        "src/azureConnectors/index.ts",
+        "src/generated/*Extensions.ts",
+        "src/generated/connectorNames.ts",
+        "src/generated/ManagedConnectors.ts"
+    ],
+    "entryPointStrategy": "expand",
+    "tsconfig": "tsconfig.json",
+    "name": "Azure Connectors Node.js SDK",
+    "readme": "docs/index.md",
+    "out": "site",
+    "json": "artifacts/api-docs.json",
+    "excludePrivate": true,
+    "excludeProtected": true,
+    "excludeInternal": true,
+    "navigationLinks": {
+        "GitHub": "https://github.com/Azure/Connectors-NodeJS-SDK",
+        "npm": "https://www.npmjs.com/package/@azure/connectors",
+        "Python SDK": "https://azure.github.io/connectors-python-sdk/"
+    },
+    "treatValidationWarningsAsErrors": true
+}
