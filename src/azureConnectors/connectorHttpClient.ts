@@ -12,6 +12,7 @@ import type { OperationTracingOptions } from "@azure/core-tracing";
 import {
     bearerTokenAuthenticationPolicy,
     createDefaultHttpClient,
+    createHttpHeaders,
     createPipelineFromOptions,
     createPipelineRequest,
     defaultRetryPolicy,
@@ -21,6 +22,7 @@ import {
 import type {
     HttpClient,
     HttpMethods,
+    MultipartRequestBody,
     Pipeline,
     PipelineOptions,
     PipelinePolicy,
@@ -192,11 +194,9 @@ export class ConnectorHttpClient {
         const request = createPipelineRequest({
             url,
             method: method as HttpMethods,
-            body: body === undefined
+            body: body === undefined || isFormDataBody
                 ? undefined
-                : isFormDataBody
-                    ? body
-                    : JSON.stringify(body),
+                : JSON.stringify(body),
             abortSignal,
             tracingOptions,
             streamResponseStatusCodes: responseAsBlob
@@ -211,6 +211,11 @@ export class ConnectorHttpClient {
 
         for (const [name, value] of Object.entries(requestHeaders ?? {})) {
             request.headers.set(name, value);
+        }
+
+        if (isFormDataBody) {
+            request.multipartBody = ConnectorHttpClient.createMultipartBody(body);
+            request.headers.set("Content-Type", request.headers.get("Content-Type") ?? "multipart/form-data");
         }
 
         try {
@@ -229,6 +234,39 @@ export class ConnectorHttpClient {
 
             throw error;
         }
+    }
+
+    private static createMultipartBody(formData: FormData): MultipartRequestBody {
+        const parts: MultipartRequestBody["parts"] = [];
+        for (const [name, value] of formData) {
+            let disposition = `form-data; name="${ConnectorHttpClient.escapeDispositionParameter(name)}"`;
+            if (typeof value === "string") {
+                parts.push({
+                    headers: createHttpHeaders({ "Content-Disposition": disposition }),
+                    body: new TextEncoder().encode(value),
+                });
+            } else {
+                disposition += `; filename="${ConnectorHttpClient.escapeDispositionParameter(value.name || "blob")}"`;
+                parts.push({
+                    headers: createHttpHeaders({
+                        "Content-Disposition": disposition,
+                        "Content-Type": value.type || "application/octet-stream",
+                    }),
+                    body: value,
+                });
+            }
+        }
+
+        return { parts };
+    }
+
+    private static escapeDispositionParameter(value: string): string {
+        if (/[\r\n]/.test(value)) {
+            throw new Error("Multipart header parameters cannot contain carriage returns or line feeds.");
+        }
+
+        // NOTE(swapnil-nagar): Form-data uses %22 for quotes; native FormData readers reject backslash quoting.
+        return value.replace(/"/g, "%22");
     }
 
     private getPipeline(scopes: string[]): Pipeline {
