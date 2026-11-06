@@ -9,6 +9,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Breaking Changes
 
+- PdfCo response interfaces use `PdfUnsearchableResponse`, `PdfFromXlsXlsxResponse`,
+  and `XlsToCsvResponse`/`XlsToHtmlResponse`/`XlsToJsonResponse`/
+  `XlsToTxtResponse`/`XlsToXmlResponse` instead of the corresponding
+  `PDFUnSearchableResponse`, `PDFFromXLSXLSXResponse`, and `XLSto*Response`
+  names. Request interfaces, methods, routes, operation IDs, and wire fields
+  remain unchanged.
 - Plivo uses `sendSms`, `Sms`, and `SendSmsResponse` instead of `sendSMS`, `SMS`,
   and `SendSMSResponse`. Routes, operation IDs, JSON fields, HTTP methods, and
   response values remain unchanged.

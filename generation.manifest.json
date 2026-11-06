@@ -689,17 +689,17 @@
     {
       "apiName": "pdfco",
       "outputFile": "src/generated/PdfcoExtensions.ts",
-      "outputSha256": "7195c44398c207f112e1cca263c78cc3a3a11f0c5281de0ccbd34e65b78d4057",
+      "outputSha256": "2b14404b2629b561b08ed682702471317ea00d5939cb04e2221b80f3154109d8",
       "swaggerInputSha256": "c9fb18e541124ef0cd7d867173a4c61eabd2c7a0b0be95bcdf5d4b1c4ede3702",
-      "capturedAtUtc": "2026-11-06T20:24:59.120Z",
+      "capturedAtUtc": "2026-11-06T22:12:26.538Z",
       "swaggerFixture": "swagger-cache/pdfco.swagger.json",
       "swaggerFixtureSha256": "c9fb18e541124ef0cd7d867173a4c61eabd2c7a0b0be95bcdf5d4b1c4ede3702",
-      "runId": "d088de79-948d-4709-b9cc-6d5d93e2c9b0",
+      "runId": "c9039927-0fe5-46fa-8562-67da6d7128dd",
       "validation": {
-        "runId": "1c389d6f-2c3c-4937-836e-abd8892e260d",
-        "capturedAtUtc": "2026-11-06T20:26:25.029Z",
+        "runId": "ab2d10e4-e0bc-4e9b-aefd-50c75a6ef9dd",
+        "capturedAtUtc": "2026-11-06T22:13:41.100Z",
         "swaggerInputSha256": "c9fb18e541124ef0cd7d867173a4c61eabd2c7a0b0be95bcdf5d4b1c4ede3702",
-        "outputSha256": "7195c44398c207f112e1cca263c78cc3a3a11f0c5281de0ccbd34e65b78d4057"
+        "outputSha256": "2b14404b2629b561b08ed682702471317ea00d5939cb04e2221b80f3154109d8"
       }
     },
     {
@@ -723,13 +723,13 @@
       "outputFile": "src/generated/PlivoExtensions.ts",
       "outputSha256": "00f34f2998adc10daf505c22955ca488b66af96355db7b001694f3bb4dd9ae3c",
       "swaggerInputSha256": "85071ba3c076fc92eef5af2272cb2a775b9fe1b04242fdc86a7cf1429d78790a",
-      "capturedAtUtc": "2026-11-06T20:25:05.826Z",
+      "capturedAtUtc": "2026-11-06T22:12:33.227Z",
       "swaggerFixture": "swagger-cache/plivo.swagger.json",
       "swaggerFixtureSha256": "85071ba3c076fc92eef5af2272cb2a775b9fe1b04242fdc86a7cf1429d78790a",
-      "runId": "d088de79-948d-4709-b9cc-6d5d93e2c9b0",
+      "runId": "c9039927-0fe5-46fa-8562-67da6d7128dd",
       "validation": {
-        "runId": "1c389d6f-2c3c-4937-836e-abd8892e260d",
-        "capturedAtUtc": "2026-11-06T20:26:31.468Z",
+        "runId": "ab2d10e4-e0bc-4e9b-aefd-50c75a6ef9dd",
+        "capturedAtUtc": "2026-11-06T22:13:47.678Z",
         "swaggerInputSha256": "85071ba3c076fc92eef5af2272cb2a775b9fe1b04242fdc86a7cf1429d78790a",
         "outputSha256": "00f34f2998adc10daf505c22955ca488b66af96355db7b001694f3bb4dd9ae3c"
       }
@@ -1890,10 +1890,45 @@
         "generatedAtUtc": "2026-11-06T20:26:32.325Z",
         "connectorListInputSha256": "e56d888582875aee4320c61ddf0c6f7fa9bac91b419f6a6d257c8e59ccb7ecc3"
       }
+    },
+    "c9039927-0fe5-46fa-8562-67da6d7128dd": {
+      "command": "LogicAppsCompiler.dll <output-directory> --directClient --language=typescript --connectors=plivo,pdfco",
+      "successfulConnectors": [
+        "pdfco",
+        "plivo"
+      ],
+      "captureStartedAtUtc": "2026-11-06T22:12:08.667Z",
+      "generatedAtUtc": "2026-11-06T22:12:34.101Z",
+      "generator": {
+        "repository": "https://msazure.visualstudio.com/One/_git/AzureUX-BPM",
+        "tool": "CodefulSdkGenerator (LogicAppsCompiler)",
+        "projectPath": "src/tools/CodefulSdkGenerator/LogicAppsCompiler.Cli/LogicAppsCompiler.Cli.csproj",
+        "bpmBaseCommit": "f73f866893706f4f0d017dfb2205b6539894526d",
+        "bpmHeadCommit": "f73f866893706f4f0d017dfb2205b6539894526d",
+        "bpmBranch": "fix/csharp-model-namespace-imports",
+        "assemblyVersion": "1.198.0.20",
+        "assemblySha256": "e219f995ceea5726a5793df31d1d2d1c90b091413b9368528359227062f1f2d0",
+        "upstreamStatus": "active-unmerged",
+        "pullRequest": "https://msazure.visualstudio.com/One/_git/AzureUX-BPM/pullrequest/17700725",
+        "pullRequestSourceCommit": "f73f866893706f4f0d017dfb2205b6539894526d"
+      },
+      "swaggerSource": {
+        "kind": "live-arm-metadata",
+        "subscriptionId": "1a839f1f-10b2-4613-95ad-0800a22abbf2",
+        "location": "westus",
+        "apiVersion": "2018-07-01-preview"
+      },
+      "connectorListInputSha256": "e56d888582875aee4320c61ddf0c6f7fa9bac91b419f6a6d257c8e59ccb7ecc3",
+      "validation": {
+        "runId": "ab2d10e4-e0bc-4e9b-aefd-50c75a6ef9dd",
+        "captureStartedAtUtc": "2026-11-06T22:13:27.246Z",
+        "generatedAtUtc": "2026-11-06T22:13:48.530Z",
+        "connectorListInputSha256": "e56d888582875aee4320c61ddf0c6f7fa9bac91b419f6a6d257c8e59ccb7ecc3"
+      }
     }
   },
   "refresh": {
-    "runId": "d088de79-948d-4709-b9cc-6d5d93e2c9b0",
+    "runId": "c9039927-0fe5-46fa-8562-67da6d7128dd",
     "refreshedConnectors": [
       "pdfco",
       "plivo"
