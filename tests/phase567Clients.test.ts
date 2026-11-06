@@ -11,7 +11,7 @@ import { ImpexiumClient } from "../src/generated/ImpexiumExtensions.ts";
 import { JedoxodatahubClient } from "../src/generated/JedoxodatahubExtensions.ts";
 import { MeetingroommapClient } from "../src/generated/MeetingroommapExtensions.ts";
 import { OrderfulClient } from "../src/generated/OrderfulExtensions.ts";
-import { PlivoClient } from "../src/generated/PlivoExtensions.ts";
+import { PlivoClient, type Sms } from "../src/generated/PlivoExtensions.ts";
 import { RepliconClient } from "../src/generated/RepliconExtensions.ts";
 import { RevaiClient } from "../src/generated/RevaiExtensions.ts";
 import {
@@ -97,6 +97,38 @@ function mockFetchResponse(body: unknown, status = 200): void {
         headers: new Headers(),
     } as Response);
 }
+
+describe("Plivo SMS naming wire contract", () => {
+    afterEach(() => {
+        jest.restoreAllMocks();
+    });
+
+    it("should preserve the SMS route and JSON body under sendSms", async () => {
+        const client = new PlivoClient(TestConnectionUrl, createMockCredential());
+        const input: Sms = { src: "15550000000", dst: "15551111111", text: "Hello" };
+        const accepted = { api_id: "request-123", message: "queued", message_uuid: ["message-123"] };
+        mockFetchResponse(accepted, 202);
+
+        const sentMessage = await client.sendSms(input, "account/id");
+
+        const [url, request] = (global.fetch as jest.Mock).mock.calls[0];
+        expect(url).toBe(`${TestConnectionUrl}/v1/Account/account%2Fid/Message/`);
+        expect(request.method).toBe("POST");
+        expect(JSON.parse(request.body as string)).toEqual(input);
+        expect(sentMessage).toEqual(accepted);
+        expect(global.fetch).toHaveBeenCalledTimes(1);
+    });
+
+    it("should preserve connector errors on sendSms", async () => {
+        const client = new PlivoClient(TestConnectionUrl, createMockCredential());
+        mockFetchResponse({ error: "Not allowed" }, 403);
+
+        await expect(client.sendSms(
+            { src: "15550000000", dst: "15551111111", text: "Hello" },
+            "account",
+        )).rejects.toMatchObject({ statusCode: 403 });
+    });
+});
 
 async function invokeRepresentativeAction(
     connector: ConnectorCase & { methodName: string },

@@ -116,19 +116,33 @@ independently; do not introduce new cache folders, catalogs, or offline replay w
 
 ### Partial live refreshes
 
+The Plivo SMS naming follow-up refreshes only `plivo` from generator commit
+`edf9bb04241ccad2c52ec7a81489cdbeb2319dd4`, active and unmerged in BPM PR
+17700725. It exposes `sendSms`, `Sms`, and `SendSmsResponse`; HTTP routes,
+operation IDs, JSON keys, and payload values do not change. Update old
+`sendSMS`, `SMS`, and `SendSMSResponse` references before adopting this correction.
+The producer and subsequent independent validation each fetched live metadata
+with their own new empty GUID-named caches and matched input/output hashes.
+Shared registries and fixture files remain unchanged.
+
 Schema v5 keeps the original top-level source and capture window as the default
 for retained clients. Each refreshed connector names a `runId` in `generationRuns`.
 That run records its own source composition, live endpoint, capture window, and
 independent validation window. Never update the default source or timestamps to
 make an untouched client appear fresh. Existing connector-specific source patches
 still apply to retained clients; refreshed entries use their run's source instead.
+Later partial refreshes also keep each retained connector's existing `runId` and
+validation record. The current refreshed set must point to the current run;
+retained entries must stay bound to their own historical run, never be relabeled
+as newly fetched. The manifest tests validate both classifications.
 
 `refresh.refreshedConnectors` names the exact refreshed set.
 `refresh.retainedConnectors` names every retained client and explains why it was
 not refreshed. Each refreshed entry's `validation` records the second run's ID,
 capture time, input hash, and output hash. Both runs must independently fetch live
-metadata into new empty GUID-named temporary caches. Compare all 74 input hashes
-and all generated client and shared-file hashes before replacing output. Delete
+metadata into new empty GUID-named temporary caches. Compare input and output
+hashes for every connector in the refreshed set before replacing output.
+Compare shared-file hashes when those files are regenerated. Delete
 both response stores, even on failure. Input hashes identify consumed raw ARM
 response text with CRLF normalized to LF, not reordered JSON.
 
