@@ -116,14 +116,19 @@ independently; do not introduce new cache folders, catalogs, or offline replay w
 
 ### Partial live refreshes
 
-The Plivo SMS naming follow-up refreshes only `plivo` from generator commit
-`edf9bb04241ccad2c52ec7a81489cdbeb2319dd4`, active and unmerged in BPM PR
-17700725. It exposes `sendSms`, `Sms`, and `SendSmsResponse`; HTTP routes,
+The latest review follow-up refreshes `plivo` and `pdfco` from generator commit
+`16d169d5ae28851f4056b27a6edeff8dc190cba5`, active and unmerged in BPM PR
+17700725. Plivo exposes `sendSms`, `Sms`, and `SendSmsResponse`; HTTP routes,
 operation IDs, JSON keys, and payload values do not change. Update old
 `sendSMS`, `SMS`, and `SendSMSResponse` references before adopting this correction.
 The producer and subsequent independent validation each fetched live metadata
 with their own new empty GUID-named caches and matched input/output hashes.
 Shared registries and fixture files remain unchanged.
+Both regenerated clients are byte-identical after LF normalization to the prior
+SDK PR iteration. The two review defects are covered by synthetic generator
+regressions; this refresh does not establish live catalog incidence or a
+Plivo/PdfCo transport failure. The other 97 clients retain their prior metadata,
+including Orderful's original unavailable-input reason.
 
 Schema v5 keeps the original top-level source and capture window as the default
 for retained clients. Each refreshed connector names a `runId` in `generationRuns`.

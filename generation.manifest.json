@@ -691,13 +691,13 @@
       "outputFile": "src/generated/PdfcoExtensions.ts",
       "outputSha256": "7195c44398c207f112e1cca263c78cc3a3a11f0c5281de0ccbd34e65b78d4057",
       "swaggerInputSha256": "c9fb18e541124ef0cd7d867173a4c61eabd2c7a0b0be95bcdf5d4b1c4ede3702",
-      "capturedAtUtc": "2026-10-27T17:38:09.348Z",
+      "capturedAtUtc": "2026-11-06T20:24:59.120Z",
       "swaggerFixture": "swagger-cache/pdfco.swagger.json",
       "swaggerFixtureSha256": "c9fb18e541124ef0cd7d867173a4c61eabd2c7a0b0be95bcdf5d4b1c4ede3702",
-      "runId": "11ba8eed-e9b2-4f01-b98e-ec20f74a51aa",
+      "runId": "d088de79-948d-4709-b9cc-6d5d93e2c9b0",
       "validation": {
-        "runId": "cf9f24c5-5dd3-4d07-9b96-3abb1f1a54cd",
-        "capturedAtUtc": "2026-10-27T17:50:08.195Z",
+        "runId": "1c389d6f-2c3c-4937-836e-abd8892e260d",
+        "capturedAtUtc": "2026-11-06T20:26:25.029Z",
         "swaggerInputSha256": "c9fb18e541124ef0cd7d867173a4c61eabd2c7a0b0be95bcdf5d4b1c4ede3702",
         "outputSha256": "7195c44398c207f112e1cca263c78cc3a3a11f0c5281de0ccbd34e65b78d4057"
       }
@@ -723,13 +723,13 @@
       "outputFile": "src/generated/PlivoExtensions.ts",
       "outputSha256": "00f34f2998adc10daf505c22955ca488b66af96355db7b001694f3bb4dd9ae3c",
       "swaggerInputSha256": "85071ba3c076fc92eef5af2272cb2a775b9fe1b04242fdc86a7cf1429d78790a",
-      "capturedAtUtc": "2026-11-06T00:34:19.391Z",
+      "capturedAtUtc": "2026-11-06T20:25:05.826Z",
       "swaggerFixture": "swagger-cache/plivo.swagger.json",
       "swaggerFixtureSha256": "85071ba3c076fc92eef5af2272cb2a775b9fe1b04242fdc86a7cf1429d78790a",
-      "runId": "e0ad85a7-8d69-4c38-9e4c-9c73a39e4ac9",
+      "runId": "d088de79-948d-4709-b9cc-6d5d93e2c9b0",
       "validation": {
-        "runId": "c034e7d0-b982-4fbc-96b6-f74ceb666b14",
-        "capturedAtUtc": "2026-11-06T00:35:21.665Z",
+        "runId": "1c389d6f-2c3c-4937-836e-abd8892e260d",
+        "capturedAtUtc": "2026-11-06T20:26:31.468Z",
         "swaggerInputSha256": "85071ba3c076fc92eef5af2272cb2a775b9fe1b04242fdc86a7cf1429d78790a",
         "outputSha256": "00f34f2998adc10daf505c22955ca488b66af96355db7b001694f3bb4dd9ae3c"
       }
@@ -1855,11 +1855,47 @@
         "generatedAtUtc": "2026-11-06T00:35:22.428Z",
         "connectorListInputSha256": "e769273273460d9ce0d4d00357ffb5ca0e0fe9f6673f3e7908fe81d0dc1b925f"
       }
+    },
+    "d088de79-948d-4709-b9cc-6d5d93e2c9b0": {
+      "command": "LogicAppsCompiler.dll <output-directory> --directClient --language=typescript --connectors=plivo,pdfco",
+      "successfulConnectors": [
+        "pdfco",
+        "plivo"
+      ],
+      "captureStartedAtUtc": "2026-11-06T20:24:42.132Z",
+      "generatedAtUtc": "2026-11-06T20:25:06.679Z",
+      "generator": {
+        "repository": "https://msazure.visualstudio.com/One/_git/AzureUX-BPM",
+        "tool": "CodefulSdkGenerator (LogicAppsCompiler)",
+        "projectPath": "src/tools/CodefulSdkGenerator/LogicAppsCompiler.Cli/LogicAppsCompiler.Cli.csproj",
+        "bpmBaseCommit": "16d169d5ae28851f4056b27a6edeff8dc190cba5",
+        "bpmHeadCommit": "16d169d5ae28851f4056b27a6edeff8dc190cba5",
+        "bpmBranch": "fix/csharp-model-namespace-imports",
+        "assemblyVersion": "1.198.0.16",
+        "assemblySha256": "f5203a611819b0829b6f41a213391554493abe5309b61061b4ecfad3cb4a508e",
+        "upstreamStatus": "active-unmerged",
+        "pullRequest": "https://msazure.visualstudio.com/One/_git/AzureUX-BPM/pullrequest/17700725",
+        "pullRequestSourceCommit": "16d169d5ae28851f4056b27a6edeff8dc190cba5"
+      },
+      "swaggerSource": {
+        "kind": "live-arm-metadata",
+        "subscriptionId": "1a839f1f-10b2-4613-95ad-0800a22abbf2",
+        "location": "westus",
+        "apiVersion": "2018-07-01-preview"
+      },
+      "connectorListInputSha256": "e56d888582875aee4320c61ddf0c6f7fa9bac91b419f6a6d257c8e59ccb7ecc3",
+      "validation": {
+        "runId": "1c389d6f-2c3c-4937-836e-abd8892e260d",
+        "captureStartedAtUtc": "2026-11-06T20:26:10.397Z",
+        "generatedAtUtc": "2026-11-06T20:26:32.325Z",
+        "connectorListInputSha256": "e56d888582875aee4320c61ddf0c6f7fa9bac91b419f6a6d257c8e59ccb7ecc3"
+      }
     }
   },
   "refresh": {
-    "runId": "e0ad85a7-8d69-4c38-9e4c-9c73a39e4ac9",
+    "runId": "d088de79-948d-4709-b9cc-6d5d93e2c9b0",
     "refreshedConnectors": [
+      "pdfco",
       "plivo"
     ],
     "retainedConnectors": [
@@ -2030,10 +2066,6 @@
       {
         "apiName": "orderful",
         "reason": "Retained original October 8 output and provenance because prior independent live probes returned ApiNotFound in westus, eastus, westcentralus, and westeurope. Not fetched in this run."
-      },
-      {
-        "apiName": "pdfco",
-        "reason": "Not refreshed by the Plivo SMS naming follow-up; output bytes and prior run-scoped provenance are retained."
       },
       {
         "apiName": "pipedrive",
