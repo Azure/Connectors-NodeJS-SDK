@@ -7,16 +7,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-### Fixed
-
-- Required query parameters are always serialized, including empty strings,
-  `false`, zero, and empty collections. Optional parameters retain their existing
-  presence checks.
-- SQL query `actualParameters` maps and Fin & Ops procedure `OutputParameters`
-  now allow unknown dynamic values instead of requiring object values. Empty and
-  mixed-value consumer tests cover both changed clients. The other 72 refreshed
-  clients and all three shared registries match their prior output.
-
 ### Breaking Changes
 
 - ClickSend's current live definition no longer exposes `sendVoice`, `sendFax`,
@@ -176,6 +166,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+- Multipart file uploads escape embedded quotes in disposition parameters,
+  preventing malformed MIME headers. Regressions cover ordinary, spaced,
+  Unicode, percent-sign, and quoted filenames through generated clients,
+  Azure Core policies, and native MIME parsing in both CJS and ESM builds.
+- Required query parameters are always serialized, including empty strings,
+  `false`, zero, and empty collections. Optional parameters retain their existing
+  presence checks.
+- SQL query `actualParameters` maps and Fin & Ops procedure `OutputParameters`
+  now allow unknown dynamic values instead of requiring object values. Empty and
+  mixed-value consumer tests cover both changed clients. The other 72 refreshed
+  clients and all three shared registries match their prior output.
 - Preserved root array aliases, numeric enum primitives, and inherited/inline
   `allOf` properties in generated TypeScript models
   ([#71](https://github.com/Azure/Connectors-NodeJS-SDK/issues/71)).
