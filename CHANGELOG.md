@@ -169,6 +169,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+- Multipart file uploads escape embedded quotes in disposition parameters,
+  preventing malformed MIME headers. Regressions cover ordinary, spaced,
+  Unicode, percent-sign, and quoted filenames through generated clients,
+  Azure Core policies, and native MIME parsing in both CJS and ESM builds.
 - Required query parameters are always serialized, including empty strings,
   `false`, zero, and empty collections. Optional parameters retain their existing
   presence checks.

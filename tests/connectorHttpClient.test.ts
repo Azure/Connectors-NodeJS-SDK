@@ -365,6 +365,57 @@ describe("ConnectorHttpClient", () => {
         expect(request.multipartBody).toBeUndefined();
     });
 
+    it("should keep default file metadata and repeated field order", async () => {
+        const httpClient = new MockHttpClient(async request => {
+            const body = typeof request.body === "function" ? request.body() : request.body;
+            const chunks = new Array<Buffer>();
+            if (body instanceof Blob) {
+                chunks.push(Buffer.from(await body.arrayBuffer()));
+            } else {
+                for await (const chunk of body as AsyncIterable<Uint8Array>) {
+                    chunks.push(Buffer.from(chunk));
+                }
+            }
+
+            const received = await new Response(Buffer.concat(chunks), {
+                headers: { "Content-Type": request.headers.get("Content-Type")! },
+            }).formData();
+            expect(received.getAll("tags")).toEqual(["first", "second"]);
+            expect([...received.keys()]).toEqual(["tags", "file", "tags"]);
+            const file = received.get("file");
+            expect(file).toBeInstanceOf(File);
+            if (!(file instanceof File)) {
+                throw new Error("Expected a file part in the multipart request.");
+            }
+
+            expect(file.name).toBe("blob");
+            expect(file.type).toBe("application/octet-stream");
+            expect(await file.text()).toBe("content");
+            return createMockResponse(request, 201);
+        });
+        const client = new ConnectorHttpClient(new MockTokenCredential(), { httpClient });
+        const formData = new FormData();
+        formData.append("tags", "first");
+        formData.append("file", new File(["content"], ""));
+        formData.append("tags", "second");
+
+        await client.sendAsync("POST", "https://example.com/api/files", undefined, formData);
+
+        expect(httpClient.requests).toHaveLength(1);
+    });
+
+    it("should reject line breaks in multipart header parameters before dispatch", async () => {
+        const httpClient = new MockHttpClient(async request => createMockResponse(request, 201));
+        const client = new ConnectorHttpClient(new MockTokenCredential(), { httpClient });
+        const formData = new FormData();
+        formData.append("file", new Blob(["content"]), "invalid\r\nfilename.txt");
+
+        await expect(client.sendAsync("POST", "https://example.com/api/files", undefined, formData))
+            .rejects.toThrow("Multipart header parameters cannot contain carriage returns or line feeds.");
+
+        expect(httpClient.requests).toHaveLength(0);
+    });
+
     it("should materialize a streamed binary response as a Blob", async () => {
         const responseBody = new Blob(["converted content"], { type: "application/pdf" });
         const httpClient = new MockHttpClient(async request => ({

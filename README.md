@@ -271,6 +271,32 @@ async function postTeamsMessage() {
 postTeamsMessage().catch(console.error);
 ```
 
+### Multipart file uploads
+
+Generated multipart operations accept `File` values when the filename matters,
+or `Blob` values for default file metadata. The runtime escapes quotes in part
+headers without percent-encoding the whole filename, and sends the structured
+parts through the normal authenticated Azure Core pipeline.
+
+```typescript
+import { DocuwareClient } from "@azure/connectors/generated/DocuwareExtensions";
+
+const client = new DocuwareClient(connectionRuntimeUrl, credential);
+
+await client.storeToFileCabinet(
+    {
+        file: new File([fileBytes], 'my "invoice".docx', {
+            type: "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+        }),
+    },
+    "cabinet",
+    "dialog",
+);
+```
+
+Filename regressions use generated DocuWare public clients and native multipart
+parsing in both CJS and ESM builds. They do not create live DocuWare documents.
+
 ## Validated Connectors
 
 The following connectors have been generated and validated with comprehensive test coverage:
