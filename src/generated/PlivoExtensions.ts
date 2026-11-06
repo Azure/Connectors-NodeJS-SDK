@@ -35,7 +35,7 @@ export interface ListMessagesResponse {
 /**
  * Response for Send SMS
  */
-export interface SendSMSResponse {
+export interface SendSmsResponse {
     /** Unique ID of the API request. */
     api_id?: string;
     /** Response of the sent message. */
@@ -79,7 +79,7 @@ export interface GetMessageResponse {
 /**
  * Definition: SMS
  */
-export interface SMS {
+export interface Sms {
     /** Plivo number from which the message is to be sent. */
     src: string;
     /** Phone number to which the message is to be sent. */
@@ -158,12 +158,12 @@ export class PlivoClient extends ConnectorClientBase {
      * Send SMS
      * @remarks This operation is used to send a text message.
      */
-    public async sendSMS(input: SMS, authId: string, options: ConnectorOperationOptions = {}): Promise<SendSMSResponse> {
+    public async sendSms(input: Sms, authId: string, options: ConnectorOperationOptions = {}): Promise<SendSmsResponse> {
         const requestPath = `/v1/Account/${encodeURIComponent(String(authId))}/Message/`;
         const requestUrl = this.resolveUrl(requestPath);
-        const httpResponse = await this.sendWithTracingAsync<SendSMSResponse>("Plivo.sendSMS", "SendSMS", "POST", requestUrl, input, options);
+        const httpResponse = await this.sendWithTracingAsync<SendSmsResponse>("Plivo.sendSms", "SendSMS", "POST", requestUrl, input, options);
 
-        return httpResponse.value as SendSMSResponse;
+        return httpResponse.value as SendSmsResponse;
     }
 
     /**

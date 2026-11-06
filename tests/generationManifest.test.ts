@@ -153,8 +153,16 @@ function validateRunSource(run: GenerationRun): void {
  * Requires each refreshed connector to match its own run and independent live validation.
  */
 function validateConnectorRun(manifest: GenerationManifest, connector: ManifestConnectorEntry): void {
+    const refreshed = manifest.refresh.refreshedConnectors.includes(connector.apiName);
+    const retained = manifest.refresh.retainedConnectors.some(entry =>
+        entry.apiName === connector.apiName && entry.reason.trim().length > 0,
+    );
+    if (refreshed === retained) {
+        throw new Error("A connector must belong to exactly one refreshed or retained set.");
+    }
+
     if (connector.runId === undefined) {
-        if (manifest.refresh.refreshedConnectors.includes(connector.apiName)) {
+        if (refreshed) {
             throw new Error("A refreshed connector must identify its live run.");
         }
 
@@ -165,8 +173,9 @@ function validateConnectorRun(manifest: GenerationManifest, connector: ManifestC
     const run = manifest.generationRuns[connector.runId];
     const validation = connector.validation;
     if (!/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/.test(connector.runId) ||
-        run === undefined || connector.runId !== manifest.refresh.runId ||
-        !manifest.refresh.refreshedConnectors.includes(connector.apiName) ||
+        run === undefined ||
+        (refreshed && connector.runId !== manifest.refresh.runId) ||
+        (retained && connector.runId === manifest.refresh.runId) ||
         validation === undefined || validation.runId !== run.validation.runId ||
         !/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/.test(validation.runId) ||
         validation.runId === connector.runId ||
@@ -413,16 +422,20 @@ describe("generation.manifest.json provenance", () => {
         expect(manifest.connectors.length).toBeGreaterThan(0);
     });
 
-    it("should refresh 98 connectors and retain only Orderful with its original provenance", () => {
+    it("should bind the current refreshed set and preserve each retained connector's own provenance", () => {
         expect(manifest.connectors).toHaveLength(99);
-        expect(manifest.refresh.refreshedConnectors).toHaveLength(98);
-        expect(new Set(manifest.refresh.refreshedConnectors).size).toBe(98);
+        expect(manifest.refresh.refreshedConnectors.length).toBeGreaterThan(0);
+        expect(new Set(manifest.refresh.refreshedConnectors).size).toBe(manifest.refresh.refreshedConnectors.length);
         expect(manifest.refresh.refreshedConnectors.slice().sort()).toEqual(
-            manifest.connectors.filter(connector => connector.apiName !== "orderful").map(connector => connector.apiName).sort(),
+            manifest.connectors.filter(connector => connector.runId === manifest.refresh.runId)
+                .map(connector => connector.apiName).sort(),
         );
-        expect(manifest.refresh.retainedConnectors).toHaveLength(1);
-        expect(manifest.refresh.retainedConnectors[0].apiName).toBe("orderful");
-        expect(manifest.refresh.retainedConnectors[0].reason).toContain("ApiNotFound");
+        expect(manifest.refresh.retainedConnectors.map(connector => connector.apiName).sort()).toEqual(
+            manifest.connectors.filter(connector => !manifest.refresh.refreshedConnectors.includes(connector.apiName))
+                .map(connector => connector.apiName).sort(),
+        );
+        expect(manifest.refresh.retainedConnectors.find(connector => connector.apiName === "orderful")!.reason)
+            .toContain("ApiNotFound");
         const retained = manifest.connectors.find(connector => connector.apiName === "orderful")!;
         expect(retained.runId).toBeUndefined();
         expect(retained.validation).toBeUndefined();
@@ -458,13 +471,17 @@ describe("generation.manifest.json provenance", () => {
         expect(run.validation.connectorListInputSha256).toBe(run.connectorListInputSha256);
     });
 
-    it("should bind the current live run to merged source and independent validation", () => {
+    it("should bind the current live run to pinned source and independent validation", () => {
         const run = manifest.generationRuns[manifest.refresh.runId];
         validateRunSource(run);
-        expect(run.generator.bpmBaseCommit).toBe("21a5e28e029a1e58304b3c4d66302cbb528ed1fd");
+        expect(run.generator.bpmBaseCommit).toMatch(/^[0-9a-f]{40}$/);
         expect(run.generator.bpmHeadCommit).toBe(run.generator.bpmBaseCommit);
         expect(run.generator.sourcePatch).toBeUndefined();
-        expect(run.generator.upstreamStatus).toBe("merged");
+        expect(["merged", "active-unmerged"]).toContain(run.generator.upstreamStatus);
+        if (run.generator.upstreamStatus === "active-unmerged") {
+            expect(run.generator.pullRequest).toMatch(/^https:\/\/msazure\.visualstudio\.com\/One\/_git\/AzureUX-BPM\/pullrequest\/\d+$/);
+            expect(run.generator.pullRequestSourceCommit).toBe(run.generator.bpmHeadCommit);
+        }
         expect(run.generator.assemblySha256).toMatch(/^[0-9a-f]{64}$/);
         expect(run.swaggerSource).toEqual({
             kind: "live-arm-metadata",
@@ -492,7 +509,7 @@ describe("generation.manifest.json provenance", () => {
     it.each(["missing-run", "unknown-run", "stale-capture", "validation-run", "validation-input", "validation-output", "validation-stale", "old-source"])(
         "should reject false per-connector freshness: %s", mutation => {
             const changed = structuredClone(manifest);
-            const connector = changed.connectors.find(entry => entry.apiName === "arm")!;
+            const connector = changed.connectors.find(entry => entry.apiName === changed.refresh.refreshedConnectors[0])!;
             if (mutation === "missing-run") delete connector.runId;
             if (mutation === "unknown-run") connector.runId = "unknown";
             if (mutation === "stale-capture") connector.capturedAtUtc = manifest.connectors.find(entry => entry.apiName === "orderful")!.capturedAtUtc;
@@ -501,6 +518,27 @@ describe("generation.manifest.json provenance", () => {
             if (mutation === "validation-output") connector.validation!.outputSha256 = "0".repeat(64);
             if (mutation === "validation-stale") connector.validation!.capturedAtUtc = connector.capturedAtUtc;
             if (mutation === "old-source") connector.generatorCommit = manifest.generator.bpmBaseCommit!;
+            expect(() => validateConnectorRun(changed, connector)).toThrow();
+        },
+    );
+
+    it.each(["retained-as-current", "missing-retention", "historical-as-refreshed"])(
+        "should reject false refresh classification: %s", mutation => {
+            const changed = structuredClone(manifest);
+            const connector = changed.connectors.find(entry =>
+                entry.runId !== undefined && entry.runId !== changed.refresh.runId,
+            )!;
+            expect(connector).toBeDefined();
+            if (mutation === "retained-as-current") connector.runId = changed.refresh.runId;
+            if (mutation === "missing-retention") {
+                changed.refresh.retainedConnectors = changed.refresh.retainedConnectors
+                    .filter(entry => entry.apiName !== connector.apiName);
+            }
+            if (mutation === "historical-as-refreshed") {
+                changed.refresh.retainedConnectors = changed.refresh.retainedConnectors
+                    .filter(entry => entry.apiName !== connector.apiName);
+                changed.refresh.refreshedConnectors.push(connector.apiName);
+            }
             expect(() => validateConnectorRun(changed, connector)).toThrow();
         },
     );

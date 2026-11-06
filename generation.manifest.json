@@ -689,17 +689,17 @@
     {
       "apiName": "pdfco",
       "outputFile": "src/generated/PdfcoExtensions.ts",
-      "outputSha256": "7195c44398c207f112e1cca263c78cc3a3a11f0c5281de0ccbd34e65b78d4057",
+      "outputSha256": "2b14404b2629b561b08ed682702471317ea00d5939cb04e2221b80f3154109d8",
       "swaggerInputSha256": "c9fb18e541124ef0cd7d867173a4c61eabd2c7a0b0be95bcdf5d4b1c4ede3702",
-      "capturedAtUtc": "2026-10-27T17:38:09.348Z",
+      "capturedAtUtc": "2026-11-06T22:12:26.538Z",
       "swaggerFixture": "swagger-cache/pdfco.swagger.json",
       "swaggerFixtureSha256": "c9fb18e541124ef0cd7d867173a4c61eabd2c7a0b0be95bcdf5d4b1c4ede3702",
-      "runId": "11ba8eed-e9b2-4f01-b98e-ec20f74a51aa",
+      "runId": "c9039927-0fe5-46fa-8562-67da6d7128dd",
       "validation": {
-        "runId": "cf9f24c5-5dd3-4d07-9b96-3abb1f1a54cd",
-        "capturedAtUtc": "2026-10-27T17:50:08.195Z",
+        "runId": "ab2d10e4-e0bc-4e9b-aefd-50c75a6ef9dd",
+        "capturedAtUtc": "2026-11-06T22:13:41.100Z",
         "swaggerInputSha256": "c9fb18e541124ef0cd7d867173a4c61eabd2c7a0b0be95bcdf5d4b1c4ede3702",
-        "outputSha256": "7195c44398c207f112e1cca263c78cc3a3a11f0c5281de0ccbd34e65b78d4057"
+        "outputSha256": "2b14404b2629b561b08ed682702471317ea00d5939cb04e2221b80f3154109d8"
       }
     },
     {
@@ -721,17 +721,17 @@
     {
       "apiName": "plivo",
       "outputFile": "src/generated/PlivoExtensions.ts",
-      "outputSha256": "2f2bbe37f45d9ea412351d2e22792c53c4607c1c36814e6dc510b5f47c04628e",
+      "outputSha256": "00f34f2998adc10daf505c22955ca488b66af96355db7b001694f3bb4dd9ae3c",
       "swaggerInputSha256": "85071ba3c076fc92eef5af2272cb2a775b9fe1b04242fdc86a7cf1429d78790a",
-      "capturedAtUtc": "2026-10-27T17:38:29.945Z",
+      "capturedAtUtc": "2026-11-06T22:12:33.227Z",
       "swaggerFixture": "swagger-cache/plivo.swagger.json",
       "swaggerFixtureSha256": "85071ba3c076fc92eef5af2272cb2a775b9fe1b04242fdc86a7cf1429d78790a",
-      "runId": "11ba8eed-e9b2-4f01-b98e-ec20f74a51aa",
+      "runId": "c9039927-0fe5-46fa-8562-67da6d7128dd",
       "validation": {
-        "runId": "cf9f24c5-5dd3-4d07-9b96-3abb1f1a54cd",
-        "capturedAtUtc": "2026-10-27T17:50:30.395Z",
+        "runId": "ab2d10e4-e0bc-4e9b-aefd-50c75a6ef9dd",
+        "capturedAtUtc": "2026-11-06T22:13:47.678Z",
         "swaggerInputSha256": "85071ba3c076fc92eef5af2272cb2a775b9fe1b04242fdc86a7cf1429d78790a",
-        "outputSha256": "2f2bbe37f45d9ea412351d2e22792c53c4607c1c36814e6dc510b5f47c04628e"
+        "outputSha256": "00f34f2998adc10daf505c22955ca488b66af96355db7b001694f3bb4dd9ae3c"
       }
     },
     {
@@ -1821,114 +1821,506 @@
         "generatedAtUtc": "2026-10-27T17:54:57.830Z",
         "connectorListInputSha256": "70980288049a4ab1ffcee2c620a47c6e70614d9f475db9a25c252226e342da11"
       }
+    },
+    "e0ad85a7-8d69-4c38-9e4c-9c73a39e4ac9": {
+      "command": "LogicAppsCompiler.dll <output-directory> --directClient --language=typescript --connectors=plivo",
+      "successfulConnectors": [
+        "plivo"
+      ],
+      "captureStartedAtUtc": "2026-11-06T00:34:04.182Z",
+      "generatedAtUtc": "2026-11-06T00:34:20.266Z",
+      "generator": {
+        "repository": "https://msazure.visualstudio.com/One/_git/AzureUX-BPM",
+        "tool": "CodefulSdkGenerator (LogicAppsCompiler)",
+        "projectPath": "src/tools/CodefulSdkGenerator/LogicAppsCompiler.Cli/LogicAppsCompiler.Cli.csproj",
+        "bpmBaseCommit": "edf9bb04241ccad2c52ec7a81489cdbeb2319dd4",
+        "bpmHeadCommit": "edf9bb04241ccad2c52ec7a81489cdbeb2319dd4",
+        "bpmBranch": "fix/csharp-model-namespace-imports",
+        "assemblyVersion": "1.198.0.14",
+        "assemblySha256": "cc23e0f508ad9d1f3aa888bdb461ec048145f9a9564bd560674520423993b3dc",
+        "upstreamStatus": "active-unmerged",
+        "pullRequest": "https://msazure.visualstudio.com/One/_git/AzureUX-BPM/pullrequest/17700725",
+        "pullRequestSourceCommit": "edf9bb04241ccad2c52ec7a81489cdbeb2319dd4"
+      },
+      "swaggerSource": {
+        "kind": "live-arm-metadata",
+        "subscriptionId": "1a839f1f-10b2-4613-95ad-0800a22abbf2",
+        "location": "westus",
+        "apiVersion": "2018-07-01-preview"
+      },
+      "connectorListInputSha256": "e769273273460d9ce0d4d00357ffb5ca0e0fe9f6673f3e7908fe81d0dc1b925f",
+      "validation": {
+        "runId": "c034e7d0-b982-4fbc-96b6-f74ceb666b14",
+        "captureStartedAtUtc": "2026-11-06T00:35:07.268Z",
+        "generatedAtUtc": "2026-11-06T00:35:22.428Z",
+        "connectorListInputSha256": "e769273273460d9ce0d4d00357ffb5ca0e0fe9f6673f3e7908fe81d0dc1b925f"
+      }
+    },
+    "d088de79-948d-4709-b9cc-6d5d93e2c9b0": {
+      "command": "LogicAppsCompiler.dll <output-directory> --directClient --language=typescript --connectors=plivo,pdfco",
+      "successfulConnectors": [
+        "pdfco",
+        "plivo"
+      ],
+      "captureStartedAtUtc": "2026-11-06T20:24:42.132Z",
+      "generatedAtUtc": "2026-11-06T20:25:06.679Z",
+      "generator": {
+        "repository": "https://msazure.visualstudio.com/One/_git/AzureUX-BPM",
+        "tool": "CodefulSdkGenerator (LogicAppsCompiler)",
+        "projectPath": "src/tools/CodefulSdkGenerator/LogicAppsCompiler.Cli/LogicAppsCompiler.Cli.csproj",
+        "bpmBaseCommit": "16d169d5ae28851f4056b27a6edeff8dc190cba5",
+        "bpmHeadCommit": "16d169d5ae28851f4056b27a6edeff8dc190cba5",
+        "bpmBranch": "fix/csharp-model-namespace-imports",
+        "assemblyVersion": "1.198.0.16",
+        "assemblySha256": "f5203a611819b0829b6f41a213391554493abe5309b61061b4ecfad3cb4a508e",
+        "upstreamStatus": "active-unmerged",
+        "pullRequest": "https://msazure.visualstudio.com/One/_git/AzureUX-BPM/pullrequest/17700725",
+        "pullRequestSourceCommit": "16d169d5ae28851f4056b27a6edeff8dc190cba5"
+      },
+      "swaggerSource": {
+        "kind": "live-arm-metadata",
+        "subscriptionId": "1a839f1f-10b2-4613-95ad-0800a22abbf2",
+        "location": "westus",
+        "apiVersion": "2018-07-01-preview"
+      },
+      "connectorListInputSha256": "e56d888582875aee4320c61ddf0c6f7fa9bac91b419f6a6d257c8e59ccb7ecc3",
+      "validation": {
+        "runId": "1c389d6f-2c3c-4937-836e-abd8892e260d",
+        "captureStartedAtUtc": "2026-11-06T20:26:10.397Z",
+        "generatedAtUtc": "2026-11-06T20:26:32.325Z",
+        "connectorListInputSha256": "e56d888582875aee4320c61ddf0c6f7fa9bac91b419f6a6d257c8e59ccb7ecc3"
+      }
+    },
+    "c9039927-0fe5-46fa-8562-67da6d7128dd": {
+      "command": "LogicAppsCompiler.dll <output-directory> --directClient --language=typescript --connectors=plivo,pdfco",
+      "successfulConnectors": [
+        "pdfco",
+        "plivo"
+      ],
+      "captureStartedAtUtc": "2026-11-06T22:12:08.667Z",
+      "generatedAtUtc": "2026-11-06T22:12:34.101Z",
+      "generator": {
+        "repository": "https://msazure.visualstudio.com/One/_git/AzureUX-BPM",
+        "tool": "CodefulSdkGenerator (LogicAppsCompiler)",
+        "projectPath": "src/tools/CodefulSdkGenerator/LogicAppsCompiler.Cli/LogicAppsCompiler.Cli.csproj",
+        "bpmBaseCommit": "f73f866893706f4f0d017dfb2205b6539894526d",
+        "bpmHeadCommit": "f73f866893706f4f0d017dfb2205b6539894526d",
+        "bpmBranch": "fix/csharp-model-namespace-imports",
+        "assemblyVersion": "1.198.0.20",
+        "assemblySha256": "e219f995ceea5726a5793df31d1d2d1c90b091413b9368528359227062f1f2d0",
+        "upstreamStatus": "active-unmerged",
+        "pullRequest": "https://msazure.visualstudio.com/One/_git/AzureUX-BPM/pullrequest/17700725",
+        "pullRequestSourceCommit": "f73f866893706f4f0d017dfb2205b6539894526d"
+      },
+      "swaggerSource": {
+        "kind": "live-arm-metadata",
+        "subscriptionId": "1a839f1f-10b2-4613-95ad-0800a22abbf2",
+        "location": "westus",
+        "apiVersion": "2018-07-01-preview"
+      },
+      "connectorListInputSha256": "e56d888582875aee4320c61ddf0c6f7fa9bac91b419f6a6d257c8e59ccb7ecc3",
+      "validation": {
+        "runId": "ab2d10e4-e0bc-4e9b-aefd-50c75a6ef9dd",
+        "captureStartedAtUtc": "2026-11-06T22:13:27.246Z",
+        "generatedAtUtc": "2026-11-06T22:13:48.530Z",
+        "connectorListInputSha256": "e56d888582875aee4320c61ddf0c6f7fa9bac91b419f6a6d257c8e59ccb7ecc3"
+      }
     }
   },
   "refresh": {
-    "runId": "11ba8eed-e9b2-4f01-b98e-ec20f74a51aa",
+    "runId": "c9039927-0fe5-46fa-8562-67da6d7128dd",
     "refreshedConnectors": [
-      "arm",
-      "azuread",
-      "azureautomation",
-      "azureblob",
-      "azuredatafactory",
-      "azuredigitaltwins",
-      "azureeventgrid",
-      "azureiotcentral",
-      "azuremonitorlogs",
-      "azurequeues",
-      "azuretables",
-      "azurevm",
-      "box",
-      "campfire",
-      "clicksendsms",
-      "cloudconvert",
-      "cloudmersiveconvert",
-      "commondataservice",
-      "dataflows",
-      "documentdb",
-      "docusign",
-      "docuware",
-      "dropbox",
-      "dynamicsax",
-      "elfsquaddata",
-      "etsy",
-      "eventbrite",
-      "eventhubs",
-      "excelonline",
-      "excelonlinebusiness",
-      "formstackforms",
-      "freshservice",
-      "ftp",
-      "github",
-      "googlecalendar",
-      "googledrive",
-      "googletasks",
-      "impexium",
-      "infusionsoft",
-      "insightly",
-      "jedoxodatahub",
-      "jira",
-      "keyvault",
-      "kusto",
-      "mailchimp",
-      "meetingroommap",
-      "microsoftbookings",
-      "microsoftforms",
-      "monday",
-      "mq",
-      "msgraphgroupsanduser",
-      "office365",
-      "office365groups",
-      "office365groupsmail",
-      "office365users",
-      "onedriveforbusiness",
-      "onenote",
-      "outlook",
       "pdfco",
-      "pipedrive",
-      "planner",
-      "plivo",
-      "plumsail",
-      "powerbi",
-      "projectplace",
-      "replicon",
-      "revai",
-      "rss",
-      "salesforce",
-      "seismicplanner",
-      "sendgrid",
-      "servicebus",
-      "sharepointonline",
-      "shifts",
-      "signinghub",
-      "slack",
-      "smtp",
-      "sql",
-      "starmind",
-      "starrezrestv1",
-      "tallyfy",
-      "teams",
-      "textrequest",
-      "ticketmaster",
-      "todo",
-      "trello",
-      "twitter",
-      "typeform",
-      "visualstudioteamservices",
-      "waywedo",
-      "wdatp",
-      "webex",
-      "wordonlinebusiness",
-      "wordpress",
-      "yammer",
-      "zendesk",
-      "zeptomail",
-      "zohosign"
+      "plivo"
     ],
     "retainedConnectors": [
       {
+        "apiName": "arm",
+        "reason": "Not refreshed by the Plivo SMS naming follow-up; output bytes and prior run-scoped provenance are retained."
+      },
+      {
+        "apiName": "azureblob",
+        "reason": "Not refreshed by the Plivo SMS naming follow-up; output bytes and prior run-scoped provenance are retained."
+      },
+      {
+        "apiName": "azureeventgrid",
+        "reason": "Not refreshed by the Plivo SMS naming follow-up; output bytes and prior run-scoped provenance are retained."
+      },
+      {
+        "apiName": "azureiotcentral",
+        "reason": "Not refreshed by the Plivo SMS naming follow-up; output bytes and prior run-scoped provenance are retained."
+      },
+      {
+        "apiName": "azuremonitorlogs",
+        "reason": "Not refreshed by the Plivo SMS naming follow-up; output bytes and prior run-scoped provenance are retained."
+      },
+      {
+        "apiName": "box",
+        "reason": "Not refreshed by the Plivo SMS naming follow-up; output bytes and prior run-scoped provenance are retained."
+      },
+      {
+        "apiName": "campfire",
+        "reason": "Not refreshed by the Plivo SMS naming follow-up; output bytes and prior run-scoped provenance are retained."
+      },
+      {
+        "apiName": "clicksendsms",
+        "reason": "Not refreshed by the Plivo SMS naming follow-up; output bytes and prior run-scoped provenance are retained."
+      },
+      {
+        "apiName": "cloudmersiveconvert",
+        "reason": "Not refreshed by the Plivo SMS naming follow-up; output bytes and prior run-scoped provenance are retained."
+      },
+      {
+        "apiName": "commondataservice",
+        "reason": "Not refreshed by the Plivo SMS naming follow-up; output bytes and prior run-scoped provenance are retained."
+      },
+      {
+        "apiName": "docusign",
+        "reason": "Not refreshed by the Plivo SMS naming follow-up; output bytes and prior run-scoped provenance are retained."
+      },
+      {
+        "apiName": "docuware",
+        "reason": "Not refreshed by the Plivo SMS naming follow-up; output bytes and prior run-scoped provenance are retained."
+      },
+      {
+        "apiName": "dropbox",
+        "reason": "Not refreshed by the Plivo SMS naming follow-up; output bytes and prior run-scoped provenance are retained."
+      },
+      {
+        "apiName": "dynamicsax",
+        "reason": "Not refreshed by the Plivo SMS naming follow-up; output bytes and prior run-scoped provenance are retained."
+      },
+      {
+        "apiName": "elfsquaddata",
+        "reason": "Not refreshed by the Plivo SMS naming follow-up; output bytes and prior run-scoped provenance are retained."
+      },
+      {
+        "apiName": "etsy",
+        "reason": "Not refreshed by the Plivo SMS naming follow-up; output bytes and prior run-scoped provenance are retained."
+      },
+      {
+        "apiName": "eventbrite",
+        "reason": "Not refreshed by the Plivo SMS naming follow-up; output bytes and prior run-scoped provenance are retained."
+      },
+      {
+        "apiName": "excelonline",
+        "reason": "Not refreshed by the Plivo SMS naming follow-up; output bytes and prior run-scoped provenance are retained."
+      },
+      {
+        "apiName": "formstackforms",
+        "reason": "Not refreshed by the Plivo SMS naming follow-up; output bytes and prior run-scoped provenance are retained."
+      },
+      {
+        "apiName": "freshservice",
+        "reason": "Not refreshed by the Plivo SMS naming follow-up; output bytes and prior run-scoped provenance are retained."
+      },
+      {
+        "apiName": "ftp",
+        "reason": "Not refreshed by the Plivo SMS naming follow-up; output bytes and prior run-scoped provenance are retained."
+      },
+      {
+        "apiName": "github",
+        "reason": "Not refreshed by the Plivo SMS naming follow-up; output bytes and prior run-scoped provenance are retained."
+      },
+      {
+        "apiName": "googlecalendar",
+        "reason": "Not refreshed by the Plivo SMS naming follow-up; output bytes and prior run-scoped provenance are retained."
+      },
+      {
+        "apiName": "googledrive",
+        "reason": "Not refreshed by the Plivo SMS naming follow-up; output bytes and prior run-scoped provenance are retained."
+      },
+      {
+        "apiName": "googletasks",
+        "reason": "Not refreshed by the Plivo SMS naming follow-up; output bytes and prior run-scoped provenance are retained."
+      },
+      {
+        "apiName": "impexium",
+        "reason": "Not refreshed by the Plivo SMS naming follow-up; output bytes and prior run-scoped provenance are retained."
+      },
+      {
+        "apiName": "infusionsoft",
+        "reason": "Not refreshed by the Plivo SMS naming follow-up; output bytes and prior run-scoped provenance are retained."
+      },
+      {
+        "apiName": "insightly",
+        "reason": "Not refreshed by the Plivo SMS naming follow-up; output bytes and prior run-scoped provenance are retained."
+      },
+      {
+        "apiName": "jedoxodatahub",
+        "reason": "Not refreshed by the Plivo SMS naming follow-up; output bytes and prior run-scoped provenance are retained."
+      },
+      {
+        "apiName": "jira",
+        "reason": "Not refreshed by the Plivo SMS naming follow-up; output bytes and prior run-scoped provenance are retained."
+      },
+      {
+        "apiName": "kusto",
+        "reason": "Not refreshed by the Plivo SMS naming follow-up; output bytes and prior run-scoped provenance are retained."
+      },
+      {
+        "apiName": "mailchimp",
+        "reason": "Not refreshed by the Plivo SMS naming follow-up; output bytes and prior run-scoped provenance are retained."
+      },
+      {
+        "apiName": "meetingroommap",
+        "reason": "Not refreshed by the Plivo SMS naming follow-up; output bytes and prior run-scoped provenance are retained."
+      },
+      {
+        "apiName": "microsoftforms",
+        "reason": "Not refreshed by the Plivo SMS naming follow-up; output bytes and prior run-scoped provenance are retained."
+      },
+      {
+        "apiName": "monday",
+        "reason": "Not refreshed by the Plivo SMS naming follow-up; output bytes and prior run-scoped provenance are retained."
+      },
+      {
+        "apiName": "mq",
+        "reason": "Not refreshed by the Plivo SMS naming follow-up; output bytes and prior run-scoped provenance are retained."
+      },
+      {
+        "apiName": "msgraphgroupsanduser",
+        "reason": "Not refreshed by the Plivo SMS naming follow-up; output bytes and prior run-scoped provenance are retained."
+      },
+      {
+        "apiName": "office365",
+        "reason": "Not refreshed by the Plivo SMS naming follow-up; output bytes and prior run-scoped provenance are retained."
+      },
+      {
+        "apiName": "office365groupsmail",
+        "reason": "Not refreshed by the Plivo SMS naming follow-up; output bytes and prior run-scoped provenance are retained."
+      },
+      {
+        "apiName": "office365users",
+        "reason": "Not refreshed by the Plivo SMS naming follow-up; output bytes and prior run-scoped provenance are retained."
+      },
+      {
+        "apiName": "onedriveforbusiness",
+        "reason": "Not refreshed by the Plivo SMS naming follow-up; output bytes and prior run-scoped provenance are retained."
+      },
+      {
         "apiName": "orderful",
         "reason": "Retained original October 8 output and provenance because prior independent live probes returned ApiNotFound in westus, eastus, westcentralus, and westeurope. Not fetched in this run."
+      },
+      {
+        "apiName": "pipedrive",
+        "reason": "Not refreshed by the Plivo SMS naming follow-up; output bytes and prior run-scoped provenance are retained."
+      },
+      {
+        "apiName": "plumsail",
+        "reason": "Not refreshed by the Plivo SMS naming follow-up; output bytes and prior run-scoped provenance are retained."
+      },
+      {
+        "apiName": "powerbi",
+        "reason": "Not refreshed by the Plivo SMS naming follow-up; output bytes and prior run-scoped provenance are retained."
+      },
+      {
+        "apiName": "projectplace",
+        "reason": "Not refreshed by the Plivo SMS naming follow-up; output bytes and prior run-scoped provenance are retained."
+      },
+      {
+        "apiName": "replicon",
+        "reason": "Not refreshed by the Plivo SMS naming follow-up; output bytes and prior run-scoped provenance are retained."
+      },
+      {
+        "apiName": "revai",
+        "reason": "Not refreshed by the Plivo SMS naming follow-up; output bytes and prior run-scoped provenance are retained."
+      },
+      {
+        "apiName": "rss",
+        "reason": "Not refreshed by the Plivo SMS naming follow-up; output bytes and prior run-scoped provenance are retained."
+      },
+      {
+        "apiName": "salesforce",
+        "reason": "Not refreshed by the Plivo SMS naming follow-up; output bytes and prior run-scoped provenance are retained."
+      },
+      {
+        "apiName": "seismicplanner",
+        "reason": "Not refreshed by the Plivo SMS naming follow-up; output bytes and prior run-scoped provenance are retained."
+      },
+      {
+        "apiName": "sendgrid",
+        "reason": "Not refreshed by the Plivo SMS naming follow-up; output bytes and prior run-scoped provenance are retained."
+      },
+      {
+        "apiName": "sharepointonline",
+        "reason": "Not refreshed by the Plivo SMS naming follow-up; output bytes and prior run-scoped provenance are retained."
+      },
+      {
+        "apiName": "shifts",
+        "reason": "Not refreshed by the Plivo SMS naming follow-up; output bytes and prior run-scoped provenance are retained."
+      },
+      {
+        "apiName": "signinghub",
+        "reason": "Not refreshed by the Plivo SMS naming follow-up; output bytes and prior run-scoped provenance are retained."
+      },
+      {
+        "apiName": "slack",
+        "reason": "Not refreshed by the Plivo SMS naming follow-up; output bytes and prior run-scoped provenance are retained."
+      },
+      {
+        "apiName": "smtp",
+        "reason": "Not refreshed by the Plivo SMS naming follow-up; output bytes and prior run-scoped provenance are retained."
+      },
+      {
+        "apiName": "sql",
+        "reason": "Not refreshed by the Plivo SMS naming follow-up; output bytes and prior run-scoped provenance are retained."
+      },
+      {
+        "apiName": "starmind",
+        "reason": "Not refreshed by the Plivo SMS naming follow-up; output bytes and prior run-scoped provenance are retained."
+      },
+      {
+        "apiName": "starrezrestv1",
+        "reason": "Not refreshed by the Plivo SMS naming follow-up; output bytes and prior run-scoped provenance are retained."
+      },
+      {
+        "apiName": "tallyfy",
+        "reason": "Not refreshed by the Plivo SMS naming follow-up; output bytes and prior run-scoped provenance are retained."
+      },
+      {
+        "apiName": "teams",
+        "reason": "Not refreshed by the Plivo SMS naming follow-up; output bytes and prior run-scoped provenance are retained."
+      },
+      {
+        "apiName": "textrequest",
+        "reason": "Not refreshed by the Plivo SMS naming follow-up; output bytes and prior run-scoped provenance are retained."
+      },
+      {
+        "apiName": "ticketmaster",
+        "reason": "Not refreshed by the Plivo SMS naming follow-up; output bytes and prior run-scoped provenance are retained."
+      },
+      {
+        "apiName": "todo",
+        "reason": "Not refreshed by the Plivo SMS naming follow-up; output bytes and prior run-scoped provenance are retained."
+      },
+      {
+        "apiName": "twitter",
+        "reason": "Not refreshed by the Plivo SMS naming follow-up; output bytes and prior run-scoped provenance are retained."
+      },
+      {
+        "apiName": "typeform",
+        "reason": "Not refreshed by the Plivo SMS naming follow-up; output bytes and prior run-scoped provenance are retained."
+      },
+      {
+        "apiName": "waywedo",
+        "reason": "Not refreshed by the Plivo SMS naming follow-up; output bytes and prior run-scoped provenance are retained."
+      },
+      {
+        "apiName": "webex",
+        "reason": "Not refreshed by the Plivo SMS naming follow-up; output bytes and prior run-scoped provenance are retained."
+      },
+      {
+        "apiName": "wordpress",
+        "reason": "Not refreshed by the Plivo SMS naming follow-up; output bytes and prior run-scoped provenance are retained."
+      },
+      {
+        "apiName": "zendesk",
+        "reason": "Not refreshed by the Plivo SMS naming follow-up; output bytes and prior run-scoped provenance are retained."
+      },
+      {
+        "apiName": "zeptomail",
+        "reason": "Not refreshed by the Plivo SMS naming follow-up; output bytes and prior run-scoped provenance are retained."
+      },
+      {
+        "apiName": "zohosign",
+        "reason": "Not refreshed by the Plivo SMS naming follow-up; output bytes and prior run-scoped provenance are retained."
+      },
+      {
+        "apiName": "wdatp",
+        "reason": "Not refreshed by the Plivo SMS naming follow-up; output bytes and prior run-scoped provenance are retained."
+      },
+      {
+        "apiName": "trello",
+        "reason": "Not refreshed by the Plivo SMS naming follow-up; output bytes and prior run-scoped provenance are retained."
+      },
+      {
+        "apiName": "wordonlinebusiness",
+        "reason": "Not refreshed by the Plivo SMS naming follow-up; output bytes and prior run-scoped provenance are retained."
+      },
+      {
+        "apiName": "yammer",
+        "reason": "Not refreshed by the Plivo SMS naming follow-up; output bytes and prior run-scoped provenance are retained."
+      },
+      {
+        "apiName": "visualstudioteamservices",
+        "reason": "Not refreshed by the Plivo SMS naming follow-up; output bytes and prior run-scoped provenance are retained."
+      },
+      {
+        "apiName": "azuread",
+        "reason": "Not refreshed by the Plivo SMS naming follow-up; output bytes and prior run-scoped provenance are retained."
+      },
+      {
+        "apiName": "excelonlinebusiness",
+        "reason": "Not refreshed by the Plivo SMS naming follow-up; output bytes and prior run-scoped provenance are retained."
+      },
+      {
+        "apiName": "office365groups",
+        "reason": "Not refreshed by the Plivo SMS naming follow-up; output bytes and prior run-scoped provenance are retained."
+      },
+      {
+        "apiName": "azureautomation",
+        "reason": "Not refreshed by the Plivo SMS naming follow-up; output bytes and prior run-scoped provenance are retained."
+      },
+      {
+        "apiName": "microsoftbookings",
+        "reason": "Not refreshed by the Plivo SMS naming follow-up; output bytes and prior run-scoped provenance are retained."
+      },
+      {
+        "apiName": "azuredatafactory",
+        "reason": "Not refreshed by the Plivo SMS naming follow-up; output bytes and prior run-scoped provenance are retained."
+      },
+      {
+        "apiName": "onenote",
+        "reason": "Not refreshed by the Plivo SMS naming follow-up; output bytes and prior run-scoped provenance are retained."
+      },
+      {
+        "apiName": "outlook",
+        "reason": "Not refreshed by the Plivo SMS naming follow-up; output bytes and prior run-scoped provenance are retained."
+      },
+      {
+        "apiName": "azuredigitaltwins",
+        "reason": "Not refreshed by the Plivo SMS naming follow-up; output bytes and prior run-scoped provenance are retained."
+      },
+      {
+        "apiName": "azurequeues",
+        "reason": "Not refreshed by the Plivo SMS naming follow-up; output bytes and prior run-scoped provenance are retained."
+      },
+      {
+        "apiName": "planner",
+        "reason": "Not refreshed by the Plivo SMS naming follow-up; output bytes and prior run-scoped provenance are retained."
+      },
+      {
+        "apiName": "keyvault",
+        "reason": "Not refreshed by the Plivo SMS naming follow-up; output bytes and prior run-scoped provenance are retained."
+      },
+      {
+        "apiName": "azuretables",
+        "reason": "Not refreshed by the Plivo SMS naming follow-up; output bytes and prior run-scoped provenance are retained."
+      },
+      {
+        "apiName": "azurevm",
+        "reason": "Not refreshed by the Plivo SMS naming follow-up; output bytes and prior run-scoped provenance are retained."
+      },
+      {
+        "apiName": "cloudconvert",
+        "reason": "Not refreshed by the Plivo SMS naming follow-up; output bytes and prior run-scoped provenance are retained."
+      },
+      {
+        "apiName": "dataflows",
+        "reason": "Not refreshed by the Plivo SMS naming follow-up; output bytes and prior run-scoped provenance are retained."
+      },
+      {
+        "apiName": "documentdb",
+        "reason": "Not refreshed by the Plivo SMS naming follow-up; output bytes and prior run-scoped provenance are retained."
+      },
+      {
+        "apiName": "servicebus",
+        "reason": "Not refreshed by the Plivo SMS naming follow-up; output bytes and prior run-scoped provenance are retained."
+      },
+      {
+        "apiName": "eventhubs",
+        "reason": "Not refreshed by the Plivo SMS naming follow-up; output bytes and prior run-scoped provenance are retained."
       }
     ],
     "sharedFiles": [
