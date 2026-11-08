@@ -2,6 +2,15 @@
 
 import type { TokenCredential } from "@azure/core-auth";
 import { PdfcoClient } from "../src/generated/PdfcoExtensions.ts";
+import type {
+    PdfFromXlsXlsxResponse,
+    PdfUnsearchableResponse,
+    XlsToCsvResponse,
+    XlsToHtmlResponse,
+    XlsToJsonResponse,
+    XlsToTxtResponse,
+    XlsToXmlResponse,
+} from "../src/generated/PdfcoExtensions.ts";
 import { ConnectorError } from "../src/azureConnectors/connectorError.ts";
 import { ConnectorNames } from "../src/generated/connectorNames.ts";
 import { availableConnectors } from "../src/generated/ManagedConnectors.ts";
@@ -96,6 +105,73 @@ describe("PdfcoClient — urlToPdf", () => {
 describe("PDFco — connector registry", () => {
     it("should expose PDFco in ConnectorNames", () => {
         expect(ConnectorNames.PDFco).toBe("pdfco");
+    });
+
+    describe("PdfcoClient — reviewed response model names", () => {
+        afterEach(() => {
+            jest.restoreAllMocks();
+        });
+
+        const inputUrl = "https://example.com/source";
+        const conversions = [
+            {
+                name: "PdfUnsearchableResponse",
+                path: "/v1/pdf/makeunsearchable",
+                invoke: (client: PdfcoClient): Promise<PdfUnsearchableResponse> =>
+                    client.pdfunSearchable({ url: inputUrl }),
+            },
+            {
+                name: "PdfFromXlsXlsxResponse",
+                path: "/v1/xls/convert/to/pdf",
+                invoke: (client: PdfcoClient): Promise<PdfFromXlsXlsxResponse> =>
+                    client.pdffromXLSXLSX({ url: inputUrl }),
+            },
+            {
+                name: "XlsToCsvResponse",
+                path: "/v1/xls/convert/to/csv",
+                invoke: (client: PdfcoClient): Promise<XlsToCsvResponse> =>
+                    client.xlstoCSV({ url: inputUrl }),
+            },
+            {
+                name: "XlsToHtmlResponse",
+                path: "/v1/xls/convert/to/html",
+                invoke: (client: PdfcoClient): Promise<XlsToHtmlResponse> =>
+                    client.xlstoHTML({ url: inputUrl }),
+            },
+            {
+                name: "XlsToJsonResponse",
+                path: "/v1/xls/convert/to/json",
+                invoke: (client: PdfcoClient): Promise<XlsToJsonResponse> =>
+                    client.xlstoJSON({ url: inputUrl }),
+            },
+            {
+                name: "XlsToTxtResponse",
+                path: "/v1/xls/convert/to/txt",
+                invoke: (client: PdfcoClient): Promise<XlsToTxtResponse> =>
+                    client.xlstoTXT({ url: inputUrl }),
+            },
+            {
+                name: "XlsToXmlResponse",
+                path: "/v1/xls/convert/to/xml",
+                invoke: (client: PdfcoClient): Promise<XlsToXmlResponse> =>
+                    client.xlstoXML({ url: inputUrl }),
+            },
+        ];
+
+        it.each(conversions)("should preserve the wire contract for $name", async ({ path, invoke }) => {
+            const response = { url: "https://example.com/output", jobId: "job-123", status: 200 };
+            mockFetchResponse(response);
+            const client = new PdfcoClient(TestConnectionUrl, createMockCredential());
+
+            const result = await invoke(client);
+
+            expect(result).toEqual(response);
+            expect(global.fetch).toHaveBeenCalledTimes(1);
+            const [requestUrl, request] = jest.mocked(global.fetch).mock.calls[0];
+            expect(String(requestUrl)).toBe(TestConnectionUrl + path);
+            expect(request?.method).toBe("POST");
+            expect(request?.body).toBe(JSON.stringify({ url: inputUrl }));
+        });
     });
 
     it("should include pdfco in availableConnectors", () => {
