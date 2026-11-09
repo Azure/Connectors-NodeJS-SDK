@@ -137,6 +137,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Bumped the SDK package version to `0.4.0-preview` and synchronized diagnostic
+  metadata and sample lockfile versions.
 - Replaced `ConnectorHttpClient`'s raw `fetch` retry loop with the Azure Core
   REST pipeline for standard retries, bearer authentication, request IDs,
   tracing, logging, and transport composition. Retries apply only to safe HTTP
