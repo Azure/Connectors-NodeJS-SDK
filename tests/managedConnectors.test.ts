@@ -35,8 +35,8 @@ describe("availableConnectors", () => {
         }
     });
 
-    it("should contain exactly 99 connectors", () => {
-        expect(availableConnectors).toHaveLength(99);
+    it("should contain exactly 103 connectors", () => {
+        expect(availableConnectors).toHaveLength(103);
     });
 
     it("should include all ConnectorNames values", () => {
@@ -45,9 +45,9 @@ describe("availableConnectors", () => {
         }
     });
 
-    it("should be sorted alphabetically", () => {
-        const sorted = [...availableConnectors].sort();
-        expect(availableConnectors).toEqual(sorted);
+    it("should be sorted alphabetically by normalized API name", () => {
+        const normalized = availableConnectors.map(apiName => apiName.replaceAll("-", ""));
+        expect(normalized).toEqual([...normalized].sort());
     });
 });
 

@@ -407,27 +407,30 @@ end against live connector connections.
 | Azure VM | `azurevm` | `@azure/connectors/generated/AzurevmExtensions` |
 | CloudConvert | `cloudconvert` | `@azure/connectors/generated/CloudconvertExtensions` |
 | Dataflows | `dataflows` | `@azure/connectors/generated/DataflowsExtensions` |
+| DataFlows SMS | `dataflowssms` | `@azure/connectors/generated/DataflowssmsExtensions` |
 | Excel Online (Business) | `excelonlinebusiness` | `@azure/connectors/generated/ExcelonlinebusinessExtensions` |
 | Microsoft Bookings | `microsoftbookings` | `@azure/connectors/generated/MicrosoftbookingsExtensions` |
 | Microsoft Defender ATP | `wdatp` | `@azure/connectors/generated/WdatpExtensions` |
 | Office 365 Groups | `office365groups` | `@azure/connectors/generated/Office365groupsExtensions` |
+| OneDrive Personal | `onedrive` | `@azure/connectors/generated/OnedriveExtensions` |
 | OneNote | `onenote` | `@azure/connectors/generated/OnenoteExtensions` |
 | Outlook.com | `outlook` | `@azure/connectors/generated/OutlookExtensions` |
 | Planner | `planner` | `@azure/connectors/generated/PlannerExtensions` |
 | Service Bus | `servicebus` | `@azure/connectors/generated/ServicebusExtensions` |
+| ServiceNow | `service-now` | `@azure/connectors/generated/ServiceNowExtensions` |
 | Trello | `trello` | `@azure/connectors/generated/TrelloExtensions` |
 | Word Online (Business) | `wordonlinebusiness` | `@azure/connectors/generated/WordonlinebusinessExtensions` |
+| Universal Print | `universalprint` | `@azure/connectors/generated/UniversalprintExtensions` |
 | Yammer | `yammer` | `@azure/connectors/generated/YammerExtensions` |
 
-OneDrive Personal (`onedrive`) and Universal Print (`universalprint`) remain
-blocked in [#117](https://github.com/Azure/Connectors-NodeJS-SDK/issues/117).
-Their live definitions returned `ApiNotFound` in West US, East US, West Central US,
-and West Europe on October 27, 2026. They are not included in the generated inventory.
+OneDrive Personal (`onedrive`) and Universal Print (`universalprint`) are now
+available from live metadata in West US and included in the generated catalog.
+The prior October 27 unavailability is historical; see [#117](https://github.com/Azure/Connectors-NodeJS-SDK/issues/117).
 
-**Connector coverage:** 99 generated clients. See [GENERATION.md](GENERATION.md)
+**Connector coverage:** 103 generated clients. See [GENERATION.md](GENERATION.md)
 for live generation and independent validation provenance.
 
-**Test coverage:** 1,629 tests across 72 test suites.
+**Test coverage:** 1,694 tests across 74 test suites.
 
 ## Authentication
 

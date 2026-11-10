@@ -1597,6 +1597,62 @@
         "swaggerInputSha256": "427949755cf4f8421886ce5165b3780d3a7bd167f3ac4e44c8f519dfe636a9ed",
         "outputSha256": "ebb1f3cb71ffa169bcd42e72cb35e0a2d87195d1263eb4ebd82825167ffec111"
       }
+    },
+    {
+      "apiName": "dataflowssms",
+      "outputFile": "src/generated/DataflowssmsExtensions.ts",
+      "outputSha256": "2ff3a688bbfdb328a39cb6f0133c5291f11e76770ec2a39de022c99f0ad6edfb",
+      "swaggerInputSha256": "e3b777684ca8973a6945b3559de08e0c369cfc0730243f15983d70c1146ad8e5",
+      "capturedAtUtc": "2026-11-10T01:35:44.677Z",
+      "runId": "1af1f1e5-004b-4ca6-92b9-18b9430d62e4",
+      "validation": {
+        "runId": "e2dc33d2-6d0e-4275-918e-929453ce8606",
+        "capturedAtUtc": "2026-11-10T01:44:20.268Z",
+        "swaggerInputSha256": "e3b777684ca8973a6945b3559de08e0c369cfc0730243f15983d70c1146ad8e5",
+        "outputSha256": "2ff3a688bbfdb328a39cb6f0133c5291f11e76770ec2a39de022c99f0ad6edfb"
+      }
+    },
+    {
+      "apiName": "onedrive",
+      "outputFile": "src/generated/OnedriveExtensions.ts",
+      "outputSha256": "7bb599e1e2f10a2b50e4958d30103b783b2cd5d7e7169a5d8f108d28979acaeb",
+      "swaggerInputSha256": "c79f8ac32d5e272d7024ddb2962bd997c5d45acc28a93747a3b36e7ef606bb6e",
+      "capturedAtUtc": "2026-11-10T01:39:20.607Z",
+      "runId": "1af1f1e5-004b-4ca6-92b9-18b9430d62e4",
+      "validation": {
+        "runId": "e2dc33d2-6d0e-4275-918e-929453ce8606",
+        "capturedAtUtc": "2026-11-10T01:44:23.630Z",
+        "swaggerInputSha256": "c79f8ac32d5e272d7024ddb2962bd997c5d45acc28a93747a3b36e7ef606bb6e",
+        "outputSha256": "7bb599e1e2f10a2b50e4958d30103b783b2cd5d7e7169a5d8f108d28979acaeb"
+      }
+    },
+    {
+      "apiName": "service-now",
+      "outputFile": "src/generated/ServiceNowExtensions.ts",
+      "outputSha256": "ba0738a50cfc1b8b705664cbc818f477e62f6003538643f95acef5b548c73c89",
+      "swaggerInputSha256": "121021eff0c41e60d1cc304c00fc6a704988545953e8f5e520442e369f960a79",
+      "capturedAtUtc": "2026-11-10T01:41:00.607Z",
+      "runId": "1af1f1e5-004b-4ca6-92b9-18b9430d62e4",
+      "validation": {
+        "runId": "e2dc33d2-6d0e-4275-918e-929453ce8606",
+        "capturedAtUtc": "2026-11-10T01:44:27.119Z",
+        "swaggerInputSha256": "121021eff0c41e60d1cc304c00fc6a704988545953e8f5e520442e369f960a79",
+        "outputSha256": "ba0738a50cfc1b8b705664cbc818f477e62f6003538643f95acef5b548c73c89"
+      }
+    },
+    {
+      "apiName": "universalprint",
+      "outputFile": "src/generated/UniversalprintExtensions.ts",
+      "outputSha256": "f84e373dabd8db8db3cbb15bb2fcf51d99dc923de1b12002eac28d993a8e29ef",
+      "swaggerInputSha256": "46eb75534617fffca747ab0a1a6ea03844d5e2f810f4488fcabac962ff9f3b13",
+      "capturedAtUtc": "2026-11-10T01:42:30.274Z",
+      "runId": "1af1f1e5-004b-4ca6-92b9-18b9430d62e4",
+      "validation": {
+        "runId": "e2dc33d2-6d0e-4275-918e-929453ce8606",
+        "capturedAtUtc": "2026-11-10T01:44:30.565Z",
+        "swaggerInputSha256": "46eb75534617fffca747ab0a1a6ea03844d5e2f810f4488fcabac962ff9f3b13",
+        "outputSha256": "f84e373dabd8db8db3cbb15bb2fcf51d99dc923de1b12002eac28d993a8e29ef"
+      }
     }
   ],
   "routeIdentityLoss": {
@@ -1925,13 +1981,54 @@
         "generatedAtUtc": "2026-11-06T22:13:48.530Z",
         "connectorListInputSha256": "e56d888582875aee4320c61ddf0c6f7fa9bac91b419f6a6d257c8e59ccb7ecc3"
       }
+    },
+    "1af1f1e5-004b-4ca6-92b9-18b9430d62e4": {
+      "command": "LogicAppsCompiler.dll <output-directory> --directClient --language=typescript --connectors=<103 canonical .NET API IDs>",
+      "successfulConnectors": [
+        "dataflowssms",
+        "onedrive",
+        "service-now",
+        "universalprint"
+      ],
+      "catalogGenerationConnectorCount": 103,
+      "captureStartedAtUtc": "2026-11-10T01:32:22.158Z",
+      "generatedAtUtc": "2026-11-10T01:43:10.032Z",
+      "generator": {
+        "repository": "https://msazure.visualstudio.com/One/_git/AzureUX-BPM",
+        "tool": "CodefulSdkGenerator (LogicAppsCompiler)",
+        "projectPath": "src/tools/CodefulSdkGenerator/LogicAppsCompiler.Cli/LogicAppsCompiler.Cli.csproj",
+        "bpmBaseCommit": "08cf479aff5f0a82a0a02b0c7975d584a8bc7c2c",
+        "bpmHeadCommit": "08cf479aff5f0a82a0a02b0c7975d584a8bc7c2c",
+        "bpmBranch": "master",
+        "assemblyVersion": "1.198.0.24",
+        "assemblySha256": "e36eedf956c83cacd20f601b8b50fa958f7945ad3329bfa8ca6928d7db0eec6d",
+        "upstreamStatus": "merged",
+        "generatorTree": "3eea8d0159b93736bd14ace678c3e0db64f87987",
+        "compilerCliSha256": "15d8695cb643d2f529c0af2ff48a0bef00725756f5affc874a48a674a60b02c1"
+      },
+      "swaggerSource": {
+        "kind": "live-arm-metadata",
+        "subscriptionId": "f34b22a3-2202-4fb1-b040-1332bd928c84",
+        "location": "westus",
+        "apiVersion": "2018-07-01-preview"
+      },
+      "connectorListInputSha256": "f8b15b35f071c2f4f8f2af417f80dd17f00b8c7a630009a611569a706d42e8b6",
+      "validation": {
+        "runId": "e2dc33d2-6d0e-4275-918e-929453ce8606",
+        "captureStartedAtUtc": "2026-11-10T01:44:07.811Z",
+        "generatedAtUtc": "2026-11-10T01:44:30.696Z",
+        "connectorListInputSha256": "f8b15b35f071c2f4f8f2af417f80dd17f00b8c7a630009a611569a706d42e8b6",
+        "kind": "independent-fresh-live-download-plus-offline-replay"
+      }
     }
   },
   "refresh": {
-    "runId": "c9039927-0fe5-46fa-8562-67da6d7128dd",
+    "runId": "1af1f1e5-004b-4ca6-92b9-18b9430d62e4",
     "refreshedConnectors": [
-      "pdfco",
-      "plivo"
+      "dataflowssms",
+      "onedrive",
+      "service-now",
+      "universalprint"
     ],
     "retainedConnectors": [
       {
@@ -2103,8 +2200,16 @@
         "reason": "Retained original October 8 output and provenance because prior independent live probes returned ApiNotFound in westus, eastus, westcentralus, and westeurope. Not fetched in this run."
       },
       {
+        "apiName": "pdfco",
+        "reason": "Unchanged in the 103-client catalog addition; previous live output and provenance retained."
+      },
+      {
         "apiName": "pipedrive",
         "reason": "Not refreshed by the Plivo SMS naming follow-up; output bytes and prior run-scoped provenance are retained."
+      },
+      {
+        "apiName": "plivo",
+        "reason": "Unchanged in the 103-client catalog addition; previous live output and provenance retained."
       },
       {
         "apiName": "plumsail",
@@ -2326,46 +2431,17 @@
     "sharedFiles": [
       {
         "outputFile": "src/generated/ManagedConnectors.ts",
-        "outputSha256": "7dc1162b9179de8e0d7812447131372d43411c3ea2359065c578b962e395f2d9"
+        "outputSha256": "2644b5a6962d766a0a13751f3e5c2f365a46faa68d2931356bb39d44b23adf0d"
       },
       {
         "outputFile": "src/generated/connectorNames.ts",
-        "outputSha256": "afdd4fe54c48dcb701a7fcd2ece09c88611ea9dc4dc1366352d636298ebfd71c"
+        "outputSha256": "ff1d39608089efff1b9882f7cef424037722d902d3d535cfbce882d87d66258f"
       },
       {
         "outputFile": "src/generated/index.ts",
-        "outputSha256": "0ceef611ff804234266d6234bf77cb54ce2c0fc2d210de193f1aa2a5586ac794"
+        "outputSha256": "4be5ef0e11508c5341ba187c1fca2e32344e1b4fed3e7986fc3f2414381c91c9"
       }
     ]
   },
-  "blockedConnectors": [
-    {
-      "apiName": "onedrive",
-      "reason": "Live definition unavailable; requester approved proceeding with the other 24 new connectors.",
-      "errorCode": "ApiNotFound",
-      "httpStatusCode": 404,
-      "checkedAtUtcDate": "2026-10-27",
-      "regions": [
-        "westus",
-        "eastus",
-        "westcentralus",
-        "westeurope"
-      ],
-      "issue": "https://github.com/Azure/Connectors-NodeJS-SDK/issues/117"
-    },
-    {
-      "apiName": "universalprint",
-      "reason": "Live definition unavailable; requester approved proceeding with the other 24 new connectors.",
-      "errorCode": "ApiNotFound",
-      "httpStatusCode": 404,
-      "checkedAtUtcDate": "2026-10-27",
-      "regions": [
-        "westus",
-        "eastus",
-        "westcentralus",
-        "westeurope"
-      ],
-      "issue": "https://github.com/Azure/Connectors-NodeJS-SDK/issues/117"
-    }
-  ]
+  "blockedConnectors": []
 }

@@ -189,7 +189,7 @@ disposable harness and response stores outside the repository.
 
 ### October 27 connector expansion
 
-The current inventory contains 99 clients: 24 additional connectors from
+The October 27 inventory contained 99 clients: 24 additional connectors from
 [#117](https://github.com/Azure/Connectors-NodeJS-SDK/issues/117), the 74 previously
 available clients, and retained Orderful. The current refresh uses merged BPM
 `master` commit `21a5e28e029a1e58304b3c4d66302cbb528ed1fd`, built in Release
@@ -405,6 +405,22 @@ finally {
   Fixture and output hashes are independently checked against repository files;
   `swaggerFixtureSha256` is never presented as the live definition consumed.
   Regenerate rather than hand-editing so the guard stays green.
+
+## November 9 catalog parity addition
+
+The current shipped catalog has 103 clients, matching the API IDs emitted in the
+.NET `Typed client for <api> connector.` metadata (including the
+`msgraphgroupsanduser` Graph alias and `service-now` hyphen). DataFlows SMS,
+OneDrive Personal, ServiceNow, and Universal Print were generated from fresh
+live West US metadata using subscription `f34b22a3-2202-4fb1-b040-1332bd928c84`
+and the source-built BPM compiler at `08cf479aff5f0a82a0a02b0c7975d584a8bc7c2c`.
+The complete 103-ID allowlist was supplied when generating the shared registries.
+Only the four missing client outputs and the complete generated registries were
+integrated; the previous 99 client files and their provenance remain unchanged.
+The latest `generationRuns` entry records input and output hashes and an
+independent four-client fresh download. A network-rejecting cache replay
+produced byte-identical complete output without altering any response bytes.
+This does not rewrite the historical October 27 `ApiNotFound` evidence below.
 
 ## Post-Generation Validation
 

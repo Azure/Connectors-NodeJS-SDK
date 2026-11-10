@@ -18,8 +18,8 @@ const GenerationGuidePath = path.join(RepositoryRoot, "GENERATION.md");
 interface ManifestConnectorEntry {
     apiName: string;
     outputFile: string;
-    swaggerFixture: string;
-    swaggerFixtureSha256: string;
+    swaggerFixture?: string;
+    swaggerFixtureSha256?: string;
     swaggerInputSha256: string;
     capturedAtUtc: string;
     outputSha256: string;
@@ -423,7 +423,7 @@ describe("generation.manifest.json provenance", () => {
     });
 
     it("should bind the current refreshed set and preserve each retained connector's own provenance", () => {
-        expect(manifest.connectors).toHaveLength(99);
+        expect(manifest.connectors).toHaveLength(103);
         expect(manifest.refresh.refreshedConnectors.length).toBeGreaterThan(0);
         expect(new Set(manifest.refresh.refreshedConnectors).size).toBe(manifest.refresh.refreshedConnectors.length);
         expect(manifest.refresh.refreshedConnectors.slice().sort()).toEqual(
@@ -485,7 +485,7 @@ describe("generation.manifest.json provenance", () => {
         expect(run.generator.assemblySha256).toMatch(/^[0-9a-f]{64}$/);
         expect(run.swaggerSource).toEqual({
             kind: "live-arm-metadata",
-            subscriptionId: "1a839f1f-10b2-4613-95ad-0800a22abbf2",
+            subscriptionId: "f34b22a3-2202-4fb1-b040-1332bd928c84",
             location: "westus",
             apiVersion: "2018-07-01-preview",
         });
@@ -494,9 +494,10 @@ describe("generation.manifest.json provenance", () => {
     });
 
     it("should track unavailable additions without shipping fixture-backed replacements", () => {
-        expect(manifest.blockedConnectors.map(connector => connector.apiName).sort()).toEqual([
-            "onedrive", "universalprint",
-        ]);
+        expect(manifest.blockedConnectors).toEqual([]);
+        for (const apiName of ["onedrive", "universalprint"]) {
+            expect(manifest.connectors.some(connector => connector.apiName === apiName)).toBe(true);
+        }
         for (const blocked of manifest.blockedConnectors) {
             expect(blocked.errorCode).toBe("ApiNotFound");
             expect(blocked.httpStatusCode).toBe(404);
@@ -558,9 +559,17 @@ describe("generation.manifest.json provenance", () => {
     it.each(connectorCases)(
         "should match the committed swagger test fixture hash for '%s'",
         (_apiName: string, connector: ManifestConnectorEntry) => {
-            expect(fs.existsSync(path.join(RepositoryRoot, connector.swaggerFixture))).toBe(true);
+            // New live-generated clients need not add a persisted Swagger fixture.
+            // Fixtures are independent test data, never the generator's producer input.
+            if (connector.swaggerFixture === undefined) {
+                expect(connector.swaggerFixtureSha256).toBeUndefined();
+                expect(manifest.refresh.refreshedConnectors).toContain(connector.apiName);
+            } else {
+                expect(connector.swaggerFixtureSha256).toMatch(/^[0-9a-f]{64}$/);
+                expect(fs.existsSync(path.join(RepositoryRoot, connector.swaggerFixture))).toBe(true);
+                expect(computeCanonicalTextSha256(connector.swaggerFixture)).toBe(connector.swaggerFixtureSha256);
+            }
             expect(fs.existsSync(path.join(RepositoryRoot, connector.outputFile))).toBe(true);
-            expect(computeCanonicalTextSha256(connector.swaggerFixture)).toBe(connector.swaggerFixtureSha256);
         },
     );
 
@@ -621,7 +630,8 @@ describe("generation.manifest.json provenance", () => {
                 throw new Error(`Connector '${droppedRoute.connector}' is missing from the generation manifest.`);
             }
 
-            const triggerRoutes = loadSwaggerTriggerRoutes(connector.swaggerFixture);
+            expect(connector.swaggerFixture).toBeDefined();
+            const triggerRoutes = loadSwaggerTriggerRoutes(connector.swaggerFixture!);
             const droppedMatches = triggerRoutes.filter(
                 triggerRoute => triggerRoute.operationId === droppedRoute.droppedOperationId,
             );

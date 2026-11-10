@@ -21,6 +21,7 @@
 //   import { CloudmersiveconvertClient } from './CloudmersiveconvertExtensions.ts';
 //   import { CommondataserviceClient } from './CommondataserviceExtensions.ts';
 //   import { DataflowsClient } from './DataflowsExtensions.ts';
+//   import { DataflowssmsClient } from './DataflowssmsExtensions.ts';
 //   import { DocumentdbClient } from './DocumentdbExtensions.ts';
 //   import { DocusignClient } from './DocusignExtensions.ts';
 //   import { DocuwareClient } from './DocuwareExtensions.ts';
@@ -57,6 +58,7 @@
 //   import { Office365groupsClient } from './Office365groupsExtensions.ts';
 //   import { Office365groupsmailClient } from './Office365groupsmailExtensions.ts';
 //   import { Office365usersClient } from './Office365usersExtensions.ts';
+//   import { OnedriveClient } from './OnedriveExtensions.ts';
 //   import { OnedriveforbusinessClient } from './OnedriveforbusinessExtensions.ts';
 //   import { OnenoteClient } from './OnenoteExtensions.ts';
 //   import { OrderfulClient } from './OrderfulExtensions.ts';
@@ -75,6 +77,7 @@
 //   import { SeismicplannerClient } from './SeismicplannerExtensions.ts';
 //   import { SendgridClient } from './SendgridExtensions.ts';
 //   import { ServicebusClient } from './ServicebusExtensions.ts';
+//   import { ServiceNowClient } from './ServiceNowExtensions.ts';
 //   import { SharepointonlineClient } from './SharepointonlineExtensions.ts';
 //   import { ShiftsClient } from './ShiftsExtensions.ts';
 //   import { SigninghubClient } from './SigninghubExtensions.ts';
@@ -91,6 +94,7 @@
 //   import { TrelloClient } from './TrelloExtensions.ts';
 //   import { TwitterClient } from './TwitterExtensions.ts';
 //   import { TypeformClient } from './TypeformExtensions.ts';
+//   import { UniversalprintClient } from './UniversalprintExtensions.ts';
 //   import { VisualstudioteamservicesClient } from './VisualstudioteamservicesExtensions.ts';
 //   import { WaywedoClient } from './WaywedoExtensions.ts';
 //   import { WdatpClient } from './WdatpExtensions.ts';
@@ -125,6 +129,7 @@ export const availableConnectors: string[] = [
     "cloudmersiveconvert",
     "commondataservice",
     "dataflows",
+    "dataflowssms",
     "documentdb",
     "docusign",
     "docuware",
@@ -161,6 +166,7 @@ export const availableConnectors: string[] = [
     "office365groups",
     "office365groupsmail",
     "office365users",
+    "onedrive",
     "onedriveforbusiness",
     "onenote",
     "orderful",
@@ -179,6 +185,7 @@ export const availableConnectors: string[] = [
     "seismicplanner",
     "sendgrid",
     "servicebus",
+    "service-now",
     "sharepointonline",
     "shifts",
     "signinghub",
@@ -195,6 +202,7 @@ export const availableConnectors: string[] = [
     "trello",
     "twitter",
     "typeform",
+    "universalprint",
     "visualstudioteamservices",
     "waywedo",
     "wdatp",
@@ -226,6 +234,7 @@ export { CloudconvertClient } from './CloudconvertExtensions.ts';
 export { CloudmersiveconvertClient } from './CloudmersiveconvertExtensions.ts';
 export { CommondataserviceClient } from './CommondataserviceExtensions.ts';
 export { DataflowsClient } from './DataflowsExtensions.ts';
+export { DataflowssmsClient } from './DataflowssmsExtensions.ts';
 export { DocumentdbClient } from './DocumentdbExtensions.ts';
 export { DocusignClient } from './DocusignExtensions.ts';
 export { DocuwareClient } from './DocuwareExtensions.ts';
@@ -262,6 +271,7 @@ export { Office365Client } from './Office365Extensions.ts';
 export { Office365groupsClient } from './Office365groupsExtensions.ts';
 export { Office365groupsmailClient } from './Office365groupsmailExtensions.ts';
 export { Office365usersClient } from './Office365usersExtensions.ts';
+export { OnedriveClient } from './OnedriveExtensions.ts';
 export { OnedriveforbusinessClient } from './OnedriveforbusinessExtensions.ts';
 export { OnenoteClient } from './OnenoteExtensions.ts';
 export { OrderfulClient } from './OrderfulExtensions.ts';
@@ -280,6 +290,7 @@ export { SalesforceClient } from './SalesforceExtensions.ts';
 export { SeismicplannerClient } from './SeismicplannerExtensions.ts';
 export { SendgridClient } from './SendgridExtensions.ts';
 export { ServicebusClient } from './ServicebusExtensions.ts';
+export { ServiceNowClient } from './ServiceNowExtensions.ts';
 export { SharepointonlineClient } from './SharepointonlineExtensions.ts';
 export { ShiftsClient } from './ShiftsExtensions.ts';
 export { SigninghubClient } from './SigninghubExtensions.ts';
@@ -296,6 +307,7 @@ export { TodoClient } from './TodoExtensions.ts';
 export { TrelloClient } from './TrelloExtensions.ts';
 export { TwitterClient } from './TwitterExtensions.ts';
 export { TypeformClient } from './TypeformExtensions.ts';
+export { UniversalprintClient } from './UniversalprintExtensions.ts';
 export { VisualstudioteamservicesClient } from './VisualstudioteamservicesExtensions.ts';
 export { WaywedoClient } from './WaywedoExtensions.ts';
 export { WdatpClient } from './WdatpExtensions.ts';

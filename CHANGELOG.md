@@ -45,6 +45,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- Added live-Swagger-generated DataFlows SMS, OneDrive Personal, ServiceNow, and Universal Print clients, with complete 103-client registries and mocked transport/export tests. OneDrive Personal and Universal Print are no longer blocked by the earlier `ApiNotFound` responses. Previously shipped client files and public names are retained.
+
 - Added a TypeDoc API reference for SDK infrastructure and all generated
   connectors, with pull-request coverage validation and GitHub Pages deployment
   from `main`. See [documentation setup](docs/publishing.md).
@@ -54,8 +56,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   Vault, Azure Queues, Azure Tables, Azure VM, CloudConvert, Dataflows, Excel Online
   (Business), Microsoft Bookings, Microsoft Defender ATP, Office 365 Groups,
   OneNote, Outlook.com, Planner, Service Bus, Trello, Word Online (Business), and
-  Yammer. Complete generated registries now contain 99 connectors, including
-  retained Orderful. OneDrive Personal and Universal Print remain blocked by
+  Yammer. At that time the generated registries contained 99 connectors, including
+  retained Orderful. OneDrive Personal and Universal Print were blocked by
   live `ApiNotFound` responses ([#117](https://github.com/Azure/Connectors-NodeJS-SDK/issues/117)).
 - Refreshed the 98 available clients using merged BPM source
   `21a5e28e029a1e58304b3c4d66302cbb528ed1fd`, with independently downloaded live
