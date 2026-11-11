@@ -7,7 +7,7 @@
 "use strict";
 
 const { ManagedIdentityTokenProvider, ConnectorError } = require("@azure/connectors");
-const { DocusignClient } = require("@azure/connectors/generated/DocusignExtensions");
+const { DocuSignClient } = require("@azure/connectors/generated/DocuSignExtensions");
 
 const CONNECTION_URL = process.env.DOCUSIGN_CONNECTION_URL ?? "";
 const DOCUSIGN_ENVELOPE_ID = process.env.DOCUSIGN_ENVELOPE_ID ?? "replace-with-envelope-id";
@@ -19,7 +19,7 @@ if (!CONNECTION_URL) {
 
 async function main() {
     const tokenProvider = new ManagedIdentityTokenProvider();
-    const client = new DocusignClient(CONNECTION_URL, tokenProvider);
+    const client = new DocuSignClient(CONNECTION_URL, tokenProvider);
 
     try {
         const result = await client.resendEnvelope(DOCUSIGN_ENVELOPE_ID);

@@ -5,7 +5,7 @@
  */
 
 import { ManagedIdentityTokenProvider, ConnectorError } from "@azure/connectors";
-import { DocusignClient } from "@azure/connectors/generated/DocusignExtensions";
+import { DocuSignClient } from "@azure/connectors/generated/DocuSignExtensions";
 
 const CONNECTION_URL = process.env.DOCUSIGN_CONNECTION_URL ?? "";
 const DOCUSIGN_ENVELOPE_ID = process.env.DOCUSIGN_ENVELOPE_ID ?? "replace-with-envelope-id";
@@ -17,7 +17,7 @@ if (!CONNECTION_URL) {
 
 async function main() {
     const tokenProvider = new ManagedIdentityTokenProvider();
-    const client = new DocusignClient(CONNECTION_URL, tokenProvider);
+    const client = new DocuSignClient(CONNECTION_URL, tokenProvider);
 
     try {
         const result = await client.resendEnvelope(DOCUSIGN_ENVELOPE_ID);

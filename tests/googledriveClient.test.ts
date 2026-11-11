@@ -1,7 +1,7 @@
 // Copyright (c) Microsoft Corporation.  All rights reserved.
 
 import type { TokenCredential } from "@azure/core-auth";
-import { GoogledriveClient } from "../src/generated/GoogledriveExtensions.ts";
+import { GoogleDriveClient } from "../src/generated/GoogleDriveExtensions.ts";
 import { ConnectorError } from "../src/azureConnectors/connectorError.ts";
 import { ConnectorNames } from "../src/generated/connectorNames.ts";
 import { availableConnectors } from "../src/generated/ManagedConnectors.ts";
@@ -40,16 +40,16 @@ function mockFetchError(status: number, errorBody: string): void {
 // Runtime tests
 // ──────────────────────────────────────────────
 
-describe("GoogledriveClient — constructor", () => {
+describe("GoogleDriveClient — constructor", () => {
     it("should construct with valid options", () => {
-        const client = new GoogledriveClient(TestConnectionUrl, createMockCredential());
+        const client = new GoogleDriveClient(TestConnectionUrl, createMockCredential());
         expect(client).toBeDefined();
-        expect(client).toBeInstanceOf(GoogledriveClient);
+        expect(client).toBeInstanceOf(GoogleDriveClient);
     });
 
     it("should strip trailing slashes from connection URL", async () => {
         mockFetchResponse({});
-        const client = new GoogledriveClient(TestConnectionUrl + "///", createMockCredential());
+        const client = new GoogleDriveClient(TestConnectionUrl + "///", createMockCredential());
         await client.getFileMetadata("file1");
         const [url] = (global.fetch as jest.Mock).mock.calls[0];
         // NOTE: Confirms the trailing slashes were stripped by inspecting the
@@ -59,17 +59,17 @@ describe("GoogledriveClient — constructor", () => {
     });
 
     it("should throw on null connection URL", () => {
-        expect(() => new GoogledriveClient(null as unknown as string, createMockCredential()))
+        expect(() => new GoogleDriveClient(null as unknown as string, createMockCredential()))
             .toThrow("Parameter 'connectionRuntimeUrl' cannot be null or undefined.");
     });
 
     it("should throw on undefined connection URL", () => {
-        expect(() => new GoogledriveClient(undefined as unknown as string, createMockCredential()))
+        expect(() => new GoogleDriveClient(undefined as unknown as string, createMockCredential()))
             .toThrow("Parameter 'connectionRuntimeUrl' cannot be null or undefined.");
     });
 });
 
-describe("GoogledriveClient — getFileMetadata", () => {
+describe("GoogleDriveClient — getFileMetadata", () => {
     afterEach(() => {
         jest.restoreAllMocks();
     });
@@ -78,7 +78,7 @@ describe("GoogledriveClient — getFileMetadata", () => {
         const metadata = { Id: "file1", Name: "notes.txt", DisplayName: "notes.txt" };
         mockFetchResponse(metadata);
 
-        const client = new GoogledriveClient(TestConnectionUrl, createMockCredential());
+        const client = new GoogleDriveClient(TestConnectionUrl, createMockCredential());
         const result = await client.getFileMetadata("file1");
 
         expect(result).toEqual(metadata);
@@ -92,7 +92,7 @@ describe("GoogledriveClient — getFileMetadata", () => {
     it("should throw ConnectorError on non-OK response", async () => {
         mockFetchError(404, "Not Found");
 
-        const client = new GoogledriveClient(TestConnectionUrl, createMockCredential());
+        const client = new GoogleDriveClient(TestConnectionUrl, createMockCredential());
         try {
             await client.getFileMetadata("missing");
             throw new Error("Expected ConnectorError to be thrown.");

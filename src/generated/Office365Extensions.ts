@@ -17,12 +17,12 @@ export type AssignCategoryBulkInput = Array<string>;
 /**
  * Update my contact's photo
  */
-export type UpdateMyContactPhotoInput = string;
+export type UpdateMyContactPhotoInput = Blob;
 
 /**
  * Send an HTTP request
  */
-export type HttpRequestInput = string;
+export type HttpRequestInput = Blob;
 
 /**
  * Response for Get calendars

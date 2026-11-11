@@ -19,12 +19,12 @@ export interface GetItemByExternalIdResponse {
 /**
  * Upload job data
  */
-export type UploadJobDataInput = string;
+export type UploadJobDataInput = Blob;
 
 /**
  * Send an HTTP request
  */
-export type HttpRequestInput = string;
+export type HttpRequestInput = Blob;
 
 /**
  * Response for Get record

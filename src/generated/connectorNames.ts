@@ -24,7 +24,7 @@ export const ConnectorNames = {
     CloudmersiveDocumentConversion: "cloudmersiveconvert",
     MicrosoftDataverse: "commondataservice",
     PowerQueryDataflows: "dataflows",
-    DataFlowsSMS: "dataflowssms",
+    DataFlowsSms: "dataflowssms",
     AzureCosmosDB: "documentdb",
     Docusign: "docusign",
     DocuWare: "docuware",

@@ -3,7 +3,7 @@
 import type { TokenCredential } from "@azure/core-auth";
 import * as fs from "node:fs";
 import * as path from "node:path";
-import type { HandSignature } from "../src/generated/SigninghubExtensions.ts";
+import type { HandSignature } from "../src/generated/SigningHubExtensions.ts";
 import {
     type ChannelWithOwnerTeamId,
     type ChatMessageList,
@@ -25,7 +25,7 @@ const StandardActionVerbs = new Set([
     "submit", "test", "unregister", "update", "upload", "upsert", "validate",
 ]);
 const CuratedActionMethodNames = new Set([
-    "Sendgrid.checkEmailIsInUnsubscribesList",
+    "SendGrid.checkEmailIsInUnsubscribesList",
 ]);
 
 /**
@@ -261,9 +261,9 @@ describe("Generated clients — no trigger operation is invoked as a data-plane 
     });
 
     it("should preserve curated connector action names", () => {
-        const clickSend = generatedFiles.find(file => file.connector === "Clicksendsms");
-        const googleTasks = generatedFiles.find(file => file.connector === "Googletasks");
-        const sendGrid = generatedFiles.find(file => file.connector === "Sendgrid");
+        const clickSend = generatedFiles.find(file => file.connector === "ClickSendSms");
+        const googleTasks = generatedFiles.find(file => file.connector === "GoogleTasks");
+        const sendGrid = generatedFiles.find(file => file.connector === "SendGrid");
         expect(clickSend).toBeDefined();
         expect(googleTasks).toBeDefined();
         expect(sendGrid).toBeDefined();
@@ -283,7 +283,7 @@ describe("Generated clients — no trigger operation is invoked as a data-plane 
         const handSignature: HandSignature = 2;
         const channel: ChannelWithOwnerTeamId = { ownerTeamId: "team1" };
         const teams = generatedFiles.find(file => file.connector === "Teams");
-        const signingHub = generatedFiles.find(file => file.connector === "Signinghub");
+        const signingHub = generatedFiles.find(file => file.connector === "SigningHub");
 
         expect(messages[0].id).toBe("message1");
         expect(JSON.stringify({ handSignature })).toBe('{"handSignature":2}');
@@ -294,7 +294,7 @@ describe("Generated clients — no trigger operation is invoked as a data-plane 
     });
 
     it("should emit every pinned multipart form-data operation", () => {
-        for (const connector of ["Cloudmersiveconvert", "Docuware"]) {
+        for (const connector of ["CloudmersiveConvert", "Docuware"]) {
             const generated = generatedFiles.find(file => file.connector === connector);
             const apiName = connector.toLowerCase();
             const swagger = JSON.parse(
@@ -350,7 +350,7 @@ describe("Generated clients — no trigger operation is invoked as a data-plane 
     // NOTE(swapnilnagar): Docusign's 'triggerMaestroFlow' is a real action on a '/trigger/' path,
     // so the guard cross-references trigger operation IDs instead of substring-matching the route.
     it("should treat the Docusign Maestro action as an action, not a trigger", () => {
-        const docusign = generatedFiles.find(file => file.connector === "Docusign");
+        const docusign = generatedFiles.find(file => file.connector === "DocuSign");
         expect(docusign).toBeDefined();
 
         const methodNames = new Set(extractClientMethodNames(docusign!.content));

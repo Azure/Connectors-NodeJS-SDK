@@ -2,7 +2,7 @@
 
 import type { TokenCredential } from "@azure/core-auth";
 import {
-    AzureblobClient,
+    AzureBlobClient,
     BlobMetadata,
     BlobMetadataPage,
     CreateBlockBlobInput,
@@ -12,7 +12,7 @@ import {
     DataWithSensitivityLabelInfo,
     ListOfBlobsWithSensitivityLabels,
     UpdateFileInput,
-} from "../src/generated/AzureblobExtensions.ts";
+} from "../src/generated/AzureBlobExtensions.ts";
 import { ConnectorError } from "../src/azureConnectors/connectorError.ts";
 import { ConnectorNames } from "../src/generated/connectorNames.ts";
 import { availableConnectors } from "../src/generated/ManagedConnectors.ts";
@@ -72,35 +72,35 @@ const _sasResult: SharedAccessSignature = {
 // Runtime tests
 // ──────────────────────────────────────────────
 
-describe("AzureblobClient — constructor", () => {
+describe("AzureBlobClient — constructor", () => {
     it("should construct with valid options", () => {
-        const client = new AzureblobClient(TestConnectionUrl, createMockCredential());
+        const client = new AzureBlobClient(TestConnectionUrl, createMockCredential());
         expect(client).toBeDefined();
-        expect(client).toBeInstanceOf(AzureblobClient);
+        expect(client).toBeInstanceOf(AzureBlobClient);
     });
 
     it("should strip trailing slashes from connection URL", () => {
-        const client = new AzureblobClient(TestConnectionUrl + "///", createMockCredential());
+        const client = new AzureBlobClient(TestConnectionUrl + "///", createMockCredential());
         expect(client).toBeDefined();
     });
 
     it("should construct with an empty connection URL", () => {
-        const client = new AzureblobClient("", createMockCredential());
+        const client = new AzureBlobClient("", createMockCredential());
         expect(client).toBeDefined();
     });
 
     it("should throw on null connection URL", () => {
-        expect(() => new AzureblobClient(null as unknown as string, createMockCredential()))
+        expect(() => new AzureBlobClient(null as unknown as string, createMockCredential()))
             .toThrow("Parameter 'connectionRuntimeUrl' cannot be null or undefined.");
     });
 
     it("should throw on undefined connection URL", () => {
-        expect(() => new AzureblobClient(undefined as unknown as string, createMockCredential()))
+        expect(() => new AzureBlobClient(undefined as unknown as string, createMockCredential()))
             .toThrow("Parameter 'connectionRuntimeUrl' cannot be null or undefined.");
     });
 });
 
-describe("AzureblobClient — listRootFolder", () => {
+describe("AzureBlobClient — listRootFolder", () => {
     afterEach(() => {
         jest.restoreAllMocks();
     });
@@ -111,7 +111,7 @@ describe("AzureblobClient — listRootFolder", () => {
         };
         mockFetchResponse(mockResponse);
 
-        const client = new AzureblobClient(TestConnectionUrl, createMockCredential());
+        const client = new AzureBlobClient(TestConnectionUrl, createMockCredential());
         const result = await client.listRootFolder(TestDataset).byPage().next();
 
         expect(result.value).toEqual(mockResponse.value);
@@ -122,7 +122,7 @@ describe("AzureblobClient — listRootFolder", () => {
     });
 });
 
-describe("AzureblobClient — getFileMetadata", () => {
+describe("AzureBlobClient — getFileMetadata", () => {
     afterEach(() => {
         jest.restoreAllMocks();
     });
@@ -131,7 +131,7 @@ describe("AzureblobClient — getFileMetadata", () => {
         const mockMetadata: DataWithSensitivityLabelInfo = {};
         mockFetchResponse(mockMetadata);
 
-        const client = new AzureblobClient(TestConnectionUrl, createMockCredential());
+        const client = new AzureBlobClient(TestConnectionUrl, createMockCredential());
         const result = await client.getFileMetadata(TestDataset, "file-id-1");
 
         expect(result).toEqual(mockMetadata);
@@ -140,7 +140,7 @@ describe("AzureblobClient — getFileMetadata", () => {
     });
 });
 
-describe("AzureblobClient — createBlockBlob", () => {
+describe("AzureBlobClient — createBlockBlob", () => {
     afterEach(() => {
         jest.restoreAllMocks();
     });
@@ -148,8 +148,8 @@ describe("AzureblobClient — createBlockBlob", () => {
     it("should POST to CreateBlockBlob endpoint", async () => {
         mockFetchResponse(null);
 
-        const client = new AzureblobClient(TestConnectionUrl, createMockCredential());
-        const input: CreateBlockBlobInput = "file content";
+        const client = new AzureBlobClient(TestConnectionUrl, createMockCredential());
+        const input: CreateBlockBlobInput = new Blob(["file content"], { type: "text/plain" });
 
         await client.createBlockBlob(input, TestStorageAccount, "/container", "newfile.txt");
 
@@ -160,7 +160,7 @@ describe("AzureblobClient — createBlockBlob", () => {
     });
 });
 
-describe("AzureblobClient — deleteFile", () => {
+describe("AzureBlobClient — deleteFile", () => {
     afterEach(() => {
         jest.restoreAllMocks();
     });
@@ -168,7 +168,7 @@ describe("AzureblobClient — deleteFile", () => {
     it("should send DELETE request for file", async () => {
         mockFetchResponse(null);
 
-        const client = new AzureblobClient(TestConnectionUrl, createMockCredential());
+        const client = new AzureBlobClient(TestConnectionUrl, createMockCredential());
         await client.deleteFile(TestDataset, "file-id-1");
 
         const [, init] = (global.fetch as jest.Mock).mock.calls[0];
@@ -176,7 +176,7 @@ describe("AzureblobClient — deleteFile", () => {
     });
 });
 
-describe("AzureblobClient — copyFile", () => {
+describe("AzureBlobClient — copyFile", () => {
     afterEach(() => {
         jest.restoreAllMocks();
     });
@@ -185,7 +185,7 @@ describe("AzureblobClient — copyFile", () => {
         const mockResult: BlobMetadata = { Name: "copied.txt" };
         mockFetchResponse(mockResult);
 
-        const client = new AzureblobClient(TestConnectionUrl, createMockCredential());
+        const client = new AzureBlobClient(TestConnectionUrl, createMockCredential());
         const result = await client.copyFile(
             TestDataset,
             "/source/file.txt",
@@ -200,7 +200,7 @@ describe("AzureblobClient — copyFile", () => {
     });
 });
 
-describe("AzureblobClient — updateFile", () => {
+describe("AzureBlobClient — updateFile", () => {
     afterEach(() => {
         jest.restoreAllMocks();
     });
@@ -209,8 +209,8 @@ describe("AzureblobClient — updateFile", () => {
         const mockResult: BlobMetadata = { Name: "updated.txt" };
         mockFetchResponse(mockResult);
 
-        const client = new AzureblobClient(TestConnectionUrl, createMockCredential());
-        const input: UpdateFileInput = "updated content";
+        const client = new AzureBlobClient(TestConnectionUrl, createMockCredential());
+        const input: UpdateFileInput = new Blob(["updated content"], { type: "text/plain" });
         const result = await client.updateFile(input, TestDataset, "file-id-1");
 
         expect(result).toEqual(mockResult);
@@ -219,7 +219,7 @@ describe("AzureblobClient — updateFile", () => {
     });
 });
 
-describe("AzureblobClient — createShareLinkByPath", () => {
+describe("AzureBlobClient — createShareLinkByPath", () => {
     afterEach(() => {
         jest.restoreAllMocks();
     });
@@ -230,7 +230,7 @@ describe("AzureblobClient — createShareLinkByPath", () => {
         };
         mockFetchResponse(mockSas);
 
-        const client = new AzureblobClient(TestConnectionUrl, createMockCredential());
+        const client = new AzureBlobClient(TestConnectionUrl, createMockCredential());
         const input: SharedAccessSignatureBlobPolicy = { Permissions: "Read" };
         const result = await client.createShareLinkByPath(
             input,
@@ -245,7 +245,7 @@ describe("AzureblobClient — createShareLinkByPath", () => {
     });
 });
 
-describe("AzureblobClient — error handling", () => {
+describe("AzureBlobClient — error handling", () => {
     afterEach(() => {
         jest.restoreAllMocks();
     });
@@ -253,7 +253,7 @@ describe("AzureblobClient — error handling", () => {
     it("should throw ConnectorError on non-OK response", async () => {
         mockFetchError(404, '{"error": "BlobNotFound"}');
 
-        const client = new AzureblobClient(TestConnectionUrl, createMockCredential());
+        const client = new AzureBlobClient(TestConnectionUrl, createMockCredential());
 
         await expect(
             client.listRootFolder(TestDataset).byPage().next(),
@@ -264,7 +264,7 @@ describe("AzureblobClient — error handling", () => {
         const errorBody = '{"code": "AuthorizationFailure"}';
         mockFetchError(403, errorBody);
 
-        const client = new AzureblobClient(TestConnectionUrl, createMockCredential());
+        const client = new AzureBlobClient(TestConnectionUrl, createMockCredential());
 
         try {
             await client.getFileMetadata(TestDataset, "file-1");

@@ -190,13 +190,14 @@ export class ConnectorHttpClient {
         const effectiveScopes = scopes ?? ConnectorHttpClient.ApiHubScopes;
         const logUrl = ConnectorHttpClient.sanitizeUrlForLogging(url);
         const isFormDataBody = typeof FormData !== "undefined" && body instanceof FormData;
+        const blobBody = typeof Blob !== "undefined" && body instanceof Blob ? body : undefined;
         logger.info(`Request ${method} ${logUrl}`);
         const request = createPipelineRequest({
             url,
             method: method as HttpMethods,
             body: body === undefined || isFormDataBody
                 ? undefined
-                : JSON.stringify(body),
+                : blobBody ?? JSON.stringify(body),
             abortSignal,
             tracingOptions,
             streamResponseStatusCodes: responseAsBlob
@@ -206,7 +207,7 @@ export class ConnectorHttpClient {
         request.headers.set("Accept", "application/json, */*;q=0.8");
 
         if (body !== undefined && !isFormDataBody) {
-            request.headers.set("Content-Type", "application/json");
+            request.headers.set("Content-Type", blobBody?.type || (blobBody ? "application/octet-stream" : "application/json"));
         }
 
         for (const [name, value] of Object.entries(requestHeaders ?? {})) {

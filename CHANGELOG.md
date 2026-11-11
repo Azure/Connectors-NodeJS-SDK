@@ -9,6 +9,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Breaking Changes
 
+- Canonical client, trigger and extension-module prefixes replace lowercase-ID-derived spellings for52 clients. Examples include `DataflowsSmsClient`, `OneDriveClient`, `UniversalPrintClient`, and `VisualStudioTeamServicesClient` with matching `*Extensions` module names. Update imports and trigger references; connector API IDs and wire fields stay unchanged. The reviewed constant is `ConnectorNames.DataFlowsSms`.
+- Binary-root request aliases now use `Blob` instead of `string`. Pass file bytes in a `Blob`; requests use its media type, or `application/octet-stream` when no type is supplied. JSON and multipart requests retain their existing transport paths.
+
 - PdfCo response interfaces use `PdfUnsearchableResponse`, `PdfFromXlsXlsxResponse`,
   and `XlsToCsvResponse`/`XlsToHtmlResponse`/`XlsToJsonResponse`/
   `XlsToTxtResponse`/`XlsToXmlResponse` instead of the corresponding

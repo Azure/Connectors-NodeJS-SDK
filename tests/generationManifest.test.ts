@@ -556,20 +556,42 @@ describe("generation.manifest.json provenance", () => {
         connector => [connector.apiName, connector],
     );
 
+    function validateFixtureOrRecordedLiveRun(candidate: GenerationManifest, connector: ManifestConnectorEntry): void {
+        // Fixture absence persists when a live-generated client becomes retained.
+        if (connector.swaggerFixture === undefined) {
+            expect(connector.swaggerFixtureSha256).toBeUndefined();
+            expect(connector.runId).toBeDefined();
+            validateConnectorRun(candidate, connector);
+        } else {
+            expect(connector.swaggerFixtureSha256).toMatch(/^[0-9a-f]{64}$/);
+            expect(fs.existsSync(path.join(RepositoryRoot, connector.swaggerFixture))).toBe(true);
+            expect(computeCanonicalTextSha256(connector.swaggerFixture)).toBe(connector.swaggerFixtureSha256);
+        }
+        expect(fs.existsSync(path.join(RepositoryRoot, connector.outputFile))).toBe(true);
+    }
+
     it.each(connectorCases)(
         "should match the committed swagger test fixture hash for '%s'",
         (_apiName: string, connector: ManifestConnectorEntry) => {
-            // New live-generated clients need not add a persisted Swagger fixture.
-            // Fixtures are independent test data, never the generator's producer input.
-            if (connector.swaggerFixture === undefined) {
-                expect(connector.swaggerFixtureSha256).toBeUndefined();
-                expect(manifest.refresh.refreshedConnectors).toContain(connector.apiName);
-            } else {
-                expect(connector.swaggerFixtureSha256).toMatch(/^[0-9a-f]{64}$/);
-                expect(fs.existsSync(path.join(RepositoryRoot, connector.swaggerFixture))).toBe(true);
-                expect(computeCanonicalTextSha256(connector.swaggerFixture)).toBe(connector.swaggerFixtureSha256);
-            }
-            expect(fs.existsSync(path.join(RepositoryRoot, connector.outputFile))).toBe(true);
+            validateFixtureOrRecordedLiveRun(manifest, connector);
+        },
+    );
+
+    it.each(connectorCases.filter(([, connector]) => connector.swaggerFixture === undefined))(
+        "should retain fixture-free live provenance for '%s' on a later partial refresh",
+        (apiName: string) => {
+            const laterRefresh = structuredClone(manifest);
+            const connector = laterRefresh.connectors.find(entry => entry.apiName === apiName)!;
+            const otherRunId = Object.keys(laterRefresh.generationRuns).find(runId => runId !== connector.runId)!;
+            expect(otherRunId).toBeDefined();
+            laterRefresh.refresh.runId = otherRunId;
+            laterRefresh.refresh.refreshedConnectors = laterRefresh.refresh.refreshedConnectors.filter(name => name !== apiName);
+            laterRefresh.refresh.retainedConnectors = laterRefresh.refresh.retainedConnectors.filter(entry => entry.apiName !== apiName);
+            laterRefresh.refresh.retainedConnectors.push({ apiName, reason: "Unchanged live-generated client" });
+            expect(() => validateFixtureOrRecordedLiveRun(laterRefresh, connector)).not.toThrow();
+            const missingRun = structuredClone(laterRefresh);
+            delete missingRun.connectors.find(entry => entry.apiName === apiName)!.runId;
+            expect(() => validateFixtureOrRecordedLiveRun(missingRun, missingRun.connectors.find(entry => entry.apiName === apiName)!)).toThrow();
         },
     );
 

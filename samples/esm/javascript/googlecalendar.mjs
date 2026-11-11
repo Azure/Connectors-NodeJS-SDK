@@ -14,7 +14,7 @@
  */
 
 import { ManagedIdentityTokenProvider, ConnectorError } from "@azure/connectors";
-import { GooglecalendarClient } from "@azure/connectors/generated/GooglecalendarExtensions";
+import { GoogleCalendarClient } from "@azure/connectors/generated/GoogleCalendarExtensions";
 
 const CONNECTION_URL = process.env.GOOGLECALENDAR_CONNECTION_URL ?? "";
 
@@ -25,7 +25,7 @@ if (!CONNECTION_URL) {
 
 async function main() {
     const tokenProvider = new ManagedIdentityTokenProvider();
-    const client = new GooglecalendarClient(CONNECTION_URL, tokenProvider);
+    const client = new GoogleCalendarClient(CONNECTION_URL, tokenProvider);
 
     // Example: List the calendars available to the connection.
     try {

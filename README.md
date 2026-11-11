@@ -31,6 +31,18 @@ Azure provides a rich ecosystem of [managed connectors](https://learn.microsoft.
 
 > **Note:** This is the Node.js SDK. A [Python SDK](https://github.com/Azure/Connectors-Python-SDK) and [.NET SDK](https://github.com/Azure/Connectors-NET-SDK) are also available.
 
+## Preview migration notes
+
+This refresh uses canonical client, trigger and extension-module names. For example,
+import `OneDriveClient` from `@azure/connectors/generated/OneDriveExtensions`, not
+`OnedriveExtensions`. The same prefix rule covers `DataflowsSms`, `UniversalPrint`
+and `VisualStudioTeamServices`; raw connector API IDs do not change. The connector
+constant is `ConnectorNames.DataFlowsSms`.
+
+File operations whose body schema is binary accept `Blob`. Use a media type when
+known, such as `new Blob([bytes], { type: "application/pdf" })`; without one the
+runtime sends `application/octet-stream`. Do not JSON-encode the file bytes.
+
 ## Documentation
 
 The [API documentation](https://azure.github.io/Connectors-NodeJS-SDK/) covers
@@ -138,12 +150,12 @@ sendEmailExample().catch(console.error);
 
 ```typescript
 import { ManagedIdentityCredential } from "@azure/identity";
-import { SharepointonlineClient } from "@azure/connectors/generated/SharepointonlineExtensions";
+import { SharePointOnlineClient } from "@azure/connectors/generated/SharePointOnlineExtensions";
 
 async function listSharePointItems(): Promise<void> {
     const connectionUrl = "https://example.azure.com/connections/sharepointonline";
     const credential = new ManagedIdentityCredential();
-    const client = new SharepointonlineClient(connectionUrl, credential);
+    const client = new SharePointOnlineClient(connectionUrl, credential);
 
     for await (const item of client.getItems(
         "https://contoso.sharepoint.com/sites/MySite",
@@ -160,12 +172,12 @@ listSharePointItems().catch(console.error);
 
 ```javascript
 import { ManagedIdentityCredential } from "@azure/identity";
-import { SharepointonlineClient } from "@azure/connectors/generated/SharepointonlineExtensions";
+import { SharePointOnlineClient } from "@azure/connectors/generated/SharePointOnlineExtensions";
 
 async function listSharePointItems() {
     const connectionUrl = "https://example.azure.com/connections/sharepointonline";
     const credential = new ManagedIdentityCredential();
-    const client = new SharepointonlineClient(connectionUrl, credential);
+    const client = new SharePointOnlineClient(connectionUrl, credential);
 
     for await (const item of client.getItems(
         "https://contoso.sharepoint.com/sites/MySite",
@@ -304,56 +316,56 @@ The following connectors have been generated and validated with comprehensive te
 | Connector | Import Path | Status | Tests |
 |-----------|-------------|--------|-------|
 | **Azure Resource Manager** | `@azure/connectors/generated/ArmExtensions` | ✅ Complete | 16 tests |
-| **Azure Blob Storage** | `@azure/connectors/generated/AzureblobExtensions` | ✅ Complete | 13 tests |
-| **Azure Monitor Logs** | `@azure/connectors/generated/AzuremonitorlogsExtensions` | ✅ Complete | 10 tests |
+| **Azure Blob Storage** | `@azure/connectors/generated/AzureBlobExtensions` | ✅ Complete | 13 tests |
+| **Azure Monitor Logs** | `@azure/connectors/generated/AzureMonitorLogsExtensions` | ✅ Complete | 10 tests |
 | **Azure Data Explorer** | `@azure/connectors/generated/KustoExtensions` | ✅ Complete | 17 tests |
 | **IBM MQ** | `@azure/connectors/generated/MqExtensions` | ✅ Complete | 13 tests |
-| **MS Graph Groups & Users** | `@azure/connectors/generated/MsgraphgroupsanduserExtensions` | ✅ Complete | 13 tests |
+| **MS Graph Groups & Users** | `@azure/connectors/generated/MsGraphGroupsAndUsersExtensions` | ✅ Complete | 13 tests |
 | **Office 365 Outlook** | `@azure/connectors/generated/Office365Extensions` | ✅ Complete | 14 tests |
-| **Office 365 Users** | `@azure/connectors/generated/Office365usersExtensions` | ✅ Complete | 14 tests |
-| **OneDrive for Business** | `@azure/connectors/generated/OnedriveforbusinessExtensions` | ✅ Complete | 15 tests |
-| **SharePoint Online** | `@azure/connectors/generated/SharepointonlineExtensions` | ✅ Complete | 12 tests |
+| **Office 365 Users** | `@azure/connectors/generated/Office365UsersExtensions` | ✅ Complete | 14 tests |
+| **OneDrive for Business** | `@azure/connectors/generated/OneDriveForBusinessExtensions` | ✅ Complete | 15 tests |
+| **SharePoint Online** | `@azure/connectors/generated/SharePointOnlineExtensions` | ✅ Complete | 12 tests |
 | **SMTP** | `@azure/connectors/generated/SmtpExtensions` | ✅ Complete | 9 tests |
 | **Microsoft Teams** | `@azure/connectors/generated/TeamsExtensions` | ✅ Complete | 14 tests |
-| **DocuSign** | `@azure/connectors/generated/DocusignExtensions` | ✅ Complete | 6 tests |
-| **GitHub** | `@azure/connectors/generated/GithubExtensions` | ✅ Complete | 6 tests |
+| **DocuSign** | `@azure/connectors/generated/DocuSignExtensions` | ✅ Complete | 6 tests |
+| **GitHub** | `@azure/connectors/generated/GitHubExtensions` | ✅ Complete | 6 tests |
 | **Jira** | `@azure/connectors/generated/JiraExtensions` | ✅ Complete | 6 tests |
-| **Microsoft Forms** | `@azure/connectors/generated/MicrosoftformsExtensions` | ✅ Complete | 6 tests |
-| **Power BI** | `@azure/connectors/generated/PowerbiExtensions` | ✅ Complete | 6 tests |
+| **Microsoft Forms** | `@azure/connectors/generated/MicrosoftFormsExtensions` | ✅ Complete | 6 tests |
+| **Power BI** | `@azure/connectors/generated/PowerBIExtensions` | ✅ Complete | 6 tests |
 | **Salesforce** | `@azure/connectors/generated/SalesforceExtensions` | ✅ Complete | 6 tests |
 | **Shifts for Microsoft Teams** | `@azure/connectors/generated/ShiftsExtensions` | ✅ Complete | 6 tests |
 | **Slack** | `@azure/connectors/generated/SlackExtensions` | ✅ Complete | 7 tests |
 | **Microsoft To Do Business** | `@azure/connectors/generated/TodoExtensions` | ✅ Complete | 6 tests |
 | **Box** | `@azure/connectors/generated/BoxExtensions` | ✅ Complete | 8 tests |
 | **Dropbox** | `@azure/connectors/generated/DropboxExtensions` | ✅ Complete | 8 tests |
-| **Excel Online** | `@azure/connectors/generated/ExcelonlineExtensions` | ✅ Complete | 9 tests |
+| **Excel Online** | `@azure/connectors/generated/ExcelOnlineExtensions` | ✅ Complete | 9 tests |
 | **FTP** | `@azure/connectors/generated/FtpExtensions` | ✅ Complete | 8 tests |
-| **Google Calendar** | `@azure/connectors/generated/GooglecalendarExtensions` | ✅ Complete | 8 tests |
-| **Google Drive** | `@azure/connectors/generated/GoogledriveExtensions` | ✅ Complete | 8 tests |
-| **Google Tasks** | `@azure/connectors/generated/GoogletasksExtensions` | ✅ Complete | 8 tests |
-| **Office 365 Groups Mail** | `@azure/connectors/generated/Office365groupsmailExtensions` | ✅ Complete | 9 tests |
+| **Google Calendar** | `@azure/connectors/generated/GoogleCalendarExtensions` | ✅ Complete | 8 tests |
+| **Google Drive** | `@azure/connectors/generated/GoogleDriveExtensions` | ✅ Complete | 8 tests |
+| **Google Tasks** | `@azure/connectors/generated/GoogleTasksExtensions` | ✅ Complete | 8 tests |
+| **Office 365 Groups Mail** | `@azure/connectors/generated/Office365GroupsMailExtensions` | ✅ Complete | 9 tests |
 | **RSS** | `@azure/connectors/generated/RssExtensions` | ✅ Complete | 8 tests |
-| **Azure Event Grid** | `@azure/connectors/generated/AzureeventgridExtensions` | ✅ Complete | 5 tests |
-| **Azure IoT Central** | `@azure/connectors/generated/AzureiotcentralExtensions` | ✅ Complete | 7 tests |
-| **Cloudmersive Document Conversion** | `@azure/connectors/generated/CloudmersiveconvertExtensions` | ✅ Complete | 7 tests |
-| **Fin & Ops Apps (Dynamics 365)** | `@azure/connectors/generated/DynamicsaxExtensions` | ✅ Complete | 7 tests |
-| **PDF.co** | `@azure/connectors/generated/PdfcoExtensions` | ✅ Complete | 7 tests |
+| **Azure Event Grid** | `@azure/connectors/generated/AzureEventGridExtensions` | ✅ Complete | 5 tests |
+| **Azure IoT Central** | `@azure/connectors/generated/AzureIoTCentralExtensions` | ✅ Complete | 7 tests |
+| **Cloudmersive Document Conversion** | `@azure/connectors/generated/CloudmersiveConvertExtensions` | ✅ Complete | 7 tests |
+| **Fin & Ops Apps (Dynamics 365)** | `@azure/connectors/generated/DynamicsAXExtensions` | ✅ Complete | 7 tests |
+| **PDF.co** | `@azure/connectors/generated/PdfCoExtensions` | ✅ Complete | 7 tests |
 | **Plumsail Documents** | `@azure/connectors/generated/PlumsailExtensions` | ✅ Complete | 7 tests |
 | **SQL Server** | `@azure/connectors/generated/SqlExtensions` | ✅ Complete | 7 tests |
 | **Zendesk** | `@azure/connectors/generated/ZendeskExtensions` | ✅ Complete | 7 tests |
 | **Pipedrive** | `@azure/connectors/generated/PipedriveExtensions` | ✅ Complete | 7 tests |
 | **DocuWare** | `@azure/connectors/generated/DocuwareExtensions` | ✅ Complete | 7 tests |
-| **SigningHub** | `@azure/connectors/generated/SigninghubExtensions` | ✅ Complete | 7 tests |
+| **SigningHub** | `@azure/connectors/generated/SigningHubExtensions` | ✅ Complete | 7 tests |
 | **Campfire** | `@azure/connectors/generated/CampfireExtensions` | ✅ Complete | 7 tests |
-| **ClickSend SMS** | `@azure/connectors/generated/ClicksendsmsExtensions` | ✅ Complete | 7 tests |
-| **Freshservice** | `@azure/connectors/generated/FreshserviceExtensions` | ✅ Complete | 7 tests |
+| **ClickSend SMS** | `@azure/connectors/generated/ClickSendSmsExtensions` | ✅ Complete | 7 tests |
+| **Freshservice** | `@azure/connectors/generated/FreshServiceExtensions` | ✅ Complete | 7 tests |
 | **Infusionsoft** | `@azure/connectors/generated/InfusionsoftExtensions` | ✅ Complete | 7 tests |
 | **Insightly** | `@azure/connectors/generated/InsightlyExtensions` | ✅ Complete | 7 tests |
-| **Mailchimp** | `@azure/connectors/generated/MailchimpExtensions` | ✅ Complete | 7 tests |
+| **Mailchimp** | `@azure/connectors/generated/MailChimpExtensions` | ✅ Complete | 7 tests |
 | **Monday** | `@azure/connectors/generated/MondayExtensions` | ✅ Complete | 7 tests |
 | **Projectplace** | `@azure/connectors/generated/ProjectplaceExtensions` | ✅ Complete | 7 tests |
-| **SendGrid** | `@azure/connectors/generated/SendgridExtensions` | ✅ Complete | 7 tests |
-| **Text Request** | `@azure/connectors/generated/TextrequestExtensions` | ✅ Complete | 7 tests |
+| **SendGrid** | `@azure/connectors/generated/SendGridExtensions` | ✅ Complete | 7 tests |
+| **Text Request** | `@azure/connectors/generated/TextRequestExtensions` | ✅ Complete | 7 tests |
 | **Webex** | `@azure/connectors/generated/WebexExtensions` | ✅ Complete | 7 tests |
 
 ## Generated Phase 5-7 Connectors
@@ -364,25 +376,25 @@ samples, but have not been validated end to end against live connector services.
 | Connector | Import Path | Validation |
 |-----------|-------------|------------|
 | **Twitter (X)** | `@azure/connectors/generated/TwitterExtensions` | Mocked SDK tests |
-| **WordPress** | `@azure/connectors/generated/WordpressExtensions` | Mocked SDK tests |
+| **WordPress** | `@azure/connectors/generated/WordPressExtensions` | Mocked SDK tests |
 | **Plivo** | `@azure/connectors/generated/PlivoExtensions` | Mocked SDK tests |
 | **Rev.ai** | `@azure/connectors/generated/RevaiExtensions` | Mocked SDK tests |
 | **Starmind** | `@azure/connectors/generated/StarmindExtensions` | Mocked SDK tests |
 | **Tallyfy** | `@azure/connectors/generated/TallyfyExtensions` | Mocked SDK tests |
 | **Eventbrite** | `@azure/connectors/generated/EventbriteExtensions` | Mocked SDK tests |
-| **Formstack Forms** | `@azure/connectors/generated/FormstackformsExtensions` | Mocked SDK tests |
+| **Formstack Forms** | `@azure/connectors/generated/FormstackFormsExtensions` | Mocked SDK tests |
 | **Typeform** | `@azure/connectors/generated/TypeformExtensions` | Mocked SDK tests |
 | **Ticketmaster** | `@azure/connectors/generated/TicketmasterExtensions` | Mocked SDK tests |
-| **Zoho Sign** | `@azure/connectors/generated/ZohosignExtensions` | Mocked SDK tests |
-| **Seismic Planner** | `@azure/connectors/generated/SeismicplannerExtensions` | Mocked SDK tests |
+| **Zoho Sign** | `@azure/connectors/generated/ZohoSignExtensions` | Mocked SDK tests |
+| **Seismic Planner** | `@azure/connectors/generated/SeismicPlannerExtensions` | Mocked SDK tests |
 | **Way We Do** | `@azure/connectors/generated/WaywedoExtensions` | Mocked SDK tests |
-| **Meeting Room Map** | `@azure/connectors/generated/MeetingroommapExtensions` | Mocked SDK tests |
-| **StarRez REST V1** | `@azure/connectors/generated/Starrezrestv1Extensions` | Mocked SDK tests |
+| **Meeting Room Map** | `@azure/connectors/generated/MeetingRoomMapExtensions` | Mocked SDK tests |
+| **StarRez REST V1** | `@azure/connectors/generated/StarrezRestV1Extensions` | Mocked SDK tests |
 | **Replicon** | `@azure/connectors/generated/RepliconExtensions` | Mocked SDK tests |
 | **Etsy** | `@azure/connectors/generated/EtsyExtensions` | Mocked SDK tests |
-| **Elfsquad Data** | `@azure/connectors/generated/ElfsquaddataExtensions` | Mocked SDK tests |
+| **Elfsquad Data** | `@azure/connectors/generated/ElfsquadDataExtensions` | Mocked SDK tests |
 | **Impexium** | `@azure/connectors/generated/ImpexiumExtensions` | Mocked SDK tests |
-| **Jedox OData Hub** | `@azure/connectors/generated/JedoxodatahubExtensions` | Mocked SDK tests |
+| **Jedox OData Hub** | `@azure/connectors/generated/JedoxOdataHubExtensions` | Mocked SDK tests |
 | **Orderful** | `@azure/connectors/generated/OrderfulExtensions` | Mocked SDK tests; retired connector fixture |
 | **Zoho ZeptoMail** | `@azure/connectors/generated/ZeptomailExtensions` | Mocked SDK tests |
 
@@ -394,33 +406,33 @@ end against live connector connections.
 
 | Connector | Connector API ID | Import Path |
 |-----------|------------------|-------------|
-| Azure AD (Microsoft Entra ID) | `azuread` | `@azure/connectors/generated/AzureadExtensions` |
-| Azure Automation | `azureautomation` | `@azure/connectors/generated/AzureautomationExtensions` |
-| Azure Cosmos DB | `documentdb` | `@azure/connectors/generated/DocumentdbExtensions` |
-| Azure Data Factory | `azuredatafactory` | `@azure/connectors/generated/AzuredatafactoryExtensions` |
-| Azure DevOps (VSTS) | `visualstudioteamservices` | `@azure/connectors/generated/VisualstudioteamservicesExtensions` |
-| Azure Digital Twins | `azuredigitaltwins` | `@azure/connectors/generated/AzuredigitaltwinsExtensions` |
-| Azure Event Hubs | `eventhubs` | `@azure/connectors/generated/EventhubsExtensions` |
-| Azure Key Vault | `keyvault` | `@azure/connectors/generated/KeyvaultExtensions` |
-| Azure Queues | `azurequeues` | `@azure/connectors/generated/AzurequeuesExtensions` |
-| Azure Tables | `azuretables` | `@azure/connectors/generated/AzuretablesExtensions` |
-| Azure VM | `azurevm` | `@azure/connectors/generated/AzurevmExtensions` |
+| Azure AD (Microsoft Entra ID) | `azuread` | `@azure/connectors/generated/AzureADExtensions` |
+| Azure Automation | `azureautomation` | `@azure/connectors/generated/AzureAutomationExtensions` |
+| Azure Cosmos DB | `documentdb` | `@azure/connectors/generated/DocumentDbExtensions` |
+| Azure Data Factory | `azuredatafactory` | `@azure/connectors/generated/AzureDataFactoryExtensions` |
+| Azure DevOps (VSTS) | `visualstudioteamservices` | `@azure/connectors/generated/VisualStudioTeamServicesExtensions` |
+| Azure Digital Twins | `azuredigitaltwins` | `@azure/connectors/generated/AzureDigitalTwinsExtensions` |
+| Azure Event Hubs | `eventhubs` | `@azure/connectors/generated/EventHubsExtensions` |
+| Azure Key Vault | `keyvault` | `@azure/connectors/generated/KeyVaultExtensions` |
+| Azure Queues | `azurequeues` | `@azure/connectors/generated/AzureQueuesExtensions` |
+| Azure Tables | `azuretables` | `@azure/connectors/generated/AzureTablesExtensions` |
+| Azure VM | `azurevm` | `@azure/connectors/generated/AzureVMExtensions` |
 | CloudConvert | `cloudconvert` | `@azure/connectors/generated/CloudconvertExtensions` |
 | Dataflows | `dataflows` | `@azure/connectors/generated/DataflowsExtensions` |
-| DataFlows SMS | `dataflowssms` | `@azure/connectors/generated/DataflowssmsExtensions` |
-| Excel Online (Business) | `excelonlinebusiness` | `@azure/connectors/generated/ExcelonlinebusinessExtensions` |
-| Microsoft Bookings | `microsoftbookings` | `@azure/connectors/generated/MicrosoftbookingsExtensions` |
+| DataFlows SMS | `dataflowssms` | `@azure/connectors/generated/DataflowsSmsExtensions` |
+| Excel Online (Business) | `excelonlinebusiness` | `@azure/connectors/generated/ExcelOnlineBusinessExtensions` |
+| Microsoft Bookings | `microsoftbookings` | `@azure/connectors/generated/MicrosoftBookingsExtensions` |
 | Microsoft Defender ATP | `wdatp` | `@azure/connectors/generated/WdatpExtensions` |
-| Office 365 Groups | `office365groups` | `@azure/connectors/generated/Office365groupsExtensions` |
-| OneDrive Personal | `onedrive` | `@azure/connectors/generated/OnedriveExtensions` |
+| Office 365 Groups | `office365groups` | `@azure/connectors/generated/Office365GroupsExtensions` |
+| OneDrive Personal | `onedrive` | `@azure/connectors/generated/OneDriveExtensions` |
 | OneNote | `onenote` | `@azure/connectors/generated/OnenoteExtensions` |
 | Outlook.com | `outlook` | `@azure/connectors/generated/OutlookExtensions` |
 | Planner | `planner` | `@azure/connectors/generated/PlannerExtensions` |
 | Service Bus | `servicebus` | `@azure/connectors/generated/ServicebusExtensions` |
 | ServiceNow | `service-now` | `@azure/connectors/generated/ServiceNowExtensions` |
 | Trello | `trello` | `@azure/connectors/generated/TrelloExtensions` |
-| Word Online (Business) | `wordonlinebusiness` | `@azure/connectors/generated/WordonlinebusinessExtensions` |
-| Universal Print | `universalprint` | `@azure/connectors/generated/UniversalprintExtensions` |
+| Word Online (Business) | `wordonlinebusiness` | `@azure/connectors/generated/WordOnlineBusinessExtensions` |
+| Universal Print | `universalprint` | `@azure/connectors/generated/UniversalPrintExtensions` |
 | Yammer | `yammer` | `@azure/connectors/generated/YammerExtensions` |
 
 OneDrive Personal (`onedrive`) and Universal Print (`universalprint`) are now
@@ -608,30 +620,30 @@ try {
 │   └── triggerPayload.ts           # Trigger callback types
 ├── src/generated/                  # Auto-generated connector clients
 │   ├── ArmExtensions.ts           # Azure Resource Manager client
-│   ├── AzureblobExtensions.ts     # Azure Blob Storage client
-│   ├── AzuremonitorlogsExtensions.ts # Azure Monitor Logs client
+│   ├── AzureBlobExtensions.ts     # Azure Blob Storage client
+│   ├── AzureMonitorLogsExtensions.ts # Azure Monitor Logs client
 │   ├── BoxExtensions.ts           # Box client
-│   ├── DocusignExtensions.ts      # DocuSign client
+│   ├── DocuSignExtensions.ts      # DocuSign client
 │   ├── DropboxExtensions.ts       # Dropbox client
-│   ├── ExcelonlineExtensions.ts   # Excel Online client
+│   ├── ExcelOnlineExtensions.ts   # Excel Online client
 │   ├── FtpExtensions.ts           # FTP client
-│   ├── GithubExtensions.ts        # GitHub client
-│   ├── GooglecalendarExtensions.ts # Google Calendar client
-│   ├── GoogledriveExtensions.ts   # Google Drive client
-│   ├── GoogletasksExtensions.ts   # Google Tasks client
+│   ├── GitHubExtensions.ts        # GitHub client
+│   ├── GoogleCalendarExtensions.ts # Google Calendar client
+│   ├── GoogleDriveExtensions.ts   # Google Drive client
+│   ├── GoogleTasksExtensions.ts   # Google Tasks client
 │   ├── JiraExtensions.ts          # Jira client
 │   ├── KustoExtensions.ts         # Azure Data Explorer client
-│   ├── MicrosoftformsExtensions.ts # Microsoft Forms client
+│   ├── MicrosoftFormsExtensions.ts # Microsoft Forms client
 │   ├── MqExtensions.ts            # IBM MQ client
-│   ├── MsgraphgroupsanduserExtensions.ts # MS Graph Groups & Users client
+│   ├── MsGraphGroupsAndUsersExtensions.ts # MS Graph Groups & Users client
 │   ├── Office365Extensions.ts     # Office 365 Outlook client
-│   ├── Office365groupsmailExtensions.ts # Office 365 Groups Mail client
-│   ├── Office365usersExtensions.ts # Office 365 Users client
-│   ├── OnedriveforbusinessExtensions.ts # OneDrive for Business client
-│   ├── PowerbiExtensions.ts       # Power BI client
+│   ├── Office365GroupsMailExtensions.ts # Office 365 Groups Mail client
+│   ├── Office365UsersExtensions.ts # Office 365 Users client
+│   ├── OneDriveForBusinessExtensions.ts # OneDrive for Business client
+│   ├── PowerBIExtensions.ts       # Power BI client
 │   ├── RssExtensions.ts           # RSS client
 │   ├── SalesforceExtensions.ts    # Salesforce client
-│   ├── SharepointonlineExtensions.ts # SharePoint Online client
+│   ├── SharePointOnlineExtensions.ts # SharePoint Online client
 │   ├── ShiftsExtensions.ts        # Shifts for Microsoft Teams client
 │   ├── SlackExtensions.ts         # Slack client
 │   ├── SmtpExtensions.ts          # SMTP client

@@ -1,7 +1,7 @@
 // Copyright (c) Microsoft Corporation.  All rights reserved.
 
 import type { TokenCredential } from "@azure/core-auth";
-import { MailchimpClient } from "../src/generated/MailchimpExtensions.ts";
+import { MailChimpClient } from "../src/generated/MailChimpExtensions.ts";
 import { ConnectorError } from "../src/azureConnectors/connectorError.ts";
 import { ConnectorNames } from "../src/generated/connectorNames.ts";
 import { availableConnectors } from "../src/generated/ManagedConnectors.ts";
@@ -40,25 +40,25 @@ function mockFetchError(status: number, errorBody: string): void {
 // Runtime tests
 // ──────────────────────────────────────────────
 
-describe("MailchimpClient — constructor", () => {
+describe("MailChimpClient — constructor", () => {
     it("should construct with valid options", () => {
-        const client = new MailchimpClient(TestConnectionUrl, createMockCredential());
+        const client = new MailChimpClient(TestConnectionUrl, createMockCredential());
         expect(client).toBeDefined();
-        expect(client).toBeInstanceOf(MailchimpClient);
+        expect(client).toBeInstanceOf(MailChimpClient);
     });
 
     it("should throw on null connection URL", () => {
-        expect(() => new MailchimpClient(null as unknown as string, createMockCredential()))
+        expect(() => new MailChimpClient(null as unknown as string, createMockCredential()))
             .toThrow("Parameter 'connectionRuntimeUrl' cannot be null or undefined.");
     });
 
     it("should throw on undefined connection URL", () => {
-        expect(() => new MailchimpClient(undefined as unknown as string, createMockCredential()))
+        expect(() => new MailChimpClient(undefined as unknown as string, createMockCredential()))
             .toThrow("Parameter 'connectionRuntimeUrl' cannot be null or undefined.");
     });
 });
 
-describe("MailchimpClient — getCampaigns", () => {
+describe("MailChimpClient — getCampaigns", () => {
     afterEach(() => {
         jest.restoreAllMocks();
     });
@@ -67,7 +67,7 @@ describe("MailchimpClient — getCampaigns", () => {
         const campaigns = { campaigns: [{ id: "camp1", type: "regular", status: "sent" }] };
         mockFetchResponse(campaigns);
 
-        const client = new MailchimpClient(TestConnectionUrl, createMockCredential());
+        const client = new MailChimpClient(TestConnectionUrl, createMockCredential());
         const result = await client.getCampaigns().byPage().next();
 
         expect(result.value).toEqual(campaigns.campaigns);
@@ -80,7 +80,7 @@ describe("MailchimpClient — getCampaigns", () => {
     it("should throw ConnectorError on non-OK response", async () => {
         mockFetchError(404, "Not Found");
 
-        const client = new MailchimpClient(TestConnectionUrl, createMockCredential());
+        const client = new MailChimpClient(TestConnectionUrl, createMockCredential());
         try {
             await client.getCampaigns().byPage().next();
             throw new Error("Expected ConnectorError to be thrown.");

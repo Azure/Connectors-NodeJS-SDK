@@ -7,7 +7,7 @@
 "use strict";
 
 const { ManagedIdentityTokenProvider, ConnectorError } = require("@azure/connectors");
-const { PowerbiClient } = require("@azure/connectors/generated/PowerbiExtensions");
+const { PowerBIClient } = require("@azure/connectors/generated/PowerBIExtensions");
 
 const CONNECTION_URL = process.env.POWERBI_CONNECTION_URL ?? "";
 const POWERBI_GROUP_ID = process.env.POWERBI_GROUP_ID ?? "replace-with-group-id";
@@ -19,7 +19,7 @@ if (!CONNECTION_URL) {
 
 async function main() {
     const tokenProvider = new ManagedIdentityTokenProvider();
-    const client = new PowerbiClient(CONNECTION_URL, tokenProvider);
+    const client = new PowerBIClient(CONNECTION_URL, tokenProvider);
 
     try {
         const result = await client.getScorecards(POWERBI_GROUP_ID, { pbiSource: "firstparty" });

@@ -14,7 +14,7 @@
  */
 
 import { ManagedIdentityTokenProvider, ConnectorError } from "@azure/connectors";
-import { FreshserviceClient } from "@azure/connectors/generated/FreshserviceExtensions";
+import { FreshServiceClient } from "@azure/connectors/generated/FreshServiceExtensions";
 
 const CONNECTION_URL = process.env.FRESHSERVICE_CONNECTION_URL ?? "";
 
@@ -25,7 +25,7 @@ if (!CONNECTION_URL) {
 
 async function main(): Promise<void> {
     const tokenProvider = new ManagedIdentityTokenProvider();
-    const client = new FreshserviceClient(CONNECTION_URL, tokenProvider);
+    const client = new FreshServiceClient(CONNECTION_URL, tokenProvider);
 
     // Example 1: Create a support ticket.
     try {

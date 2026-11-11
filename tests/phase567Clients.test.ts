@@ -3,13 +3,13 @@
 import type { TokenCredential } from "@azure/core-auth";
 import { ConnectorError } from "../src/azureConnectors/connectorError.ts";
 import { ConnectorNames } from "../src/generated/connectorNames.ts";
-import { ElfsquaddataClient } from "../src/generated/ElfsquaddataExtensions.ts";
+import { ElfsquadDataClient } from "../src/generated/ElfsquadDataExtensions.ts";
 import { EtsyClient } from "../src/generated/EtsyExtensions.ts";
 import { EventbriteClient } from "../src/generated/EventbriteExtensions.ts";
-import { FormstackformsClient } from "../src/generated/FormstackformsExtensions.ts";
+import { FormstackFormsClient } from "../src/generated/FormstackFormsExtensions.ts";
 import { ImpexiumClient } from "../src/generated/ImpexiumExtensions.ts";
-import { JedoxodatahubClient } from "../src/generated/JedoxodatahubExtensions.ts";
-import { MeetingroommapClient } from "../src/generated/MeetingroommapExtensions.ts";
+import { JedoxOdataHubClient } from "../src/generated/JedoxOdataHubExtensions.ts";
+import { MeetingRoomMapClient } from "../src/generated/MeetingRoomMapExtensions.ts";
 import { OrderfulClient } from "../src/generated/OrderfulExtensions.ts";
 import { PlivoClient, type Sms } from "../src/generated/PlivoExtensions.ts";
 import { RepliconClient } from "../src/generated/RepliconExtensions.ts";
@@ -17,18 +17,18 @@ import { RevaiClient } from "../src/generated/RevaiExtensions.ts";
 import {
     CustomPropertyDataDisplay,
     CustomPropertyValues,
-    SeismicplannerClient,
-} from "../src/generated/SeismicplannerExtensions.ts";
+    SeismicPlannerClient,
+} from "../src/generated/SeismicPlannerExtensions.ts";
 import { StarmindClient } from "../src/generated/StarmindExtensions.ts";
-import { Starrezrestv1Client } from "../src/generated/Starrezrestv1Extensions.ts";
+import { StarrezRestV1Client } from "../src/generated/StarrezRestV1Extensions.ts";
 import { TallyfyClient } from "../src/generated/TallyfyExtensions.ts";
-import { TextrequestClient } from "../src/generated/TextrequestExtensions.ts";
+import { TextRequestClient } from "../src/generated/TextRequestExtensions.ts";
 import { TicketmasterClient } from "../src/generated/TicketmasterExtensions.ts";
 import { TwitterClient } from "../src/generated/TwitterExtensions.ts";
 import { TypeformClient, TypeformTriggerOperations } from "../src/generated/TypeformExtensions.ts";
 import { WaywedoClient } from "../src/generated/WaywedoExtensions.ts";
-import { WordpressClient } from "../src/generated/WordpressExtensions.ts";
-import { ZohosignClient } from "../src/generated/ZohosignExtensions.ts";
+import { WordPressClient } from "../src/generated/WordPressExtensions.ts";
+import { ZohoSignClient } from "../src/generated/ZohoSignExtensions.ts";
 import { availableConnectors } from "../src/generated/ManagedConnectors.ts";
 
 const TestConnectionUrl = "https://connection-runtime.azure.com/apim/test/abc123";
@@ -57,25 +57,25 @@ interface ConnectorCase {
 
 const ConnectorCases: ConnectorCase[] = [
     { displayName: "Twitter", apiName: "twitter", connectorNameKey: "X", clientConstructor: TwitterClient, methodName: "homeTimeline" },
-    { displayName: "WordPress", apiName: "wordpress", connectorNameKey: "WordPress", clientConstructor: WordpressClient, methodName: "siteStats", methodArguments: ["site-id"] },
+    { displayName: "WordPress", apiName: "wordpress", connectorNameKey: "WordPress", clientConstructor: WordPressClient, methodName: "siteStats", methodArguments: ["site-id"] },
     { displayName: "Plivo", apiName: "plivo", connectorNameKey: "Plivo", clientConstructor: PlivoClient, methodName: "listMessages", methodArguments: ["auth-id"] },
     { displayName: "Rev.ai", apiName: "revai", connectorNameKey: "RevAIIndependentPublisher", clientConstructor: RevaiClient, methodName: "getTranscriptions" },
     { displayName: "Starmind", apiName: "starmind", connectorNameKey: "Starmind", clientConstructor: StarmindClient, methodName: "findQuestions" },
     { displayName: "Tallyfy", apiName: "tallyfy", connectorNameKey: "Tallyfy", clientConstructor: TallyfyClient, methodName: "getUserTasks", methodArguments: ["organization", "user-id"] },
     { displayName: "Eventbrite", apiName: "eventbrite", connectorNameKey: "Eventbrite", clientConstructor: EventbriteClient, methodName: "createEvent", methodArguments: ["organization-id"] },
-    { displayName: "Formstack Forms", apiName: "formstackforms", connectorNameKey: "FormstackForms", clientConstructor: FormstackformsClient, methodName: "getAvailableForms" },
+    { displayName: "Formstack Forms", apiName: "formstackforms", connectorNameKey: "FormstackForms", clientConstructor: FormstackFormsClient, methodName: "getAvailableForms" },
     { displayName: "Typeform", apiName: "typeform", connectorNameKey: "Typeform", clientConstructor: TypeformClient },
     { displayName: "Ticketmaster", apiName: "ticketmaster", connectorNameKey: "TicketmasterIndependentPublisher", clientConstructor: TicketmasterClient, methodName: "getEvent", methodArguments: ["event-id"] },
-    { displayName: "Zoho Sign", apiName: "zohosign", connectorNameKey: "ZohoSign", clientConstructor: ZohosignClient, methodName: "downloadCompletionCertificate", methodArguments: ["request-id"] },
-    { displayName: "Seismic Planner", apiName: "seismicplanner", connectorNameKey: "SeismicPlanner", clientConstructor: SeismicplannerClient, methodName: "getComments", methodArguments: ["space-id", "node-id"] },
+    { displayName: "Zoho Sign", apiName: "zohosign", connectorNameKey: "ZohoSign", clientConstructor: ZohoSignClient, methodName: "downloadCompletionCertificate", methodArguments: ["request-id"] },
+    { displayName: "Seismic Planner", apiName: "seismicplanner", connectorNameKey: "SeismicPlanner", clientConstructor: SeismicPlannerClient, methodName: "getComments", methodArguments: ["space-id", "node-id"] },
     { displayName: "Way We Do", apiName: "waywedo", connectorNameKey: "WayWeDo", clientConstructor: WaywedoClient, methodName: "getChecklistInstance", methodArguments: ["instance-id"] },
-    { displayName: "Meeting Room Map", apiName: "meetingroommap", connectorNameKey: "MeetingRoomMap", clientConstructor: MeetingroommapClient, methodName: "getCategories" },
-    { displayName: "StarRez REST V1", apiName: "starrezrestv1", connectorNameKey: "StarRezRESTV1", clientConstructor: Starrezrestv1Client, methodName: "selectEntry", methodArguments: [{}] },
+    { displayName: "Meeting Room Map", apiName: "meetingroommap", connectorNameKey: "MeetingRoomMap", clientConstructor: MeetingRoomMapClient, methodName: "getCategories" },
+    { displayName: "StarRez REST V1", apiName: "starrezrestv1", connectorNameKey: "StarRezRESTV1", clientConstructor: StarrezRestV1Client, methodName: "selectEntry", methodArguments: [{}] },
     { displayName: "Replicon", apiName: "replicon", connectorNameKey: "Replicon", clientConstructor: RepliconClient, methodName: "getBulkProjectDetails3", methodArguments: [{}] },
     { displayName: "Etsy", apiName: "etsy", connectorNameKey: "EtsyIndependentPublisher", clientConstructor: EtsyClient, methodName: "ping" },
-    { displayName: "Elfsquad Data", apiName: "elfsquaddata", connectorNameKey: "ElfsquadData", clientConstructor: ElfsquaddataClient, methodName: "getEntities", methodArguments: ["entity"] },
+    { displayName: "Elfsquad Data", apiName: "elfsquaddata", connectorNameKey: "ElfsquadData", clientConstructor: ElfsquadDataClient, methodName: "getEntities", methodArguments: ["entity"] },
     { displayName: "Impexium", apiName: "impexium", connectorNameKey: "Impexium", clientConstructor: ImpexiumClient, methodName: "getAbandonedCheckouts", methodArguments: ["1"] },
-    { displayName: "Jedox OData Hub", apiName: "jedoxodatahub", connectorNameKey: "JedoxODataHub", clientConstructor: JedoxodatahubClient, methodName: "databases" },
+    { displayName: "Jedox OData Hub", apiName: "jedoxodatahub", connectorNameKey: "JedoxODataHub", clientConstructor: JedoxOdataHubClient, methodName: "databases" },
     { displayName: "Orderful", apiName: "orderful", connectorNameKey: "Orderful", clientConstructor: OrderfulClient, methodName: "listTransactions" },
 ];
 
@@ -199,7 +199,7 @@ describe("Phase 5-7 connector clients", () => {
 
     it("should serialize zero for required numeric queries", async () => {
         mockFetchResponse({});
-        const client = new TextrequestClient(TestConnectionUrl, createMockCredential());
+        const client = new TextRequestClient(TestConnectionUrl, createMockCredential());
 
         await client.getMessagesByContactPhone(1, "sample-phone", 0, 0);
 
@@ -212,7 +212,7 @@ describe("Phase 5-7 connector clients", () => {
 
     it("should serialize an empty required collection and preserve an optional false value", async () => {
         mockFetchResponse({});
-        const client = new SeismicplannerClient(TestConnectionUrl, createMockCredential());
+        const client = new SeismicPlannerClient(TestConnectionUrl, createMockCredential());
 
         await client.deleteProjects("space", [], { deleteTasks: false });
 

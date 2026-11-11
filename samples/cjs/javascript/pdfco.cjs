@@ -17,7 +17,7 @@
 "use strict";
 
 const { ManagedIdentityTokenProvider, ConnectorError } = require("@azure/connectors");
-const { PdfcoClient } = require("@azure/connectors/generated/PdfcoExtensions");
+const { PdfCoClient } = require("@azure/connectors/generated/PdfCoExtensions");
 
 const CONNECTION_URL = process.env.PDFCO_CONNECTION_URL ?? "";
 
@@ -28,7 +28,7 @@ if (!CONNECTION_URL) {
 
 async function main() {
     const tokenProvider = new ManagedIdentityTokenProvider();
-    const client = new PdfcoClient(CONNECTION_URL, tokenProvider);
+    const client = new PdfCoClient(CONNECTION_URL, tokenProvider);
 
     // Example 1: Convert a web page to a PDF document.
     const sourceUrl = process.env.PDFCO_SOURCE_URL ?? "https://example.com";

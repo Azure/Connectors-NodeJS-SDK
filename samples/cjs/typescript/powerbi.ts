@@ -5,7 +5,7 @@
  */
 
 import { ManagedIdentityTokenProvider, ConnectorError } from "@azure/connectors";
-import { PowerbiClient, ListedScorecards } from "@azure/connectors/generated/PowerbiExtensions";
+import { PowerBIClient, ListedScorecards } from "@azure/connectors/generated/PowerBIExtensions";
 
 const CONNECTION_URL = process.env.POWERBI_CONNECTION_URL ?? "";
 const POWERBI_GROUP_ID = process.env.POWERBI_GROUP_ID ?? "replace-with-group-id";
@@ -17,7 +17,7 @@ if (!CONNECTION_URL) {
 
 async function main(): Promise<void> {
     const tokenProvider = new ManagedIdentityTokenProvider();
-    const client = new PowerbiClient(CONNECTION_URL, tokenProvider);
+    const client = new PowerBIClient(CONNECTION_URL, tokenProvider);
 
     try {
         const result: ListedScorecards = await client.getScorecards(POWERBI_GROUP_ID, { pbiSource: "firstparty" });

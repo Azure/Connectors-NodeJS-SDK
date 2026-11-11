@@ -1,7 +1,7 @@
 // Copyright (c) Microsoft Corporation.  All rights reserved.
 
 import type { TokenCredential } from "@azure/core-auth";
-import { GoogletasksClient } from "../src/generated/GoogletasksExtensions.ts";
+import { GoogleTasksClient } from "../src/generated/GoogleTasksExtensions.ts";
 import { ConnectorError } from "../src/azureConnectors/connectorError.ts";
 import { ConnectorNames } from "../src/generated/connectorNames.ts";
 import { availableConnectors } from "../src/generated/ManagedConnectors.ts";
@@ -40,16 +40,16 @@ function mockFetchError(status: number, errorBody: string): void {
 // Runtime tests
 // ──────────────────────────────────────────────
 
-describe("GoogletasksClient — constructor", () => {
+describe("GoogleTasksClient — constructor", () => {
     it("should construct with valid options", () => {
-        const client = new GoogletasksClient(TestConnectionUrl, createMockCredential());
+        const client = new GoogleTasksClient(TestConnectionUrl, createMockCredential());
         expect(client).toBeDefined();
-        expect(client).toBeInstanceOf(GoogletasksClient);
+        expect(client).toBeInstanceOf(GoogleTasksClient);
     });
 
     it("should strip trailing slashes from connection URL", async () => {
         mockFetchResponse([]);
-        const client = new GoogletasksClient(TestConnectionUrl + "///", createMockCredential());
+        const client = new GoogleTasksClient(TestConnectionUrl + "///", createMockCredential());
         await client.listTasks("list1").byPage().next();
         const [url] = (global.fetch as jest.Mock).mock.calls[0];
         // NOTE: Confirms the trailing slashes were stripped by inspecting the
@@ -59,17 +59,17 @@ describe("GoogletasksClient — constructor", () => {
     });
 
     it("should throw on null connection URL", () => {
-        expect(() => new GoogletasksClient(null as unknown as string, createMockCredential()))
+        expect(() => new GoogleTasksClient(null as unknown as string, createMockCredential()))
             .toThrow("Parameter 'connectionRuntimeUrl' cannot be null or undefined.");
     });
 
     it("should throw on undefined connection URL", () => {
-        expect(() => new GoogletasksClient(undefined as unknown as string, createMockCredential()))
+        expect(() => new GoogleTasksClient(undefined as unknown as string, createMockCredential()))
             .toThrow("Parameter 'connectionRuntimeUrl' cannot be null or undefined.");
     });
 });
 
-describe("GoogletasksClient — listTasks", () => {
+describe("GoogleTasksClient — listTasks", () => {
     afterEach(() => {
         jest.restoreAllMocks();
     });
@@ -78,7 +78,7 @@ describe("GoogletasksClient — listTasks", () => {
         const tasks = { items: [{ id: "task1", title: "Write report" }] };
         mockFetchResponse(tasks);
 
-        const client = new GoogletasksClient(TestConnectionUrl, createMockCredential());
+        const client = new GoogleTasksClient(TestConnectionUrl, createMockCredential());
         const result = await client.listTasks("list1").byPage().next();
 
         expect(result.value).toEqual(tasks.items);
@@ -92,7 +92,7 @@ describe("GoogletasksClient — listTasks", () => {
     it("should throw ConnectorError on non-OK response", async () => {
         mockFetchError(404, "Not Found");
 
-        const client = new GoogletasksClient(TestConnectionUrl, createMockCredential());
+        const client = new GoogleTasksClient(TestConnectionUrl, createMockCredential());
         try {
             await client.listTasks("missing").byPage().next();
             throw new Error("Expected ConnectorError to be thrown.");
@@ -107,7 +107,7 @@ describe("GoogletasksClient — listTasks", () => {
     });
 });
 
-describe("GoogletasksClient — createTask", () => {
+describe("GoogleTasksClient — createTask", () => {
     afterEach(() => {
         jest.restoreAllMocks();
     });
@@ -116,7 +116,7 @@ describe("GoogletasksClient — createTask", () => {
         const task = { id: "task1", title: "Write report" };
         mockFetchResponse(task);
 
-        const client = new GoogletasksClient(TestConnectionUrl, createMockCredential());
+        const client = new GoogleTasksClient(TestConnectionUrl, createMockCredential());
         const result = await client.createTask({ title: "Write report" }, "list1");
 
         expect(result).toEqual(task);

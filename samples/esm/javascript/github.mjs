@@ -5,7 +5,7 @@
  */
 
 import { ManagedIdentityTokenProvider, ConnectorError } from "@azure/connectors";
-import { GithubClient } from "@azure/connectors/generated/GithubExtensions";
+import { GitHubClient } from "@azure/connectors/generated/GitHubExtensions";
 
 const CONNECTION_URL = process.env.GITHUB_CONNECTION_URL ?? "";
 const GITHUB_REPOSITORY_ID = process.env.GITHUB_REPOSITORY_ID ?? "1";
@@ -17,7 +17,7 @@ if (!CONNECTION_URL) {
 
 async function main() {
     const tokenProvider = new ManagedIdentityTokenProvider();
-    const client = new GithubClient(CONNECTION_URL, tokenProvider);
+    const client = new GitHubClient(CONNECTION_URL, tokenProvider);
 
     try {
         const result = await client.getRepositoryById(

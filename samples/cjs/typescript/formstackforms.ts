@@ -2,12 +2,12 @@
 
 /** Formstack Forms Connector SDK Sample - CJS TypeScript. */
 import { ConnectorError, ManagedIdentityTokenProvider } from "@azure/connectors";
-import { FormstackformsClient } from "@azure/connectors/generated/FormstackformsExtensions";
+import { FormstackFormsClient } from "@azure/connectors/generated/FormstackFormsExtensions";
 const CONNECTION_URL = process.env.FORMSTACKFORMS_CONNECTION_URL ?? "";
 if (!CONNECTION_URL) throw new Error("FORMSTACKFORMS_CONNECTION_URL is required.");
 async function main(): Promise<void> {
     try {
-        const forms = await new FormstackformsClient(CONNECTION_URL, new ManagedIdentityTokenProvider()).getAvailableForms();
+        const forms = await new FormstackFormsClient(CONNECTION_URL, new ManagedIdentityTokenProvider()).getAvailableForms();
         console.log("Forms:", JSON.stringify(forms, null, 2));
     } catch (error) {
         if (error instanceof ConnectorError) console.error(`Connector error (${error.statusCode}): ${error.message}`);

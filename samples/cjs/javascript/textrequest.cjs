@@ -18,7 +18,7 @@
 "use strict";
 
 const { ManagedIdentityTokenProvider, ConnectorError } = require("@azure/connectors");
-const { TextrequestClient } = require("@azure/connectors/generated/TextrequestExtensions");
+const { TextRequestClient } = require("@azure/connectors/generated/TextRequestExtensions");
 
 const CONNECTION_URL = process.env.TEXTREQUEST_CONNECTION_URL ?? "";
 const DASHBOARD_ID = process.env.TEXTREQUEST_DASHBOARD_ID ?? "";
@@ -35,7 +35,7 @@ if (!/^\d+$/.test(DASHBOARD_ID)) {
 
 async function main() {
     const tokenProvider = new ManagedIdentityTokenProvider();
-    const client = new TextrequestClient(CONNECTION_URL, tokenProvider);
+    const client = new TextRequestClient(CONNECTION_URL, tokenProvider);
 
     // Example 1: List messages exchanged with a contact phone number.
     const phoneNumber = process.env.TEXTREQUEST_PHONE ?? "+15555550100";

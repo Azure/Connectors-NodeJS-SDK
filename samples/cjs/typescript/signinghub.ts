@@ -17,7 +17,7 @@
  */
 
 import { ManagedIdentityTokenProvider, ConnectorError } from "@azure/connectors";
-import { SigninghubClient } from "@azure/connectors/generated/SigninghubExtensions";
+import { SigningHubClient } from "@azure/connectors/generated/SigningHubExtensions";
 
 const CONNECTION_URL = process.env.SIGNINGHUB_CONNECTION_URL ?? "";
 const PACKAGE_ID = process.env.SIGNINGHUB_PACKAGE_ID ?? "";
@@ -46,7 +46,7 @@ if (!/^\d+$/.test(ATTACHMENT_ID)) {
 
 async function main(): Promise<void> {
     const tokenProvider = new ManagedIdentityTokenProvider();
-    const client = new SigninghubClient(CONNECTION_URL, tokenProvider);
+    const client = new SigningHubClient(CONNECTION_URL, tokenProvider);
 
     // Example 1: Download a document attachment.
     try {

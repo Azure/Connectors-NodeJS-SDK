@@ -23,7 +23,7 @@
  */
 
 import { ManagedIdentityTokenProvider, ConnectorError } from "@azure/connectors";
-import { OnedriveforbusinessClient, BlobMetadata } from "@azure/connectors/generated/OnedriveforbusinessExtensions";
+import { OneDriveForBusinessClient, BlobMetadata } from "@azure/connectors/generated/OneDriveForBusinessExtensions";
 
 const CONNECTION_URL = process.env.ONEDRIVE_CONNECTION_URL ?? "";
 
@@ -37,7 +37,7 @@ async function main(): Promise<void> {
     console.log("=".repeat(58));
 
     const tokenProvider = new ManagedIdentityTokenProvider();
-    const client = new OnedriveforbusinessClient(CONNECTION_URL, tokenProvider);
+    const client = new OneDriveForBusinessClient(CONNECTION_URL, tokenProvider);
 
     // Example 1: List root folder
     console.log("\n--- List Root Folder ---");

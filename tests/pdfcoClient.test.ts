@@ -1,7 +1,7 @@
 // Copyright (c) Microsoft Corporation.  All rights reserved.
 
 import type { TokenCredential } from "@azure/core-auth";
-import { PdfcoClient } from "../src/generated/PdfcoExtensions.ts";
+import { PdfCoClient } from "../src/generated/PdfCoExtensions.ts";
 import type {
     PdfFromXlsXlsxResponse,
     PdfUnsearchableResponse,
@@ -10,7 +10,7 @@ import type {
     XlsToJsonResponse,
     XlsToTxtResponse,
     XlsToXmlResponse,
-} from "../src/generated/PdfcoExtensions.ts";
+} from "../src/generated/PdfCoExtensions.ts";
 import { ConnectorError } from "../src/azureConnectors/connectorError.ts";
 import { ConnectorNames } from "../src/generated/connectorNames.ts";
 import { availableConnectors } from "../src/generated/ManagedConnectors.ts";
@@ -49,25 +49,25 @@ function mockFetchError(status: number, errorBody: string): void {
 // Runtime tests
 // ──────────────────────────────────────────────
 
-describe("PdfcoClient — constructor", () => {
+describe("PdfCoClient — constructor", () => {
     it("should construct with valid options", () => {
-        const client = new PdfcoClient(TestConnectionUrl, createMockCredential());
+        const client = new PdfCoClient(TestConnectionUrl, createMockCredential());
         expect(client).toBeDefined();
-        expect(client).toBeInstanceOf(PdfcoClient);
+        expect(client).toBeInstanceOf(PdfCoClient);
     });
 
     it("should throw on null connection URL", () => {
-        expect(() => new PdfcoClient(null as unknown as string, createMockCredential()))
+        expect(() => new PdfCoClient(null as unknown as string, createMockCredential()))
             .toThrow("Parameter 'connectionRuntimeUrl' cannot be null or undefined.");
     });
 
     it("should throw on undefined connection URL", () => {
-        expect(() => new PdfcoClient(undefined as unknown as string, createMockCredential()))
+        expect(() => new PdfCoClient(undefined as unknown as string, createMockCredential()))
             .toThrow("Parameter 'connectionRuntimeUrl' cannot be null or undefined.");
     });
 });
 
-describe("PdfcoClient — urlToPdf", () => {
+describe("PdfCoClient — urlToPdf", () => {
     afterEach(() => {
         jest.restoreAllMocks();
     });
@@ -76,7 +76,7 @@ describe("PdfcoClient — urlToPdf", () => {
         const response = { url: "https://pdf.co/output/document.pdf", pageCount: 1, error: false };
         mockFetchResponse(response);
 
-        const client = new PdfcoClient(TestConnectionUrl, createMockCredential());
+        const client = new PdfCoClient(TestConnectionUrl, createMockCredential());
         const result = await client.urlToPdf({ url: "https://example.com/page.html" });
 
         expect(result).toEqual(response);
@@ -89,7 +89,7 @@ describe("PdfcoClient — urlToPdf", () => {
     it("should throw ConnectorError on non-OK response", async () => {
         mockFetchError(400, "Bad Request");
 
-        const client = new PdfcoClient(TestConnectionUrl, createMockCredential());
+        const client = new PdfCoClient(TestConnectionUrl, createMockCredential());
         try {
             await client.urlToPdf({ url: "https://example.com/page.html" });
             throw new Error("Expected ConnectorError to be thrown.");
@@ -107,7 +107,7 @@ describe("PDFco — connector registry", () => {
         expect(ConnectorNames.PDFco).toBe("pdfco");
     });
 
-    describe("PdfcoClient — reviewed response model names", () => {
+    describe("PdfCoClient — reviewed response model names", () => {
         afterEach(() => {
             jest.restoreAllMocks();
         });
@@ -117,43 +117,43 @@ describe("PDFco — connector registry", () => {
             {
                 name: "PdfUnsearchableResponse",
                 path: "/v1/pdf/makeunsearchable",
-                invoke: (client: PdfcoClient): Promise<PdfUnsearchableResponse> =>
+                invoke: (client: PdfCoClient): Promise<PdfUnsearchableResponse> =>
                     client.pdfunSearchable({ url: inputUrl }),
             },
             {
                 name: "PdfFromXlsXlsxResponse",
                 path: "/v1/xls/convert/to/pdf",
-                invoke: (client: PdfcoClient): Promise<PdfFromXlsXlsxResponse> =>
+                invoke: (client: PdfCoClient): Promise<PdfFromXlsXlsxResponse> =>
                     client.pdffromXLSXLSX({ url: inputUrl }),
             },
             {
                 name: "XlsToCsvResponse",
                 path: "/v1/xls/convert/to/csv",
-                invoke: (client: PdfcoClient): Promise<XlsToCsvResponse> =>
+                invoke: (client: PdfCoClient): Promise<XlsToCsvResponse> =>
                     client.xlstoCSV({ url: inputUrl }),
             },
             {
                 name: "XlsToHtmlResponse",
                 path: "/v1/xls/convert/to/html",
-                invoke: (client: PdfcoClient): Promise<XlsToHtmlResponse> =>
+                invoke: (client: PdfCoClient): Promise<XlsToHtmlResponse> =>
                     client.xlstoHTML({ url: inputUrl }),
             },
             {
                 name: "XlsToJsonResponse",
                 path: "/v1/xls/convert/to/json",
-                invoke: (client: PdfcoClient): Promise<XlsToJsonResponse> =>
+                invoke: (client: PdfCoClient): Promise<XlsToJsonResponse> =>
                     client.xlstoJSON({ url: inputUrl }),
             },
             {
                 name: "XlsToTxtResponse",
                 path: "/v1/xls/convert/to/txt",
-                invoke: (client: PdfcoClient): Promise<XlsToTxtResponse> =>
+                invoke: (client: PdfCoClient): Promise<XlsToTxtResponse> =>
                     client.xlstoTXT({ url: inputUrl }),
             },
             {
                 name: "XlsToXmlResponse",
                 path: "/v1/xls/convert/to/xml",
-                invoke: (client: PdfcoClient): Promise<XlsToXmlResponse> =>
+                invoke: (client: PdfCoClient): Promise<XlsToXmlResponse> =>
                     client.xlstoXML({ url: inputUrl }),
             },
         ];
@@ -161,7 +161,7 @@ describe("PDFco — connector registry", () => {
         it.each(conversions)("should preserve the wire contract for $name", async ({ path, invoke }) => {
             const response = { url: "https://example.com/output", jobId: "job-123", status: 200 };
             mockFetchResponse(response);
-            const client = new PdfcoClient(TestConnectionUrl, createMockCredential());
+            const client = new PdfCoClient(TestConnectionUrl, createMockCredential());
 
             const result = await invoke(client);
 

@@ -14,7 +14,7 @@
  */
 
 import { ManagedIdentityTokenProvider, ConnectorError } from "@azure/connectors";
-import { ClicksendsmsClient } from "@azure/connectors/generated/ClicksendsmsExtensions";
+import { ClickSendSmsClient } from "@azure/connectors/generated/ClickSendSmsExtensions";
 
 const CONNECTION_URL = process.env.CLICKSENDSMS_CONNECTION_URL ?? "";
 
@@ -25,7 +25,7 @@ if (!CONNECTION_URL) {
 
 async function main(): Promise<void> {
     const tokenProvider = new ManagedIdentityTokenProvider();
-    const client = new ClicksendsmsClient(CONNECTION_URL, tokenProvider);
+    const client = new ClickSendSmsClient(CONNECTION_URL, tokenProvider);
 
     // Example 1: List the contact lists.
     try {

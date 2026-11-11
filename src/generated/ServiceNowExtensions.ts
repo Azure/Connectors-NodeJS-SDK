@@ -18,7 +18,7 @@ export interface GetAttachmentMetdataResponse {
 /**
  * Upload a binary file as an attachment
  */
-export type UploadAttachmentFileInput = string;
+export type UploadAttachmentFileInput = Blob;
 
 /**
  * Response for Retrieve attachment metadata

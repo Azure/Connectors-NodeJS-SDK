@@ -2,9 +2,9 @@
 
 import type { TokenCredential } from "@azure/core-auth";
 import {
-    DocusignClient,
+    DocuSignClient,
     EnvelopeResendResponse,
-} from "../src/generated/DocusignExtensions.ts";
+} from "../src/generated/DocuSignExtensions.ts";
 import { ConnectorError } from "../src/azureConnectors/connectorError.ts";
 import { ConnectorNames } from "../src/generated/connectorNames.ts";
 import { availableConnectors } from "../src/generated/ManagedConnectors.ts";
@@ -35,20 +35,20 @@ function mockFetchError(status: number, errorBody: string): void {
     } as Response);
 }
 
-describe("DocusignClient — constructor", () => {
+describe("DocuSignClient — constructor", () => {
     it("should construct with valid options", () => {
-        const client = new DocusignClient(TestConnectionUrl, createMockCredential());
+        const client = new DocuSignClient(TestConnectionUrl, createMockCredential());
         expect(client).toBeDefined();
-        expect(client).toBeInstanceOf(DocusignClient);
+        expect(client).toBeInstanceOf(DocuSignClient);
     });
 
     it("should throw on null connection URL", () => {
-        expect(() => new DocusignClient(null as unknown as string, createMockCredential()))
+        expect(() => new DocuSignClient(null as unknown as string, createMockCredential()))
             .toThrow("Parameter 'connectionRuntimeUrl' cannot be null or undefined.");
     });
 });
 
-describe("DocusignClient — resendEnvelope", () => {
+describe("DocuSignClient — resendEnvelope", () => {
     afterEach(() => {
         jest.restoreAllMocks();
     });
@@ -57,7 +57,7 @@ describe("DocusignClient — resendEnvelope", () => {
         const mockResponse: EnvelopeResendResponse = {};
         mockFetchResponse(mockResponse);
 
-        const client = new DocusignClient(TestConnectionUrl, createMockCredential());
+        const client = new DocuSignClient(TestConnectionUrl, createMockCredential());
         const result = await client.resendEnvelope("env-123");
 
         expect(result).toEqual(mockResponse);
@@ -70,7 +70,7 @@ describe("DocusignClient — resendEnvelope", () => {
     it("should throw ConnectorError on non-OK response", async () => {
         mockFetchError(400, '{"error":"BadRequest"}');
 
-        const client = new DocusignClient(TestConnectionUrl, createMockCredential());
+        const client = new DocuSignClient(TestConnectionUrl, createMockCredential());
         await expect(client.resendEnvelope("env-123")).rejects.toThrow(ConnectorError);
     });
 });
