@@ -1,7 +1,7 @@
 // Copyright (c) Microsoft Corporation.  All rights reserved.
 
 import type { TokenCredential } from "@azure/core-auth";
-import { FreshServiceClient } from "../src/generated/FreshServiceExtensions.ts";
+import { FreshserviceClient } from "../src/generated/FreshserviceExtensions.ts";
 import { ConnectorError } from "../src/azureConnectors/connectorError.ts";
 import { ConnectorNames } from "../src/generated/connectorNames.ts";
 import { availableConnectors } from "../src/generated/ManagedConnectors.ts";
@@ -40,25 +40,25 @@ function mockFetchError(status: number, errorBody: string): void {
 // Runtime tests
 // ──────────────────────────────────────────────
 
-describe("FreshServiceClient — constructor", () => {
+describe("FreshserviceClient — constructor", () => {
     it("should construct with valid options", () => {
-        const client = new FreshServiceClient(TestConnectionUrl, createMockCredential());
+        const client = new FreshserviceClient(TestConnectionUrl, createMockCredential());
         expect(client).toBeDefined();
-        expect(client).toBeInstanceOf(FreshServiceClient);
+        expect(client).toBeInstanceOf(FreshserviceClient);
     });
 
     it("should throw on null connection URL", () => {
-        expect(() => new FreshServiceClient(null as unknown as string, createMockCredential()))
+        expect(() => new FreshserviceClient(null as unknown as string, createMockCredential()))
             .toThrow("Parameter 'connectionRuntimeUrl' cannot be null or undefined.");
     });
 
     it("should throw on undefined connection URL", () => {
-        expect(() => new FreshServiceClient(undefined as unknown as string, createMockCredential()))
+        expect(() => new FreshserviceClient(undefined as unknown as string, createMockCredential()))
             .toThrow("Parameter 'connectionRuntimeUrl' cannot be null or undefined.");
     });
 });
 
-describe("FreshServiceClient — createTicket", () => {
+describe("FreshserviceClient — createTicket", () => {
     afterEach(() => {
         jest.restoreAllMocks();
     });
@@ -67,7 +67,7 @@ describe("FreshServiceClient — createTicket", () => {
         const response = { id: 101, subject: "Cannot access email", status: 2, priority: 3 };
         mockFetchResponse(response);
 
-        const client = new FreshServiceClient(TestConnectionUrl, createMockCredential());
+        const client = new FreshserviceClient(TestConnectionUrl, createMockCredential());
         const result = await client.createTicket({
             email: "requester@example.com",
             subject: "Cannot access email",
@@ -86,7 +86,7 @@ describe("FreshServiceClient — createTicket", () => {
     it("should throw ConnectorError on non-OK response", async () => {
         mockFetchError(400, "Bad Request");
 
-        const client = new FreshServiceClient(TestConnectionUrl, createMockCredential());
+        const client = new FreshserviceClient(TestConnectionUrl, createMockCredential());
         try {
             await client.createTicket({
                 email: "requester@example.com",

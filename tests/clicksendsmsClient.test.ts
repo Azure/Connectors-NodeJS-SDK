@@ -132,6 +132,45 @@ describe("ClickSendSmsClient - sendSmsCampaign", () => {
     });
 });
 
+describe("ClickSendSmsClient — restored service actions", () => {
+    const cases = [
+        { method: "sendVoice", path: "/voice/send", operation: "send_voice",
+            body: { messages: [{ to: "+12065550123", body: "Hello" }] } },
+        { method: "sendFax", path: "/fax/send", operation: "send_fax",
+            body: { messages: [{ to: "+12065550123" }], file_url: "https://example.test/fax.pdf" } },
+        { method: "sendLetter", path: "/post/letters/send", operation: "send_letter",
+            body: { file_url: "https://example.test/letter.pdf", colour: 0, duplex: 1,
+                recipients: [{ name: "Recipient" }], source: "sdk-test" } },
+        { method: "sendPostcard", path: "/post/postcards/send", operation: "send_postcard",
+            body: { recipients: [{ name: "Recipient" }], file_urls: ["https://example.test/card.pdf"] } },
+    ] as const;
+
+    afterEach(() => {
+        jest.restoreAllMocks();
+    });
+
+    it.each(cases)("preserves $method route and typed request fields", async ({ method, path, body }) => {
+        const response = { http_code: 202, data: { id: "queued" } };
+        mockFetchResponse(response);
+        const client = new ClickSendSmsClient(TestConnectionUrl, createMockCredential());
+
+        expect(await client[method](body as never)).toEqual(response);
+        const [requestUrl, request] = (global.fetch as jest.Mock).mock.calls[0];
+        expect(requestUrl).toBe(`${TestConnectionUrl}${path}`);
+        expect(request.method).toBe("POST");
+        expect(JSON.parse(request.body)).toEqual(body);
+    });
+
+    it.each(cases)("preserves $method raw operation ID on error", async ({ method, body, operation }) => {
+        mockFetchError(400, '{"error":"Rejected"}');
+        const client = new ClickSendSmsClient(TestConnectionUrl, createMockCredential());
+
+        await expect(client[method](body as never)).rejects.toMatchObject({
+            connectorName: "clicksendsms", operation, statusCode: 400,
+        });
+    });
+});
+
 describe("ClickSend — connector registry", () => {
     it("should expose ClickSend in ConnectorNames", () => {
         expect(ConnectorNames.ClickSend).toBe("clicksendsms");

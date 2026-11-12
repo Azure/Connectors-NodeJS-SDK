@@ -67,7 +67,7 @@ export interface GetCustomLocationListByImageNameQuery {
 /**
  * Definition: AADMeetingRoom
  */
-export interface AADMeetingRoom {
+export interface AadMeetingRoom {
     name?: string;
     address?: string;
 }
@@ -75,14 +75,14 @@ export interface AADMeetingRoom {
 /**
  * Definition: AADMeetingRoomCollection
  */
-export interface AADMeetingRoomCollection {
-    rooms?: Array<AADMeetingRoom>;
+export interface AadMeetingRoomCollection {
+    rooms?: Array<AadMeetingRoom>;
 }
 
 /**
  * Definition: UserDetailsDTO
  */
-export interface UserDetailsDTO {
+export interface UserDetailsDto {
     tenantId?: string;
     email?: string;
 }
@@ -343,50 +343,50 @@ export class MeetingRoomMapClient extends ConnectorClientBase {
      * Get all rooms
      * @remarks Get all rooms (defined in Azure AD as meeting rooms)
      */
-    public async getRooms(options: ConnectorOperationOptions = {}): Promise<AADMeetingRoomCollection> {
+    public async getRooms(options: ConnectorOperationOptions = {}): Promise<AadMeetingRoomCollection> {
         const requestPath = `/api/rooms`;
         const requestUrl = this.resolveUrl(requestPath);
-        const httpResponse = await this.sendWithTracingAsync<AADMeetingRoomCollection>("MeetingRoomMap.getRooms", "GetRooms", "GET", requestUrl, undefined, options);
+        const httpResponse = await this.sendWithTracingAsync<AadMeetingRoomCollection>("MeetingRoomMap.getRooms", "GetRooms", "GET", requestUrl, undefined, options);
 
-        return httpResponse.value as AADMeetingRoomCollection;
+        return httpResponse.value as AadMeetingRoomCollection;
     }
 
     /**
      * Search for meeting room
      * @remarks Get rooms by name search (from Azure AD meeting rooms)
      */
-    public async searchMeetingRooms(name: string, options: ConnectorOperationOptions = {}): Promise<AADMeetingRoomCollection> {
+    public async searchMeetingRooms(name: string, options: ConnectorOperationOptions = {}): Promise<AadMeetingRoomCollection> {
         const requestPath = `/api/rooms/findbyname/${encodeURIComponent(String(name))}`;
         const requestUrl = this.resolveUrl(requestPath);
-        const httpResponse = await this.sendWithTracingAsync<AADMeetingRoomCollection>("MeetingRoomMap.searchMeetingRooms", "SearchMeetingRooms", "GET", requestUrl, undefined, options);
+        const httpResponse = await this.sendWithTracingAsync<AadMeetingRoomCollection>("MeetingRoomMap.searchMeetingRooms", "SearchMeetingRooms", "GET", requestUrl, undefined, options);
 
-        return httpResponse.value as AADMeetingRoomCollection;
+        return httpResponse.value as AadMeetingRoomCollection;
     }
 
     /**
      * Get meeting rooms lists
      * @remarks Get meeting rooms lists as defined in Azure AD
      */
-    public async roomLists(options: ConnectorOperationOptions = {}): Promise<AADMeetingRoomCollection> {
+    public async roomLists(options: ConnectorOperationOptions = {}): Promise<AadMeetingRoomCollection> {
         const requestPath = `/api/rooms/lists`;
         const requestUrl = this.resolveUrl(requestPath);
-        const httpResponse = await this.sendWithTracingAsync<AADMeetingRoomCollection>("MeetingRoomMap.roomLists", "RoomLists", "GET", requestUrl, undefined, options);
+        const httpResponse = await this.sendWithTracingAsync<AadMeetingRoomCollection>("MeetingRoomMap.roomLists", "RoomLists", "GET", requestUrl, undefined, options);
 
-        return httpResponse.value as AADMeetingRoomCollection;
+        return httpResponse.value as AadMeetingRoomCollection;
     }
 
     /**
      * Get meeting rooms by list
      * @remarks Get all meeting rooms from specific list name
      */
-    public listRoomsByAddress(meetingRoomListAddress: string, options: ConnectorOperationOptions = {}): ConnectorPagedAsyncIterableIterator<AADMeetingRoom> {
+    public listRoomsByAddress(meetingRoomListAddress: string, options: ConnectorOperationOptions = {}): ConnectorPagedAsyncIterableIterator<AadMeetingRoom> {
         const requestPath = `/api/rooms/${encodeURIComponent(String(meetingRoomListAddress))}`;
-        return this.createPageable<AADMeetingRoomCollection, AADMeetingRoom>(
+        return this.createPageable<AadMeetingRoomCollection, AadMeetingRoom>(
             requestPath,
             async (requestUrl) => {
-                const httpResponse = await this.sendWithTracingAsync<AADMeetingRoomCollection>("MeetingRoomMap.listRoomsByAddress", "RoomsByListAddress", "GET", requestUrl, undefined, options);
+                const httpResponse = await this.sendWithTracingAsync<AadMeetingRoomCollection>("MeetingRoomMap.listRoomsByAddress", "RoomsByListAddress", "GET", requestUrl, undefined, options);
 
-                return httpResponse.value as AADMeetingRoomCollection;
+                return httpResponse.value as AadMeetingRoomCollection;
             },
             "rooms",
             undefined,

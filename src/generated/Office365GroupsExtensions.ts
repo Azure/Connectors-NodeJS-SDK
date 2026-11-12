@@ -136,7 +136,7 @@ export interface UpdateCalendarEventRequest {
 /**
  * Definition: UpdateCalendarEvent_HTMLRequest
  */
-export interface UpdateCalendarEventHTMLRequest {
+export interface UpdateCalendarEventHtmlRequest {
     /** Title of the event. */
     subject: string;
     start: Record<string, unknown>;
@@ -365,7 +365,7 @@ export class Office365GroupsClient extends ConnectorClientBase {
      * Update a group event
      * @remarks This operation is used to update a new event in a group calendar.
      */
-    public async updateCalendarEvent(input: UpdateCalendarEventHTMLRequest, groupId: string, event_: string, options: ConnectorOperationOptions = {}): Promise<CreateCalendarEventResponse> {
+    public async updateCalendarEvent(input: UpdateCalendarEventHtmlRequest, groupId: string, event_: string, options: ConnectorOperationOptions = {}): Promise<CreateCalendarEventResponse> {
         const requestPath = `/v1.0/groups/${encodeURIComponent(String(groupId))}/events/${encodeURIComponent(encodeURIComponent(String(event_)))}`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.sendWithTracingAsync<CreateCalendarEventResponse>("Office365Groups.updateCalendarEvent", "UpdateCalendarEvent", "PATCH", requestUrl, input, options);
@@ -451,7 +451,7 @@ export class Office365GroupsClient extends ConnectorClientBase {
      * Create a group event
      * @remarks This operation is used to create a new event in a group calendar.
      */
-    public async createCalendarEvent(input: UpdateCalendarEventHTMLRequest, groupId: string, options: ConnectorOperationOptions = {}): Promise<CreateCalendarEventResponse> {
+    public async createCalendarEvent(input: UpdateCalendarEventHtmlRequest, groupId: string, options: ConnectorOperationOptions = {}): Promise<CreateCalendarEventResponse> {
         const requestPath = `/v2/v1.0/groups/${encodeURIComponent(String(groupId))}/events`;
         const requestUrl = this.resolveUrl(requestPath);
         const httpResponse = await this.sendWithTracingAsync<CreateCalendarEventResponse>("Office365Groups.createCalendarEvent", "CreateCalendarEventV2", "POST", requestUrl, input, options);

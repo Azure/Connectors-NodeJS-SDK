@@ -100,13 +100,24 @@ interface GenerationRun {
     generatedAtUtc: string;
     generator: GenerationManifest["generator"] & {
         assemblySha256: string;
+        compilerCliSha256?: string;
+        generatorTree?: string;
         upstreamStatus: string;
         pullRequest?: string;
         pullRequestSourceCommit?: string;
     };
     swaggerSource: { kind: string; subscriptionId: string; location: string; apiVersion: string };
     connectorListInputSha256: string;
-    validation: { runId: string; captureStartedAtUtc: string; generatedAtUtc: string; connectorListInputSha256: string };
+    validation: {
+        runId: string;
+        captureStartedAtUtc: string;
+        captureEndedAtUtc?: string;
+        generatedAtUtc: string;
+        connectorListInputSha256: string;
+        kind?: string;
+        captureGeneratorCommit?: string;
+        replayGeneratorCommit?: string;
+    };
 }
 
 /**
@@ -188,8 +199,22 @@ function validateConnectorRun(manifest: GenerationManifest, connector: ManifestC
     validateRunSource(run);
     validateCaptureWindow(run.captureStartedAtUtc, run.generatedAtUtc, connector.capturedAtUtc);
     validateCaptureWindow(run.validation.captureStartedAtUtc, run.validation.generatedAtUtc, validation.capturedAtUtc);
-    if (parseUtcTimestamp(run.validation.captureStartedAtUtc) < parseUtcTimestamp(run.generatedAtUtc)) {
-        throw new Error("Independent validation must start after generation completes.");
+    const producerCompletedAt = parseUtcTimestamp(run.generatedAtUtc);
+    const validatorStartedAt = parseUtcTimestamp(run.validation.captureStartedAtUtc);
+    const validatorCompletedAt = parseUtcTimestamp(run.validation.generatedAtUtc);
+    if (run.validation.captureEndedAtUtc !== undefined) {
+        const validatorCaptureEndedAt = parseUtcTimestamp(run.validation.captureEndedAtUtc);
+        if (validatorCaptureEndedAt < validatorStartedAt ||
+            validatorCaptureEndedAt > validatorCompletedAt ||
+            parseUtcTimestamp(validation.capturedAtUtc) > validatorCaptureEndedAt) {
+            throw new Error("Independent live capture window does not bound its inputs.");
+        }
+    }
+    if (validatorStartedAt < producerCompletedAt &&
+        (run.validation.replayGeneratorCommit !== run.generator.bpmHeadCommit ||
+        run.validation.captureGeneratorCommit === run.validation.replayGeneratorCommit ||
+        validatorCompletedAt < producerCompletedAt)) {
+        throw new Error("A pre-producer independent capture requires a later exact-source replay.");
     }
 }
 
@@ -477,12 +502,19 @@ describe("generation.manifest.json provenance", () => {
         expect(run.generator.bpmBaseCommit).toMatch(/^[0-9a-f]{40}$/);
         expect(run.generator.bpmHeadCommit).toBe(run.generator.bpmBaseCommit);
         expect(run.generator.sourcePatch).toBeUndefined();
-        expect(["merged", "active-unmerged"]).toContain(run.generator.upstreamStatus);
+        expect(["merged", "active-unmerged", "local-committed-unpushed"]).toContain(run.generator.upstreamStatus);
+        if (run.generator.upstreamStatus === "local-committed-unpushed") {
+            expect(run.generator.bpmHeadCommit).toBe("863de794422bccbd5443f8a070d0a83642c32e51");
+            expect(run.generator.pullRequest).toBeUndefined();
+            expect(run.generator.pullRequestSourceCommit).toBeUndefined();
+        }
         if (run.generator.upstreamStatus === "active-unmerged") {
             expect(run.generator.pullRequest).toMatch(/^https:\/\/msazure\.visualstudio\.com\/One\/_git\/AzureUX-BPM\/pullrequest\/\d+$/);
             expect(run.generator.pullRequestSourceCommit).toBe(run.generator.bpmHeadCommit);
         }
-        expect(run.generator.assemblySha256).toMatch(/^[0-9a-f]{64}$/);
+        expect(run.generator.assemblySha256).toBe("86e557f11dda688a98d1557f494c3b0f82ae33109e6b0ab94366ecdb04ab814f");
+        expect(run.generator.compilerCliSha256).toBe("6a15d48686d5ac9a449f2d1da9f3a4c9a62719d81c751241764f46c55ed40f71");
+        expect(run.generator.generatorTree).toBe("cab267939959bc1fe180b3d8f47cc4c94bc55f2e");
         expect(run.swaggerSource).toEqual({
             kind: "live-arm-metadata",
             subscriptionId: "f34b22a3-2202-4fb1-b040-1332bd928c84",
@@ -491,7 +523,30 @@ describe("generation.manifest.json provenance", () => {
         });
         expect(run.connectorListInputSha256).toMatch(/^[0-9a-f]{64}$/);
         expect(run.validation.connectorListInputSha256).toBe(run.connectorListInputSha256);
+        expect(run.validation.kind).toBe("independent-fresh-live-download-plus-offline-replay");
+        expect(run.validation.captureGeneratorCommit).toBe("b3aa14d9406c4196d406c8e450814336d0544d7c");
+        expect(run.validation.replayGeneratorCommit).toBe("863de794422bccbd5443f8a070d0a83642c32e51");
+        expect(run.validation.replayGeneratorCommit).not.toBe(run.validation.captureGeneratorCommit);
+        expect(run.validation.replayGeneratorCommit).toBe(run.generator.bpmHeadCommit);
+        expect(run.validation.captureEndedAtUtc).toBe("2026-11-12T16:53:06.453Z");
+        expect(parseUtcTimestamp(run.validation.captureStartedAtUtc)).toBeLessThan(parseUtcTimestamp(run.generatedAtUtc));
+        expect(parseUtcTimestamp(run.validation.generatedAtUtc)).toBeGreaterThan(parseUtcTimestamp(run.generatedAtUtc));
     });
+
+    it.each(["replay-source", "capture-origin", "replay-time", "capture-end"] as const)(
+        "should reject an invalid early-capture exact-source validation: %s", mutation => {
+            const changed = structuredClone(manifest);
+            const connector = changed.connectors.find(entry => entry.apiName === changed.refresh.refreshedConnectors[0])!;
+            const run = changed.generationRuns[changed.refresh.runId];
+            if (mutation === "replay-source") run.validation.replayGeneratorCommit = "69ceed26b150c4cfd194fe7ac143cd9ce1bd40d9";
+            if (mutation === "capture-origin") run.validation.captureGeneratorCommit = run.generator.bpmHeadCommit!;
+            if (mutation === "replay-time") {
+                run.validation.generatedAtUtc = new Date(parseUtcTimestamp(run.generatedAtUtc) - 1).toISOString();
+            }
+            if (mutation === "capture-end") run.validation.captureEndedAtUtc = run.validation.captureStartedAtUtc;
+            expect(() => validateConnectorRun(changed, connector)).toThrow();
+        },
+    );
 
     it("should track unavailable additions without shipping fixture-backed replacements", () => {
         expect(manifest.blockedConnectors).toEqual([]);

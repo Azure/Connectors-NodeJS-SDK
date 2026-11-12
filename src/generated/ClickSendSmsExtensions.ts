@@ -102,6 +102,28 @@ export interface CreateListResponse {
 }
 
 /**
+ * Send Voice Message
+ */
+export interface SendVoiceInput {
+    /** Message */
+    messages: Array<Record<string, unknown>>;
+}
+
+/**
+ * Response for Send Voice Message
+ */
+export interface SendVoiceResponse {
+    /** Http Code */
+    http_code?: number;
+    /** Response Code */
+    response_code?: string;
+    /** Response Message */
+    response_msg?: string;
+    /** data */
+    data?: Record<string, unknown>;
+}
+
+/**
  * Response for Delete List
  */
 export interface DeleteListResponse {
@@ -215,6 +237,30 @@ export interface SendMmsResponse {
 }
 
 /**
+ * Send Fax
+ */
+export interface SendFaxInput {
+    /** Message */
+    messages: Array<Record<string, unknown>>;
+    /** Maximum file size is 4 MB. All pages should be in portrait. Chat with ClickSend Support for complete specifications */
+    file_url: string;
+}
+
+/**
+ * Response for Send Fax
+ */
+export interface SendFaxResponse {
+    /** Http Code */
+    http_code?: number;
+    /** Response Code */
+    response_code?: string;
+    /** Response Message */
+    response_msg?: string;
+    /** data */
+    data?: Record<string, unknown>;
+}
+
+/**
  * Convert Media File Format
  */
 export interface UploadMediaInput {
@@ -240,6 +286,64 @@ export interface UploadMediaResponse {
  * Response for Search Contact Lists
  */
 export interface SearchContactListResponse {
+    /** Http Code */
+    http_code?: number;
+    /** Response Code */
+    response_code?: string;
+    /** Response Message */
+    response_msg?: string;
+    /** data */
+    data?: Record<string, unknown>;
+}
+
+/**
+ * Send Letter
+ */
+export interface SendLetterInput {
+    /** Maximum file size is 10 MB. All pages should be in portrait. Chat with ClickSend Support for complete specifications. */
+    file_url: string;
+    /** Whether using letter template. Flag value must be 1 for yes or 0 for no. */
+    template_used?: number;
+    /** Choose to use colour or B&W printing. (Black & White = 0, Colour = 1) */
+    colour: number;
+    /** Choose to use Duplex = 1 (double-sided) or Simplex = 0(single sided) printing. */
+    duplex: number;
+    /** Whether letter is priority, Flag value must be 1 for yes or 0 for no. */
+    priority_post?: number;
+    /** Recipient */
+    recipients: Array<Record<string, unknown>>;
+    /** Source */
+    source: string;
+}
+
+/**
+ * Response for Send Letter
+ */
+export interface SendLetterResponse {
+    /** Http Code */
+    http_code?: number;
+    /** Response Code */
+    response_code?: string;
+    /** Response Message */
+    response_msg?: string;
+    /** data */
+    data?: Record<string, unknown>;
+}
+
+/**
+ * Send Postcard
+ */
+export interface SendPostcardInput {
+    /** item */
+    recipients: Array<Record<string, unknown>>;
+    /** PDF File URL */
+    file_urls: Array<string>;
+}
+
+/**
+ * Response for Send Postcard
+ */
+export interface SendPostcardResponse {
     /** Http Code */
     http_code?: number;
     /** Response Code */
@@ -367,6 +471,18 @@ export class ClickSendSmsClient extends ConnectorClientBase {
     }
 
     /**
+     * Send Voice Message
+     * @remarks Each 300 characters = 1 voice message. Can send up to 1,200 standard characters
+     */
+    public async sendVoice(input: SendVoiceInput, options: ConnectorOperationOptions = {}): Promise<SendVoiceResponse> {
+        const requestPath = `/voice/send`;
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.sendWithTracingAsync<SendVoiceResponse>("ClickSendSms.sendVoice", "send_voice", "POST", requestUrl, input, options);
+
+        return httpResponse.value as SendVoiceResponse;
+    }
+
+    /**
      * Delete List
      * @remarks Delete a specific contact list
      * @remarks Uses the curated name for operationId 'delete_list'.
@@ -430,6 +546,18 @@ export class ClickSendSmsClient extends ConnectorClientBase {
     }
 
     /**
+     * Send Fax
+     * @remarks Send Fax
+     */
+    public async sendFax(input: SendFaxInput, options: ConnectorOperationOptions = {}): Promise<SendFaxResponse> {
+        const requestPath = `/fax/send`;
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.sendWithTracingAsync<SendFaxResponse>("ClickSendSms.sendFax", "send_fax", "POST", requestUrl, input, options);
+
+        return httpResponse.value as SendFaxResponse;
+    }
+
+    /**
      * Convert Media File Format
      * @remarks Convert Media File Format
      */
@@ -455,6 +583,30 @@ export class ClickSendSmsClient extends ConnectorClientBase {
         const httpResponse = await this.sendWithTracingAsync<SearchContactListResponse>("ClickSendSms.listSearchContact", "search_contact_list", "GET", requestUrl, undefined, options);
 
         return httpResponse.value as SearchContactListResponse;
+    }
+
+    /**
+     * Send Letter
+     * @remarks Send Letter
+     */
+    public async sendLetter(input: SendLetterInput, options: ConnectorOperationOptions = {}): Promise<SendLetterResponse> {
+        const requestPath = `/post/letters/send`;
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.sendWithTracingAsync<SendLetterResponse>("ClickSendSms.sendLetter", "send_letter", "POST", requestUrl, input, options);
+
+        return httpResponse.value as SendLetterResponse;
+    }
+
+    /**
+     * Send Postcard
+     * @remarks Send one or more postcards
+     */
+    public async sendPostcard(input: SendPostcardInput, options: ConnectorOperationOptions = {}): Promise<SendPostcardResponse> {
+        const requestPath = `/post/postcards/send`;
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.sendWithTracingAsync<SendPostcardResponse>("ClickSendSms.sendPostcard", "send_postcard", "POST", requestUrl, input, options);
+
+        return httpResponse.value as SendPostcardResponse;
     }
 
 }

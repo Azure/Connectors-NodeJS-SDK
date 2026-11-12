@@ -336,7 +336,7 @@ export interface SplitPdf2Response {
 /**
  * PDF Search Text
  */
-export interface PDFSearchTextInput {
+export interface PdfSearchTextInput {
     /** URL to the source file. Supports links from Google Drive, Dropbox, and PDF.co built-in files storage. */
     url: string;
     /** Text to search can support regular expressions if you set the "Regex Search" parameter to true. */
@@ -360,7 +360,7 @@ export interface PDFSearchTextInput {
 /**
  * Response for PDF Search Text
  */
-export interface PDFSearchTextResponse {
+export interface PdfSearchTextResponse {
     /** body */
     body?: Array<Record<string, unknown>>;
     /** url */
@@ -546,7 +546,7 @@ export interface BarcodeReaderResponse {
 /**
  * PDF Info Reader
  */
-export interface PDFInfoReaderInput {
+export interface PdfInfoReaderInput {
     /** URL to the source file. Supports links from Google Drive, Dropbox, and PDF.co built-in files storage. */
     url: string;
     /** Set to true for long processes to run in the background, API will then return a jobId which you can use with JobCheck module to check the status of the process and retrieve the output while you can proceed with other tasks without waiting for this process to finish. */
@@ -560,7 +560,7 @@ export interface PDFInfoReaderInput {
 /**
  * Response for PDF Info Reader
  */
-export interface PDFInfoReaderResponse {
+export interface PdfInfoReaderResponse {
     /** jobId */
     jobId?: string;
     /** url */
@@ -582,7 +582,7 @@ export interface PDFInfoReaderResponse {
 /**
  * PDF Forms Info Reader
  */
-export interface PDFFormsInfoReaderInput {
+export interface PdfFormsInfoReaderInput {
     /** URL to the source file. Supports links from Google Drive, Dropbox, and PDF.co built-in files storage. */
     url: string;
     /** Set to true for long processes to run in the background, API will then return a jobId which you can use with JobCheck module to check the status of the process and retrieve the output while you can proceed with other tasks without waiting for this process to finish. */
@@ -596,7 +596,7 @@ export interface PDFFormsInfoReaderInput {
 /**
  * Response for PDF Forms Info Reader
  */
-export interface PDFFormsInfoReaderResponse {
+export interface PdfFormsInfoReaderResponse {
     /** jobId */
     jobId?: string;
     /** url */
@@ -618,7 +618,7 @@ export interface PDFFormsInfoReaderResponse {
 /**
  * PDF Find Table
  */
-export interface PDFFindTableInput {
+export interface PdfFindTableInput {
     /** URL to the source file. Supports links from Google Drive, Dropbox, and PDF.co built-in files storage. */
     url: string;
     /** Comma-separated list of page indices (or ranges) to process. IMPORTANT: the very first page starts at 0 (zero). To set a range use the dash -, for example: 0,2-5,7-. To set a range from the index to the last page use range like this: 2- (from page #3 as the index starts at zero and till the of the document). For ALL pages just leave this param empty. Example: 0,2-5,7- means first page, then 3rd page to 6th page, and then the range from 8th (index = 7) page till the end of the document. */
@@ -637,7 +637,7 @@ export interface PDFFindTableInput {
 /**
  * Response for PDF Find Table
  */
-export interface PDFFindTableResponse {
+export interface PdfFindTableResponse {
     /** jobId */
     jobId?: string;
     /** url */
@@ -811,7 +811,7 @@ export interface SearchAndDeleteTextResponse {
 /**
  * Make Scanned PDF to Text Searchable
  */
-export interface PDFSearchableInput {
+export interface PdfSearchableInput {
     /** URL to the source file. Supports links from Google Drive, Dropbox, and PDF.co built-in files storage. */
     url: string;
     /** the language for OCR (text from image) to use for scanned PDF, PNG, and JPG documents input when extracting text. The default is “eng”. Other languages are also supported: deu, spa, chi_sim, jpn, and many others (full list of supported OCR languages is at https://developer.pdf.co/api/pdf-make-text-searchable-or-unsearchable/index.html#language-support). You can also use 2 languages simultaneously like this: eng+deu or jpn+kor (any combination). */
@@ -829,7 +829,7 @@ export interface PDFSearchableInput {
 /**
  * Response for Make Scanned PDF to Text Searchable
  */
-export interface PDFSearchableResponse {
+export interface PdfSearchableResponse {
     /** url */
     url?: string;
     /** jobId */
@@ -853,7 +853,7 @@ export interface PDFSearchableResponse {
 /**
  * PDF to Scanned PDF
  */
-export interface PDFUnSearchableInput {
+export interface PdfUnSearchableInput {
     /** URL to the source file. Supports links from Google Drive, Dropbox, and PDF.co built-in files storage. */
     url: string;
     /** Comma-separated list of page indices (or ranges) to process. The very first page starts at 0 (zero). To set a range use the dash -, for example: 0,2-5,7-. To set a range from the index to the last page use range like this: 2- (from page #3 as the index starts at zero and till the of the document). For ALL pages just leave this param empty. Example: 0,2-5,7- means first page, then 3rd page to 6th page, and then the range from 8th (index = 7) page till the end of the document. */
@@ -893,7 +893,7 @@ export interface PdfUnsearchableResponse {
 /**
  * PDF To CSV
  */
-export interface PDFToCSVInput {
+export interface PdfToCsvInput {
     /** URL to the source file. Supports links from Google Drive, Dropbox, and PDF.co built-in files storage. */
     url: string;
     /** Set the language for OCR (text from image) to use for scanned PDF, PNG, and JPG documents input when extracting text. The default is “eng”. Other languages are also supported: deu, spa, chi_sim, jpn, and many others (full list of supported OCR languages is here (https://developer.pdf.co/api/pdf-make-text-searchable-or-unsearchable/index.html#language-support). You can also use 2 languages simultaneously like this: eng+deu or jpn+kor (any combination). */
@@ -922,7 +922,7 @@ export interface PDFToCSVInput {
 /**
  * Response for PDF To CSV
  */
-export interface PDFToCSVResponse {
+export interface PdfToCsvResponse {
     /** body */
     body?: string;
     /** url */
@@ -946,7 +946,7 @@ export interface PDFToCSVResponse {
 /**
  * PDF To JSON
  */
-export interface PDFToJSONInput {
+export interface PdfToJsonInput {
     /** URL to the source file. Supports links from Google Drive, Dropbox, and PDF.co built-in files storage. */
     url: string;
     /** Set the language for OCR (text from image) to use for scanned PDF, PNG, and JPG documents input when extracting text. The default is “eng”. Other languages are also supported: deu, spa, chi_sim, jpn, and many others (full list of supported OCR languages is here (https://developer.pdf.co/api/pdf-make-text-searchable-or-unsearchable/index.html#language-support). You can also use 2 languages simultaneously like this: eng+deu or jpn+kor (any combination). */
@@ -975,7 +975,7 @@ export interface PDFToJSONInput {
 /**
  * Response for PDF To JSON
  */
-export interface PDFToJSONResponse {
+export interface PdfToJsonResponse {
     /** body */
     body?: Record<string, unknown>;
     /** url */
@@ -1001,7 +1001,7 @@ export interface PDFToJSONResponse {
 /**
  * PDF To JSON (AI Powered)
  */
-export interface PDFToJSONMetaInput {
+export interface PdfToJsonMetaInput {
     /** URL to the source file. Supports links from Google Drive, Dropbox, and PDF.co built-in files storage. */
     url: string;
     /** Set the language for OCR (text from image) to use for scanned PDF, PNG, and JPG documents input when extracting text. The default is “eng”. Other languages are also supported: deu, spa, chi_sim, jpn, and many others (full list of supported OCR languages is here (https://developer.pdf.co/api/pdf-make-text-searchable-or-unsearchable/index.html#language-support). You can also use 2 languages simultaneously like this: eng+deu or jpn+kor (any combination). */
@@ -1030,7 +1030,7 @@ export interface PDFToJSONMetaInput {
 /**
  * Response for PDF To JSON (AI Powered)
  */
-export interface PDFToJSONMetaResponse {
+export interface PdfToJsonMetaResponse {
     /** body */
     body?: Record<string, unknown>;
     /** url */
@@ -1056,7 +1056,7 @@ export interface PDFToJSONMetaResponse {
 /**
  * PDF To Text (with layout and ocr)
  */
-export interface PDFToTextInput {
+export interface PdfToTextInput {
     /** URL to the source file. Supports links from Google Drive, Dropbox, and PDF.co built-in files storage. */
     url: string;
     /** Set the language for OCR (text from image) to use for scanned PDF, PNG, and JPG documents input when extracting text. The default is “eng”. Other languages are also supported: deu, spa, chi_sim, jpn, and many others (full list of supported OCR languages is here (https://developer.pdf.co/api/pdf-make-text-searchable-or-unsearchable/index.html#language-support). You can also use 2 languages simultaneously like this: eng+deu or jpn+kor (any combination). */
@@ -1085,7 +1085,7 @@ export interface PDFToTextInput {
 /**
  * Response for PDF To Text (with layout and ocr)
  */
-export interface PDFToTextResponse {
+export interface PdfToTextResponse {
     /** body */
     body?: string;
     /** url */
@@ -1111,7 +1111,7 @@ export interface PDFToTextResponse {
 /**
  * PDF To Text (without layout and ocr)
  */
-export interface PDFToTextSimpleInput {
+export interface PdfToTextSimpleInput {
     /** URL to the source file. Supports links from Google Drive, Dropbox, and PDF.co built-in files storage. */
     url: string;
     inline?: boolean;
@@ -1130,7 +1130,7 @@ export interface PDFToTextSimpleInput {
 /**
  * Response for PDF To Text (without layout and ocr)
  */
-export interface PDFToTextSimpleResponse {
+export interface PdfToTextSimpleResponse {
     /** body */
     body?: string;
     /** url */
@@ -1156,7 +1156,7 @@ export interface PDFToTextSimpleResponse {
 /**
  * PDF To XLS
  */
-export interface PDFToXLSInput {
+export interface PdfToXlsInput {
     /** URL to the source file. Supports links from Google Drive, Dropbox, and PDF.co built-in files storage. */
     url: string;
     /** Set the language for OCR (text from image) to use for scanned PDF, PNG, and JPG documents input when extracting text. The default is “eng”. Other languages are also supported: deu, spa, chi_sim, jpn, and many others (full list of supported OCR languages is here (https://developer.pdf.co/api/pdf-make-text-searchable-or-unsearchable/index.html#language-support). You can also use 2 languages simultaneously like this: eng+deu or jpn+kor (any combination). */
@@ -1184,7 +1184,7 @@ export interface PDFToXLSInput {
 /**
  * Response for PDF To XLS
  */
-export interface PDFToXLSResponse {
+export interface PdfToXlsResponse {
     /** url */
     url?: string;
     /** jobId */
@@ -1208,7 +1208,7 @@ export interface PDFToXLSResponse {
 /**
  * PDF To XLSX
  */
-export interface PDFToXLSXInput {
+export interface PdfToXlsxInput {
     /** URL to the source file. Supports links from Google Drive, Dropbox, and PDF.co built-in files storage. */
     url: string;
     /** Set the language for OCR (text from image) to use for scanned PDF, PNG, and JPG documents input when extracting text. The default is “eng”. Other languages are also supported: deu, spa, chi_sim, jpn, and many others (full list of supported OCR languages is here (https://developer.pdf.co/api/pdf-make-text-searchable-or-unsearchable/index.html#language-support). You can also use 2 languages simultaneously like this: eng+deu or jpn+kor (any combination). */
@@ -1236,7 +1236,7 @@ export interface PDFToXLSXInput {
 /**
  * Response for PDF To XLSX
  */
-export interface PDFToXLSXResponse {
+export interface PdfToXlsxResponse {
     /** url */
     url?: string;
     /** jobId */
@@ -1260,7 +1260,7 @@ export interface PDFToXLSXResponse {
 /**
  * PDF To XML
  */
-export interface PDFToXMLInput {
+export interface PdfToXmlInput {
     /** URL to the source file. Supports links from Google Drive, Dropbox, and PDF.co built-in files storage. */
     url: string;
     inline?: boolean;
@@ -1289,7 +1289,7 @@ export interface PDFToXMLInput {
 /**
  * Response for PDF To XML
  */
-export interface PDFToXMLResponse {
+export interface PdfToXmlResponse {
     /** url */
     url?: string;
     /** body */
@@ -1315,7 +1315,7 @@ export interface PDFToXMLResponse {
 /**
  * PDF to JPG
  */
-export interface PDFToJPGInput {
+export interface PdfToJpgInput {
     /** URL to the source file. Supports links from Google Drive, Dropbox, and PDF.co built-in files storage. */
     url: string;
     /** inline */
@@ -1335,7 +1335,7 @@ export interface PDFToJPGInput {
 /**
  * Response for PDF to JPG
  */
-export interface PDFToJPGResponse {
+export interface PdfToJpgResponse {
     /** urls */
     urls?: Array<string>;
     /** jobId */
@@ -1359,7 +1359,7 @@ export interface PDFToJPGResponse {
 /**
  * PDF to PNG
  */
-export interface PDFToPNGInput {
+export interface PdfToPngInput {
     /** URL to the source file. Supports links from Google Drive, Dropbox, and PDF.co built-in files storage. */
     url: string;
     /** inline */
@@ -1379,7 +1379,7 @@ export interface PDFToPNGInput {
 /**
  * Response for PDF to PNG
  */
-export interface PDFToPNGResponse {
+export interface PdfToPngResponse {
     /** urls */
     urls?: Array<string>;
     /** jobId */
@@ -1403,7 +1403,7 @@ export interface PDFToPNGResponse {
 /**
  * PDF to WEBP
  */
-export interface PDFToWEBPInput {
+export interface PdfToWebpInput {
     /** URL to the source file. Supports links from Google Drive, Dropbox, and PDF.co built-in files storage. */
     url: string;
     /** inline */
@@ -1423,7 +1423,7 @@ export interface PDFToWEBPInput {
 /**
  * Response for PDF to WEBP
  */
-export interface PDFToWEBPResponse {
+export interface PdfToWebpResponse {
     /** urls */
     urls?: Array<string>;
     /** jobId */
@@ -1447,7 +1447,7 @@ export interface PDFToWEBPResponse {
 /**
  * PDF to TIFF
  */
-export interface PDFToTIFFInput {
+export interface PdfToTiffInput {
     /** URL to the source file. Supports links from Google Drive, Dropbox, and PDF.co built-in files storage. */
     url: string;
     /** inline */
@@ -1467,7 +1467,7 @@ export interface PDFToTIFFInput {
 /**
  * Response for PDF to TIFF
  */
-export interface PDFToTIFFResponse {
+export interface PdfToTiffResponse {
     url?: string;
     /** jobId */
     jobId?: string;
@@ -1490,7 +1490,7 @@ export interface PDFToTIFFResponse {
 /**
  * PDF from CSV
  */
-export interface PDFFromCSVInput {
+export interface PdfFromCsvInput {
     /** URL to the source file. Supports links from Google Drive, Dropbox, and PDF.co built-in files storage. */
     url: string;
     /** Comma-separated list of page indices (or ranges) to process. The very first page starts at 0 (zero). To set a range use the dash -, for example: 0,2-5,7-. To set a range from the index to the last page use range like this: 2- (from page #3 as the index starts at zero and till the of the document). For ALL pages just leave this param empty. Example: 0,2-5,7- means first page, then 3rd page to 6th page, and then the range from 8th (index = 7) page till the end of the document. */
@@ -1508,7 +1508,7 @@ export interface PDFFromCSVInput {
 /**
  * Response for PDF from CSV
  */
-export interface PDFFromCSVResponse {
+export interface PdfFromCsvResponse {
     url?: string;
     /** jobId */
     jobId?: string;
@@ -1531,7 +1531,7 @@ export interface PDFFromCSVResponse {
 /**
  * PDF from Document (Doc, DocX, RTF, TXT, XPS)
  */
-export interface PDFFromDocInput {
+export interface PdfFromDocInput {
     /** URL to the source file. Supports links from Google Drive, Dropbox, and PDF.co built-in files storage. */
     url: string;
     /** Comma-separated list of page indices (or ranges) to process. The very first page starts at 0 (zero). To set a range use the dash -, for example: 0,2-5,7-. To set a range from the index to the last page use range like this: 2- (from page #3 as the index starts at zero and till the of the document). For ALL pages just leave this param empty. Example: 0,2-5,7- means first page, then 3rd page to 6th page, and then the range from 8th (index = 7) page till the end of the document. */
@@ -1549,7 +1549,7 @@ export interface PDFFromDocInput {
 /**
  * Response for PDF from Document (Doc, DocX, RTF, TXT, XPS)
  */
-export interface PDFFromDocResponse {
+export interface PdfFromDocResponse {
     url?: string;
     /** jobId */
     jobId?: string;
@@ -1572,7 +1572,7 @@ export interface PDFFromDocResponse {
 /**
  * PDF from Image
  */
-export interface PDFFromImagesInput {
+export interface PdfFromImagesInput {
     /** URL to the source file. Provide multiple URLS in comma seperated format. Supports links from Google Drive, Dropbox, and PDF.co built-in files storage. */
     url: string;
     /** File name for the generated output. */
@@ -1588,7 +1588,7 @@ export interface PDFFromImagesInput {
 /**
  * Response for PDF from Image
  */
-export interface PDFFromImagesResponse {
+export interface PdfFromImagesResponse {
     url?: string;
     /** jobId */
     jobId?: string;
@@ -1611,7 +1611,7 @@ export interface PDFFromImagesResponse {
 /**
  * PDF from Email
  */
-export interface PDFFromEmailInput {
+export interface PdfFromEmailInput {
     /** URL to the source file. Supports links from Google Drive, Dropbox, and PDF.co built-in files storage. */
     url: string;
     /** Set to true to automatically embeds all attachments from original input email MSG or EML files into the final output PDF. Set it to false if you don’t want to embed attachments so it will convert only the body of the input email. */
@@ -1636,7 +1636,7 @@ export interface PDFFromEmailInput {
 /**
  * Response for PDF from Email
  */
-export interface PDFFromEmailResponse {
+export interface PdfFromEmailResponse {
     url?: string;
     /** jobId */
     jobId?: string;
@@ -1659,7 +1659,7 @@ export interface PDFFromEmailResponse {
 /**
  * PDF Add Security
  */
-export interface PDFAddSecurityInput {
+export interface PdfAddSecurityInput {
     /** URL to the source file. Supports links from Google Drive, Dropbox, and PDF.co built-in files storage. */
     url: string;
     /** The main owner password that is used for document encryption and for setting/removing restrictions. */
@@ -1697,7 +1697,7 @@ export interface PDFAddSecurityInput {
 /**
  * Response for PDF Add Security
  */
-export interface PDFAddSecurityResponse {
+export interface PdfAddSecurityResponse {
     url?: string;
     /** jobId */
     jobId?: string;
@@ -1720,7 +1720,7 @@ export interface PDFAddSecurityResponse {
 /**
  * PDF Remove Security
  */
-export interface PDFSecurityRemoveInput {
+export interface PdfSecurityRemoveInput {
     /** URL to the source file. Supports links from Google Drive, Dropbox, and PDF.co built-in files storage. */
     url: string;
     /** The owner/user password to open files and remove security features. */
@@ -1738,7 +1738,7 @@ export interface PDFSecurityRemoveInput {
 /**
  * Response for PDF Remove Security
  */
-export interface PDFSecurityRemoveResponse {
+export interface PdfSecurityRemoveResponse {
     url?: string;
     /** jobId */
     jobId?: string;
@@ -1761,7 +1761,7 @@ export interface PDFSecurityRemoveResponse {
 /**
  * PDF From Spreadsheet
  */
-export interface PDFFromXLSXLSXInput {
+export interface PdfFromXlsxlsxInput {
     /** URL to the source file. Supports links from Google Drive, Dropbox, and PDF.co built-in files storage. */
     url: string;
     /** Set the WorkSheet index (Default is 0). */
@@ -1802,7 +1802,7 @@ export interface PdfFromXlsXlsxResponse {
 /**
  * Spreadsheet to CSV
  */
-export interface XLStoCSVInput {
+export interface XLStoCsvInput {
     /** URL to the source file. Supports links from Google Drive, Dropbox, and PDF.co built-in files storage. */
     url: string;
     /** Set the WorkSheet index (Default is 0). */
@@ -1846,7 +1846,7 @@ export interface XlsToCsvResponse {
 /**
  * Spreadsheet to JSON
  */
-export interface XLStoJSONInput {
+export interface XLStoJsonInput {
     /** URL to the source file. Supports links from Google Drive, Dropbox, and PDF.co built-in files storage. */
     url: string;
     /** Set the WorkSheet index (Default is 0). */
@@ -1886,7 +1886,7 @@ export interface XlsToJsonResponse {
 /**
  * Spreadsheet to HTML
  */
-export interface XLStoHTMLInput {
+export interface XLStoHtmlInput {
     /** URL to the source file. Supports links from Google Drive, Dropbox, and PDF.co built-in files storage. */
     url: string;
     /** Set the WorkSheet index (Default is 0). */
@@ -1926,7 +1926,7 @@ export interface XlsToHtmlResponse {
 /**
  * Spreadsheet to TXT
  */
-export interface XLStoTXTInput {
+export interface XLStoTxtInput {
     /** URL to the source file. Supports links from Google Drive, Dropbox, and PDF.co built-in files storage. */
     url: string;
     /** Set the WorkSheet index (Default is 0). */
@@ -1966,7 +1966,7 @@ export interface XlsToTxtResponse {
 /**
  * Spreadsheet to XML
  */
-export interface XLStoXMLInput {
+export interface XLStoXmlInput {
     /** URL to the source file. Supports links from Google Drive, Dropbox, and PDF.co built-in files storage. */
     url: string;
     /** Set the WorkSheet index (Default is 0). */
@@ -2006,7 +2006,7 @@ export interface XlsToXmlResponse {
 /**
  * Rotate PDF Pages
  */
-export interface PDFRotatePagesInput {
+export interface PdfRotatePagesInput {
     /** URL to the source file. Supports links from Google Drive, Dropbox, and PDF.co built-in files storage. */
     url: string;
     /** Angle in degrees. Supported values 90, 180, and 270. */
@@ -2026,7 +2026,7 @@ export interface PDFRotatePagesInput {
 /**
  * Response for Rotate PDF Pages
  */
-export interface PDFRotatePagesResponse {
+export interface PdfRotatePagesResponse {
     /** url */
     url?: string;
     /** jobId */
@@ -2050,7 +2050,7 @@ export interface PDFRotatePagesResponse {
 /**
  * Rotate PDF Pages (Auto)
  */
-export interface PDFAutoRotatePagesInput {
+export interface PdfAutoRotatePagesInput {
     /** URL to the source file. Supports links from Google Drive, Dropbox, and PDF.co built-in files storage. */
     url: string;
     /** the language for OCR (text from image) to use for scanned PDF, PNG, and JPG documents input when extracting text. The default is “eng”. Other languages are also supported: deu, spa, chi_sim, jpn, and many others (full list of supported OCR languages is at https://developer.pdf.co/api/pdf-make-text-searchable-or-unsearchable/index.html#language-support). You can also use 2 languages simultaneously like this: eng+deu or jpn+kor (any combination). */
@@ -2068,7 +2068,7 @@ export interface PDFAutoRotatePagesInput {
 /**
  * Response for Rotate PDF Pages (Auto)
  */
-export interface PDFAutoRotatePagesResponse {
+export interface PdfAutoRotatePagesResponse {
     /** url */
     url?: string;
     /** jobId */
@@ -2092,7 +2092,7 @@ export interface PDFAutoRotatePagesResponse {
 /**
  * PDF Delete Pages
  */
-export interface PDFDeletePagesInput {
+export interface PdfDeletePagesInput {
     /** URL to the source file. Supports links from Google Drive, Dropbox, and PDF.co built-in files storage. */
     url: string;
     /** Comma-separated list of page indices (or ranges) to process. The very first page starts at 0 (zero). To set a range use the dash -, for example: 0,2-5,7-. To set a range from the index to the last page use range like this: 2- (from page #3 as the index starts at zero and till the of the document). For ALL pages just leave this param empty. Example: 0,2-5,7- means first page, then 3rd page to 6th page, and then the range from 8th (index = 7) page till the end of the document. */
@@ -2110,7 +2110,7 @@ export interface PDFDeletePagesInput {
 /**
  * Response for PDF Delete Pages
  */
-export interface PDFDeletePagesResponse {
+export interface PdfDeletePagesResponse {
     /** url */
     url?: string;
     /** jobId */
@@ -2134,7 +2134,7 @@ export interface PDFDeletePagesResponse {
 /**
  * PDF Compress and Optimize
  */
-export interface PDFCompressInput {
+export interface PdfCompressInput {
     /** URL to the source file. Supports links from Google Drive, Dropbox, and PDF.co built-in files storage. */
     url: string;
     /** File name for the generated output */
@@ -2152,7 +2152,7 @@ export interface PDFCompressInput {
 /**
  * Response for PDF Compress and Optimize
  */
-export interface PDFCompressResponse {
+export interface PdfCompressResponse {
     /** url */
     url?: string;
     /** jobId */
@@ -2176,7 +2176,7 @@ export interface PDFCompressResponse {
 /**
  * Document Classifier
  */
-export interface PDFClassifierInput {
+export interface PdfClassifierInput {
     /** URL to the source file. Supports links from Google Drive, Dropbox, and PDF.co built-in files storage. */
     url: string;
     /** Define custom classification rules in CSV format. Rules are in CSV format where each row contains: "class name, logic (AND or OR (default)), and keywords" separated by a comma. Each row is separated by the \n symbol. */
@@ -2200,7 +2200,7 @@ export interface PDFClassifierInput {
 /**
  * Response for Document Classifier
  */
-export interface PDFClassifierResponse {
+export interface PdfClassifierResponse {
     /** url */
     url?: string;
     /** body */
@@ -2346,7 +2346,7 @@ export interface EmailAttachmentExtractionResponse {
 /**
  * PDF Attachment Extraction
  */
-export interface PDFAttachmentExtractionInput {
+export interface PdfAttachmentExtractionInput {
     /** Url to the source PDF document */
     url: string;
     /** Determines whether to return output in response or link to output file. */
@@ -2364,7 +2364,7 @@ export interface PDFAttachmentExtractionInput {
 /**
  * Response for PDF Attachment Extraction
  */
-export interface PDFAttachmentExtractionResponse {
+export interface PdfAttachmentExtractionResponse {
     /** urls */
     urls?: Array<string>;
     /** Output document URL. */
@@ -2497,12 +2497,12 @@ export class PdfCoClient extends ConnectorClientBase {
      * PDF Search Text
      * @remarks Search text in PDF and get coordinates. Supports regular expressions. Please see api documentation at https://developer.pdf.co/api/pdf-find/index.html for comprehensive guidelines.
      */
-    public async searchPDFText(input: PDFSearchTextInput, options: ConnectorOperationOptions = {}): Promise<PDFSearchTextResponse> {
+    public async searchPdfText(input: PdfSearchTextInput, options: ConnectorOperationOptions = {}): Promise<PdfSearchTextResponse> {
         const requestPath = `/v1/pdf/find`;
         const requestUrl = this.resolveUrl(requestPath);
-        const httpResponse = await this.sendWithTracingAsync<PDFSearchTextResponse>("PdfCo.searchPDFText", "PDFSearchText", "POST", requestUrl, input, options);
+        const httpResponse = await this.sendWithTracingAsync<PdfSearchTextResponse>("PdfCo.searchPdfText", "PDFSearchText", "POST", requestUrl, input, options);
 
-        return httpResponse.value as PDFSearchTextResponse;
+        return httpResponse.value as PdfSearchTextResponse;
     }
 
     /**
@@ -2557,36 +2557,36 @@ export class PdfCoClient extends ConnectorClientBase {
      * PDF Info Reader
      * @remarks Get detailed information about the PDF document, it's properties and security permissions. Please see api documentation at https://developer.pdf.co/api/pdf-info-reader/index.html for comprehensive guidelines.
      */
-    public async pdfinfoReader(input: PDFInfoReaderInput, options: ConnectorOperationOptions = {}): Promise<PDFInfoReaderResponse> {
+    public async pdfInfoReader(input: PdfInfoReaderInput, options: ConnectorOperationOptions = {}): Promise<PdfInfoReaderResponse> {
         const requestPath = `/v1/pdf/info`;
         const requestUrl = this.resolveUrl(requestPath);
-        const httpResponse = await this.sendWithTracingAsync<PDFInfoReaderResponse>("PdfCo.pdfinfoReader", "PDFInfoReader", "POST", requestUrl, input, options);
+        const httpResponse = await this.sendWithTracingAsync<PdfInfoReaderResponse>("PdfCo.pdfInfoReader", "PDFInfoReader", "POST", requestUrl, input, options);
 
-        return httpResponse.value as PDFInfoReaderResponse;
+        return httpResponse.value as PdfInfoReaderResponse;
     }
 
     /**
      * PDF Forms Info Reader
      * @remarks Get information about fillable fields inside PDF form file. Please see api documentation at https://developer.pdf.co/api/pdf-forms-info-reader/index.html for comprehensive guidelines.
      */
-    public async pdfformsInfoReader(input: PDFFormsInfoReaderInput, options: ConnectorOperationOptions = {}): Promise<PDFFormsInfoReaderResponse> {
+    public async pdfFormsInfoReader(input: PdfFormsInfoReaderInput, options: ConnectorOperationOptions = {}): Promise<PdfFormsInfoReaderResponse> {
         const requestPath = `/v1/pdf/info/fields`;
         const requestUrl = this.resolveUrl(requestPath);
-        const httpResponse = await this.sendWithTracingAsync<PDFFormsInfoReaderResponse>("PdfCo.pdfformsInfoReader", "PDFFormsInfoReader", "POST", requestUrl, input, options);
+        const httpResponse = await this.sendWithTracingAsync<PdfFormsInfoReaderResponse>("PdfCo.pdfFormsInfoReader", "PDFFormsInfoReader", "POST", requestUrl, input, options);
 
-        return httpResponse.value as PDFFormsInfoReaderResponse;
+        return httpResponse.value as PdfFormsInfoReaderResponse;
     }
 
     /**
      * PDF Find Table
      * @remarks AI powered document analysis can scan your document for tables and return the array of tables on pages with coordinates and information about columns detected in these tables. Please see api documentation at https://developer.pdf.co/api/pdf-find/index.html#post-tag-pdf-find-table for comprehensive guidelines.
      */
-    public async pdffindTable(input: PDFFindTableInput, options: ConnectorOperationOptions = {}): Promise<PDFFindTableResponse> {
+    public async pdfFindTable(input: PdfFindTableInput, options: ConnectorOperationOptions = {}): Promise<PdfFindTableResponse> {
         const requestPath = `/v1/pdf/find/table`;
         const requestUrl = this.resolveUrl(requestPath);
-        const httpResponse = await this.sendWithTracingAsync<PDFFindTableResponse>("PdfCo.pdffindTable", "PDFFindTable", "POST", requestUrl, input, options);
+        const httpResponse = await this.sendWithTracingAsync<PdfFindTableResponse>("PdfCo.pdfFindTable", "PDFFindTable", "POST", requestUrl, input, options);
 
-        return httpResponse.value as PDFFindTableResponse;
+        return httpResponse.value as PdfFindTableResponse;
     }
 
     /**
@@ -2629,22 +2629,22 @@ export class PdfCoClient extends ConnectorClientBase {
      * Make Scanned PDF to Text Searchable
      * @remarks Turn PDF and scanned JPG, PNG images into text-searchable PDF. Please see api documentation at https://developer.pdf.co/api/pdf-make-text-searchable-or-unsearchable/index.html#post-tag-pdf-makesearchable for comprehensive guidelines.
      */
-    public async pdfsearchable(input: PDFSearchableInput, options: ConnectorOperationOptions = {}): Promise<PDFSearchableResponse> {
+    public async pdfSearchable(input: PdfSearchableInput, options: ConnectorOperationOptions = {}): Promise<PdfSearchableResponse> {
         const requestPath = `/v1/pdf/makesearchable`;
         const requestUrl = this.resolveUrl(requestPath);
-        const httpResponse = await this.sendWithTracingAsync<PDFSearchableResponse>("PdfCo.pdfsearchable", "PDFSearchable", "POST", requestUrl, input, options);
+        const httpResponse = await this.sendWithTracingAsync<PdfSearchableResponse>("PdfCo.pdfSearchable", "PDFSearchable", "POST", requestUrl, input, options);
 
-        return httpResponse.value as PDFSearchableResponse;
+        return httpResponse.value as PdfSearchableResponse;
     }
 
     /**
      * PDF to Scanned PDF
      * @remarks Convert PDF to Scanned PDF. Result PDF is same as if you printed and then scanned your PDF. Please see api documentation at https://developer.pdf.co/api/pdf-make-text-searchable-or-unsearchable/index.html#post-tag-pdf-makeunsearchable for comprehensive guidelines.
      */
-    public async pdfunSearchable(input: PDFUnSearchableInput, options: ConnectorOperationOptions = {}): Promise<PdfUnsearchableResponse> {
+    public async pdfUnSearchable(input: PdfUnSearchableInput, options: ConnectorOperationOptions = {}): Promise<PdfUnsearchableResponse> {
         const requestPath = `/v1/pdf/makeunsearchable`;
         const requestUrl = this.resolveUrl(requestPath);
-        const httpResponse = await this.sendWithTracingAsync<PdfUnsearchableResponse>("PdfCo.pdfunSearchable", "PDFUnSearchable", "POST", requestUrl, input, options);
+        const httpResponse = await this.sendWithTracingAsync<PdfUnsearchableResponse>("PdfCo.pdfUnSearchable", "PDFUnSearchable", "POST", requestUrl, input, options);
 
         return httpResponse.value as PdfUnsearchableResponse;
     }
@@ -2653,226 +2653,226 @@ export class PdfCoClient extends ConnectorClientBase {
      * PDF To CSV
      * @remarks Convert PDF and scanned images into CSV representation with layout, columns, rows, and tables. Please see api documentation at https://developer.pdf.co/api/pdf-to-csv/index.html for comprehensive guidelines.
      */
-    public async pdftoCSV(input: PDFToCSVInput, options: ConnectorOperationOptions = {}): Promise<PDFToCSVResponse> {
+    public async pdfToCsv(input: PdfToCsvInput, options: ConnectorOperationOptions = {}): Promise<PdfToCsvResponse> {
         const requestPath = `/v1/pdf/convert/to/csv`;
         const requestUrl = this.resolveUrl(requestPath);
-        const httpResponse = await this.sendWithTracingAsync<PDFToCSVResponse>("PdfCo.pdftoCSV", "PDFToCSV", "POST", requestUrl, input, options);
+        const httpResponse = await this.sendWithTracingAsync<PdfToCsvResponse>("PdfCo.pdfToCsv", "PDFToCSV", "POST", requestUrl, input, options);
 
-        return httpResponse.value as PDFToCSVResponse;
+        return httpResponse.value as PdfToCsvResponse;
     }
 
     /**
      * PDF To JSON
      * @remarks Convert PDF and scanned images into JSON representation with text, fonts, images, vectors, and formatting preserved. Please see api documentation at https://developer.pdf.co/api/pdf-to-json/index.html for comprehensive guidelines.
      */
-    public async pdftoJSON(input: PDFToJSONInput, options: ConnectorOperationOptions = {}): Promise<PDFToJSONResponse> {
+    public async pdfToJson(input: PdfToJsonInput, options: ConnectorOperationOptions = {}): Promise<PdfToJsonResponse> {
         const requestPath = `/v1/pdf/convert/to/json2`;
         const requestUrl = this.resolveUrl(requestPath);
-        const httpResponse = await this.sendWithTracingAsync<PDFToJSONResponse>("PdfCo.pdftoJSON", "PDFToJSON", "POST", requestUrl, input, options);
+        const httpResponse = await this.sendWithTracingAsync<PdfToJsonResponse>("PdfCo.pdfToJson", "PDFToJSON", "POST", requestUrl, input, options);
 
-        return httpResponse.value as PDFToJSONResponse;
+        return httpResponse.value as PdfToJsonResponse;
     }
 
     /**
      * PDF To JSON (AI Powered)
      * @remarks Convert PDF and scanned images into JSON representation with text, fonts, images, vectors, and formatting preserved. Please see api documentation at https://developer.pdf.co/api/pdf-to-json/index.html#post-tag-pdf-convert-to-json-meta for comprehensive guidelines.
      */
-    public async pdftoJSONMeta(input: PDFToJSONMetaInput, options: ConnectorOperationOptions = {}): Promise<PDFToJSONMetaResponse> {
+    public async pdfToJsonMeta(input: PdfToJsonMetaInput, options: ConnectorOperationOptions = {}): Promise<PdfToJsonMetaResponse> {
         const requestPath = `/v1/pdf/convert/to/json-meta`;
         const requestUrl = this.resolveUrl(requestPath);
-        const httpResponse = await this.sendWithTracingAsync<PDFToJSONMetaResponse>("PdfCo.pdftoJSONMeta", "PDFToJSONMeta", "POST", requestUrl, input, options);
+        const httpResponse = await this.sendWithTracingAsync<PdfToJsonMetaResponse>("PdfCo.pdfToJsonMeta", "PDFToJSONMeta", "POST", requestUrl, input, options);
 
-        return httpResponse.value as PDFToJSONMetaResponse;
+        return httpResponse.value as PdfToJsonMetaResponse;
     }
 
     /**
      * PDF To Text (with layout and ocr)
      * @remarks Convert PDF and scanned images to Text with layout preserved. Please see api documentation at https://developer.pdf.co/api/pdf-to-text/index.html for comprehensive guidelines.
      */
-    public async pdftoText(input: PDFToTextInput, options: ConnectorOperationOptions = {}): Promise<PDFToTextResponse> {
+    public async pdfToText(input: PdfToTextInput, options: ConnectorOperationOptions = {}): Promise<PdfToTextResponse> {
         const requestPath = `/v1/pdf/convert/to/text`;
         const requestUrl = this.resolveUrl(requestPath);
-        const httpResponse = await this.sendWithTracingAsync<PDFToTextResponse>("PdfCo.pdftoText", "PDFToText", "POST", requestUrl, input, options);
+        const httpResponse = await this.sendWithTracingAsync<PdfToTextResponse>("PdfCo.pdfToText", "PDFToText", "POST", requestUrl, input, options);
 
-        return httpResponse.value as PDFToTextResponse;
+        return httpResponse.value as PdfToTextResponse;
     }
 
     /**
      * PDF To Text (without layout and ocr)
      * @remarks Convert PDF to plain text without layout preserved and OCR support. Please see api documentation at https://developer.pdf.co/api/pdf-to-text/index.html#post-tag-pdf-convert-to-text-simple for comprehensive guidelines.
      */
-    public async pdftoTextSimple(input: PDFToTextSimpleInput, options: ConnectorOperationOptions = {}): Promise<PDFToTextSimpleResponse> {
+    public async pdfToTextSimple(input: PdfToTextSimpleInput, options: ConnectorOperationOptions = {}): Promise<PdfToTextSimpleResponse> {
         const requestPath = `/v1/pdf/convert/to/text-simple`;
         const requestUrl = this.resolveUrl(requestPath);
-        const httpResponse = await this.sendWithTracingAsync<PDFToTextSimpleResponse>("PdfCo.pdftoTextSimple", "PDFToTextSimple", "POST", requestUrl, input, options);
+        const httpResponse = await this.sendWithTracingAsync<PdfToTextSimpleResponse>("PdfCo.pdfToTextSimple", "PDFToTextSimple", "POST", requestUrl, input, options);
 
-        return httpResponse.value as PDFToTextSimpleResponse;
+        return httpResponse.value as PdfToTextSimpleResponse;
     }
 
     /**
      * PDF To XLS
      * @remarks Convert PDF and scanned images to spreadsheet with layout and fonts preserved. Please see api documentation at https://developer.pdf.co/api/pdf-to-excel/index.html#post-tag-pdf-convert-to-xls for comprehensive guidelines.
      */
-    public async pdftoXLS(input: PDFToXLSInput, options: ConnectorOperationOptions = {}): Promise<PDFToXLSResponse> {
+    public async pdfToXls(input: PdfToXlsInput, options: ConnectorOperationOptions = {}): Promise<PdfToXlsResponse> {
         const requestPath = `/v1/pdf/convert/to/xls`;
         const requestUrl = this.resolveUrl(requestPath);
-        const httpResponse = await this.sendWithTracingAsync<PDFToXLSResponse>("PdfCo.pdftoXLS", "PDFToXLS", "POST", requestUrl, input, options);
+        const httpResponse = await this.sendWithTracingAsync<PdfToXlsResponse>("PdfCo.pdfToXls", "PDFToXLS", "POST", requestUrl, input, options);
 
-        return httpResponse.value as PDFToXLSResponse;
+        return httpResponse.value as PdfToXlsResponse;
     }
 
     /**
      * PDF To XLSX
      * @remarks Convert PDF and scanned images to spreadsheet with layout and fonts preserved. Please see api documentation at https://developer.pdf.co/api/pdf-to-excel/index.html#post-tag-pdf-convert-to-xlsx for comprehensive guidelines.
      */
-    public async pdftoXLSX(input: PDFToXLSXInput, options: ConnectorOperationOptions = {}): Promise<PDFToXLSXResponse> {
+    public async pdfToXlsx(input: PdfToXlsxInput, options: ConnectorOperationOptions = {}): Promise<PdfToXlsxResponse> {
         const requestPath = `/v1/pdf/convert/to/xlsx`;
         const requestUrl = this.resolveUrl(requestPath);
-        const httpResponse = await this.sendWithTracingAsync<PDFToXLSXResponse>("PdfCo.pdftoXLSX", "PDFToXLSX", "POST", requestUrl, input, options);
+        const httpResponse = await this.sendWithTracingAsync<PdfToXlsxResponse>("PdfCo.pdfToXlsx", "PDFToXLSX", "POST", requestUrl, input, options);
 
-        return httpResponse.value as PDFToXLSXResponse;
+        return httpResponse.value as PdfToXlsxResponse;
     }
 
     /**
      * PDF To XML
      * @remarks Convert PDF to XML with information about text value, tables, fonts, images, objects positions. Please see api documentation at https://developer.pdf.co/api/pdf-to-xml/index.html for comprehensive guidelines.
      */
-    public async pdftoXML(input: PDFToXMLInput, options: ConnectorOperationOptions = {}): Promise<PDFToXMLResponse> {
+    public async pdfToXml(input: PdfToXmlInput, options: ConnectorOperationOptions = {}): Promise<PdfToXmlResponse> {
         const requestPath = `/v1/pdf/convert/to/xml`;
         const requestUrl = this.resolveUrl(requestPath);
-        const httpResponse = await this.sendWithTracingAsync<PDFToXMLResponse>("PdfCo.pdftoXML", "PDFToXML", "POST", requestUrl, input, options);
+        const httpResponse = await this.sendWithTracingAsync<PdfToXmlResponse>("PdfCo.pdfToXml", "PDFToXML", "POST", requestUrl, input, options);
 
-        return httpResponse.value as PDFToXMLResponse;
+        return httpResponse.value as PdfToXmlResponse;
     }
 
     /**
      * PDF to JPG
      * @remarks PDF to JPG conversion. High-quality rendering. Also works great for thumbnail generation and previews. Please see api documentation at https://developer.pdf.co/api/pdf-to-image/index.html#post-tag-pdf-convert-to-jpg for comprehensive guidelines.
      */
-    public async pdftoJPG(input: PDFToJPGInput, options: ConnectorOperationOptions = {}): Promise<PDFToJPGResponse> {
+    public async pdfToJpg(input: PdfToJpgInput, options: ConnectorOperationOptions = {}): Promise<PdfToJpgResponse> {
         const requestPath = `/v1/pdf/convert/to/jpg`;
         const requestUrl = this.resolveUrl(requestPath);
-        const httpResponse = await this.sendWithTracingAsync<PDFToJPGResponse>("PdfCo.pdftoJPG", "PDFToJPG", "POST", requestUrl, input, options);
+        const httpResponse = await this.sendWithTracingAsync<PdfToJpgResponse>("PdfCo.pdfToJpg", "PDFToJPG", "POST", requestUrl, input, options);
 
-        return httpResponse.value as PDFToJPGResponse;
+        return httpResponse.value as PdfToJpgResponse;
     }
 
     /**
      * PDF to PNG
      * @remarks PDF to PNG conversion. High-quality rendering. Also works great for thumbnail generation and previews. Please see api documentation at https://developer.pdf.co/api/pdf-to-image/index.html#post-tag-pdf-convert-to-png for comprehensive guidelines.
      */
-    public async pdftoPNG(input: PDFToPNGInput, options: ConnectorOperationOptions = {}): Promise<PDFToPNGResponse> {
+    public async pdfToPng(input: PdfToPngInput, options: ConnectorOperationOptions = {}): Promise<PdfToPngResponse> {
         const requestPath = `/v1/pdf/convert/to/png`;
         const requestUrl = this.resolveUrl(requestPath);
-        const httpResponse = await this.sendWithTracingAsync<PDFToPNGResponse>("PdfCo.pdftoPNG", "PDFToPNG", "POST", requestUrl, input, options);
+        const httpResponse = await this.sendWithTracingAsync<PdfToPngResponse>("PdfCo.pdfToPng", "PDFToPNG", "POST", requestUrl, input, options);
 
-        return httpResponse.value as PDFToPNGResponse;
+        return httpResponse.value as PdfToPngResponse;
     }
 
     /**
      * PDF to WEBP
      * @remarks PDF to WEBP conversion. High-quality rendering. Also works great for thumbnail generation and previews. Please see api documentation at https://developer.pdf.co/api/pdf-to-image/index.html#post-tag-pdf-convert-to-webp for comprehensive guidelines.
      */
-    public async pdftoWEBP(input: PDFToWEBPInput, options: ConnectorOperationOptions = {}): Promise<PDFToWEBPResponse> {
+    public async pdfToWebp(input: PdfToWebpInput, options: ConnectorOperationOptions = {}): Promise<PdfToWebpResponse> {
         const requestPath = `/v1/pdf/convert/to/webp`;
         const requestUrl = this.resolveUrl(requestPath);
-        const httpResponse = await this.sendWithTracingAsync<PDFToWEBPResponse>("PdfCo.pdftoWEBP", "PDFToWEBP", "POST", requestUrl, input, options);
+        const httpResponse = await this.sendWithTracingAsync<PdfToWebpResponse>("PdfCo.pdfToWebp", "PDFToWEBP", "POST", requestUrl, input, options);
 
-        return httpResponse.value as PDFToWEBPResponse;
+        return httpResponse.value as PdfToWebpResponse;
     }
 
     /**
      * PDF to TIFF
      * @remarks PDF to high quality TIFF images conversion. High quality rendering. Also works great for thumbnail generation and previews. Please see api documentation at https://developer.pdf.co/api/pdf-to-image/index.html#post-tag-pdf-convert-to-tiff for comprehensive guidelines.
      */
-    public async pdftoTIFF(input: PDFToTIFFInput, options: ConnectorOperationOptions = {}): Promise<PDFToTIFFResponse> {
+    public async pdfToTiff(input: PdfToTiffInput, options: ConnectorOperationOptions = {}): Promise<PdfToTiffResponse> {
         const requestPath = `/v1/pdf/convert/to/tiff`;
         const requestUrl = this.resolveUrl(requestPath);
-        const httpResponse = await this.sendWithTracingAsync<PDFToTIFFResponse>("PdfCo.pdftoTIFF", "PDFToTIFF", "POST", requestUrl, input, options);
+        const httpResponse = await this.sendWithTracingAsync<PdfToTiffResponse>("PdfCo.pdfToTiff", "PDFToTIFF", "POST", requestUrl, input, options);
 
-        return httpResponse.value as PDFToTIFFResponse;
+        return httpResponse.value as PdfToTiffResponse;
     }
 
     /**
      * PDF from CSV
      * @remarks Convert CSV document to PDF. Works also with XLS or XLSX input. Please see api documentation at https://developer.pdf.co/api/pdf-from-document/index.html#post-tag-pdf-convert-from-csv for comprehensive guidelines.
      */
-    public async pdffromCSV(input: PDFFromCSVInput, options: ConnectorOperationOptions = {}): Promise<PDFFromCSVResponse> {
+    public async pdfFromCsv(input: PdfFromCsvInput, options: ConnectorOperationOptions = {}): Promise<PdfFromCsvResponse> {
         const requestPath = `/v1/pdf/convert/from/csv`;
         const requestUrl = this.resolveUrl(requestPath);
-        const httpResponse = await this.sendWithTracingAsync<PDFFromCSVResponse>("PdfCo.pdffromCSV", "PDFFromCSV", "POST", requestUrl, input, options);
+        const httpResponse = await this.sendWithTracingAsync<PdfFromCsvResponse>("PdfCo.pdfFromCsv", "PDFFromCSV", "POST", requestUrl, input, options);
 
-        return httpResponse.value as PDFFromCSVResponse;
+        return httpResponse.value as PdfFromCsvResponse;
     }
 
     /**
      * PDF from Document (Doc, DocX, RTF, TXT, XPS)
      * @remarks Convert DOC, DOCX, RTF, TXT, XPS files into PDF. Please see api documentation at https://developer.pdf.co/api/pdf-from-document/index.html#post-tag-pdf-convert-from-doc for comprehensive guidelines.
      */
-    public async pdffromDoc(input: PDFFromDocInput, options: ConnectorOperationOptions = {}): Promise<PDFFromDocResponse> {
+    public async pdfFromDoc(input: PdfFromDocInput, options: ConnectorOperationOptions = {}): Promise<PdfFromDocResponse> {
         const requestPath = `/v1/pdf/convert/from/doc`;
         const requestUrl = this.resolveUrl(requestPath);
-        const httpResponse = await this.sendWithTracingAsync<PDFFromDocResponse>("PdfCo.pdffromDoc", "PDFFromDoc", "POST", requestUrl, input, options);
+        const httpResponse = await this.sendWithTracingAsync<PdfFromDocResponse>("PdfCo.pdfFromDoc", "PDFFromDoc", "POST", requestUrl, input, options);
 
-        return httpResponse.value as PDFFromDocResponse;
+        return httpResponse.value as PdfFromDocResponse;
     }
 
     /**
      * PDF from Image
      * @remarks Create a PDF file from one or more JPG, PNG, TIFF images. Please see api documentation at https://developer.pdf.co/api/pdf-from-image/index.html for comprehensive guidelines.
      */
-    public async pdffromImages(input: PDFFromImagesInput, options: ConnectorOperationOptions = {}): Promise<PDFFromImagesResponse> {
+    public async pdfFromImages(input: PdfFromImagesInput, options: ConnectorOperationOptions = {}): Promise<PdfFromImagesResponse> {
         const requestPath = `/v1/pdf/convert/from/image`;
         const requestUrl = this.resolveUrl(requestPath);
-        const httpResponse = await this.sendWithTracingAsync<PDFFromImagesResponse>("PdfCo.pdffromImages", "PDFFromImages", "POST", requestUrl, input, options);
+        const httpResponse = await this.sendWithTracingAsync<PdfFromImagesResponse>("PdfCo.pdfFromImages", "PDFFromImages", "POST", requestUrl, input, options);
 
-        return httpResponse.value as PDFFromImagesResponse;
+        return httpResponse.value as PdfFromImagesResponse;
     }
 
     /**
      * PDF from Email
      * @remarks Convert email files (MSG or EML) code into PDF. Extracts attachments (if any) from input email and embeds into PDF as pdf attachments. Please see api documentation at https://developer.pdf.co/api/pdf-from-email/index.html for comprehensive guidelines.
      */
-    public async pdffromEmail(input: PDFFromEmailInput, options: ConnectorOperationOptions = {}): Promise<PDFFromEmailResponse> {
+    public async pdfFromEmail(input: PdfFromEmailInput, options: ConnectorOperationOptions = {}): Promise<PdfFromEmailResponse> {
         const requestPath = `/v1/pdf/convert/from/email`;
         const requestUrl = this.resolveUrl(requestPath);
-        const httpResponse = await this.sendWithTracingAsync<PDFFromEmailResponse>("PdfCo.pdffromEmail", "PDFFromEmail", "POST", requestUrl, input, options);
+        const httpResponse = await this.sendWithTracingAsync<PdfFromEmailResponse>("PdfCo.pdfFromEmail", "PDFFromEmail", "POST", requestUrl, input, options);
 
-        return httpResponse.value as PDFFromEmailResponse;
+        return httpResponse.value as PdfFromEmailResponse;
     }
 
     /**
      * PDF Add Security
      * @remarks Add password and security limitations to existing PDF. Please see api documentation at https://developer.pdf.co/api/password-and-security/index.html#post-tag-pdf-security-add for comprehensive guidelines.
      */
-    public async addPDFSecurity(input: PDFAddSecurityInput, options: ConnectorOperationOptions = {}): Promise<PDFAddSecurityResponse> {
+    public async addPdfSecurity(input: PdfAddSecurityInput, options: ConnectorOperationOptions = {}): Promise<PdfAddSecurityResponse> {
         const requestPath = `/v1/pdf/security/add`;
         const requestUrl = this.resolveUrl(requestPath);
-        const httpResponse = await this.sendWithTracingAsync<PDFAddSecurityResponse>("PdfCo.addPDFSecurity", "PDFAddSecurity", "POST", requestUrl, input, options);
+        const httpResponse = await this.sendWithTracingAsync<PdfAddSecurityResponse>("PdfCo.addPdfSecurity", "PDFAddSecurity", "POST", requestUrl, input, options);
 
-        return httpResponse.value as PDFAddSecurityResponse;
+        return httpResponse.value as PdfAddSecurityResponse;
     }
 
     /**
      * PDF Remove Security
      * @remarks Remove password and security from existing PDF files. Please see api documentation at https://developer.pdf.co/api/password-and-security/index.html#post-tag-pdf-security-remove for comprehensive guidelines.
      */
-    public async removePDFSecurity(input: PDFSecurityRemoveInput, options: ConnectorOperationOptions = {}): Promise<PDFSecurityRemoveResponse> {
+    public async removePdfSecurity(input: PdfSecurityRemoveInput, options: ConnectorOperationOptions = {}): Promise<PdfSecurityRemoveResponse> {
         const requestPath = `/v1/pdf/security/remove`;
         const requestUrl = this.resolveUrl(requestPath);
-        const httpResponse = await this.sendWithTracingAsync<PDFSecurityRemoveResponse>("PdfCo.removePDFSecurity", "PDFSecurityRemove", "POST", requestUrl, input, options);
+        const httpResponse = await this.sendWithTracingAsync<PdfSecurityRemoveResponse>("PdfCo.removePdfSecurity", "PDFSecurityRemove", "POST", requestUrl, input, options);
 
-        return httpResponse.value as PDFSecurityRemoveResponse;
+        return httpResponse.value as PdfSecurityRemoveResponse;
     }
 
     /**
      * PDF From Spreadsheet
      * @remarks Create PDF from XLS, XLSX spreadsheet. Please see api documentation at https://developer.pdf.co/api/convert-excel/index.html#post-tag-xls-convert-to-pdf for comprehensive guidelines.
      */
-    public async pdffromXLSXLSX(input: PDFFromXLSXLSXInput, options: ConnectorOperationOptions = {}): Promise<PdfFromXlsXlsxResponse> {
+    public async pdfFromXlsxlsx(input: PdfFromXlsxlsxInput, options: ConnectorOperationOptions = {}): Promise<PdfFromXlsXlsxResponse> {
         const requestPath = `/v1/xls/convert/to/pdf`;
         const requestUrl = this.resolveUrl(requestPath);
-        const httpResponse = await this.sendWithTracingAsync<PdfFromXlsXlsxResponse>("PdfCo.pdffromXLSXLSX", "PDFFromXLSXLSX", "POST", requestUrl, input, options);
+        const httpResponse = await this.sendWithTracingAsync<PdfFromXlsXlsxResponse>("PdfCo.pdfFromXlsxlsx", "PDFFromXLSXLSX", "POST", requestUrl, input, options);
 
         return httpResponse.value as PdfFromXlsXlsxResponse;
     }
@@ -2881,10 +2881,10 @@ export class PdfCoClient extends ConnectorClientBase {
      * Spreadsheet to CSV
      * @remarks Convert XLS/XLSX into CSV comma separated values file. Please see api documentation at https://developer.pdf.co/api/convert-excel/index.html#post-tag-xls-convert-to-csv for comprehensive guidelines.
      */
-    public async xlstoCSV(input: XLStoCSVInput, options: ConnectorOperationOptions = {}): Promise<XlsToCsvResponse> {
+    public async xlStoCsv(input: XLStoCsvInput, options: ConnectorOperationOptions = {}): Promise<XlsToCsvResponse> {
         const requestPath = `/v1/xls/convert/to/csv`;
         const requestUrl = this.resolveUrl(requestPath);
-        const httpResponse = await this.sendWithTracingAsync<XlsToCsvResponse>("PdfCo.xlstoCSV", "XLStoCSV", "POST", requestUrl, input, options);
+        const httpResponse = await this.sendWithTracingAsync<XlsToCsvResponse>("PdfCo.xlStoCsv", "XLStoCSV", "POST", requestUrl, input, options);
 
         return httpResponse.value as XlsToCsvResponse;
     }
@@ -2893,10 +2893,10 @@ export class PdfCoClient extends ConnectorClientBase {
      * Spreadsheet to JSON
      * @remarks Convert XLS/XLSX into JSON file. Please see api documentation at https://developer.pdf.co/api/convert-excel/index.html#post-tag-xls-convert-to-json for comprehensive guidelines.
      */
-    public async xlstoJSON(input: XLStoJSONInput, options: ConnectorOperationOptions = {}): Promise<XlsToJsonResponse> {
+    public async xlStoJson(input: XLStoJsonInput, options: ConnectorOperationOptions = {}): Promise<XlsToJsonResponse> {
         const requestPath = `/v1/xls/convert/to/json`;
         const requestUrl = this.resolveUrl(requestPath);
-        const httpResponse = await this.sendWithTracingAsync<XlsToJsonResponse>("PdfCo.xlstoJSON", "XLStoJSON", "POST", requestUrl, input, options);
+        const httpResponse = await this.sendWithTracingAsync<XlsToJsonResponse>("PdfCo.xlStoJson", "XLStoJSON", "POST", requestUrl, input, options);
 
         return httpResponse.value as XlsToJsonResponse;
     }
@@ -2905,10 +2905,10 @@ export class PdfCoClient extends ConnectorClientBase {
      * Spreadsheet to HTML
      * @remarks Convert XLS/XLSX into HTML file. Please see api documentation at https://developer.pdf.co/api/convert-excel/index.html#post-tag-xls-convert-to-html for comprehensive guidelines.
      */
-    public async xlstoHTML(input: XLStoHTMLInput, options: ConnectorOperationOptions = {}): Promise<XlsToHtmlResponse> {
+    public async xlStoHtml(input: XLStoHtmlInput, options: ConnectorOperationOptions = {}): Promise<XlsToHtmlResponse> {
         const requestPath = `/v1/xls/convert/to/html`;
         const requestUrl = this.resolveUrl(requestPath);
-        const httpResponse = await this.sendWithTracingAsync<XlsToHtmlResponse>("PdfCo.xlstoHTML", "XLStoHTML", "POST", requestUrl, input, options);
+        const httpResponse = await this.sendWithTracingAsync<XlsToHtmlResponse>("PdfCo.xlStoHtml", "XLStoHTML", "POST", requestUrl, input, options);
 
         return httpResponse.value as XlsToHtmlResponse;
     }
@@ -2917,10 +2917,10 @@ export class PdfCoClient extends ConnectorClientBase {
      * Spreadsheet to TXT
      * @remarks Convert XLS/XLSX or CSV into Text file. Please see api documentation at https://developer.pdf.co/api/convert-excel/index.html#post-tag-xls-convert-to-txt for comprehensive guidelines.
      */
-    public async xlstoTXT(input: XLStoTXTInput, options: ConnectorOperationOptions = {}): Promise<XlsToTxtResponse> {
+    public async xlStoTxt(input: XLStoTxtInput, options: ConnectorOperationOptions = {}): Promise<XlsToTxtResponse> {
         const requestPath = `/v1/xls/convert/to/txt`;
         const requestUrl = this.resolveUrl(requestPath);
-        const httpResponse = await this.sendWithTracingAsync<XlsToTxtResponse>("PdfCo.xlstoTXT", "XLStoTXT", "POST", requestUrl, input, options);
+        const httpResponse = await this.sendWithTracingAsync<XlsToTxtResponse>("PdfCo.xlStoTxt", "XLStoTXT", "POST", requestUrl, input, options);
 
         return httpResponse.value as XlsToTxtResponse;
     }
@@ -2929,10 +2929,10 @@ export class PdfCoClient extends ConnectorClientBase {
      * Spreadsheet to XML
      * @remarks Convert XLS/XLSX or CSV into XML file. Please see api documentation at https://developer.pdf.co/api/convert-excel/index.html#post-tag-xls-convert-to-xml for comprehensive guidelines.
      */
-    public async xlstoXML(input: XLStoXMLInput, options: ConnectorOperationOptions = {}): Promise<XlsToXmlResponse> {
+    public async xlStoXml(input: XLStoXmlInput, options: ConnectorOperationOptions = {}): Promise<XlsToXmlResponse> {
         const requestPath = `/v1/xls/convert/to/xml`;
         const requestUrl = this.resolveUrl(requestPath);
-        const httpResponse = await this.sendWithTracingAsync<XlsToXmlResponse>("PdfCo.xlstoXML", "XLStoXML", "POST", requestUrl, input, options);
+        const httpResponse = await this.sendWithTracingAsync<XlsToXmlResponse>("PdfCo.xlStoXml", "XLStoXML", "POST", requestUrl, input, options);
 
         return httpResponse.value as XlsToXmlResponse;
     }
@@ -2941,60 +2941,60 @@ export class PdfCoClient extends ConnectorClientBase {
      * Rotate PDF Pages
      * @remarks Rotate PDF Pages. Please see api documentation at https://developer.pdf.co/api/pdf-rotate-pages/index.html for comprehensive guidelines.
      */
-    public async pdfrotatePages(input: PDFRotatePagesInput, options: ConnectorOperationOptions = {}): Promise<PDFRotatePagesResponse> {
+    public async pdfRotatePages(input: PdfRotatePagesInput, options: ConnectorOperationOptions = {}): Promise<PdfRotatePagesResponse> {
         const requestPath = `/v1/pdf/edit/rotate`;
         const requestUrl = this.resolveUrl(requestPath);
-        const httpResponse = await this.sendWithTracingAsync<PDFRotatePagesResponse>("PdfCo.pdfrotatePages", "PDFRotatePages", "POST", requestUrl, input, options);
+        const httpResponse = await this.sendWithTracingAsync<PdfRotatePagesResponse>("PdfCo.pdfRotatePages", "PDFRotatePages", "POST", requestUrl, input, options);
 
-        return httpResponse.value as PDFRotatePagesResponse;
+        return httpResponse.value as PdfRotatePagesResponse;
     }
 
     /**
      * Rotate PDF Pages (Auto)
      * @remarks Uses AI to automatically fix the rotation of pages inside scanned PDF based on text analysis. Please see api documentation at https://developer.pdf.co/api/pdf-rotate-pages/index.html#post-tag-pdf-edit-rotate-auto for comprehensive guidelines.
      */
-    public async pdfautoRotatePages(input: PDFAutoRotatePagesInput, options: ConnectorOperationOptions = {}): Promise<PDFAutoRotatePagesResponse> {
+    public async pdfAutoRotatePages(input: PdfAutoRotatePagesInput, options: ConnectorOperationOptions = {}): Promise<PdfAutoRotatePagesResponse> {
         const requestPath = `/v1/pdf/edit/rotate/auto`;
         const requestUrl = this.resolveUrl(requestPath);
-        const httpResponse = await this.sendWithTracingAsync<PDFAutoRotatePagesResponse>("PdfCo.pdfautoRotatePages", "PDFAutoRotatePages", "POST", requestUrl, input, options);
+        const httpResponse = await this.sendWithTracingAsync<PdfAutoRotatePagesResponse>("PdfCo.pdfAutoRotatePages", "PDFAutoRotatePages", "POST", requestUrl, input, options);
 
-        return httpResponse.value as PDFAutoRotatePagesResponse;
+        return httpResponse.value as PdfAutoRotatePagesResponse;
     }
 
     /**
      * PDF Delete Pages
      * @remarks Delete pages in PDF. Please see api documentation at https://developer.pdf.co/api/pdf-delete-pages/index.html for comprehensive guidelines.
      */
-    public async deletePDFPages(input: PDFDeletePagesInput, options: ConnectorOperationOptions = {}): Promise<PDFDeletePagesResponse> {
+    public async deletePdfPages(input: PdfDeletePagesInput, options: ConnectorOperationOptions = {}): Promise<PdfDeletePagesResponse> {
         const requestPath = `/v1/pdf/edit/delete-pages`;
         const requestUrl = this.resolveUrl(requestPath);
-        const httpResponse = await this.sendWithTracingAsync<PDFDeletePagesResponse>("PdfCo.deletePDFPages", "PDFDeletePages", "POST", requestUrl, input, options);
+        const httpResponse = await this.sendWithTracingAsync<PdfDeletePagesResponse>("PdfCo.deletePdfPages", "PDFDeletePages", "POST", requestUrl, input, options);
 
-        return httpResponse.value as PDFDeletePagesResponse;
+        return httpResponse.value as PdfDeletePagesResponse;
     }
 
     /**
      * PDF Compress and Optimize
      * @remarks Optimize PDF document to reduce its size. Please see api documentation at https://developer.pdf.co/api/pdf-optimize/index.html for comprehensive guidelines.
      */
-    public async pdfcompress(input: PDFCompressInput, options: ConnectorOperationOptions = {}): Promise<PDFCompressResponse> {
+    public async pdfCompress(input: PdfCompressInput, options: ConnectorOperationOptions = {}): Promise<PdfCompressResponse> {
         const requestPath = `/v1/pdf/optimize`;
         const requestUrl = this.resolveUrl(requestPath);
-        const httpResponse = await this.sendWithTracingAsync<PDFCompressResponse>("PdfCo.pdfcompress", "PDFCompress", "POST", requestUrl, input, options);
+        const httpResponse = await this.sendWithTracingAsync<PdfCompressResponse>("PdfCo.pdfCompress", "PDFCompress", "POST", requestUrl, input, options);
 
-        return httpResponse.value as PDFCompressResponse;
+        return httpResponse.value as PdfCompressResponse;
     }
 
     /**
      * Document Classifier
      * @remarks Auto classification Of Incoming Documents based on keywords-based rules. For example, you can define rules to find which vendor provided the document to find which template to apply accordingly. Please see api documentation at https://developer.pdf.co/api/document-classifier/index.html for comprehensive guidelines.
      */
-    public async pdfclassifier(input: PDFClassifierInput, options: ConnectorOperationOptions = {}): Promise<PDFClassifierResponse> {
+    public async pdfClassifier(input: PdfClassifierInput, options: ConnectorOperationOptions = {}): Promise<PdfClassifierResponse> {
         const requestPath = `/v1/pdf/classifier`;
         const requestUrl = this.resolveUrl(requestPath);
-        const httpResponse = await this.sendWithTracingAsync<PDFClassifierResponse>("PdfCo.pdfclassifier", "PDFClassifier", "POST", requestUrl, input, options);
+        const httpResponse = await this.sendWithTracingAsync<PdfClassifierResponse>("PdfCo.pdfClassifier", "PDFClassifier", "POST", requestUrl, input, options);
 
-        return httpResponse.value as PDFClassifierResponse;
+        return httpResponse.value as PdfClassifierResponse;
     }
 
     /**
@@ -3037,12 +3037,12 @@ export class PdfCoClient extends ConnectorClientBase {
      * PDF Attachment Extraction
      * @remarks Extract attachments from input PDF document. Please see api documentation at https://developer.pdf.co/api/extract-attachments/index.html for comprehensive guidelines.
      */
-    public async pdfattachmentExtraction(input: PDFAttachmentExtractionInput, options: ConnectorOperationOptions = {}): Promise<PDFAttachmentExtractionResponse> {
+    public async pdfAttachmentExtraction(input: PdfAttachmentExtractionInput, options: ConnectorOperationOptions = {}): Promise<PdfAttachmentExtractionResponse> {
         const requestPath = `/v1/pdf/attachments/extract`;
         const requestUrl = this.resolveUrl(requestPath);
-        const httpResponse = await this.sendWithTracingAsync<PDFAttachmentExtractionResponse>("PdfCo.pdfattachmentExtraction", "PDFAttachmentExtraction", "POST", requestUrl, input, options);
+        const httpResponse = await this.sendWithTracingAsync<PdfAttachmentExtractionResponse>("PdfCo.pdfAttachmentExtraction", "PDFAttachmentExtraction", "POST", requestUrl, input, options);
 
-        return httpResponse.value as PDFAttachmentExtractionResponse;
+        return httpResponse.value as PdfAttachmentExtractionResponse;
     }
 
 }

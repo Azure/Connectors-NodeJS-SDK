@@ -35,9 +35,15 @@ Azure provides a rich ecosystem of [managed connectors](https://learn.microsoft.
 
 This refresh uses canonical client, trigger and extension-module names. For example,
 import `OneDriveClient` from `@azure/connectors/generated/OneDriveExtensions`, not
-`OnedriveExtensions`. The same prefix rule covers `DataflowsSms`, `UniversalPrint`
+`OnedriveExtensions`. The same prefix rule covers `DataFlowsSms`, `UniversalPrint`
 and `VisualStudioTeamServices`; raw connector API IDs do not change. The connector
 constant is `ConnectorNames.DataFlowsSms`.
+
+For the complete module, public symbol, constant-key, and instance-method rename
+map, see the [preview naming migration guide](docs/naming-migration.md).
+Teams callers should import `AIInsightResponse` / `AIInsightCollectionResponse`
+(instead of `AiInsightResponse` / `AiInsightCollectionResponse`); only the
+TypeScript type names change, not the `listAiInsights` operation or wire format.
 
 File operations whose body schema is binary accept `Blob`. Use a media type when
 known, such as `new Blob([bytes], { type: "application/pdf" })`; without one the
@@ -357,7 +363,7 @@ The following connectors have been generated and validated with comprehensive te
 | **DocuWare** | `@azure/connectors/generated/DocuwareExtensions` | ✅ Complete | 7 tests |
 | **SigningHub** | `@azure/connectors/generated/SigningHubExtensions` | ✅ Complete | 7 tests |
 | **Campfire** | `@azure/connectors/generated/CampfireExtensions` | ✅ Complete | 7 tests |
-| **ClickSend SMS** | `@azure/connectors/generated/ClickSendSmsExtensions` | ✅ Complete | 7 tests |
+| **ClickSend SMS** | `@azure/connectors/generated/ClickSendSmsExtensions` | ✅ Complete | 17 tests |
 | **Freshservice** | `@azure/connectors/generated/FreshServiceExtensions` | ✅ Complete | 7 tests |
 | **Infusionsoft** | `@azure/connectors/generated/InfusionsoftExtensions` | ✅ Complete | 7 tests |
 | **Insightly** | `@azure/connectors/generated/InsightlyExtensions` | ✅ Complete | 7 tests |
@@ -623,7 +629,7 @@ try {
 │   ├── AzureBlobExtensions.ts     # Azure Blob Storage client
 │   ├── AzureMonitorLogsExtensions.ts # Azure Monitor Logs client
 │   ├── BoxExtensions.ts           # Box client
-│   ├── DocuSignExtensions.ts      # DocuSign client
+│   ├── DocusignExtensions.ts      # DocuSign client
 │   ├── DropboxExtensions.ts       # Dropbox client
 │   ├── ExcelOnlineExtensions.ts   # Excel Online client
 │   ├── FtpExtensions.ts           # FTP client
@@ -634,8 +640,8 @@ try {
 │   ├── JiraExtensions.ts          # Jira client
 │   ├── KustoExtensions.ts         # Azure Data Explorer client
 │   ├── MicrosoftFormsExtensions.ts # Microsoft Forms client
-│   ├── MqExtensions.ts            # IBM MQ client
-│   ├── MsGraphGroupsAndUsersExtensions.ts # MS Graph Groups & Users client
+│   ├── MQExtensions.ts            # IBM MQ client
+│   ├── MSGraphGroupsAndUsersExtensions.ts # MS Graph Groups & Users client
 │   ├── Office365Extensions.ts     # Office 365 Outlook client
 │   ├── Office365GroupsMailExtensions.ts # Office 365 Groups Mail client
 │   ├── Office365UsersExtensions.ts # Office 365 Users client

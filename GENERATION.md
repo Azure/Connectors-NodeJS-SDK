@@ -268,7 +268,20 @@ is a separate final merge gate, not a prerequisite for showing the paired output
 | `connectors[].runId` | Optional key into `generationRuns`; required for each client named in the current refresh. |
 | `generationRuns` | Run-scoped generator, live endpoint, capture bounds, ARM-list hash, and independent validation bounds. |
 | `connectors[].validation` | Independent live run ID, capture time, input hash, and output hash; must match the refreshed client. |
+| `generationRuns[].validation.captureEndedAtUtc` | End of the independent fresh metadata download, before the exact-source offline replay. |
+| `generationRuns[].validation.captureGeneratorCommit` | Commit of the binary used to fetch the independent fresh metadata; it is not the producer or replay commit. |
+| `generationRuns[].validation.replayGeneratorCommit` | Commit of the independently rebuilt compiler used to replay the validator inputs offline; record a later replay only after verifying all 106 byte outputs. |
 | `refresh` | Exact refreshed/retained inventory, retention reasons, and generator-emitted shared-file hashes. |
+
+Validation receipts may hash the raw emitted bytes, while manifest `outputSha256`
+normalizes CRLF to LF. Verify the raw receipt against both output copies,
+then record the canonical manifest hash; never substitute a fixture hash for
+a captured live response. Capture and offline-replay generator commits may
+differ; retain their distinct identities without relabeling the producer.
+When final source is committed after the independent fresh capture, record the
+actual producer completion time even if it is later than that capture; the
+independent exact-source replay must finish after the producer and produce
+identical bytes. Do not shift the capture timestamp to imply a later download.
 
 ### Recording provenance for a run
 

@@ -13,8 +13,8 @@ import {
     GoogleDriveClient,
     GoogleTasksClient,
     KustoClient,
-    MqClient,
-    MsGraphGroupsAndUsersClient,
+    MQClient,
+    MSGraphGroupsAndUsersClient,
     Office365Client,
     Office365GroupsMailClient,
     Office365UsersClient,
@@ -73,13 +73,13 @@ describe("ManagedConnectors — re-exports", () => {
     });
 
     it("should re-export MqClient", () => {
-        expect(MqClient).toBeDefined();
-        expect(typeof MqClient).toBe("function");
+        expect(MQClient).toBeDefined();
+        expect(typeof MQClient).toBe("function");
     });
 
     it("should re-export MsGraphGroupsAndUsersClient", () => {
-        expect(MsGraphGroupsAndUsersClient).toBeDefined();
-        expect(typeof MsGraphGroupsAndUsersClient).toBe("function");
+        expect(MSGraphGroupsAndUsersClient).toBeDefined();
+        expect(typeof MSGraphGroupsAndUsersClient).toBe("function");
     });
 
     it("should re-export Office365Client", () => {

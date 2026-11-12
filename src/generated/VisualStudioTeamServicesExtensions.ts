@@ -3182,7 +3182,7 @@ export const VisualStudioTeamServicesTriggerParameters = {
             defaultValue: "Equals",
             allowedValues: ["Equals", "Under"],
         },
-        wiqlMicrosoftVSTSCommonPriority: {
+        wiqlMicrosoftVstsCommonPriority: {
             name: "wiql__Microsoft_VSTS_Common_Priority",
             type: "string",
             required: false,
@@ -3279,7 +3279,7 @@ export const VisualStudioTeamServicesTriggerParameters = {
             defaultValue: "Equals",
             allowedValues: ["Equals", "Under"],
         },
-        wiqlMicrosoftVSTSCommonPriority: {
+        wiqlMicrosoftVstsCommonPriority: {
             name: "wiql__Microsoft_VSTS_Common_Priority",
             type: "string",
             required: false,
@@ -3368,7 +3368,7 @@ export const VisualStudioTeamServicesTriggerParameters = {
             defaultValue: "Equals",
             allowedValues: ["Equals", "Under"],
         },
-        wiqlMicrosoftVSTSCommonPriority: {
+        wiqlMicrosoftVstsCommonPriority: {
             name: "wiql__Microsoft_VSTS_Common_Priority",
             type: "string",
             required: false,
@@ -3456,7 +3456,7 @@ export const VisualStudioTeamServicesTriggerParameters = {
             defaultValue: "Equals",
             allowedValues: ["Equals", "Under"],
         },
-        wiqlMicrosoftVSTSCommonPriority: {
+        wiqlMicrosoftVstsCommonPriority: {
             name: "wiql__Microsoft_VSTS_Common_Priority",
             type: "string",
             required: false,

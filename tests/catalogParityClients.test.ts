@@ -4,10 +4,11 @@ import type { TokenCredential } from "@azure/core-auth";
 import { ConnectorError } from "../src/azureConnectors/connectorError.ts";
 import { ConnectorNames } from "../src/generated/connectorNames.ts";
 import {
-    availableConnectors, DataflowsSmsClient, OneDriveClient,
+    availableConnectors, DataFlowsSmsClient, OneDriveClient,
     ServiceNowClient, UniversalPrintClient,
 } from "../src/generated/ManagedConnectors.ts";
-import { DataflowsSmsTriggerOperations } from "../src/generated/DataflowsSmsExtensions.ts";
+import { DataFlowsSmsTriggerOperations } from "../src/generated/DataFlowsSmsExtensions.ts";
+import type { AIInsightResponse, AIInsightCollectionResponse } from "../src/generated/TeamsExtensions.ts";
 import { OneDriveTriggerOperations, OneDriveTriggerParameters } from "../src/generated/OneDriveExtensions.ts";
 import * as generated from "../src/generated/index.ts";
 import * as fs from "node:fs";
@@ -37,7 +38,7 @@ afterEach(() => {
 
 describe("new catalog clients", () => {
     it.each([
-        ["DataFlowsSms", "dataflowssms", DataflowsSmsClient],
+        ["DataFlowsSms", "dataflowssms", DataFlowsSmsClient],
         ["OneDrive", "onedrive", OneDriveClient],
         ["ServiceNow", "service-now", ServiceNowClient],
         ["UniversalPrint", "universalprint", UniversalPrintClient],
@@ -53,7 +54,7 @@ describe("new catalog clients", () => {
     });
 
     it.each([
-        ["DataflowsSms", "DataflowsSmsClient"],
+        ["DataFlowsSms", "DataFlowsSmsClient"],
         ["OneDrive", "OneDriveClient"],
         ["ServiceNow", "ServiceNowClient"],
         ["UniversalPrint", "UniversalPrintClient"],
@@ -82,7 +83,7 @@ describe("new catalog clients", () => {
 
     it("serializes DataFlows SMS request and returns typed response", async () => {
         const fetch = mockResponse({ status: "accepted" });
-        const response = await new DataflowsSmsClient(runtimeUrl, credential).sendSms({
+        const response = await new DataFlowsSmsClient(runtimeUrl, credential).sendSms({
             recipient: "+12065550123", sender_id: "Notify", message: "hello", type: "sms",
         });
         expect(response).toEqual({ status: "accepted" });
@@ -97,7 +98,7 @@ describe("new catalog clients", () => {
 
     it("propagates DataFlows SMS HTTP errors instead of returning a payload", async () => {
         const fetch = mockResponse({ error: "invalid" }, 400);
-        await expect(new DataflowsSmsClient(runtimeUrl, credential).getBalance()).rejects.toMatchObject({
+        await expect(new DataFlowsSmsClient(runtimeUrl, credential).getBalance()).rejects.toMatchObject({
             statusCode: 400, connectorName: "dataflowssms",
         } satisfies Partial<ConnectorError>);
         expect(fetch).toHaveBeenCalledTimes(1);
@@ -212,7 +213,7 @@ describe("new catalog clients", () => {
     });
 
     it("preserves trigger IDs and actual OneDrive parameter metadata", () => {
-        expect(DataflowsSmsTriggerOperations).toEqual({ OnRegisterWebhook: "RegisterWebhook" });
+        expect(DataFlowsSmsTriggerOperations).toEqual({ OnRegisterWebhook: "RegisterWebhook" });
         expect(OneDriveTriggerOperations).toEqual({ OnDeletedFiles: "OnDeletedFiles", OnNewFile: "OnNewFileV2", OnNewFiles: "OnNewFilesV2", OnUpdatedFile: "OnUpdatedFileV2", OnUpdatedFiles: "OnUpdatedFilesV2" });
         expect(OneDriveTriggerParameters.OnNewFile.folderId).toMatchObject({ name: "folderId", type: "string", required: true });
         expect(OneDriveTriggerParameters.OnNewFile.includeSubfolders).toMatchObject({ name: "includeSubfolders", type: "boolean", required: false, defaultValue: "false" });
@@ -227,6 +228,34 @@ describe("new catalog clients", () => {
         expect(new Uint8Array(await new Response(init.body).arrayBuffer())).toEqual(bytes);
         expect(new Headers(init.headers).get("Content-Type")).toBe("application/pdf");
         expect(init.method).toBe("POST");
+    });
+
+    it.each([
+        ["commondataservice", "CommonDataService"],
+        ["dataflowssms", "DataFlowsSms"],
+        ["documentdb", "DocumentDB"],
+        ["docusign", "Docusign"],
+        ["freshservice", "Freshservice"],
+        ["jedoxodatahub", "JedoxODataHub"],
+        ["mailchimp", "Mailchimp"],
+        ["mq", "MQ"],
+        ["msgraphgroupsanduser", "MSGraphGroupsAndUsers"],
+        ["revai", "RevAI"],
+        ["servicebus", "ServiceBus"],
+        ["starrezrestv1", "StarRezRestV1"],
+        ["zeptomail", "ZeptoMail"],
+    ] as const)("keeps %s bound to its canonical %s module and class", (apiName, prefix) => {
+        const moduleFile = `${prefix}Extensions.ts`;
+        expect(fs.readdirSync("src/generated")).toContain(moduleFile);
+        const Client = generated[`${prefix}Client` as keyof typeof generated] as typeof DataFlowsSmsClient;
+        expect(Client.name).toBe(`${prefix}Client`);
+        expect(new Client(runtimeUrl, credential).connectorName).toBe(apiName);
+    });
+
+    it("keeps Teams AI insight type-only renames independent of JSON field names", () => {
+        const insight: AIInsightResponse = { id: "insight-1", contentCorrelationId: "correlation-1" };
+        const collection: AIInsightCollectionResponse = { value: [insight] };
+        expect(JSON.stringify(collection)).toBe('{"value":[{"id":"insight-1","contentCorrelationId":"correlation-1"}]}');
     });
 
 });

@@ -10,14 +10,14 @@ import type { ConnectorClientOptions, ConnectorOperationOptions } from "../azure
 /**
  * Invoke API
  */
-export interface InvokeAPIInput {
+export interface InvokeApiInput {
     [key: string]: unknown;
 }
 
 /**
  * Response for Invoke API
  */
-export interface InvokeAPIResponse {
+export interface InvokeApiResponse {
     [key: string]: unknown;
 }
 
@@ -154,14 +154,14 @@ export class ZohoSignClient extends ConnectorClientBase {
      * Invoke API
      * @remarks Invoke API
      */
-    public async invokeAPI(input: InvokeAPIInput, url: string, method: string, options: ConnectorOperationOptions = {}): Promise<InvokeAPIResponse> {
+    public async invokeApi(input: InvokeApiInput, url: string, method: string, options: ConnectorOperationOptions = {}): Promise<InvokeApiResponse> {
         const queryParams: string[] = [];
         queryParams.push(`method=${encodeURIComponent(String(method))}`);
         const requestPath = `/${encodeURIComponent(String(url))}` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
-        const httpResponse = await this.sendWithTracingAsync<InvokeAPIResponse>("ZohoSign.invokeAPI", "InvokeAPI", "POST", requestUrl, input, options);
+        const httpResponse = await this.sendWithTracingAsync<InvokeApiResponse>("ZohoSign.invokeApi", "InvokeAPI", "POST", requestUrl, input, options);
 
-        return httpResponse.value as InvokeAPIResponse;
+        return httpResponse.value as InvokeApiResponse;
     }
 
     /**

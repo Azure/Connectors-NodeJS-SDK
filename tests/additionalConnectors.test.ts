@@ -17,7 +17,7 @@ import {
     AzureVMClient,
     CloudconvertClient,
     DataflowsClient,
-    DocumentDbClient,
+    DocumentDBClient,
     EventHubsClient,
     ExcelOnlineBusinessClient,
     KeyVaultClient,
@@ -26,7 +26,7 @@ import {
     OnenoteClient,
     OutlookClient,
     PlannerClient,
-    ServicebusClient,
+    ServiceBusClient,
     TrelloClient,
     VisualStudioTeamServicesClient,
     WdatpClient,
@@ -83,7 +83,7 @@ const ConnectorCases: ConnectorCase[] = [
         await client.captureWebsite({ tasks: { capture: { operation: "capture-website", url: "https://example.com" } } }, "application/json"), "POST"),
     connectorCase("dataflows", DataflowsClient, async client =>
         await client.refreshDataflow("group-id", "dataflow-id", "Workspace"), "POST"),
-    connectorCase("documentdb", DocumentDbClient, async client =>
+    connectorCase("documentdb", DocumentDBClient, async client =>
         await client.getDocument("account", "database", "collection", "document")),
     connectorCase("eventhubs", EventHubsClient, async client =>
         await client.sendEvent({ ContentData: "aGVsbG8=" }, "event-hub"), "POST"),
@@ -96,13 +96,13 @@ const ConnectorCases: ConnectorCase[] = [
     connectorCase("onenote", OnenoteClient, async client => await client.getPageContent("notebook", "section", "page", false)),
     connectorCase("outlook", OutlookClient, async client => await client.getEmail("message-id")),
     connectorCase("planner", PlannerClient, async client => await client.getPlanDetails("plan-id")),
-    connectorCase("servicebus", ServicebusClient, async client => await client.getDeferredMessageFromQueue("queue", 1)),
+    connectorCase("servicebus", ServiceBusClient, async client => await client.getDeferredMessageFromQueue("queue", 1)),
     connectorCase("trello", TrelloClient, async client => await client.getCard("card-id", "board-id")),
     connectorCase("visualstudioteamservices", VisualStudioTeamServicesClient, async client =>
         await client.getBuild("project", 1, "account")),
     connectorCase("wdatp", WdatpClient, async client => await client.getSingleAlert("alert-id")),
     connectorCase("wordonlinebusiness", WordOnlineBusinessClient, async client =>
-        await client.getFilePDF("source", "drive", "file", "pdf")),
+        await client.getFilePdf("source", "drive", "file", "pdf")),
     connectorCase("yammer", YammerClient, async client => await client.getUserDetailsById(1)),
 ];
 

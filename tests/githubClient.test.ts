@@ -4,7 +4,7 @@ import type { TokenCredential } from "@azure/core-auth";
 import {
     GitHubClient,
     RepositoryDetails,
-    GeneralAPIModel,
+    GeneralApiModel,
 } from "../src/generated/GitHubExtensions.ts";
 import { ConnectorError } from "../src/azureConnectors/connectorError.ts";
 import { ConnectorNames } from "../src/generated/connectorNames.ts";
@@ -77,7 +77,7 @@ describe("GitHubClient — getPullRequests", () => {
     });
 
     it("should include state query parameter when provided", async () => {
-        const mockResponse: GeneralAPIModel[] = [];
+        const mockResponse: GeneralApiModel[] = [];
         mockFetchResponse(mockResponse);
 
         const client = new GitHubClient(TestConnectionUrl, createMockCredential());

@@ -177,7 +177,7 @@ export type MicrosoftBookingsTriggerOperation = typeof MicrosoftBookingsTriggerO
 
 export const MicrosoftBookingsTriggerParameters = {
     OnCancelAppointment: {
-        sMTPAddress: {
+        smtpAddress: {
             name: "SMTPAddress",
             type: "string",
             required: true,
@@ -187,7 +187,7 @@ export const MicrosoftBookingsTriggerParameters = {
         },
     },
     OnCreateAppointment: {
-        sMTPAddress: {
+        smtpAddress: {
             name: "SMTPAddress",
             type: "string",
             required: true,
@@ -197,7 +197,7 @@ export const MicrosoftBookingsTriggerParameters = {
         },
     },
     OnUpdateAppointment: {
-        sMTPAddress: {
+        smtpAddress: {
             name: "SMTPAddress",
             type: "string",
             required: true,
@@ -233,11 +233,11 @@ export class MicrosoftBookingsClient extends ConnectorClientBase {
      * List Booking Businesses where user is an admin
      * @remarks Operation used to list all mailboxes for which the accessing user is an Administrator.
      */
-    public listBookingsBusinessUserAsAdmin(xPreferOWAUserConfig: string, options: ConnectorOperationOptions = {}): ConnectorPagedAsyncIterableIterator<MailboxEntity> {
+    public listBookingsBusinessUserAsAdmin(xPreferOwaUserConfig: string, options: ConnectorOperationOptions = {}): ConnectorPagedAsyncIterableIterator<MailboxEntity> {
         const requestPath = `/BookingsService/api/V1/bookingBusinessesUserAsAdmin`;
         const requestHeaders: Record<string, string> = {};
-        if (xPreferOWAUserConfig !== undefined) {
-            requestHeaders["X-Prefer-OWAUserConfig"] = String(xPreferOWAUserConfig);
+        if (xPreferOwaUserConfig !== undefined) {
+            requestHeaders["X-Prefer-OWAUserConfig"] = String(xPreferOwaUserConfig);
         }
         return this.createPageable<ListMailboxResponse, MailboxEntity>(
             requestPath,

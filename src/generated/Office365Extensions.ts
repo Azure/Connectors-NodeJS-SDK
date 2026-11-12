@@ -2091,7 +2091,7 @@ export interface SensitivityLabelMetadata {
 /**
  * Definition: MCPQueryRequest
  */
-export interface MCPQueryRequest {
+export interface McpQueryRequest {
     jsonrpc?: string;
     id?: string;
     method?: string;
@@ -2104,7 +2104,7 @@ export interface MCPQueryRequest {
 /**
  * Definition: MCPQueryResponse
  */
-export interface MCPQueryResponse {
+export interface McpQueryResponse {
     jsonrpc?: string;
     id?: string;
     method?: string;
@@ -3026,48 +3026,48 @@ export class Office365Client extends ConnectorClientBase {
      * Email Management MCP Server (deprecated)
      * @remarks This MCP server manages email messages from your Office 365 account
      */
-    public async mcpEmailsManagement(input: MCPQueryRequest, options: McpEmailsManagementOptions = {}): Promise<MCPQueryResponse> {
+    public async mcpEmailsManagement(input: McpQueryRequest, options: McpEmailsManagementOptions = {}): Promise<McpQueryResponse> {
         const queryParams: string[] = [];
         if (options.sessionId !== undefined) {
             queryParams.push(`sessionId=${encodeURIComponent(String(options.sessionId))}`);
         }
         const requestPath = `/mcp/EmailsManagement` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
-        const httpResponse = await this.sendWithTracingAsync<MCPQueryResponse>("Office365.mcpEmailsManagement", "mcp_EmailsManagement", "POST", requestUrl, input, options);
+        const httpResponse = await this.sendWithTracingAsync<McpQueryResponse>("Office365.mcpEmailsManagement", "mcp_EmailsManagement", "POST", requestUrl, input, options);
 
-        return httpResponse.value as MCPQueryResponse;
+        return httpResponse.value as McpQueryResponse;
     }
 
     /**
      * Meeting Management MCP Server (deprecated)
      * @remarks This MCP server manages events, calendars and meetings
      */
-    public async mcpMeetingManagement(input: MCPQueryRequest, options: McpMeetingManagementOptions = {}): Promise<MCPQueryResponse> {
+    public async mcpMeetingManagement(input: McpQueryRequest, options: McpMeetingManagementOptions = {}): Promise<McpQueryResponse> {
         const queryParams: string[] = [];
         if (options.sessionId !== undefined) {
             queryParams.push(`sessionId=${encodeURIComponent(String(options.sessionId))}`);
         }
         const requestPath = `/mcp/MeetingManagement` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
-        const httpResponse = await this.sendWithTracingAsync<MCPQueryResponse>("Office365.mcpMeetingManagement", "mcp_MeetingManagement", "POST", requestUrl, input, options);
+        const httpResponse = await this.sendWithTracingAsync<McpQueryResponse>("Office365.mcpMeetingManagement", "mcp_MeetingManagement", "POST", requestUrl, input, options);
 
-        return httpResponse.value as MCPQueryResponse;
+        return httpResponse.value as McpQueryResponse;
     }
 
     /**
      * Contact Management MCP Server
      * @remarks This MCP server manages contacts
      */
-    public async mcpContactsManagement(input: MCPQueryRequest, options: McpContactsManagementOptions = {}): Promise<MCPQueryResponse> {
+    public async mcpContactsManagement(input: McpQueryRequest, options: McpContactsManagementOptions = {}): Promise<McpQueryResponse> {
         const queryParams: string[] = [];
         if (options.sessionId !== undefined) {
             queryParams.push(`sessionId=${encodeURIComponent(String(options.sessionId))}`);
         }
         const requestPath = `/mcp/ContactsManagement` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
-        const httpResponse = await this.sendWithTracingAsync<MCPQueryResponse>("Office365.mcpContactsManagement", "mcp_ContactsManagement", "POST", requestUrl, input, options);
+        const httpResponse = await this.sendWithTracingAsync<McpQueryResponse>("Office365.mcpContactsManagement", "mcp_ContactsManagement", "POST", requestUrl, input, options);
 
-        return httpResponse.value as MCPQueryResponse;
+        return httpResponse.value as McpQueryResponse;
     }
 
     /**

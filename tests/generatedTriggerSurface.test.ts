@@ -244,7 +244,7 @@ describe("Generated clients — no trigger operation is invoked as a data-plane 
 
     it("should emit query and header service options without leaking transport types", () => {
         const arm = generatedFiles.find(file => file.connector === "Arm");
-        const revai = generatedFiles.find(file => file.connector === "Revai");
+        const revai = generatedFiles.find(file => file.connector === "RevAI");
         expect(arm).toBeDefined();
         expect(revai).toBeDefined();
         expect(arm!.content).toContain("export interface ListResourceGroupsOptions extends ConnectorOperationOptions");
@@ -254,7 +254,7 @@ describe("Generated clients — no trigger operation is invoked as a data-plane 
     });
 
     it("should preserve named empty-object model references", () => {
-        const commonDataService = generatedFiles.find(file => file.connector === "Commondataservice");
+        const commonDataService = generatedFiles.find(file => file.connector === "CommonDataService");
         expect(commonDataService).toBeDefined();
         expect(commonDataService!.content).toContain("schema?: ObjectEntity;");
         expect(commonDataService!.content).toContain("export interface ObjectEntity");
@@ -350,7 +350,7 @@ describe("Generated clients — no trigger operation is invoked as a data-plane 
     // NOTE(swapnilnagar): Docusign's 'triggerMaestroFlow' is a real action on a '/trigger/' path,
     // so the guard cross-references trigger operation IDs instead of substring-matching the route.
     it("should treat the Docusign Maestro action as an action, not a trigger", () => {
-        const docusign = generatedFiles.find(file => file.connector === "DocuSign");
+        const docusign = generatedFiles.find(file => file.connector === "Docusign");
         expect(docusign).toBeDefined();
 
         const methodNames = new Set(extractClientMethodNames(docusign!.content));

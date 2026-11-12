@@ -14,8 +14,8 @@ import {
     Table,
     VisualizeResults,
     AsyncCommandResult,
-    MCPQueryRequest,
-    MCPQueryResponse,
+    McpQueryRequest,
+    McpQueryResponse,
 } from "../src/generated/KustoExtensions.ts";
 import { ConnectorError } from "../src/azureConnectors/connectorError.ts";
 import { ConnectorNames } from "../src/generated/connectorNames.ts";
@@ -81,7 +81,7 @@ const _commandVisualizeInput: CommandAndVisualizeSchema = {
     chartType: "Bar Chart" as unknown as ChartType,
 };
 
-const _mcpRequest: MCPQueryRequest = {
+const _mcpRequest: McpQueryRequest = {
     jsonrpc: "2.0",
     id: "1",
     method: "tools/call",
@@ -251,11 +251,11 @@ describe("KustoClient — mcpKustoQueryManagement", () => {
     });
 
     it("should POST to /mcp/KustoQueryManagement without session ID", async () => {
-        const mockResponse: MCPQueryResponse = { result: { status: "ok" } };
+        const mockResponse: McpQueryResponse = { result: { status: "ok" } };
         mockFetchResponse(mockResponse);
 
         const client = new KustoClient(TestConnectionUrl, createMockCredential());
-        const input: MCPQueryRequest = {
+        const input: McpQueryRequest = {
             jsonrpc: "2.0",
             id: "1",
             method: "tools/call",
@@ -273,7 +273,7 @@ describe("KustoClient — mcpKustoQueryManagement", () => {
         mockFetchResponse({});
 
         const client = new KustoClient(TestConnectionUrl, createMockCredential());
-        const input: MCPQueryRequest = {
+        const input: McpQueryRequest = {
             jsonrpc: "2.0",
             id: "2",
             method: "tools/call",

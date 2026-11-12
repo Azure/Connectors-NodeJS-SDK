@@ -61,9 +61,9 @@ export interface CreateWordFileWithContentOptions extends ConnectorOperationOpti
 }
 
 /**
- * Options for the getFilePDF operation.
+ * Options for the getFilePdf operation.
  */
-export interface GetFilePDFOptions extends ConnectorOperationOptions {
+export interface GetFilePdfOptions extends ConnectorOperationOptions {
     /** Select if you want to extract Sensitivity label ( false, true). */
     extractSensitivityLabel?: boolean;
     /** A boolean whether to fetch sensitivity label Metadata for associated LabelId. */
@@ -128,7 +128,7 @@ export class WordOnlineBusinessClient extends ConnectorClientBase {
      * Convert Word Document to PDF
      * @remarks Gets a PDF version of the selected file
      */
-    public async getFilePDF(source: string, drive: string, file: string, format: string, options: GetFilePDFOptions = {}): Promise<Blob> {
+    public async getFilePdf(source: string, drive: string, file: string, format: string, options: GetFilePdfOptions = {}): Promise<Blob> {
         const queryParams: string[] = [];
         queryParams.push(`source=${encodeURIComponent(String(source))}`);
         queryParams.push(`drive=${encodeURIComponent(String(drive))}`);
@@ -142,7 +142,7 @@ export class WordOnlineBusinessClient extends ConnectorClientBase {
         queryParams.push(`format=${encodeURIComponent(String(format))}`);
         const requestPath = `/api/templates/convertFile` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
-        const httpResponse = await this.sendWithTracingAsync<Blob>("WordOnlineBusiness.getFilePDF", "GetFilePDF", "GET", requestUrl, undefined, options, undefined, true);
+        const httpResponse = await this.sendWithTracingAsync<Blob>("WordOnlineBusiness.getFilePdf", "GetFilePDF", "GET", requestUrl, undefined, options, undefined, true);
 
         return httpResponse.value as Blob;
     }

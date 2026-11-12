@@ -16,7 +16,7 @@
 "use strict";
 
 const { ManagedIdentityTokenProvider, ConnectorError } = require("@azure/connectors");
-const { MailChimpClient } = require("@azure/connectors/generated/MailChimpExtensions");
+const { MailchimpClient } = require("@azure/connectors/generated/MailchimpExtensions");
 
 const CONNECTION_URL = process.env.MAILCHIMP_CONNECTION_URL ?? "";
 
@@ -27,7 +27,7 @@ if (!CONNECTION_URL) {
 
 async function main() {
     const tokenProvider = new ManagedIdentityTokenProvider();
-    const client = new MailChimpClient(CONNECTION_URL, tokenProvider);
+    const client = new MailchimpClient(CONNECTION_URL, tokenProvider);
 
     // Example 1: List the campaigns.
     try {

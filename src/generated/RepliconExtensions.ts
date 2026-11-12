@@ -121,7 +121,7 @@ export interface BulkGetTimeEnteredSummaryInput {
 /**
  * Subscribe to Event triggers
  */
-export interface WebhookSubscriptionsRestAPIInput {
+export interface WebhookSubscriptionsRestApiInput {
     /** Event type to subscribe to */
     eventType?: string;
     /** target url */
@@ -262,13 +262,13 @@ export interface TenantEndpointDetails {
 // #endregion Types
 
 export const RepliconTriggerOperations = {
-    OnWebhookSubscriptionsRestAPI: "WebhookSubscriptionsRestAPI",
+    OnWebhookSubscriptionsRestApi: "WebhookSubscriptionsRestAPI",
 } as const;
 
 export type RepliconTriggerOperation = typeof RepliconTriggerOperations[keyof typeof RepliconTriggerOperations];
 
 export const RepliconTriggerParameters = {
-    OnWebhookSubscriptionsRestAPI: {
+    OnWebhookSubscriptionsRestApi: {
         hostUrl: {
             name: "hostUrl",
             type: "string",

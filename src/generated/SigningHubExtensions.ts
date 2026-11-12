@@ -443,8 +443,8 @@ export interface FieldDimension {
  * Definition: QrCodeOptions
  */
 export interface QrCodeOptions {
-    error_correction_level: ECCLevelAPI;
-    encoding: EciModeAPI;
+    error_correction_level: EccLevelApi;
+    encoding: EciModeApi;
     /** Specifies the number of pixels per module in the QR code. A higher number results in a larger and more detailed QR code. Default is "20" Possible Values are : 20 | 30 | 40 | 50 */
     pixels_per_module: number;
     /** Indicates whether quiet zones (margins) should be drawn around the QR code. Quiet zones help scanners to detect and decode the QR code more accurately. Default is "true" */
@@ -454,12 +454,12 @@ export interface QrCodeOptions {
 /**
  * Definition: ECCLevelAPI
  */
-export type ECCLevelAPI = "L" | "M" | "Q" | "H" | "Default";
+export type EccLevelApi = "L" | "M" | "Q" | "H" | "Default";
 
 /**
  * Definition: EciModeAPI
  */
-export type EciModeAPI = "Default" | "Iso8859_1" | "Iso8859_2" | "Utf8";
+export type EciModeApi = "Default" | "Iso8859_1" | "Iso8859_2" | "Utf8";
 
 /**
  * Definition: QrCodeColor
@@ -2858,13 +2858,13 @@ export interface FieldAuthentication {
     /** True,  if authentications are enabled for the electronic signature fields. */
     enabled: boolean;
     sms_otp?: AccessSecuritySmsOtpResponse;
-    totp?: AccessSecurityTOTPResponse;
+    totp?: AccessSecurityTotpResponse;
 }
 
 /**
  * Definition: AccessSecurityTOTPResponse
  */
-export interface AccessSecurityTOTPResponse {
+export interface AccessSecurityTotpResponse {
     /** True, if TOTP authentication is enabled for the package. */
     enabled: boolean;
 }
@@ -4702,7 +4702,7 @@ export class SigningHubClient extends ConnectorClientBase {
      * Add QR Code
      * @remarks Business applications can use this service API to add a QR Code to a document in a package.
      */
-    public async addQRQRCode(input: QrCodeRequest, packageId: number, documentId: number, contentType: string, accept: string, options: ConnectorOperationOptions = {}): Promise<AddQrCodeResponse> {
+    public async addQrqrCode(input: QrCodeRequest, packageId: number, documentId: number, contentType: string, accept: string, options: ConnectorOperationOptions = {}): Promise<AddQrCodeResponse> {
         const requestPath = `/v4/packages/${encodeURIComponent(String(packageId))}/documents/${encodeURIComponent(String(documentId))}/fields/qrcode`;
         const requestHeaders: Record<string, string> = {};
         if (contentType !== undefined) {
@@ -4712,7 +4712,7 @@ export class SigningHubClient extends ConnectorClientBase {
             requestHeaders["Accept"] = String(accept);
         }
         const requestUrl = this.resolveUrl(requestPath);
-        const httpResponse = await this.sendWithTracingAsync<AddQrCodeResponse>("SigningHub.addQRQRCode", "V4_QR_AddQRCode", "POST", requestUrl, input, options, requestHeaders);
+        const httpResponse = await this.sendWithTracingAsync<AddQrCodeResponse>("SigningHub.addQrqrCode", "V4_QR_AddQRCode", "POST", requestUrl, input, options, requestHeaders);
 
         return httpResponse.value as AddQrCodeResponse;
     }
@@ -4721,7 +4721,7 @@ export class SigningHubClient extends ConnectorClientBase {
      * Update QR Code
      * @remarks Business applications can use this service API to update a QR Code of a document in a package.
      */
-    public async updateQRQRCode(input: UpdateQrCodeRequest, packageId: number, documentId: number, contentType: string, accept: string, options: ConnectorOperationOptions = {}): Promise<UpdateQrCodeResponse> {
+    public async updateQrqrCode(input: UpdateQrCodeRequest, packageId: number, documentId: number, contentType: string, accept: string, options: ConnectorOperationOptions = {}): Promise<UpdateQrCodeResponse> {
         const requestPath = `/v4/packages/${encodeURIComponent(String(packageId))}/documents/${encodeURIComponent(String(documentId))}/fields/qrcode`;
         const requestHeaders: Record<string, string> = {};
         if (contentType !== undefined) {
@@ -4731,7 +4731,7 @@ export class SigningHubClient extends ConnectorClientBase {
             requestHeaders["Accept"] = String(accept);
         }
         const requestUrl = this.resolveUrl(requestPath);
-        const httpResponse = await this.sendWithTracingAsync<UpdateQrCodeResponse>("SigningHub.updateQRQRCode", "V4_QR_UpdateQRCode", "PUT", requestUrl, input, options, requestHeaders);
+        const httpResponse = await this.sendWithTracingAsync<UpdateQrCodeResponse>("SigningHub.updateQrqrCode", "V4_QR_UpdateQRCode", "PUT", requestUrl, input, options, requestHeaders);
 
         return httpResponse.value as UpdateQrCodeResponse;
     }

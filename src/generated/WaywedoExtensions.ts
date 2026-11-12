@@ -132,7 +132,7 @@ export interface InviteSupervisorWebHookInput {
 /**
  * When a procedure is accepted
  */
-export interface GenerateAcceptancePDFWebHookInput {
+export interface GenerateAcceptancePdfWebHookInput {
     /** The URL to call when action occurs. */
     callbackUrl: string;
 }
@@ -179,6 +179,14 @@ export interface ChecklistStep {
     title?: string;
     /** The number of the instance step. */
     ordinal?: number;
+    /** The completed status of the step. */
+    status?: string;
+    /** Date and time of when the step was checked. */
+    checked?: string;
+    /** The email or username of the user that completed the step. */
+    checkedBy?: string;
+    /** Date and time of when the step is due. */
+    due?: string;
 }
 
 /**
@@ -197,7 +205,7 @@ export interface CompletedStep {
     createdBy?: string;
     /** The date and time the checklist step was due. */
     due?: string;
-    step?: ChecklistStep;
+    step?: Record<string, unknown>;
     /** The list of choices made if the step is a decision point. */
     decisionChoices?: Array<string>;
 }
@@ -248,8 +256,12 @@ export interface Procedure {
     url?: string;
     /** Wether the procedure is restricted or not. */
     restricted?: boolean;
-    /** The type of procedure; 1 (standard) or 2 (checklist) */
+    /** The type of procedure; 1 (standard), 2 (checklist), 3 (Quiz), 4 (Form) */
     type?: number;
+    /** The version of this procedure. */
+    version?: string;
+    /** Date and time of when the procedure was last edited. */
+    lastEdited?: string;
 }
 
 /**
@@ -335,7 +347,7 @@ export const WaywedoTriggerOperations = {
     OnChecklistCreateWebHook: "Checklist_Create_WebHook",
     OnChecklistStepCompletedWebHook: "Checklist_Step_Completed_WebHook",
     OnFinishChecklistWebHook: "Finish_Checklist_WebHook",
-    OnGenerateAcceptancePDFWebHook: "Generate_Acceptance_PDF_WebHook",
+    OnGenerateAcceptancePdfWebHook: "Generate_Acceptance_PDF_WebHook",
     OnInviteSupervisorWebHook: "Invite_Supervisor_WebHook",
     OnNewCommentWebHook: "New_Comment_WebHook",
 } as const;

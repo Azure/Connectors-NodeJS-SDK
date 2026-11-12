@@ -215,7 +215,7 @@ describe("SmtpClient — error handling", () => {
 
 describe("Smtp — connector registry", () => {
     it("should have smtp in ConnectorNames", () => {
-        expect(ConnectorNames.SMTP).toBe("smtp");
+        expect(ConnectorNames.Smtp).toBe("smtp");
     });
 
     it("should include smtp in availableConnectors", () => {

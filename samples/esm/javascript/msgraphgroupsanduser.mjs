@@ -19,7 +19,7 @@
  */
 
 import { ManagedIdentityTokenProvider, ConnectorError } from "@azure/connectors";
-import { MsGraphGroupsAndUsersClient } from "@azure/connectors/generated/MsGraphGroupsAndUsersExtensions";
+import { MSGraphGroupsAndUsersClient } from "@azure/connectors/generated/MSGraphGroupsAndUsersExtensions";
 
 const CONNECTION_URL = process.env.MSGRAPH_CONNECTION_URL ?? "";
 
@@ -33,7 +33,7 @@ async function main() {
     console.log("=".repeat(60));
 
     const tokenProvider = new ManagedIdentityTokenProvider();
-    const client = new MsGraphGroupsAndUsersClient(CONNECTION_URL, tokenProvider);
+    const client = new MSGraphGroupsAndUsersClient(CONNECTION_URL, tokenProvider);
 
     // Example 1: List users
     console.log("\n--- List Users ---");

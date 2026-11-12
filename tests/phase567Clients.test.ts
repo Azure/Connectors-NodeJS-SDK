@@ -8,19 +8,19 @@ import { EtsyClient } from "../src/generated/EtsyExtensions.ts";
 import { EventbriteClient } from "../src/generated/EventbriteExtensions.ts";
 import { FormstackFormsClient } from "../src/generated/FormstackFormsExtensions.ts";
 import { ImpexiumClient } from "../src/generated/ImpexiumExtensions.ts";
-import { JedoxOdataHubClient } from "../src/generated/JedoxOdataHubExtensions.ts";
+import { JedoxODataHubClient } from "../src/generated/JedoxODataHubExtensions.ts";
 import { MeetingRoomMapClient } from "../src/generated/MeetingRoomMapExtensions.ts";
 import { OrderfulClient } from "../src/generated/OrderfulExtensions.ts";
 import { PlivoClient, type Sms } from "../src/generated/PlivoExtensions.ts";
 import { RepliconClient } from "../src/generated/RepliconExtensions.ts";
-import { RevaiClient } from "../src/generated/RevaiExtensions.ts";
+import { RevAIClient } from "../src/generated/RevAIExtensions.ts";
 import {
     CustomPropertyDataDisplay,
     CustomPropertyValues,
     SeismicPlannerClient,
 } from "../src/generated/SeismicPlannerExtensions.ts";
 import { StarmindClient } from "../src/generated/StarmindExtensions.ts";
-import { StarrezRestV1Client } from "../src/generated/StarrezRestV1Extensions.ts";
+import { StarRezRestV1Client } from "../src/generated/StarRezRestV1Extensions.ts";
 import { TallyfyClient } from "../src/generated/TallyfyExtensions.ts";
 import { TextRequestClient } from "../src/generated/TextRequestExtensions.ts";
 import { TicketmasterClient } from "../src/generated/TicketmasterExtensions.ts";
@@ -59,7 +59,7 @@ const ConnectorCases: ConnectorCase[] = [
     { displayName: "Twitter", apiName: "twitter", connectorNameKey: "X", clientConstructor: TwitterClient, methodName: "homeTimeline" },
     { displayName: "WordPress", apiName: "wordpress", connectorNameKey: "WordPress", clientConstructor: WordPressClient, methodName: "siteStats", methodArguments: ["site-id"] },
     { displayName: "Plivo", apiName: "plivo", connectorNameKey: "Plivo", clientConstructor: PlivoClient, methodName: "listMessages", methodArguments: ["auth-id"] },
-    { displayName: "Rev.ai", apiName: "revai", connectorNameKey: "RevAIIndependentPublisher", clientConstructor: RevaiClient, methodName: "getTranscriptions" },
+    { displayName: "Rev.ai", apiName: "revai", connectorNameKey: "RevAIIndependentPublisher", clientConstructor: RevAIClient, methodName: "getTranscriptions" },
     { displayName: "Starmind", apiName: "starmind", connectorNameKey: "Starmind", clientConstructor: StarmindClient, methodName: "findQuestions" },
     { displayName: "Tallyfy", apiName: "tallyfy", connectorNameKey: "Tallyfy", clientConstructor: TallyfyClient, methodName: "getUserTasks", methodArguments: ["organization", "user-id"] },
     { displayName: "Eventbrite", apiName: "eventbrite", connectorNameKey: "Eventbrite", clientConstructor: EventbriteClient, methodName: "createEvent", methodArguments: ["organization-id"] },
@@ -70,12 +70,12 @@ const ConnectorCases: ConnectorCase[] = [
     { displayName: "Seismic Planner", apiName: "seismicplanner", connectorNameKey: "SeismicPlanner", clientConstructor: SeismicPlannerClient, methodName: "getComments", methodArguments: ["space-id", "node-id"] },
     { displayName: "Way We Do", apiName: "waywedo", connectorNameKey: "WayWeDo", clientConstructor: WaywedoClient, methodName: "getChecklistInstance", methodArguments: ["instance-id"] },
     { displayName: "Meeting Room Map", apiName: "meetingroommap", connectorNameKey: "MeetingRoomMap", clientConstructor: MeetingRoomMapClient, methodName: "getCategories" },
-    { displayName: "StarRez REST V1", apiName: "starrezrestv1", connectorNameKey: "StarRezRESTV1", clientConstructor: StarrezRestV1Client, methodName: "selectEntry", methodArguments: [{}] },
+    { displayName: "StarRez REST V1", apiName: "starrezrestv1", connectorNameKey: "StarRezRestV1", clientConstructor: StarRezRestV1Client, methodName: "selectEntry", methodArguments: [{}] },
     { displayName: "Replicon", apiName: "replicon", connectorNameKey: "Replicon", clientConstructor: RepliconClient, methodName: "getBulkProjectDetails3", methodArguments: [{}] },
     { displayName: "Etsy", apiName: "etsy", connectorNameKey: "EtsyIndependentPublisher", clientConstructor: EtsyClient, methodName: "ping" },
     { displayName: "Elfsquad Data", apiName: "elfsquaddata", connectorNameKey: "ElfsquadData", clientConstructor: ElfsquadDataClient, methodName: "getEntities", methodArguments: ["entity"] },
     { displayName: "Impexium", apiName: "impexium", connectorNameKey: "Impexium", clientConstructor: ImpexiumClient, methodName: "getAbandonedCheckouts", methodArguments: ["1"] },
-    { displayName: "Jedox OData Hub", apiName: "jedoxodatahub", connectorNameKey: "JedoxODataHub", clientConstructor: JedoxOdataHubClient, methodName: "databases" },
+    { displayName: "Jedox OData Hub", apiName: "jedoxodatahub", connectorNameKey: "JedoxODataHub", clientConstructor: JedoxODataHubClient, methodName: "databases" },
     { displayName: "Orderful", apiName: "orderful", connectorNameKey: "Orderful", clientConstructor: OrderfulClient, methodName: "listTransactions" },
 ];
 

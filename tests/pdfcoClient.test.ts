@@ -118,43 +118,43 @@ describe("PDFco — connector registry", () => {
                 name: "PdfUnsearchableResponse",
                 path: "/v1/pdf/makeunsearchable",
                 invoke: (client: PdfCoClient): Promise<PdfUnsearchableResponse> =>
-                    client.pdfunSearchable({ url: inputUrl }),
+                    client.pdfUnSearchable({ url: inputUrl }),
             },
             {
                 name: "PdfFromXlsXlsxResponse",
                 path: "/v1/xls/convert/to/pdf",
                 invoke: (client: PdfCoClient): Promise<PdfFromXlsXlsxResponse> =>
-                    client.pdffromXLSXLSX({ url: inputUrl }),
+                    client.pdfFromXlsxlsx({ url: inputUrl }),
             },
             {
                 name: "XlsToCsvResponse",
                 path: "/v1/xls/convert/to/csv",
                 invoke: (client: PdfCoClient): Promise<XlsToCsvResponse> =>
-                    client.xlstoCSV({ url: inputUrl }),
+                    client.xlStoCsv({ url: inputUrl }),
             },
             {
                 name: "XlsToHtmlResponse",
                 path: "/v1/xls/convert/to/html",
                 invoke: (client: PdfCoClient): Promise<XlsToHtmlResponse> =>
-                    client.xlstoHTML({ url: inputUrl }),
+                    client.xlStoHtml({ url: inputUrl }),
             },
             {
                 name: "XlsToJsonResponse",
                 path: "/v1/xls/convert/to/json",
                 invoke: (client: PdfCoClient): Promise<XlsToJsonResponse> =>
-                    client.xlstoJSON({ url: inputUrl }),
+                    client.xlStoJson({ url: inputUrl }),
             },
             {
                 name: "XlsToTxtResponse",
                 path: "/v1/xls/convert/to/txt",
                 invoke: (client: PdfCoClient): Promise<XlsToTxtResponse> =>
-                    client.xlstoTXT({ url: inputUrl }),
+                    client.xlStoTxt({ url: inputUrl }),
             },
             {
                 name: "XlsToXmlResponse",
                 path: "/v1/xls/convert/to/xml",
                 invoke: (client: PdfCoClient): Promise<XlsToXmlResponse> =>
-                    client.xlstoXML({ url: inputUrl }),
+                    client.xlStoXml({ url: inputUrl }),
             },
         ];
 

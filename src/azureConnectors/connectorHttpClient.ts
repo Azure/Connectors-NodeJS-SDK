@@ -197,7 +197,7 @@ export class ConnectorHttpClient {
             method: method as HttpMethods,
             body: body === undefined || isFormDataBody
                 ? undefined
-                : blobBody ?? JSON.stringify(body),
+                : blobBody ? new Uint8Array(await blobBody.arrayBuffer()) : JSON.stringify(body),
             abortSignal,
             tracingOptions,
             streamResponseStatusCodes: responseAsBlob

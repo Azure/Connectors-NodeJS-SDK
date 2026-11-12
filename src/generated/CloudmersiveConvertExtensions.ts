@@ -1807,7 +1807,7 @@ export interface RemovePptxSlidesRequest {
 /**
  * Definition: RemoveWhitespaceFromTextRequest
  */
-export interface RemoveWhitespaceFromTextRequest {
+export interface RemoveWhiteSpaceFromTextRequest {
     /** Input text string to remove the whitespace from */
     TextContainingWhitespace?: string;
 }
@@ -1815,7 +1815,7 @@ export interface RemoveWhitespaceFromTextRequest {
 /**
  * Definition: RemoveWhitespaceFromTextResponse
  */
-export interface RemoveWhitespaceFromTextResponse {
+export interface RemoveWhiteSpaceFromTextResponse {
     /** True if successful, false otherwise */
     Successful?: boolean;
     /** Result of performing a remove whitespace from string operation */
@@ -2553,9 +2553,9 @@ export interface GetConvertImageImageInfoFormData {
 }
 
 /**
- * Multipart form data for the setConvertImageImageDPI operation.
+ * Multipart form data for the setConvertImageImageDpi operation.
  */
-export interface SetConvertImageImageDPIFormData {
+export interface SetConvertImageImageDpiFormData {
     /** Input file to perform the operation on. */
     inputFile: Blob;
 }
@@ -4065,13 +4065,13 @@ export class CloudmersiveConvertClient extends ConnectorClientBase {
      * Change image DPI
      * @remarks Resize an image to have a different DPI
      */
-    public async setConvertImageImageDPI(input: SetConvertImageImageDPIFormData, dpi: number, options: ConnectorOperationOptions = {}): Promise<Blob> {
+    public async setConvertImageImageDpi(input: SetConvertImageImageDpiFormData, dpi: number, options: ConnectorOperationOptions = {}): Promise<Blob> {
         const requestPath = `/convert/image/set-dpi/${encodeURIComponent(String(dpi))}`;
         const formData = new FormData();
         formData.append("inputFile", input.inputFile);
 
         const requestUrl = this.resolveUrl(requestPath);
-        const httpResponse = await this.sendWithTracingAsync<Blob>("CloudmersiveConvert.setConvertImageImageDPI", "ConvertImage_ImageSetDPI", "POST", requestUrl, formData, options, undefined, true);
+        const httpResponse = await this.sendWithTracingAsync<Blob>("CloudmersiveConvert.setConvertImageImageDpi", "ConvertImage_ImageSetDPI", "POST", requestUrl, formData, options, undefined, true);
 
         return httpResponse.value as Blob;
     }

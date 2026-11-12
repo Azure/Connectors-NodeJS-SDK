@@ -2,14 +2,14 @@
 
 import type { TokenCredential } from "@azure/core-auth";
 import {
-    MqClient,
+    MQClient,
     SendValidDataOptions,
     SingleGetValidOptions,
     MultipleGetValidOptions,
     SendResponse,
     Item,
     ItemsList,
-} from "../src/generated/MqExtensions.ts";
+} from "../src/generated/MQExtensions.ts";
 import { ConnectorError } from "../src/azureConnectors/connectorError.ts";
 import { ConnectorNames } from "../src/generated/connectorNames.ts";
 import { availableConnectors } from "../src/generated/ManagedConnectors.ts";
@@ -69,39 +69,39 @@ const _sendResponse: SendResponse = {
 // Runtime tests
 // ──────────────────────────────────────────────
 
-describe("MqClient — constructor", () => {
+describe("MQClient — constructor", () => {
     it("should construct with valid options", () => {
-        const client = new MqClient(
+        const client = new MQClient(
             TestConnectionUrl,
             createMockCredential(),
             { retryOptions: { maxRetries: 0 } },
         );
         expect(client).toBeDefined();
-        expect(client).toBeInstanceOf(MqClient);
+        expect(client).toBeInstanceOf(MQClient);
     });
 
     it("should strip trailing slashes from connection URL", () => {
-        const client = new MqClient(TestConnectionUrl + "///", createMockCredential());
+        const client = new MQClient(TestConnectionUrl + "///", createMockCredential());
         expect(client).toBeDefined();
     });
 
     it("should construct with an empty connection URL", () => {
-        const client = new MqClient("", createMockCredential());
+        const client = new MQClient("", createMockCredential());
         expect(client).toBeDefined();
     });
 
     it("should throw on null connection URL", () => {
-        expect(() => new MqClient(null as unknown as string, createMockCredential()))
+        expect(() => new MQClient(null as unknown as string, createMockCredential()))
             .toThrow("Parameter 'connectionRuntimeUrl' cannot be null or undefined.");
     });
 
     it("should throw on undefined connection URL", () => {
-        expect(() => new MqClient(undefined as unknown as string, createMockCredential()))
+        expect(() => new MQClient(undefined as unknown as string, createMockCredential()))
             .toThrow("Parameter 'connectionRuntimeUrl' cannot be null or undefined.");
     });
 });
 
-describe("MqClient — send", () => {
+describe("MQClient — send", () => {
     afterEach(() => {
         jest.restoreAllMocks();
     });
@@ -110,7 +110,7 @@ describe("MqClient — send", () => {
         const mockResponse: SendResponse = { ItemInternalId: "msg-001" };
         mockFetchResponse(mockResponse);
 
-        const client = new MqClient(TestConnectionUrl, createMockCredential());
+        const client = new MQClient(TestConnectionUrl, createMockCredential());
         const input: SendValidDataOptions = {
             Queue: "MY.QUEUE",
             Message: "Test message",
@@ -131,7 +131,7 @@ describe("MqClient — send", () => {
     });
 });
 
-describe("MqClient — receive", () => {
+describe("MQClient — receive", () => {
     afterEach(() => {
         jest.restoreAllMocks();
     });
@@ -140,7 +140,7 @@ describe("MqClient — receive", () => {
         const mockItem: Item = { MessageData: "test-data" };
         mockFetchResponse(mockItem);
 
-        const client = new MqClient(TestConnectionUrl, createMockCredential());
+        const client = new MQClient(TestConnectionUrl, createMockCredential());
         const input: SingleGetValidOptions = { Queue: "MY.QUEUE" };
 
         const result = await client.receive(input);
@@ -152,7 +152,7 @@ describe("MqClient — receive", () => {
     });
 });
 
-describe("MqClient — receiveAll", () => {
+describe("MQClient — receiveAll", () => {
     afterEach(() => {
         jest.restoreAllMocks();
     });
@@ -161,7 +161,7 @@ describe("MqClient — receiveAll", () => {
         const mockItems: ItemsList = {};
         mockFetchResponse(mockItems);
 
-        const client = new MqClient(TestConnectionUrl, createMockCredential());
+        const client = new MQClient(TestConnectionUrl, createMockCredential());
         const input: MultipleGetValidOptions = { Queue: "MY.QUEUE" };
 
         const result = await client.receiveAll(input);
@@ -172,7 +172,7 @@ describe("MqClient — receiveAll", () => {
     });
 });
 
-describe("MqClient — read", () => {
+describe("MQClient — read", () => {
     afterEach(() => {
         jest.restoreAllMocks();
     });
@@ -181,7 +181,7 @@ describe("MqClient — read", () => {
         const mockItem: Item = { MessageData: "test-data" };
         mockFetchResponse(mockItem);
 
-        const client = new MqClient(TestConnectionUrl, createMockCredential());
+        const client = new MQClient(TestConnectionUrl, createMockCredential());
         const result = await client.read({ Queue: "MY.QUEUE" });
 
         expect(result).toEqual(mockItem);
@@ -190,7 +190,7 @@ describe("MqClient — read", () => {
     });
 });
 
-describe("MqClient — readAll", () => {
+describe("MQClient — readAll", () => {
     afterEach(() => {
         jest.restoreAllMocks();
     });
@@ -199,7 +199,7 @@ describe("MqClient — readAll", () => {
         const mockItems: ItemsList = {};
         mockFetchResponse(mockItems);
 
-        const client = new MqClient(TestConnectionUrl, createMockCredential());
+        const client = new MQClient(TestConnectionUrl, createMockCredential());
         const result = await client.readAll({ Queue: "MY.QUEUE" });
 
         expect(result).toEqual(mockItems);
@@ -208,7 +208,7 @@ describe("MqClient — readAll", () => {
     });
 });
 
-describe("MqClient — delete", () => {
+describe("MQClient — delete", () => {
     afterEach(() => {
         jest.restoreAllMocks();
     });
@@ -217,7 +217,7 @@ describe("MqClient — delete", () => {
         const mockItem: Item = { MessageData: "test-data" };
         mockFetchResponse(mockItem);
 
-        const client = new MqClient(TestConnectionUrl, createMockCredential());
+        const client = new MQClient(TestConnectionUrl, createMockCredential());
         const result = await client.delete({ Queue: "MY.QUEUE", MessageId: "msg-1" });
 
         expect(result).toEqual(mockItem);
@@ -227,7 +227,7 @@ describe("MqClient — delete", () => {
     });
 });
 
-describe("MqClient — deleteAll", () => {
+describe("MQClient — deleteAll", () => {
     afterEach(() => {
         jest.restoreAllMocks();
     });
@@ -236,7 +236,7 @@ describe("MqClient — deleteAll", () => {
         const mockItems: ItemsList = {};
         mockFetchResponse(mockItems);
 
-        const client = new MqClient(TestConnectionUrl, createMockCredential());
+        const client = new MQClient(TestConnectionUrl, createMockCredential());
         const result = await client.deleteAll({ Queue: "MY.QUEUE" });
 
         expect(result).toEqual(mockItems);
@@ -245,7 +245,7 @@ describe("MqClient — deleteAll", () => {
     });
 });
 
-describe("MqClient — error handling", () => {
+describe("MQClient — error handling", () => {
     afterEach(() => {
         jest.restoreAllMocks();
     });
@@ -253,7 +253,7 @@ describe("MqClient — error handling", () => {
     it("should throw ConnectorError on non-OK response", async () => {
         mockFetchError(500, '{"error": "QueueNotFound"}');
 
-        const client = new MqClient(
+        const client = new MQClient(
             TestConnectionUrl,
             createMockCredential(),
             { retryOptions: { maxRetries: 0 } },
@@ -268,7 +268,7 @@ describe("MqClient — error handling", () => {
         const errorBody = '{"code": "Unauthorized"}';
         mockFetchError(401, errorBody);
 
-        const client = new MqClient(TestConnectionUrl, createMockCredential());
+        const client = new MQClient(TestConnectionUrl, createMockCredential());
 
         try {
             await client.receive({ Queue: "MY.QUEUE" });

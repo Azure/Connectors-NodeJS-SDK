@@ -1,10 +1,10 @@
 // Copyright (c) Microsoft Corporation.  All rights reserved.
 
 import {
-    CommondataserviceClient,
+    CommonDataServiceClient,
     Item,
     ItemsList,
-} from "../src/generated/CommondataserviceExtensions.ts";
+} from "../src/generated/CommonDataServiceExtensions.ts";
 import { ConnectorError } from "../src/azureConnectors/connectorError.ts";
 import type { TokenCredential } from "../src/azureConnectors/index.ts";
 
@@ -37,7 +37,7 @@ function createErrorResponse(status: number, body: string): Response {
     } as Response;
 }
 
-describe("CommondataserviceClient — getItems", () => {
+describe("CommonDataServiceClient — getItems", () => {
     afterEach(() => {
         jest.restoreAllMocks();
     });
@@ -53,7 +53,7 @@ describe("CommondataserviceClient — getItems", () => {
             }))
             .mockResolvedValueOnce(createFetchResponse({ value: [secondItem] }));
 
-        const client = new CommondataserviceClient(TestConnectionUrl, createMockCredential());
+        const client = new CommonDataServiceClient(TestConnectionUrl, createMockCredential());
         const items: Item[] = [];
         for await (const item of client.getItems("default", "accounts")) {
             items.push(item);
@@ -79,7 +79,7 @@ describe("CommondataserviceClient — getItems", () => {
             }))
             .mockResolvedValueOnce(createFetchResponse({ value: [secondItem] }));
 
-        const client = new CommondataserviceClient(TestConnectionUrl, createMockCredential());
+        const client = new CommonDataServiceClient(TestConnectionUrl, createMockCredential());
         const items: Item[] = [];
         for await (const item of client.getItems("default", "accounts")) {
             items.push(item);
@@ -99,7 +99,7 @@ describe("CommondataserviceClient — getItems", () => {
             }))
             .mockResolvedValueOnce(createErrorResponse(503, "Service unavailable"));
 
-        const client = new CommondataserviceClient(TestConnectionUrl, createMockCredential(), {
+        const client = new CommonDataServiceClient(TestConnectionUrl, createMockCredential(), {
             retryOptions: { maxRetries: 0 },
         });
         const iterator = client.getItems("default", "accounts")[Symbol.asyncIterator]();

@@ -465,7 +465,7 @@ export interface GetCurrentUserInfoResponse {
 /**
  * Definition: SOSLSearchQueryResponse
  */
-export interface SOSLSearchQueryResponse {
+export interface SoslSearchQueryResponse {
     /** A list of search records returned by an SOSL search query */
     searchRecords?: Array<SearchRecordObject>;
     /** Metadata of the result returned from the query */
@@ -500,7 +500,7 @@ export interface ObjectWithoutType {
 /**
  * Definition: MCPQueryRequest
  */
-export interface MCPQueryRequest {
+export interface McpQueryRequest {
     jsonrpc?: string;
     id?: string;
     method?: string;
@@ -513,7 +513,7 @@ export interface MCPQueryRequest {
 /**
  * Definition: MCPQueryResponse
  */
-export interface MCPQueryResponse {
+export interface McpQueryResponse {
     jsonrpc?: string;
     id?: string;
     method?: string;
@@ -1180,14 +1180,14 @@ export class SalesforceClient extends ConnectorClientBase {
      * Execute SOSL search query
      * @remarks Execute the specified SOSL search qyery
      */
-    public async executeSOSLQuery(q: string, options: ConnectorOperationOptions = {}): Promise<SOSLSearchQueryResponse> {
+    public async executeSoslQuery(q: string, options: ConnectorOperationOptions = {}): Promise<SoslSearchQueryResponse> {
         const queryParams: string[] = [];
         queryParams.push(`q=${encodeURIComponent(String(q))}`);
         const requestPath = `/codeless/search` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
-        const httpResponse = await this.sendWithTracingAsync<SOSLSearchQueryResponse>("Salesforce.executeSOSLQuery", "ExecuteSOSLQuery", "GET", requestUrl, undefined, options);
+        const httpResponse = await this.sendWithTracingAsync<SoslSearchQueryResponse>("Salesforce.executeSoslQuery", "ExecuteSOSLQuery", "GET", requestUrl, undefined, options);
 
-        return httpResponse.value as SOSLSearchQueryResponse;
+        return httpResponse.value as SoslSearchQueryResponse;
     }
 
     /**
@@ -1231,16 +1231,16 @@ export class SalesforceClient extends ConnectorClientBase {
      * MCP server for Salesforce
      * @remarks MCP server for Salesforce
      */
-    public async mcpSalesforceManagement(input: MCPQueryRequest, options: McpSalesforceManagementOptions = {}): Promise<MCPQueryResponse> {
+    public async mcpSalesforceManagement(input: McpQueryRequest, options: McpSalesforceManagementOptions = {}): Promise<McpQueryResponse> {
         const queryParams: string[] = [];
         if (options.sessionId !== undefined) {
             queryParams.push(`sessionId=${encodeURIComponent(String(options.sessionId))}`);
         }
         const requestPath = `/mcp/SalesforceManagement` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
-        const httpResponse = await this.sendWithTracingAsync<MCPQueryResponse>("Salesforce.mcpSalesforceManagement", "mcp_SalesforceManagement", "POST", requestUrl, input, options);
+        const httpResponse = await this.sendWithTracingAsync<McpQueryResponse>("Salesforce.mcpSalesforceManagement", "mcp_SalesforceManagement", "POST", requestUrl, input, options);
 
-        return httpResponse.value as MCPQueryResponse;
+        return httpResponse.value as McpQueryResponse;
     }
 
     /**

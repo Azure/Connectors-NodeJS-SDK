@@ -12,7 +12,7 @@ import { TriggerCallbackPayload } from "../azureConnectors/triggerPayload.ts";
 /**
  * Response for Set do not disturb
  */
-export interface SetDNDResponse {
+export interface SetDndResponse {
     /** Whether snooze is enabled. */
     snooze_enabled?: boolean;
 }
@@ -97,9 +97,9 @@ export interface PostMessageResponse {
 }
 
 /**
- * Options for the setDND operation.
+ * Options for the setDnd operation.
  */
-export interface SetDNDOptions extends ConnectorOperationOptions {
+export interface SetDndOptions extends ConnectorOperationOptions {
     /** The number of minutes to set do not disturb. */
     numMinutes?: string;
 }
@@ -173,16 +173,16 @@ export class SlackClient extends ConnectorClientBase {
      * Set do not disturb
      * @remarks Set the do not disturb status for the user.
      */
-    public async setDND(options: SetDNDOptions = {}): Promise<SetDNDResponse> {
+    public async setDnd(options: SetDndOptions = {}): Promise<SetDndResponse> {
         const queryParams: string[] = [];
         if (options.numMinutes !== undefined) {
             queryParams.push(`num_minutes=${encodeURIComponent(String(options.numMinutes))}`);
         }
         const requestPath = `/dnd.setSnooze` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
-        const httpResponse = await this.sendWithTracingAsync<SetDNDResponse>("Slack.setDND", "SetDND", "GET", requestUrl, undefined, options);
+        const httpResponse = await this.sendWithTracingAsync<SetDndResponse>("Slack.setDnd", "SetDND", "GET", requestUrl, undefined, options);
 
-        return httpResponse.value as SetDNDResponse;
+        return httpResponse.value as SetDndResponse;
     }
 
     /**

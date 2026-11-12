@@ -31,7 +31,7 @@ export interface FlowV1DocumentsJobsAddWatermarkToPdfInput {
 /**
  * Start document generation process with json
  */
-export interface FlowV1ProcessesFlowJobsExecuteProcessInput {
+export interface FlowV1ProcessesFlowJobsExecuteProcessV2Input {
     [key: string]: unknown;
 }
 
@@ -43,6 +43,8 @@ export interface AddPowerAutomateWebhookData {
     processId: string;
     /** HookUrl */
     hookUrl: string;
+    /** Choose whether output files are returned as separate variables or as an array of files */
+    outputFilesAs: string;
 }
 
 /**
@@ -123,6 +125,8 @@ export interface ApplyXlsxTemplateRequest {
     locale?: string;
     /** The time zone of the document */
     timezone?: string;
+    /** The engine that will process the template */
+    engine?: string;
 }
 
 /**
@@ -197,7 +201,7 @@ export interface Doc2DocxRequest {
 /**
  * Definition: DocumentContentWithFilenameResponse
  */
-export interface DocumentContentWithFilenameResponse {
+export interface DocumentContentWithFileNameResponse {
     /** Name of the file */
     filename?: string;
     /** File content */
@@ -225,7 +229,7 @@ export interface DocumentsArrayResponse {
  */
 export interface DocumentsWithFilenamesResponse {
     /** Array of raw contents of result files with their filenames */
-    resultFiles?: Array<DocumentContentWithFilenameResponse>;
+    resultFiles?: Array<DocumentContentWithFileNameResponse>;
 }
 
 /**
@@ -655,6 +659,13 @@ export interface SplitPdfRequest {
 }
 
 /**
+ * Definition: StartProcessOutputDynamicSchemaResponse
+ */
+export interface StartProcessOutputDynamicSchemaResponse {
+    [key: string]: unknown;
+}
+
+/**
  * Definition: StringResultResponse
  */
 export interface StringResultResponse {
@@ -679,7 +690,7 @@ export interface Xlsx2PdfRequest {
 // #endregion Types
 
 export const PlumsailTriggerOperations = {
-    OnFlowV1ProcessesFlowTriggersPost: "FlowV1ProcessesFlowTriggersPost",
+    OnFlowV1ProcessesFlowTriggersV2Post: "FlowV1ProcessesFlowTriggersV2Post",
 } as const;
 
 export type PlumsailTriggerOperation = typeof PlumsailTriggerOperations[keyof typeof PlumsailTriggerOperations];
@@ -1133,12 +1144,12 @@ export class PlumsailClient extends ConnectorClientBase {
      * Create Archive
      * @remarks Compresses and adds files to a ZIP archive.
      */
-    public async createFlowV1DocumentsJobArchive(input: CreateArchiveRequest, options: ConnectorOperationOptions = {}): Promise<DocumentContentWithFilenameResponse> {
+    public async createFlowV1DocumentsJobArchive(input: CreateArchiveRequest, options: ConnectorOperationOptions = {}): Promise<DocumentContentWithFileNameResponse> {
         const requestPath = `/flow/v1/Documents/jobs/CreateArchive`;
         const requestUrl = this.resolveUrl(requestPath);
-        const httpResponse = await this.sendWithTracingAsync<DocumentContentWithFilenameResponse>("Plumsail.createFlowV1DocumentsJobArchive", "FlowV1DocumentsJobsCreateArchivePost", "POST", requestUrl, input, options);
+        const httpResponse = await this.sendWithTracingAsync<DocumentContentWithFileNameResponse>("Plumsail.createFlowV1DocumentsJobArchive", "FlowV1DocumentsJobsCreateArchivePost", "POST", requestUrl, input, options);
 
-        return httpResponse.value as DocumentContentWithFilenameResponse;
+        return httpResponse.value as DocumentContentWithFileNameResponse;
     }
 
     /**
@@ -1169,28 +1180,30 @@ export class PlumsailClient extends ConnectorClientBase {
      * Start document generation process with json
      * @remarks Start document generation process fills a DOCX, XLSX, PPTX or PDF template related to the selected process with the JSON data. Documentation - https://plumsail.com/docs/documents/v1.x/flow/actions/document-processing.html##start-process-json
      */
-    public async executeFlowV1ProcessesFlowJobsProcess(input: FlowV1ProcessesFlowJobsExecuteProcessInput, processId: string, options: ConnectorOperationOptions = {}): Promise<Blob> {
+    public async executeFlowV1ProcessesFlowJobsProcessV2(input: FlowV1ProcessesFlowJobsExecuteProcessV2Input, processId: string, outputFilesAs: string, options: ConnectorOperationOptions = {}): Promise<StartProcessOutputDynamicSchemaResponse> {
         const queryParams: string[] = [];
         queryParams.push(`processId=${encodeURIComponent(String(processId))}`);
-        const requestPath = `/flow/v1/ProcessesFlow/jobs/ExecuteProcess` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
+        queryParams.push(`outputFilesAs=${encodeURIComponent(String(outputFilesAs))}`);
+        const requestPath = `/flow/v1/ProcessesFlow/jobs/ExecuteProcessV2` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
-        const httpResponse = await this.sendWithTracingAsync<Blob>("Plumsail.executeFlowV1ProcessesFlowJobsProcess", "FlowV1ProcessesFlowJobsExecuteProcessPost", "POST", requestUrl, input, options, undefined, true);
+        const httpResponse = await this.sendWithTracingAsync<StartProcessOutputDynamicSchemaResponse>("Plumsail.executeFlowV1ProcessesFlowJobsProcessV2", "FlowV1ProcessesFlowJobsExecuteProcessV2Post", "POST", requestUrl, input, options);
 
-        return httpResponse.value as Blob;
+        return httpResponse.value as StartProcessOutputDynamicSchemaResponse;
     }
 
     /**
      * Start document generation process
      * @remarks Start document generation process fills a DOCX, XLSX, PPTX or PDF template related to the selected process with the JSON data. Documentation - https://plumsail.com/docs/documents/v1.x/flow/actions/document-processing.html#start-document-generation-process
      */
-    public async executeFlowV1ProcessesFlowJobsProcessWithGeneratedData(input: ProcessJsonData, processId: string, options: ConnectorOperationOptions = {}): Promise<Blob> {
+    public async executeFlowV1ProcessesFlowJobsProcessWithGeneratedDataMultipleOutputs(input: ProcessJsonData, processId: string, outputFilesAs: string, options: ConnectorOperationOptions = {}): Promise<StartProcessOutputDynamicSchemaResponse> {
         const queryParams: string[] = [];
         queryParams.push(`processId=${encodeURIComponent(String(processId))}`);
-        const requestPath = `/flow/v1/ProcessesFlow/jobs/ExecuteProcessWithGeneratedData` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
+        queryParams.push(`outputFilesAs=${encodeURIComponent(String(outputFilesAs))}`);
+        const requestPath = `/flow/v1/ProcessesFlow/jobs/ExecuteProcessWithGeneratedDataMultipleOutputs` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
-        const httpResponse = await this.sendWithTracingAsync<Blob>("Plumsail.executeFlowV1ProcessesFlowJobsProcessWithGeneratedData", "FlowV1ProcessesFlowJobsExecuteProcessWithGeneratedDataPost", "POST", requestUrl, input, options, undefined, true);
+        const httpResponse = await this.sendWithTracingAsync<StartProcessOutputDynamicSchemaResponse>("Plumsail.executeFlowV1ProcessesFlowJobsProcessWithGeneratedDataMultipleOutputs", "FlowV1ProcessesFlowJobsExecuteProcessWithGeneratedDataMultipleOutputsPost", "POST", requestUrl, input, options);
 
-        return httpResponse.value as Blob;
+        return httpResponse.value as StartProcessOutputDynamicSchemaResponse;
     }
 
 }

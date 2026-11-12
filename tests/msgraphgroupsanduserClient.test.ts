@@ -2,7 +2,7 @@
 
 import type { TokenCredential } from "@azure/core-auth";
 import {
-    MsGraphGroupsAndUsersClient,
+    MSGraphGroupsAndUsersClient,
     ListUsersResponse,
     ListGroupsByDisplayNameSearchResponse,
     ListSubscribedSkusResponse,
@@ -11,7 +11,7 @@ import {
     GetGroupPropertiesResponse,
     GetMemberGroupsInput,
     GetMemberGroupsResponse,
-} from "../src/generated/MsGraphGroupsAndUsersExtensions.ts";
+} from "../src/generated/MSGraphGroupsAndUsersExtensions.ts";
 import { ConnectorError } from "../src/azureConnectors/connectorError.ts";
 import { ConnectorNames } from "../src/generated/connectorNames.ts";
 import { availableConnectors } from "../src/generated/ManagedConnectors.ts";
@@ -63,35 +63,35 @@ const _groupProperties: GetGroupPropertiesResponse = {
 // Runtime tests
 // ──────────────────────────────────────────────
 
-describe("MsGraphGroupsAndUsersClient — constructor", () => {
+describe("MSGraphGroupsAndUsersClient — constructor", () => {
     it("should construct with valid options", () => {
-        const client = new MsGraphGroupsAndUsersClient(TestConnectionUrl, createMockCredential());
+        const client = new MSGraphGroupsAndUsersClient(TestConnectionUrl, createMockCredential());
         expect(client).toBeDefined();
-        expect(client).toBeInstanceOf(MsGraphGroupsAndUsersClient);
+        expect(client).toBeInstanceOf(MSGraphGroupsAndUsersClient);
     });
 
     it("should strip trailing slashes from connection URL", () => {
-        const client = new MsGraphGroupsAndUsersClient(TestConnectionUrl + "///", createMockCredential());
+        const client = new MSGraphGroupsAndUsersClient(TestConnectionUrl + "///", createMockCredential());
         expect(client).toBeDefined();
     });
 
     it("should construct with an empty connection URL", () => {
-        const client = new MsGraphGroupsAndUsersClient("", createMockCredential());
+        const client = new MSGraphGroupsAndUsersClient("", createMockCredential());
         expect(client).toBeDefined();
     });
 
     it("should throw on null connection URL", () => {
-        expect(() => new MsGraphGroupsAndUsersClient(null as unknown as string, createMockCredential()))
+        expect(() => new MSGraphGroupsAndUsersClient(null as unknown as string, createMockCredential()))
             .toThrow("Parameter 'connectionRuntimeUrl' cannot be null or undefined.");
     });
 
     it("should throw on undefined connection URL", () => {
-        expect(() => new MsGraphGroupsAndUsersClient(undefined as unknown as string, createMockCredential()))
+        expect(() => new MSGraphGroupsAndUsersClient(undefined as unknown as string, createMockCredential()))
             .toThrow("Parameter 'connectionRuntimeUrl' cannot be null or undefined.");
     });
 });
 
-describe("MsGraphGroupsAndUsersClient — listUsers", () => {
+describe("MSGraphGroupsAndUsersClient — listUsers", () => {
     afterEach(() => {
         jest.restoreAllMocks();
     });
@@ -102,7 +102,7 @@ describe("MsGraphGroupsAndUsersClient — listUsers", () => {
         };
         mockFetchResponse(mockResponse);
 
-        const client = new MsGraphGroupsAndUsersClient(TestConnectionUrl, createMockCredential());
+        const client = new MSGraphGroupsAndUsersClient(TestConnectionUrl, createMockCredential());
         const result = await client.listUsers().byPage().next();
 
         expect(result.value).toEqual(mockResponse.value);
@@ -113,7 +113,7 @@ describe("MsGraphGroupsAndUsersClient — listUsers", () => {
     });
 });
 
-describe("MsGraphGroupsAndUsersClient — listGroupsByDisplayNameSearch", () => {
+describe("MSGraphGroupsAndUsersClient — listGroupsByDisplayNameSearch", () => {
     afterEach(() => {
         jest.restoreAllMocks();
     });
@@ -124,7 +124,7 @@ describe("MsGraphGroupsAndUsersClient — listGroupsByDisplayNameSearch", () => 
         };
         mockFetchResponse(mockResponse);
 
-        const client = new MsGraphGroupsAndUsersClient(TestConnectionUrl, createMockCredential());
+        const client = new MSGraphGroupsAndUsersClient(TestConnectionUrl, createMockCredential());
         const result = await client.listGroupsByDisplayNameSearch(
             "true",
             "eventual",
@@ -138,7 +138,7 @@ describe("MsGraphGroupsAndUsersClient — listGroupsByDisplayNameSearch", () => 
     });
 });
 
-describe("MsGraphGroupsAndUsersClient — getGroupProperties", () => {
+describe("MSGraphGroupsAndUsersClient — getGroupProperties", () => {
     afterEach(() => {
         jest.restoreAllMocks();
     });
@@ -150,7 +150,7 @@ describe("MsGraphGroupsAndUsersClient — getGroupProperties", () => {
         };
         mockFetchResponse(mockResponse);
 
-        const client = new MsGraphGroupsAndUsersClient(TestConnectionUrl, createMockCredential());
+        const client = new MSGraphGroupsAndUsersClient(TestConnectionUrl, createMockCredential());
         const result = await client.getGroupProperties("group-123");
 
         expect(result).toEqual(mockResponse);
@@ -159,7 +159,7 @@ describe("MsGraphGroupsAndUsersClient — getGroupProperties", () => {
     });
 });
 
-describe("MsGraphGroupsAndUsersClient — listDirectGroupMembers", () => {
+describe("MSGraphGroupsAndUsersClient — listDirectGroupMembers", () => {
     afterEach(() => {
         jest.restoreAllMocks();
     });
@@ -170,7 +170,7 @@ describe("MsGraphGroupsAndUsersClient — listDirectGroupMembers", () => {
         };
         mockFetchResponse(mockResponse);
 
-        const client = new MsGraphGroupsAndUsersClient(TestConnectionUrl, createMockCredential());
+        const client = new MSGraphGroupsAndUsersClient(TestConnectionUrl, createMockCredential());
         const result = await client.listDirectGroupMembers(
             "group-1",
             "true",
@@ -183,7 +183,7 @@ describe("MsGraphGroupsAndUsersClient — listDirectGroupMembers", () => {
     });
 });
 
-describe("MsGraphGroupsAndUsersClient — getMemberGroups", () => {
+describe("MSGraphGroupsAndUsersClient — getMemberGroups", () => {
     afterEach(() => {
         jest.restoreAllMocks();
     });
@@ -194,7 +194,7 @@ describe("MsGraphGroupsAndUsersClient — getMemberGroups", () => {
         };
         mockFetchResponse(mockResponse);
 
-        const client = new MsGraphGroupsAndUsersClient(TestConnectionUrl, createMockCredential());
+        const client = new MSGraphGroupsAndUsersClient(TestConnectionUrl, createMockCredential());
         const input: GetMemberGroupsInput = { securityEnabledOnly: false };
         const result = await client.getMemberGroups(input, "user-123");
 
@@ -206,7 +206,7 @@ describe("MsGraphGroupsAndUsersClient — getMemberGroups", () => {
     });
 });
 
-describe("MsGraphGroupsAndUsersClient — listSubscribedSkus", () => {
+describe("MSGraphGroupsAndUsersClient — listSubscribedSkus", () => {
     afterEach(() => {
         jest.restoreAllMocks();
     });
@@ -217,7 +217,7 @@ describe("MsGraphGroupsAndUsersClient — listSubscribedSkus", () => {
         };
         mockFetchResponse(mockResponse);
 
-        const client = new MsGraphGroupsAndUsersClient(TestConnectionUrl, createMockCredential());
+        const client = new MSGraphGroupsAndUsersClient(TestConnectionUrl, createMockCredential());
         const result = await client.listSubscribedSkus().byPage().next();
 
         expect(result.value).toEqual(mockResponse.value);
@@ -226,7 +226,7 @@ describe("MsGraphGroupsAndUsersClient — listSubscribedSkus", () => {
     });
 });
 
-describe("MsGraphGroupsAndUsersClient — getMemberLicenseDetails", () => {
+describe("MSGraphGroupsAndUsersClient — getMemberLicenseDetails", () => {
     afterEach(() => {
         jest.restoreAllMocks();
     });
@@ -237,7 +237,7 @@ describe("MsGraphGroupsAndUsersClient — getMemberLicenseDetails", () => {
         };
         mockFetchResponse(mockResponse);
 
-        const client = new MsGraphGroupsAndUsersClient(TestConnectionUrl, createMockCredential());
+        const client = new MSGraphGroupsAndUsersClient(TestConnectionUrl, createMockCredential());
         const result = await client.getMemberLicenseDetails("user-1");
 
         expect(result).toEqual(mockResponse);
@@ -246,7 +246,7 @@ describe("MsGraphGroupsAndUsersClient — getMemberLicenseDetails", () => {
     });
 });
 
-describe("MsGraphGroupsAndUsersClient — error handling", () => {
+describe("MSGraphGroupsAndUsersClient — error handling", () => {
     afterEach(() => {
         jest.restoreAllMocks();
     });
@@ -254,7 +254,7 @@ describe("MsGraphGroupsAndUsersClient — error handling", () => {
     it("should throw ConnectorError on non-OK response", async () => {
         mockFetchError(403, '{"error": "InsufficientPermissions"}');
 
-        const client = new MsGraphGroupsAndUsersClient(TestConnectionUrl, createMockCredential());
+        const client = new MSGraphGroupsAndUsersClient(TestConnectionUrl, createMockCredential());
 
         await expect(client.listUsers().byPage().next()).rejects.toThrow(ConnectorError);
     });
@@ -263,7 +263,7 @@ describe("MsGraphGroupsAndUsersClient — error handling", () => {
         const errorBody = '{"code": "NotFound"}';
         mockFetchError(404, errorBody);
 
-        const client = new MsGraphGroupsAndUsersClient(TestConnectionUrl, createMockCredential());
+        const client = new MSGraphGroupsAndUsersClient(TestConnectionUrl, createMockCredential());
 
         try {
             await client.getGroupProperties("nonexistent-group");
