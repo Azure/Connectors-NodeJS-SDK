@@ -12,7 +12,7 @@ export type { AbortSignalLike } from "@azure/abort-controller";
 export type { TokenCredential } from "@azure/core-auth";
 export type { PagedAsyncIterableIterator } from "@azure/core-paging";
 export { ConnectorClientBase } from "./clientBase.ts";
-export type { ConnectorPageSettings, ConnectorPagedAsyncIterableIterator } from "./clientBase.ts";
+export type { ConnectorPage, ConnectorPageSettings, ConnectorPagedAsyncIterableIterator } from "./clientBase.ts";
 export { DefaultConnectorClientOptions } from "./options.ts";
 export type {
     ConnectorClientOptions,

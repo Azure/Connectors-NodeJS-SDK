@@ -133,6 +133,14 @@ export interface ErrorResponse {
 }
 
 /**
+ * Options for the sendSmsGet operation.
+ */
+export interface SendSmsGetOptions extends ConnectorOperationOptions {
+    /** Message type */
+    type?: string;
+}
+
+/**
  * Options for the listSms operation.
  */
 export interface ListSmsOptions extends ConnectorOperationOptions {
@@ -168,6 +176,25 @@ export class DataFlowsSmsClient extends ConnectorClientBase {
 
     public get connectorName(): string {
         return "dataflowssms";
+    }
+
+    /**
+     * Send SMS via GET (Alternative method)
+     * @remarks Send SMS using GET parameters (for simple integrations)
+     */
+    public async sendSmsGet(recipient: string, senderId: string, message: string, options: SendSmsGetOptions = {}): Promise<SmsResponse> {
+        const queryParams: string[] = [];
+        queryParams.push(`recipient=${encodeURIComponent(String(recipient))}`);
+        queryParams.push(`sender_id=${encodeURIComponent(String(senderId))}`);
+        queryParams.push(`message=${encodeURIComponent(String(message))}`);
+        if (options.type !== undefined) {
+            queryParams.push(`type=${encodeURIComponent(String(options.type))}`);
+        }
+        const requestPath = `/sms/send` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
+        const requestUrl = this.resolveUrl(requestPath);
+        const httpResponse = await this.sendWithTracingAsync<SmsResponse>("DataFlowsSms.sendSmsGet", "SendSMSGet", "GET", requestUrl, undefined, options);
+
+        return httpResponse.value as SmsResponse;
     }
 
     /**

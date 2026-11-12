@@ -138,13 +138,13 @@
       "outputFile": "src/generated/ClickSendSmsExtensions.ts",
       "outputSha256": "05dbe24ad986da20051f413f1ff36a830e2e6dd2908e8c9faa3707980aed2cf9",
       "swaggerInputSha256": "e2ece2b3df4dda553863a10857205888c6525f0d52a3942f716ab11c674d8485",
-      "capturedAtUtc": "2026-11-12T05:53:22.031Z",
+      "capturedAtUtc": "2026-11-12T21:36:26.254Z",
       "swaggerFixture": "swagger-cache/clicksendsms.swagger.json",
       "swaggerFixtureSha256": "e2ece2b3df4dda553863a10857205888c6525f0d52a3942f716ab11c674d8485",
       "runId": "46aa7eba-ab89-495e-8a47-f430efee5b6e",
       "validation": {
-        "runId": "20a6b4ed-759a-47cd-b331-ae5df147fdc1",
-        "capturedAtUtc": "2026-11-12T16:48:59.512Z",
+        "runId": "27e4758e-8f2c-430a-8ec9-6b7ddb66e943",
+        "capturedAtUtc": "2026-11-12T21:43:54.130Z",
         "swaggerInputSha256": "e2ece2b3df4dda553863a10857205888c6525f0d52a3942f716ab11c674d8485",
         "outputSha256": "05dbe24ad986da20051f413f1ff36a830e2e6dd2908e8c9faa3707980aed2cf9"
       }
@@ -154,13 +154,13 @@
       "outputFile": "src/generated/CloudmersiveConvertExtensions.ts",
       "outputSha256": "61b9482fa5defa16314484bc7e9ab06216ad86c28d6f65d666c78b2a4c3c70db",
       "swaggerInputSha256": "860768b6ceff8ca5fd5f41b118b06d0cfe55076e15636295b3894e6c78cf067c",
-      "capturedAtUtc": "2026-11-12T05:53:27.719Z",
+      "capturedAtUtc": "2026-11-12T21:36:32.533Z",
       "swaggerFixture": "swagger-cache/cloudmersiveconvert.swagger.json",
       "swaggerFixtureSha256": "860768b6ceff8ca5fd5f41b118b06d0cfe55076e15636295b3894e6c78cf067c",
       "runId": "46aa7eba-ab89-495e-8a47-f430efee5b6e",
       "validation": {
-        "runId": "20a6b4ed-759a-47cd-b331-ae5df147fdc1",
-        "capturedAtUtc": "2026-11-12T16:49:06.203Z",
+        "runId": "27e4758e-8f2c-430a-8ec9-6b7ddb66e943",
+        "capturedAtUtc": "2026-11-12T21:43:58.455Z",
         "swaggerInputSha256": "860768b6ceff8ca5fd5f41b118b06d0cfe55076e15636295b3894e6c78cf067c",
         "outputSha256": "61b9482fa5defa16314484bc7e9ab06216ad86c28d6f65d666c78b2a4c3c70db"
       }
@@ -170,13 +170,13 @@
       "outputFile": "src/generated/CommonDataServiceExtensions.ts",
       "outputSha256": "2a413c3aea92ab8bf0f00ea65b1230dc7fbe5b7bf2410c225a2f82cc8f7dec06",
       "swaggerInputSha256": "8c07cdc661241079cbd8f801bb28444f7f5907b68518c161be98bc6aa6c3e24c",
-      "capturedAtUtc": "2026-11-12T05:53:30.653Z",
+      "capturedAtUtc": "2026-11-12T21:36:35.789Z",
       "swaggerFixture": "swagger-cache/commondataservice.swagger.json",
       "swaggerFixtureSha256": "8c07cdc661241079cbd8f801bb28444f7f5907b68518c161be98bc6aa6c3e24c",
       "runId": "46aa7eba-ab89-495e-8a47-f430efee5b6e",
       "validation": {
-        "runId": "20a6b4ed-759a-47cd-b331-ae5df147fdc1",
-        "capturedAtUtc": "2026-11-12T16:49:09.196Z",
+        "runId": "27e4758e-8f2c-430a-8ec9-6b7ddb66e943",
+        "capturedAtUtc": "2026-11-12T21:44:00.642Z",
         "swaggerInputSha256": "8c07cdc661241079cbd8f801bb28444f7f5907b68518c161be98bc6aa6c3e24c",
         "outputSha256": "2a413c3aea92ab8bf0f00ea65b1230dc7fbe5b7bf2410c225a2f82cc8f7dec06"
       }
@@ -186,13 +186,13 @@
       "outputFile": "src/generated/DocusignExtensions.ts",
       "outputSha256": "6d18c29771c79fe4aa144d2fda060ecf0935669e1a157157895fa3b8feb47d4e",
       "swaggerInputSha256": "4a8742b7bf35b705558a5ddb7607219e7ac46fd6582a1f2fe964ec72c1d435dd",
-      "capturedAtUtc": "2026-11-12T05:53:43.659Z",
+      "capturedAtUtc": "2026-11-12T21:36:47.993Z",
       "swaggerFixture": "swagger-cache/docusign.swagger.json",
       "swaggerFixtureSha256": "4a8742b7bf35b705558a5ddb7607219e7ac46fd6582a1f2fe964ec72c1d435dd",
       "runId": "46aa7eba-ab89-495e-8a47-f430efee5b6e",
       "validation": {
-        "runId": "20a6b4ed-759a-47cd-b331-ae5df147fdc1",
-        "capturedAtUtc": "2026-11-12T16:49:21.880Z",
+        "runId": "27e4758e-8f2c-430a-8ec9-6b7ddb66e943",
+        "capturedAtUtc": "2026-11-12T21:44:10.962Z",
         "swaggerInputSha256": "4a8742b7bf35b705558a5ddb7607219e7ac46fd6582a1f2fe964ec72c1d435dd",
         "outputSha256": "6d18c29771c79fe4aa144d2fda060ecf0935669e1a157157895fa3b8feb47d4e"
       }
@@ -330,13 +330,13 @@
       "outputFile": "src/generated/FreshserviceExtensions.ts",
       "outputSha256": "2ca9044d2d6337099cedfe542cdce3b3cbf641d9af74e02e3d772ef75c9a3a3c",
       "swaggerInputSha256": "9f0d6655b631ee3c07f50be93d62fe02ac166573f2ee79bb8a3781bca96aaee3",
-      "capturedAtUtc": "2026-11-12T05:54:15.953Z",
+      "capturedAtUtc": "2026-11-12T21:37:19.029Z",
       "swaggerFixture": "swagger-cache/freshservice.swagger.json",
       "swaggerFixtureSha256": "9f0d6655b631ee3c07f50be93d62fe02ac166573f2ee79bb8a3781bca96aaee3",
       "runId": "46aa7eba-ab89-495e-8a47-f430efee5b6e",
       "validation": {
-        "runId": "20a6b4ed-759a-47cd-b331-ae5df147fdc1",
-        "capturedAtUtc": "2026-11-12T16:49:56.391Z",
+        "runId": "27e4758e-8f2c-430a-8ec9-6b7ddb66e943",
+        "capturedAtUtc": "2026-11-12T21:44:47.607Z",
         "swaggerInputSha256": "9f0d6655b631ee3c07f50be93d62fe02ac166573f2ee79bb8a3781bca96aaee3",
         "outputSha256": "2ca9044d2d6337099cedfe542cdce3b3cbf641d9af74e02e3d772ef75c9a3a3c"
       }
@@ -362,13 +362,13 @@
       "outputFile": "src/generated/GitHubExtensions.ts",
       "outputSha256": "7f66dd2849efd265b6e05d779640f376a838e313ebf11e74b584e6329c65605d",
       "swaggerInputSha256": "ab508ed2ea1f9c4cf3216d440e2d50cf86b3cc0f5312fa39ee036185d493c73e",
-      "capturedAtUtc": "2026-11-12T05:54:20.694Z",
+      "capturedAtUtc": "2026-11-12T21:37:26.999Z",
       "swaggerFixture": "swagger-cache/github.swagger.json",
       "swaggerFixtureSha256": "ab508ed2ea1f9c4cf3216d440e2d50cf86b3cc0f5312fa39ee036185d493c73e",
       "runId": "46aa7eba-ab89-495e-8a47-f430efee5b6e",
       "validation": {
-        "runId": "20a6b4ed-759a-47cd-b331-ae5df147fdc1",
-        "capturedAtUtc": "2026-11-12T16:50:02.379Z",
+        "runId": "27e4758e-8f2c-430a-8ec9-6b7ddb66e943",
+        "capturedAtUtc": "2026-11-12T21:44:52.064Z",
         "swaggerInputSha256": "ab508ed2ea1f9c4cf3216d440e2d50cf86b3cc0f5312fa39ee036185d493c73e",
         "outputSha256": "7f66dd2849efd265b6e05d779640f376a838e313ebf11e74b584e6329c65605d"
       }
@@ -474,13 +474,13 @@
       "outputFile": "src/generated/JedoxODataHubExtensions.ts",
       "outputSha256": "f81c4475d31d2248792381aede844a9154bbfb76d3e15243fe2c6be7b5d050e0",
       "swaggerInputSha256": "c733673ea33c7babcae0570e83eeabbe3682ae71932fcfb8bee281b9954a2199",
-      "capturedAtUtc": "2026-11-12T05:54:40.716Z",
+      "capturedAtUtc": "2026-11-12T21:37:46.331Z",
       "swaggerFixture": "swagger-cache/jedoxodatahub.swagger.json",
       "swaggerFixtureSha256": "c733673ea33c7babcae0570e83eeabbe3682ae71932fcfb8bee281b9954a2199",
       "runId": "46aa7eba-ab89-495e-8a47-f430efee5b6e",
       "validation": {
-        "runId": "20a6b4ed-759a-47cd-b331-ae5df147fdc1",
-        "capturedAtUtc": "2026-11-12T16:50:23.611Z",
+        "runId": "27e4758e-8f2c-430a-8ec9-6b7ddb66e943",
+        "capturedAtUtc": "2026-11-12T21:45:06.903Z",
         "swaggerInputSha256": "c733673ea33c7babcae0570e83eeabbe3682ae71932fcfb8bee281b9954a2199",
         "outputSha256": "f81c4475d31d2248792381aede844a9154bbfb76d3e15243fe2c6be7b5d050e0"
       }
@@ -490,13 +490,13 @@
       "outputFile": "src/generated/JiraExtensions.ts",
       "outputSha256": "fbb157860d4c408be0d646869244f1ec74ef3434762b0501fd76836854ea4eb2",
       "swaggerInputSha256": "09c9e3b933be233c381c3c0f35a9ecdb493583bb655163e0d786c31be7754a5d",
-      "capturedAtUtc": "2026-11-12T05:54:43.390Z",
+      "capturedAtUtc": "2026-11-12T21:37:49.400Z",
       "swaggerFixture": "swagger-cache/jira.swagger.json",
       "swaggerFixtureSha256": "09c9e3b933be233c381c3c0f35a9ecdb493583bb655163e0d786c31be7754a5d",
       "runId": "46aa7eba-ab89-495e-8a47-f430efee5b6e",
       "validation": {
-        "runId": "20a6b4ed-759a-47cd-b331-ae5df147fdc1",
-        "capturedAtUtc": "2026-11-12T16:50:27.347Z",
+        "runId": "27e4758e-8f2c-430a-8ec9-6b7ddb66e943",
+        "capturedAtUtc": "2026-11-12T21:45:08.847Z",
         "swaggerInputSha256": "09c9e3b933be233c381c3c0f35a9ecdb493583bb655163e0d786c31be7754a5d",
         "outputSha256": "fbb157860d4c408be0d646869244f1ec74ef3434762b0501fd76836854ea4eb2"
       }
@@ -506,13 +506,13 @@
       "outputFile": "src/generated/KustoExtensions.ts",
       "outputSha256": "350e2ad719773efb6bbd061fe42a3edf577849a02f68ac57a2e8ca64d1bc9262",
       "swaggerInputSha256": "2a087d76fd239a5f9abf80f4e9b4b57b8e8aca4cf7bf913d22aea1a32ca05cb7",
-      "capturedAtUtc": "2026-11-12T05:54:51.773Z",
+      "capturedAtUtc": "2026-11-12T21:37:55.925Z",
       "swaggerFixture": "swagger-cache/kusto.swagger.json",
       "swaggerFixtureSha256": "2a087d76fd239a5f9abf80f4e9b4b57b8e8aca4cf7bf913d22aea1a32ca05cb7",
       "runId": "46aa7eba-ab89-495e-8a47-f430efee5b6e",
       "validation": {
-        "runId": "20a6b4ed-759a-47cd-b331-ae5df147fdc1",
-        "capturedAtUtc": "2026-11-12T16:50:34.325Z",
+        "runId": "27e4758e-8f2c-430a-8ec9-6b7ddb66e943",
+        "capturedAtUtc": "2026-11-12T21:45:13.487Z",
         "swaggerInputSha256": "2a087d76fd239a5f9abf80f4e9b4b57b8e8aca4cf7bf913d22aea1a32ca05cb7",
         "outputSha256": "350e2ad719773efb6bbd061fe42a3edf577849a02f68ac57a2e8ca64d1bc9262"
       }
@@ -522,13 +522,13 @@
       "outputFile": "src/generated/MailchimpExtensions.ts",
       "outputSha256": "1e9fe3f5a0a57e6877ccc572eec13d69f287e1da155d1e4d922f029e1af0c150",
       "swaggerInputSha256": "2cf5f68881a233e7f1c9850bc4d3649231bad35ac2d883b02b94c24962308fa6",
-      "capturedAtUtc": "2026-11-12T05:54:54.298Z",
+      "capturedAtUtc": "2026-11-12T21:37:58.599Z",
       "swaggerFixture": "swagger-cache/mailchimp.swagger.json",
       "swaggerFixtureSha256": "2cf5f68881a233e7f1c9850bc4d3649231bad35ac2d883b02b94c24962308fa6",
       "runId": "46aa7eba-ab89-495e-8a47-f430efee5b6e",
       "validation": {
-        "runId": "20a6b4ed-759a-47cd-b331-ae5df147fdc1",
-        "capturedAtUtc": "2026-11-12T16:50:37.191Z",
+        "runId": "27e4758e-8f2c-430a-8ec9-6b7ddb66e943",
+        "capturedAtUtc": "2026-11-12T21:45:15.662Z",
         "swaggerInputSha256": "2cf5f68881a233e7f1c9850bc4d3649231bad35ac2d883b02b94c24962308fa6",
         "outputSha256": "1e9fe3f5a0a57e6877ccc572eec13d69f287e1da155d1e4d922f029e1af0c150"
       }
@@ -538,13 +538,13 @@
       "outputFile": "src/generated/MeetingRoomMapExtensions.ts",
       "outputSha256": "c10d7fde8610e9a5363f1a1837cedf3b6dfc4ddfd4b4cba231c679e7a84f5fa5",
       "swaggerInputSha256": "d78285d9fa59597e5e8f2ff0ef55db439c1e85ed565f2257231ea215a9246465",
-      "capturedAtUtc": "2026-11-12T05:54:56.865Z",
+      "capturedAtUtc": "2026-11-12T21:38:02.471Z",
       "swaggerFixture": "swagger-cache/meetingroommap.swagger.json",
       "swaggerFixtureSha256": "d78285d9fa59597e5e8f2ff0ef55db439c1e85ed565f2257231ea215a9246465",
       "runId": "46aa7eba-ab89-495e-8a47-f430efee5b6e",
       "validation": {
-        "runId": "20a6b4ed-759a-47cd-b331-ae5df147fdc1",
-        "capturedAtUtc": "2026-11-12T16:50:40.072Z",
+        "runId": "27e4758e-8f2c-430a-8ec9-6b7ddb66e943",
+        "capturedAtUtc": "2026-11-12T21:45:18.107Z",
         "swaggerInputSha256": "d78285d9fa59597e5e8f2ff0ef55db439c1e85ed565f2257231ea215a9246465",
         "outputSha256": "c10d7fde8610e9a5363f1a1837cedf3b6dfc4ddfd4b4cba231c679e7a84f5fa5"
       }
@@ -586,13 +586,13 @@
       "outputFile": "src/generated/MQExtensions.ts",
       "outputSha256": "c6284fb0ed94a3cba05f336b9cb9753ed4823970b68506da88256899a3239c51",
       "swaggerInputSha256": "ffd294fd756815f011740d654360b95e5acdbbe9ee0de2d05b64c0edd158de18",
-      "capturedAtUtc": "2026-11-12T05:55:06.314Z",
+      "capturedAtUtc": "2026-11-12T21:38:13.033Z",
       "swaggerFixture": "swagger-cache/mq.swagger.json",
       "swaggerFixtureSha256": "ffd294fd756815f011740d654360b95e5acdbbe9ee0de2d05b64c0edd158de18",
       "runId": "46aa7eba-ab89-495e-8a47-f430efee5b6e",
       "validation": {
-        "runId": "20a6b4ed-759a-47cd-b331-ae5df147fdc1",
-        "capturedAtUtc": "2026-11-12T16:50:52.067Z",
+        "runId": "27e4758e-8f2c-430a-8ec9-6b7ddb66e943",
+        "capturedAtUtc": "2026-11-12T21:45:28.435Z",
         "swaggerInputSha256": "ffd294fd756815f011740d654360b95e5acdbbe9ee0de2d05b64c0edd158de18",
         "outputSha256": "c6284fb0ed94a3cba05f336b9cb9753ed4823970b68506da88256899a3239c51"
       }
@@ -602,13 +602,13 @@
       "outputFile": "src/generated/MSGraphGroupsAndUsersExtensions.ts",
       "outputSha256": "763752a14de096641e50cc5ec00b372bc3e64fe663b687f88bbdef436ef6f6a8",
       "swaggerInputSha256": "cf7a73b0df7b3e26ab4c2c19a595f4c7eb3d3c935f47675735b074b00ea0af7b",
-      "capturedAtUtc": "2026-11-12T05:55:09.097Z",
+      "capturedAtUtc": "2026-11-12T21:38:15.505Z",
       "swaggerFixture": "swagger-cache/msgraphgroupsanduser.swagger.json",
       "swaggerFixtureSha256": "cf7a73b0df7b3e26ab4c2c19a595f4c7eb3d3c935f47675735b074b00ea0af7b",
       "runId": "46aa7eba-ab89-495e-8a47-f430efee5b6e",
       "validation": {
-        "runId": "20a6b4ed-759a-47cd-b331-ae5df147fdc1",
-        "capturedAtUtc": "2026-11-12T16:50:55.278Z",
+        "runId": "27e4758e-8f2c-430a-8ec9-6b7ddb66e943",
+        "capturedAtUtc": "2026-11-12T21:45:32.563Z",
         "swaggerInputSha256": "cf7a73b0df7b3e26ab4c2c19a595f4c7eb3d3c935f47675735b074b00ea0af7b",
         "outputSha256": "763752a14de096641e50cc5ec00b372bc3e64fe663b687f88bbdef436ef6f6a8"
       }
@@ -618,13 +618,13 @@
       "outputFile": "src/generated/Office365Extensions.ts",
       "outputSha256": "22ea89235060b13837259aefde3a89f871b5a64725bec373c2da757641b51c3d",
       "swaggerInputSha256": "034ec860aba27b9db11c56f6ebe2de32c9dad9345a6edb76a14383e876e8c01c",
-      "capturedAtUtc": "2026-11-12T05:55:11.769Z",
+      "capturedAtUtc": "2026-11-12T21:38:18.675Z",
       "swaggerFixture": "swagger-cache/office365.swagger.json",
       "swaggerFixtureSha256": "b58a10baa9a5ca6914bd7dff75d050cba3949c1186ef962abc2365fabdc96f05",
       "runId": "46aa7eba-ab89-495e-8a47-f430efee5b6e",
       "validation": {
-        "runId": "20a6b4ed-759a-47cd-b331-ae5df147fdc1",
-        "capturedAtUtc": "2026-11-12T16:50:57.598Z",
+        "runId": "27e4758e-8f2c-430a-8ec9-6b7ddb66e943",
+        "capturedAtUtc": "2026-11-12T21:45:38.905Z",
         "swaggerInputSha256": "034ec860aba27b9db11c56f6ebe2de32c9dad9345a6edb76a14383e876e8c01c",
         "outputSha256": "22ea89235060b13837259aefde3a89f871b5a64725bec373c2da757641b51c3d"
       }
@@ -691,13 +691,13 @@
       "outputFile": "src/generated/PdfCoExtensions.ts",
       "outputSha256": "b444cd1939b01a14b3ef2192ee2a9100b2ece0b6ed10a545a561943c7e0b88fd",
       "swaggerInputSha256": "c9fb18e541124ef0cd7d867173a4c61eabd2c7a0b0be95bcdf5d4b1c4ede3702",
-      "capturedAtUtc": "2026-11-12T05:55:38.772Z",
+      "capturedAtUtc": "2026-11-12T21:38:43.904Z",
       "swaggerFixture": "swagger-cache/pdfco.swagger.json",
       "swaggerFixtureSha256": "c9fb18e541124ef0cd7d867173a4c61eabd2c7a0b0be95bcdf5d4b1c4ede3702",
       "runId": "46aa7eba-ab89-495e-8a47-f430efee5b6e",
       "validation": {
-        "runId": "20a6b4ed-759a-47cd-b331-ae5df147fdc1",
-        "capturedAtUtc": "2026-11-12T16:51:21.998Z",
+        "runId": "27e4758e-8f2c-430a-8ec9-6b7ddb66e943",
+        "capturedAtUtc": "2026-11-12T21:46:12.747Z",
         "swaggerInputSha256": "c9fb18e541124ef0cd7d867173a4c61eabd2c7a0b0be95bcdf5d4b1c4ede3702",
         "outputSha256": "b444cd1939b01a14b3ef2192ee2a9100b2ece0b6ed10a545a561943c7e0b88fd"
       }
@@ -739,13 +739,13 @@
       "outputFile": "src/generated/PlumsailExtensions.ts",
       "outputSha256": "806dba1d7aae4b0effae759925c691cbd54ebf9fd4dd975626f3db45bbf249bf",
       "swaggerInputSha256": "81bce10812a95289a60e01d7c10f737961114b79bfaa34e4d96e1dcf628bfe48",
-      "capturedAtUtc": "2026-11-12T05:55:49.193Z",
+      "capturedAtUtc": "2026-11-12T21:38:54.843Z",
       "swaggerFixture": "swagger-cache/plumsail.swagger.json",
       "swaggerFixtureSha256": "08a9a832487f5c1e414757a4dab88f6c3719aaf3bdb37d4fe72dce69e9f46adb",
       "runId": "46aa7eba-ab89-495e-8a47-f430efee5b6e",
       "validation": {
-        "runId": "20a6b4ed-759a-47cd-b331-ae5df147fdc1",
-        "capturedAtUtc": "2026-11-12T16:51:31.503Z",
+        "runId": "27e4758e-8f2c-430a-8ec9-6b7ddb66e943",
+        "capturedAtUtc": "2026-11-12T21:46:21.899Z",
         "swaggerInputSha256": "81bce10812a95289a60e01d7c10f737961114b79bfaa34e4d96e1dcf628bfe48",
         "outputSha256": "806dba1d7aae4b0effae759925c691cbd54ebf9fd4dd975626f3db45bbf249bf"
       }
@@ -787,13 +787,13 @@
       "outputFile": "src/generated/RepliconExtensions.ts",
       "outputSha256": "938992cd3cfc8be19de319a9f3a7940ec56c0add1be03ea16408ad9ca56540a6",
       "swaggerInputSha256": "8af777a66023a7ffd02c8e1ce5261119a529da8dc4fab07eebbe0c2454264b2c",
-      "capturedAtUtc": "2026-11-12T05:56:03.610Z",
+      "capturedAtUtc": "2026-11-12T21:39:05.825Z",
       "swaggerFixture": "swagger-cache/replicon.swagger.json",
       "swaggerFixtureSha256": "8af777a66023a7ffd02c8e1ce5261119a529da8dc4fab07eebbe0c2454264b2c",
       "runId": "46aa7eba-ab89-495e-8a47-f430efee5b6e",
       "validation": {
-        "runId": "20a6b4ed-759a-47cd-b331-ae5df147fdc1",
-        "capturedAtUtc": "2026-11-12T16:51:38.394Z",
+        "runId": "27e4758e-8f2c-430a-8ec9-6b7ddb66e943",
+        "capturedAtUtc": "2026-11-12T21:46:29.433Z",
         "swaggerInputSha256": "8af777a66023a7ffd02c8e1ce5261119a529da8dc4fab07eebbe0c2454264b2c",
         "outputSha256": "938992cd3cfc8be19de319a9f3a7940ec56c0add1be03ea16408ad9ca56540a6"
       }
@@ -803,13 +803,13 @@
       "outputFile": "src/generated/RevAIExtensions.ts",
       "outputSha256": "118c5aea339217058b6449bb4cc9dae115b748cc1eb88dc4777c793b4ca94eb1",
       "swaggerInputSha256": "0b0aa956275624c23f31a2c3c3315f49fb26d8559e80e6ec536f6364c04e1037",
-      "capturedAtUtc": "2026-11-12T05:56:05.600Z",
+      "capturedAtUtc": "2026-11-12T21:39:08.104Z",
       "swaggerFixture": "swagger-cache/revai.swagger.json",
       "swaggerFixtureSha256": "0b0aa956275624c23f31a2c3c3315f49fb26d8559e80e6ec536f6364c04e1037",
       "runId": "46aa7eba-ab89-495e-8a47-f430efee5b6e",
       "validation": {
-        "runId": "20a6b4ed-759a-47cd-b331-ae5df147fdc1",
-        "capturedAtUtc": "2026-11-12T16:51:40.727Z",
+        "runId": "27e4758e-8f2c-430a-8ec9-6b7ddb66e943",
+        "capturedAtUtc": "2026-11-12T21:46:32.253Z",
         "swaggerInputSha256": "0b0aa956275624c23f31a2c3c3315f49fb26d8559e80e6ec536f6364c04e1037",
         "outputSha256": "118c5aea339217058b6449bb4cc9dae115b748cc1eb88dc4777c793b4ca94eb1"
       }
@@ -835,13 +835,13 @@
       "outputFile": "src/generated/SalesforceExtensions.ts",
       "outputSha256": "04e3aee126bb8e0127bffae0131a6ee37d1ac0ac6e74376d0b7c9030bbf3a44c",
       "swaggerInputSha256": "57ad15ab50d2d1796a1520b9a03d85dbabbf52b5ac722b05e390f1787926051f",
-      "capturedAtUtc": "2026-11-12T05:56:10.316Z",
+      "capturedAtUtc": "2026-11-12T21:39:13.553Z",
       "swaggerFixture": "swagger-cache/salesforce.swagger.json",
       "swaggerFixtureSha256": "57ad15ab50d2d1796a1520b9a03d85dbabbf52b5ac722b05e390f1787926051f",
       "runId": "46aa7eba-ab89-495e-8a47-f430efee5b6e",
       "validation": {
-        "runId": "20a6b4ed-759a-47cd-b331-ae5df147fdc1",
-        "capturedAtUtc": "2026-11-12T16:51:46.004Z",
+        "runId": "27e4758e-8f2c-430a-8ec9-6b7ddb66e943",
+        "capturedAtUtc": "2026-11-12T21:46:36.982Z",
         "swaggerInputSha256": "57ad15ab50d2d1796a1520b9a03d85dbabbf52b5ac722b05e390f1787926051f",
         "outputSha256": "04e3aee126bb8e0127bffae0131a6ee37d1ac0ac6e74376d0b7c9030bbf3a44c"
       }
@@ -915,13 +915,13 @@
       "outputFile": "src/generated/SigningHubExtensions.ts",
       "outputSha256": "fe27ababb9f59c2aa529455a8d408e8c00b60094b6631eb13598f9f00c75e9d5",
       "swaggerInputSha256": "209a58f4fa78b19845cd3d7b6f4e01d94f73ace0a9832c73f804449f68263404",
-      "capturedAtUtc": "2026-11-12T05:56:27.000Z",
+      "capturedAtUtc": "2026-11-12T21:39:29.741Z",
       "swaggerFixture": "swagger-cache/signinghub.swagger.json",
       "swaggerFixtureSha256": "209a58f4fa78b19845cd3d7b6f4e01d94f73ace0a9832c73f804449f68263404",
       "runId": "46aa7eba-ab89-495e-8a47-f430efee5b6e",
       "validation": {
-        "runId": "20a6b4ed-759a-47cd-b331-ae5df147fdc1",
-        "capturedAtUtc": "2026-11-12T16:52:05.462Z",
+        "runId": "27e4758e-8f2c-430a-8ec9-6b7ddb66e943",
+        "capturedAtUtc": "2026-11-12T21:46:52.890Z",
         "swaggerInputSha256": "209a58f4fa78b19845cd3d7b6f4e01d94f73ace0a9832c73f804449f68263404",
         "outputSha256": "fe27ababb9f59c2aa529455a8d408e8c00b60094b6631eb13598f9f00c75e9d5"
       }
@@ -931,13 +931,13 @@
       "outputFile": "src/generated/SlackExtensions.ts",
       "outputSha256": "5fc455c2f51a6f53cdcadb82edb5a80b15723435b9e828f108e4ec447a87cbbf",
       "swaggerInputSha256": "9628ffa4396b91d06a3ef246926c86beea3513602b8b8f5a1d6f22c38386c336",
-      "capturedAtUtc": "2026-11-12T05:56:30.077Z",
+      "capturedAtUtc": "2026-11-12T21:39:32.463Z",
       "swaggerFixture": "swagger-cache/slack.swagger.json",
       "swaggerFixtureSha256": "9628ffa4396b91d06a3ef246926c86beea3513602b8b8f5a1d6f22c38386c336",
       "runId": "46aa7eba-ab89-495e-8a47-f430efee5b6e",
       "validation": {
-        "runId": "20a6b4ed-759a-47cd-b331-ae5df147fdc1",
-        "capturedAtUtc": "2026-11-12T16:52:07.643Z",
+        "runId": "27e4758e-8f2c-430a-8ec9-6b7ddb66e943",
+        "capturedAtUtc": "2026-11-12T21:46:55.667Z",
         "swaggerInputSha256": "9628ffa4396b91d06a3ef246926c86beea3513602b8b8f5a1d6f22c38386c336",
         "outputSha256": "5fc455c2f51a6f53cdcadb82edb5a80b15723435b9e828f108e4ec447a87cbbf"
       }
@@ -995,13 +995,13 @@
       "outputFile": "src/generated/StarRezRestV1Extensions.ts",
       "outputSha256": "53553c89cab24ad1fde4b2863f14ffd87b8ce54faede03d746bb42de83985229",
       "swaggerInputSha256": "ec00ac764f396b41b9725414ad10f2b358ee583bbea760ae99a91799d48d0e73",
-      "capturedAtUtc": "2026-11-12T05:56:41.568Z",
+      "capturedAtUtc": "2026-11-12T21:39:44.734Z",
       "swaggerFixture": "swagger-cache/starrezrestv1.swagger.json",
       "swaggerFixtureSha256": "ec00ac764f396b41b9725414ad10f2b358ee583bbea760ae99a91799d48d0e73",
       "runId": "46aa7eba-ab89-495e-8a47-f430efee5b6e",
       "validation": {
-        "runId": "20a6b4ed-759a-47cd-b331-ae5df147fdc1",
-        "capturedAtUtc": "2026-11-12T16:52:16.327Z",
+        "runId": "27e4758e-8f2c-430a-8ec9-6b7ddb66e943",
+        "capturedAtUtc": "2026-11-12T21:47:05.774Z",
         "swaggerInputSha256": "ec00ac764f396b41b9725414ad10f2b358ee583bbea760ae99a91799d48d0e73",
         "outputSha256": "53553c89cab24ad1fde4b2863f14ffd87b8ce54faede03d746bb42de83985229"
       }
@@ -1027,13 +1027,13 @@
       "outputFile": "src/generated/TeamsExtensions.ts",
       "outputSha256": "d6542a1e2bbac1f7559bd7d6a5dd7a411adbb2b592ccedfaa8bfcb42631cc30b",
       "swaggerInputSha256": "ae2cd051a30f718773c63a3129d8c329431955da2cbf2afe15372a1d60e3b48b",
-      "capturedAtUtc": "2026-11-12T05:56:55.352Z",
+      "capturedAtUtc": "2026-11-12T21:39:52.225Z",
       "swaggerFixture": "swagger-cache/teams.swagger.json",
       "swaggerFixtureSha256": "0116fc974e54ff4c9a69ef386b9f990f1d51d226f1666bbd705f53e720b955e8",
       "runId": "46aa7eba-ab89-495e-8a47-f430efee5b6e",
       "validation": {
-        "runId": "20a6b4ed-759a-47cd-b331-ae5df147fdc1",
-        "capturedAtUtc": "2026-11-12T16:52:22.371Z",
+        "runId": "27e4758e-8f2c-430a-8ec9-6b7ddb66e943",
+        "capturedAtUtc": "2026-11-12T21:47:10.619Z",
         "swaggerInputSha256": "ae2cd051a30f718773c63a3129d8c329431955da2cbf2afe15372a1d60e3b48b",
         "outputSha256": "d6542a1e2bbac1f7559bd7d6a5dd7a411adbb2b592ccedfaa8bfcb42631cc30b"
       }
@@ -1059,13 +1059,13 @@
       "outputFile": "src/generated/TicketmasterExtensions.ts",
       "outputSha256": "057267f5e766683df60c76ec753bdb9e8b844ffd7e7ac1af8b5ca4297e0f445f",
       "swaggerInputSha256": "70eb7108409c5e0a3010a6564300b595825e2e700e30f721c9f0bc2b16cf17ca",
-      "capturedAtUtc": "2026-11-12T05:57:00.695Z",
+      "capturedAtUtc": "2026-11-12T21:40:01.492Z",
       "swaggerFixture": "swagger-cache/ticketmaster.swagger.json",
       "swaggerFixtureSha256": "70eb7108409c5e0a3010a6564300b595825e2e700e30f721c9f0bc2b16cf17ca",
       "runId": "46aa7eba-ab89-495e-8a47-f430efee5b6e",
       "validation": {
-        "runId": "20a6b4ed-759a-47cd-b331-ae5df147fdc1",
-        "capturedAtUtc": "2026-11-12T16:52:27.924Z",
+        "runId": "27e4758e-8f2c-430a-8ec9-6b7ddb66e943",
+        "capturedAtUtc": "2026-11-12T21:47:15.877Z",
         "swaggerInputSha256": "70eb7108409c5e0a3010a6564300b595825e2e700e30f721c9f0bc2b16cf17ca",
         "outputSha256": "057267f5e766683df60c76ec753bdb9e8b844ffd7e7ac1af8b5ca4297e0f445f"
       }
@@ -1123,13 +1123,13 @@
       "outputFile": "src/generated/WaywedoExtensions.ts",
       "outputSha256": "69bff42b7144b0951fb7b08631e0de494be26936e831e612086c842c0c818b77",
       "swaggerInputSha256": "123bd268c4cf0676396313aaeb548df42d4228a492940c45edf884c8bdd1bc46",
-      "capturedAtUtc": "2026-11-12T05:57:18.620Z",
+      "capturedAtUtc": "2026-11-12T21:40:18.610Z",
       "swaggerFixture": "swagger-cache/waywedo.swagger.json",
       "swaggerFixtureSha256": "7f5fc1e2e00c11874a8c9bf6b2301ebfe325de3f70e4b786f316d11f3555d21a",
       "runId": "46aa7eba-ab89-495e-8a47-f430efee5b6e",
       "validation": {
-        "runId": "20a6b4ed-759a-47cd-b331-ae5df147fdc1",
-        "capturedAtUtc": "2026-11-12T16:52:44.649Z",
+        "runId": "27e4758e-8f2c-430a-8ec9-6b7ddb66e943",
+        "capturedAtUtc": "2026-11-12T21:47:55.794Z",
         "swaggerInputSha256": "123bd268c4cf0676396313aaeb548df42d4228a492940c45edf884c8bdd1bc46",
         "outputSha256": "69bff42b7144b0951fb7b08631e0de494be26936e831e612086c842c0c818b77"
       }
@@ -1187,13 +1187,13 @@
       "outputFile": "src/generated/ZeptoMailExtensions.ts",
       "outputSha256": "0a98c46cfdb3dfa19bf73810fe25d244085a815cdc3b71672562a9224fd1b57d",
       "swaggerInputSha256": "85dd833f593445f5fa135d342774d12f211707b1d0de6d2ef1695d985e5c4854",
-      "capturedAtUtc": "2026-11-12T05:57:36.391Z",
+      "capturedAtUtc": "2026-11-12T21:40:35.832Z",
       "swaggerFixture": "swagger-cache/zeptomail.swagger.json",
       "swaggerFixtureSha256": "85dd833f593445f5fa135d342774d12f211707b1d0de6d2ef1695d985e5c4854",
       "runId": "46aa7eba-ab89-495e-8a47-f430efee5b6e",
       "validation": {
-        "runId": "20a6b4ed-759a-47cd-b331-ae5df147fdc1",
-        "capturedAtUtc": "2026-11-12T16:53:02.668Z",
+        "runId": "27e4758e-8f2c-430a-8ec9-6b7ddb66e943",
+        "capturedAtUtc": "2026-11-12T21:48:11.305Z",
         "swaggerInputSha256": "85dd833f593445f5fa135d342774d12f211707b1d0de6d2ef1695d985e5c4854",
         "outputSha256": "0a98c46cfdb3dfa19bf73810fe25d244085a815cdc3b71672562a9224fd1b57d"
       }
@@ -1203,13 +1203,13 @@
       "outputFile": "src/generated/ZohoSignExtensions.ts",
       "outputSha256": "afe799533efd5619660996da9c6cbb34b778265697e687f1aa2ec010f57bdd66",
       "swaggerInputSha256": "ce62c4d774b291d1ccbf5a1f258613e938f894400c77cec02eefca0bbd9c8239",
-      "capturedAtUtc": "2026-11-12T05:57:38.850Z",
+      "capturedAtUtc": "2026-11-12T21:40:38.153Z",
       "swaggerFixture": "swagger-cache/zohosign.swagger.json",
       "swaggerFixtureSha256": "ce62c4d774b291d1ccbf5a1f258613e938f894400c77cec02eefca0bbd9c8239",
       "runId": "46aa7eba-ab89-495e-8a47-f430efee5b6e",
       "validation": {
-        "runId": "20a6b4ed-759a-47cd-b331-ae5df147fdc1",
-        "capturedAtUtc": "2026-11-12T16:53:06.378Z",
+        "runId": "27e4758e-8f2c-430a-8ec9-6b7ddb66e943",
+        "capturedAtUtc": "2026-11-12T21:48:13.480Z",
         "swaggerInputSha256": "ce62c4d774b291d1ccbf5a1f258613e938f894400c77cec02eefca0bbd9c8239",
         "outputSha256": "afe799533efd5619660996da9c6cbb34b778265697e687f1aa2ec010f57bdd66"
       }
@@ -1251,13 +1251,13 @@
       "outputFile": "src/generated/WordOnlineBusinessExtensions.ts",
       "outputSha256": "ec956deb311a18ad085bfbd70370e07a2dae2b49343476a328a3186db548bda8",
       "swaggerInputSha256": "860c4abd6376e400135a488f11c131bc0096a76a868e7e9e7e6ad6891d92dbfc",
-      "capturedAtUtc": "2026-11-12T05:57:26.256Z",
+      "capturedAtUtc": "2026-11-12T21:40:25.432Z",
       "swaggerFixture": "swagger-cache/wordonlinebusiness.swagger.json",
       "swaggerFixtureSha256": "860c4abd6376e400135a488f11c131bc0096a76a868e7e9e7e6ad6891d92dbfc",
       "runId": "46aa7eba-ab89-495e-8a47-f430efee5b6e",
       "validation": {
-        "runId": "20a6b4ed-759a-47cd-b331-ae5df147fdc1",
-        "capturedAtUtc": "2026-11-12T16:52:52.210Z",
+        "runId": "27e4758e-8f2c-430a-8ec9-6b7ddb66e943",
+        "capturedAtUtc": "2026-11-12T21:48:02.584Z",
         "swaggerInputSha256": "860c4abd6376e400135a488f11c131bc0096a76a868e7e9e7e6ad6891d92dbfc",
         "outputSha256": "ec956deb311a18ad085bfbd70370e07a2dae2b49343476a328a3186db548bda8"
       }
@@ -1283,13 +1283,13 @@
       "outputFile": "src/generated/VisualStudioTeamServicesExtensions.ts",
       "outputSha256": "52def1e9128cdb4005f425aaf4c392ad6f7edcac871309139395d977f360b0f3",
       "swaggerInputSha256": "df18405d61aeac67561f439cc2f7cc300feb36f4b0fcb8de25f0b70b807fccec",
-      "capturedAtUtc": "2026-11-12T05:57:16.516Z",
+      "capturedAtUtc": "2026-11-12T21:40:16.304Z",
       "swaggerFixture": "swagger-cache/visualstudioteamservices.swagger.json",
       "swaggerFixtureSha256": "df18405d61aeac67561f439cc2f7cc300feb36f4b0fcb8de25f0b70b807fccec",
       "runId": "46aa7eba-ab89-495e-8a47-f430efee5b6e",
       "validation": {
-        "runId": "20a6b4ed-759a-47cd-b331-ae5df147fdc1",
-        "capturedAtUtc": "2026-11-12T16:52:42.313Z",
+        "runId": "27e4758e-8f2c-430a-8ec9-6b7ddb66e943",
+        "capturedAtUtc": "2026-11-12T21:47:53.533Z",
         "swaggerInputSha256": "df18405d61aeac67561f439cc2f7cc300feb36f4b0fcb8de25f0b70b807fccec",
         "outputSha256": "52def1e9128cdb4005f425aaf4c392ad6f7edcac871309139395d977f360b0f3"
       }
@@ -1331,13 +1331,13 @@
       "outputFile": "src/generated/Office365GroupsExtensions.ts",
       "outputSha256": "7d1121819a554bd3a0e032514c97711fadab4bf1f262e3751e7bd1c05efe55cc",
       "swaggerInputSha256": "3f553ce2c316f1af178cb04beacac6e621ffbb7103e3db92f56dbf8792292ccf",
-      "capturedAtUtc": "2026-11-12T05:55:14.550Z",
+      "capturedAtUtc": "2026-11-12T21:38:22.513Z",
       "swaggerFixture": "swagger-cache/office365groups.swagger.json",
       "swaggerFixtureSha256": "3f553ce2c316f1af178cb04beacac6e621ffbb7103e3db92f56dbf8792292ccf",
       "runId": "46aa7eba-ab89-495e-8a47-f430efee5b6e",
       "validation": {
-        "runId": "20a6b4ed-759a-47cd-b331-ae5df147fdc1",
-        "capturedAtUtc": "2026-11-12T16:51:00.341Z",
+        "runId": "27e4758e-8f2c-430a-8ec9-6b7ddb66e943",
+        "capturedAtUtc": "2026-11-12T21:45:54.525Z",
         "swaggerInputSha256": "3f553ce2c316f1af178cb04beacac6e621ffbb7103e3db92f56dbf8792292ccf",
         "outputSha256": "7d1121819a554bd3a0e032514c97711fadab4bf1f262e3751e7bd1c05efe55cc"
       }
@@ -1363,13 +1363,13 @@
       "outputFile": "src/generated/MicrosoftBookingsExtensions.ts",
       "outputSha256": "5e8e17a4c47fc7da2bc75541fe82a434c89959bb9dbcba49c085b2a232d72ef5",
       "swaggerInputSha256": "f5a9d2d540ba646436feb4e3f521eb4d6d84511d92612f8290e95625e2be5321",
-      "capturedAtUtc": "2026-11-12T05:54:59.070Z",
+      "capturedAtUtc": "2026-11-12T21:38:05.131Z",
       "swaggerFixture": "swagger-cache/microsoftbookings.swagger.json",
       "swaggerFixtureSha256": "f5a9d2d540ba646436feb4e3f521eb4d6d84511d92612f8290e95625e2be5321",
       "runId": "46aa7eba-ab89-495e-8a47-f430efee5b6e",
       "validation": {
-        "runId": "20a6b4ed-759a-47cd-b331-ae5df147fdc1",
-        "capturedAtUtc": "2026-11-12T16:50:43.191Z",
+        "runId": "27e4758e-8f2c-430a-8ec9-6b7ddb66e943",
+        "capturedAtUtc": "2026-11-12T21:45:20.514Z",
         "swaggerInputSha256": "f5a9d2d540ba646436feb4e3f521eb4d6d84511d92612f8290e95625e2be5321",
         "outputSha256": "5e8e17a4c47fc7da2bc75541fe82a434c89959bb9dbcba49c085b2a232d72ef5"
       }
@@ -1555,13 +1555,13 @@
       "outputFile": "src/generated/DocumentDBExtensions.ts",
       "outputSha256": "02a2e012799011fd8cb3c6fd4ebc2e1bbef3be8b3804e538a02e802cc20370f2",
       "swaggerInputSha256": "065e7fdf4058c42a9d395da1de82f4d8f53cb81395dc2482a38733ebeea55969",
-      "capturedAtUtc": "2026-11-12T05:53:41.290Z",
+      "capturedAtUtc": "2026-11-12T21:36:45.222Z",
       "swaggerFixture": "swagger-cache/documentdb.swagger.json",
       "swaggerFixtureSha256": "065e7fdf4058c42a9d395da1de82f4d8f53cb81395dc2482a38733ebeea55969",
       "runId": "46aa7eba-ab89-495e-8a47-f430efee5b6e",
       "validation": {
-        "runId": "20a6b4ed-759a-47cd-b331-ae5df147fdc1",
-        "capturedAtUtc": "2026-11-12T16:49:18.679Z",
+        "runId": "27e4758e-8f2c-430a-8ec9-6b7ddb66e943",
+        "capturedAtUtc": "2026-11-12T21:44:07.347Z",
         "swaggerInputSha256": "065e7fdf4058c42a9d395da1de82f4d8f53cb81395dc2482a38733ebeea55969",
         "outputSha256": "02a2e012799011fd8cb3c6fd4ebc2e1bbef3be8b3804e538a02e802cc20370f2"
       }
@@ -1571,13 +1571,13 @@
       "outputFile": "src/generated/ServiceBusExtensions.ts",
       "outputSha256": "9b6730ae105deeeb3d3ed47cad355608028aebfbf789075137df7c4e9faa7171",
       "swaggerInputSha256": "b772b0ee3a4cbaee6e5f35c5690397ca0676855555051164ac3bdfd809ccd44b",
-      "capturedAtUtc": "2026-11-12T05:56:17.251Z",
+      "capturedAtUtc": "2026-11-12T21:39:20.283Z",
       "swaggerFixture": "swagger-cache/servicebus.swagger.json",
       "swaggerFixtureSha256": "b772b0ee3a4cbaee6e5f35c5690397ca0676855555051164ac3bdfd809ccd44b",
       "runId": "46aa7eba-ab89-495e-8a47-f430efee5b6e",
       "validation": {
-        "runId": "20a6b4ed-759a-47cd-b331-ae5df147fdc1",
-        "capturedAtUtc": "2026-11-12T16:51:53.204Z",
+        "runId": "27e4758e-8f2c-430a-8ec9-6b7ddb66e943",
+        "capturedAtUtc": "2026-11-12T21:46:43.683Z",
         "swaggerInputSha256": "b772b0ee3a4cbaee6e5f35c5690397ca0676855555051164ac3bdfd809ccd44b",
         "outputSha256": "9b6730ae105deeeb3d3ed47cad355608028aebfbf789075137df7c4e9faa7171"
       }
@@ -1601,15 +1601,15 @@
     {
       "apiName": "dataflowssms",
       "outputFile": "src/generated/DataFlowsSmsExtensions.ts",
-      "outputSha256": "714155955d4ce02f868d0a085b84444c4a5b0572e4757948f32c21ffbf919d17",
+      "outputSha256": "769bb23780c16a6346e3999bedb7ca5f138091720a228005a3d66cd7b6a02a4d",
       "swaggerInputSha256": "e3b777684ca8973a6945b3559de08e0c369cfc0730243f15983d70c1146ad8e5",
-      "capturedAtUtc": "2026-11-12T05:53:36.309Z",
+      "capturedAtUtc": "2026-11-12T21:36:42.221Z",
       "runId": "46aa7eba-ab89-495e-8a47-f430efee5b6e",
       "validation": {
-        "runId": "20a6b4ed-759a-47cd-b331-ae5df147fdc1",
-        "capturedAtUtc": "2026-11-12T16:49:15.769Z",
+        "runId": "27e4758e-8f2c-430a-8ec9-6b7ddb66e943",
+        "capturedAtUtc": "2026-11-12T21:44:05.223Z",
         "swaggerInputSha256": "e3b777684ca8973a6945b3559de08e0c369cfc0730243f15983d70c1146ad8e5",
-        "outputSha256": "714155955d4ce02f868d0a085b84444c4a5b0572e4757948f32c21ffbf919d17"
+        "outputSha256": "769bb23780c16a6346e3999bedb7ca5f138091720a228005a3d66cd7b6a02a4d"
       }
     },
     {
@@ -2269,20 +2269,20 @@
         "zohosign"
       ],
       "catalogGenerationConnectorCount": 103,
-      "captureStartedAtUtc": "2026-11-12T05:52:27.013Z",
-      "generatedAtUtc": "2026-11-12T19:05:56.681Z",
+      "captureStartedAtUtc": "2026-11-12T21:35:30.646Z",
+      "generatedAtUtc": "2026-11-12T21:40:47.567Z",
       "generator": {
         "repository": "https://msazure.visualstudio.com/One/_git/AzureUX-BPM",
         "tool": "CodefulSdkGenerator (LogicAppsCompiler)",
         "projectPath": "src/tools/CodefulSdkGenerator/LogicAppsCompiler.Cli/LogicAppsCompiler.Cli.csproj",
-        "bpmBaseCommit": "9b373af51e9ba70d02fc8cdd25cfb8d2f3188a0d",
-        "bpmHeadCommit": "9b373af51e9ba70d02fc8cdd25cfb8d2f3188a0d",
+        "bpmBaseCommit": "334cb8e0830a0b60e34a457da6725a779ade7ff3",
+        "bpmHeadCommit": "334cb8e0830a0b60e34a457da6725a779ade7ff3",
         "bpmBranch": "fix/sdk-systematic-naming",
         "assemblyVersion": "1.199.0.2",
-        "assemblySha256": "76441ae0c301ebbe0a4988764f64befa09e876c3d434d047a512c92bb2fce379",
-        "compilerCliSha256": "fbc07089945368f36644ceb7afe025e711f660ac93a2e131b9db79dfb8b31922",
-        "upstreamStatus": "local-committed-unpushed",
-        "generatorTree": "2753d7c99f08b90249b3fe40ef98e05b43d60cb4"
+        "assemblySha256": "891f9b2a62ed448279f4abf62cdbf0732487b003cadf329b0ea64731688027d3",
+        "compilerCliSha256": "1b90441e6076b02127856c63ff8756643bb36c5842b550f41e88c67d974101e2",
+        "upstreamStatus": "committed-and-pushed",
+        "generatorTree": "ab7b5187739437c26d42622e567757e8bd983a14"
       },
       "swaggerSource": {
         "kind": "live-arm-metadata",
@@ -2292,14 +2292,14 @@
       },
       "connectorListInputSha256": "a083be669c1f5fd85c92cfa1591e78d7df1cc59de394e77586fc3509a1b372d9",
       "validation": {
-        "runId": "20a6b4ed-759a-47cd-b331-ae5df147fdc1",
-        "captureStartedAtUtc": "2026-11-12T16:47:58.965Z",
-        "generatedAtUtc": "2026-11-12T19:07:13.829Z",
+        "runId": "27e4758e-8f2c-430a-8ec9-6b7ddb66e943",
+        "captureStartedAtUtc": "2026-11-12T21:43:13.189Z",
+        "captureEndedAtUtc": "2026-11-12T21:48:13.480Z",
+        "generatedAtUtc": "2026-11-12T21:48:13.561Z",
         "connectorListInputSha256": "a083be669c1f5fd85c92cfa1591e78d7df1cc59de394e77586fc3509a1b372d9",
         "kind": "independent-fresh-live-download-plus-offline-replay",
-        "captureGeneratorCommit": "b3aa14d9406c4196d406c8e450814336d0544d7c",
-        "replayGeneratorCommit": "9b373af51e9ba70d02fc8cdd25cfb8d2f3188a0d",
-        "captureEndedAtUtc": "2026-11-12T16:53:06.453Z"
+        "captureGeneratorCommit": "334cb8e0830a0b60e34a457da6725a779ade7ff3",
+        "replayGeneratorCommit": "334cb8e0830a0b60e34a457da6725a779ade7ff3"
       }
     }
   },
@@ -2564,7 +2564,7 @@
       },
       {
         "apiName": "onenote",
-        "reason": "Output is unchanged by corrected committed-source naming generation; retain independently validated historical capture."
+        "reason": "Output is unchanged despite independent live input drift; retain the historical capture and Swagger hash rather than claiming new validation."
       },
       {
         "apiName": "outlook",

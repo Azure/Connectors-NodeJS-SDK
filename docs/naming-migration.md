@@ -449,3 +449,35 @@ Binary-root operations accept a `Blob`, not a JSON string. Pass file bytes via
 `new Blob([bytes], { type: "application/pdf" })` when the type is known; the
 SDK uses `application/octet-stream` when no media type is supplied. The default
 Node transport sends the Blob bytes, not a JSON-serialized representation.
+
+## SMS GET retry safety
+
+`DataFlowsSmsClient.sendSmsGet(recipient, senderId, message, options)` sends the
+connector's `GET /sms/send` action with query parameters. This endpoint sends
+an SMS despite its HTTP verb: the SDK does not retry it on transient responses
+or transport failures, even with `retryUnsafeHttpMethods: true`.
+`sendSms` still uses POST; ordinary read-only GET operations such as `listSms`
+retain normal retry behavior. The raw operation IDs remain `SendSMSGet` and
+`SendSMS`.
+
+## Preserving parsed pages and transport responses
+
+`.byPage()` still yields arrays. Each array also has non-enumerable `pageModel`
+(the full parsed service response), `rawResponse` (the Azure Core
+`PipelineResponse`), and `continuationToken` (the resolved next-page link).
+Generated clients keep the source-compatible one-parameter iterator type;
+`pageModel` defaults to `unknown`, so cast it to the relevant service model:
+
+```typescript
+import type { ItemsList } from "@azure/connectors/generated/ExcelOnlineBusinessExtensions";
+
+// Given an ExcelOnlineBusinessClient named client:
+for await (const page of client.getItems(drive, file, table, source).byPage()) {
+    const model = page.pageModel as ItemsList | undefined;
+    console.log(model?.sensitivityLabelInfo, page.rawResponse?.status, page.continuationToken);
+}
+```
+
+The package root also exports `ConnectorPage<TItem, TPage>` for consumers
+that need an explicitly typed page. Metadata does not affect `Array.isArray`,
+`JSON.stringify`, or ordinary array equality.

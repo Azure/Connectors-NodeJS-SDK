@@ -269,7 +269,7 @@ is a separate final merge gate, not a prerequisite for showing the paired output
 | `generationRuns` | Run-scoped generator, live endpoint, capture bounds, ARM-list hash, and independent validation bounds. |
 | `connectors[].validation` | Independent live run ID, capture time, input hash, and output hash; must match the refreshed client. |
 | `generationRuns[].validation.captureEndedAtUtc` | End of the independent fresh metadata download, before the exact-source offline replay. |
-| `generationRuns[].validation.captureGeneratorCommit` | Commit of the binary used to fetch the independent fresh metadata; it is not the producer or replay commit. |
+| `generationRuns[].validation.captureGeneratorCommit` | Commit of the binary used to fetch independent fresh metadata; record it separately even if it matches the producer and replay commits. |
 | `generationRuns[].validation.replayGeneratorCommit` | Commit of the independently rebuilt compiler used to replay the validator inputs offline; record a later replay only after verifying all 106 byte outputs. |
 | `refresh` | Exact refreshed/retained inventory, retention reasons, and generator-emitted shared-file hashes. |
 

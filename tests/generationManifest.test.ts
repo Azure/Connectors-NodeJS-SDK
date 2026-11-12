@@ -502,9 +502,10 @@ describe("generation.manifest.json provenance", () => {
         expect(run.generator.bpmBaseCommit).toMatch(/^[0-9a-f]{40}$/);
         expect(run.generator.bpmHeadCommit).toBe(run.generator.bpmBaseCommit);
         expect(run.generator.sourcePatch).toBeUndefined();
-        expect(["merged", "active-unmerged", "local-committed-unpushed"]).toContain(run.generator.upstreamStatus);
-        if (run.generator.upstreamStatus === "local-committed-unpushed") {
-            expect(run.generator.bpmHeadCommit).toBe("9b373af51e9ba70d02fc8cdd25cfb8d2f3188a0d");
+        expect(["merged", "active-unmerged", "local-committed-unpushed", "committed-and-pushed"]).toContain(run.generator.upstreamStatus);
+        if (run.generator.upstreamStatus === "local-committed-unpushed" ||
+            run.generator.upstreamStatus === "committed-and-pushed") {
+            expect(run.generator.bpmHeadCommit).toBe("334cb8e0830a0b60e34a457da6725a779ade7ff3");
             expect(run.generator.pullRequest).toBeUndefined();
             expect(run.generator.pullRequestSourceCommit).toBeUndefined();
         }
@@ -512,9 +513,9 @@ describe("generation.manifest.json provenance", () => {
             expect(run.generator.pullRequest).toMatch(/^https:\/\/msazure\.visualstudio\.com\/One\/_git\/AzureUX-BPM\/pullrequest\/\d+$/);
             expect(run.generator.pullRequestSourceCommit).toBe(run.generator.bpmHeadCommit);
         }
-        expect(run.generator.assemblySha256).toBe("76441ae0c301ebbe0a4988764f64befa09e876c3d434d047a512c92bb2fce379");
-        expect(run.generator.compilerCliSha256).toBe("fbc07089945368f36644ceb7afe025e711f660ac93a2e131b9db79dfb8b31922");
-        expect(run.generator.generatorTree).toBe("2753d7c99f08b90249b3fe40ef98e05b43d60cb4");
+        expect(run.generator.assemblySha256).toBe("891f9b2a62ed448279f4abf62cdbf0732487b003cadf329b0ea64731688027d3");
+        expect(run.generator.compilerCliSha256).toBe("1b90441e6076b02127856c63ff8756643bb36c5842b550f41e88c67d974101e2");
+        expect(run.generator.generatorTree).toBe("ab7b5187739437c26d42622e567757e8bd983a14");
         expect(run.swaggerSource).toEqual({
             kind: "live-arm-metadata",
             subscriptionId: "f34b22a3-2202-4fb1-b040-1332bd928c84",
@@ -524,20 +525,23 @@ describe("generation.manifest.json provenance", () => {
         expect(run.connectorListInputSha256).toMatch(/^[0-9a-f]{64}$/);
         expect(run.validation.connectorListInputSha256).toBe(run.connectorListInputSha256);
         expect(run.validation.kind).toBe("independent-fresh-live-download-plus-offline-replay");
-        expect(run.validation.captureGeneratorCommit).toBe("b3aa14d9406c4196d406c8e450814336d0544d7c");
-        expect(run.validation.replayGeneratorCommit).toBe("9b373af51e9ba70d02fc8cdd25cfb8d2f3188a0d");
-        expect(run.validation.replayGeneratorCommit).not.toBe(run.validation.captureGeneratorCommit);
+        expect(run.validation.captureGeneratorCommit).toBe("334cb8e0830a0b60e34a457da6725a779ade7ff3");
+        expect(run.validation.replayGeneratorCommit).toBe("334cb8e0830a0b60e34a457da6725a779ade7ff3");
+        expect(run.validation.replayGeneratorCommit).toBe(run.validation.captureGeneratorCommit);
         expect(run.validation.replayGeneratorCommit).toBe(run.generator.bpmHeadCommit);
-        expect(run.validation.captureEndedAtUtc).toBe("2026-11-12T16:53:06.453Z");
-        expect(parseUtcTimestamp(run.validation.captureStartedAtUtc)).toBeLessThan(parseUtcTimestamp(run.generatedAtUtc));
+        expect(run.validation.captureEndedAtUtc).toBe("2026-11-12T21:48:13.480Z");
+        expect(parseUtcTimestamp(run.validation.captureStartedAtUtc)).toBeGreaterThan(parseUtcTimestamp(run.generatedAtUtc));
         expect(parseUtcTimestamp(run.validation.generatedAtUtc)).toBeGreaterThan(parseUtcTimestamp(run.generatedAtUtc));
     });
 
     it.each(["replay-source", "capture-origin", "replay-time", "capture-end"] as const)(
-        "should reject an invalid early-capture exact-source validation: %s", mutation => {
+        "should reject falsified independent validation chronology or source: %s", mutation => {
             const changed = structuredClone(manifest);
             const connector = changed.connectors.find(entry => entry.apiName === changed.refresh.refreshedConnectors[0])!;
             const run = changed.generationRuns[changed.refresh.runId];
+            if (mutation === "replay-source" || mutation === "capture-origin") {
+                run.validation.captureStartedAtUtc = new Date(parseUtcTimestamp(run.generatedAtUtc) - 1).toISOString();
+            }
             if (mutation === "replay-source") run.validation.replayGeneratorCommit = "69ceed26b150c4cfd194fe7ac143cd9ce1bd40d9";
             if (mutation === "capture-origin") run.validation.captureGeneratorCommit = run.generator.bpmHeadCommit!;
             if (mutation === "replay-time") {

@@ -1,10 +1,13 @@
 // Copyright (c) Microsoft Corporation.  All rights reserved.
 
 import type { TokenCredential } from "@azure/core-auth";
+import type { PipelineResponse } from "@azure/core-rest-pipeline";
+import type { ConnectorPage } from "../src/azureConnectors/index.ts";
+import type { Item, ItemsList } from "../src/generated/ExcelOnlineBusinessExtensions.ts";
 import { ConnectorError } from "../src/azureConnectors/connectorError.ts";
 import { ConnectorNames } from "../src/generated/connectorNames.ts";
 import {
-    availableConnectors, DataFlowsSmsClient, OneDriveClient,
+    availableConnectors, DataFlowsSmsClient, ExcelOnlineBusinessClient, OneDriveClient,
     ServiceNowClient, UniversalPrintClient,
 } from "../src/generated/ManagedConnectors.ts";
 import { DataFlowsSmsTriggerOperations } from "../src/generated/DataFlowsSmsExtensions.ts";
@@ -256,6 +259,104 @@ describe("new catalog clients", () => {
         const insight: AIInsightResponse = { id: "insight-1", contentCorrelationId: "correlation-1" };
         const collection: AIInsightCollectionResponse = { value: [insight] };
         expect(JSON.stringify(collection)).toBe('{"value":[{"id":"insight-1","contentCorrelationId":"correlation-1"}]}');
+    });
+
+    it("dispatches DataFlows SMS GET send with service query keys and no body", async () => {
+        const fetch = mockResponse({ status: "queued" });
+        const client = new DataFlowsSmsClient(runtimeUrl, credential, {
+            retryUnsafeHttpMethods: true, retryOptions: { maxRetries: 2, retryDelayInMs: 1, maxRetryDelayInMs: 1 },
+        });
+
+        expect(await client.sendSmsGet("+12065550123", "Sender", "hello / world", { type: "sms" }))
+            .toEqual({ status: "queued" });
+        const [requestUrl, request] = fetch.mock.calls[0] as [string, RequestInit];
+        const url = new URL(requestUrl);
+        expect(url.pathname).toBe("/connections/test/sms/send");
+        expect(Object.fromEntries(url.searchParams)).toEqual({
+            recipient: "+12065550123", sender_id: "Sender", message: "hello / world", type: "sms",
+        });
+        expect(request.method).toBe("GET");
+        expect(request.body).toBeUndefined();
+        expect(fetch).toHaveBeenCalledTimes(1);
+    });
+
+    it("does not retry the side-effecting SMS GET on 503 even with unsafe opt-in", async () => {
+        const fetch = mockResponse({ error: "busy" }, 503);
+        const client = new DataFlowsSmsClient(runtimeUrl, credential, {
+            retryUnsafeHttpMethods: true, retryOptions: { maxRetries: 2, retryDelayInMs: 1, maxRetryDelayInMs: 1 },
+        });
+
+        await expect(client.sendSmsGet("recipient", "sender", "message")).rejects.toMatchObject({
+            connectorName: "dataflowssms", operation: "SendSMSGet", statusCode: 503,
+        });
+        expect(fetch).toHaveBeenCalledTimes(1);
+    });
+
+    it("does not retry the side-effecting SMS GET after a retryable transport error", async () => {
+        const fetch = mockResponse(undefined);
+        fetch.mockRejectedValue(Object.assign(new Error("socket reset"), { code: "ECONNRESET" }));
+        const client = new DataFlowsSmsClient(runtimeUrl, credential, {
+            retryUnsafeHttpMethods: true, retryOptions: { maxRetries: 2, retryDelayInMs: 1, maxRetryDelayInMs: 1 },
+        });
+
+        await expect(client.sendSmsGet("recipient", "sender", "message")).rejects.toThrow("socket reset");
+        expect(fetch).toHaveBeenCalledTimes(1);
+    });
+
+    it("retains normal retries on a listSms GET after 503", async () => {
+        const fetch = mockResponse(undefined);
+        fetch.mockResolvedValueOnce(new Response("Unavailable", { status: 503 }))
+            .mockResolvedValueOnce(new Response(JSON.stringify({ data: [] }), { status: 200 }));
+        const client = new DataFlowsSmsClient(runtimeUrl, credential, {
+            retryUnsafeHttpMethods: true, retryOptions: { maxRetries: 2, retryDelayInMs: 1, maxRetryDelayInMs: 1 },
+        });
+
+        expect(await client.listSms({ page: 2 })).toEqual({ data: [] });
+        expect(fetch).toHaveBeenCalledTimes(2);
+        for (const [url, request] of fetch.mock.calls as Array<[string, RequestInit]>) {
+            expect(new URL(url).pathname).toBe("/connections/test/sms");
+            expect(request.method).toBe("GET");
+        }
+    });
+
+    it("exposes Excel page models and raw pipeline responses without changing page arrays", async () => {
+        const nextUrl = `${runtimeUrl}/drives/drive/files/file/tables/table/items?source=source&$skiptoken=second`;
+        const models: ItemsList[] = [
+            { value: [{}], sensitivityLabelInfo: [{ name: "Internal" }], "@odata.nextLink": nextUrl },
+            { value: [{ dynamicProperties: {} }], sensitivityLabelInfo: [{ name: "Public" }] },
+        ];
+        const fetch = mockResponse(undefined);
+        let current = 0;
+        fetch.mockImplementation(async () => new Response(JSON.stringify(models[current++]), {
+            status: 200, headers: { "x-ms-request-id": `page-${current}` },
+        }));
+        const responses: PipelineResponse[] = [];
+        const client = new ExcelOnlineBusinessClient(runtimeUrl, credential);
+        const pages: Array<ConnectorPage<Item>> = [];
+        for await (const page of client.getItems("drive", "file", "table", "source", {
+            fetchSensitivityLabelMetadata: true, onResponse: raw => { responses.push(raw); },
+        }).byPage()) {
+            pages.push(page);
+        }
+
+        expect(pages).toHaveLength(2);
+        expect(fetch).toHaveBeenCalledTimes(2);
+        expect(fetch.mock.calls[1][0]).toBe(nextUrl);
+        for (const [index, page] of pages.entries()) {
+            expect(Array.isArray(page)).toBe(true);
+            expect(page).toEqual(models[index].value);
+            expect(JSON.stringify(page)).toBe(JSON.stringify(models[index].value));
+            expect((page.pageModel as ItemsList).sensitivityLabelInfo).toEqual(models[index].sensitivityLabelInfo);
+            expect(page.rawResponse).toBe(responses[index]);
+            expect(page.rawResponse?.status).toBe(200);
+            expect(page.rawResponse?.headers.get("x-ms-request-id")).toBe(`page-${index + 1}`);
+            expect(Object.keys(page)).toEqual(["0"]);
+            for (const key of ["pageModel", "rawResponse", "continuationToken"]) {
+                expect(Object.getOwnPropertyDescriptor(page, key)?.enumerable).toBe(false);
+            }
+        }
+        expect(pages[0].continuationToken).toBe(nextUrl);
+        expect(pages[1].continuationToken).toBeUndefined();
     });
 
 });

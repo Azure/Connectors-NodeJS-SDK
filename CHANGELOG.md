@@ -45,6 +45,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- Exposed `DataFlowsSmsClient.sendSmsGet` for the managed connector's
+  `GET /sms/send` operation alongside the existing `sendSms` POST action.
+- Exported `ConnectorPage<TItem, TPage>`; generated `.byPage()` arrays now
+  expose non-enumerable `pageModel`, `rawResponse`, and `continuationToken`
+  properties. Existing item iteration and array comparisons are unchanged.
+
 - Added live-Swagger-generated DataFlows SMS, OneDrive Personal, ServiceNow, and Universal Print clients, with complete 103-client registries and mocked transport/export tests. OneDrive Personal and Universal Print are no longer blocked by the earlier `ApiNotFound` responses. Previously shipped connector API IDs remain registered (see Breaking Changes above and `docs/naming-migration.md` for renamed TypeScript client classes and `*Extensions` module paths).
 
 - Added a TypeDoc API reference for SDK infrastructure and all generated
@@ -175,6 +181,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   unreleased Phase 2 connector exports resolve during local validation.
 
 ### Fixed
+
+- The side-effecting `GET /sms/send` action never automatically retries, even
+  with `retryUnsafeHttpMethods: true`; normal read-only GET operations still
+  use their configured retry policy.
 
 - Multipart file uploads escape embedded quotes in disposition parameters,
   preventing malformed MIME headers. Regressions cover ordinary, spaced,

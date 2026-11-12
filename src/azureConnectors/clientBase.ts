@@ -7,6 +7,7 @@
  */
 
 import type { TokenCredential } from "@azure/core-auth";
+import type { PipelineResponse } from "@azure/core-rest-pipeline";
 import { getPagedAsyncIterator, type PagedAsyncIterableIterator } from "@azure/core-paging";
 import { createTracingClient, type TracingClient } from "@azure/core-tracing";
 import { ConnectorError } from "./connectorError.ts";
@@ -25,9 +26,19 @@ export interface ConnectorPageSettings {
     continuationToken?: string;
 }
 
+/** Array of connector items with optional original page and transport metadata. */
+export type ConnectorPage<TItem, TPage = unknown> = TItem[] & {
+    /** The complete parsed page model, including service-specific metadata. */
+    readonly pageModel?: TPage;
+    /** The underlying HTTP pipeline response for this page. */
+    readonly rawResponse?: PipelineResponse;
+    /** The resolved link to the next page, when present. */
+    readonly continuationToken?: string;
+};
+
 /** A connector item iterator whose page API accepts only supported connector settings. */
-export type ConnectorPagedAsyncIterableIterator<TItem> =
-    PagedAsyncIterableIterator<TItem, TItem[], ConnectorPageSettings>;
+export type ConnectorPagedAsyncIterableIterator<TItem, TPage = unknown> =
+    PagedAsyncIterableIterator<TItem, ConnectorPage<TItem, TPage>, ConnectorPageSettings>;
 
 /**
  * Abstract base class for generated connector clients.
@@ -40,6 +51,7 @@ export abstract class ConnectorClientBase {
     protected readonly options: ConnectorClientOptions;
 
     private readonly tracingClient: TracingClient;
+    private readonly rawResponses = new WeakMap<object, PipelineResponse>();
 
     /**
      * Initializes a ConnectorClientBase.
@@ -108,6 +120,9 @@ export abstract class ConnectorClientBase {
                 requestHeaders,
                 responseAsBlob,
             );
+            if (response.value !== null && typeof response.value === "object") {
+                this.rawResponses.set(response.value, response.rawResponse);
+            }
             if (!response.isSuccessStatusCode) {
                 const error = new ConnectorError(this.connectorName, operationName, response.rawResponse);
                 options.onResponse?.(response.rawResponse, response.value, error);
@@ -131,9 +146,9 @@ export abstract class ConnectorClientBase {
         fetchPage: (url: string, isFirstPage: boolean) => Promise<TPage>,
         itemPropertyName: string | null = "value",
         nextLinkPropertyName?: string,
-    ): ConnectorPagedAsyncIterableIterator<TItem> {
+    ): ConnectorPagedAsyncIterableIterator<TItem, TPage> {
         const initialPageLink: InitialPageLink = { url: firstPageLink };
-        return getPagedAsyncIterator<TItem, TItem[], ConnectorPageSettings, string | InitialPageLink>({
+        return getPagedAsyncIterator<TItem, ConnectorPage<TItem, TPage>, ConnectorPageSettings, string | InitialPageLink>({
             firstPageLink: initialPageLink,
             getPage: async (pageLink) => {
                 const isFirstPage = typeof pageLink !== "string";
@@ -150,12 +165,18 @@ export abstract class ConnectorClientBase {
                 const nextPageLink = typeof nextPageLinkValue === "string"
                     ? nextPageLinkValue
                     : undefined;
-                return {
-                    page: Array.isArray(items) ? items as TItem[] : [],
-                    nextPageLink: nextPageLink === undefined
-                        ? undefined
-                        : this.resolvePageLink(nextPageLink, resolvedPageLink),
-                };
+                const resolvedNextPageLink = nextPageLink === undefined
+                    ? undefined
+                    : this.resolvePageLink(nextPageLink, resolvedPageLink);
+                const pageItems: ConnectorPage<TItem, TPage> = Array.isArray(items)
+                    ? items as ConnectorPage<TItem, TPage>
+                    : [];
+                Object.defineProperties(pageItems, {
+                    pageModel: { value: response, enumerable: false, configurable: true },
+                    rawResponse: { value: this.rawResponses.get(response), enumerable: false, configurable: true },
+                    continuationToken: { value: resolvedNextPageLink, enumerable: false, configurable: true },
+                });
+                return { page: pageItems, nextPageLink: resolvedNextPageLink };
             },
         });
     }

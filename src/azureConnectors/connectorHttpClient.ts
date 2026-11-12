@@ -187,14 +187,15 @@ export class ConnectorHttpClient {
         requestHeaders?: Readonly<Record<string, string>>,
         responseAsBlob = false,
     ): Promise<ConnectorResponse<TValue>> {
+        const normalizedMethod = method.toUpperCase() as HttpMethods;
         const effectiveScopes = scopes ?? ConnectorHttpClient.ApiHubScopes;
         const logUrl = ConnectorHttpClient.sanitizeUrlForLogging(url);
         const isFormDataBody = typeof FormData !== "undefined" && body instanceof FormData;
         const blobBody = typeof Blob !== "undefined" && body instanceof Blob ? body : undefined;
-        logger.info(`Request ${method} ${logUrl}`);
+        logger.info(`Request ${normalizedMethod} ${logUrl}`);
         const request = createPipelineRequest({
             url,
-            method: method as HttpMethods,
+            method: normalizedMethod,
             body: body === undefined || isFormDataBody
                 ? undefined
                 : blobBody ? new Uint8Array(await blobBody.arrayBuffer()) : JSON.stringify(body),
@@ -287,10 +288,15 @@ export class ConnectorHttpClient {
             pipeline.addPolicy(
                 {
                     name: ConnectorHttpClient.DefaultRetryPolicyName,
-                    sendRequest: (request, next) => this.retryUnsafeHttpMethods ||
-                        ConnectorHttpClient.SafeHttpMethods.has(request.method)
-                        ? retryPolicy.sendRequest(request, next)
-                        : next(request),
+                    sendRequest: (request, next) => {
+                        // Some connectors send SMS through a GET action; retrying it duplicates messages.
+                        const isSmsSendGet = request.method === "GET" &&
+                            new URL(request.url).pathname.endsWith("/sms/send");
+                        return !isSmsSendGet &&
+                            (this.retryUnsafeHttpMethods || ConnectorHttpClient.SafeHttpMethods.has(request.method))
+                            ? retryPolicy.sendRequest(request, next)
+                            : next(request);
+                    },
                 },
                 { phase: "Retry" },
             );
