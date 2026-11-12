@@ -45,7 +45,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- Added live-Swagger-generated DataFlows SMS, OneDrive Personal, ServiceNow, and Universal Print clients, with complete 103-client registries and mocked transport/export tests. OneDrive Personal and Universal Print are no longer blocked by the earlier `ApiNotFound` responses. Previously shipped client files and public names are retained.
+- Added live-Swagger-generated DataFlows SMS, OneDrive Personal, ServiceNow, and Universal Print clients, with complete 103-client registries and mocked transport/export tests. OneDrive Personal and Universal Print are no longer blocked by the earlier `ApiNotFound` responses. Previously shipped connector API IDs remain registered (see Breaking Changes above and `docs/naming-migration.md` for renamed TypeScript client classes and `*Extensions` module paths).
 
 - Added a TypeDoc API reference for SDK infrastructure and all generated
   connectors, with pull-request coverage validation and GitHub Pages deployment
