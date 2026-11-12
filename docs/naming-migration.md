@@ -395,6 +395,23 @@ verify that operation contract before switching a Plumsail caller.
 | `wordonlinebusiness` | `getFilePDF` | `getFilePdf` |
 | `zohosign` | `invokeAPI` | `invokeApi` |
 
+## Renamed trigger keys, trigger parameter descriptors, and option properties
+
+The following nested trigger-operation keys, trigger-parameter descriptor keys,
+and method-options interface properties also adopt canonical acronym casing
+while retaining their underlying wire query/header names and operation IDs:
+
+| API ID | Surface | Previous property / key | New property / key |
+| --- | --- | --- | --- |
+| `docusign` | `CreateEnvelopeRecipientViewOptions`, `CreateSenderViewOptions` | `embeddedRecipientStartURL` | `embeddedRecipientStartUrl` |
+| `jira` | `JiraTriggerOperations`, `JiraTriggerParameters` | `OnNewIssueJQL`, `OnNewIssueJQLDatacenter` | `OnNewIssueJql`, `OnNewIssueJqlDatacenter` |
+| `microsoftbookings` | `MicrosoftBookingsTriggerParameters` (appointment triggers) | `sMTPAddress` | `smtpAddress` |
+| `plumsail` | `PlumsailTriggerOperations` | `OnFlowV1ProcessesFlowTriggersPost` | `OnFlowV1ProcessesFlowTriggersV2Post` |
+| `replicon` | `RepliconTriggerOperations`, `RepliconTriggerParameters` | `OnWebhookSubscriptionsRestAPI` | `OnWebhookSubscriptionsRestApi` |
+| `ticketmaster` | `GetEventsOptions`, `GetSuggestionsOptions` | `includeTBA`, `includeTBD` | `includeTba`, `includeTbd` |
+| `visualstudioteamservices` | `VisualStudioTeamServicesTriggerParameters` | `wiqlMicrosoftVSTSCommonPriority` | `wiqlMicrosoftVstsCommonPriority` |
+| `waywedo` | `WaywedoTriggerOperations` | `OnGenerateAcceptancePDFWebHook` | `OnGenerateAcceptancePdfWebHook` |
+
 ## Renamed `ConnectorNames` keys
 
 Only the TypeScript constant keys change; the associated connector API ID stays
