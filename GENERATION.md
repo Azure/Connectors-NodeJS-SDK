@@ -427,7 +427,7 @@ The catalog contains all103 canonical connector API IDs. The original four-clien
 addition used BPM08cf479; this refresh uses committed source dab8ca4237ad5bb7c75a453f689d472d12890fe4
 from [BPM PR17895210](https://msazure.visualstudio.com/One/_git/AzureUX-BPM/pullrequest/17895210).
 Generator integration remains pending. Canonical client/trigger/file names share
-the existing prefix mapping, including DataflowsSms, OneDrive, UniversalPrint and
+the existing prefix mapping, including DataFlowsSms, OneDrive, UniversalPrint and
 VisualStudioTeamServices. The reviewed constant is ConnectorNames.DataFlowsSms.
 Root binary inputs use Blob; runtime dispatch preserves the raw bytes and uses
 the Blob media type, or application/octet-stream when none is supplied.

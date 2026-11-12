@@ -43,7 +43,8 @@ For the complete module, public symbol, constant-key, and instance-method rename
 map, see the [preview naming migration guide](docs/naming-migration.md).
 Teams callers should import `AIInsightResponse` / `AIInsightCollectionResponse`
 (instead of `AiInsightResponse` / `AiInsightCollectionResponse`); only the
-TypeScript type names change, not the `listAiInsights` operation or wire format.
+TypeScript type and method names change (`listAIInsights` and `getAIInsight`);
+raw operation IDs, routes, and wire fields stay unchanged.
 
 File operations whose body schema is binary accept `Blob`. Use a media type when
 known, such as `new Blob([bytes], { type: "application/pdf" })`; without one the
@@ -325,15 +326,15 @@ The following connectors have been generated and validated with comprehensive te
 | **Azure Blob Storage** | `@azure/connectors/generated/AzureBlobExtensions` | ✅ Complete | 13 tests |
 | **Azure Monitor Logs** | `@azure/connectors/generated/AzureMonitorLogsExtensions` | ✅ Complete | 10 tests |
 | **Azure Data Explorer** | `@azure/connectors/generated/KustoExtensions` | ✅ Complete | 17 tests |
-| **IBM MQ** | `@azure/connectors/generated/MqExtensions` | ✅ Complete | 13 tests |
-| **MS Graph Groups & Users** | `@azure/connectors/generated/MsGraphGroupsAndUsersExtensions` | ✅ Complete | 13 tests |
+| **IBM MQ** | `@azure/connectors/generated/MQExtensions` | ✅ Complete | 13 tests |
+| **MS Graph Groups & Users** | `@azure/connectors/generated/MSGraphGroupsAndUsersExtensions` | ✅ Complete | 13 tests |
 | **Office 365 Outlook** | `@azure/connectors/generated/Office365Extensions` | ✅ Complete | 14 tests |
 | **Office 365 Users** | `@azure/connectors/generated/Office365UsersExtensions` | ✅ Complete | 14 tests |
 | **OneDrive for Business** | `@azure/connectors/generated/OneDriveForBusinessExtensions` | ✅ Complete | 15 tests |
 | **SharePoint Online** | `@azure/connectors/generated/SharePointOnlineExtensions` | ✅ Complete | 12 tests |
 | **SMTP** | `@azure/connectors/generated/SmtpExtensions` | ✅ Complete | 9 tests |
 | **Microsoft Teams** | `@azure/connectors/generated/TeamsExtensions` | ✅ Complete | 14 tests |
-| **DocuSign** | `@azure/connectors/generated/DocuSignExtensions` | ✅ Complete | 6 tests |
+| **DocuSign** | `@azure/connectors/generated/DocusignExtensions` | ✅ Complete | 6 tests |
 | **GitHub** | `@azure/connectors/generated/GitHubExtensions` | ✅ Complete | 6 tests |
 | **Jira** | `@azure/connectors/generated/JiraExtensions` | ✅ Complete | 6 tests |
 | **Microsoft Forms** | `@azure/connectors/generated/MicrosoftFormsExtensions` | ✅ Complete | 6 tests |
@@ -364,10 +365,10 @@ The following connectors have been generated and validated with comprehensive te
 | **SigningHub** | `@azure/connectors/generated/SigningHubExtensions` | ✅ Complete | 7 tests |
 | **Campfire** | `@azure/connectors/generated/CampfireExtensions` | ✅ Complete | 7 tests |
 | **ClickSend SMS** | `@azure/connectors/generated/ClickSendSmsExtensions` | ✅ Complete | 17 tests |
-| **Freshservice** | `@azure/connectors/generated/FreshServiceExtensions` | ✅ Complete | 7 tests |
+| **Freshservice** | `@azure/connectors/generated/FreshserviceExtensions` | ✅ Complete | 7 tests |
 | **Infusionsoft** | `@azure/connectors/generated/InfusionsoftExtensions` | ✅ Complete | 7 tests |
 | **Insightly** | `@azure/connectors/generated/InsightlyExtensions` | ✅ Complete | 7 tests |
-| **Mailchimp** | `@azure/connectors/generated/MailChimpExtensions` | ✅ Complete | 7 tests |
+| **Mailchimp** | `@azure/connectors/generated/MailchimpExtensions` | ✅ Complete | 7 tests |
 | **Monday** | `@azure/connectors/generated/MondayExtensions` | ✅ Complete | 7 tests |
 | **Projectplace** | `@azure/connectors/generated/ProjectplaceExtensions` | ✅ Complete | 7 tests |
 | **SendGrid** | `@azure/connectors/generated/SendGridExtensions` | ✅ Complete | 7 tests |
@@ -384,7 +385,7 @@ samples, but have not been validated end to end against live connector services.
 | **Twitter (X)** | `@azure/connectors/generated/TwitterExtensions` | Mocked SDK tests |
 | **WordPress** | `@azure/connectors/generated/WordPressExtensions` | Mocked SDK tests |
 | **Plivo** | `@azure/connectors/generated/PlivoExtensions` | Mocked SDK tests |
-| **Rev.ai** | `@azure/connectors/generated/RevaiExtensions` | Mocked SDK tests |
+| **Rev.ai** | `@azure/connectors/generated/RevAIExtensions` | Mocked SDK tests |
 | **Starmind** | `@azure/connectors/generated/StarmindExtensions` | Mocked SDK tests |
 | **Tallyfy** | `@azure/connectors/generated/TallyfyExtensions` | Mocked SDK tests |
 | **Eventbrite** | `@azure/connectors/generated/EventbriteExtensions` | Mocked SDK tests |
@@ -395,14 +396,14 @@ samples, but have not been validated end to end against live connector services.
 | **Seismic Planner** | `@azure/connectors/generated/SeismicPlannerExtensions` | Mocked SDK tests |
 | **Way We Do** | `@azure/connectors/generated/WaywedoExtensions` | Mocked SDK tests |
 | **Meeting Room Map** | `@azure/connectors/generated/MeetingRoomMapExtensions` | Mocked SDK tests |
-| **StarRez REST V1** | `@azure/connectors/generated/StarrezRestV1Extensions` | Mocked SDK tests |
+| **StarRez REST V1** | `@azure/connectors/generated/StarRezRestV1Extensions` | Mocked SDK tests |
 | **Replicon** | `@azure/connectors/generated/RepliconExtensions` | Mocked SDK tests |
 | **Etsy** | `@azure/connectors/generated/EtsyExtensions` | Mocked SDK tests |
 | **Elfsquad Data** | `@azure/connectors/generated/ElfsquadDataExtensions` | Mocked SDK tests |
 | **Impexium** | `@azure/connectors/generated/ImpexiumExtensions` | Mocked SDK tests |
-| **Jedox OData Hub** | `@azure/connectors/generated/JedoxOdataHubExtensions` | Mocked SDK tests |
+| **Jedox OData Hub** | `@azure/connectors/generated/JedoxODataHubExtensions` | Mocked SDK tests |
 | **Orderful** | `@azure/connectors/generated/OrderfulExtensions` | Mocked SDK tests; retired connector fixture |
-| **Zoho ZeptoMail** | `@azure/connectors/generated/ZeptomailExtensions` | Mocked SDK tests |
+| **Zoho ZeptoMail** | `@azure/connectors/generated/ZeptoMailExtensions` | Mocked SDK tests |
 
 ## Additional Generated Connectors
 
@@ -414,7 +415,7 @@ end against live connector connections.
 |-----------|------------------|-------------|
 | Azure AD (Microsoft Entra ID) | `azuread` | `@azure/connectors/generated/AzureADExtensions` |
 | Azure Automation | `azureautomation` | `@azure/connectors/generated/AzureAutomationExtensions` |
-| Azure Cosmos DB | `documentdb` | `@azure/connectors/generated/DocumentDbExtensions` |
+| Azure Cosmos DB | `documentdb` | `@azure/connectors/generated/DocumentDBExtensions` |
 | Azure Data Factory | `azuredatafactory` | `@azure/connectors/generated/AzureDataFactoryExtensions` |
 | Azure DevOps (VSTS) | `visualstudioteamservices` | `@azure/connectors/generated/VisualStudioTeamServicesExtensions` |
 | Azure Digital Twins | `azuredigitaltwins` | `@azure/connectors/generated/AzureDigitalTwinsExtensions` |
@@ -425,7 +426,7 @@ end against live connector connections.
 | Azure VM | `azurevm` | `@azure/connectors/generated/AzureVMExtensions` |
 | CloudConvert | `cloudconvert` | `@azure/connectors/generated/CloudconvertExtensions` |
 | Dataflows | `dataflows` | `@azure/connectors/generated/DataflowsExtensions` |
-| DataFlows SMS | `dataflowssms` | `@azure/connectors/generated/DataflowsSmsExtensions` |
+| DataFlows SMS | `dataflowssms` | `@azure/connectors/generated/DataFlowsSmsExtensions` |
 | Excel Online (Business) | `excelonlinebusiness` | `@azure/connectors/generated/ExcelOnlineBusinessExtensions` |
 | Microsoft Bookings | `microsoftbookings` | `@azure/connectors/generated/MicrosoftBookingsExtensions` |
 | Microsoft Defender ATP | `wdatp` | `@azure/connectors/generated/WdatpExtensions` |
@@ -434,7 +435,7 @@ end against live connector connections.
 | OneNote | `onenote` | `@azure/connectors/generated/OnenoteExtensions` |
 | Outlook.com | `outlook` | `@azure/connectors/generated/OutlookExtensions` |
 | Planner | `planner` | `@azure/connectors/generated/PlannerExtensions` |
-| Service Bus | `servicebus` | `@azure/connectors/generated/ServicebusExtensions` |
+| Service Bus | `servicebus` | `@azure/connectors/generated/ServiceBusExtensions` |
 | ServiceNow | `service-now` | `@azure/connectors/generated/ServiceNowExtensions` |
 | Trello | `trello` | `@azure/connectors/generated/TrelloExtensions` |
 | Word Online (Business) | `wordonlinebusiness` | `@azure/connectors/generated/WordOnlineBusinessExtensions` |

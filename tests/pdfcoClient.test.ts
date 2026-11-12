@@ -116,47 +116,63 @@ describe("PDFco — connector registry", () => {
         const conversions = [
             {
                 name: "PdfUnsearchableResponse",
+                operationId: "PDFUnSearchable",
                 path: "/v1/pdf/makeunsearchable",
                 invoke: (client: PdfCoClient): Promise<PdfUnsearchableResponse> =>
-                    client.pdfUnSearchable({ url: inputUrl }),
+                    client.pdfUnsearchable({ url: inputUrl }),
             },
             {
                 name: "PdfFromXlsXlsxResponse",
+                operationId: "PDFFromXLSXLSX",
                 path: "/v1/xls/convert/to/pdf",
                 invoke: (client: PdfCoClient): Promise<PdfFromXlsXlsxResponse> =>
-                    client.pdfFromXlsxlsx({ url: inputUrl }),
+                    client.pdfFromXlsXlsx({ url: inputUrl }),
             },
             {
                 name: "XlsToCsvResponse",
+                operationId: "XLStoCSV",
                 path: "/v1/xls/convert/to/csv",
                 invoke: (client: PdfCoClient): Promise<XlsToCsvResponse> =>
-                    client.xlStoCsv({ url: inputUrl }),
+                    client.xlsToCsv({ url: inputUrl }),
             },
             {
                 name: "XlsToHtmlResponse",
+                operationId: "XLStoHTML",
                 path: "/v1/xls/convert/to/html",
                 invoke: (client: PdfCoClient): Promise<XlsToHtmlResponse> =>
-                    client.xlStoHtml({ url: inputUrl }),
+                    client.xlsToHtml({ url: inputUrl }),
             },
             {
                 name: "XlsToJsonResponse",
+                operationId: "XLStoJSON",
                 path: "/v1/xls/convert/to/json",
                 invoke: (client: PdfCoClient): Promise<XlsToJsonResponse> =>
-                    client.xlStoJson({ url: inputUrl }),
+                    client.xlsToJson({ url: inputUrl }),
             },
             {
                 name: "XlsToTxtResponse",
+                operationId: "XLStoTXT",
                 path: "/v1/xls/convert/to/txt",
                 invoke: (client: PdfCoClient): Promise<XlsToTxtResponse> =>
-                    client.xlStoTxt({ url: inputUrl }),
+                    client.xlsToTxt({ url: inputUrl }),
             },
             {
                 name: "XlsToXmlResponse",
+                operationId: "XLStoXML",
                 path: "/v1/xls/convert/to/xml",
                 invoke: (client: PdfCoClient): Promise<XlsToXmlResponse> =>
-                    client.xlStoXml({ url: inputUrl }),
+                    client.xlsToXml({ url: inputUrl }),
             },
         ];
+
+        it.each(conversions)("should retain the raw operation ID for $name", async ({ operationId, invoke }) => {
+            mockFetchError(400, '{"error":"invalid file"}');
+            const client = new PdfCoClient(TestConnectionUrl, createMockCredential());
+
+            await expect(invoke(client)).rejects.toMatchObject({
+                connectorName: "pdfco", operation: operationId, statusCode: 400,
+            });
+        });
 
         it.each(conversions)("should preserve the wire contract for $name", async ({ path, invoke }) => {
             const response = { url: "https://example.com/output", jobId: "job-123", status: 200 };

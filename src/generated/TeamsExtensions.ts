@@ -3349,12 +3349,12 @@ export class TeamsClient extends ConnectorClientBase {
      * List AI insights
      * @remarks Lists AI-generated insights for an online meeting. Requires Microsoft 365 Copilot license.
      */
-    public listAiInsights(meetingId: string, options: ConnectorOperationOptions = {}): ConnectorPagedAsyncIterableIterator<AIInsightResponse> {
+    public listAIInsights(meetingId: string, options: ConnectorOperationOptions = {}): ConnectorPagedAsyncIterableIterator<AIInsightResponse> {
         const requestPath = `/v1.0/copilot/me/onlineMeetings/${encodeURIComponent(String(meetingId))}/aiInsights`;
         return this.createPageable<AIInsightCollectionResponse, AIInsightResponse>(
             requestPath,
             async (requestUrl) => {
-                const httpResponse = await this.sendWithTracingAsync<AIInsightCollectionResponse>("Teams.listAiInsights", "ListAiInsights", "GET", requestUrl, undefined, options);
+                const httpResponse = await this.sendWithTracingAsync<AIInsightCollectionResponse>("Teams.listAIInsights", "ListAiInsights", "GET", requestUrl, undefined, options);
 
                 return httpResponse.value as AIInsightCollectionResponse;
             },
@@ -3367,10 +3367,10 @@ export class TeamsClient extends ConnectorClientBase {
      * Get AI insight
      * @remarks Gets a specific AI-generated insight for an online meeting. Requires Microsoft 365 Copilot license.
      */
-    public async getAiInsight(meetingId: string, aiInsightId: string, options: ConnectorOperationOptions = {}): Promise<AiInsightDetailResponse> {
+    public async getAIInsight(meetingId: string, aiInsightId: string, options: ConnectorOperationOptions = {}): Promise<AiInsightDetailResponse> {
         const requestPath = `/v1.0/copilot/me/onlineMeetings/${encodeURIComponent(String(meetingId))}/aiInsights/${encodeURIComponent(String(aiInsightId))}`;
         const requestUrl = this.resolveUrl(requestPath);
-        const httpResponse = await this.sendWithTracingAsync<AiInsightDetailResponse>("Teams.getAiInsight", "GetAiInsight", "GET", requestUrl, undefined, options);
+        const httpResponse = await this.sendWithTracingAsync<AiInsightDetailResponse>("Teams.getAIInsight", "GetAiInsight", "GET", requestUrl, undefined, options);
 
         return httpResponse.value as AiInsightDetailResponse;
     }

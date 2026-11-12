@@ -853,7 +853,7 @@ export interface PdfSearchableResponse {
 /**
  * PDF to Scanned PDF
  */
-export interface PdfUnSearchableInput {
+export interface PdfUnsearchableInput {
     /** URL to the source file. Supports links from Google Drive, Dropbox, and PDF.co built-in files storage. */
     url: string;
     /** Comma-separated list of page indices (or ranges) to process. The very first page starts at 0 (zero). To set a range use the dash -, for example: 0,2-5,7-. To set a range from the index to the last page use range like this: 2- (from page #3 as the index starts at zero and till the of the document). For ALL pages just leave this param empty. Example: 0,2-5,7- means first page, then 3rd page to 6th page, and then the range from 8th (index = 7) page till the end of the document. */
@@ -1761,7 +1761,7 @@ export interface PdfSecurityRemoveResponse {
 /**
  * PDF From Spreadsheet
  */
-export interface PdfFromXlsxlsxInput {
+export interface PdfFromXlsXlsxInput {
     /** URL to the source file. Supports links from Google Drive, Dropbox, and PDF.co built-in files storage. */
     url: string;
     /** Set the WorkSheet index (Default is 0). */
@@ -1802,7 +1802,7 @@ export interface PdfFromXlsXlsxResponse {
 /**
  * Spreadsheet to CSV
  */
-export interface XLStoCsvInput {
+export interface XlsToCsvInput {
     /** URL to the source file. Supports links from Google Drive, Dropbox, and PDF.co built-in files storage. */
     url: string;
     /** Set the WorkSheet index (Default is 0). */
@@ -1846,7 +1846,7 @@ export interface XlsToCsvResponse {
 /**
  * Spreadsheet to JSON
  */
-export interface XLStoJsonInput {
+export interface XlsToJsonInput {
     /** URL to the source file. Supports links from Google Drive, Dropbox, and PDF.co built-in files storage. */
     url: string;
     /** Set the WorkSheet index (Default is 0). */
@@ -1886,7 +1886,7 @@ export interface XlsToJsonResponse {
 /**
  * Spreadsheet to HTML
  */
-export interface XLStoHtmlInput {
+export interface XlsToHtmlInput {
     /** URL to the source file. Supports links from Google Drive, Dropbox, and PDF.co built-in files storage. */
     url: string;
     /** Set the WorkSheet index (Default is 0). */
@@ -1926,7 +1926,7 @@ export interface XlsToHtmlResponse {
 /**
  * Spreadsheet to TXT
  */
-export interface XLStoTxtInput {
+export interface XlsToTxtInput {
     /** URL to the source file. Supports links from Google Drive, Dropbox, and PDF.co built-in files storage. */
     url: string;
     /** Set the WorkSheet index (Default is 0). */
@@ -1966,7 +1966,7 @@ export interface XlsToTxtResponse {
 /**
  * Spreadsheet to XML
  */
-export interface XLStoXmlInput {
+export interface XlsToXmlInput {
     /** URL to the source file. Supports links from Google Drive, Dropbox, and PDF.co built-in files storage. */
     url: string;
     /** Set the WorkSheet index (Default is 0). */
@@ -2641,10 +2641,10 @@ export class PdfCoClient extends ConnectorClientBase {
      * PDF to Scanned PDF
      * @remarks Convert PDF to Scanned PDF. Result PDF is same as if you printed and then scanned your PDF. Please see api documentation at https://developer.pdf.co/api/pdf-make-text-searchable-or-unsearchable/index.html#post-tag-pdf-makeunsearchable for comprehensive guidelines.
      */
-    public async pdfUnSearchable(input: PdfUnSearchableInput, options: ConnectorOperationOptions = {}): Promise<PdfUnsearchableResponse> {
+    public async pdfUnsearchable(input: PdfUnsearchableInput, options: ConnectorOperationOptions = {}): Promise<PdfUnsearchableResponse> {
         const requestPath = `/v1/pdf/makeunsearchable`;
         const requestUrl = this.resolveUrl(requestPath);
-        const httpResponse = await this.sendWithTracingAsync<PdfUnsearchableResponse>("PdfCo.pdfUnSearchable", "PDFUnSearchable", "POST", requestUrl, input, options);
+        const httpResponse = await this.sendWithTracingAsync<PdfUnsearchableResponse>("PdfCo.pdfUnsearchable", "PDFUnSearchable", "POST", requestUrl, input, options);
 
         return httpResponse.value as PdfUnsearchableResponse;
     }
@@ -2869,10 +2869,10 @@ export class PdfCoClient extends ConnectorClientBase {
      * PDF From Spreadsheet
      * @remarks Create PDF from XLS, XLSX spreadsheet. Please see api documentation at https://developer.pdf.co/api/convert-excel/index.html#post-tag-xls-convert-to-pdf for comprehensive guidelines.
      */
-    public async pdfFromXlsxlsx(input: PdfFromXlsxlsxInput, options: ConnectorOperationOptions = {}): Promise<PdfFromXlsXlsxResponse> {
+    public async pdfFromXlsXlsx(input: PdfFromXlsXlsxInput, options: ConnectorOperationOptions = {}): Promise<PdfFromXlsXlsxResponse> {
         const requestPath = `/v1/xls/convert/to/pdf`;
         const requestUrl = this.resolveUrl(requestPath);
-        const httpResponse = await this.sendWithTracingAsync<PdfFromXlsXlsxResponse>("PdfCo.pdfFromXlsxlsx", "PDFFromXLSXLSX", "POST", requestUrl, input, options);
+        const httpResponse = await this.sendWithTracingAsync<PdfFromXlsXlsxResponse>("PdfCo.pdfFromXlsXlsx", "PDFFromXLSXLSX", "POST", requestUrl, input, options);
 
         return httpResponse.value as PdfFromXlsXlsxResponse;
     }
@@ -2881,10 +2881,10 @@ export class PdfCoClient extends ConnectorClientBase {
      * Spreadsheet to CSV
      * @remarks Convert XLS/XLSX into CSV comma separated values file. Please see api documentation at https://developer.pdf.co/api/convert-excel/index.html#post-tag-xls-convert-to-csv for comprehensive guidelines.
      */
-    public async xlStoCsv(input: XLStoCsvInput, options: ConnectorOperationOptions = {}): Promise<XlsToCsvResponse> {
+    public async xlsToCsv(input: XlsToCsvInput, options: ConnectorOperationOptions = {}): Promise<XlsToCsvResponse> {
         const requestPath = `/v1/xls/convert/to/csv`;
         const requestUrl = this.resolveUrl(requestPath);
-        const httpResponse = await this.sendWithTracingAsync<XlsToCsvResponse>("PdfCo.xlStoCsv", "XLStoCSV", "POST", requestUrl, input, options);
+        const httpResponse = await this.sendWithTracingAsync<XlsToCsvResponse>("PdfCo.xlsToCsv", "XLStoCSV", "POST", requestUrl, input, options);
 
         return httpResponse.value as XlsToCsvResponse;
     }
@@ -2893,10 +2893,10 @@ export class PdfCoClient extends ConnectorClientBase {
      * Spreadsheet to JSON
      * @remarks Convert XLS/XLSX into JSON file. Please see api documentation at https://developer.pdf.co/api/convert-excel/index.html#post-tag-xls-convert-to-json for comprehensive guidelines.
      */
-    public async xlStoJson(input: XLStoJsonInput, options: ConnectorOperationOptions = {}): Promise<XlsToJsonResponse> {
+    public async xlsToJson(input: XlsToJsonInput, options: ConnectorOperationOptions = {}): Promise<XlsToJsonResponse> {
         const requestPath = `/v1/xls/convert/to/json`;
         const requestUrl = this.resolveUrl(requestPath);
-        const httpResponse = await this.sendWithTracingAsync<XlsToJsonResponse>("PdfCo.xlStoJson", "XLStoJSON", "POST", requestUrl, input, options);
+        const httpResponse = await this.sendWithTracingAsync<XlsToJsonResponse>("PdfCo.xlsToJson", "XLStoJSON", "POST", requestUrl, input, options);
 
         return httpResponse.value as XlsToJsonResponse;
     }
@@ -2905,10 +2905,10 @@ export class PdfCoClient extends ConnectorClientBase {
      * Spreadsheet to HTML
      * @remarks Convert XLS/XLSX into HTML file. Please see api documentation at https://developer.pdf.co/api/convert-excel/index.html#post-tag-xls-convert-to-html for comprehensive guidelines.
      */
-    public async xlStoHtml(input: XLStoHtmlInput, options: ConnectorOperationOptions = {}): Promise<XlsToHtmlResponse> {
+    public async xlsToHtml(input: XlsToHtmlInput, options: ConnectorOperationOptions = {}): Promise<XlsToHtmlResponse> {
         const requestPath = `/v1/xls/convert/to/html`;
         const requestUrl = this.resolveUrl(requestPath);
-        const httpResponse = await this.sendWithTracingAsync<XlsToHtmlResponse>("PdfCo.xlStoHtml", "XLStoHTML", "POST", requestUrl, input, options);
+        const httpResponse = await this.sendWithTracingAsync<XlsToHtmlResponse>("PdfCo.xlsToHtml", "XLStoHTML", "POST", requestUrl, input, options);
 
         return httpResponse.value as XlsToHtmlResponse;
     }
@@ -2917,10 +2917,10 @@ export class PdfCoClient extends ConnectorClientBase {
      * Spreadsheet to TXT
      * @remarks Convert XLS/XLSX or CSV into Text file. Please see api documentation at https://developer.pdf.co/api/convert-excel/index.html#post-tag-xls-convert-to-txt for comprehensive guidelines.
      */
-    public async xlStoTxt(input: XLStoTxtInput, options: ConnectorOperationOptions = {}): Promise<XlsToTxtResponse> {
+    public async xlsToTxt(input: XlsToTxtInput, options: ConnectorOperationOptions = {}): Promise<XlsToTxtResponse> {
         const requestPath = `/v1/xls/convert/to/txt`;
         const requestUrl = this.resolveUrl(requestPath);
-        const httpResponse = await this.sendWithTracingAsync<XlsToTxtResponse>("PdfCo.xlStoTxt", "XLStoTXT", "POST", requestUrl, input, options);
+        const httpResponse = await this.sendWithTracingAsync<XlsToTxtResponse>("PdfCo.xlsToTxt", "XLStoTXT", "POST", requestUrl, input, options);
 
         return httpResponse.value as XlsToTxtResponse;
     }
@@ -2929,10 +2929,10 @@ export class PdfCoClient extends ConnectorClientBase {
      * Spreadsheet to XML
      * @remarks Convert XLS/XLSX or CSV into XML file. Please see api documentation at https://developer.pdf.co/api/convert-excel/index.html#post-tag-xls-convert-to-xml for comprehensive guidelines.
      */
-    public async xlStoXml(input: XLStoXmlInput, options: ConnectorOperationOptions = {}): Promise<XlsToXmlResponse> {
+    public async xlsToXml(input: XlsToXmlInput, options: ConnectorOperationOptions = {}): Promise<XlsToXmlResponse> {
         const requestPath = `/v1/xls/convert/to/xml`;
         const requestUrl = this.resolveUrl(requestPath);
-        const httpResponse = await this.sendWithTracingAsync<XlsToXmlResponse>("PdfCo.xlStoXml", "XLStoXML", "POST", requestUrl, input, options);
+        const httpResponse = await this.sendWithTracingAsync<XlsToXmlResponse>("PdfCo.xlsToXml", "XLStoXML", "POST", requestUrl, input, options);
 
         return httpResponse.value as XlsToXmlResponse;
     }

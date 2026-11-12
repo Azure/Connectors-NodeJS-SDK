@@ -259,7 +259,7 @@ and serialized object keys are not covered by this rename.
 | `pdfco` | `PDFFindTableResponse` | `PdfFindTableResponse` |
 | `pdfco` | `PDFSearchableInput` | `PdfSearchableInput` |
 | `pdfco` | `PDFSearchableResponse` | `PdfSearchableResponse` |
-| `pdfco` | `PDFUnSearchableInput` | `PdfUnSearchableInput` |
+| `pdfco` | `PDFUnSearchableInput` | `PdfUnsearchableInput` |
 | `pdfco` | `PDFToCSVInput` | `PdfToCsvInput` |
 | `pdfco` | `PDFToCSVResponse` | `PdfToCsvResponse` |
 | `pdfco` | `PDFToJSONInput` | `PdfToJsonInput` |
@@ -296,12 +296,12 @@ and serialized object keys are not covered by this rename.
 | `pdfco` | `PDFAddSecurityResponse` | `PdfAddSecurityResponse` |
 | `pdfco` | `PDFSecurityRemoveInput` | `PdfSecurityRemoveInput` |
 | `pdfco` | `PDFSecurityRemoveResponse` | `PdfSecurityRemoveResponse` |
-| `pdfco` | `PDFFromXLSXLSXInput` | `PdfFromXlsxlsxInput` |
-| `pdfco` | `XLStoCSVInput` | `XLStoCsvInput` |
-| `pdfco` | `XLStoJSONInput` | `XLStoJsonInput` |
-| `pdfco` | `XLStoHTMLInput` | `XLStoHtmlInput` |
-| `pdfco` | `XLStoTXTInput` | `XLStoTxtInput` |
-| `pdfco` | `XLStoXMLInput` | `XLStoXmlInput` |
+| `pdfco` | `PDFFromXLSXLSXInput` | `PdfFromXlsXlsxInput` |
+| `pdfco` | `XLStoCSVInput` | `XlsToCsvInput` |
+| `pdfco` | `XLStoJSONInput` | `XlsToJsonInput` |
+| `pdfco` | `XLStoHTMLInput` | `XlsToHtmlInput` |
+| `pdfco` | `XLStoTXTInput` | `XlsToTxtInput` |
+| `pdfco` | `XLStoXMLInput` | `XlsToXmlInput` |
 | `pdfco` | `PDFRotatePagesInput` | `PdfRotatePagesInput` |
 | `pdfco` | `PDFRotatePagesResponse` | `PdfRotatePagesResponse` |
 | `pdfco` | `PDFAutoRotatePagesInput` | `PdfAutoRotatePagesInput` |
@@ -355,7 +355,7 @@ verify that operation contract before switching a Plumsail caller.
 | `pdfco` | `pdfformsInfoReader` | `pdfFormsInfoReader` |
 | `pdfco` | `pdffindTable` | `pdfFindTable` |
 | `pdfco` | `pdfsearchable` | `pdfSearchable` |
-| `pdfco` | `pdfunSearchable` | `pdfUnSearchable` |
+| `pdfco` | `pdfunSearchable` | `pdfUnsearchable` |
 | `pdfco` | `pdftoCSV` | `pdfToCsv` |
 | `pdfco` | `pdftoJSON` | `pdfToJson` |
 | `pdfco` | `pdftoJSONMeta` | `pdfToJsonMeta` |
@@ -374,12 +374,12 @@ verify that operation contract before switching a Plumsail caller.
 | `pdfco` | `pdffromEmail` | `pdfFromEmail` |
 | `pdfco` | `addPDFSecurity` | `addPdfSecurity` |
 | `pdfco` | `removePDFSecurity` | `removePdfSecurity` |
-| `pdfco` | `pdffromXLSXLSX` | `pdfFromXlsxlsx` |
-| `pdfco` | `xlstoCSV` | `xlStoCsv` |
-| `pdfco` | `xlstoJSON` | `xlStoJson` |
-| `pdfco` | `xlstoHTML` | `xlStoHtml` |
-| `pdfco` | `xlstoTXT` | `xlStoTxt` |
-| `pdfco` | `xlstoXML` | `xlStoXml` |
+| `pdfco` | `pdffromXLSXLSX` | `pdfFromXlsXlsx` |
+| `pdfco` | `xlstoCSV` | `xlsToCsv` |
+| `pdfco` | `xlstoJSON` | `xlsToJson` |
+| `pdfco` | `xlstoHTML` | `xlsToHtml` |
+| `pdfco` | `xlstoTXT` | `xlsToTxt` |
+| `pdfco` | `xlstoXML` | `xlsToXml` |
 | `pdfco` | `pdfrotatePages` | `pdfRotatePages` |
 | `pdfco` | `pdfautoRotatePages` | `pdfAutoRotatePages` |
 | `pdfco` | `deletePDFPages` | `deletePdfPages` |
@@ -421,9 +421,10 @@ callers needing V2 must retain an earlier SDK until it is supported again.
 
 Teams imports of `AiInsightResponse` and `AiInsightCollectionResponse` must
 become `AIInsightResponse` and `AIInsightCollectionResponse`. The
-`listAiInsights` method name, raw operation ID, route, and wire fields stay
-unchanged; its return type now refers to `AIInsightResponse`. No request-body
-or JSON key migration is needed for these two renamed types.
+`listAIInsights` and `getAIInsight` methods replace `listAiInsights` and
+`getAiInsight`; their raw operation IDs, routes, and wire fields stay
+unchanged. The paged `listAIInsights` return type refers to
+`AIInsightResponse`. No request-body or JSON key migration is needed.
 
 ## Binary bodies
 
