@@ -26,7 +26,7 @@ import { TextRequestClient } from "../src/generated/TextRequestExtensions.ts";
 import { TicketmasterClient } from "../src/generated/TicketmasterExtensions.ts";
 import { TwitterClient } from "../src/generated/TwitterExtensions.ts";
 import { TypeformClient, TypeformTriggerOperations } from "../src/generated/TypeformExtensions.ts";
-import { WaywedoClient } from "../src/generated/WaywedoExtensions.ts";
+import { WayWeDoClient } from "../src/generated/WayWeDoExtensions.ts";
 import { WordPressClient } from "../src/generated/WordPressExtensions.ts";
 import { ZohoSignClient } from "../src/generated/ZohoSignExtensions.ts";
 import { availableConnectors } from "../src/generated/ManagedConnectors.ts";
@@ -68,7 +68,7 @@ const ConnectorCases: ConnectorCase[] = [
     { displayName: "Ticketmaster", apiName: "ticketmaster", connectorNameKey: "TicketmasterIndependentPublisher", clientConstructor: TicketmasterClient, methodName: "getEvent", methodArguments: ["event-id"] },
     { displayName: "Zoho Sign", apiName: "zohosign", connectorNameKey: "ZohoSign", clientConstructor: ZohoSignClient, methodName: "downloadCompletionCertificate", methodArguments: ["request-id"] },
     { displayName: "Seismic Planner", apiName: "seismicplanner", connectorNameKey: "SeismicPlanner", clientConstructor: SeismicPlannerClient, methodName: "getComments", methodArguments: ["space-id", "node-id"] },
-    { displayName: "Way We Do", apiName: "waywedo", connectorNameKey: "WayWeDo", clientConstructor: WaywedoClient, methodName: "getChecklistInstance", methodArguments: ["instance-id"] },
+    { displayName: "Way We Do", apiName: "waywedo", connectorNameKey: "WayWeDo", clientConstructor: WayWeDoClient, methodName: "getChecklistInstance", methodArguments: ["instance-id"] },
     { displayName: "Meeting Room Map", apiName: "meetingroommap", connectorNameKey: "MeetingRoomMap", clientConstructor: MeetingRoomMapClient, methodName: "getCategories" },
     { displayName: "StarRez REST V1", apiName: "starrezrestv1", connectorNameKey: "StarRezRestV1", clientConstructor: StarRezRestV1Client, methodName: "selectEntry", methodArguments: [{}] },
     { displayName: "Replicon", apiName: "replicon", connectorNameKey: "Replicon", clientConstructor: RepliconClient, methodName: "getBulkProjectDetails3", methodArguments: [{}] },

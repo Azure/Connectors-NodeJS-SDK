@@ -2,13 +2,13 @@
 
 /** Way We Do Connector SDK Sample - CJS JavaScript. */
 const { ConnectorError, ManagedIdentityTokenProvider } = require("@azure/connectors");
-const { WaywedoClient } = require("@azure/connectors/generated/WaywedoExtensions");
+const { WayWeDoClient } = require("@azure/connectors/generated/WayWeDoExtensions");
 const CONNECTION_URL = process.env.WAYWEDO_CONNECTION_URL ?? "";
 const INSTANCE_ID = process.env.WAYWEDO_INSTANCE_ID ?? "";
 if (!CONNECTION_URL || !INSTANCE_ID) throw new Error("WAYWEDO_CONNECTION_URL and WAYWEDO_INSTANCE_ID are required.");
 async function main() {
     try {
-        const checklist = await new WaywedoClient(CONNECTION_URL, new ManagedIdentityTokenProvider()).getChecklistInstance(INSTANCE_ID);
+        const checklist = await new WayWeDoClient(CONNECTION_URL, new ManagedIdentityTokenProvider()).getChecklistInstance(INSTANCE_ID);
         console.log("Checklist instance:", JSON.stringify(checklist, null, 2));
     } catch (error) {
         if (error instanceof ConnectorError) console.error(`Connector error (${error.statusCode}): ${error.message}`);

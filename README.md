@@ -298,9 +298,9 @@ headers without percent-encoding the whole filename, and sends the structured
 parts through the normal authenticated Azure Core pipeline.
 
 ```typescript
-import { DocuwareClient } from "@azure/connectors/generated/DocuwareExtensions";
+import { DocuWareClient } from "@azure/connectors/generated/DocuWareExtensions";
 
-const client = new DocuwareClient(connectionRuntimeUrl, credential);
+const client = new DocuWareClient(connectionRuntimeUrl, credential);
 
 await client.storeToFileCabinet(
     {
@@ -361,7 +361,7 @@ The following connectors have been generated and validated with comprehensive te
 | **SQL Server** | `@azure/connectors/generated/SqlExtensions` | ✅ Complete | 7 tests |
 | **Zendesk** | `@azure/connectors/generated/ZendeskExtensions` | ✅ Complete | 7 tests |
 | **Pipedrive** | `@azure/connectors/generated/PipedriveExtensions` | ✅ Complete | 7 tests |
-| **DocuWare** | `@azure/connectors/generated/DocuwareExtensions` | ✅ Complete | 7 tests |
+| **DocuWare** | `@azure/connectors/generated/DocuWareExtensions` | ✅ Complete | 7 tests |
 | **SigningHub** | `@azure/connectors/generated/SigningHubExtensions` | ✅ Complete | 7 tests |
 | **Campfire** | `@azure/connectors/generated/CampfireExtensions` | ✅ Complete | 7 tests |
 | **ClickSend SMS** | `@azure/connectors/generated/ClickSendSmsExtensions` | ✅ Complete | 17 tests |
@@ -394,7 +394,7 @@ samples, but have not been validated end to end against live connector services.
 | **Ticketmaster** | `@azure/connectors/generated/TicketmasterExtensions` | Mocked SDK tests |
 | **Zoho Sign** | `@azure/connectors/generated/ZohoSignExtensions` | Mocked SDK tests |
 | **Seismic Planner** | `@azure/connectors/generated/SeismicPlannerExtensions` | Mocked SDK tests |
-| **Way We Do** | `@azure/connectors/generated/WaywedoExtensions` | Mocked SDK tests |
+| **Way We Do** | `@azure/connectors/generated/WayWeDoExtensions` | Mocked SDK tests |
 | **Meeting Room Map** | `@azure/connectors/generated/MeetingRoomMapExtensions` | Mocked SDK tests |
 | **StarRez REST V1** | `@azure/connectors/generated/StarRezRestV1Extensions` | Mocked SDK tests |
 | **Replicon** | `@azure/connectors/generated/RepliconExtensions` | Mocked SDK tests |
@@ -424,7 +424,7 @@ end against live connector connections.
 | Azure Queues | `azurequeues` | `@azure/connectors/generated/AzureQueuesExtensions` |
 | Azure Tables | `azuretables` | `@azure/connectors/generated/AzureTablesExtensions` |
 | Azure VM | `azurevm` | `@azure/connectors/generated/AzureVMExtensions` |
-| CloudConvert | `cloudconvert` | `@azure/connectors/generated/CloudconvertExtensions` |
+| CloudConvert | `cloudconvert` | `@azure/connectors/generated/CloudConvertExtensions` |
 | Dataflows | `dataflows` | `@azure/connectors/generated/DataflowsExtensions` |
 | DataFlows SMS | `dataflowssms` | `@azure/connectors/generated/DataFlowsSmsExtensions` |
 | Excel Online (Business) | `excelonlinebusiness` | `@azure/connectors/generated/ExcelOnlineBusinessExtensions` |
@@ -432,7 +432,7 @@ end against live connector connections.
 | Microsoft Defender ATP | `wdatp` | `@azure/connectors/generated/WdatpExtensions` |
 | Office 365 Groups | `office365groups` | `@azure/connectors/generated/Office365GroupsExtensions` |
 | OneDrive Personal | `onedrive` | `@azure/connectors/generated/OneDriveExtensions` |
-| OneNote | `onenote` | `@azure/connectors/generated/OnenoteExtensions` |
+| OneNote | `onenote` | `@azure/connectors/generated/OneNoteExtensions` |
 | Outlook.com | `outlook` | `@azure/connectors/generated/OutlookExtensions` |
 | Planner | `planner` | `@azure/connectors/generated/PlannerExtensions` |
 | Service Bus | `servicebus` | `@azure/connectors/generated/ServiceBusExtensions` |

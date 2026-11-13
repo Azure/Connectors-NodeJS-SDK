@@ -15,18 +15,22 @@ These names are case-sensitive on non-Windows platforms.
 
 | API ID | Previous module | New module | Previous class | New class |
 | --- | --- | --- | --- | --- |
+| `cloudconvert` | `CloudconvertExtensions` | `CloudConvertExtensions` | `CloudconvertClient` | `CloudConvertClient` |
 | `commondataservice` | `CommondataserviceExtensions` | `CommonDataServiceExtensions` | `CommondataserviceClient` | `CommonDataServiceClient` |
 | `dataflowssms` | `DataflowsSmsExtensions` | `DataFlowsSmsExtensions` | `DataflowsSmsClient` | `DataFlowsSmsClient` |
 | `documentdb` | `DocumentDbExtensions` | `DocumentDBExtensions` | `DocumentDbClient` | `DocumentDBClient` |
 | `docusign` | `DocuSignExtensions` | `DocusignExtensions` | `DocuSignClient` | `DocusignClient` |
+| `docuware` | `DocuwareExtensions` | `DocuWareExtensions` | `DocuwareClient` | `DocuWareClient` |
 | `freshservice` | `FreshServiceExtensions` | `FreshserviceExtensions` | `FreshServiceClient` | `FreshserviceClient` |
 | `jedoxodatahub` | `JedoxOdataHubExtensions` | `JedoxODataHubExtensions` | `JedoxOdataHubClient` | `JedoxODataHubClient` |
 | `mailchimp` | `MailChimpExtensions` | `MailchimpExtensions` | `MailChimpClient` | `MailchimpClient` |
 | `mq` | `MqExtensions` | `MQExtensions` | `MqClient` | `MQClient` |
 | `msgraphgroupsanduser` | `MsGraphGroupsAndUsersExtensions` | `MSGraphGroupsAndUsersExtensions` | `MsGraphGroupsAndUsersClient` | `MSGraphGroupsAndUsersClient` |
+| `onenote` | `OnenoteExtensions` | `OneNoteExtensions` | `OnenoteClient` | `OneNoteClient` |
 | `revai` | `RevaiExtensions` | `RevAIExtensions` | `RevaiClient` | `RevAIClient` |
 | `servicebus` | `ServicebusExtensions` | `ServiceBusExtensions` | `ServicebusClient` | `ServiceBusClient` |
 | `starrezrestv1` | `StarrezRestV1Extensions` | `StarRezRestV1Extensions` | `StarrezRestV1Client` | `StarRezRestV1Client` |
+| `waywedo` | `WaywedoExtensions` | `WayWeDoExtensions` | `WaywedoClient` | `WayWeDoClient` |
 | `zeptomail` | `ZeptomailExtensions` | `ZeptoMailExtensions` | `ZeptomailClient` | `ZeptoMailClient` |
 
 ## Module migration from the previous SDK preview
@@ -250,6 +254,12 @@ and serialized object keys are not covered by this rename.
 | `office365` | `MCPQueryRequest` | `McpQueryRequest` |
 | `office365` | `MCPQueryResponse` | `McpQueryResponse` |
 | `office365groups` | `UpdateCalendarEventHTMLRequest` | `UpdateCalendarEventHtmlRequest` |
+| `onenote` | `OnenoteOnNewPageInSectionTriggerPayload` | `OneNoteOnNewPageInSectionTriggerPayload` |
+| `onenote` | `OnenoteOnNewSectionGroupInNotebookTriggerPayload` | `OneNoteOnNewSectionGroupInNotebookTriggerPayload` |
+| `onenote` | `OnenoteOnNewSectionInNotebookTriggerPayload` | `OneNoteOnNewSectionInNotebookTriggerPayload` |
+| `onenote` | `OnenoteTriggerOperation` | `OneNoteTriggerOperation` |
+| `onenote` | `OnenoteTriggerOperations` | `OneNoteTriggerOperations` |
+| `onenote` | `OnenoteTriggerParameters` | `OneNoteTriggerParameters` |
 | `pdfco` | `PDFSearchTextInput` | `PdfSearchTextInput` |
 | `pdfco` | `PDFSearchTextResponse` | `PdfSearchTextResponse` |
 | `pdfco` | `PDFInfoReaderInput` | `PdfInfoReaderInput` |
@@ -334,6 +344,8 @@ and serialized object keys are not covered by this rename.
 | `slack` | `SetDNDResponse` | `SetDndResponse` |
 | `slack` | `SetDNDOptions` | `SetDndOptions` |
 | `waywedo` | `GenerateAcceptancePDFWebHookInput` | `GenerateAcceptancePdfWebHookInput` |
+| `waywedo` | `WaywedoTriggerOperation` | `WayWeDoTriggerOperation` |
+| `waywedo` | `WaywedoTriggerOperations` | `WayWeDoTriggerOperations` |
 | `wordonlinebusiness` | `GetFilePDFOptions` | `GetFilePdfOptions` |
 | `zohosign` | `InvokeAPIInput` | `InvokeApiInput` |
 | `zohosign` | `InvokeAPIResponse` | `InvokeApiResponse` |
@@ -421,7 +433,7 @@ while retaining their underlying wire query/header names and operation IDs:
 | `replicon` | `RepliconTriggerOperations`, `RepliconTriggerParameters` | `OnWebhookSubscriptionsRestAPI` | `OnWebhookSubscriptionsRestApi` |
 | `ticketmaster` | `GetEventsOptions`, `GetSuggestionsOptions` | `includeTBA`, `includeTBD` | `includeTba`, `includeTbd` |
 | `visualstudioteamservices` | `VisualStudioTeamServicesTriggerParameters` | `wiqlMicrosoftVSTSCommonPriority` | `wiqlMicrosoftVstsCommonPriority` |
-| `waywedo` | `WaywedoTriggerOperations` | `OnGenerateAcceptancePDFWebHook` | `OnGenerateAcceptancePdfWebHook` |
+| `waywedo` | `WayWeDoTriggerOperations` | `OnGenerateAcceptancePDFWebHook` | `OnGenerateAcceptancePdfWebHook` |
 
 ## Renamed `ConnectorNames` keys
 

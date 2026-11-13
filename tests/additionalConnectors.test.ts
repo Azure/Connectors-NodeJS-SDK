@@ -15,7 +15,7 @@ import {
     AzureQueuesClient,
     AzureTablesClient,
     AzureVMClient,
-    CloudconvertClient,
+    CloudConvertClient,
     DataflowsClient,
     DocumentDBClient,
     EventHubsClient,
@@ -23,7 +23,7 @@ import {
     KeyVaultClient,
     MicrosoftBookingsClient,
     Office365GroupsClient,
-    OnenoteClient,
+    OneNoteClient,
     OutlookClient,
     PlannerClient,
     ServiceBusClient,
@@ -79,7 +79,7 @@ const ConnectorCases: ConnectorCase[] = [
     connectorCase("azuretables", AzureTablesClient, async client => await firstPage(client.getEntities("account", "table"))),
     connectorCase("azurevm", AzureVMClient, async client =>
         await client.getVirtualMachineInScaleSet("subscription", "resource-group", "scale-set", "instance", "2019-07-01")),
-    connectorCase("cloudconvert", CloudconvertClient, async client =>
+    connectorCase("cloudconvert", CloudConvertClient, async client =>
         await client.captureWebsite({ tasks: { capture: { operation: "capture-website", url: "https://example.com" } } }, "application/json"), "POST"),
     connectorCase("dataflows", DataflowsClient, async client =>
         await client.refreshDataflow("group-id", "dataflow-id", "Workspace"), "POST"),
@@ -93,7 +93,7 @@ const ConnectorCases: ConnectorCase[] = [
     connectorCase("microsoftbookings", MicrosoftBookingsClient, async client =>
         await firstPage(client.listBookingsBusinessUserAsAdmin("outlook.body-content-type=\"text\""))),
     connectorCase("office365groups", Office365GroupsClient, async client => await firstPage(client.listGroupMembers("group-id"))),
-    connectorCase("onenote", OnenoteClient, async client => await client.getPageContent("notebook", "section", "page", false)),
+    connectorCase("onenote", OneNoteClient, async client => await client.getPageContent("notebook", "section", "page", false)),
     connectorCase("outlook", OutlookClient, async client => await client.getEmail("message-id")),
     connectorCase("planner", PlannerClient, async client => await client.getPlanDetails("plan-id")),
     connectorCase("servicebus", ServiceBusClient, async client => await client.getDeferredMessageFromQueue("queue", 1)),

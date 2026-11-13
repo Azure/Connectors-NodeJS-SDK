@@ -294,7 +294,7 @@ describe("Generated clients — no trigger operation is invoked as a data-plane 
     });
 
     it("should emit every pinned multipart form-data operation", () => {
-        for (const connector of ["CloudmersiveConvert", "Docuware"]) {
+        for (const connector of ["CloudmersiveConvert", "DocuWare"]) {
             const generated = generatedFiles.find(file => file.connector === connector);
             const apiName = connector.toLowerCase();
             const swagger = JSON.parse(
@@ -310,7 +310,7 @@ describe("Generated clients — no trigger operation is invoked as a data-plane 
                 .toHaveLength(multipartOperationCount);
         }
 
-        const docuware = generatedFiles.find(file => file.connector === "Docuware");
+        const docuware = generatedFiles.find(file => file.connector === "DocuWare");
         expect(docuware!.content).toContain("public async deleteFile(");
     });
 
