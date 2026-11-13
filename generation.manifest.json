@@ -138,13 +138,13 @@
       "outputFile": "src/generated/ClickSendSmsExtensions.ts",
       "outputSha256": "05dbe24ad986da20051f413f1ff36a830e2e6dd2908e8c9faa3707980aed2cf9",
       "swaggerInputSha256": "e2ece2b3df4dda553863a10857205888c6525f0d52a3942f716ab11c674d8485",
-      "capturedAtUtc": "2026-11-13T20:12:24.353Z",
+      "capturedAtUtc": "2026-11-13T22:47:09.505Z",
       "swaggerFixture": "swagger-cache/clicksendsms.swagger.json",
       "swaggerFixtureSha256": "e2ece2b3df4dda553863a10857205888c6525f0d52a3942f716ab11c674d8485",
-      "runId": "03d33f91-2af3-4b2a-ba21-9a12ff1092fe",
+      "runId": "aab3822d-1a6f-497b-9648-5e4ce5e9de04",
       "validation": {
-        "runId": "d2492bbe-ed04-4941-8237-dcc9ee0b611d",
-        "capturedAtUtc": "2026-11-13T20:16:05.535Z",
+        "runId": "6dd79312-3798-472a-b541-751c9a5a2f1d",
+        "capturedAtUtc": "2026-11-13T22:51:20.149Z",
         "swaggerInputSha256": "e2ece2b3df4dda553863a10857205888c6525f0d52a3942f716ab11c674d8485",
         "outputSha256": "05dbe24ad986da20051f413f1ff36a830e2e6dd2908e8c9faa3707980aed2cf9"
       }
@@ -154,13 +154,13 @@
       "outputFile": "src/generated/CloudmersiveConvertExtensions.ts",
       "outputSha256": "61b9482fa5defa16314484bc7e9ab06216ad86c28d6f65d666c78b2a4c3c70db",
       "swaggerInputSha256": "860768b6ceff8ca5fd5f41b118b06d0cfe55076e15636295b3894e6c78cf067c",
-      "capturedAtUtc": "2026-11-13T20:12:28.579Z",
+      "capturedAtUtc": "2026-11-13T22:47:13.970Z",
       "swaggerFixture": "swagger-cache/cloudmersiveconvert.swagger.json",
       "swaggerFixtureSha256": "860768b6ceff8ca5fd5f41b118b06d0cfe55076e15636295b3894e6c78cf067c",
-      "runId": "03d33f91-2af3-4b2a-ba21-9a12ff1092fe",
+      "runId": "aab3822d-1a6f-497b-9648-5e4ce5e9de04",
       "validation": {
-        "runId": "d2492bbe-ed04-4941-8237-dcc9ee0b611d",
-        "capturedAtUtc": "2026-11-13T20:16:09.534Z",
+        "runId": "6dd79312-3798-472a-b541-751c9a5a2f1d",
+        "capturedAtUtc": "2026-11-13T22:51:24.118Z",
         "swaggerInputSha256": "860768b6ceff8ca5fd5f41b118b06d0cfe55076e15636295b3894e6c78cf067c",
         "outputSha256": "61b9482fa5defa16314484bc7e9ab06216ad86c28d6f65d666c78b2a4c3c70db"
       }
@@ -170,13 +170,13 @@
       "outputFile": "src/generated/CommonDataServiceExtensions.ts",
       "outputSha256": "2a413c3aea92ab8bf0f00ea65b1230dc7fbe5b7bf2410c225a2f82cc8f7dec06",
       "swaggerInputSha256": "8c07cdc661241079cbd8f801bb28444f7f5907b68518c161be98bc6aa6c3e24c",
-      "capturedAtUtc": "2026-11-13T20:12:30.828Z",
+      "capturedAtUtc": "2026-11-13T22:47:16.177Z",
       "swaggerFixture": "swagger-cache/commondataservice.swagger.json",
       "swaggerFixtureSha256": "8c07cdc661241079cbd8f801bb28444f7f5907b68518c161be98bc6aa6c3e24c",
-      "runId": "03d33f91-2af3-4b2a-ba21-9a12ff1092fe",
+      "runId": "aab3822d-1a6f-497b-9648-5e4ce5e9de04",
       "validation": {
-        "runId": "d2492bbe-ed04-4941-8237-dcc9ee0b611d",
-        "capturedAtUtc": "2026-11-13T20:16:11.692Z",
+        "runId": "6dd79312-3798-472a-b541-751c9a5a2f1d",
+        "capturedAtUtc": "2026-11-13T22:51:26.203Z",
         "swaggerInputSha256": "8c07cdc661241079cbd8f801bb28444f7f5907b68518c161be98bc6aa6c3e24c",
         "outputSha256": "2a413c3aea92ab8bf0f00ea65b1230dc7fbe5b7bf2410c225a2f82cc8f7dec06"
       }
@@ -186,13 +186,13 @@
       "outputFile": "src/generated/DocusignExtensions.ts",
       "outputSha256": "87286efc94ff216d2b31ae3e77cfd93e16a94d52a7ea5d041fb8141539600d37",
       "swaggerInputSha256": "4a8742b7bf35b705558a5ddb7607219e7ac46fd6582a1f2fe964ec72c1d435dd",
-      "capturedAtUtc": "2026-11-13T20:12:39.130Z",
+      "capturedAtUtc": "2026-11-13T22:47:24.695Z",
       "swaggerFixture": "swagger-cache/docusign.swagger.json",
       "swaggerFixtureSha256": "4a8742b7bf35b705558a5ddb7607219e7ac46fd6582a1f2fe964ec72c1d435dd",
-      "runId": "03d33f91-2af3-4b2a-ba21-9a12ff1092fe",
+      "runId": "aab3822d-1a6f-497b-9648-5e4ce5e9de04",
       "validation": {
-        "runId": "d2492bbe-ed04-4941-8237-dcc9ee0b611d",
-        "capturedAtUtc": "2026-11-13T20:16:19.900Z",
+        "runId": "6dd79312-3798-472a-b541-751c9a5a2f1d",
+        "capturedAtUtc": "2026-11-13T22:51:34.871Z",
         "swaggerInputSha256": "4a8742b7bf35b705558a5ddb7607219e7ac46fd6582a1f2fe964ec72c1d435dd",
         "outputSha256": "87286efc94ff216d2b31ae3e77cfd93e16a94d52a7ea5d041fb8141539600d37"
       }
@@ -202,13 +202,13 @@
       "outputFile": "src/generated/DocuWareExtensions.ts",
       "outputSha256": "cc8f2a63b6c1c629226db4b3d52bb6770f3178de62cf0601fda10f3e5c4b1cd7",
       "swaggerInputSha256": "7ebc04b5a47c35f5da9a2afddb9de3bb022e169744f5362f92449939f07df143",
-      "capturedAtUtc": "2026-11-13T20:12:41.335Z",
+      "capturedAtUtc": "2026-11-13T22:47:26.942Z",
       "swaggerFixture": "swagger-cache/docuware.swagger.json",
       "swaggerFixtureSha256": "7ebc04b5a47c35f5da9a2afddb9de3bb022e169744f5362f92449939f07df143",
-      "runId": "03d33f91-2af3-4b2a-ba21-9a12ff1092fe",
+      "runId": "aab3822d-1a6f-497b-9648-5e4ce5e9de04",
       "validation": {
-        "runId": "d2492bbe-ed04-4941-8237-dcc9ee0b611d",
-        "capturedAtUtc": "2026-11-13T20:16:21.903Z",
+        "runId": "6dd79312-3798-472a-b541-751c9a5a2f1d",
+        "capturedAtUtc": "2026-11-13T22:51:37.119Z",
         "swaggerInputSha256": "7ebc04b5a47c35f5da9a2afddb9de3bb022e169744f5362f92449939f07df143",
         "outputSha256": "cc8f2a63b6c1c629226db4b3d52bb6770f3178de62cf0601fda10f3e5c4b1cd7"
       }
@@ -330,13 +330,13 @@
       "outputFile": "src/generated/FreshserviceExtensions.ts",
       "outputSha256": "2ca9044d2d6337099cedfe542cdce3b3cbf641d9af74e02e3d772ef75c9a3a3c",
       "swaggerInputSha256": "9f0d6655b631ee3c07f50be93d62fe02ac166573f2ee79bb8a3781bca96aaee3",
-      "capturedAtUtc": "2026-11-13T20:13:01.371Z",
+      "capturedAtUtc": "2026-11-13T22:47:48.698Z",
       "swaggerFixture": "swagger-cache/freshservice.swagger.json",
       "swaggerFixtureSha256": "9f0d6655b631ee3c07f50be93d62fe02ac166573f2ee79bb8a3781bca96aaee3",
-      "runId": "03d33f91-2af3-4b2a-ba21-9a12ff1092fe",
+      "runId": "aab3822d-1a6f-497b-9648-5e4ce5e9de04",
       "validation": {
-        "runId": "d2492bbe-ed04-4941-8237-dcc9ee0b611d",
-        "capturedAtUtc": "2026-11-13T20:16:42.084Z",
+        "runId": "6dd79312-3798-472a-b541-751c9a5a2f1d",
+        "capturedAtUtc": "2026-11-13T22:51:58.189Z",
         "swaggerInputSha256": "9f0d6655b631ee3c07f50be93d62fe02ac166573f2ee79bb8a3781bca96aaee3",
         "outputSha256": "2ca9044d2d6337099cedfe542cdce3b3cbf641d9af74e02e3d772ef75c9a3a3c"
       }
@@ -362,13 +362,13 @@
       "outputFile": "src/generated/GitHubExtensions.ts",
       "outputSha256": "7f66dd2849efd265b6e05d779640f376a838e313ebf11e74b584e6329c65605d",
       "swaggerInputSha256": "ab508ed2ea1f9c4cf3216d440e2d50cf86b3cc0f5312fa39ee036185d493c73e",
-      "capturedAtUtc": "2026-11-13T20:13:05.326Z",
+      "capturedAtUtc": "2026-11-13T22:47:52.839Z",
       "swaggerFixture": "swagger-cache/github.swagger.json",
       "swaggerFixtureSha256": "ab508ed2ea1f9c4cf3216d440e2d50cf86b3cc0f5312fa39ee036185d493c73e",
-      "runId": "03d33f91-2af3-4b2a-ba21-9a12ff1092fe",
+      "runId": "aab3822d-1a6f-497b-9648-5e4ce5e9de04",
       "validation": {
-        "runId": "d2492bbe-ed04-4941-8237-dcc9ee0b611d",
-        "capturedAtUtc": "2026-11-13T20:16:45.941Z",
+        "runId": "6dd79312-3798-472a-b541-751c9a5a2f1d",
+        "capturedAtUtc": "2026-11-13T22:52:02.644Z",
         "swaggerInputSha256": "ab508ed2ea1f9c4cf3216d440e2d50cf86b3cc0f5312fa39ee036185d493c73e",
         "outputSha256": "7f66dd2849efd265b6e05d779640f376a838e313ebf11e74b584e6329c65605d"
       }
@@ -474,13 +474,13 @@
       "outputFile": "src/generated/JedoxODataHubExtensions.ts",
       "outputSha256": "f81c4475d31d2248792381aede844a9154bbfb76d3e15243fe2c6be7b5d050e0",
       "swaggerInputSha256": "c733673ea33c7babcae0570e83eeabbe3682ae71932fcfb8bee281b9954a2199",
-      "capturedAtUtc": "2026-11-13T20:13:21.902Z",
+      "capturedAtUtc": "2026-11-13T22:48:09.489Z",
       "swaggerFixture": "swagger-cache/jedoxodatahub.swagger.json",
       "swaggerFixtureSha256": "c733673ea33c7babcae0570e83eeabbe3682ae71932fcfb8bee281b9954a2199",
-      "runId": "03d33f91-2af3-4b2a-ba21-9a12ff1092fe",
+      "runId": "aab3822d-1a6f-497b-9648-5e4ce5e9de04",
       "validation": {
-        "runId": "d2492bbe-ed04-4941-8237-dcc9ee0b611d",
-        "capturedAtUtc": "2026-11-13T20:17:00.864Z",
+        "runId": "6dd79312-3798-472a-b541-751c9a5a2f1d",
+        "capturedAtUtc": "2026-11-13T22:52:16.466Z",
         "swaggerInputSha256": "c733673ea33c7babcae0570e83eeabbe3682ae71932fcfb8bee281b9954a2199",
         "outputSha256": "f81c4475d31d2248792381aede844a9154bbfb76d3e15243fe2c6be7b5d050e0"
       }
@@ -490,13 +490,13 @@
       "outputFile": "src/generated/JiraExtensions.ts",
       "outputSha256": "fbb157860d4c408be0d646869244f1ec74ef3434762b0501fd76836854ea4eb2",
       "swaggerInputSha256": "09c9e3b933be233c381c3c0f35a9ecdb493583bb655163e0d786c31be7754a5d",
-      "capturedAtUtc": "2026-11-13T20:13:24.160Z",
+      "capturedAtUtc": "2026-11-13T22:48:11.479Z",
       "swaggerFixture": "swagger-cache/jira.swagger.json",
       "swaggerFixtureSha256": "09c9e3b933be233c381c3c0f35a9ecdb493583bb655163e0d786c31be7754a5d",
-      "runId": "03d33f91-2af3-4b2a-ba21-9a12ff1092fe",
+      "runId": "aab3822d-1a6f-497b-9648-5e4ce5e9de04",
       "validation": {
-        "runId": "d2492bbe-ed04-4941-8237-dcc9ee0b611d",
-        "capturedAtUtc": "2026-11-13T20:17:02.874Z",
+        "runId": "6dd79312-3798-472a-b541-751c9a5a2f1d",
+        "capturedAtUtc": "2026-11-13T22:52:18.403Z",
         "swaggerInputSha256": "09c9e3b933be233c381c3c0f35a9ecdb493583bb655163e0d786c31be7754a5d",
         "outputSha256": "fbb157860d4c408be0d646869244f1ec74ef3434762b0501fd76836854ea4eb2"
       }
@@ -506,13 +506,13 @@
       "outputFile": "src/generated/KustoExtensions.ts",
       "outputSha256": "350e2ad719773efb6bbd061fe42a3edf577849a02f68ac57a2e8ca64d1bc9262",
       "swaggerInputSha256": "2a087d76fd239a5f9abf80f4e9b4b57b8e8aca4cf7bf913d22aea1a32ca05cb7",
-      "capturedAtUtc": "2026-11-13T20:13:28.108Z",
+      "capturedAtUtc": "2026-11-13T22:48:15.477Z",
       "swaggerFixture": "swagger-cache/kusto.swagger.json",
       "swaggerFixtureSha256": "2a087d76fd239a5f9abf80f4e9b4b57b8e8aca4cf7bf913d22aea1a32ca05cb7",
-      "runId": "03d33f91-2af3-4b2a-ba21-9a12ff1092fe",
+      "runId": "aab3822d-1a6f-497b-9648-5e4ce5e9de04",
       "validation": {
-        "runId": "d2492bbe-ed04-4941-8237-dcc9ee0b611d",
-        "capturedAtUtc": "2026-11-13T20:17:06.816Z",
+        "runId": "6dd79312-3798-472a-b541-751c9a5a2f1d",
+        "capturedAtUtc": "2026-11-13T22:52:22.193Z",
         "swaggerInputSha256": "2a087d76fd239a5f9abf80f4e9b4b57b8e8aca4cf7bf913d22aea1a32ca05cb7",
         "outputSha256": "350e2ad719773efb6bbd061fe42a3edf577849a02f68ac57a2e8ca64d1bc9262"
       }
@@ -522,13 +522,13 @@
       "outputFile": "src/generated/MailchimpExtensions.ts",
       "outputSha256": "1e9fe3f5a0a57e6877ccc572eec13d69f287e1da155d1e4d922f029e1af0c150",
       "swaggerInputSha256": "2cf5f68881a233e7f1c9850bc4d3649231bad35ac2d883b02b94c24962308fa6",
-      "capturedAtUtc": "2026-11-13T20:13:30.327Z",
+      "capturedAtUtc": "2026-11-13T22:48:19.400Z",
       "swaggerFixture": "swagger-cache/mailchimp.swagger.json",
       "swaggerFixtureSha256": "2cf5f68881a233e7f1c9850bc4d3649231bad35ac2d883b02b94c24962308fa6",
-      "runId": "03d33f91-2af3-4b2a-ba21-9a12ff1092fe",
+      "runId": "aab3822d-1a6f-497b-9648-5e4ce5e9de04",
       "validation": {
-        "runId": "d2492bbe-ed04-4941-8237-dcc9ee0b611d",
-        "capturedAtUtc": "2026-11-13T20:17:08.663Z",
+        "runId": "6dd79312-3798-472a-b541-751c9a5a2f1d",
+        "capturedAtUtc": "2026-11-13T22:52:24.237Z",
         "swaggerInputSha256": "2cf5f68881a233e7f1c9850bc4d3649231bad35ac2d883b02b94c24962308fa6",
         "outputSha256": "1e9fe3f5a0a57e6877ccc572eec13d69f287e1da155d1e4d922f029e1af0c150"
       }
@@ -538,13 +538,13 @@
       "outputFile": "src/generated/MeetingRoomMapExtensions.ts",
       "outputSha256": "c10d7fde8610e9a5363f1a1837cedf3b6dfc4ddfd4b4cba231c679e7a84f5fa5",
       "swaggerInputSha256": "d78285d9fa59597e5e8f2ff0ef55db439c1e85ed565f2257231ea215a9246465",
-      "capturedAtUtc": "2026-11-13T20:13:32.052Z",
+      "capturedAtUtc": "2026-11-13T22:48:21.660Z",
       "swaggerFixture": "swagger-cache/meetingroommap.swagger.json",
       "swaggerFixtureSha256": "d78285d9fa59597e5e8f2ff0ef55db439c1e85ed565f2257231ea215a9246465",
-      "runId": "03d33f91-2af3-4b2a-ba21-9a12ff1092fe",
+      "runId": "aab3822d-1a6f-497b-9648-5e4ce5e9de04",
       "validation": {
-        "runId": "d2492bbe-ed04-4941-8237-dcc9ee0b611d",
-        "capturedAtUtc": "2026-11-13T20:17:10.469Z",
+        "runId": "6dd79312-3798-472a-b541-751c9a5a2f1d",
+        "capturedAtUtc": "2026-11-13T22:52:26.136Z",
         "swaggerInputSha256": "d78285d9fa59597e5e8f2ff0ef55db439c1e85ed565f2257231ea215a9246465",
         "outputSha256": "c10d7fde8610e9a5363f1a1837cedf3b6dfc4ddfd4b4cba231c679e7a84f5fa5"
       }
@@ -586,13 +586,13 @@
       "outputFile": "src/generated/MQExtensions.ts",
       "outputSha256": "c6284fb0ed94a3cba05f336b9cb9753ed4823970b68506da88256899a3239c51",
       "swaggerInputSha256": "ffd294fd756815f011740d654360b95e5acdbbe9ee0de2d05b64c0edd158de18",
-      "capturedAtUtc": "2026-11-13T20:13:39.735Z",
+      "capturedAtUtc": "2026-11-13T22:48:45.522Z",
       "swaggerFixture": "swagger-cache/mq.swagger.json",
       "swaggerFixtureSha256": "ffd294fd756815f011740d654360b95e5acdbbe9ee0de2d05b64c0edd158de18",
-      "runId": "03d33f91-2af3-4b2a-ba21-9a12ff1092fe",
+      "runId": "aab3822d-1a6f-497b-9648-5e4ce5e9de04",
       "validation": {
-        "runId": "d2492bbe-ed04-4941-8237-dcc9ee0b611d",
-        "capturedAtUtc": "2026-11-13T20:17:18.524Z",
+        "runId": "6dd79312-3798-472a-b541-751c9a5a2f1d",
+        "capturedAtUtc": "2026-11-13T22:52:33.891Z",
         "swaggerInputSha256": "ffd294fd756815f011740d654360b95e5acdbbe9ee0de2d05b64c0edd158de18",
         "outputSha256": "c6284fb0ed94a3cba05f336b9cb9753ed4823970b68506da88256899a3239c51"
       }
@@ -602,13 +602,13 @@
       "outputFile": "src/generated/MSGraphGroupsAndUsersExtensions.ts",
       "outputSha256": "763752a14de096641e50cc5ec00b372bc3e64fe663b687f88bbdef436ef6f6a8",
       "swaggerInputSha256": "cf7a73b0df7b3e26ab4c2c19a595f4c7eb3d3c935f47675735b074b00ea0af7b",
-      "capturedAtUtc": "2026-11-13T20:13:41.868Z",
+      "capturedAtUtc": "2026-11-13T22:48:49.186Z",
       "swaggerFixture": "swagger-cache/msgraphgroupsanduser.swagger.json",
       "swaggerFixtureSha256": "cf7a73b0df7b3e26ab4c2c19a595f4c7eb3d3c935f47675735b074b00ea0af7b",
-      "runId": "03d33f91-2af3-4b2a-ba21-9a12ff1092fe",
+      "runId": "aab3822d-1a6f-497b-9648-5e4ce5e9de04",
       "validation": {
-        "runId": "d2492bbe-ed04-4941-8237-dcc9ee0b611d",
-        "capturedAtUtc": "2026-11-13T20:17:20.529Z",
+        "runId": "6dd79312-3798-472a-b541-751c9a5a2f1d",
+        "capturedAtUtc": "2026-11-13T22:52:35.773Z",
         "swaggerInputSha256": "cf7a73b0df7b3e26ab4c2c19a595f4c7eb3d3c935f47675735b074b00ea0af7b",
         "outputSha256": "763752a14de096641e50cc5ec00b372bc3e64fe663b687f88bbdef436ef6f6a8"
       }
@@ -618,13 +618,13 @@
       "outputFile": "src/generated/Office365Extensions.ts",
       "outputSha256": "22ea89235060b13837259aefde3a89f871b5a64725bec373c2da757641b51c3d",
       "swaggerInputSha256": "034ec860aba27b9db11c56f6ebe2de32c9dad9345a6edb76a14383e876e8c01c",
-      "capturedAtUtc": "2026-11-13T20:13:43.949Z",
+      "capturedAtUtc": "2026-11-13T22:48:51.168Z",
       "swaggerFixture": "swagger-cache/office365.swagger.json",
       "swaggerFixtureSha256": "b58a10baa9a5ca6914bd7dff75d050cba3949c1186ef962abc2365fabdc96f05",
-      "runId": "03d33f91-2af3-4b2a-ba21-9a12ff1092fe",
+      "runId": "aab3822d-1a6f-497b-9648-5e4ce5e9de04",
       "validation": {
-        "runId": "d2492bbe-ed04-4941-8237-dcc9ee0b611d",
-        "capturedAtUtc": "2026-11-13T20:17:22.375Z",
+        "runId": "6dd79312-3798-472a-b541-751c9a5a2f1d",
+        "capturedAtUtc": "2026-11-13T22:52:37.416Z",
         "swaggerInputSha256": "034ec860aba27b9db11c56f6ebe2de32c9dad9345a6edb76a14383e876e8c01c",
         "outputSha256": "22ea89235060b13837259aefde3a89f871b5a64725bec373c2da757641b51c3d"
       }
@@ -691,13 +691,13 @@
       "outputFile": "src/generated/PdfCoExtensions.ts",
       "outputSha256": "b444cd1939b01a14b3ef2192ee2a9100b2ece0b6ed10a545a561943c7e0b88fd",
       "swaggerInputSha256": "c9fb18e541124ef0cd7d867173a4c61eabd2c7a0b0be95bcdf5d4b1c4ede3702",
-      "capturedAtUtc": "2026-11-13T20:14:02.500Z",
+      "capturedAtUtc": "2026-11-13T22:49:11.215Z",
       "swaggerFixture": "swagger-cache/pdfco.swagger.json",
       "swaggerFixtureSha256": "c9fb18e541124ef0cd7d867173a4c61eabd2c7a0b0be95bcdf5d4b1c4ede3702",
-      "runId": "03d33f91-2af3-4b2a-ba21-9a12ff1092fe",
+      "runId": "aab3822d-1a6f-497b-9648-5e4ce5e9de04",
       "validation": {
-        "runId": "d2492bbe-ed04-4941-8237-dcc9ee0b611d",
-        "capturedAtUtc": "2026-11-13T20:17:41.071Z",
+        "runId": "6dd79312-3798-472a-b541-751c9a5a2f1d",
+        "capturedAtUtc": "2026-11-13T22:52:55.467Z",
         "swaggerInputSha256": "c9fb18e541124ef0cd7d867173a4c61eabd2c7a0b0be95bcdf5d4b1c4ede3702",
         "outputSha256": "b444cd1939b01a14b3ef2192ee2a9100b2ece0b6ed10a545a561943c7e0b88fd"
       }
@@ -739,13 +739,13 @@
       "outputFile": "src/generated/PlumsailExtensions.ts",
       "outputSha256": "806dba1d7aae4b0effae759925c691cbd54ebf9fd4dd975626f3db45bbf249bf",
       "swaggerInputSha256": "81bce10812a95289a60e01d7c10f737961114b79bfaa34e4d96e1dcf628bfe48",
-      "capturedAtUtc": "2026-11-13T20:14:10.837Z",
+      "capturedAtUtc": "2026-11-13T22:49:20.575Z",
       "swaggerFixture": "swagger-cache/plumsail.swagger.json",
       "swaggerFixtureSha256": "08a9a832487f5c1e414757a4dab88f6c3719aaf3bdb37d4fe72dce69e9f46adb",
-      "runId": "03d33f91-2af3-4b2a-ba21-9a12ff1092fe",
+      "runId": "aab3822d-1a6f-497b-9648-5e4ce5e9de04",
       "validation": {
-        "runId": "d2492bbe-ed04-4941-8237-dcc9ee0b611d",
-        "capturedAtUtc": "2026-11-13T20:17:48.812Z",
+        "runId": "6dd79312-3798-472a-b541-751c9a5a2f1d",
+        "capturedAtUtc": "2026-11-13T22:53:03.340Z",
         "swaggerInputSha256": "81bce10812a95289a60e01d7c10f737961114b79bfaa34e4d96e1dcf628bfe48",
         "outputSha256": "806dba1d7aae4b0effae759925c691cbd54ebf9fd4dd975626f3db45bbf249bf"
       }
@@ -787,13 +787,13 @@
       "outputFile": "src/generated/RepliconExtensions.ts",
       "outputSha256": "938992cd3cfc8be19de319a9f3a7940ec56c0add1be03ea16408ad9ca56540a6",
       "swaggerInputSha256": "8af777a66023a7ffd02c8e1ce5261119a529da8dc4fab07eebbe0c2454264b2c",
-      "capturedAtUtc": "2026-11-13T20:14:16.691Z",
+      "capturedAtUtc": "2026-11-13T22:49:26.694Z",
       "swaggerFixture": "swagger-cache/replicon.swagger.json",
       "swaggerFixtureSha256": "8af777a66023a7ffd02c8e1ce5261119a529da8dc4fab07eebbe0c2454264b2c",
-      "runId": "03d33f91-2af3-4b2a-ba21-9a12ff1092fe",
+      "runId": "aab3822d-1a6f-497b-9648-5e4ce5e9de04",
       "validation": {
-        "runId": "d2492bbe-ed04-4941-8237-dcc9ee0b611d",
-        "capturedAtUtc": "2026-11-13T20:17:54.767Z",
+        "runId": "6dd79312-3798-472a-b541-751c9a5a2f1d",
+        "capturedAtUtc": "2026-11-13T22:53:09.160Z",
         "swaggerInputSha256": "8af777a66023a7ffd02c8e1ce5261119a529da8dc4fab07eebbe0c2454264b2c",
         "outputSha256": "938992cd3cfc8be19de319a9f3a7940ec56c0add1be03ea16408ad9ca56540a6"
       }
@@ -803,13 +803,13 @@
       "outputFile": "src/generated/RevAIExtensions.ts",
       "outputSha256": "118c5aea339217058b6449bb4cc9dae115b748cc1eb88dc4777c793b4ca94eb1",
       "swaggerInputSha256": "0b0aa956275624c23f31a2c3c3315f49fb26d8559e80e6ec536f6364c04e1037",
-      "capturedAtUtc": "2026-11-13T20:14:18.930Z",
+      "capturedAtUtc": "2026-11-13T22:49:28.797Z",
       "swaggerFixture": "swagger-cache/revai.swagger.json",
       "swaggerFixtureSha256": "0b0aa956275624c23f31a2c3c3315f49fb26d8559e80e6ec536f6364c04e1037",
-      "runId": "03d33f91-2af3-4b2a-ba21-9a12ff1092fe",
+      "runId": "aab3822d-1a6f-497b-9648-5e4ce5e9de04",
       "validation": {
-        "runId": "d2492bbe-ed04-4941-8237-dcc9ee0b611d",
-        "capturedAtUtc": "2026-11-13T20:17:56.820Z",
+        "runId": "6dd79312-3798-472a-b541-751c9a5a2f1d",
+        "capturedAtUtc": "2026-11-13T22:53:10.977Z",
         "swaggerInputSha256": "0b0aa956275624c23f31a2c3c3315f49fb26d8559e80e6ec536f6364c04e1037",
         "outputSha256": "118c5aea339217058b6449bb4cc9dae115b748cc1eb88dc4777c793b4ca94eb1"
       }
@@ -835,13 +835,13 @@
       "outputFile": "src/generated/SalesforceExtensions.ts",
       "outputSha256": "04e3aee126bb8e0127bffae0131a6ee37d1ac0ac6e74376d0b7c9030bbf3a44c",
       "swaggerInputSha256": "57ad15ab50d2d1796a1520b9a03d85dbabbf52b5ac722b05e390f1787926051f",
-      "capturedAtUtc": "2026-11-13T20:14:23.155Z",
+      "capturedAtUtc": "2026-11-13T22:49:32.838Z",
       "swaggerFixture": "swagger-cache/salesforce.swagger.json",
       "swaggerFixtureSha256": "57ad15ab50d2d1796a1520b9a03d85dbabbf52b5ac722b05e390f1787926051f",
-      "runId": "03d33f91-2af3-4b2a-ba21-9a12ff1092fe",
+      "runId": "aab3822d-1a6f-497b-9648-5e4ce5e9de04",
       "validation": {
-        "runId": "d2492bbe-ed04-4941-8237-dcc9ee0b611d",
-        "capturedAtUtc": "2026-11-13T20:18:00.986Z",
+        "runId": "6dd79312-3798-472a-b541-751c9a5a2f1d",
+        "capturedAtUtc": "2026-11-13T22:53:14.686Z",
         "swaggerInputSha256": "57ad15ab50d2d1796a1520b9a03d85dbabbf52b5ac722b05e390f1787926051f",
         "outputSha256": "04e3aee126bb8e0127bffae0131a6ee37d1ac0ac6e74376d0b7c9030bbf3a44c"
       }
@@ -915,13 +915,13 @@
       "outputFile": "src/generated/SigningHubExtensions.ts",
       "outputSha256": "fe27ababb9f59c2aa529455a8d408e8c00b60094b6631eb13598f9f00c75e9d5",
       "swaggerInputSha256": "209a58f4fa78b19845cd3d7b6f4e01d94f73ace0a9832c73f804449f68263404",
-      "capturedAtUtc": "2026-11-13T20:14:37.602Z",
+      "capturedAtUtc": "2026-11-13T22:49:48.912Z",
       "swaggerFixture": "swagger-cache/signinghub.swagger.json",
       "swaggerFixtureSha256": "209a58f4fa78b19845cd3d7b6f4e01d94f73ace0a9832c73f804449f68263404",
-      "runId": "03d33f91-2af3-4b2a-ba21-9a12ff1092fe",
+      "runId": "aab3822d-1a6f-497b-9648-5e4ce5e9de04",
       "validation": {
-        "runId": "d2492bbe-ed04-4941-8237-dcc9ee0b611d",
-        "capturedAtUtc": "2026-11-13T20:18:14.779Z",
+        "runId": "6dd79312-3798-472a-b541-751c9a5a2f1d",
+        "capturedAtUtc": "2026-11-13T22:53:28.411Z",
         "swaggerInputSha256": "209a58f4fa78b19845cd3d7b6f4e01d94f73ace0a9832c73f804449f68263404",
         "outputSha256": "fe27ababb9f59c2aa529455a8d408e8c00b60094b6631eb13598f9f00c75e9d5"
       }
@@ -931,13 +931,13 @@
       "outputFile": "src/generated/SlackExtensions.ts",
       "outputSha256": "5fc455c2f51a6f53cdcadb82edb5a80b15723435b9e828f108e4ec447a87cbbf",
       "swaggerInputSha256": "9628ffa4396b91d06a3ef246926c86beea3513602b8b8f5a1d6f22c38386c336",
-      "capturedAtUtc": "2026-11-13T20:14:39.717Z",
+      "capturedAtUtc": "2026-11-13T22:49:50.959Z",
       "swaggerFixture": "swagger-cache/slack.swagger.json",
       "swaggerFixtureSha256": "9628ffa4396b91d06a3ef246926c86beea3513602b8b8f5a1d6f22c38386c336",
-      "runId": "03d33f91-2af3-4b2a-ba21-9a12ff1092fe",
+      "runId": "aab3822d-1a6f-497b-9648-5e4ce5e9de04",
       "validation": {
-        "runId": "d2492bbe-ed04-4941-8237-dcc9ee0b611d",
-        "capturedAtUtc": "2026-11-13T20:18:16.812Z",
+        "runId": "6dd79312-3798-472a-b541-751c9a5a2f1d",
+        "capturedAtUtc": "2026-11-13T22:53:30.090Z",
         "swaggerInputSha256": "9628ffa4396b91d06a3ef246926c86beea3513602b8b8f5a1d6f22c38386c336",
         "outputSha256": "5fc455c2f51a6f53cdcadb82edb5a80b15723435b9e828f108e4ec447a87cbbf"
       }
@@ -995,13 +995,13 @@
       "outputFile": "src/generated/StarRezRestV1Extensions.ts",
       "outputSha256": "53553c89cab24ad1fde4b2863f14ffd87b8ce54faede03d746bb42de83985229",
       "swaggerInputSha256": "ec00ac764f396b41b9725414ad10f2b358ee583bbea760ae99a91799d48d0e73",
-      "capturedAtUtc": "2026-11-13T20:14:47.635Z",
+      "capturedAtUtc": "2026-11-13T22:49:59.235Z",
       "swaggerFixture": "swagger-cache/starrezrestv1.swagger.json",
       "swaggerFixtureSha256": "ec00ac764f396b41b9725414ad10f2b358ee583bbea760ae99a91799d48d0e73",
-      "runId": "03d33f91-2af3-4b2a-ba21-9a12ff1092fe",
+      "runId": "aab3822d-1a6f-497b-9648-5e4ce5e9de04",
       "validation": {
-        "runId": "d2492bbe-ed04-4941-8237-dcc9ee0b611d",
-        "capturedAtUtc": "2026-11-13T20:18:25.199Z",
+        "runId": "6dd79312-3798-472a-b541-751c9a5a2f1d",
+        "capturedAtUtc": "2026-11-13T22:53:37.781Z",
         "swaggerInputSha256": "ec00ac764f396b41b9725414ad10f2b358ee583bbea760ae99a91799d48d0e73",
         "outputSha256": "53553c89cab24ad1fde4b2863f14ffd87b8ce54faede03d746bb42de83985229"
       }
@@ -1027,13 +1027,13 @@
       "outputFile": "src/generated/TeamsExtensions.ts",
       "outputSha256": "d6542a1e2bbac1f7559bd7d6a5dd7a411adbb2b592ccedfaa8bfcb42631cc30b",
       "swaggerInputSha256": "ae2cd051a30f718773c63a3129d8c329431955da2cbf2afe15372a1d60e3b48b",
-      "capturedAtUtc": "2026-11-13T20:14:51.712Z",
+      "capturedAtUtc": "2026-11-13T22:50:03.357Z",
       "swaggerFixture": "swagger-cache/teams.swagger.json",
       "swaggerFixtureSha256": "0116fc974e54ff4c9a69ef386b9f990f1d51d226f1666bbd705f53e720b955e8",
-      "runId": "03d33f91-2af3-4b2a-ba21-9a12ff1092fe",
+      "runId": "aab3822d-1a6f-497b-9648-5e4ce5e9de04",
       "validation": {
-        "runId": "d2492bbe-ed04-4941-8237-dcc9ee0b611d",
-        "capturedAtUtc": "2026-11-13T20:18:30.095Z",
+        "runId": "6dd79312-3798-472a-b541-751c9a5a2f1d",
+        "capturedAtUtc": "2026-11-13T22:53:42.113Z",
         "swaggerInputSha256": "ae2cd051a30f718773c63a3129d8c329431955da2cbf2afe15372a1d60e3b48b",
         "outputSha256": "d6542a1e2bbac1f7559bd7d6a5dd7a411adbb2b592ccedfaa8bfcb42631cc30b"
       }
@@ -1059,13 +1059,13 @@
       "outputFile": "src/generated/TicketmasterExtensions.ts",
       "outputSha256": "057267f5e766683df60c76ec753bdb9e8b844ffd7e7ac1af8b5ca4297e0f445f",
       "swaggerInputSha256": "70eb7108409c5e0a3010a6564300b595825e2e700e30f721c9f0bc2b16cf17ca",
-      "capturedAtUtc": "2026-11-13T20:14:55.842Z",
+      "capturedAtUtc": "2026-11-13T22:50:07.858Z",
       "swaggerFixture": "swagger-cache/ticketmaster.swagger.json",
       "swaggerFixtureSha256": "70eb7108409c5e0a3010a6564300b595825e2e700e30f721c9f0bc2b16cf17ca",
-      "runId": "03d33f91-2af3-4b2a-ba21-9a12ff1092fe",
+      "runId": "aab3822d-1a6f-497b-9648-5e4ce5e9de04",
       "validation": {
-        "runId": "d2492bbe-ed04-4941-8237-dcc9ee0b611d",
-        "capturedAtUtc": "2026-11-13T20:18:33.998Z",
+        "runId": "6dd79312-3798-472a-b541-751c9a5a2f1d",
+        "capturedAtUtc": "2026-11-13T22:53:46.075Z",
         "swaggerInputSha256": "70eb7108409c5e0a3010a6564300b595825e2e700e30f721c9f0bc2b16cf17ca",
         "outputSha256": "057267f5e766683df60c76ec753bdb9e8b844ffd7e7ac1af8b5ca4297e0f445f"
       }
@@ -1123,13 +1123,13 @@
       "outputFile": "src/generated/WayWeDoExtensions.ts",
       "outputSha256": "143a7a55aa4a48a57493858d5f04851938ec5906f86933fb9150d1bf27b60d5b",
       "swaggerInputSha256": "123bd268c4cf0676396313aaeb548df42d4228a492940c45edf884c8bdd1bc46",
-      "capturedAtUtc": "2026-11-13T20:15:10.194Z",
+      "capturedAtUtc": "2026-11-13T22:50:22.849Z",
       "swaggerFixture": "swagger-cache/waywedo.swagger.json",
       "swaggerFixtureSha256": "7f5fc1e2e00c11874a8c9bf6b2301ebfe325de3f70e4b786f316d11f3555d21a",
-      "runId": "03d33f91-2af3-4b2a-ba21-9a12ff1092fe",
+      "runId": "aab3822d-1a6f-497b-9648-5e4ce5e9de04",
       "validation": {
-        "runId": "d2492bbe-ed04-4941-8237-dcc9ee0b611d",
-        "capturedAtUtc": "2026-11-13T20:18:48.044Z",
+        "runId": "6dd79312-3798-472a-b541-751c9a5a2f1d",
+        "capturedAtUtc": "2026-11-13T22:53:59.851Z",
         "swaggerInputSha256": "123bd268c4cf0676396313aaeb548df42d4228a492940c45edf884c8bdd1bc46",
         "outputSha256": "143a7a55aa4a48a57493858d5f04851938ec5906f86933fb9150d1bf27b60d5b"
       }
@@ -1187,13 +1187,13 @@
       "outputFile": "src/generated/ZeptoMailExtensions.ts",
       "outputSha256": "0a98c46cfdb3dfa19bf73810fe25d244085a815cdc3b71672562a9224fd1b57d",
       "swaggerInputSha256": "85dd833f593445f5fa135d342774d12f211707b1d0de6d2ef1695d985e5c4854",
-      "capturedAtUtc": "2026-11-13T20:15:24.122Z",
+      "capturedAtUtc": "2026-11-13T22:50:37.851Z",
       "swaggerFixture": "swagger-cache/zeptomail.swagger.json",
       "swaggerFixtureSha256": "85dd833f593445f5fa135d342774d12f211707b1d0de6d2ef1695d985e5c4854",
-      "runId": "03d33f91-2af3-4b2a-ba21-9a12ff1092fe",
+      "runId": "aab3822d-1a6f-497b-9648-5e4ce5e9de04",
       "validation": {
-        "runId": "d2492bbe-ed04-4941-8237-dcc9ee0b611d",
-        "capturedAtUtc": "2026-11-13T20:19:01.803Z",
+        "runId": "6dd79312-3798-472a-b541-751c9a5a2f1d",
+        "capturedAtUtc": "2026-11-13T22:54:13.441Z",
         "swaggerInputSha256": "85dd833f593445f5fa135d342774d12f211707b1d0de6d2ef1695d985e5c4854",
         "outputSha256": "0a98c46cfdb3dfa19bf73810fe25d244085a815cdc3b71672562a9224fd1b57d"
       }
@@ -1203,13 +1203,13 @@
       "outputFile": "src/generated/ZohoSignExtensions.ts",
       "outputSha256": "afe799533efd5619660996da9c6cbb34b778265697e687f1aa2ec010f57bdd66",
       "swaggerInputSha256": "ce62c4d774b291d1ccbf5a1f258613e938f894400c77cec02eefca0bbd9c8239",
-      "capturedAtUtc": "2026-11-13T20:15:26.234Z",
+      "capturedAtUtc": "2026-11-13T22:50:40.038Z",
       "swaggerFixture": "swagger-cache/zohosign.swagger.json",
       "swaggerFixtureSha256": "ce62c4d774b291d1ccbf5a1f258613e938f894400c77cec02eefca0bbd9c8239",
-      "runId": "03d33f91-2af3-4b2a-ba21-9a12ff1092fe",
+      "runId": "aab3822d-1a6f-497b-9648-5e4ce5e9de04",
       "validation": {
-        "runId": "d2492bbe-ed04-4941-8237-dcc9ee0b611d",
-        "capturedAtUtc": "2026-11-13T20:19:03.686Z",
+        "runId": "6dd79312-3798-472a-b541-751c9a5a2f1d",
+        "capturedAtUtc": "2026-11-13T22:54:15.414Z",
         "swaggerInputSha256": "ce62c4d774b291d1ccbf5a1f258613e938f894400c77cec02eefca0bbd9c8239",
         "outputSha256": "afe799533efd5619660996da9c6cbb34b778265697e687f1aa2ec010f57bdd66"
       }
@@ -1251,13 +1251,13 @@
       "outputFile": "src/generated/WordOnlineBusinessExtensions.ts",
       "outputSha256": "ec956deb311a18ad085bfbd70370e07a2dae2b49343476a328a3186db548bda8",
       "swaggerInputSha256": "860c4abd6376e400135a488f11c131bc0096a76a868e7e9e7e6ad6891d92dbfc",
-      "capturedAtUtc": "2026-11-13T20:15:16.205Z",
+      "capturedAtUtc": "2026-11-13T22:50:29.151Z",
       "swaggerFixture": "swagger-cache/wordonlinebusiness.swagger.json",
       "swaggerFixtureSha256": "860c4abd6376e400135a488f11c131bc0096a76a868e7e9e7e6ad6891d92dbfc",
-      "runId": "03d33f91-2af3-4b2a-ba21-9a12ff1092fe",
+      "runId": "aab3822d-1a6f-497b-9648-5e4ce5e9de04",
       "validation": {
-        "runId": "d2492bbe-ed04-4941-8237-dcc9ee0b611d",
-        "capturedAtUtc": "2026-11-13T20:18:54.130Z",
+        "runId": "6dd79312-3798-472a-b541-751c9a5a2f1d",
+        "capturedAtUtc": "2026-11-13T22:54:05.535Z",
         "swaggerInputSha256": "860c4abd6376e400135a488f11c131bc0096a76a868e7e9e7e6ad6891d92dbfc",
         "outputSha256": "ec956deb311a18ad085bfbd70370e07a2dae2b49343476a328a3186db548bda8"
       }
@@ -1283,13 +1283,13 @@
       "outputFile": "src/generated/VisualStudioTeamServicesExtensions.ts",
       "outputSha256": "52def1e9128cdb4005f425aaf4c392ad6f7edcac871309139395d977f360b0f3",
       "swaggerInputSha256": "df18405d61aeac67561f439cc2f7cc300feb36f4b0fcb8de25f0b70b807fccec",
-      "capturedAtUtc": "2026-11-13T20:15:07.995Z",
+      "capturedAtUtc": "2026-11-13T22:50:20.869Z",
       "swaggerFixture": "swagger-cache/visualstudioteamservices.swagger.json",
       "swaggerFixtureSha256": "df18405d61aeac67561f439cc2f7cc300feb36f4b0fcb8de25f0b70b807fccec",
-      "runId": "03d33f91-2af3-4b2a-ba21-9a12ff1092fe",
+      "runId": "aab3822d-1a6f-497b-9648-5e4ce5e9de04",
       "validation": {
-        "runId": "d2492bbe-ed04-4941-8237-dcc9ee0b611d",
-        "capturedAtUtc": "2026-11-13T20:18:45.997Z",
+        "runId": "6dd79312-3798-472a-b541-751c9a5a2f1d",
+        "capturedAtUtc": "2026-11-13T22:53:57.925Z",
         "swaggerInputSha256": "df18405d61aeac67561f439cc2f7cc300feb36f4b0fcb8de25f0b70b807fccec",
         "outputSha256": "52def1e9128cdb4005f425aaf4c392ad6f7edcac871309139395d977f360b0f3"
       }
@@ -1331,13 +1331,13 @@
       "outputFile": "src/generated/Office365GroupsExtensions.ts",
       "outputSha256": "7d1121819a554bd3a0e032514c97711fadab4bf1f262e3751e7bd1c05efe55cc",
       "swaggerInputSha256": "3f553ce2c316f1af178cb04beacac6e621ffbb7103e3db92f56dbf8792292ccf",
-      "capturedAtUtc": "2026-11-13T20:13:45.953Z",
+      "capturedAtUtc": "2026-11-13T22:48:53.420Z",
       "swaggerFixture": "swagger-cache/office365groups.swagger.json",
       "swaggerFixtureSha256": "3f553ce2c316f1af178cb04beacac6e621ffbb7103e3db92f56dbf8792292ccf",
-      "runId": "03d33f91-2af3-4b2a-ba21-9a12ff1092fe",
+      "runId": "aab3822d-1a6f-497b-9648-5e4ce5e9de04",
       "validation": {
-        "runId": "d2492bbe-ed04-4941-8237-dcc9ee0b611d",
-        "capturedAtUtc": "2026-11-13T20:17:24.116Z",
+        "runId": "6dd79312-3798-472a-b541-751c9a5a2f1d",
+        "capturedAtUtc": "2026-11-13T22:52:39.216Z",
         "swaggerInputSha256": "3f553ce2c316f1af178cb04beacac6e621ffbb7103e3db92f56dbf8792292ccf",
         "outputSha256": "7d1121819a554bd3a0e032514c97711fadab4bf1f262e3751e7bd1c05efe55cc"
       }
@@ -1363,13 +1363,13 @@
       "outputFile": "src/generated/MicrosoftBookingsExtensions.ts",
       "outputSha256": "5e8e17a4c47fc7da2bc75541fe82a434c89959bb9dbcba49c085b2a232d72ef5",
       "swaggerInputSha256": "f5a9d2d540ba646436feb4e3f521eb4d6d84511d92612f8290e95625e2be5321",
-      "capturedAtUtc": "2026-11-13T20:13:34.156Z",
+      "capturedAtUtc": "2026-11-13T22:48:31.115Z",
       "swaggerFixture": "swagger-cache/microsoftbookings.swagger.json",
       "swaggerFixtureSha256": "f5a9d2d540ba646436feb4e3f521eb4d6d84511d92612f8290e95625e2be5321",
-      "runId": "03d33f91-2af3-4b2a-ba21-9a12ff1092fe",
+      "runId": "aab3822d-1a6f-497b-9648-5e4ce5e9de04",
       "validation": {
-        "runId": "d2492bbe-ed04-4941-8237-dcc9ee0b611d",
-        "capturedAtUtc": "2026-11-13T20:17:12.452Z",
+        "runId": "6dd79312-3798-472a-b541-751c9a5a2f1d",
+        "capturedAtUtc": "2026-11-13T22:52:28.288Z",
         "swaggerInputSha256": "f5a9d2d540ba646436feb4e3f521eb4d6d84511d92612f8290e95625e2be5321",
         "outputSha256": "5e8e17a4c47fc7da2bc75541fe82a434c89959bb9dbcba49c085b2a232d72ef5"
       }
@@ -1395,13 +1395,13 @@
       "outputFile": "src/generated/OneNoteExtensions.ts",
       "outputSha256": "7a37d6c5c447856f2929da7fe402b6eebe7ba57b5d135000621fffd1d0b9a0cb",
       "swaggerInputSha256": "78f7bf008d382a1827cffa9e6f1a4630aa4886a0db0a16adb01613631203920f",
-      "capturedAtUtc": "2026-11-13T20:13:55.998Z",
+      "capturedAtUtc": "2026-11-13T22:49:04.518Z",
       "swaggerFixture": "swagger-cache/onenote.swagger.json",
       "swaggerFixtureSha256": "f770e29ca5f26e51d7cc0e3ddbf54f56702ae2dfebd80dda40050b19c0414229",
-      "runId": "03d33f91-2af3-4b2a-ba21-9a12ff1092fe",
+      "runId": "aab3822d-1a6f-497b-9648-5e4ce5e9de04",
       "validation": {
-        "runId": "d2492bbe-ed04-4941-8237-dcc9ee0b611d",
-        "capturedAtUtc": "2026-11-13T20:17:34.654Z",
+        "runId": "6dd79312-3798-472a-b541-751c9a5a2f1d",
+        "capturedAtUtc": "2026-11-13T22:52:49.287Z",
         "swaggerInputSha256": "78f7bf008d382a1827cffa9e6f1a4630aa4886a0db0a16adb01613631203920f",
         "outputSha256": "7a37d6c5c447856f2929da7fe402b6eebe7ba57b5d135000621fffd1d0b9a0cb"
       }
@@ -1523,13 +1523,13 @@
       "outputFile": "src/generated/CloudConvertExtensions.ts",
       "outputSha256": "ac70848329c33513dc0f0cedb4c4dec9d604fc131779eeb2be7860c2f8cf15c0",
       "swaggerInputSha256": "712163413c172796594683be3ef469549232a63066250145701bb69e0b1ce96b",
-      "capturedAtUtc": "2026-11-13T20:12:26.398Z",
+      "capturedAtUtc": "2026-11-13T22:47:11.881Z",
       "swaggerFixture": "swagger-cache/cloudconvert.swagger.json",
       "swaggerFixtureSha256": "712163413c172796594683be3ef469549232a63066250145701bb69e0b1ce96b",
-      "runId": "03d33f91-2af3-4b2a-ba21-9a12ff1092fe",
+      "runId": "aab3822d-1a6f-497b-9648-5e4ce5e9de04",
       "validation": {
-        "runId": "d2492bbe-ed04-4941-8237-dcc9ee0b611d",
-        "capturedAtUtc": "2026-11-13T20:16:07.670Z",
+        "runId": "6dd79312-3798-472a-b541-751c9a5a2f1d",
+        "capturedAtUtc": "2026-11-13T22:51:22.048Z",
         "swaggerInputSha256": "712163413c172796594683be3ef469549232a63066250145701bb69e0b1ce96b",
         "outputSha256": "ac70848329c33513dc0f0cedb4c4dec9d604fc131779eeb2be7860c2f8cf15c0"
       }
@@ -1555,13 +1555,13 @@
       "outputFile": "src/generated/DocumentDBExtensions.ts",
       "outputSha256": "02a2e012799011fd8cb3c6fd4ebc2e1bbef3be8b3804e538a02e802cc20370f2",
       "swaggerInputSha256": "065e7fdf4058c42a9d395da1de82f4d8f53cb81395dc2482a38733ebeea55969",
-      "capturedAtUtc": "2026-11-13T20:12:36.913Z",
+      "capturedAtUtc": "2026-11-13T22:47:22.594Z",
       "swaggerFixture": "swagger-cache/documentdb.swagger.json",
       "swaggerFixtureSha256": "065e7fdf4058c42a9d395da1de82f4d8f53cb81395dc2482a38733ebeea55969",
-      "runId": "03d33f91-2af3-4b2a-ba21-9a12ff1092fe",
+      "runId": "aab3822d-1a6f-497b-9648-5e4ce5e9de04",
       "validation": {
-        "runId": "d2492bbe-ed04-4941-8237-dcc9ee0b611d",
-        "capturedAtUtc": "2026-11-13T20:16:17.742Z",
+        "runId": "6dd79312-3798-472a-b541-751c9a5a2f1d",
+        "capturedAtUtc": "2026-11-13T22:51:32.826Z",
         "swaggerInputSha256": "065e7fdf4058c42a9d395da1de82f4d8f53cb81395dc2482a38733ebeea55969",
         "outputSha256": "02a2e012799011fd8cb3c6fd4ebc2e1bbef3be8b3804e538a02e802cc20370f2"
       }
@@ -1571,13 +1571,13 @@
       "outputFile": "src/generated/ServiceBusExtensions.ts",
       "outputSha256": "9b6730ae105deeeb3d3ed47cad355608028aebfbf789075137df7c4e9faa7171",
       "swaggerInputSha256": "b772b0ee3a4cbaee6e5f35c5690397ca0676855555051164ac3bdfd809ccd44b",
-      "capturedAtUtc": "2026-11-13T20:14:29.289Z",
+      "capturedAtUtc": "2026-11-13T22:49:38.956Z",
       "swaggerFixture": "swagger-cache/servicebus.swagger.json",
       "swaggerFixtureSha256": "b772b0ee3a4cbaee6e5f35c5690397ca0676855555051164ac3bdfd809ccd44b",
-      "runId": "03d33f91-2af3-4b2a-ba21-9a12ff1092fe",
+      "runId": "aab3822d-1a6f-497b-9648-5e4ce5e9de04",
       "validation": {
-        "runId": "d2492bbe-ed04-4941-8237-dcc9ee0b611d",
-        "capturedAtUtc": "2026-11-13T20:18:07.156Z",
+        "runId": "6dd79312-3798-472a-b541-751c9a5a2f1d",
+        "capturedAtUtc": "2026-11-13T22:53:20.729Z",
         "swaggerInputSha256": "b772b0ee3a4cbaee6e5f35c5690397ca0676855555051164ac3bdfd809ccd44b",
         "outputSha256": "9b6730ae105deeeb3d3ed47cad355608028aebfbf789075137df7c4e9faa7171"
       }
@@ -1603,11 +1603,11 @@
       "outputFile": "src/generated/DataFlowsSmsExtensions.ts",
       "outputSha256": "769bb23780c16a6346e3999bedb7ca5f138091720a228005a3d66cd7b6a02a4d",
       "swaggerInputSha256": "e3b777684ca8973a6945b3559de08e0c369cfc0730243f15983d70c1146ad8e5",
-      "capturedAtUtc": "2026-11-13T20:12:34.762Z",
-      "runId": "03d33f91-2af3-4b2a-ba21-9a12ff1092fe",
+      "capturedAtUtc": "2026-11-13T22:47:20.580Z",
+      "runId": "aab3822d-1a6f-497b-9648-5e4ce5e9de04",
       "validation": {
-        "runId": "d2492bbe-ed04-4941-8237-dcc9ee0b611d",
-        "capturedAtUtc": "2026-11-13T20:16:15.710Z",
+        "runId": "6dd79312-3798-472a-b541-751c9a5a2f1d",
+        "capturedAtUtc": "2026-11-13T22:51:30.661Z",
         "swaggerInputSha256": "e3b777684ca8973a6945b3559de08e0c369cfc0730243f15983d70c1146ad8e5",
         "outputSha256": "769bb23780c16a6346e3999bedb7ca5f138091720a228005a3d66cd7b6a02a4d"
       }
@@ -2161,7 +2161,7 @@
         "kind": "independent-fresh-live-download-plus-offline-replay"
       }
     },
-    "03d33f91-2af3-4b2a-ba21-9a12ff1092fe": {
+    "aab3822d-1a6f-497b-9648-5e4ce5e9de04": {
       "command": "dotnet LogicAppsCompiler.dll <output-directory> unused --directClient --language=typescript --connectors=arm,azureblob,azureeventgrid,azureiotcentral,azuremonitorlogs,box,campfire,clicksendsms,cloudmersiveconvert,commondataservice,docusign,docuware,dropbox,dynamicsax,elfsquaddata,etsy,eventbrite,excelonline,formstackforms,freshservice,ftp,github,googlecalendar,googledrive,googletasks,impexium,infusionsoft,insightly,jedoxodatahub,jira,kusto,mailchimp,meetingroommap,microsoftforms,monday,mq,msgraphgroupsanduser,office365,office365groupsmail,office365users,onedriveforbusiness,orderful,pdfco,pipedrive,plivo,plumsail,powerbi,projectplace,replicon,revai,rss,salesforce,seismicplanner,sendgrid,sharepointonline,shifts,signinghub,slack,smtp,sql,starmind,starrezrestv1,tallyfy,teams,textrequest,ticketmaster,todo,twitter,typeform,waywedo,webex,wordpress,zendesk,zeptomail,zohosign,wdatp,trello,wordonlinebusiness,yammer,visualstudioteamservices,azuread,excelonlinebusiness,office365groups,azureautomation,microsoftbookings,azuredatafactory,onenote,outlook,azuredigitaltwins,azurequeues,planner,keyvault,azuretables,azurevm,cloudconvert,dataflows,documentdb,servicebus,eventhubs,dataflowssms,onedrive,service-now,universalprint",
       "successfulConnectors": [
         "arm",
@@ -2269,20 +2269,20 @@
         "universalprint"
       ],
       "catalogGenerationConnectorCount": 103,
-      "captureStartedAtUtc": "2026-11-13T20:11:40.183Z",
-      "generatedAtUtc": "2026-11-13T20:15:26.274Z",
+      "captureStartedAtUtc": "2026-11-13T22:46:22.308Z",
+      "generatedAtUtc": "2026-11-13T22:50:40.076Z",
       "generator": {
         "repository": "https://msazure.visualstudio.com/One/_git/AzureUX-BPM",
         "tool": "CodefulSdkGenerator (LogicAppsCompiler)",
         "projectPath": "src/tools/CodefulSdkGenerator/LogicAppsCompiler.Cli/LogicAppsCompiler.Cli.csproj",
-        "bpmBaseCommit": "30b4c75be24a4b08900e18f636ec7e2aabfbcb12",
-        "bpmHeadCommit": "30b4c75be24a4b08900e18f636ec7e2aabfbcb12",
+        "bpmBaseCommit": "0c2d3991f2ef082b053becdaca7984c6e332dc3a",
+        "bpmHeadCommit": "0c2d3991f2ef082b053becdaca7984c6e332dc3a",
         "bpmBranch": "fix/sdk-systematic-naming",
         "assemblyVersion": "1.199.0.2",
         "assemblySha256": "195c3c3cd5a33e091cee4b217c034f2205dfca63820bf2d512c77582e789c55d",
         "compilerCliSha256": "03378a508adc10193ca13fcee7f08e4fa94828be07d992e538a58612c465cfa1",
         "upstreamStatus": "committed-and-pushed",
-        "generatorTree": "b0fb3581a24fc395925f7455a4a1db8b6986b6cd"
+        "generatorTree": "a035145bd1ceeea3be41b46fd68cdaeb5896cbc4"
       },
       "swaggerSource": {
         "kind": "live-arm-metadata",
@@ -2292,19 +2292,19 @@
       },
       "connectorListInputSha256": "b69a586d9712742fe72089ad06d3365d841caab044d26c13e6f44ac4ff2d100e",
       "validation": {
-        "runId": "d2492bbe-ed04-4941-8237-dcc9ee0b611d",
-        "captureStartedAtUtc": "2026-11-13T20:15:26.616Z",
-        "captureEndedAtUtc": "2026-11-13T20:19:03.737Z",
-        "generatedAtUtc": "2026-11-13T20:19:06.520Z",
+        "runId": "6dd79312-3798-472a-b541-751c9a5a2f1d",
+        "captureStartedAtUtc": "2026-11-13T22:50:40.474Z",
+        "captureEndedAtUtc": "2026-11-13T22:54:15.450Z",
+        "generatedAtUtc": "2026-11-13T22:54:18.143Z",
         "connectorListInputSha256": "b69a586d9712742fe72089ad06d3365d841caab044d26c13e6f44ac4ff2d100e",
         "kind": "independent-fresh-live-download-plus-offline-replay",
-        "captureGeneratorCommit": "30b4c75be24a4b08900e18f636ec7e2aabfbcb12",
-        "replayGeneratorCommit": "30b4c75be24a4b08900e18f636ec7e2aabfbcb12"
+        "captureGeneratorCommit": "0c2d3991f2ef082b053becdaca7984c6e332dc3a",
+        "replayGeneratorCommit": "0c2d3991f2ef082b053becdaca7984c6e332dc3a"
       }
     }
   },
   "refresh": {
-    "runId": "03d33f91-2af3-4b2a-ba21-9a12ff1092fe",
+    "runId": "aab3822d-1a6f-497b-9648-5e4ce5e9de04",
     "refreshedConnectors": [
       "clicksendsms",
       "cloudmersiveconvert",

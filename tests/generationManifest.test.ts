@@ -505,7 +505,7 @@ describe("generation.manifest.json provenance", () => {
         expect(["merged", "active-unmerged", "local-committed-unpushed", "committed-and-pushed"]).toContain(run.generator.upstreamStatus);
         if (run.generator.upstreamStatus === "local-committed-unpushed" ||
             run.generator.upstreamStatus === "committed-and-pushed") {
-            expect(run.generator.bpmHeadCommit).toBe("30b4c75be24a4b08900e18f636ec7e2aabfbcb12");
+            expect(run.generator.bpmHeadCommit).toBe("0c2d3991f2ef082b053becdaca7984c6e332dc3a");
             expect(run.generator.pullRequest).toBeUndefined();
             expect(run.generator.pullRequestSourceCommit).toBeUndefined();
         }
@@ -515,7 +515,7 @@ describe("generation.manifest.json provenance", () => {
         }
         expect(run.generator.assemblySha256).toBe("195c3c3cd5a33e091cee4b217c034f2205dfca63820bf2d512c77582e789c55d");
         expect(run.generator.compilerCliSha256).toBe("03378a508adc10193ca13fcee7f08e4fa94828be07d992e538a58612c465cfa1");
-        expect(run.generator.generatorTree).toBe("b0fb3581a24fc395925f7455a4a1db8b6986b6cd");
+        expect(run.generator.generatorTree).toBe("a035145bd1ceeea3be41b46fd68cdaeb5896cbc4");
         expect(run.swaggerSource).toEqual({
             kind: "live-arm-metadata",
             subscriptionId: "f34b22a3-2202-4fb1-b040-1332bd928c84",
@@ -525,11 +525,11 @@ describe("generation.manifest.json provenance", () => {
         expect(run.connectorListInputSha256).toMatch(/^[0-9a-f]{64}$/);
         expect(run.validation.connectorListInputSha256).toBe(run.connectorListInputSha256);
         expect(run.validation.kind).toBe("independent-fresh-live-download-plus-offline-replay");
-        expect(run.validation.captureGeneratorCommit).toBe("30b4c75be24a4b08900e18f636ec7e2aabfbcb12");
-        expect(run.validation.replayGeneratorCommit).toBe("30b4c75be24a4b08900e18f636ec7e2aabfbcb12");
+        expect(run.validation.captureGeneratorCommit).toBe("0c2d3991f2ef082b053becdaca7984c6e332dc3a");
+        expect(run.validation.replayGeneratorCommit).toBe("0c2d3991f2ef082b053becdaca7984c6e332dc3a");
         expect(run.validation.replayGeneratorCommit).toBe(run.validation.captureGeneratorCommit);
         expect(run.validation.replayGeneratorCommit).toBe(run.generator.bpmHeadCommit);
-        expect(run.validation.captureEndedAtUtc).toBe("2026-11-13T20:19:03.737Z");
+        expect(run.validation.captureEndedAtUtc).toBe("2026-11-13T22:54:15.450Z");
         expect(parseUtcTimestamp(run.validation.captureStartedAtUtc)).toBeGreaterThan(parseUtcTimestamp(run.generatedAtUtc));
         expect(parseUtcTimestamp(run.validation.generatedAtUtc)).toBeGreaterThan(parseUtcTimestamp(run.generatedAtUtc));
     });
