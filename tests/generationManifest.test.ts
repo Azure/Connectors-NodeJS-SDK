@@ -505,7 +505,7 @@ describe("generation.manifest.json provenance", () => {
         expect(["merged", "active-unmerged", "local-committed-unpushed", "committed-and-pushed"]).toContain(run.generator.upstreamStatus);
         if (run.generator.upstreamStatus === "local-committed-unpushed" ||
             run.generator.upstreamStatus === "committed-and-pushed") {
-            expect(run.generator.bpmHeadCommit).toBe("3cb5968155c1854d52bf1256a3199da920029e82");
+            expect(run.generator.bpmHeadCommit).toBe("8cc49435bc966c25dd58022c707fab7f64a637f4");
             expect(run.generator.pullRequest).toBeUndefined();
             expect(run.generator.pullRequestSourceCommit).toBeUndefined();
         }
@@ -513,9 +513,9 @@ describe("generation.manifest.json provenance", () => {
             expect(run.generator.pullRequest).toMatch(/^https:\/\/msazure\.visualstudio\.com\/One\/_git\/AzureUX-BPM\/pullrequest\/\d+$/);
             expect(run.generator.pullRequestSourceCommit).toBe(run.generator.bpmHeadCommit);
         }
-        expect(run.generator.assemblySha256).toBe("166f55c1ff4a3da9d6d873eeb6a6ca00056845e94198bfac7402688495b5ae64");
-        expect(run.generator.compilerCliSha256).toBe("bbe849cbc9e95dfed5cbefba328148d35c40439e9c03928a8d935455852aca77");
-        expect(run.generator.generatorTree).toBe("c349eec8e4f39c20329250d4795d9fb15b759146");
+        expect(run.generator.assemblySha256).toBe("69be467a051b0887a73fc3921cacd5b6306cac3654f2248a691a03ec9581eb4a");
+        expect(run.generator.compilerCliSha256).toBe("43a51ee6bab402343c81d154d6b8a3ef400d73711e2d9115735d2c6bd0766a1d");
+        expect(run.generator.generatorTree).toBe("eb7a8c4f514295ba17f978da7f11c9c0998c5df3");
         expect(run.swaggerSource).toEqual({
             kind: "live-arm-metadata",
             subscriptionId: "f34b22a3-2202-4fb1-b040-1332bd928c84",
@@ -525,8 +525,8 @@ describe("generation.manifest.json provenance", () => {
         expect(run.connectorListInputSha256).toMatch(/^[0-9a-f]{64}$/);
         expect(run.validation.connectorListInputSha256).toBe(run.connectorListInputSha256);
         expect(run.validation.kind).toBe("independent-fresh-live-download-plus-offline-replay");
-        expect(run.validation.captureGeneratorCommit).toBe("3cb5968155c1854d52bf1256a3199da920029e82");
-        expect(run.validation.replayGeneratorCommit).toBe("3cb5968155c1854d52bf1256a3199da920029e82");
+        expect(run.validation.captureGeneratorCommit).toBe("8cc49435bc966c25dd58022c707fab7f64a637f4");
+        expect(run.validation.replayGeneratorCommit).toBe("8cc49435bc966c25dd58022c707fab7f64a637f4");
         expect(run.validation.replayGeneratorCommit).toBe(run.validation.captureGeneratorCommit);
         expect(run.validation.replayGeneratorCommit).toBe(run.generator.bpmHeadCommit);
         expect(run.validation.captureEndedAtUtc).toBe("2026-11-12T21:48:13.480Z");

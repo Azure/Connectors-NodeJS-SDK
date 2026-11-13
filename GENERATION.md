@@ -424,7 +424,7 @@ finally {
 ## Catalog parity and canonical TypeScript names
 
 The catalog contains all 103 canonical connector API IDs. This refresh uses
-reconciled generator source `3cb5968155c1854d52bf1256a3199da920029e82` from
+reconciled generator source `8cc49435bc966c25dd58022c707fab7f64a637f4` from
 [BPM PR 17922280](https://msazure.visualstudio.com/One/_git/AzureUX-BPM/pullrequest/17922280).
 Generator integration remains pending. Canonical client/trigger/file names share
 the existing prefix mapping, including DataFlowsSms, OneDrive, UniversalPrint and

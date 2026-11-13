@@ -2275,14 +2275,14 @@
         "repository": "https://msazure.visualstudio.com/One/_git/AzureUX-BPM",
         "tool": "CodefulSdkGenerator (LogicAppsCompiler)",
         "projectPath": "src/tools/CodefulSdkGenerator/LogicAppsCompiler.Cli/LogicAppsCompiler.Cli.csproj",
-        "bpmBaseCommit": "3cb5968155c1854d52bf1256a3199da920029e82",
-        "bpmHeadCommit": "3cb5968155c1854d52bf1256a3199da920029e82",
+        "bpmBaseCommit": "8cc49435bc966c25dd58022c707fab7f64a637f4",
+        "bpmHeadCommit": "8cc49435bc966c25dd58022c707fab7f64a637f4",
         "bpmBranch": "fix/sdk-systematic-naming",
         "assemblyVersion": "1.199.0.2",
-        "assemblySha256": "166f55c1ff4a3da9d6d873eeb6a6ca00056845e94198bfac7402688495b5ae64",
-        "compilerCliSha256": "bbe849cbc9e95dfed5cbefba328148d35c40439e9c03928a8d935455852aca77",
+        "assemblySha256": "69be467a051b0887a73fc3921cacd5b6306cac3654f2248a691a03ec9581eb4a",
+        "compilerCliSha256": "43a51ee6bab402343c81d154d6b8a3ef400d73711e2d9115735d2c6bd0766a1d",
         "upstreamStatus": "committed-and-pushed",
-        "generatorTree": "c349eec8e4f39c20329250d4795d9fb15b759146"
+        "generatorTree": "eb7a8c4f514295ba17f978da7f11c9c0998c5df3"
       },
       "swaggerSource": {
         "kind": "live-arm-metadata",
@@ -2298,8 +2298,8 @@
         "generatedAtUtc": "2026-11-12T21:48:13.561Z",
         "connectorListInputSha256": "a083be669c1f5fd85c92cfa1591e78d7df1cc59de394e77586fc3509a1b372d9",
         "kind": "independent-fresh-live-download-plus-offline-replay",
-        "captureGeneratorCommit": "3cb5968155c1854d52bf1256a3199da920029e82",
-        "replayGeneratorCommit": "3cb5968155c1854d52bf1256a3199da920029e82"
+        "captureGeneratorCommit": "8cc49435bc966c25dd58022c707fab7f64a637f4",
+        "replayGeneratorCommit": "8cc49435bc966c25dd58022c707fab7f64a637f4"
       }
     }
   },
