@@ -482,7 +482,7 @@ export interface CombinedEmailBodyAndCustomFields {
 /**
  * Definition: EnvelopeIDsResponse
  */
-export interface EnvelopeIDsResponse {
+export interface EnvelopeIdsResponse {
     /** list of envelope ids */
     envelopes?: Array<EnvelopeIds>;
 }

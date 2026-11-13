@@ -72,12 +72,12 @@ describe("ManagedConnectors — re-exports", () => {
         expect(typeof KustoClient).toBe("function");
     });
 
-    it("should re-export MqClient", () => {
+    it("should re-export MQClient", () => {
         expect(MQClient).toBeDefined();
         expect(typeof MQClient).toBe("function");
     });
 
-    it("should re-export MsGraphGroupsAndUsersClient", () => {
+    it("should re-export MSGraphGroupsAndUsersClient", () => {
         expect(MSGraphGroupsAndUsersClient).toBeDefined();
         expect(typeof MSGraphGroupsAndUsersClient).toBe("function");
     });

@@ -93,8 +93,8 @@ describe("MailchimpClient — getCampaigns", () => {
     });
 });
 
-describe("MailChimp — connector registry", () => {
-    it("should expose MailChimp in ConnectorNames", () => {
+describe("Mailchimp — connector registry", () => {
+    it("should expose Mailchimp in ConnectorNames", () => {
         expect(ConnectorNames.Mailchimp).toBe("mailchimp");
     });
 

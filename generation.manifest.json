@@ -184,7 +184,7 @@
     {
       "apiName": "docusign",
       "outputFile": "src/generated/DocusignExtensions.ts",
-      "outputSha256": "6d18c29771c79fe4aa144d2fda060ecf0935669e1a157157895fa3b8feb47d4e",
+      "outputSha256": "87286efc94ff216d2b31ae3e77cfd93e16a94d52a7ea5d041fb8141539600d37",
       "swaggerInputSha256": "4a8742b7bf35b705558a5ddb7607219e7ac46fd6582a1f2fe964ec72c1d435dd",
       "capturedAtUtc": "2026-11-12T21:36:47.993Z",
       "swaggerFixture": "swagger-cache/docusign.swagger.json",
@@ -194,7 +194,7 @@
         "runId": "27e4758e-8f2c-430a-8ec9-6b7ddb66e943",
         "capturedAtUtc": "2026-11-12T21:44:10.962Z",
         "swaggerInputSha256": "4a8742b7bf35b705558a5ddb7607219e7ac46fd6582a1f2fe964ec72c1d435dd",
-        "outputSha256": "6d18c29771c79fe4aa144d2fda060ecf0935669e1a157157895fa3b8feb47d4e"
+        "outputSha256": "87286efc94ff216d2b31ae3e77cfd93e16a94d52a7ea5d041fb8141539600d37"
       }
     },
     {
@@ -1505,7 +1505,7 @@
     {
       "apiName": "azurevm",
       "outputFile": "src/generated/AzureVMExtensions.ts",
-      "outputSha256": "db5577e422bdefaf2bb10ac5f098801ea74277272d80ffa5da7150336cdd5115",
+      "outputSha256": "260a6f96d5f5aa8fa10fbeae6f9db69435fd3819196c03b3ce78570c636500de",
       "swaggerInputSha256": "d5fe4e4f971fe26a0aa54dcb50b828eb61ba8582c01324eddd8b3065ad32dad8",
       "capturedAtUtc": "2026-11-11T17:39:23.832Z",
       "swaggerFixture": "swagger-cache/azurevm.swagger.json",
@@ -1515,7 +1515,7 @@
         "runId": "fa91e7ff-71c7-4ed6-ab53-7716c654bf5b",
         "capturedAtUtc": "2026-11-11T19:14:58.089Z",
         "swaggerInputSha256": "d5fe4e4f971fe26a0aa54dcb50b828eb61ba8582c01324eddd8b3065ad32dad8",
-        "outputSha256": "db5577e422bdefaf2bb10ac5f098801ea74277272d80ffa5da7150336cdd5115"
+        "outputSha256": "260a6f96d5f5aa8fa10fbeae6f9db69435fd3819196c03b3ce78570c636500de"
       }
     },
     {
@@ -2275,14 +2275,14 @@
         "repository": "https://msazure.visualstudio.com/One/_git/AzureUX-BPM",
         "tool": "CodefulSdkGenerator (LogicAppsCompiler)",
         "projectPath": "src/tools/CodefulSdkGenerator/LogicAppsCompiler.Cli/LogicAppsCompiler.Cli.csproj",
-        "bpmBaseCommit": "334cb8e0830a0b60e34a457da6725a779ade7ff3",
-        "bpmHeadCommit": "334cb8e0830a0b60e34a457da6725a779ade7ff3",
+        "bpmBaseCommit": "3cb5968155c1854d52bf1256a3199da920029e82",
+        "bpmHeadCommit": "3cb5968155c1854d52bf1256a3199da920029e82",
         "bpmBranch": "fix/sdk-systematic-naming",
         "assemblyVersion": "1.199.0.2",
-        "assemblySha256": "891f9b2a62ed448279f4abf62cdbf0732487b003cadf329b0ea64731688027d3",
-        "compilerCliSha256": "1b90441e6076b02127856c63ff8756643bb36c5842b550f41e88c67d974101e2",
+        "assemblySha256": "166f55c1ff4a3da9d6d873eeb6a6ca00056845e94198bfac7402688495b5ae64",
+        "compilerCliSha256": "bbe849cbc9e95dfed5cbefba328148d35c40439e9c03928a8d935455852aca77",
         "upstreamStatus": "committed-and-pushed",
-        "generatorTree": "ab7b5187739437c26d42622e567757e8bd983a14"
+        "generatorTree": "c349eec8e4f39c20329250d4795d9fb15b759146"
       },
       "swaggerSource": {
         "kind": "live-arm-metadata",
@@ -2298,8 +2298,8 @@
         "generatedAtUtc": "2026-11-12T21:48:13.561Z",
         "connectorListInputSha256": "a083be669c1f5fd85c92cfa1591e78d7df1cc59de394e77586fc3509a1b372d9",
         "kind": "independent-fresh-live-download-plus-offline-replay",
-        "captureGeneratorCommit": "334cb8e0830a0b60e34a457da6725a779ade7ff3",
-        "replayGeneratorCommit": "334cb8e0830a0b60e34a457da6725a779ade7ff3"
+        "captureGeneratorCommit": "3cb5968155c1854d52bf1256a3199da920029e82",
+        "replayGeneratorCommit": "3cb5968155c1854d52bf1256a3199da920029e82"
       }
     }
   },

@@ -228,6 +228,7 @@ and serialized object keys are not covered by this rename.
 | `docusign` | `DocuSignTriggerOperations` | `DocusignTriggerOperations` |
 | `docusign` | `DocuSignTriggerOperation` | `DocusignTriggerOperation` |
 | `docusign` | `DocuSignTriggerParameters` | `DocusignTriggerParameters` |
+| `docusign` | `EnvelopeIDsResponse` | `EnvelopeIdsResponse` |
 | `freshservice` | `FreshServiceOnTicketCreatedTriggerPayload` | `FreshserviceOnTicketCreatedTriggerPayload` |
 | `freshservice` | `FreshServiceTriggerOperations` | `FreshserviceTriggerOperations` |
 | `freshservice` | `FreshServiceTriggerOperation` | `FreshserviceTriggerOperation` |
@@ -346,6 +347,16 @@ verify that operation contract before switching a Plumsail caller.
 
 | API ID | Previous method | New method |
 | --- | --- | --- |
+| `azurevm` | `setVirtualMachineInScaleDeallocate` | `deallocateVirtualMachineInScaleSet` |
+| `azurevm` | `setVirtualMachineInScalePowerOff` | `powerOffVirtualMachineInScaleSet` |
+| `azurevm` | `setVirtualMachineInScaleRedeploy` | `redeployVirtualMachineInScaleSet` |
+| `azurevm` | `setVirtualMachineInScaleReimage` | `reimageVirtualMachineInScaleSet` |
+| `azurevm` | `setVirtualMachineInScaleRestart` | `restartVirtualMachineInScaleSet` |
+| `azurevm` | `virtualMachineDeallocate` | `deallocateVirtualMachine` |
+| `azurevm` | `virtualMachinePoweroff` | `poweroffVirtualMachine` |
+| `azurevm` | `virtualMachineReapply` | `reapplyVirtualMachine` |
+| `azurevm` | `virtualMachineRedeploy` | `redeployVirtualMachine` |
+| `azurevm` | `virtualMachineRestart` | `restartVirtualMachine` |
 | `cloudmersiveconvert` | `setConvertImageImageDPI` | `setConvertImageImageDpi` |
 | `docusign` | `generateEmbeddedSenderURL` | `generateEmbeddedSenderUrl` |
 | `docusign` | `generateEmbeddedSigningURL` | `generateEmbeddedSigningUrl` |

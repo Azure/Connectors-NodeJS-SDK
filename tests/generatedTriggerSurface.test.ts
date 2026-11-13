@@ -19,10 +19,10 @@ import {
 const TeamsConnectionUrl = "https://connection-runtime.azure.com/apim/teams/abc123";
 const GeneratedDirectory = path.join(process.cwd(), "src", "generated");
 const StandardActionVerbs = new Set([
-    "add", "approve", "cancel", "copy", "create", "decline", "delete", "disable", "download", "enable",
-    "execute", "export", "finish", "forward", "get", "list", "move", "patch", "register", "reject",
-    "remove", "rename", "replace", "resume", "rerun", "run", "search", "send", "set", "start", "stop",
-    "submit", "test", "unregister", "update", "upload", "upsert", "validate",
+    "add", "approve", "cancel", "copy", "create", "deallocate", "decline", "delete", "disable", "download", "enable",
+    "execute", "export", "finish", "forward", "get", "list", "move", "patch", "power", "poweroff", "reapply",
+    "redeploy", "register", "reimage", "reject", "remove", "rename", "replace", "restart", "resume", "rerun", "run",
+    "search", "send", "set", "start", "stop", "submit", "test", "unregister", "update", "upload", "upsert", "validate",
 ]);
 const CuratedActionMethodNames = new Set([
     "SendGrid.checkEmailIsInUnsubscribesList",

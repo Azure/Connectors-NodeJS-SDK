@@ -186,60 +186,60 @@ export class AzureVMClient extends ConnectorClientBase {
      * Deallocate virtual machine in a VM scale set
      * @remarks Deallocates a specific virtual machine in a VM scale set. Shuts down the virtual machine and releases the compute resources it uses. You are not billed for the compute resources of this virtual machine once it is deallocated.
      */
-    public async setVirtualMachineInScaleDeallocate(subscriptionId: string, resourceGroupName: string, virtualMachineScaleSetName: string, virtualMachineInScaleSetInstanceId: string, xMsApiVersion: string, options: ConnectorOperationOptions = {}): Promise<void> {
+    public async deallocateVirtualMachineInScaleSet(subscriptionId: string, resourceGroupName: string, virtualMachineScaleSetName: string, virtualMachineInScaleSetInstanceId: string, xMsApiVersion: string, options: ConnectorOperationOptions = {}): Promise<void> {
         const queryParams: string[] = [];
         queryParams.push(`x-ms-api-version=${encodeURIComponent(String(xMsApiVersion))}`);
         const requestPath = `/subscriptions/${encodeURIComponent(String(subscriptionId))}/resourcegroups/${encodeURIComponent(String(resourceGroupName))}/providers/Microsoft.Compute/virtualMachineScaleSets/${encodeURIComponent(String(virtualMachineScaleSetName))}/virtualMachines/${encodeURIComponent(String(virtualMachineInScaleSetInstanceId))}/deallocate` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
-        await this.sendWithTracingAsync<void>("AzureVM.setVirtualMachineInScaleDeallocate", "VirtualMachineInScaleSet_Deallocate", "POST", requestUrl, undefined, options);
+        await this.sendWithTracingAsync<void>("AzureVM.deallocateVirtualMachineInScaleSet", "VirtualMachineInScaleSet_Deallocate", "POST", requestUrl, undefined, options);
     }
 
     /**
      * Power off virtual machine in a VM scale set
      * @remarks Power off (stop) a virtual machine in a VM scale set. Note that resources are still attached and you are getting charged for the resources.
      */
-    public async setVirtualMachineInScalePowerOff(subscriptionId: string, resourceGroupName: string, virtualMachineScaleSetName: string, virtualMachineInScaleSetInstanceId: string, xMsApiVersion: string, options: ConnectorOperationOptions = {}): Promise<void> {
+    public async powerOffVirtualMachineInScaleSet(subscriptionId: string, resourceGroupName: string, virtualMachineScaleSetName: string, virtualMachineInScaleSetInstanceId: string, xMsApiVersion: string, options: ConnectorOperationOptions = {}): Promise<void> {
         const queryParams: string[] = [];
         queryParams.push(`x-ms-api-version=${encodeURIComponent(String(xMsApiVersion))}`);
         const requestPath = `/subscriptions/${encodeURIComponent(String(subscriptionId))}/resourcegroups/${encodeURIComponent(String(resourceGroupName))}/providers/Microsoft.Compute/virtualMachineScaleSets/${encodeURIComponent(String(virtualMachineScaleSetName))}/virtualMachines/${encodeURIComponent(String(virtualMachineInScaleSetInstanceId))}/poweroff` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
-        await this.sendWithTracingAsync<void>("AzureVM.setVirtualMachineInScalePowerOff", "VirtualMachineInScaleSet_PowerOff", "POST", requestUrl, undefined, options);
+        await this.sendWithTracingAsync<void>("AzureVM.powerOffVirtualMachineInScaleSet", "VirtualMachineInScaleSet_PowerOff", "POST", requestUrl, undefined, options);
     }
 
     /**
      * Redeploy virtual machine in a VM scale set
      * @remarks Shuts down the virtual machine in the VM scale set, moves it to a new node, and powers it back on.
      */
-    public async setVirtualMachineInScaleRedeploy(subscriptionId: string, resourceGroupName: string, virtualMachineScaleSetName: string, virtualMachineInScaleSetInstanceId: string, xMsApiVersion: string, options: ConnectorOperationOptions = {}): Promise<void> {
+    public async redeployVirtualMachineInScaleSet(subscriptionId: string, resourceGroupName: string, virtualMachineScaleSetName: string, virtualMachineInScaleSetInstanceId: string, xMsApiVersion: string, options: ConnectorOperationOptions = {}): Promise<void> {
         const queryParams: string[] = [];
         queryParams.push(`x-ms-api-version=${encodeURIComponent(String(xMsApiVersion))}`);
         const requestPath = `/subscriptions/${encodeURIComponent(String(subscriptionId))}/resourcegroups/${encodeURIComponent(String(resourceGroupName))}/providers/Microsoft.Compute/virtualMachineScaleSets/${encodeURIComponent(String(virtualMachineScaleSetName))}/virtualMachines/${encodeURIComponent(String(virtualMachineInScaleSetInstanceId))}/redeploy` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
-        await this.sendWithTracingAsync<void>("AzureVM.setVirtualMachineInScaleRedeploy", "VirtualMachineInScaleSet_Redeploy", "POST", requestUrl, undefined, options);
+        await this.sendWithTracingAsync<void>("AzureVM.redeployVirtualMachineInScaleSet", "VirtualMachineInScaleSet_Redeploy", "POST", requestUrl, undefined, options);
     }
 
     /**
      * Reimage virtual machine in a VM scale set
      * @remarks Reimages (upgrade the operating system) a specific virtual machine in a VM scale set.
      */
-    public async setVirtualMachineInScaleReimage(subscriptionId: string, resourceGroupName: string, virtualMachineScaleSetName: string, virtualMachineInScaleSetInstanceId: string, xMsApiVersion: string, options: ConnectorOperationOptions = {}): Promise<void> {
+    public async reimageVirtualMachineInScaleSet(subscriptionId: string, resourceGroupName: string, virtualMachineScaleSetName: string, virtualMachineInScaleSetInstanceId: string, xMsApiVersion: string, options: ConnectorOperationOptions = {}): Promise<void> {
         const queryParams: string[] = [];
         queryParams.push(`x-ms-api-version=${encodeURIComponent(String(xMsApiVersion))}`);
         const requestPath = `/subscriptions/${encodeURIComponent(String(subscriptionId))}/resourcegroups/${encodeURIComponent(String(resourceGroupName))}/providers/Microsoft.Compute/virtualMachineScaleSets/${encodeURIComponent(String(virtualMachineScaleSetName))}/virtualMachines/${encodeURIComponent(String(virtualMachineInScaleSetInstanceId))}/reimage` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
-        await this.sendWithTracingAsync<void>("AzureVM.setVirtualMachineInScaleReimage", "VirtualMachineInScaleSet_Reimage", "POST", requestUrl, undefined, options);
+        await this.sendWithTracingAsync<void>("AzureVM.reimageVirtualMachineInScaleSet", "VirtualMachineInScaleSet_Reimage", "POST", requestUrl, undefined, options);
     }
 
     /**
      * Restart virtual machine in a VM scale set
      * @remarks Restarts a virtual machine in a VM scale set.
      */
-    public async setVirtualMachineInScaleRestart(subscriptionId: string, resourceGroupName: string, virtualMachineScaleSetName: string, virtualMachineInScaleSetInstanceId: string, xMsApiVersion: string, options: ConnectorOperationOptions = {}): Promise<void> {
+    public async restartVirtualMachineInScaleSet(subscriptionId: string, resourceGroupName: string, virtualMachineScaleSetName: string, virtualMachineInScaleSetInstanceId: string, xMsApiVersion: string, options: ConnectorOperationOptions = {}): Promise<void> {
         const queryParams: string[] = [];
         queryParams.push(`x-ms-api-version=${encodeURIComponent(String(xMsApiVersion))}`);
         const requestPath = `/subscriptions/${encodeURIComponent(String(subscriptionId))}/resourcegroups/${encodeURIComponent(String(resourceGroupName))}/providers/Microsoft.Compute/virtualMachineScaleSets/${encodeURIComponent(String(virtualMachineScaleSetName))}/virtualMachines/${encodeURIComponent(String(virtualMachineInScaleSetInstanceId))}/restart` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
-        await this.sendWithTracingAsync<void>("AzureVM.setVirtualMachineInScaleRestart", "VirtualMachineInScaleSet_Restart", "POST", requestUrl, undefined, options);
+        await this.sendWithTracingAsync<void>("AzureVM.restartVirtualMachineInScaleSet", "VirtualMachineInScaleSet_Restart", "POST", requestUrl, undefined, options);
     }
 
     /**
@@ -284,60 +284,60 @@ export class AzureVMClient extends ConnectorClientBase {
      * Deallocate virtual machine
      * @remarks Shuts down the virtual machine and releases the compute resources. You are not billed for the compute resources that this virtual machine uses.
      */
-    public async virtualMachineDeallocate(subscriptionId: string, resourceGroupName: string, virtualMachineName: string, apiVersion: string, options: ConnectorOperationOptions = {}): Promise<void> {
+    public async deallocateVirtualMachine(subscriptionId: string, resourceGroupName: string, virtualMachineName: string, apiVersion: string, options: ConnectorOperationOptions = {}): Promise<void> {
         const queryParams: string[] = [];
         queryParams.push(`api-version=${encodeURIComponent(String(apiVersion))}`);
         const requestPath = `/subscriptions/${encodeURIComponent(String(subscriptionId))}/resourcegroups/${encodeURIComponent(String(resourceGroupName))}/providers/Microsoft.Compute/virtualMachines/${encodeURIComponent(String(virtualMachineName))}/deallocate` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
-        await this.sendWithTracingAsync<void>("AzureVM.virtualMachineDeallocate", "VirtualMachine_Deallocate", "POST", requestUrl, undefined, options);
+        await this.sendWithTracingAsync<void>("AzureVM.deallocateVirtualMachine", "VirtualMachine_Deallocate", "POST", requestUrl, undefined, options);
     }
 
     /**
      * Power off virtual machine
      * @remarks Power off (stop) a virtual machine. The virtual machine can be restarted with the same provisioned resources. You are still charged for this virtual machine.
      */
-    public async virtualMachinePoweroff(subscriptionId: string, resourceGroupName: string, virtualMachineName: string, apiVersion: string, options: ConnectorOperationOptions = {}): Promise<void> {
+    public async poweroffVirtualMachine(subscriptionId: string, resourceGroupName: string, virtualMachineName: string, apiVersion: string, options: ConnectorOperationOptions = {}): Promise<void> {
         const queryParams: string[] = [];
         queryParams.push(`api-version=${encodeURIComponent(String(apiVersion))}`);
         const requestPath = `/subscriptions/${encodeURIComponent(String(subscriptionId))}/resourcegroups/${encodeURIComponent(String(resourceGroupName))}/providers/Microsoft.Compute/virtualMachines/${encodeURIComponent(String(virtualMachineName))}/powerOff` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
-        await this.sendWithTracingAsync<void>("AzureVM.virtualMachinePoweroff", "VirtualMachine_Poweroff", "POST", requestUrl, undefined, options);
+        await this.sendWithTracingAsync<void>("AzureVM.poweroffVirtualMachine", "VirtualMachine_Poweroff", "POST", requestUrl, undefined, options);
     }
 
     /**
      * Reapply virtual machine
      * @remarks Reapply a virtual machine's state.
      */
-    public async virtualMachineReapply(subscriptionId: string, resourceGroupName: string, virtualMachineName: string, apiVersion: string, options: ConnectorOperationOptions = {}): Promise<void> {
+    public async reapplyVirtualMachine(subscriptionId: string, resourceGroupName: string, virtualMachineName: string, apiVersion: string, options: ConnectorOperationOptions = {}): Promise<void> {
         const queryParams: string[] = [];
         queryParams.push(`api-version=${encodeURIComponent(String(apiVersion))}`);
         const requestPath = `/subscriptions/${encodeURIComponent(String(subscriptionId))}/resourcegroups/${encodeURIComponent(String(resourceGroupName))}/providers/Microsoft.Compute/virtualMachines/${encodeURIComponent(String(virtualMachineName))}/reapply` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
-        await this.sendWithTracingAsync<void>("AzureVM.virtualMachineReapply", "VirtualMachine_Reapply", "POST", requestUrl, undefined, options);
+        await this.sendWithTracingAsync<void>("AzureVM.reapplyVirtualMachine", "VirtualMachine_Reapply", "POST", requestUrl, undefined, options);
     }
 
     /**
      * Redeploy virtual machine
      * @remarks Shuts down the virtual machine, moves it to a new node, and powers it back on.
      */
-    public async virtualMachineRedeploy(subscriptionId: string, resourceGroupName: string, virtualMachineName: string, apiVersion: string, options: ConnectorOperationOptions = {}): Promise<void> {
+    public async redeployVirtualMachine(subscriptionId: string, resourceGroupName: string, virtualMachineName: string, apiVersion: string, options: ConnectorOperationOptions = {}): Promise<void> {
         const queryParams: string[] = [];
         queryParams.push(`api-version=${encodeURIComponent(String(apiVersion))}`);
         const requestPath = `/subscriptions/${encodeURIComponent(String(subscriptionId))}/resourcegroups/${encodeURIComponent(String(resourceGroupName))}/providers/Microsoft.Compute/virtualMachines/${encodeURIComponent(String(virtualMachineName))}/redeploy` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
-        await this.sendWithTracingAsync<void>("AzureVM.virtualMachineRedeploy", "VirtualMachine_Redeploy", "POST", requestUrl, undefined, options);
+        await this.sendWithTracingAsync<void>("AzureVM.redeployVirtualMachine", "VirtualMachine_Redeploy", "POST", requestUrl, undefined, options);
     }
 
     /**
      * Restart virtual machine
      * @remarks Restarts a virtual machine.
      */
-    public async virtualMachineRestart(subscriptionId: string, resourceGroupName: string, virtualMachineName: string, apiVersion: string, options: ConnectorOperationOptions = {}): Promise<void> {
+    public async restartVirtualMachine(subscriptionId: string, resourceGroupName: string, virtualMachineName: string, apiVersion: string, options: ConnectorOperationOptions = {}): Promise<void> {
         const queryParams: string[] = [];
         queryParams.push(`api-version=${encodeURIComponent(String(apiVersion))}`);
         const requestPath = `/subscriptions/${encodeURIComponent(String(subscriptionId))}/resourcegroups/${encodeURIComponent(String(resourceGroupName))}/providers/Microsoft.Compute/virtualMachines/${encodeURIComponent(String(virtualMachineName))}/restart` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
-        await this.sendWithTracingAsync<void>("AzureVM.virtualMachineRestart", "VirtualMachine_Restart", "POST", requestUrl, undefined, options);
+        await this.sendWithTracingAsync<void>("AzureVM.restartVirtualMachine", "VirtualMachine_Restart", "POST", requestUrl, undefined, options);
     }
 
 }

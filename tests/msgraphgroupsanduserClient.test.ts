@@ -279,7 +279,7 @@ describe("MSGraphGroupsAndUsersClient — error handling", () => {
     });
 });
 
-describe("Msgraphgroupsanduser — connector registry", () => {
+describe("MSGraphGroupsAndUsers — connector registry", () => {
     it("should have msgraphgroupsanduser in ConnectorNames", () => {
         expect(ConnectorNames.MSGraphGroupsAndUsers).toBe("msgraphgroupsanduser");
     });

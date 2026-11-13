@@ -334,7 +334,7 @@ The following connectors have been generated and validated with comprehensive te
 | **SharePoint Online** | `@azure/connectors/generated/SharePointOnlineExtensions` | ✅ Complete | 12 tests |
 | **SMTP** | `@azure/connectors/generated/SmtpExtensions` | ✅ Complete | 9 tests |
 | **Microsoft Teams** | `@azure/connectors/generated/TeamsExtensions` | ✅ Complete | 14 tests |
-| **DocuSign** | `@azure/connectors/generated/DocusignExtensions` | ✅ Complete | 6 tests |
+| **Docusign** | `@azure/connectors/generated/DocusignExtensions` | ✅ Complete | 6 tests |
 | **GitHub** | `@azure/connectors/generated/GitHubExtensions` | ✅ Complete | 6 tests |
 | **Jira** | `@azure/connectors/generated/JiraExtensions` | ✅ Complete | 6 tests |
 | **Microsoft Forms** | `@azure/connectors/generated/MicrosoftFormsExtensions` | ✅ Complete | 6 tests |
@@ -630,7 +630,7 @@ try {
 │   ├── AzureBlobExtensions.ts     # Azure Blob Storage client
 │   ├── AzureMonitorLogsExtensions.ts # Azure Monitor Logs client
 │   ├── BoxExtensions.ts           # Box client
-│   ├── DocusignExtensions.ts      # DocuSign client
+│   ├── DocusignExtensions.ts      # Docusign client
 │   ├── DropboxExtensions.ts       # Dropbox client
 │   ├── ExcelOnlineExtensions.ts   # Excel Online client
 │   ├── FtpExtensions.ts           # FTP client
