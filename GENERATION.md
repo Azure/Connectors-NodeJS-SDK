@@ -424,7 +424,7 @@ finally {
 ## Catalog parity and canonical TypeScript names
 
 The catalog contains all 103 canonical connector API IDs. This refresh uses
-reconciled generator source `c6c07e0485bad8770cc1ae1d27f2c5e5f366bf50` from
+reconciled generator source `30b4c75be24a4b08900e18f636ec7e2aabfbcb12` from
 [BPM PR 17922280](https://msazure.visualstudio.com/One/_git/AzureUX-BPM/pullrequest/17922280),
 built in Release. Generator integration remains pending. Canonical client/trigger/file
 names share the existing prefix mapping, including DataFlowsSms, OneDrive, OneNote,
@@ -443,7 +443,8 @@ definition and connector-list hashes. The current run records 37 clients: the 34
 clients previously attributed to an earlier run, plus OneNote, DocuWare and
 CloudConvert, whose output changed. That earlier run record named generator commit
 `8cc49435bc966c25dd58022c707fab7f64a637f4` for a capture that finished before that
-commit existed, so it was replaced rather than relabeled. The other 66 outputs are
+commit existed, so it was replaced rather than relabeled. A later live run at
+`c6c07e0485bad8770cc1ae1d27f2c5e5f366bf50` produced the same outputs and is likewise superseded by this run. The other 66 outputs are
 unchanged and retain their own provenance. Orderful was supplied by the fresh live
 ARM definition in both full runs, never a stored fixture; its unchanged output retains
 historical October provenance. Historical ApiNotFound evidence below remains unchanged.
