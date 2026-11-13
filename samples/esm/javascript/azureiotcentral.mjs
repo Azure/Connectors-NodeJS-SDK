@@ -14,7 +14,7 @@
  */
 
 import { ManagedIdentityTokenProvider, ConnectorError } from "@azure/connectors";
-import { AzureiotcentralClient } from "@azure/connectors/generated/AzureiotcentralExtensions";
+import { AzureIoTCentralClient } from "@azure/connectors/generated/AzureIoTCentralExtensions";
 
 const CONNECTION_URL = process.env.AZUREIOTCENTRAL_CONNECTION_URL ?? "";
 const APPLICATION_ID = process.env.AZUREIOTCENTRAL_APPLICATION_ID ?? "";
@@ -31,7 +31,7 @@ if (!APPLICATION_ID) {
 
 async function main() {
     const tokenProvider = new ManagedIdentityTokenProvider();
-    const client = new AzureiotcentralClient(CONNECTION_URL, tokenProvider);
+    const client = new AzureIoTCentralClient(CONNECTION_URL, tokenProvider);
 
     // Example 1: List the device groups in the application.
     try {

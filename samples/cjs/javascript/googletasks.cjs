@@ -16,7 +16,7 @@
 "use strict";
 
 const { ManagedIdentityTokenProvider, ConnectorError } = require("@azure/connectors");
-const { GoogletasksClient } = require("@azure/connectors/generated/GoogletasksExtensions");
+const { GoogleTasksClient } = require("@azure/connectors/generated/GoogleTasksExtensions");
 
 const CONNECTION_URL = process.env.GOOGLETASKS_CONNECTION_URL ?? "";
 
@@ -27,7 +27,7 @@ if (!CONNECTION_URL) {
 
 async function main() {
     const tokenProvider = new ManagedIdentityTokenProvider();
-    const client = new GoogletasksClient(CONNECTION_URL, tokenProvider);
+    const client = new GoogleTasksClient(CONNECTION_URL, tokenProvider);
 
     // Example: List the task lists, then the tasks in the first one.
     try {

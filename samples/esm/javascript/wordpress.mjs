@@ -2,7 +2,7 @@
 
 /** WordPress Connector SDK Sample - ESM JavaScript. */
 import { ConnectorError, ManagedIdentityTokenProvider } from "@azure/connectors";
-import { WordpressClient } from "@azure/connectors/generated/WordpressExtensions";
+import { WordPressClient } from "@azure/connectors/generated/WordPressExtensions";
 
 const CONNECTION_URL = process.env.WORDPRESS_CONNECTION_URL ?? "";
 const SITE_ID = process.env.WORDPRESS_SITE_ID ?? "";
@@ -10,7 +10,7 @@ if (!CONNECTION_URL || !SITE_ID) throw new Error("WORDPRESS_CONNECTION_URL and W
 
 async function main() {
     try {
-        const statistics = await new WordpressClient(CONNECTION_URL, new ManagedIdentityTokenProvider()).siteStats(SITE_ID);
+        const statistics = await new WordPressClient(CONNECTION_URL, new ManagedIdentityTokenProvider()).siteStats(SITE_ID);
         console.log("Site statistics:", JSON.stringify(statistics, null, 2));
     } catch (error) {
         if (error instanceof ConnectorError) console.error(`Connector error (${error.statusCode}): ${error.message}`);

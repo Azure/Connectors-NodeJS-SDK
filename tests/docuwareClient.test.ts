@@ -1,7 +1,7 @@
 // Copyright (c) Microsoft Corporation.  All rights reserved.
 
 import type { TokenCredential } from "@azure/core-auth";
-import { DocuwareClient } from "../src/generated/DocuwareExtensions.ts";
+import { DocuWareClient } from "../src/generated/DocuWareExtensions.ts";
 import { ConnectorError } from "../src/azureConnectors/connectorError.ts";
 import { ConnectorNames } from "../src/generated/connectorNames.ts";
 import { availableConnectors } from "../src/generated/ManagedConnectors.ts";
@@ -56,25 +56,25 @@ async function readRequestBody(body: unknown): Promise<string> {
 // Runtime tests
 // ──────────────────────────────────────────────
 
-describe("DocuwareClient — constructor", () => {
+describe("DocuWareClient — constructor", () => {
     it("should construct with valid options", () => {
-        const client = new DocuwareClient(TestConnectionUrl, createMockCredential());
+        const client = new DocuWareClient(TestConnectionUrl, createMockCredential());
         expect(client).toBeDefined();
-        expect(client).toBeInstanceOf(DocuwareClient);
+        expect(client).toBeInstanceOf(DocuWareClient);
     });
 
     it("should throw on null connection URL", () => {
-        expect(() => new DocuwareClient(null as unknown as string, createMockCredential()))
+        expect(() => new DocuWareClient(null as unknown as string, createMockCredential()))
             .toThrow("Parameter 'connectionRuntimeUrl' cannot be null or undefined.");
     });
 
     it("should throw on undefined connection URL", () => {
-        expect(() => new DocuwareClient(undefined as unknown as string, createMockCredential()))
+        expect(() => new DocuWareClient(undefined as unknown as string, createMockCredential()))
             .toThrow("Parameter 'connectionRuntimeUrl' cannot be null or undefined.");
     });
 });
 
-describe("DocuwareClient — getOrganization", () => {
+describe("DocuWareClient — getOrganization", () => {
     afterEach(() => {
         jest.restoreAllMocks();
     });
@@ -83,7 +83,7 @@ describe("DocuwareClient — getOrganization", () => {
         const organization = { Id: "org1", Name: "Contoso", Guid: "00000000-0000-0000-0000-000000000000" };
         mockFetchResponse(organization);
 
-        const client = new DocuwareClient(TestConnectionUrl, createMockCredential());
+        const client = new DocuWareClient(TestConnectionUrl, createMockCredential());
         const result = await client.getOrganization();
 
         expect(result).toEqual(organization);
@@ -96,7 +96,7 @@ describe("DocuwareClient — getOrganization", () => {
     it("should throw ConnectorError on non-OK response", async () => {
         mockFetchError(404, "Not Found");
 
-        const client = new DocuwareClient(TestConnectionUrl, createMockCredential());
+        const client = new DocuWareClient(TestConnectionUrl, createMockCredential());
         try {
             await client.getOrganization();
             throw new Error("Expected ConnectorError to be thrown.");
@@ -109,14 +109,14 @@ describe("DocuwareClient — getOrganization", () => {
     });
 });
 
-describe("DocuwareClient — multipart files", () => {
+describe("DocuWareClient — multipart files", () => {
     afterEach(() => {
         jest.restoreAllMocks();
     });
 
     it("should POST multipart fields to a file cabinet", async () => {
         mockFetchResponse({ Id: 42 });
-        const client = new DocuwareClient(TestConnectionUrl, createMockCredential());
+        const client = new DocuWareClient(TestConnectionUrl, createMockCredential());
 
         await client.storeToFileCabinet(
             {
@@ -140,7 +140,7 @@ describe("DocuwareClient — multipart files", () => {
 
     it("should expose bodyless deleteFile despite its irrelevant consumes declaration", async () => {
         mockFetchResponse(undefined, 204);
-        const client = new DocuwareClient(TestConnectionUrl, createMockCredential());
+        const client = new DocuWareClient(TestConnectionUrl, createMockCredential());
 
         await client.deleteFile("cabinet1", 42, 3);
 

@@ -17,7 +17,7 @@
 "use strict";
 
 const { ManagedIdentityTokenProvider, ConnectorError } = require("@azure/connectors");
-const { DynamicsaxClient } = require("@azure/connectors/generated/DynamicsaxExtensions");
+const { DynamicsAXClient } = require("@azure/connectors/generated/DynamicsAXExtensions");
 
 const CONNECTION_URL = process.env.DYNAMICSAX_CONNECTION_URL ?? "";
 
@@ -28,7 +28,7 @@ if (!CONNECTION_URL) {
 
 async function main() {
     const tokenProvider = new ManagedIdentityTokenProvider();
-    const client = new DynamicsaxClient(CONNECTION_URL, tokenProvider);
+    const client = new DynamicsAXClient(CONNECTION_URL, tokenProvider);
 
     // Example 1: List items from a table in the default dataset.
     const table = process.env.DYNAMICSAX_TABLE ?? "Customers";

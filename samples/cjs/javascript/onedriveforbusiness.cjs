@@ -21,7 +21,7 @@
 "use strict";
 
 const { ManagedIdentityTokenProvider, ConnectorError } = require("@azure/connectors");
-const { OnedriveforbusinessClient } = require("@azure/connectors/generated/OnedriveforbusinessExtensions");
+const { OneDriveForBusinessClient } = require("@azure/connectors/generated/OneDriveForBusinessExtensions");
 
 const CONNECTION_URL = process.env.ONEDRIVE_CONNECTION_URL ?? "";
 
@@ -35,7 +35,7 @@ async function main() {
     console.log("=".repeat(58));
 
     const tokenProvider = new ManagedIdentityTokenProvider();
-    const client = new OnedriveforbusinessClient(CONNECTION_URL, tokenProvider);
+    const client = new OneDriveForBusinessClient(CONNECTION_URL, tokenProvider);
 
     // Example 1: List root folder
     console.log("\n--- List Root Folder ---");

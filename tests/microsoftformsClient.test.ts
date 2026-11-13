@@ -2,10 +2,10 @@
 
 import type { TokenCredential } from "@azure/core-auth";
 import {
-    MicrosoftformsClient,
+    MicrosoftFormsClient,
     GetFormDetailsByIdResult,
     GetFormResponseByIdResult,
-} from "../src/generated/MicrosoftformsExtensions.ts";
+} from "../src/generated/MicrosoftFormsExtensions.ts";
 import { ConnectorError } from "../src/azureConnectors/connectorError.ts";
 import { ConnectorNames } from "../src/generated/connectorNames.ts";
 import { availableConnectors } from "../src/generated/ManagedConnectors.ts";
@@ -36,15 +36,15 @@ function mockFetchError(status: number, errorBody: string): void {
     } as Response);
 }
 
-describe("MicrosoftformsClient — constructor", () => {
+describe("MicrosoftFormsClient — constructor", () => {
     it("should construct with valid options", () => {
-        const client = new MicrosoftformsClient(TestConnectionUrl, createMockCredential());
+        const client = new MicrosoftFormsClient(TestConnectionUrl, createMockCredential());
         expect(client).toBeDefined();
-        expect(client).toBeInstanceOf(MicrosoftformsClient);
+        expect(client).toBeInstanceOf(MicrosoftFormsClient);
     });
 });
 
-describe("MicrosoftformsClient — getFormDetailsById", () => {
+describe("MicrosoftFormsClient — getFormDetailsById", () => {
     afterEach(() => {
         jest.restoreAllMocks();
     });
@@ -53,7 +53,7 @@ describe("MicrosoftformsClient — getFormDetailsById", () => {
         const mockResponse: GetFormDetailsByIdResult = {};
         mockFetchResponse(mockResponse);
 
-        const client = new MicrosoftformsClient(TestConnectionUrl, createMockCredential());
+        const client = new MicrosoftFormsClient(TestConnectionUrl, createMockCredential());
         const result = await client.getFormDetailsById("form-1", "id,title");
 
         expect(result).toEqual(mockResponse);
@@ -66,12 +66,12 @@ describe("MicrosoftformsClient — getFormDetailsById", () => {
     it("should throw ConnectorError on non-OK response", async () => {
         mockFetchError(400, '{"error":"BadRequest"}');
 
-        const client = new MicrosoftformsClient(TestConnectionUrl, createMockCredential());
+        const client = new MicrosoftFormsClient(TestConnectionUrl, createMockCredential());
         await expect(client.getFormDetailsById("form-1", "id,title")).rejects.toThrow(ConnectorError);
     });
 });
 
-describe("MicrosoftformsClient — getFormResponseById", () => {
+describe("MicrosoftFormsClient — getFormResponseById", () => {
     afterEach(() => {
         jest.restoreAllMocks();
     });
@@ -80,7 +80,7 @@ describe("MicrosoftformsClient — getFormResponseById", () => {
         const mockResponse: GetFormResponseByIdResult = {};
         mockFetchResponse(mockResponse);
 
-        const client = new MicrosoftformsClient(TestConnectionUrl, createMockCredential());
+        const client = new MicrosoftFormsClient(TestConnectionUrl, createMockCredential());
         await client.getFormResponseById("form-1", 2);
 
         const [url] = (global.fetch as jest.Mock).mock.calls[0];

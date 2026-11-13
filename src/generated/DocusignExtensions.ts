@@ -57,7 +57,7 @@ export interface CompositeTemplatesResponse {
     status?: string;
     /** The datetime the status was set. */
     statusDateTime?: string;
-    /** The URI for the envelope in DocuSign. */
+    /** The URI for the envelope in Docusign. */
     uri?: string;
 }
 
@@ -210,7 +210,7 @@ export interface MaestroInputVariables {
 /**
  * Definition: GetDocumentsResponse
  */
-export type GetDocumentsResponse = string;
+export type GetDocumentsResponse = Blob;
 
 /**
  * Definition: AddRemindersResponse
@@ -251,14 +251,14 @@ export interface AdditionalRecipientData {
 /**
  * Definition: AdditionalURLForSenderView
  */
-export interface AdditionalURLForSenderView {
+export interface AdditionalUrlForSenderView {
     [key: string]: unknown;
 }
 
 /**
  * Definition: AdditionalURL
  */
-export interface AdditionalURL {
+export interface AdditionalUrl {
     [key: string]: unknown;
 }
 
@@ -438,15 +438,15 @@ export interface DocumentRecord {
  * Definition: Envelope
  */
 export interface Envelope {
-    /** The URI for the document in DocuSign. */
+    /** The URI for the document in Docusign. */
     documentsUri?: string;
     /** The id of the envelope. */
     envelopeId?: string;
-    /** The URI for the envelope in DocuSign. */
+    /** The URI for the envelope in Docusign. */
     envelopeUri?: string;
     /** The URI for the notifications. */
     notificationUri?: string;
-    /** The URI for the recipients of the envelope in DocuSign. */
+    /** The URI for the recipients of the envelope in Docusign. */
     recipientsUri?: string;
     /** The status of the envelope. */
     status?: string;
@@ -482,7 +482,7 @@ export interface CombinedEmailBodyAndCustomFields {
 /**
  * Definition: EnvelopeIDsResponse
  */
-export interface EnvelopeIDsResponse {
+export interface EnvelopeIdsResponse {
     /** list of envelope ids */
     envelopes?: Array<EnvelopeIds>;
 }
@@ -564,7 +564,7 @@ export interface CreateEnvelopeResponse {
     status?: string;
     /** The datetime the status was set. */
     statusDateTime?: string;
-    /** The URI for the envelope in DocuSign. */
+    /** The URI for the envelope in Docusign. */
     uri?: string;
 }
 
@@ -1110,12 +1110,12 @@ export interface GetRecipientFieldsOptions extends ConnectorOperationOptions {
  * Options for the updateEnvelopeRecipient operation.
  */
 export interface UpdateEnvelopeRecipientOptions extends ConnectorOperationOptions {
-    /** DocuSign standards-based-signature (SBS) types. */
+    /** Docusign standards-based-signature (SBS) types. */
     signatureType?: string;
     /** Client user ID for embedded signer */
     clientUserId?: string;
     /** A sender-provided URL string for redirecting an embedded recipient. */
-    embeddedRecipientStartURL?: string;
+    embeddedRecipientStartUrl?: string;
     /** The signing order of the recipient. */
     routingOrder?: string;
     /** Language for the email notification. */
@@ -1153,7 +1153,7 @@ export interface AddRecipientToEnvelopeOptions extends ConnectorOperationOptions
     /** Enter a recipient ID. */
     recipientId?: string;
     /** A sender-provided URL string for redirecting an embedded recipient. */
-    embeddedRecipientStartURL?: string;
+    embeddedRecipientStartUrl?: string;
     /** The signing order of the recipient. */
     routingOrder?: string;
     /** Language for the email notification. */
@@ -1172,7 +1172,7 @@ export interface AddRecipientToEnvelopeOptions extends ConnectorOperationOptions
     phoneNumber?: string;
     /** Signing Group */
     signingGroupId?: string;
-    /** DocuSign standards-based-signature (SBS) types. */
+    /** Docusign standards-based-signature (SBS) types. */
     signatureType?: string;
     /** IDV workflows with pen signature types must be selected here. */
     workflowId?: string;
@@ -1547,13 +1547,13 @@ export class DocusignClient extends ConnectorClientBase {
      * Generate Embedded Sender URL
      * @remarks Generate Embedded Sender URL
      */
-    public async generateEmbeddedSenderURL(input: AdditionalURLForSenderView, accountId: string, envelopeId: string, openIn: string, returnUrl: string, options: ConnectorOperationOptions = {}): Promise<EmbeddedSenderResponse> {
+    public async generateEmbeddedSenderUrl(input: AdditionalUrlForSenderView, accountId: string, envelopeId: string, openIn: string, returnUrl: string, options: ConnectorOperationOptions = {}): Promise<EmbeddedSenderResponse> {
         const queryParams: string[] = [];
         queryParams.push(`openIn=${encodeURIComponent(String(openIn))}`);
         queryParams.push(`returnUrl=${encodeURIComponent(String(returnUrl))}`);
         const requestPath = `/accounts/${encodeURIComponent(String(accountId))}/envelopes/${encodeURIComponent(String(envelopeId))}/views/sender` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
-        const httpResponse = await this.sendWithTracingAsync<EmbeddedSenderResponse>("Docusign.generateEmbeddedSenderURL", "GenerateEmbeddedSenderURL", "POST", requestUrl, input, options);
+        const httpResponse = await this.sendWithTracingAsync<EmbeddedSenderResponse>("Docusign.generateEmbeddedSenderUrl", "GenerateEmbeddedSenderURL", "POST", requestUrl, input, options);
 
         return httpResponse.value as EmbeddedSenderResponse;
     }
@@ -1658,8 +1658,8 @@ export class DocusignClient extends ConnectorClientBase {
         if (options.clientUserId !== undefined) {
             queryParams.push(`clientUserId=${encodeURIComponent(String(options.clientUserId))}`);
         }
-        if (options.embeddedRecipientStartURL !== undefined) {
-            queryParams.push(`embeddedRecipientStartURL=${encodeURIComponent(String(options.embeddedRecipientStartURL))}`);
+        if (options.embeddedRecipientStartUrl !== undefined) {
+            queryParams.push(`embeddedRecipientStartURL=${encodeURIComponent(String(options.embeddedRecipientStartUrl))}`);
         }
         if (options.routingOrder !== undefined) {
             queryParams.push(`routingOrder=${encodeURIComponent(String(options.routingOrder))}`);
@@ -1919,8 +1919,8 @@ export class DocusignClient extends ConnectorClientBase {
         if (options.recipientId !== undefined) {
             queryParams.push(`recipientId=${encodeURIComponent(String(options.recipientId))}`);
         }
-        if (options.embeddedRecipientStartURL !== undefined) {
-            queryParams.push(`embeddedRecipientStartURL=${encodeURIComponent(String(options.embeddedRecipientStartURL))}`);
+        if (options.embeddedRecipientStartUrl !== undefined) {
+            queryParams.push(`embeddedRecipientStartURL=${encodeURIComponent(String(options.embeddedRecipientStartUrl))}`);
         }
         if (options.routingOrder !== undefined) {
             queryParams.push(`routingOrder=${encodeURIComponent(String(options.routingOrder))}`);
@@ -1980,14 +1980,14 @@ export class DocusignClient extends ConnectorClientBase {
      * Generate Embedded Signing URL
      * @remarks Generate Embedded Signing URL
      */
-    public async generateEmbeddedSigningURL(input: DynamicSigningUrlFields, accountId: string, envelopeId: string, isInPersonSigner: string, authenticationMethod: string, returnUrl: string, options: ConnectorOperationOptions = {}): Promise<EmbeddedSigningResponse> {
+    public async generateEmbeddedSigningUrl(input: DynamicSigningUrlFields, accountId: string, envelopeId: string, isInPersonSigner: string, authenticationMethod: string, returnUrl: string, options: ConnectorOperationOptions = {}): Promise<EmbeddedSigningResponse> {
         const queryParams: string[] = [];
         queryParams.push(`isInPersonSigner=${encodeURIComponent(String(isInPersonSigner))}`);
         queryParams.push(`authenticationMethod=${encodeURIComponent(String(authenticationMethod))}`);
         queryParams.push(`returnUrl=${encodeURIComponent(String(returnUrl))}`);
         const requestPath = `/accounts/${encodeURIComponent(String(accountId))}/envelopes/${encodeURIComponent(String(envelopeId))}/views/recipientV2` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
-        const httpResponse = await this.sendWithTracingAsync<EmbeddedSigningResponse>("Docusign.generateEmbeddedSigningURL", "GenerateEmbeddedSigningURLV2", "POST", requestUrl, input, options);
+        const httpResponse = await this.sendWithTracingAsync<EmbeddedSigningResponse>("Docusign.generateEmbeddedSigningUrl", "GenerateEmbeddedSigningURLV2", "POST", requestUrl, input, options);
 
         return httpResponse.value as EmbeddedSigningResponse;
     }

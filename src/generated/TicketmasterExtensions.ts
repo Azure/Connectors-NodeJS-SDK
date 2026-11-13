@@ -215,9 +215,9 @@ export interface GetEventsOptions extends ConnectorOperationOptions {
     /** The filter with a start date before this date. */
     endDateTime?: string;
     /** Indicates whether to include events with date to be announced (TBA). */
-    includeTBA?: string;
+    includeTba?: string;
     /** Indicates whether to include events with a date to be defined (TBD). */
-    includeTBD?: string;
+    includeTbd?: string;
     /** Indicates whether to include entities flagged as test in the response. */
     includeTest?: string;
     /** The page number. */
@@ -495,9 +495,9 @@ export interface GetSuggestionsOptions extends ConnectorOperationOptions {
     /** The locale in ISO code format. Multiple comma-separated values can be provided. */
     locale?: string;
     /** Indicates whether to include events with date to be announced (TBA).  Defaults to no if date parameter sent, yes otherwise. */
-    includeTBA?: string;
+    includeTba?: string;
     /** Indicates whether to include events with a date to be defined (TBD). Defaults to no if date parameter sent, yes otherwise. */
-    includeTBD?: string;
+    includeTbd?: string;
     /** Indicates whether to include entities flagged as test in the response. */
     includeTest?: string;
     /** Size of every entity returned in the response. */
@@ -592,11 +592,11 @@ export class TicketmasterClient extends ConnectorClientBase {
         if (options.endDateTime !== undefined) {
             queryParams.push(`endDateTime=${encodeURIComponent(String(options.endDateTime))}`);
         }
-        if (options.includeTBA !== undefined) {
-            queryParams.push(`includeTBA=${encodeURIComponent(String(options.includeTBA))}`);
+        if (options.includeTba !== undefined) {
+            queryParams.push(`includeTBA=${encodeURIComponent(String(options.includeTba))}`);
         }
-        if (options.includeTBD !== undefined) {
-            queryParams.push(`includeTBD=${encodeURIComponent(String(options.includeTBD))}`);
+        if (options.includeTbd !== undefined) {
+            queryParams.push(`includeTBD=${encodeURIComponent(String(options.includeTbd))}`);
         }
         if (options.includeTest !== undefined) {
             queryParams.push(`includeTest=${encodeURIComponent(String(options.includeTest))}`);
@@ -1060,11 +1060,11 @@ export class TicketmasterClient extends ConnectorClientBase {
         if (options.locale !== undefined) {
             queryParams.push(`locale=${encodeURIComponent(String(options.locale))}`);
         }
-        if (options.includeTBA !== undefined) {
-            queryParams.push(`includeTBA=${encodeURIComponent(String(options.includeTBA))}`);
+        if (options.includeTba !== undefined) {
+            queryParams.push(`includeTBA=${encodeURIComponent(String(options.includeTba))}`);
         }
-        if (options.includeTBD !== undefined) {
-            queryParams.push(`includeTBD=${encodeURIComponent(String(options.includeTBD))}`);
+        if (options.includeTbd !== undefined) {
+            queryParams.push(`includeTBD=${encodeURIComponent(String(options.includeTbd))}`);
         }
         if (options.includeTest !== undefined) {
             queryParams.push(`includeTest=${encodeURIComponent(String(options.includeTest))}`);

@@ -8,29 +8,29 @@ import { ConnectorNames } from "../src/generated/connectorNames.ts";
 import * as Generated from "../src/generated/index.ts";
 import {
     availableConnectors,
-    AzureadClient,
-    AzureautomationClient,
-    AzuredatafactoryClient,
-    AzuredigitaltwinsClient,
-    AzurequeuesClient,
-    AzuretablesClient,
-    AzurevmClient,
-    CloudconvertClient,
+    AzureADClient,
+    AzureAutomationClient,
+    AzureDataFactoryClient,
+    AzureDigitalTwinsClient,
+    AzureQueuesClient,
+    AzureTablesClient,
+    AzureVMClient,
+    CloudConvertClient,
     DataflowsClient,
-    DocumentdbClient,
-    EventhubsClient,
-    ExcelonlinebusinessClient,
-    KeyvaultClient,
-    MicrosoftbookingsClient,
-    Office365groupsClient,
-    OnenoteClient,
+    DocumentDBClient,
+    EventHubsClient,
+    ExcelOnlineBusinessClient,
+    KeyVaultClient,
+    MicrosoftBookingsClient,
+    Office365GroupsClient,
+    OneNoteClient,
     OutlookClient,
     PlannerClient,
-    ServicebusClient,
+    ServiceBusClient,
     TrelloClient,
-    VisualstudioteamservicesClient,
+    VisualStudioTeamServicesClient,
     WdatpClient,
-    WordonlinebusinessClient,
+    WordOnlineBusinessClient,
     YammerClient,
 } from "../src/generated/ManagedConnectors.ts";
 
@@ -68,41 +68,41 @@ async function firstPage<TItem>(iterator: ConnectorPagedAsyncIterableIterator<TI
 }
 
 const ConnectorCases: ConnectorCase[] = [
-    connectorCase("azuread", AzureadClient, async client => await client.getUser("user-id")),
-    connectorCase("azureautomation", AzureautomationClient, async client =>
+    connectorCase("azuread", AzureADClient, async client => await client.getUser("user-id")),
+    connectorCase("azureautomation", AzureAutomationClient, async client =>
         await client.getStatusOfJob("subscription", "resource-group", "account", "job", "2015-10-31")),
-    connectorCase("azuredatafactory", AzuredatafactoryClient, async client =>
+    connectorCase("azuredatafactory", AzureDataFactoryClient, async client =>
         await client.getPipelineRun("subscription", "resource-group", "factory", "run", "2018-06-01")),
-    connectorCase("azuredigitaltwins", AzuredigitaltwinsClient, async client =>
+    connectorCase("azuredigitaltwins", AzureDigitalTwinsClient, async client =>
         await client.getModelById("model-id", "2020-10-31")),
-    connectorCase("azurequeues", AzurequeuesClient, async client => await client.getMessages("account", "queue")),
-    connectorCase("azuretables", AzuretablesClient, async client => await firstPage(client.getEntities("account", "table"))),
-    connectorCase("azurevm", AzurevmClient, async client =>
+    connectorCase("azurequeues", AzureQueuesClient, async client => await client.getMessages("account", "queue")),
+    connectorCase("azuretables", AzureTablesClient, async client => await firstPage(client.getEntities("account", "table"))),
+    connectorCase("azurevm", AzureVMClient, async client =>
         await client.getVirtualMachineInScaleSet("subscription", "resource-group", "scale-set", "instance", "2019-07-01")),
-    connectorCase("cloudconvert", CloudconvertClient, async client =>
+    connectorCase("cloudconvert", CloudConvertClient, async client =>
         await client.captureWebsite({ tasks: { capture: { operation: "capture-website", url: "https://example.com" } } }, "application/json"), "POST"),
     connectorCase("dataflows", DataflowsClient, async client =>
         await client.refreshDataflow("group-id", "dataflow-id", "Workspace"), "POST"),
-    connectorCase("documentdb", DocumentdbClient, async client =>
+    connectorCase("documentdb", DocumentDBClient, async client =>
         await client.getDocument("account", "database", "collection", "document")),
-    connectorCase("eventhubs", EventhubsClient, async client =>
+    connectorCase("eventhubs", EventHubsClient, async client =>
         await client.sendEvent({ ContentData: "aGVsbG8=" }, "event-hub"), "POST"),
-    connectorCase("excelonlinebusiness", ExcelonlinebusinessClient, async client =>
+    connectorCase("excelonlinebusiness", ExcelOnlineBusinessClient, async client =>
         await firstPage(client.getItems("drive", "file", "table", "source"))),
-    connectorCase("keyvault", KeyvaultClient, async client => await client.getKeyMetadata("key-name")),
-    connectorCase("microsoftbookings", MicrosoftbookingsClient, async client =>
+    connectorCase("keyvault", KeyVaultClient, async client => await client.getKeyMetadata("key-name")),
+    connectorCase("microsoftbookings", MicrosoftBookingsClient, async client =>
         await firstPage(client.listBookingsBusinessUserAsAdmin("outlook.body-content-type=\"text\""))),
-    connectorCase("office365groups", Office365groupsClient, async client => await firstPage(client.listGroupMembers("group-id"))),
-    connectorCase("onenote", OnenoteClient, async client => await client.getPageContent("notebook", "section", "page", false)),
+    connectorCase("office365groups", Office365GroupsClient, async client => await firstPage(client.listGroupMembers("group-id"))),
+    connectorCase("onenote", OneNoteClient, async client => await client.getPageContent("notebook", "section", "page", false)),
     connectorCase("outlook", OutlookClient, async client => await client.getEmail("message-id")),
     connectorCase("planner", PlannerClient, async client => await client.getPlanDetails("plan-id")),
-    connectorCase("servicebus", ServicebusClient, async client => await client.getDeferredMessageFromQueue("queue", 1)),
+    connectorCase("servicebus", ServiceBusClient, async client => await client.getDeferredMessageFromQueue("queue", 1)),
     connectorCase("trello", TrelloClient, async client => await client.getCard("card-id", "board-id")),
-    connectorCase("visualstudioteamservices", VisualstudioteamservicesClient, async client =>
+    connectorCase("visualstudioteamservices", VisualStudioTeamServicesClient, async client =>
         await client.getBuild("project", 1, "account")),
     connectorCase("wdatp", WdatpClient, async client => await client.getSingleAlert("alert-id")),
-    connectorCase("wordonlinebusiness", WordonlinebusinessClient, async client =>
-        await client.getFilePDF("source", "drive", "file", "pdf")),
+    connectorCase("wordonlinebusiness", WordOnlineBusinessClient, async client =>
+        await client.getFilePdf("source", "drive", "file", "pdf")),
     connectorCase("yammer", YammerClient, async client => await client.getUserDetailsById(1)),
 ];
 
@@ -167,7 +167,7 @@ describe("Additional generated connector clients", () => {
 
     it("should send the typed Event Hubs payload without renaming wire properties", async () => {
         const fetchMock = jest.spyOn(global, "fetch").mockResolvedValue(new Response(null, { status: 204 }));
-        const client = new EventhubsClient(ConnectionUrl, Credential);
+        const client = new EventHubsClient(ConnectionUrl, Credential);
         await client.sendEvent({ ContentData: "aGVsbG8=" }, "event hub", { partitionKey: "partition" });
 
         const [requestUrl, request] = fetchMock.mock.calls[0];
@@ -183,7 +183,7 @@ describe("Additional generated connector clients", () => {
         const fetchMock = jest.spyOn(global, "fetch")
             .mockResolvedValueOnce(new Response(JSON.stringify({ value: initialItems, nextLink }), { status: 200 }))
             .mockResolvedValueOnce(new Response(JSON.stringify({ value: [{ id: "later-model" }] }), { status: 200 }));
-        const client = new AzuredigitaltwinsClient(ConnectionUrl, Credential);
+        const client = new AzureDigitalTwinsClient(ConnectionUrl, Credential);
         const iterator = client.listModels("2020-10-31");
         expect(fetchMock).not.toHaveBeenCalled();
 

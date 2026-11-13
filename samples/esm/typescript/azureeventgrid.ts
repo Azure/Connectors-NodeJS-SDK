@@ -17,7 +17,7 @@
  */
 
 import { ManagedIdentityTokenProvider } from "@azure/connectors";
-import { AzureeventgridClient, AzureeventgridTriggerOperations } from "@azure/connectors/generated/AzureeventgridExtensions";
+import { AzureEventGridClient, AzureEventGridTriggerOperations } from "@azure/connectors/generated/AzureEventGridExtensions";
 
 const CONNECTION_URL = process.env.AZUREEVENTGRID_CONNECTION_URL ?? "";
 
@@ -28,11 +28,11 @@ if (!CONNECTION_URL) {
 
 async function main(): Promise<void> {
     const tokenProvider = new ManagedIdentityTokenProvider();
-    const client = new AzureeventgridClient(CONNECTION_URL, tokenProvider);
+    const client = new AzureEventGridClient(CONNECTION_URL, tokenProvider);
 
     // Azure Event Grid is a trigger-only connector; report its identity and triggers.
     console.log("Connector name:", client.connectorName);
-    console.log("Available trigger operations:", JSON.stringify(AzureeventgridTriggerOperations, null, 2));
+    console.log("Available trigger operations:", JSON.stringify(AzureEventGridTriggerOperations, null, 2));
 }
 
 main().catch(console.error);

@@ -189,7 +189,7 @@ disposable harness and response stores outside the repository.
 
 ### October 27 connector expansion
 
-The current inventory contains 99 clients: 24 additional connectors from
+The October 27 inventory contained 99 clients: 24 additional connectors from
 [#117](https://github.com/Azure/Connectors-NodeJS-SDK/issues/117), the 74 previously
 available clients, and retained Orderful. The current refresh uses merged BPM
 `master` commit `21a5e28e029a1e58304b3c4d66302cbb528ed1fd`, built in Release
@@ -259,8 +259,8 @@ is a separate final merge gate, not a prerequisite for showing the paired output
 | `swaggerSource.apiVersion` | Managed-connector API version used to read metadata. |
 | `connectors[].swaggerInputSha256` | SHA-256 of the freshly fetched definition actually consumed, as canonical UTF-8/LF text. |
 | `connectors[].capturedAtUtc` | Actual live response time, bounded by this run's capture start and generation end. |
-| `connectors[].swaggerFixture` | Repository-relative test fixture path; not a claimed generation input. |
-| `connectors[].swaggerFixtureSha256` | Canonical SHA-256 of that fixture, independent of the live-input hash. |
+| `connectors[].swaggerFixture` (optional) | Repository-relative test fixture path; not a claimed generation input. |
+| `connectors[].swaggerFixtureSha256` (optional) | Canonical SHA-256 of that fixture, independent of the live-input hash. |
 | `connectors[].outputSha256` | SHA-256 of the generated `outputFile` as UTF-8 text with CRLF normalized to LF, so provenance is platform-independent. |
 | `connectors[].generatorCommit` | Optional immutable BPM baseline used instead of `generator.bpmBaseCommit` for one connector; requires `sourcePatch`. |
 | `connectors[].sourcePatch.path` | Repository-relative patch required with a connector-specific `generatorCommit`. |
@@ -268,7 +268,20 @@ is a separate final merge gate, not a prerequisite for showing the paired output
 | `connectors[].runId` | Optional key into `generationRuns`; required for each client named in the current refresh. |
 | `generationRuns` | Run-scoped generator, live endpoint, capture bounds, ARM-list hash, and independent validation bounds. |
 | `connectors[].validation` | Independent live run ID, capture time, input hash, and output hash; must match the refreshed client. |
+| `generationRuns[].validation.captureEndedAtUtc` | End of the independent fresh metadata download, before the exact-source offline replay. |
+| `generationRuns[].validation.captureGeneratorCommit` | Commit of the binary used to fetch independent fresh metadata; record it separately even if it matches the producer and replay commits. |
+| `generationRuns[].validation.replayGeneratorCommit` | Commit of the independently rebuilt compiler used to replay the validator inputs offline; record a later replay only after verifying all 106 byte outputs. |
 | `refresh` | Exact refreshed/retained inventory, retention reasons, and generator-emitted shared-file hashes. |
+
+Validation receipts may hash the raw emitted bytes, while manifest `outputSha256`
+normalizes CRLF to LF. Verify the raw receipt against both output copies,
+then record the canonical manifest hash; never substitute a fixture hash for
+a captured live response. Capture and offline-replay generator commits may
+differ; retain their distinct identities without relabeling the producer.
+When final source is committed after the independent fresh capture, record the
+actual producer completion time even if it is later than that capture; the
+independent exact-source replay must finish after the producer and produce
+identical bytes. Do not shift the capture timestamp to imply a later download.
 
 ### Recording provenance for a run
 
@@ -378,7 +391,9 @@ try {
     if (-not (Test-Path $responsePath)) { throw "A consumed live definition is missing." }
     $connector.swaggerInputSha256 = Get-CanonicalTextSha256 -Path $responsePath
     $connector.capturedAtUtc = (Get-Item $responsePath).LastWriteTimeUtc.ToString("yyyy-MM-ddTHH:mm:ss.fffZ")
-    $connector.swaggerFixtureSha256 = Get-CanonicalTextSha256 -Path $connector.swaggerFixture
+    if ($connector.swaggerFixture) {
+      $connector.swaggerFixtureSha256 = Get-CanonicalTextSha256 -Path $connector.swaggerFixture
+    }
         $connector.outputSha256 = Get-CanonicalTextSha256 -Path $connector.outputFile
     }
   $manifest.generatedAtUtc = [DateTime]::UtcNow.ToString("yyyy-MM-ddTHH:mm:ss.fffZ")
@@ -405,6 +420,106 @@ finally {
   Fixture and output hashes are independently checked against repository files;
   `swaggerFixtureSha256` is never presented as the live definition consumed.
   Regenerate rather than hand-editing so the guard stays green.
+
+## Catalog parity and canonical TypeScript names
+
+The catalog contains all 103 canonical connector API IDs. This refresh uses
+reconciled generator source `0c2d3991f2ef082b053becdaca7984c6e332dc3a` from
+[BPM PR 17922280](https://msazure.visualstudio.com/One/_git/AzureUX-BPM/pullrequest/17922280),
+built in Release. Generator integration remains pending. Canonical client/trigger/file
+names share the existing prefix mapping, including DataFlowsSms, OneDrive, OneNote,
+DocuWare, CloudConvert, WayWeDo, UniversalPrint and VisualStudioTeamServices. The
+reviewed constant is ConnectorNames.DataFlowsSms.
+Root binary inputs use Blob; runtime dispatch preserves the raw bytes and uses
+the Blob media type, or application/octet-stream when none is supplied.
+
+The complete command, with every API ID, is recorded in the current generationRuns
+entry. Its successfulConnectors lists all103 emitted clients, not just adopted
+outputs. The producer and independent captures each downloaded fresh live
+definitions into a separate empty ARM cache; the independent capture was then
+replayed offline through a rejecting proxy. All 106 outputs from the three runs
+matched each other and the committed files, and both captures consumed identical
+definition and connector-list hashes. The current run records 37 clients: the 34
+clients previously attributed to an earlier run, plus OneNote, DocuWare and
+CloudConvert, whose output changed. That earlier run record named generator commit
+`8cc49435bc966c25dd58022c707fab7f64a637f4` for a capture that finished before that
+commit existed, so it was replaced rather than relabeled. A later live run at
+`c6c07e0485bad8770cc1ae1d27f2c5e5f366bf50` produced the same outputs and is likewise superseded by this run. The other 66 outputs are
+unchanged and retain their own provenance. Orderful was supplied by the fresh live
+ARM definition in both full runs, never a stored fixture; its unchanged output retains
+historical October provenance. Historical ApiNotFound evidence below remains unchanged.
+
+### Complete shared-registry reproduction
+
+Build the exact source commit above and use separate empty ARMCACHE_PATH directories
+for producer and independent live downloads. Supply the following complete list:
+
+```powershell
+$allowlist = "arm,azuread,azureautomation,azureblob,azuredatafactory,azuredigitaltwins,azureeventgrid,azureiotcentral,azuremonitorlogs,azurequeues,azuretables,azurevm,box,campfire,clicksendsms,cloudconvert,cloudmersiveconvert,commondataservice,dataflows,dataflowssms,documentdb,docusign,docuware,dropbox,dynamicsax,elfsquaddata,etsy,eventbrite,eventhubs,excelonline,excelonlinebusiness,formstackforms,freshservice,ftp,github,googlecalendar,googledrive,googletasks,impexium,infusionsoft,insightly,jedoxodatahub,jira,keyvault,kusto,mailchimp,meetingroommap,microsoftbookings,microsoftforms,monday,mq,msgraphgroupsanduser,office365,office365groups,office365groupsmail,office365users,onedrive,onedriveforbusiness,onenote,orderful,outlook,pdfco,pipedrive,planner,plivo,plumsail,powerbi,projectplace,replicon,revai,rss,salesforce,seismicplanner,sendgrid,service-now,servicebus,sharepointonline,shifts,signinghub,slack,smtp,sql,starmind,starrezrestv1,tallyfy,teams,textrequest,ticketmaster,todo,trello,twitter,typeform,universalprint,visualstudioteamservices,waywedo,wdatp,webex,wordonlinebusiness,wordpress,yammer,zendesk,zeptomail,zohosign"
+$compiler = Join-Path $bpmRepoRoot "src\tools\CodefulSdkGenerator\LogicAppsCompiler.Cli\bin\Release\LogicAppsCompiler.dll"
+$env:AZURE_SUBSCRIPTION_ID = "f34b22a3-2202-4fb1-b040-1332bd928c84"
+$env:AZURE_LOCATION = "westus"
+$outputDirectory = Join-Path $env:TEMP ("connector-producer-" + [guid]::NewGuid())
+$independentOutput = Join-Path $env:TEMP ("connector-independent-" + [guid]::NewGuid())
+$producerCache = Join-Path $env:TEMP ("connector-producer-cache-" + [guid]::NewGuid())
+$independentCache = Join-Path $env:TEMP ("connector-independent-cache-" + [guid]::NewGuid())
+New-Item -ItemType Directory -Path $outputDirectory, $independentOutput, $producerCache, $independentCache | Out-Null
+$previousCachePath = $env:ARMCACHE_PATH
+try {
+    $env:ARMCACHE_PATH = $producerCache
+    Push-Location $outputDirectory
+    try {
+        & dotnet $compiler $outputDirectory --directClient --language=typescript "--connectors=$allowlist"
+        if ($LASTEXITCODE -ne 0 -or (Test-Path "failed.txt") -or
+            @(Get-ChildItem -File -Filter "*Extensions.ts").Count -ne 103) {
+            throw "The complete producer generation failed."
+        }
+    }
+    finally { Pop-Location }
+    $env:ARMCACHE_PATH = $independentCache
+    Push-Location $independentOutput
+    try {
+        & dotnet $compiler $independentOutput --directClient --language=typescript "--connectors=$allowlist"
+        if ($LASTEXITCODE -ne 0 -or (Test-Path "failed.txt") -or
+            @(Get-ChildItem -File -Filter "*Extensions.ts").Count -ne 103) {
+            throw "The complete independent generation failed."
+        }
+    }
+    finally { Pop-Location }
+    foreach ($name in @("ManagedConnectors.ts", "connectorNames.ts", "index.ts")) {
+        if ((Get-FileHash (Join-Path $outputDirectory $name)).Hash -ne
+            (Get-FileHash (Join-Path $independentOutput $name)).Hash) {
+            throw "Independent shared-file generation drifted: $name"
+        }
+    }
+}
+finally {
+    $env:ARMCACHE_PATH = $previousCachePath
+    Remove-Item -LiteralPath $producerCache -Recurse -Force
+    Remove-Item -LiteralPath $independentCache -Recurse -Force
+}
+```
+
+Set the subscription and westus location explicitly as in the live recipe above.
+Each command uses a different empty temporary response store. Check failed.txt and
+require103 client files plus all three shared files; an exit code alone is not
+sufficient. Compare every client too. Finally replay the independent capture with
+HTTP_PROXY, HTTPS_PROXY and ALL_PROXY set to a rejecting endpoint, compare all106
+outputs and verify every input hash stays unchanged. A fixture-free entry keeps
+its recorded live run even when a later refresh retains it.
+
+## Review regressions recorded for this refresh
+
+| Original finding at PR127 head ae30328 | Missed boundary | Fix and observed regression evidence |
+| --- | --- | --- |
+| [Casing review](https://github.com/Azure/Connectors-NodeJS-SDK/pull/127#discussion_r4529520887) and the later connector-constant request | ID normalization lost word boundaries; tests repeated the wrong spellings. | Shared prefix projection covers client, trigger, filename and catalog sites. The initial generator regressions failed7 cases with3 controls; the constant follow-up failed1 case with1 control. All1134 generator tests pass. Raw API IDs stay unchanged. |
+| [Binary/provenance review body](https://github.com/Azure/Connectors-NodeJS-SDK/pull/127#pullrequestreview-5848019790) | The emitter used primitive string aliases for binary roots, while transport JSON-encoded non-FormData bodies; earlier tests only checked body presence. | Generate Blob aliases and test exact PDF/binary bytes and media types through Universal Print and OneDrive. JSON and multipart paths retain existing tests. |
+| [Fixture provenance](https://github.com/Azure/Connectors-NodeJS-SDK/pull/127#discussion_r4529484190), optional-fixture recipe and incomplete registry inputs | Fixture absence was tied to the current refresh, and the recipe assumed every fixture existed. Only adopted clients appeared in the run's success list. | Validate fixture-free retained runs, guard optional fixture hashes, and record all103 emitted IDs and commands. Independent live generation and rejecting-proxy replay match all106 outputs, including all three shared files;557 manifest checks pass. |
+| [Paging/trigger coverage](https://github.com/Azure/Connectors-NodeJS-SDK/pull/127#discussion_r4529737151) | Shared paginator tests did not exercise these generated methods or their field projections. | The new-client suite passes25 tests, including empty/nonempty root/result collections, OneDrive continuation after an empty first page, final termination and exact trigger metadata. |
+
+These are generator, captured-metadata and synthetic-transport checks, not live
+connector-action validation. Existing frozen fixtures remain regression inputs,
+not live-download substitutes.
 
 ## Post-Generation Validation
 

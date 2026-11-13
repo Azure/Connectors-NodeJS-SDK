@@ -2,10 +2,10 @@
 
 import type { TokenCredential } from "@azure/core-auth";
 import {
-    GithubClient,
+    GitHubClient,
     RepositoryDetails,
-    GeneralAPIModel,
-} from "../src/generated/GithubExtensions.ts";
+    GeneralApiModel,
+} from "../src/generated/GitHubExtensions.ts";
 import { ConnectorError } from "../src/azureConnectors/connectorError.ts";
 import { ConnectorNames } from "../src/generated/connectorNames.ts";
 import { availableConnectors } from "../src/generated/ManagedConnectors.ts";
@@ -36,15 +36,15 @@ function mockFetchError(status: number, errorBody: string): void {
     } as Response);
 }
 
-describe("GithubClient — constructor", () => {
+describe("GitHubClient — constructor", () => {
     it("should construct with valid options", () => {
-        const client = new GithubClient(TestConnectionUrl, createMockCredential());
+        const client = new GitHubClient(TestConnectionUrl, createMockCredential());
         expect(client).toBeDefined();
-        expect(client).toBeInstanceOf(GithubClient);
+        expect(client).toBeInstanceOf(GitHubClient);
     });
 });
 
-describe("GithubClient — getRepositoryById", () => {
+describe("GitHubClient — getRepositoryById", () => {
     afterEach(() => {
         jest.restoreAllMocks();
     });
@@ -53,7 +53,7 @@ describe("GithubClient — getRepositoryById", () => {
         const mockResponse: RepositoryDetails = { id: 123, name: "repo" };
         mockFetchResponse(mockResponse);
 
-        const client = new GithubClient(TestConnectionUrl, createMockCredential());
+        const client = new GitHubClient(TestConnectionUrl, createMockCredential());
         const result = await client.getRepositoryById(123, "application/vnd.github+json");
 
         expect(result).toEqual(mockResponse);
@@ -65,22 +65,22 @@ describe("GithubClient — getRepositoryById", () => {
     it("should throw ConnectorError on non-OK response", async () => {
         mockFetchError(404, '{"error":"NotFound"}');
 
-        const client = new GithubClient(TestConnectionUrl, createMockCredential());
+        const client = new GitHubClient(TestConnectionUrl, createMockCredential());
         await expect(client.getRepositoryById(123, "application/vnd.github+json"))
             .rejects.toThrow(ConnectorError);
     });
 });
 
-describe("GithubClient — getPullRequests", () => {
+describe("GitHubClient — getPullRequests", () => {
     afterEach(() => {
         jest.restoreAllMocks();
     });
 
     it("should include state query parameter when provided", async () => {
-        const mockResponse: GeneralAPIModel[] = [];
+        const mockResponse: GeneralApiModel[] = [];
         mockFetchResponse(mockResponse);
 
-        const client = new GithubClient(TestConnectionUrl, createMockCredential());
+        const client = new GitHubClient(TestConnectionUrl, createMockCredential());
         await client.getPullRequests("owner", "repo", { state: "open" });
 
         const [url] = (global.fetch as jest.Mock).mock.calls[0];

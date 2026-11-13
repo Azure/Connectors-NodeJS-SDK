@@ -2,12 +2,12 @@
 
 import type { TokenCredential } from "@azure/core-auth";
 import {
-    AzuremonitorlogsClient,
+    AzureMonitorLogsClient,
     QueryDataInput,
     Table,
     VisualizeQueryInput,
     VisualizeResults,
-} from "../src/generated/AzuremonitorlogsExtensions.ts";
+} from "../src/generated/AzureMonitorLogsExtensions.ts";
 import { ConnectorError } from "../src/azureConnectors/connectorError.ts";
 import { ConnectorNames } from "../src/generated/connectorNames.ts";
 import { availableConnectors } from "../src/generated/ManagedConnectors.ts";
@@ -70,35 +70,35 @@ const _visualizeInput: VisualizeQueryInput = {
 // Runtime tests
 // ──────────────────────────────────────────────
 
-describe("AzuremonitorlogsClient — constructor", () => {
+describe("AzureMonitorLogsClient — constructor", () => {
     it("should construct with valid options", () => {
-        const client = new AzuremonitorlogsClient(TestConnectionUrl, createMockCredential());
+        const client = new AzureMonitorLogsClient(TestConnectionUrl, createMockCredential());
         expect(client).toBeDefined();
-        expect(client).toBeInstanceOf(AzuremonitorlogsClient);
+        expect(client).toBeInstanceOf(AzureMonitorLogsClient);
     });
 
     it("should strip trailing slashes from connection URL", () => {
-        const client = new AzuremonitorlogsClient(TestConnectionUrl + "///", createMockCredential());
+        const client = new AzureMonitorLogsClient(TestConnectionUrl + "///", createMockCredential());
         expect(client).toBeDefined();
     });
 
     it("should construct with an empty connection URL", () => {
-        const client = new AzuremonitorlogsClient("", createMockCredential());
+        const client = new AzureMonitorLogsClient("", createMockCredential());
         expect(client).toBeDefined();
     });
 
     it("should throw on null connection URL", () => {
-        expect(() => new AzuremonitorlogsClient(null as unknown as string, createMockCredential()))
+        expect(() => new AzureMonitorLogsClient(null as unknown as string, createMockCredential()))
             .toThrow("Parameter 'connectionRuntimeUrl' cannot be null or undefined.");
     });
 
     it("should throw on undefined connection URL", () => {
-        expect(() => new AzuremonitorlogsClient(undefined as unknown as string, createMockCredential()))
+        expect(() => new AzureMonitorLogsClient(undefined as unknown as string, createMockCredential()))
             .toThrow("Parameter 'connectionRuntimeUrl' cannot be null or undefined.");
     });
 });
 
-describe("AzuremonitorlogsClient — queryData", () => {
+describe("AzureMonitorLogsClient — queryData", () => {
     afterEach(() => {
         jest.restoreAllMocks();
     });
@@ -107,7 +107,7 @@ describe("AzuremonitorlogsClient — queryData", () => {
         const mockTable: Table = { value: [] };
         mockFetchResponse(mockTable);
 
-        const client = new AzuremonitorlogsClient(TestConnectionUrl, createMockCredential());
+        const client = new AzureMonitorLogsClient(TestConnectionUrl, createMockCredential());
         const input: QueryDataInput = {
             query: "Heartbeat | take 10",
             timerangetype: "Last hour",
@@ -136,7 +136,7 @@ describe("AzuremonitorlogsClient — queryData", () => {
     it("should include subscription query parameter when provided", async () => {
         mockFetchResponse({});
 
-        const client = new AzuremonitorlogsClient(TestConnectionUrl, createMockCredential());
+        const client = new AzureMonitorLogsClient(TestConnectionUrl, createMockCredential());
         await client.queryData(
             { query: "test", timerangetype: "Last hour", timerange: {} },
             TestSubscriptions,
@@ -150,7 +150,7 @@ describe("AzuremonitorlogsClient — queryData", () => {
     });
 });
 
-describe("AzuremonitorlogsClient — visualizeQuery", () => {
+describe("AzureMonitorLogsClient — visualizeQuery", () => {
     afterEach(() => {
         jest.restoreAllMocks();
     });
@@ -159,7 +159,7 @@ describe("AzuremonitorlogsClient — visualizeQuery", () => {
         const mockResult: VisualizeResults = { body: "chart-data" };
         mockFetchResponse(mockResult);
 
-        const client = new AzuremonitorlogsClient(TestConnectionUrl, createMockCredential());
+        const client = new AzureMonitorLogsClient(TestConnectionUrl, createMockCredential());
         const input: VisualizeQueryInput = {
             query: "Heartbeat | summarize count()",
             timerangetype: "Last 24 hours",
@@ -185,7 +185,7 @@ describe("AzuremonitorlogsClient — visualizeQuery", () => {
     it("should include visType query parameter when provided", async () => {
         mockFetchResponse({});
 
-        const client = new AzuremonitorlogsClient(TestConnectionUrl, createMockCredential());
+        const client = new AzureMonitorLogsClient(TestConnectionUrl, createMockCredential());
         await client.visualizeQuery(
             { query: "test", timerangetype: "Last hour", timerange: {} },
             TestSubscriptions,
@@ -200,7 +200,7 @@ describe("AzuremonitorlogsClient — visualizeQuery", () => {
     });
 });
 
-describe("AzuremonitorlogsClient — error handling", () => {
+describe("AzureMonitorLogsClient — error handling", () => {
     afterEach(() => {
         jest.restoreAllMocks();
     });
@@ -208,7 +208,7 @@ describe("AzuremonitorlogsClient — error handling", () => {
     it("should throw ConnectorError on non-OK response", async () => {
         mockFetchError(400, '{"error": "BadRequest"}');
 
-        const client = new AzuremonitorlogsClient(TestConnectionUrl, createMockCredential());
+        const client = new AzureMonitorLogsClient(TestConnectionUrl, createMockCredential());
 
         await expect(
             client.queryData(
@@ -225,7 +225,7 @@ describe("AzuremonitorlogsClient — error handling", () => {
         const errorBody = '{"code": "Unauthorized"}';
         mockFetchError(401, errorBody);
 
-        const client = new AzuremonitorlogsClient(TestConnectionUrl, createMockCredential());
+        const client = new AzureMonitorLogsClient(TestConnectionUrl, createMockCredential());
 
         try {
             await client.queryData(

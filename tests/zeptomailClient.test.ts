@@ -8,8 +8,8 @@ import {
     ReplyToAddress,
     SendMailInput,
     SendTemplateMailInput,
-    ZeptomailClient,
-} from "../src/generated/ZeptomailExtensions.ts";
+    ZeptoMailClient,
+} from "../src/generated/ZeptoMailExtensions.ts";
 
 const TestConnectionUrl = "https://connection-runtime.azure.com/apim/zeptomail/connection";
 
@@ -55,7 +55,7 @@ describe("Zoho ZeptoMail generated client", () => {
             merge_key_detail: [{ key: "customer", value: "Ada", rank: 2 }],
             reply_to: [{ address: "reply@example.com", name: "Reply" }],
         };
-        const client = new ZeptomailClient(TestConnectionUrl, createMockCredential());
+        const client = new ZeptoMailClient(TestConnectionUrl, createMockCredential());
 
         const result = await client.sendTemplateMail(model);
 
@@ -70,7 +70,7 @@ describe("Zoho ZeptoMail generated client", () => {
     it("should GET processed emails with required and boolean query parameters", async () => {
         const response = { data: [] };
         mockFetchResponse(response);
-        const client = new ZeptomailClient(TestConnectionUrl, createMockCredential());
+        const client = new ZeptoMailClient(TestConnectionUrl, createMockCredential());
 
         const result = await client.getProcessedEmails("agent+key", {
             subject: "Quarterly report",
@@ -96,7 +96,7 @@ describe("Zoho ZeptoMail generated client", () => {
 
     it("should expose ConnectorError details for a non-OK response", async () => {
         mockFetchError(422, "Invalid template payload");
-        const client = new ZeptomailClient(TestConnectionUrl, createMockCredential());
+        const client = new ZeptoMailClient(TestConnectionUrl, createMockCredential());
 
         try {
             await client.sendTemplateMail({
@@ -119,7 +119,7 @@ describe("Zoho ZeptoMail generated client", () => {
     });
 
     it("should construct and register the client", () => {
-        const client = new ZeptomailClient(TestConnectionUrl, createMockCredential());
+        const client = new ZeptoMailClient(TestConnectionUrl, createMockCredential());
 
         expect(client.connectorName).toBe("zeptomail");
         expect(ConnectorNames.ZohoZeptoMail).toBe("zeptomail");

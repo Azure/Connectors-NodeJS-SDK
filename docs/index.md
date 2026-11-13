@@ -38,6 +38,15 @@ Create and authorize a Connector Namespace connection before calling an
 operation. See the
 [connection setup guide](https://github.com/Azure/Connectors-NodeJS-SDK/blob/main/docs/connection-setup.md).
 
+## Preview naming migration
+
+See the
+[naming migration guide](https://github.com/Azure/Connectors-NodeJS-SDK/blob/main/docs/naming-migration.md)
+for an overview of renamed module subpaths, public exports, trigger and option
+keys, connector keys, and methods, including the Teams `AiInsightResponse` →
+`AIInsightResponse` type-only change. Service API IDs, operation IDs, and
+serialized keys are not renamed.
+
 ## Browse the API reference
 
 - **SDK infrastructure:** The `azureConnectors` module documents the

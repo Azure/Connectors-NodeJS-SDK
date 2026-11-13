@@ -25,7 +25,7 @@
  */
 
 import { ManagedIdentityTokenProvider, ConnectorError } from "@azure/connectors";
-import { AzuremonitorlogsClient, QueryDataInput, Table, VisualizeQueryInput, VisualizeResults } from "@azure/connectors/generated/AzuremonitorlogsExtensions";
+import { AzureMonitorLogsClient, QueryDataInput, Table, VisualizeQueryInput, VisualizeResults } from "@azure/connectors/generated/AzureMonitorLogsExtensions";
 
 const CONNECTION_URL = process.env.AZUREMONITOR_CONNECTION_URL ?? "";
 const SUBSCRIPTIONS = process.env.AZUREMONITOR_SUBSCRIPTIONS ?? "";
@@ -43,7 +43,7 @@ async function main(): Promise<void> {
     console.log("=".repeat(55));
 
     const tokenProvider = new ManagedIdentityTokenProvider();
-    const client = new AzuremonitorlogsClient(CONNECTION_URL, tokenProvider);
+    const client = new AzureMonitorLogsClient(CONNECTION_URL, tokenProvider);
 
     // Example 1: Run a KQL query
     const kqlQuery = process.env.AZUREMONITOR_QUERY ?? "Heartbeat | summarize count() by Computer | take 5";

@@ -1,7 +1,7 @@
 // Copyright (c) Microsoft Corporation.  All rights reserved.
 
 import type { TokenCredential } from "@azure/core-auth";
-import { ExcelonlineClient } from "../src/generated/ExcelonlineExtensions.ts";
+import { ExcelOnlineClient } from "../src/generated/ExcelOnlineExtensions.ts";
 import { ConnectorError } from "../src/azureConnectors/connectorError.ts";
 import { ConnectorNames } from "../src/generated/connectorNames.ts";
 import { availableConnectors } from "../src/generated/ManagedConnectors.ts";
@@ -40,16 +40,16 @@ function mockFetchError(status: number, errorBody: string): void {
 // Runtime tests
 // ──────────────────────────────────────────────
 
-describe("ExcelonlineClient — constructor", () => {
+describe("ExcelOnlineClient — constructor", () => {
     it("should construct with valid options", () => {
-        const client = new ExcelonlineClient(TestConnectionUrl, createMockCredential());
+        const client = new ExcelOnlineClient(TestConnectionUrl, createMockCredential());
         expect(client).toBeDefined();
-        expect(client).toBeInstanceOf(ExcelonlineClient);
+        expect(client).toBeInstanceOf(ExcelOnlineClient);
     });
 
     it("should strip trailing slashes from connection URL", async () => {
         mockFetchResponse([]);
-        const client = new ExcelonlineClient(TestConnectionUrl + "///", createMockCredential());
+        const client = new ExcelOnlineClient(TestConnectionUrl + "///", createMockCredential());
         await client.getTables("drive1", "file1", "SharePoint");
         const [url] = (global.fetch as jest.Mock).mock.calls[0];
         // NOTE: Confirms the trailing slashes were stripped by inspecting the
@@ -59,17 +59,17 @@ describe("ExcelonlineClient — constructor", () => {
     });
 
     it("should throw on null connection URL", () => {
-        expect(() => new ExcelonlineClient(null as unknown as string, createMockCredential()))
+        expect(() => new ExcelOnlineClient(null as unknown as string, createMockCredential()))
             .toThrow("Parameter 'connectionRuntimeUrl' cannot be null or undefined.");
     });
 
     it("should throw on undefined connection URL", () => {
-        expect(() => new ExcelonlineClient(undefined as unknown as string, createMockCredential()))
+        expect(() => new ExcelOnlineClient(undefined as unknown as string, createMockCredential()))
             .toThrow("Parameter 'connectionRuntimeUrl' cannot be null or undefined.");
     });
 });
 
-describe("ExcelonlineClient — getTables", () => {
+describe("ExcelOnlineClient — getTables", () => {
     afterEach(() => {
         jest.restoreAllMocks();
     });
@@ -78,7 +78,7 @@ describe("ExcelonlineClient — getTables", () => {
         const tables = { value: [{ id: "table1", name: "Sales" }] };
         mockFetchResponse(tables);
 
-        const client = new ExcelonlineClient(TestConnectionUrl, createMockCredential());
+        const client = new ExcelOnlineClient(TestConnectionUrl, createMockCredential());
         const result = await client.getTables("drive1", "file1", "SharePoint");
 
         expect(result).toEqual(tables);
@@ -94,7 +94,7 @@ describe("ExcelonlineClient — getTables", () => {
     it("should append optional query parameters when provided", async () => {
         mockFetchResponse({ value: [] });
 
-        const client = new ExcelonlineClient(TestConnectionUrl, createMockCredential());
+        const client = new ExcelOnlineClient(TestConnectionUrl, createMockCredential());
         await client.getTables("drive1", "file1", "SharePoint", { select: "id" });
 
         const [url] = (global.fetch as jest.Mock).mock.calls[0];
@@ -104,7 +104,7 @@ describe("ExcelonlineClient — getTables", () => {
     it("should throw ConnectorError on non-OK response", async () => {
         mockFetchError(403, "Forbidden");
 
-        const client = new ExcelonlineClient(TestConnectionUrl, createMockCredential());
+        const client = new ExcelOnlineClient(TestConnectionUrl, createMockCredential());
         try {
             await client.getTables("drive1", "file1", "SharePoint");
             throw new Error("Expected ConnectorError to be thrown.");

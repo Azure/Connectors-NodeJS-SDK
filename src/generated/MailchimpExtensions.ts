@@ -29,7 +29,7 @@ export interface Recipient {
  * Definition: Variate_Settings
  */
 export interface VariateSettings {
-    /** The combination that performs the best. This may be determined automatically by click rate, open rate, or total revenue—or you may choose manually based on the reporting data you find the most valuable. For Multivariate Campaigns testing send_time, winner_critera is ignored. For Multivariate Campaigns with 'manual' as the winner_citeria, the winner must be chosen in the MailChimp web application */
+    /** The combination that performs the best. This may be determined automatically by click rate, open rate, or total revenue—or you may choose manually based on the reporting data you find the most valuable. For Multivariate Campaigns testing send_time, winner_critera is ignored. For Multivariate Campaigns with 'manual' as the winner_citeria, the winner must be chosen in the Mailchimp web application */
     winner_criteria?: string;
     /** The number of minutes to wait before choosing the winning campaign. The value of wait_time must be greater than 0 and in whole hours, specified in minutes */
     wait_time?: number;
@@ -71,7 +71,7 @@ export interface Tracking {
 /**
  * Definition: RSS_Opts
  */
-export interface RSSOpts {
+export interface RssOpts {
     /** The URL for the RSS feed */
     feed_url?: string;
     /** The frequency of the RSS Campaign */
@@ -170,7 +170,7 @@ export interface DailySend {
 export interface CampaignResponseModel {
     /** A string that uniquely identifies this campaign */
     id?: string;
-    /** There are four types of campaigns you can create in MailChimp. A/B Split campaigns have been deprecated and variate campaigns should be used instead */
+    /** There are four types of campaigns you can create in Mailchimp. A/B Split campaigns have been deprecated and variate campaigns should be used instead */
     type?: string;
     /** The date and time the campaign was created */
     create_time?: string;
@@ -189,7 +189,7 @@ export interface CampaignResponseModel {
     settings?: Settings;
     variate_settings?: VariateSettings;
     tracking?: Tracking;
-    rss_opts?: RSSOpts;
+    rss_opts?: RssOpts;
     ab_split_opts?: ABSplitOpts;
     social_card?: SocialCard;
     report_summary?: ReportSummary;
@@ -210,15 +210,15 @@ export interface Settings {
     from_name: string;
     /** The reply-to email address for the campaign */
     reply_to: string;
-    /** Use MailChimp Conversation feature to manage out-of-office replies */
+    /** Use Mailchimp Conversation feature to manage out-of-office replies */
     use_conversation?: boolean;
     /** The campaign's custom 'To' name. Typically the first name merge field */
     to_name?: string;
     /** If the campaign is listed in a folder, the id for that folder */
     folder_id?: string;
-    /** Whether MailChimp authenticated the campaign. Defaults to true */
+    /** Whether Mailchimp authenticated the campaign. Defaults to true */
     authenticate?: boolean;
-    /** Automatically append MailChimp's default footer to the campaign */
+    /** Automatically append Mailchimp's default footer to the campaign */
     auto_footer?: boolean;
     /** Automatically inline the CSS included with the campaign content */
     inline_css?: boolean;
@@ -318,13 +318,13 @@ export interface Link {
  * Definition: NewCampaignRequest
  */
 export interface NewCampaignRequest {
-    /** There are four types of campaigns you can create in MailChimp. A/B Split campaigns have been deprecated and variate campaigns should be used instead. Possible Values: regular, plaintext, absplit, rss, variate */
+    /** There are four types of campaigns you can create in Mailchimp. A/B Split campaigns have been deprecated and variate campaigns should be used instead. Possible Values: regular, plaintext, absplit, rss, variate */
     type: string;
     recipients: Recipient;
     settings: Settings;
     variate_settings?: VariateSettings;
     tracking?: Tracking;
-    rss_opts?: RSSOpts;
+    rss_opts?: RssOpts;
     social_card?: SocialCard;
 }
 
@@ -529,7 +529,7 @@ export interface MemberResponseModel {
     id?: string;
     /** Email address for a subscriber */
     email_address?: string;
-    /** An identifier for the address across all of MailChimp */
+    /** An identifier for the address across all of Mailchimp */
     unique_email_id?: string;
     /** Type of email this member asked to get (‘html’ or ‘text’). */
     email_type?: string;
@@ -644,7 +644,7 @@ export interface AddUserResponseModel {
     id: string;
     /** Email address for a subscriber */
     email_address: string;
-    /** An identifier for the address across all of MailChimp */
+    /** An identifier for the address across all of Mailchimp */
     unique_email_id?: string;
     /** Type of email this member asked to get (‘html’ or ‘text’). */
     email_type?: string;
@@ -799,7 +799,7 @@ export class MailchimpClient extends ConnectorClientBase {
 
     /**
      * New List
-     * @remarks Create a new list in your MailChimp account
+     * @remarks Create a new list in your Mailchimp account
      */
     public async newlist(input: NewListRequest, options: ConnectorOperationOptions = {}): Promise<CreateNewListResponseModel> {
         const requestPath = `/lists`;

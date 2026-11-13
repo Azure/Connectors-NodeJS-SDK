@@ -3,104 +3,108 @@
 
 // Usage:
 //   import { ArmClient } from './ArmExtensions.ts';
-//   import { AzureadClient } from './AzureadExtensions.ts';
-//   import { AzureautomationClient } from './AzureautomationExtensions.ts';
-//   import { AzureblobClient } from './AzureblobExtensions.ts';
-//   import { AzuredatafactoryClient } from './AzuredatafactoryExtensions.ts';
-//   import { AzuredigitaltwinsClient } from './AzuredigitaltwinsExtensions.ts';
-//   import { AzureeventgridClient } from './AzureeventgridExtensions.ts';
-//   import { AzureiotcentralClient } from './AzureiotcentralExtensions.ts';
-//   import { AzuremonitorlogsClient } from './AzuremonitorlogsExtensions.ts';
-//   import { AzurequeuesClient } from './AzurequeuesExtensions.ts';
-//   import { AzuretablesClient } from './AzuretablesExtensions.ts';
-//   import { AzurevmClient } from './AzurevmExtensions.ts';
+//   import { AzureADClient } from './AzureADExtensions.ts';
+//   import { AzureAutomationClient } from './AzureAutomationExtensions.ts';
+//   import { AzureBlobClient } from './AzureBlobExtensions.ts';
+//   import { AzureDataFactoryClient } from './AzureDataFactoryExtensions.ts';
+//   import { AzureDigitalTwinsClient } from './AzureDigitalTwinsExtensions.ts';
+//   import { AzureEventGridClient } from './AzureEventGridExtensions.ts';
+//   import { AzureIoTCentralClient } from './AzureIoTCentralExtensions.ts';
+//   import { AzureMonitorLogsClient } from './AzureMonitorLogsExtensions.ts';
+//   import { AzureQueuesClient } from './AzureQueuesExtensions.ts';
+//   import { AzureTablesClient } from './AzureTablesExtensions.ts';
+//   import { AzureVMClient } from './AzureVMExtensions.ts';
 //   import { BoxClient } from './BoxExtensions.ts';
 //   import { CampfireClient } from './CampfireExtensions.ts';
-//   import { ClicksendsmsClient } from './ClicksendsmsExtensions.ts';
-//   import { CloudconvertClient } from './CloudconvertExtensions.ts';
-//   import { CloudmersiveconvertClient } from './CloudmersiveconvertExtensions.ts';
-//   import { CommondataserviceClient } from './CommondataserviceExtensions.ts';
+//   import { ClickSendSmsClient } from './ClickSendSmsExtensions.ts';
+//   import { CloudConvertClient } from './CloudConvertExtensions.ts';
+//   import { CloudmersiveConvertClient } from './CloudmersiveConvertExtensions.ts';
+//   import { CommonDataServiceClient } from './CommonDataServiceExtensions.ts';
 //   import { DataflowsClient } from './DataflowsExtensions.ts';
-//   import { DocumentdbClient } from './DocumentdbExtensions.ts';
+//   import { DataFlowsSmsClient } from './DataFlowsSmsExtensions.ts';
+//   import { DocumentDBClient } from './DocumentDBExtensions.ts';
 //   import { DocusignClient } from './DocusignExtensions.ts';
-//   import { DocuwareClient } from './DocuwareExtensions.ts';
+//   import { DocuWareClient } from './DocuWareExtensions.ts';
 //   import { DropboxClient } from './DropboxExtensions.ts';
-//   import { DynamicsaxClient } from './DynamicsaxExtensions.ts';
-//   import { ElfsquaddataClient } from './ElfsquaddataExtensions.ts';
+//   import { DynamicsAXClient } from './DynamicsAXExtensions.ts';
+//   import { ElfsquadDataClient } from './ElfsquadDataExtensions.ts';
 //   import { EtsyClient } from './EtsyExtensions.ts';
 //   import { EventbriteClient } from './EventbriteExtensions.ts';
-//   import { EventhubsClient } from './EventhubsExtensions.ts';
-//   import { ExcelonlineClient } from './ExcelonlineExtensions.ts';
-//   import { ExcelonlinebusinessClient } from './ExcelonlinebusinessExtensions.ts';
-//   import { FormstackformsClient } from './FormstackformsExtensions.ts';
+//   import { EventHubsClient } from './EventHubsExtensions.ts';
+//   import { ExcelOnlineClient } from './ExcelOnlineExtensions.ts';
+//   import { ExcelOnlineBusinessClient } from './ExcelOnlineBusinessExtensions.ts';
+//   import { FormstackFormsClient } from './FormstackFormsExtensions.ts';
 //   import { FreshserviceClient } from './FreshserviceExtensions.ts';
 //   import { FtpClient } from './FtpExtensions.ts';
-//   import { GithubClient } from './GithubExtensions.ts';
-//   import { GooglecalendarClient } from './GooglecalendarExtensions.ts';
-//   import { GoogledriveClient } from './GoogledriveExtensions.ts';
-//   import { GoogletasksClient } from './GoogletasksExtensions.ts';
+//   import { GitHubClient } from './GitHubExtensions.ts';
+//   import { GoogleCalendarClient } from './GoogleCalendarExtensions.ts';
+//   import { GoogleDriveClient } from './GoogleDriveExtensions.ts';
+//   import { GoogleTasksClient } from './GoogleTasksExtensions.ts';
 //   import { ImpexiumClient } from './ImpexiumExtensions.ts';
 //   import { InfusionsoftClient } from './InfusionsoftExtensions.ts';
 //   import { InsightlyClient } from './InsightlyExtensions.ts';
-//   import { JedoxodatahubClient } from './JedoxodatahubExtensions.ts';
+//   import { JedoxODataHubClient } from './JedoxODataHubExtensions.ts';
 //   import { JiraClient } from './JiraExtensions.ts';
-//   import { KeyvaultClient } from './KeyvaultExtensions.ts';
+//   import { KeyVaultClient } from './KeyVaultExtensions.ts';
 //   import { KustoClient } from './KustoExtensions.ts';
 //   import { MailchimpClient } from './MailchimpExtensions.ts';
-//   import { MeetingroommapClient } from './MeetingroommapExtensions.ts';
-//   import { MicrosoftbookingsClient } from './MicrosoftbookingsExtensions.ts';
-//   import { MicrosoftformsClient } from './MicrosoftformsExtensions.ts';
+//   import { MeetingRoomMapClient } from './MeetingRoomMapExtensions.ts';
+//   import { MicrosoftBookingsClient } from './MicrosoftBookingsExtensions.ts';
+//   import { MicrosoftFormsClient } from './MicrosoftFormsExtensions.ts';
 //   import { MondayClient } from './MondayExtensions.ts';
-//   import { MqClient } from './MqExtensions.ts';
-//   import { MsgraphgroupsanduserClient } from './MsgraphgroupsanduserExtensions.ts';
+//   import { MQClient } from './MQExtensions.ts';
+//   import { MSGraphGroupsAndUsersClient } from './MSGraphGroupsAndUsersExtensions.ts';
 //   import { Office365Client } from './Office365Extensions.ts';
-//   import { Office365groupsClient } from './Office365groupsExtensions.ts';
-//   import { Office365groupsmailClient } from './Office365groupsmailExtensions.ts';
-//   import { Office365usersClient } from './Office365usersExtensions.ts';
-//   import { OnedriveforbusinessClient } from './OnedriveforbusinessExtensions.ts';
-//   import { OnenoteClient } from './OnenoteExtensions.ts';
+//   import { Office365GroupsClient } from './Office365GroupsExtensions.ts';
+//   import { Office365GroupsMailClient } from './Office365GroupsMailExtensions.ts';
+//   import { Office365UsersClient } from './Office365UsersExtensions.ts';
+//   import { OneDriveClient } from './OneDriveExtensions.ts';
+//   import { OneDriveForBusinessClient } from './OneDriveForBusinessExtensions.ts';
+//   import { OneNoteClient } from './OneNoteExtensions.ts';
 //   import { OrderfulClient } from './OrderfulExtensions.ts';
 //   import { OutlookClient } from './OutlookExtensions.ts';
-//   import { PdfcoClient } from './PdfcoExtensions.ts';
+//   import { PdfCoClient } from './PdfCoExtensions.ts';
 //   import { PipedriveClient } from './PipedriveExtensions.ts';
 //   import { PlannerClient } from './PlannerExtensions.ts';
 //   import { PlivoClient } from './PlivoExtensions.ts';
 //   import { PlumsailClient } from './PlumsailExtensions.ts';
-//   import { PowerbiClient } from './PowerbiExtensions.ts';
+//   import { PowerBIClient } from './PowerBIExtensions.ts';
 //   import { ProjectplaceClient } from './ProjectplaceExtensions.ts';
 //   import { RepliconClient } from './RepliconExtensions.ts';
-//   import { RevaiClient } from './RevaiExtensions.ts';
+//   import { RevAIClient } from './RevAIExtensions.ts';
 //   import { RssClient } from './RssExtensions.ts';
 //   import { SalesforceClient } from './SalesforceExtensions.ts';
-//   import { SeismicplannerClient } from './SeismicplannerExtensions.ts';
-//   import { SendgridClient } from './SendgridExtensions.ts';
-//   import { ServicebusClient } from './ServicebusExtensions.ts';
-//   import { SharepointonlineClient } from './SharepointonlineExtensions.ts';
+//   import { SeismicPlannerClient } from './SeismicPlannerExtensions.ts';
+//   import { SendGridClient } from './SendGridExtensions.ts';
+//   import { ServiceBusClient } from './ServiceBusExtensions.ts';
+//   import { ServiceNowClient } from './ServiceNowExtensions.ts';
+//   import { SharePointOnlineClient } from './SharePointOnlineExtensions.ts';
 //   import { ShiftsClient } from './ShiftsExtensions.ts';
-//   import { SigninghubClient } from './SigninghubExtensions.ts';
+//   import { SigningHubClient } from './SigningHubExtensions.ts';
 //   import { SlackClient } from './SlackExtensions.ts';
 //   import { SmtpClient } from './SmtpExtensions.ts';
 //   import { SqlClient } from './SqlExtensions.ts';
 //   import { StarmindClient } from './StarmindExtensions.ts';
-//   import { Starrezrestv1Client } from './Starrezrestv1Extensions.ts';
+//   import { StarRezRestV1Client } from './StarRezRestV1Extensions.ts';
 //   import { TallyfyClient } from './TallyfyExtensions.ts';
 //   import { TeamsClient } from './TeamsExtensions.ts';
-//   import { TextrequestClient } from './TextrequestExtensions.ts';
+//   import { TextRequestClient } from './TextRequestExtensions.ts';
 //   import { TicketmasterClient } from './TicketmasterExtensions.ts';
 //   import { TodoClient } from './TodoExtensions.ts';
 //   import { TrelloClient } from './TrelloExtensions.ts';
 //   import { TwitterClient } from './TwitterExtensions.ts';
 //   import { TypeformClient } from './TypeformExtensions.ts';
-//   import { VisualstudioteamservicesClient } from './VisualstudioteamservicesExtensions.ts';
-//   import { WaywedoClient } from './WaywedoExtensions.ts';
+//   import { UniversalPrintClient } from './UniversalPrintExtensions.ts';
+//   import { VisualStudioTeamServicesClient } from './VisualStudioTeamServicesExtensions.ts';
+//   import { WayWeDoClient } from './WayWeDoExtensions.ts';
 //   import { WdatpClient } from './WdatpExtensions.ts';
 //   import { WebexClient } from './WebexExtensions.ts';
-//   import { WordonlinebusinessClient } from './WordonlinebusinessExtensions.ts';
-//   import { WordpressClient } from './WordpressExtensions.ts';
+//   import { WordOnlineBusinessClient } from './WordOnlineBusinessExtensions.ts';
+//   import { WordPressClient } from './WordPressExtensions.ts';
 //   import { YammerClient } from './YammerExtensions.ts';
 //   import { ZendeskClient } from './ZendeskExtensions.ts';
-//   import { ZeptomailClient } from './ZeptomailExtensions.ts';
-//   import { ZohosignClient } from './ZohosignExtensions.ts';
+//   import { ZeptoMailClient } from './ZeptoMailExtensions.ts';
+//   import { ZohoSignClient } from './ZohoSignExtensions.ts';
 
 /**
  * Available DirectClient connectors.
@@ -125,6 +129,7 @@ export const availableConnectors: string[] = [
     "cloudmersiveconvert",
     "commondataservice",
     "dataflows",
+    "dataflowssms",
     "documentdb",
     "docusign",
     "docuware",
@@ -161,6 +166,7 @@ export const availableConnectors: string[] = [
     "office365groups",
     "office365groupsmail",
     "office365users",
+    "onedrive",
     "onedriveforbusiness",
     "onenote",
     "orderful",
@@ -179,6 +185,7 @@ export const availableConnectors: string[] = [
     "seismicplanner",
     "sendgrid",
     "servicebus",
+    "service-now",
     "sharepointonline",
     "shifts",
     "signinghub",
@@ -195,6 +202,7 @@ export const availableConnectors: string[] = [
     "trello",
     "twitter",
     "typeform",
+    "universalprint",
     "visualstudioteamservices",
     "waywedo",
     "wdatp",
@@ -208,101 +216,105 @@ export const availableConnectors: string[] = [
 ];
 
 export { ArmClient } from './ArmExtensions.ts';
-export { AzureadClient } from './AzureadExtensions.ts';
-export { AzureautomationClient } from './AzureautomationExtensions.ts';
-export { AzureblobClient } from './AzureblobExtensions.ts';
-export { AzuredatafactoryClient } from './AzuredatafactoryExtensions.ts';
-export { AzuredigitaltwinsClient } from './AzuredigitaltwinsExtensions.ts';
-export { AzureeventgridClient } from './AzureeventgridExtensions.ts';
-export { AzureiotcentralClient } from './AzureiotcentralExtensions.ts';
-export { AzuremonitorlogsClient } from './AzuremonitorlogsExtensions.ts';
-export { AzurequeuesClient } from './AzurequeuesExtensions.ts';
-export { AzuretablesClient } from './AzuretablesExtensions.ts';
-export { AzurevmClient } from './AzurevmExtensions.ts';
+export { AzureADClient } from './AzureADExtensions.ts';
+export { AzureAutomationClient } from './AzureAutomationExtensions.ts';
+export { AzureBlobClient } from './AzureBlobExtensions.ts';
+export { AzureDataFactoryClient } from './AzureDataFactoryExtensions.ts';
+export { AzureDigitalTwinsClient } from './AzureDigitalTwinsExtensions.ts';
+export { AzureEventGridClient } from './AzureEventGridExtensions.ts';
+export { AzureIoTCentralClient } from './AzureIoTCentralExtensions.ts';
+export { AzureMonitorLogsClient } from './AzureMonitorLogsExtensions.ts';
+export { AzureQueuesClient } from './AzureQueuesExtensions.ts';
+export { AzureTablesClient } from './AzureTablesExtensions.ts';
+export { AzureVMClient } from './AzureVMExtensions.ts';
 export { BoxClient } from './BoxExtensions.ts';
 export { CampfireClient } from './CampfireExtensions.ts';
-export { ClicksendsmsClient } from './ClicksendsmsExtensions.ts';
-export { CloudconvertClient } from './CloudconvertExtensions.ts';
-export { CloudmersiveconvertClient } from './CloudmersiveconvertExtensions.ts';
-export { CommondataserviceClient } from './CommondataserviceExtensions.ts';
+export { ClickSendSmsClient } from './ClickSendSmsExtensions.ts';
+export { CloudConvertClient } from './CloudConvertExtensions.ts';
+export { CloudmersiveConvertClient } from './CloudmersiveConvertExtensions.ts';
+export { CommonDataServiceClient } from './CommonDataServiceExtensions.ts';
 export { DataflowsClient } from './DataflowsExtensions.ts';
-export { DocumentdbClient } from './DocumentdbExtensions.ts';
+export { DataFlowsSmsClient } from './DataFlowsSmsExtensions.ts';
+export { DocumentDBClient } from './DocumentDBExtensions.ts';
 export { DocusignClient } from './DocusignExtensions.ts';
-export { DocuwareClient } from './DocuwareExtensions.ts';
+export { DocuWareClient } from './DocuWareExtensions.ts';
 export { DropboxClient } from './DropboxExtensions.ts';
-export { DynamicsaxClient } from './DynamicsaxExtensions.ts';
-export { ElfsquaddataClient } from './ElfsquaddataExtensions.ts';
+export { DynamicsAXClient } from './DynamicsAXExtensions.ts';
+export { ElfsquadDataClient } from './ElfsquadDataExtensions.ts';
 export { EtsyClient } from './EtsyExtensions.ts';
 export { EventbriteClient } from './EventbriteExtensions.ts';
-export { EventhubsClient } from './EventhubsExtensions.ts';
-export { ExcelonlineClient } from './ExcelonlineExtensions.ts';
-export { ExcelonlinebusinessClient } from './ExcelonlinebusinessExtensions.ts';
-export { FormstackformsClient } from './FormstackformsExtensions.ts';
+export { EventHubsClient } from './EventHubsExtensions.ts';
+export { ExcelOnlineClient } from './ExcelOnlineExtensions.ts';
+export { ExcelOnlineBusinessClient } from './ExcelOnlineBusinessExtensions.ts';
+export { FormstackFormsClient } from './FormstackFormsExtensions.ts';
 export { FreshserviceClient } from './FreshserviceExtensions.ts';
 export { FtpClient } from './FtpExtensions.ts';
-export { GithubClient } from './GithubExtensions.ts';
-export { GooglecalendarClient } from './GooglecalendarExtensions.ts';
-export { GoogledriveClient } from './GoogledriveExtensions.ts';
-export { GoogletasksClient } from './GoogletasksExtensions.ts';
+export { GitHubClient } from './GitHubExtensions.ts';
+export { GoogleCalendarClient } from './GoogleCalendarExtensions.ts';
+export { GoogleDriveClient } from './GoogleDriveExtensions.ts';
+export { GoogleTasksClient } from './GoogleTasksExtensions.ts';
 export { ImpexiumClient } from './ImpexiumExtensions.ts';
 export { InfusionsoftClient } from './InfusionsoftExtensions.ts';
 export { InsightlyClient } from './InsightlyExtensions.ts';
-export { JedoxodatahubClient } from './JedoxodatahubExtensions.ts';
+export { JedoxODataHubClient } from './JedoxODataHubExtensions.ts';
 export { JiraClient } from './JiraExtensions.ts';
-export { KeyvaultClient } from './KeyvaultExtensions.ts';
+export { KeyVaultClient } from './KeyVaultExtensions.ts';
 export { KustoClient } from './KustoExtensions.ts';
 export { MailchimpClient } from './MailchimpExtensions.ts';
-export { MeetingroommapClient } from './MeetingroommapExtensions.ts';
-export { MicrosoftbookingsClient } from './MicrosoftbookingsExtensions.ts';
-export { MicrosoftformsClient } from './MicrosoftformsExtensions.ts';
+export { MeetingRoomMapClient } from './MeetingRoomMapExtensions.ts';
+export { MicrosoftBookingsClient } from './MicrosoftBookingsExtensions.ts';
+export { MicrosoftFormsClient } from './MicrosoftFormsExtensions.ts';
 export { MondayClient } from './MondayExtensions.ts';
-export { MqClient } from './MqExtensions.ts';
-export { MsgraphgroupsanduserClient } from './MsgraphgroupsanduserExtensions.ts';
+export { MQClient } from './MQExtensions.ts';
+export { MSGraphGroupsAndUsersClient } from './MSGraphGroupsAndUsersExtensions.ts';
 export { Office365Client } from './Office365Extensions.ts';
-export { Office365groupsClient } from './Office365groupsExtensions.ts';
-export { Office365groupsmailClient } from './Office365groupsmailExtensions.ts';
-export { Office365usersClient } from './Office365usersExtensions.ts';
-export { OnedriveforbusinessClient } from './OnedriveforbusinessExtensions.ts';
-export { OnenoteClient } from './OnenoteExtensions.ts';
+export { Office365GroupsClient } from './Office365GroupsExtensions.ts';
+export { Office365GroupsMailClient } from './Office365GroupsMailExtensions.ts';
+export { Office365UsersClient } from './Office365UsersExtensions.ts';
+export { OneDriveClient } from './OneDriveExtensions.ts';
+export { OneDriveForBusinessClient } from './OneDriveForBusinessExtensions.ts';
+export { OneNoteClient } from './OneNoteExtensions.ts';
 export { OrderfulClient } from './OrderfulExtensions.ts';
 export { OutlookClient } from './OutlookExtensions.ts';
-export { PdfcoClient } from './PdfcoExtensions.ts';
+export { PdfCoClient } from './PdfCoExtensions.ts';
 export { PipedriveClient } from './PipedriveExtensions.ts';
 export { PlannerClient } from './PlannerExtensions.ts';
 export { PlivoClient } from './PlivoExtensions.ts';
 export { PlumsailClient } from './PlumsailExtensions.ts';
-export { PowerbiClient } from './PowerbiExtensions.ts';
+export { PowerBIClient } from './PowerBIExtensions.ts';
 export { ProjectplaceClient } from './ProjectplaceExtensions.ts';
 export { RepliconClient } from './RepliconExtensions.ts';
-export { RevaiClient } from './RevaiExtensions.ts';
+export { RevAIClient } from './RevAIExtensions.ts';
 export { RssClient } from './RssExtensions.ts';
 export { SalesforceClient } from './SalesforceExtensions.ts';
-export { SeismicplannerClient } from './SeismicplannerExtensions.ts';
-export { SendgridClient } from './SendgridExtensions.ts';
-export { ServicebusClient } from './ServicebusExtensions.ts';
-export { SharepointonlineClient } from './SharepointonlineExtensions.ts';
+export { SeismicPlannerClient } from './SeismicPlannerExtensions.ts';
+export { SendGridClient } from './SendGridExtensions.ts';
+export { ServiceBusClient } from './ServiceBusExtensions.ts';
+export { ServiceNowClient } from './ServiceNowExtensions.ts';
+export { SharePointOnlineClient } from './SharePointOnlineExtensions.ts';
 export { ShiftsClient } from './ShiftsExtensions.ts';
-export { SigninghubClient } from './SigninghubExtensions.ts';
+export { SigningHubClient } from './SigningHubExtensions.ts';
 export { SlackClient } from './SlackExtensions.ts';
 export { SmtpClient } from './SmtpExtensions.ts';
 export { SqlClient } from './SqlExtensions.ts';
 export { StarmindClient } from './StarmindExtensions.ts';
-export { Starrezrestv1Client } from './Starrezrestv1Extensions.ts';
+export { StarRezRestV1Client } from './StarRezRestV1Extensions.ts';
 export { TallyfyClient } from './TallyfyExtensions.ts';
 export { TeamsClient } from './TeamsExtensions.ts';
-export { TextrequestClient } from './TextrequestExtensions.ts';
+export { TextRequestClient } from './TextRequestExtensions.ts';
 export { TicketmasterClient } from './TicketmasterExtensions.ts';
 export { TodoClient } from './TodoExtensions.ts';
 export { TrelloClient } from './TrelloExtensions.ts';
 export { TwitterClient } from './TwitterExtensions.ts';
 export { TypeformClient } from './TypeformExtensions.ts';
-export { VisualstudioteamservicesClient } from './VisualstudioteamservicesExtensions.ts';
-export { WaywedoClient } from './WaywedoExtensions.ts';
+export { UniversalPrintClient } from './UniversalPrintExtensions.ts';
+export { VisualStudioTeamServicesClient } from './VisualStudioTeamServicesExtensions.ts';
+export { WayWeDoClient } from './WayWeDoExtensions.ts';
 export { WdatpClient } from './WdatpExtensions.ts';
 export { WebexClient } from './WebexExtensions.ts';
-export { WordonlinebusinessClient } from './WordonlinebusinessExtensions.ts';
-export { WordpressClient } from './WordpressExtensions.ts';
+export { WordOnlineBusinessClient } from './WordOnlineBusinessExtensions.ts';
+export { WordPressClient } from './WordPressExtensions.ts';
 export { YammerClient } from './YammerExtensions.ts';
 export { ZendeskClient } from './ZendeskExtensions.ts';
-export { ZeptomailClient } from './ZeptomailExtensions.ts';
-export { ZohosignClient } from './ZohosignExtensions.ts';
+export { ZeptoMailClient } from './ZeptoMailExtensions.ts';
+export { ZohoSignClient } from './ZohoSignExtensions.ts';

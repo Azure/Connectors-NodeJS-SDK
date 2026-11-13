@@ -44,7 +44,7 @@ describe("ConnectorNames", () => {
     });
 
     it("should expose SMTP with correct API name", () => {
-        expect(ConnectorNames.SMTP).toBe("smtp");
+        expect(ConnectorNames.Smtp).toBe("smtp");
     });
 
     it("should expose MicrosoftTeams with correct API name", () => {
@@ -64,7 +64,7 @@ describe("ConnectorNames", () => {
     });
 
     it("should expose FTP with correct API name", () => {
-        expect(ConnectorNames.FTP).toBe("ftp");
+        expect(ConnectorNames.Ftp).toBe("ftp");
     });
 
     it("should expose GoogleCalendar with correct API name", () => {
@@ -84,12 +84,12 @@ describe("ConnectorNames", () => {
     });
 
     it("should expose RSS with correct API name", () => {
-        expect(ConnectorNames.RSS).toBe("rss");
+        expect(ConnectorNames.Rss).toBe("rss");
     });
 
-    it("should contain exactly 99 connector entries", () => {
+    it("should contain exactly 103 connector entries", () => {
         const keys = Object.keys(ConnectorNames);
-        expect(keys).toHaveLength(99);
+        expect(keys).toHaveLength(103);
     });
 
     it("should have all values as lowercase strings", () => {

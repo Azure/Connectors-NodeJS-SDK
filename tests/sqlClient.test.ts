@@ -120,7 +120,7 @@ describe("SqlClient — dynamic query parameters", () => {
 
 describe("SQLServer — connector registry", () => {
     it("should expose SQLServer in ConnectorNames", () => {
-        expect(ConnectorNames.SQLServer).toBe("sql");
+        expect(ConnectorNames.SqlServer).toBe("sql");
     });
 
     it("should include sql in availableConnectors", () => {

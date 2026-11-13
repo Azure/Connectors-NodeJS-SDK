@@ -2,11 +2,11 @@
 
 import type { TokenCredential } from "@azure/core-auth";
 import {
-    PowerbiClient,
+    PowerBIClient,
     ListedScorecards,
     CreateScorecardRequest,
     CreatedScorecard,
-} from "../src/generated/PowerbiExtensions.ts";
+} from "../src/generated/PowerBIExtensions.ts";
 import { ConnectorError } from "../src/azureConnectors/connectorError.ts";
 import { ConnectorNames } from "../src/generated/connectorNames.ts";
 import { availableConnectors } from "../src/generated/ManagedConnectors.ts";
@@ -37,15 +37,15 @@ function mockFetchError(status: number, errorBody: string): void {
     } as Response);
 }
 
-describe("PowerbiClient — constructor", () => {
+describe("PowerBIClient — constructor", () => {
     it("should construct with valid options", () => {
-        const client = new PowerbiClient(TestConnectionUrl, createMockCredential());
+        const client = new PowerBIClient(TestConnectionUrl, createMockCredential());
         expect(client).toBeDefined();
-        expect(client).toBeInstanceOf(PowerbiClient);
+        expect(client).toBeInstanceOf(PowerBIClient);
     });
 });
 
-describe("PowerbiClient — getScorecards", () => {
+describe("PowerBIClient — getScorecards", () => {
     afterEach(() => {
         jest.restoreAllMocks();
     });
@@ -54,7 +54,7 @@ describe("PowerbiClient — getScorecards", () => {
         const mockResponse: ListedScorecards = {};
         mockFetchResponse(mockResponse);
 
-        const client = new PowerbiClient(TestConnectionUrl, createMockCredential());
+        const client = new PowerBIClient(TestConnectionUrl, createMockCredential());
         const result = await client.getScorecards("group-1", { pbiSource: "firstparty" });
 
         expect(result).toEqual(mockResponse);
@@ -67,12 +67,12 @@ describe("PowerbiClient — getScorecards", () => {
     it("should throw ConnectorError on non-OK response", async () => {
         mockFetchError(401, '{"error":"Unauthorized"}');
 
-        const client = new PowerbiClient(TestConnectionUrl, createMockCredential());
+        const client = new PowerBIClient(TestConnectionUrl, createMockCredential());
         await expect(client.getScorecards("group-1")).rejects.toThrow(ConnectorError);
     });
 });
 
-describe("PowerbiClient — createScorecard", () => {
+describe("PowerBIClient — createScorecard", () => {
     afterEach(() => {
         jest.restoreAllMocks();
     });
@@ -82,7 +82,7 @@ describe("PowerbiClient — createScorecard", () => {
         const mockResponse: CreatedScorecard = { id: "scorecard-1" };
         mockFetchResponse(mockResponse);
 
-        const client = new PowerbiClient(TestConnectionUrl, createMockCredential());
+        const client = new PowerBIClient(TestConnectionUrl, createMockCredential());
         const result = await client.createScorecard(input, "group-1");
 
         expect(result).toEqual(mockResponse);

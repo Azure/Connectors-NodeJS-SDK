@@ -23,7 +23,7 @@
 "use strict";
 
 const { ManagedIdentityTokenProvider, ConnectorError } = require("@azure/connectors");
-const { AzureblobClient } = require("@azure/connectors/generated/AzureblobExtensions");
+const { AzureBlobClient } = require("@azure/connectors/generated/AzureBlobExtensions");
 
 const CONNECTION_URL = process.env.AZUREBLOB_CONNECTION_URL ?? "";
 const STORAGE_ACCOUNT = process.env.BLOB_STORAGE_ACCOUNT ?? "";
@@ -39,7 +39,7 @@ async function main() {
     console.log("=".repeat(55));
 
     const tokenProvider = new ManagedIdentityTokenProvider();
-    const client = new AzureblobClient(CONNECTION_URL, tokenProvider);
+    const client = new AzureBlobClient(CONNECTION_URL, tokenProvider);
 
     // Example 1: List blobs in a container
     if (CONTAINER) {

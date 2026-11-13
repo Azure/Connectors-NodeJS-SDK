@@ -16,7 +16,7 @@
  */
 
 import { ManagedIdentityTokenProvider, ConnectorError } from "@azure/connectors";
-import { ExcelonlineClient } from "@azure/connectors/generated/ExcelonlineExtensions";
+import { ExcelOnlineClient } from "@azure/connectors/generated/ExcelOnlineExtensions";
 
 const CONNECTION_URL = process.env.EXCELONLINE_CONNECTION_URL ?? "";
 
@@ -27,7 +27,7 @@ if (!CONNECTION_URL) {
 
 async function main(): Promise<void> {
     const tokenProvider = new ManagedIdentityTokenProvider();
-    const client = new ExcelonlineClient(CONNECTION_URL, tokenProvider);
+    const client = new ExcelOnlineClient(CONNECTION_URL, tokenProvider);
 
     const driveId = process.env.EXCEL_DRIVE_ID;
     const fileId = process.env.EXCEL_FILE_ID;
