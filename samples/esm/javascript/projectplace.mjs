@@ -1,9 +1,9 @@
 // Copyright (c) Microsoft Corporation.  All rights reserved.
 
 /**
- * Projectplace Connector SDK Sample — ESM JavaScript
+ * ProjectPlace Connector SDK Sample — ESM JavaScript
  *
- * Demonstrates using the Projectplace connector with ESM imports in plain JavaScript.
+ * Demonstrates using the ProjectPlace connector with ESM imports in plain JavaScript.
  *
  * Usage:
  *   Set environment variables:
@@ -15,7 +15,7 @@
  */
 
 import { ManagedIdentityTokenProvider, ConnectorError } from "@azure/connectors";
-import { ProjectplaceClient } from "@azure/connectors/generated/ProjectplaceExtensions";
+import { ProjectPlaceClient } from "@azure/connectors/generated/ProjectPlaceExtensions";
 
 const CONNECTION_URL = process.env.PROJECTPLACE_CONNECTION_URL ?? "";
 const BOARD_ID = process.env.PROJECTPLACE_BOARD_ID ?? "";
@@ -32,7 +32,7 @@ if (!/^\d+$/.test(BOARD_ID)) {
 
 async function main() {
     const tokenProvider = new ManagedIdentityTokenProvider();
-    const client = new ProjectplaceClient(CONNECTION_URL, tokenProvider);
+    const client = new ProjectPlaceClient(CONNECTION_URL, tokenProvider);
 
     // Example 1: Create a card on a board.
     try {

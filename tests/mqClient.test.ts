@@ -283,7 +283,7 @@ describe("MQClient — error handling", () => {
     });
 });
 
-describe("Mq — connector registry", () => {
+describe("MQ — connector registry", () => {
     it("should have mq in ConnectorNames", () => {
         expect(ConnectorNames.MQ).toBe("mq");
     });

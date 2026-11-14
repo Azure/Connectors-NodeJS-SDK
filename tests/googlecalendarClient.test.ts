@@ -108,7 +108,7 @@ describe("GoogleCalendarClient — getEvent", () => {
     });
 });
 
-describe("Googlecalendar — connector registry", () => {
+describe("GoogleCalendar — connector registry", () => {
     it("should expose GoogleCalendar in ConnectorNames", () => {
         expect(ConnectorNames.GoogleCalendar).toBe("googlecalendar");
     });

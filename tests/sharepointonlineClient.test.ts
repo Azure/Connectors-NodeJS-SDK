@@ -179,7 +179,7 @@ describe("SharePointOnlineClient — error handling", () => {
 
 });
 
-describe("SharepointOnline — connector registry", () => {
+describe("SharePointOnline — connector registry", () => {
     it("should have sharepointonline in ConnectorNames", () => {
         expect(ConnectorNames.SharePoint).toBe("sharepointonline");
     });

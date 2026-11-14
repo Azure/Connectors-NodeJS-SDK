@@ -185,7 +185,7 @@ describe("Office365GroupsMailClient — forward", () => {
     });
 });
 
-describe("Office365groupsmail — connector registry", () => {
+describe("Office365GroupsMail — connector registry", () => {
     it("should expose Office365GroupsMail in ConnectorNames", () => {
         expect(ConnectorNames.Office365GroupsMail).toBe("office365groupsmail");
     });

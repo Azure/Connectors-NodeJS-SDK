@@ -69,7 +69,7 @@
 //   import { PlivoClient } from './PlivoExtensions.ts';
 //   import { PlumsailClient } from './PlumsailExtensions.ts';
 //   import { PowerBIClient } from './PowerBIExtensions.ts';
-//   import { ProjectplaceClient } from './ProjectplaceExtensions.ts';
+//   import { ProjectPlaceClient } from './ProjectPlaceExtensions.ts';
 //   import { RepliconClient } from './RepliconExtensions.ts';
 //   import { RevAIClient } from './RevAIExtensions.ts';
 //   import { RssClient } from './RssExtensions.ts';
@@ -282,7 +282,7 @@ export { PlannerClient } from './PlannerExtensions.ts';
 export { PlivoClient } from './PlivoExtensions.ts';
 export { PlumsailClient } from './PlumsailExtensions.ts';
 export { PowerBIClient } from './PowerBIExtensions.ts';
-export { ProjectplaceClient } from './ProjectplaceExtensions.ts';
+export { ProjectPlaceClient } from './ProjectPlaceExtensions.ts';
 export { RepliconClient } from './RepliconExtensions.ts';
 export { RevAIClient } from './RevAIExtensions.ts';
 export { RssClient } from './RssExtensions.ts';

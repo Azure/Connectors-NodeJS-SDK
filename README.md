@@ -370,7 +370,7 @@ The following connectors have been generated and validated with comprehensive te
 | **Insightly** | `@azure/connectors/generated/InsightlyExtensions` | ✅ Complete | 7 tests |
 | **Mailchimp** | `@azure/connectors/generated/MailchimpExtensions` | ✅ Complete | 7 tests |
 | **Monday** | `@azure/connectors/generated/MondayExtensions` | ✅ Complete | 7 tests |
-| **Projectplace** | `@azure/connectors/generated/ProjectplaceExtensions` | ✅ Complete | 7 tests |
+| **ProjectPlace** | `@azure/connectors/generated/ProjectPlaceExtensions` | ✅ Complete | 7 tests |
 | **SendGrid** | `@azure/connectors/generated/SendGridExtensions` | ✅ Complete | 7 tests |
 | **Text Request** | `@azure/connectors/generated/TextRequestExtensions` | ✅ Complete | 7 tests |
 | **Webex** | `@azure/connectors/generated/WebexExtensions` | ✅ Complete | 7 tests |

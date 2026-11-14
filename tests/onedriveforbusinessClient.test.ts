@@ -305,7 +305,7 @@ describe("OneDriveForBusinessClient — error handling", () => {
     });
 });
 
-describe("Onedriveforbusiness — connector registry", () => {
+describe("OneDriveForBusiness — connector registry", () => {
     it("should have onedriveforbusiness in ConnectorNames", () => {
         expect(ConnectorNames.OneDriveForBusiness).toBe("onedriveforbusiness");
     });

@@ -102,9 +102,9 @@ describe("PdfCoClient — urlToPdf", () => {
     });
 });
 
-describe("PDFco — connector registry", () => {
-    it("should expose PDFco in ConnectorNames", () => {
-        expect(ConnectorNames.PDFco).toBe("pdfco");
+describe("PdfCo — connector registry", () => {
+    it("should expose PdfCo in ConnectorNames", () => {
+        expect(ConnectorNames.PdfCo).toBe("pdfco");
     });
 
     describe("PdfCoClient — reviewed response model names", () => {

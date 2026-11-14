@@ -424,11 +424,11 @@ finally {
 ## Catalog parity and canonical TypeScript names
 
 The catalog contains all 103 canonical connector API IDs. This refresh uses
-reconciled generator source `0c2d3991f2ef082b053becdaca7984c6e332dc3a` from
+reconciled generator source `deb3465d97d6f2797e0b617a115aaec313e6aebc` from
 [BPM PR 17922280](https://msazure.visualstudio.com/One/_git/AzureUX-BPM/pullrequest/17922280),
 built in Release. Generator integration remains pending. Canonical client/trigger/file
 names share the existing prefix mapping, including DataFlowsSms, OneDrive, OneNote,
-DocuWare, CloudConvert, WayWeDo, UniversalPrint and VisualStudioTeamServices. The
+DocuWare, CloudConvert, ProjectPlace, WayWeDo, UniversalPrint and VisualStudioTeamServices. The
 reviewed constant is ConnectorNames.DataFlowsSms.
 Root binary inputs use Blob; runtime dispatch preserves the raw bytes and uses
 the Blob media type, or application/octet-stream when none is supplied.

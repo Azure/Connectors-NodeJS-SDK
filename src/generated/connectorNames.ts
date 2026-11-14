@@ -66,7 +66,7 @@ export const ConnectorNames = {
     OneNoteBusiness: "onenote",
     Orderful: "orderful",
     OutlookCom: "outlook",
-    PDFco: "pdfco",
+    PdfCo: "pdfco",
     Pipedrive: "pipedrive",
     Planner: "planner",
     Plivo: "plivo",

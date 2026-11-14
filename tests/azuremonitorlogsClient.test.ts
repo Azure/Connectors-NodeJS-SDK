@@ -246,7 +246,7 @@ describe("AzureMonitorLogsClient — error handling", () => {
     });
 });
 
-describe("Azuremonitorlogs — connector registry", () => {
+describe("AzureMonitorLogs — connector registry", () => {
     it("should have azuremonitorlogs in ConnectorNames", () => {
         expect(ConnectorNames.AzureMonitorLogs).toBe("azuremonitorlogs");
     });

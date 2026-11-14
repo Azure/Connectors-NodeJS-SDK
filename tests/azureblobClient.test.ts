@@ -280,7 +280,7 @@ describe("AzureBlobClient — error handling", () => {
     });
 });
 
-describe("Azureblob — connector registry", () => {
+describe("AzureBlob — connector registry", () => {
     it("should have azureblob in ConnectorNames", () => {
         expect(ConnectorNames.AzureBlobStorage).toBe("azureblob");
     });

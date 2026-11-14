@@ -128,7 +128,7 @@ describe("GoogleTasksClient — createTask", () => {
     });
 });
 
-describe("Googletasks — connector registry", () => {
+describe("GoogleTasks — connector registry", () => {
     it("should expose GoogleTasks in ConnectorNames", () => {
         expect(ConnectorNames.GoogleTasks).toBe("googletasks");
     });

@@ -89,7 +89,7 @@ describe("GitHubClient — getPullRequests", () => {
     });
 });
 
-describe("Github — connector registry", () => {
+describe("GitHub — connector registry", () => {
     it("should have github in ConnectorNames", () => {
         expect(ConnectorNames.GitHub).toBe("github");
     });

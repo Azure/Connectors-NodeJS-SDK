@@ -119,7 +119,7 @@ describe("ExcelOnlineClient — getTables", () => {
     });
 });
 
-describe("Excelonline — connector registry", () => {
+describe("ExcelOnline — connector registry", () => {
     it("should expose ExcelOnlineOneDrive in ConnectorNames", () => {
         expect(ConnectorNames.ExcelOnlineOneDrive).toBe("excelonline");
     });

@@ -277,7 +277,7 @@ describe("Office365UsersClient — error handling", () => {
     });
 });
 
-describe("Office365users — connector registry", () => {
+describe("Office365Users — connector registry", () => {
     it("should have office365users in ConnectorNames", () => {
         expect(ConnectorNames.Office365Users).toBe("office365users");
     });

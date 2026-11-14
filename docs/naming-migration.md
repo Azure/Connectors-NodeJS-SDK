@@ -27,6 +27,7 @@ These names are case-sensitive on non-Windows platforms.
 | `mq` | `MqExtensions` | `MQExtensions` | `MqClient` | `MQClient` |
 | `msgraphgroupsanduser` | `MsGraphGroupsAndUsersExtensions` | `MSGraphGroupsAndUsersExtensions` | `MsGraphGroupsAndUsersClient` | `MSGraphGroupsAndUsersClient` |
 | `onenote` | `OnenoteExtensions` | `OneNoteExtensions` | `OnenoteClient` | `OneNoteClient` |
+| `projectplace` | `ProjectplaceExtensions` | `ProjectPlaceExtensions` | `ProjectplaceClient` | `ProjectPlaceClient` |
 | `revai` | `RevaiExtensions` | `RevAIExtensions` | `RevaiClient` | `RevAIClient` |
 | `servicebus` | `ServicebusExtensions` | `ServiceBusExtensions` | `ServicebusClient` | `ServiceBusClient` |
 | `starrezrestv1` | `StarrezRestV1Extensions` | `StarRezRestV1Extensions` | `StarrezRestV1Client` | `StarRezRestV1Client` |
@@ -444,6 +445,7 @@ the same.
 | --- | --- | --- |
 | `ftp` | `FTP` | `Ftp` |
 | `mailchimp` | `MailChimp` | `Mailchimp` |
+| `pdfco` | `PDFco` | `PdfCo` |
 | `rss` | `RSS` | `Rss` |
 | `smtp` | `SMTP` | `Smtp` |
 | `sql` | `SQLServer` | `SqlServer` |

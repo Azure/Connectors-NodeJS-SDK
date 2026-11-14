@@ -107,7 +107,7 @@ describe("GoogleDriveClient — getFileMetadata", () => {
     });
 });
 
-describe("Googledrive — connector registry", () => {
+describe("GoogleDrive — connector registry", () => {
     it("should expose GoogleDrive in ConnectorNames", () => {
         expect(ConnectorNames.GoogleDrive).toBe("googledrive");
     });
