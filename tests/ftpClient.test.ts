@@ -108,7 +108,7 @@ describe("FtpClient — getFileMetadata", () => {
 });
 
 describe("Ftp — connector registry", () => {
-    it("should expose FTP in ConnectorNames", () => {
+    it("should expose Ftp in ConnectorNames", () => {
         expect(ConnectorNames.Ftp).toBe("ftp");
     });
 

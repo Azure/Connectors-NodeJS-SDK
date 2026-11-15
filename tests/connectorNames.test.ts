@@ -43,7 +43,7 @@ describe("ConnectorNames", () => {
         expect(ConnectorNames.SharePoint).toBe("sharepointonline");
     });
 
-    it("should expose SMTP with correct API name", () => {
+    it("should expose Smtp with correct API name", () => {
         expect(ConnectorNames.Smtp).toBe("smtp");
     });
 
@@ -63,7 +63,7 @@ describe("ConnectorNames", () => {
         expect(ConnectorNames.ExcelOnlineOneDrive).toBe("excelonline");
     });
 
-    it("should expose FTP with correct API name", () => {
+    it("should expose Ftp with correct API name", () => {
         expect(ConnectorNames.Ftp).toBe("ftp");
     });
 
@@ -83,7 +83,7 @@ describe("ConnectorNames", () => {
         expect(ConnectorNames.Office365GroupsMail).toBe("office365groupsmail");
     });
 
-    it("should expose RSS with correct API name", () => {
+    it("should expose Rss with correct API name", () => {
         expect(ConnectorNames.Rss).toBe("rss");
     });
 

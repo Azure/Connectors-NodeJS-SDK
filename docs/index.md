@@ -43,8 +43,8 @@ operation. See the
 See the
 [naming migration guide](https://github.com/Azure/Connectors-NodeJS-SDK/blob/main/docs/naming-migration.md)
 for an overview of renamed module subpaths, public exports, trigger and option
-keys, connector keys, and methods, including the Teams `AiInsightResponse` →
-`AIInsightResponse` type-only change. Service API IDs, operation IDs, and
+keys, connector keys, and methods, including the Teams `AiInsight` →
+`AIInsight` type-only change. Service API IDs, operation IDs, and
 serialized keys are not renamed.
 
 ## Browse the API reference

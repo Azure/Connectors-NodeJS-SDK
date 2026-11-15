@@ -111,7 +111,7 @@ describe("RssClient — listFeedItems", () => {
 });
 
 describe("Rss — connector registry", () => {
-    it("should expose RSS in ConnectorNames", () => {
+    it("should expose Rss in ConnectorNames", () => {
         expect(ConnectorNames.Rss).toBe("rss");
     });
 

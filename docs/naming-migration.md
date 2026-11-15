@@ -466,7 +466,14 @@ become `AIInsightResponse` and `AIInsightCollectionResponse`. The
 `listAIInsights` and `getAIInsight` methods replace `listAiInsights` and
 `getAiInsight`; their raw operation IDs, routes, and wire fields stay
 unchanged. The paged `listAIInsights` return type refers to
-`AIInsightResponse`. No request-body or JSON key migration is needed.
+`AIInsightResponse`. The other Teams AI insight types follow the same rule:
+`AiInsightDetailResponse`, `AiInsightActionItem`, `AiInsightMeetingNote`,
+`AiInsightMeetingNoteSubpoint`, `AiInsightMentionEvent`, `AiInsightViewpoint`,
+`AiInsightWebhookResponseSchema` and `DynamicAiInsightTriggerRequest` become
+`AIInsightDetailResponse`, `AIInsightActionItem`, `AIInsightMeetingNote`,
+`AIInsightMeetingNoteSubpoint`, `AIInsightMentionEvent`, `AIInsightViewpoint`,
+`AIInsightWebhookResponseSchema` and `DynamicAIInsightTriggerRequest`. No
+request-body or JSON key migration is needed.
 
 ## Binary bodies
 

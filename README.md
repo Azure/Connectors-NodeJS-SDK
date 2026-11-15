@@ -42,7 +42,8 @@ constant is `ConnectorNames.DataFlowsSms`.
 For the complete module, public symbol, constant-key, and instance-method rename
 map, see the [preview naming migration guide](docs/naming-migration.md).
 Teams callers should import `AIInsightResponse` / `AIInsightCollectionResponse`
-(instead of `AiInsightResponse` / `AiInsightCollectionResponse`); only the
+(instead of `AiInsightResponse` / `AiInsightCollectionResponse`), and every other
+AI insight type uses the same `AIInsight` spelling; only the
 TypeScript type and method names change (`listAIInsights` and `getAIInsight`);
 raw operation IDs, routes, and wire fields stay unchanged.
 
