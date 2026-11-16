@@ -7,14 +7,12 @@
 
 Type-safe TypeScript/JavaScript clients for [Azure connectors](https://learn.microsoft.com/connectors/connector-reference/) — call Office 365, SharePoint, Teams, Azure Resource Manager, Azure Blob Storage, and 1,000+ connectors directly from Azure Functions and other Node.js apps.
 
-> [!CAUTION]
-> **Early Preview — Not for Production Use**
+> [!NOTE]
+> **General Availability - 1.0.0**
 >
-> This SDK is currently in early preview and is under active development. It is intended for evaluation, experimentation, and feedback purposes only.
->
-> - **Do not use this SDK in production environments.**
-> - **Breaking changes should be expected** across APIs, data models, and behavior in future releases.
-> - Features may be added, modified, or removed without prior notice.
+> Version 1.0.0 is the first stable release of the SDK. See the
+> [changelog](CHANGELOG.md) and [naming migration guide](docs/naming-migration.md)
+> when upgrading from a preview version.
 >
 > We welcome feedback and contributions — please [open an issue](https://github.com/Azure/connectors-nodejs-sdk/issues) with questions, suggestions, or bug reports.
 

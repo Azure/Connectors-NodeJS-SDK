@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.0.0] - 2026-11-16
+
 ### Breaking Changes
 
 - Canonical client, trigger and extension-module prefixes replace lowercase-ID-derived spellings for existing clients. Examples include `DataFlowsSmsClient`, `OneDriveClient`, `OneNoteClient`, `DocuWareClient`, `UniversalPrintClient`, and `VisualStudioTeamServicesClient` with matching `*Extensions` module names. Update imports and trigger references; connector API IDs and wire fields stay unchanged. The constant is `ConnectorNames.DataFlowsSms`. See the [complete migration map](docs/naming-migration.md) for renamed module paths, public model/trigger symbols, seven constant keys and instance methods, including the Teams `AiInsightResponse`/`AiInsightCollectionResponse` → `AIInsightResponse`/`AIInsightCollectionResponse` type-only migration.
@@ -44,6 +46,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   `localizations["en-US"].name` ([Azure/Connectors-NET-SDK#262](https://github.com/Azure/Connectors-NET-SDK/issues/262)).
 
 ### Added
+
+- **General availability** - first stable release of `@azure/connectors`.
 
 - Exposed `DataFlowsSmsClient.sendSmsGet` for the managed connector's
   `GET /sms/send` operation alongside the existing `sendSms` POST action.
@@ -413,3 +417,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Teams connector client (generated)
 - Connector registry (`ConnectorNames`, `ManagedConnectors`) for programmatic connector discovery
 - Sample usage scripts for Office 365, SharePoint, and Teams connectors
+
+[Unreleased]: https://github.com/Azure/Connectors-NodeJS-SDK/compare/v1.0.0...HEAD
+[1.0.0]: https://github.com/Azure/Connectors-NodeJS-SDK/releases/tag/v1.0.0
