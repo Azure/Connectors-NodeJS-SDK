@@ -14,7 +14,7 @@
  */
 
 import { ManagedIdentityTokenProvider, ConnectorError } from "@azure/connectors";
-import { DocuwareClient } from "@azure/connectors/generated/DocuwareExtensions";
+import { DocuWareClient } from "@azure/connectors/generated/DocuWareExtensions";
 
 const CONNECTION_URL = process.env.DOCUWARE_CONNECTION_URL ?? "";
 
@@ -25,7 +25,7 @@ if (!CONNECTION_URL) {
 
 async function main() {
     const tokenProvider = new ManagedIdentityTokenProvider();
-    const client = new DocuwareClient(CONNECTION_URL, tokenProvider);
+    const client = new DocuWareClient(CONNECTION_URL, tokenProvider);
 
     // Example 1: Retrieve the organization details.
     try {

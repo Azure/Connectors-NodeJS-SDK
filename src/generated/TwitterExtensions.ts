@@ -11,7 +11,7 @@ import { TriggerCallbackPayload } from "../azureConnectors/triggerPayload.ts";
 /**
  * Post a tweet
  */
-export type TweetInput = string;
+export type TweetInput = Blob;
 
 /**
  * Definition: TweetModel

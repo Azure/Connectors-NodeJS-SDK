@@ -3,6 +3,7 @@
 import type { TokenCredential } from "@azure/core-auth";
 import {
     TeamsClient,
+    type AIInsightCollectionResponse,
     NewMeeting,
     NewMeetingResponse,
     GetAllTeamsResponse,
@@ -283,5 +284,44 @@ describe("Teams — connector registry", () => {
 
     it("should include teams in availableConnectors", () => {
         expect(availableConnectors).toContain("teams");
+    });
+});
+
+describe("TeamsClient — AI insight operation casing", () => {
+    afterEach(() => {
+        jest.restoreAllMocks();
+    });
+
+    it("pages AI insights using the unchanged ListAiInsights operation route", async () => {
+        const response: AIInsightCollectionResponse = { value: [{ id: "insight-1", callId: "call-1" }] };
+        mockFetchResponse(response);
+        const client = new TeamsClient(TestConnectionUrl, createMockCredential());
+
+        const page = await client.listAIInsights("meeting/1").byPage().next();
+
+        expect(page.value).toEqual(response.value);
+        const [url, request] = (global.fetch as jest.Mock).mock.calls[0];
+        expect(url).toBe(`${TestConnectionUrl}/v1.0/copilot/me/onlineMeetings/meeting%2F1/aiInsights`);
+        expect(request.method).toBe("GET");
+    });
+
+    it("gets one AI insight without changing the route or JSON keys", async () => {
+        const response = { id: "insight-1", content: "summary" };
+        mockFetchResponse(response);
+        const client = new TeamsClient(TestConnectionUrl, createMockCredential());
+
+        expect(await client.getAIInsight("meeting/1", "insight/1")).toEqual(response);
+        const [url, request] = (global.fetch as jest.Mock).mock.calls[0];
+        expect(url).toBe(`${TestConnectionUrl}/v1.0/copilot/me/onlineMeetings/meeting%2F1/aiInsights/insight%2F1`);
+        expect(request.method).toBe("GET");
+    });
+
+    it("keeps GetAiInsight as the raw operation ID on error", async () => {
+        mockFetchError(400, '{"error":"invalid insight"}');
+        const client = new TeamsClient(TestConnectionUrl, createMockCredential());
+
+        await expect(client.getAIInsight("meeting", "missing")).rejects.toMatchObject({
+            connectorName: "teams", operation: "GetAiInsight", statusCode: 400,
+        });
     });
 });

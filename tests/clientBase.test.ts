@@ -3,7 +3,7 @@
 import type { TokenCredential } from "@azure/core-auth";
 import type { PagedAsyncIterableIterator } from "@azure/core-paging";
 import { ConnectorClientBase } from "../src/azureConnectors/clientBase.ts";
-import type { ConnectorPageSettings } from "../src/azureConnectors/clientBase.ts";
+import type { ConnectorPage, ConnectorPageSettings } from "../src/azureConnectors/clientBase.ts";
 import type { ConnectorClientOptions } from "../src/azureConnectors/options.ts";
 
 interface TestItem {
@@ -353,12 +353,16 @@ describe("ConnectorClientBase", () => {
                 null,
             );
 
-            const pages: TestItem[][] = [];
+            const pages: Array<ConnectorPage<TestItem>> = [];
             for await (const page of pageable.byPage()) {
                 pages.push(page);
             }
 
             expect(pages).toEqual([[{ id: "first" }, { id: "second" }]]);
+            expect(pages[0].pageModel).toBe(pages[0]);
+            expect(pages[0].rawResponse).toBeUndefined();
+            expect(pages[0].continuationToken).toBeUndefined();
+            expect(JSON.stringify(pages[0])).toBe('[{"id":"first"},{"id":"second"}]');
         });
 
         it("should read custom item and next-link properties", async () => {

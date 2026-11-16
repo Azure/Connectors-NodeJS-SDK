@@ -521,6 +521,48 @@ describe("ConnectorHttpClient", () => {
         expect(response.text).toBe("Unauthorized");
     });
 
+    it.each([
+        { method: "get", path: "/sms/send?message=hello", unsafe: false, attempts: 1 },
+        { method: "GeT", path: "/sms/send?message=hello", unsafe: true, attempts: 1 },
+        { method: "gEt", path: "/sms", unsafe: false, attempts: 3 },
+        { method: "HeAd", path: "/items", unsafe: false, attempts: 3 },
+        { method: "pOsT", path: "/items", unsafe: false, attempts: 1 },
+        { method: "pOsT", path: "/items", unsafe: true, attempts: 3 },
+        { method: "pRoPfInD", path: "/items", unsafe: false, attempts: 1 },
+        { method: "pRoPfInD", path: "/items", unsafe: true, attempts: 3 },
+    ])("normalizes $method and dispatches exactly $attempts attempts to $path",
+        async ({ method, path, unsafe, attempts }) => {
+            const httpClient = new MockHttpClient(async request =>
+                createMockResponse(request, 503, "Unavailable"));
+            const client = new ConnectorHttpClient(new MockTokenCredential(), {
+                httpClient, retryUnsafeHttpMethods: unsafe,
+                retryOptions: { maxRetries: 2, retryDelayInMs: 1, maxRetryDelayInMs: 1 },
+            });
+
+            const response = await client.sendAsync(method, `https://example.com/api${path}`);
+
+            expect(response.statusCode).toBe(503);
+            expect(httpClient.requests).toHaveLength(attempts);
+            expect(httpClient.requests.map(request => request.method))
+                .toEqual(Array(attempts).fill(method.toUpperCase()));
+        },
+    );
+
+    it.each(["get", "GeT"])("does not retry %s /sms/send after a transport error", async method => {
+        const httpClient = new MockHttpClient(async () => {
+            throw Object.assign(new Error("socket reset"), { code: "ECONNRESET" });
+        });
+        const client = new ConnectorHttpClient(new MockTokenCredential(), {
+            httpClient, retryUnsafeHttpMethods: true,
+            retryOptions: { maxRetries: 2, retryDelayInMs: 1, maxRetryDelayInMs: 1 },
+        });
+
+        await expect(client.sendAsync(method, "https://example.com/api/sms/send?message=hello"))
+            .rejects.toThrow("socket reset");
+        expect(httpClient.requests).toHaveLength(1);
+        expect(httpClient.requests[0].method).toBe("GET");
+    });
+
     it("should retry transient server responses and succeed", async () => {
         const httpClient = new MockHttpClient(async (request, attempt) => attempt < 3
             ? createMockResponse(request, 503, "Unavailable")

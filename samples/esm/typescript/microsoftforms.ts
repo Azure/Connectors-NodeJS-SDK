@@ -5,7 +5,7 @@
  */
 
 import { ManagedIdentityTokenProvider, ConnectorError } from "@azure/connectors";
-import { MicrosoftformsClient, GetFormDetailsByIdResult } from "@azure/connectors/generated/MicrosoftformsExtensions";
+import { MicrosoftFormsClient, GetFormDetailsByIdResult } from "@azure/connectors/generated/MicrosoftFormsExtensions";
 
 const CONNECTION_URL = process.env.MICROSOFTFORMS_CONNECTION_URL ?? "";
 const MICROSOFTFORMS_FORM_ID = process.env.MICROSOFTFORMS_FORM_ID ?? "replace-with-form-id";
@@ -17,7 +17,7 @@ if (!CONNECTION_URL) {
 
 async function main(): Promise<void> {
     const tokenProvider = new ManagedIdentityTokenProvider();
-    const client = new MicrosoftformsClient(CONNECTION_URL, tokenProvider);
+    const client = new MicrosoftFormsClient(CONNECTION_URL, tokenProvider);
 
     try {
         const result: GetFormDetailsByIdResult = await client.getFormDetailsById(MICROSOFTFORMS_FORM_ID, "id,title");

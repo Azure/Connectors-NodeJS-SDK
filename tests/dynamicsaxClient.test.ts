@@ -1,8 +1,8 @@
 // Copyright (c) Microsoft Corporation.  All rights reserved.
 
 import type { TokenCredential } from "@azure/core-auth";
-import { DynamicsaxClient } from "../src/generated/DynamicsaxExtensions.ts";
-import type { AxOnlineProcedureResult } from "../src/generated/DynamicsaxExtensions.ts";
+import { DynamicsAXClient } from "../src/generated/DynamicsAXExtensions.ts";
+import type { AxOnlineProcedureResult } from "../src/generated/DynamicsAXExtensions.ts";
 import { ConnectorError } from "../src/azureConnectors/connectorError.ts";
 import { ConnectorNames } from "../src/generated/connectorNames.ts";
 import { availableConnectors } from "../src/generated/ManagedConnectors.ts";
@@ -41,25 +41,25 @@ function mockFetchError(status: number, errorBody: string): void {
 // Runtime tests
 // ──────────────────────────────────────────────
 
-describe("DynamicsaxClient — constructor", () => {
+describe("DynamicsAXClient — constructor", () => {
     it("should construct with valid options", () => {
-        const client = new DynamicsaxClient(TestConnectionUrl, createMockCredential());
+        const client = new DynamicsAXClient(TestConnectionUrl, createMockCredential());
         expect(client).toBeDefined();
-        expect(client).toBeInstanceOf(DynamicsaxClient);
+        expect(client).toBeInstanceOf(DynamicsAXClient);
     });
 
     it("should throw on null connection URL", () => {
-        expect(() => new DynamicsaxClient(null as unknown as string, createMockCredential()))
+        expect(() => new DynamicsAXClient(null as unknown as string, createMockCredential()))
             .toThrow("Parameter 'connectionRuntimeUrl' cannot be null or undefined.");
     });
 
     it("should throw on undefined connection URL", () => {
-        expect(() => new DynamicsaxClient(undefined as unknown as string, createMockCredential()))
+        expect(() => new DynamicsAXClient(undefined as unknown as string, createMockCredential()))
             .toThrow("Parameter 'connectionRuntimeUrl' cannot be null or undefined.");
     });
 });
 
-describe("DynamicsaxClient — getItems", () => {
+describe("DynamicsAXClient — getItems", () => {
     afterEach(() => {
         jest.restoreAllMocks();
     });
@@ -68,7 +68,7 @@ describe("DynamicsaxClient — getItems", () => {
         const items = { value: [{ CustomerAccount: "US-001", Name: "Contoso" }] };
         mockFetchResponse(items);
 
-        const client = new DynamicsaxClient(TestConnectionUrl, createMockCredential());
+        const client = new DynamicsAXClient(TestConnectionUrl, createMockCredential());
         const result = await client.getItems("default", "Customers").byPage().next();
 
         expect(result.value).toEqual(items.value);
@@ -81,7 +81,7 @@ describe("DynamicsaxClient — getItems", () => {
     it("should throw ConnectorError on non-OK response", async () => {
         mockFetchError(404, "Not Found");
 
-        const client = new DynamicsaxClient(TestConnectionUrl, createMockCredential());
+        const client = new DynamicsAXClient(TestConnectionUrl, createMockCredential());
         try {
             await client.getItems("default", "Customers").byPage().next();
             throw new Error("Expected ConnectorError to be thrown.");
@@ -94,7 +94,7 @@ describe("DynamicsaxClient — getItems", () => {
     });
 });
 
-describe("DynamicsaxClient — dynamic procedure results", () => {
+describe("DynamicsAXClient — dynamic procedure results", () => {
     afterEach(() => { jest.restoreAllMocks(); });
 
     it.each([false, true])("should preserve empty and mixed dynamic output maps (empty: %s)", async empty => {
@@ -105,7 +105,7 @@ describe("DynamicsaxClient — dynamic procedure results", () => {
         };
         mockFetchResponse(response);
 
-        const result = await new DynamicsaxClient(TestConnectionUrl, createMockCredential())
+        const result = await new DynamicsAXClient(TestConnectionUrl, createMockCredential())
             .executeProcedure({ count: 0, enabled: false }, "default", "RunAction");
 
         expect(result).toStrictEqual(response);

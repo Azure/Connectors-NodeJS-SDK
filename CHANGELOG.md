@@ -9,21 +9,22 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Breaking Changes
 
+- Canonical client, trigger and extension-module prefixes replace lowercase-ID-derived spellings for existing clients. Examples include `DataFlowsSmsClient`, `OneDriveClient`, `OneNoteClient`, `DocuWareClient`, `UniversalPrintClient`, and `VisualStudioTeamServicesClient` with matching `*Extensions` module names. Update imports and trigger references; connector API IDs and wire fields stay unchanged. The constant is `ConnectorNames.DataFlowsSms`. See the [complete migration map](docs/naming-migration.md) for renamed module paths, public model/trigger symbols, seven constant keys and instance methods, including the Teams `AiInsightResponse`/`AiInsightCollectionResponse` → `AIInsightResponse`/`AIInsightCollectionResponse` type-only migration.
+- Binary-root request aliases now use `Blob` instead of `string`. Pass file bytes in a `Blob`; requests use its media type, or `application/octet-stream` when no type is supplied. JSON and multipart requests retain their existing transport paths.
+
 - PdfCo response interfaces use `PdfUnsearchableResponse`, `PdfFromXlsXlsxResponse`,
   and `XlsToCsvResponse`/`XlsToHtmlResponse`/`XlsToJsonResponse`/
   `XlsToTxtResponse`/`XlsToXmlResponse` instead of the corresponding
   `PDFUnSearchableResponse`, `PDFFromXLSXLSXResponse`, and `XLSto*Response`
-  names. Request interfaces, methods, routes, operation IDs, and wire fields
-  remain unchanged.
+  names. Further PDF.co public type/method names use canonical casing (see the
+  migration map); routes, raw operation IDs and wire fields do not change as
+  part of the naming migration.
 - Plivo uses `sendSms`, `Sms`, and `SendSmsResponse` instead of `sendSMS`, `SMS`,
   and `SendSMSResponse`. Routes, operation IDs, JSON fields, HTTP methods, and
   response values remain unchanged.
-- ClickSend's current live definition no longer exposes `sendVoice`, `sendFax`,
-  `sendLetter`, or `sendPostcard`, or their request/response interfaces. These
-  members are therefore absent from the refreshed generated client. Existing
-  applications using them must retain an earlier SDK until a supported service
-  contract is available. The refreshed client adds `sendSmsCampaign` and its
-  typed request/response models.
+- ClickSend retains its typed `sendVoice`, `sendFax`, `sendLetter`, and
+  `sendPostcard` actions and their service-defined request/response models.
+  The refreshed client also adds `sendSmsCampaign` and its typed models.
 - Jira `listFilters` and `listProjects` now follow the live `nextPage` field;
   Insightly `listProjects` follows `nextLink`. Full iteration can issue additional
   requests and return more items than before. Page-by-page callers can stop after
@@ -40,10 +41,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Seismic Planner `CustomPropertyValues.localizations` now exposes
   `Record<string, CustomPropertyDataDisplay>` instead of `Record<string, unknown>`.
   Callers can access typed localization values directly, such as
-  `localizations["en-US"].name` ([Azure/Connectors-NET-SDK#262](https://github.com/Azure/Connectors-NET-SDK/issues/262),
-  [BPM PR 17131877](https://msazure.visualstudio.com/One/_git/AzureUX-BPM/pullrequest/17131877)).
+  `localizations["en-US"].name` ([Azure/Connectors-NET-SDK#262](https://github.com/Azure/Connectors-NET-SDK/issues/262)).
 
 ### Added
+
+- Exposed `DataFlowsSmsClient.sendSmsGet` for the managed connector's
+  `GET /sms/send` operation alongside the existing `sendSms` POST action.
+- Exported `ConnectorPage<TItem, TPage>`; generated `.byPage()` arrays now
+  expose non-enumerable `pageModel`, `rawResponse`, and `continuationToken`
+  properties. Existing item iteration and array comparisons are unchanged.
+
+- Added live-Swagger-generated DataFlows SMS, OneDrive Personal, ServiceNow, and Universal Print clients, with complete 103-client registries and mocked transport/export tests. OneDrive Personal and Universal Print are no longer blocked by the earlier `ApiNotFound` responses. Previously shipped connector API IDs remain registered (see Breaking Changes above and `docs/naming-migration.md` for renamed TypeScript client classes and `*Extensions` module paths).
 
 - Added a TypeDoc API reference for SDK infrastructure and all generated
   connectors, with pull-request coverage validation and GitHub Pages deployment
@@ -54,8 +62,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   Vault, Azure Queues, Azure Tables, Azure VM, CloudConvert, Dataflows, Excel Online
   (Business), Microsoft Bookings, Microsoft Defender ATP, Office 365 Groups,
   OneNote, Outlook.com, Planner, Service Bus, Trello, Word Online (Business), and
-  Yammer. Complete generated registries now contain 99 connectors, including
-  retained Orderful. OneDrive Personal and Universal Print remain blocked by
+  Yammer. At that time the generated registries contained 99 connectors, including
+  retained Orderful. OneDrive Personal and Universal Print were blocked by
   live `ApiNotFound` responses ([#117](https://github.com/Azure/Connectors-NodeJS-SDK/issues/117)).
 - Refreshed the 98 available clients using merged BPM source
   `21a5e28e029a1e58304b3c4d66302cbb528ed1fd`, with independently downloaded live
@@ -66,9 +74,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   fixture for [#110](https://github.com/Azure/Connectors-NodeJS-SDK/issues/110).
   Refreshed 74 connector clients from two independent live downloads with the
   generator at `ae43130532c83c922aea4ad9d39bc44a86f71f5c`, including guards that
-  preserve open dynamic-schema payloads such as SharePoint item inputs. The paired
-  [BPM PR 17586353](https://msazure.visualstudio.com/One/_git/AzureUX-BPM/pullrequest/17586353)
-  must integrate before this SDK PR merges. Orderful remains unchanged because its live API is
+  preserve open dynamic-schema payloads such as SharePoint item inputs. The paired generator change must integrate before this SDK PR merges. Orderful remains unchanged because its live API is
   unavailable; all 75 connector registry entries remain. Run-scoped provenance
   distinguishes fresh captures from retained output. This refresh has no
   production scalar-union output changes.
@@ -82,7 +88,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added `ConnectorClientOptions.applicationId` for optional application identification
   ahead of the SDK identity. Values exceeding 24 characters or containing whitespace
   are rejected; the generic `userAgentOptions.userAgentPrefix` is not length-limited.
-- Added the generated Zoho ZeptoMail client with five public mail-agent, send-mail, template-mail, and analytics actions. `SendTemplateMailInput.merge_key_detail` remains `Array<Record<string, unknown>>` so fixed string fields and arbitrary non-string merge values stay representable. The malformed Swagger type `ReplyToAddresss` is exposed as `ReplyToAddress` without changing the `reply_to` wire field ([BPM PR 17131877](https://msazure.visualstudio.com/One/_git/AzureUX-BPM/pullrequest/17131877)).
+- Added the generated Zoho ZeptoMail client with five public mail-agent, send-mail, template-mail, and analytics actions. `SendTemplateMailInput.merge_key_detail` remains `Array<Record<string, unknown>>` so fixed string fields and arbitrary non-string merge values stay representable. The malformed Swagger type `ReplyToAddresss` is exposed as `ReplyToAddress` without changing the `reply_to` wire field.
 - Added generated multipart/form-data actions for Cloudmersive Document
   Conversion and DocuWare, including typed `Blob`/string form inputs and the
   previously omitted DocuWare `deleteFile` action
@@ -90,8 +96,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added opt-in structured request, response, retry, and error diagnostics under
   the `azure:connectors` namespace using `@azure/logger`.
 - Added the generated Microsoft Dataverse client with automatic async iteration
-  over `@odata.nextLink` pages ([Azure/Connectors-NET-SDK#208](https://github.com/Azure/Connectors-NET-SDK/issues/208),
-  [BPM PR 17086991](https://msazure.visualstudio.com/One/_git/AzureUX-BPM/pullrequest/17086991)).
+  over `@odata.nextLink` pages ([Azure/Connectors-NET-SDK#208](https://github.com/Azure/Connectors-NET-SDK/issues/208)).
 - Added `@azure/core-auth` as a peer dependency and re-exported its
   `TokenCredential` interface from the package root.
 - Added `@azure/core-rest-pipeline` as a direct dependency and optional
@@ -176,6 +181,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   unreleased Phase 2 connector exports resolve during local validation.
 
 ### Fixed
+
+- The side-effecting `GET /sms/send` action never automatically retries, even
+  with `retryUnsafeHttpMethods: true`; normal read-only GET operations still
+  use their configured retry policy.
 
 - Multipart file uploads escape embedded quotes in disposition parameters,
   preventing malformed MIME headers. Regressions cover ordinary, spaced,

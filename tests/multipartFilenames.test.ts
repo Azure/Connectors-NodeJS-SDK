@@ -10,8 +10,8 @@ import { pathToFileURL } from "node:url";
 import { createHttpHeaders } from "@azure/core-rest-pipeline";
 
 const [distribution, fileName] = process.argv.slice(1);
-const modulePath = resolve("dist", distribution, "generated", "DocuwareExtensions.js");
-const { DocuwareClient } = distribution === "cjs"
+const modulePath = resolve("dist", distribution, "generated", "DocuWareExtensions.js");
+const { DocuWareClient } = distribution === "cjs"
     ? createRequire(import.meta.url)(modulePath)
     : await import(pathToFileURL(modulePath).href);
 const content = new Uint8Array([0, 127, 128, 255, 13, 10]);
@@ -57,7 +57,7 @@ const httpClient = {
         };
     },
 };
-const client = new DocuwareClient("https://example.test/connection", credential, { httpClient });
+const client = new DocuWareClient("https://example.test/connection", credential, { httpClient });
 const response = await client.storeToFileCabinet({
     index: "invoice metadata",
     file: new File([content], fileName, { type: "application/custom" }),

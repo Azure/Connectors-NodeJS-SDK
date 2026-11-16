@@ -23,7 +23,7 @@
 "use strict";
 
 const { ManagedIdentityTokenProvider, ConnectorError } = require("@azure/connectors");
-const { MqClient } = require("@azure/connectors/generated/MqExtensions");
+const { MQClient } = require("@azure/connectors/generated/MQExtensions");
 
 const CONNECTION_URL = process.env.MQ_CONNECTION_URL ?? "";
 const QUEUE_NAME = process.env.MQ_QUEUE_NAME ?? "DEV.QUEUE.1";
@@ -38,7 +38,7 @@ async function main() {
     console.log("=".repeat(50));
 
     const tokenProvider = new ManagedIdentityTokenProvider();
-    const client = new MqClient(CONNECTION_URL, tokenProvider);
+    const client = new MQClient(CONNECTION_URL, tokenProvider);
 
     // Example 1: Send a message to a queue
     console.log("\n--- Send Message ---");

@@ -12,12 +12,12 @@ import { TriggerCallbackPayload } from "../azureConnectors/triggerPayload.ts";
 /**
  * Create file
  */
-export type CreateFileInput = string;
+export type CreateFileInput = Blob;
 
 /**
  * Update file
  */
-export type UpdateFileInput = string;
+export type UpdateFileInput = Blob;
 
 /**
  * Definition: DataSetsMetadata

@@ -414,7 +414,7 @@ export interface TransitionInput {
 /**
  * Definition: MCPQueryRequest
  */
-export interface MCPQueryRequest {
+export interface McpQueryRequest {
     jsonrpc?: string;
     id?: string;
     method?: string;
@@ -427,7 +427,7 @@ export interface MCPQueryRequest {
 /**
  * Definition: MCPQueryResponse
  */
-export interface MCPQueryResponse {
+export interface McpQueryResponse {
     jsonrpc?: string;
     id?: string;
     method?: string;
@@ -517,12 +517,12 @@ export type JiraOnNewIssueDatacenterTriggerPayload = TriggerCallbackPayload<Full
 /**
  * Typed callback payload for trigger operation 'OnNewIssueJQL_V2'.
  */
-export type JiraOnNewIssueJQLTriggerPayload = TriggerCallbackPayload<FullIssue>;
+export type JiraOnNewIssueJqlTriggerPayload = TriggerCallbackPayload<FullIssue>;
 
 /**
  * Typed callback payload for trigger operation 'OnNewIssueJQL_Datacenter'.
  */
-export type JiraOnNewIssueJQLDatacenterTriggerPayload = TriggerCallbackPayload<FullIssue>;
+export type JiraOnNewIssueJqlDatacenterTriggerPayload = TriggerCallbackPayload<FullIssue>;
 
 // #endregion Types
 
@@ -531,8 +531,8 @@ export const JiraTriggerOperations = {
     OnCloseIssueDatacenter: "OnCloseIssue_Datacenter",
     OnNewIssue: "OnNewIssue_V2",
     OnNewIssueDatacenter: "OnNewIssue_Datacenter",
-    OnNewIssueJQL: "OnNewIssueJQL_V2",
-    OnNewIssueJQLDatacenter: "OnNewIssueJQL_Datacenter",
+    OnNewIssueJql: "OnNewIssueJQL_V2",
+    OnNewIssueJqlDatacenter: "OnNewIssueJQL_Datacenter",
 } as const;
 
 export type JiraTriggerOperation = typeof JiraTriggerOperations[keyof typeof JiraTriggerOperations];
@@ -610,7 +610,7 @@ export const JiraTriggerParameters = {
             dynamicValuesOperationId: "ListProjects_V3",
         },
     },
-    OnNewIssueJQL: {
+    OnNewIssueJql: {
         xRequestJirainstance: {
             name: "X-Request-Jirainstance",
             type: "string",
@@ -628,7 +628,7 @@ export const JiraTriggerParameters = {
             defaultValue: "",
         },
     },
-    OnNewIssueJQLDatacenter: {
+    OnNewIssueJqlDatacenter: {
         xRequestJirainstance: {
             name: "X-Request-Jirainstance",
             type: "string",
@@ -806,16 +806,16 @@ export class JiraClient extends ConnectorClientBase {
      * Jira MCP Server
      * @remarks Jira MCP Server
      */
-    public async mcpJiraIssueManagement(input: MCPQueryRequest, options: McpJiraIssueManagementOptions = {}): Promise<MCPQueryResponse> {
+    public async mcpJiraIssueManagement(input: McpQueryRequest, options: McpJiraIssueManagementOptions = {}): Promise<McpQueryResponse> {
         const queryParams: string[] = [];
         if (options.sessionId !== undefined) {
             queryParams.push(`sessionId=${encodeURIComponent(String(options.sessionId))}`);
         }
         const requestPath = `/mcp/JiraIssueManagement` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
-        const httpResponse = await this.sendWithTracingAsync<MCPQueryResponse>("Jira.mcpJiraIssueManagement", "mcp_JiraIssueManagement", "POST", requestUrl, input, options);
+        const httpResponse = await this.sendWithTracingAsync<McpQueryResponse>("Jira.mcpJiraIssueManagement", "mcp_JiraIssueManagement", "POST", requestUrl, input, options);
 
-        return httpResponse.value as MCPQueryResponse;
+        return httpResponse.value as McpQueryResponse;
     }
 
     /**

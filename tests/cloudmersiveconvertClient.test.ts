@@ -1,7 +1,7 @@
 // Copyright (c) Microsoft Corporation.  All rights reserved.
 
 import type { TokenCredential } from "@azure/core-auth";
-import { CloudmersiveconvertClient } from "../src/generated/CloudmersiveconvertExtensions.ts";
+import { CloudmersiveConvertClient } from "../src/generated/CloudmersiveConvertExtensions.ts";
 import { ConnectorError } from "../src/azureConnectors/connectorError.ts";
 import { ConnectorNames } from "../src/generated/connectorNames.ts";
 import { availableConnectors } from "../src/generated/ManagedConnectors.ts";
@@ -40,25 +40,25 @@ function mockFetchError(status: number, errorBody: string): void {
 // Runtime tests
 // ──────────────────────────────────────────────
 
-describe("CloudmersiveconvertClient — constructor", () => {
+describe("CloudmersiveConvertClient — constructor", () => {
     it("should construct with valid options", () => {
-        const client = new CloudmersiveconvertClient(TestConnectionUrl, createMockCredential());
+        const client = new CloudmersiveConvertClient(TestConnectionUrl, createMockCredential());
         expect(client).toBeDefined();
-        expect(client).toBeInstanceOf(CloudmersiveconvertClient);
+        expect(client).toBeInstanceOf(CloudmersiveConvertClient);
     });
 
     it("should throw on null connection URL", () => {
-        expect(() => new CloudmersiveconvertClient(null as unknown as string, createMockCredential()))
+        expect(() => new CloudmersiveConvertClient(null as unknown as string, createMockCredential()))
             .toThrow("Parameter 'connectionRuntimeUrl' cannot be null or undefined.");
     });
 
     it("should throw on undefined connection URL", () => {
-        expect(() => new CloudmersiveconvertClient(undefined as unknown as string, createMockCredential()))
+        expect(() => new CloudmersiveConvertClient(undefined as unknown as string, createMockCredential()))
             .toThrow("Parameter 'connectionRuntimeUrl' cannot be null or undefined.");
     });
 });
 
-describe("CloudmersiveconvertClient — createEditDocumentDocxBlankDocument", () => {
+describe("CloudmersiveConvertClient — createEditDocumentDocxBlankDocument", () => {
     afterEach(() => {
         jest.restoreAllMocks();
     });
@@ -67,7 +67,7 @@ describe("CloudmersiveconvertClient — createEditDocumentDocxBlankDocument", ()
         const response = { EditedDocumentURL: "https://cloudmersive.com/output/blank.docx", Successful: true };
         mockFetchResponse(response);
 
-        const client = new CloudmersiveconvertClient(TestConnectionUrl, createMockCredential());
+        const client = new CloudmersiveConvertClient(TestConnectionUrl, createMockCredential());
         const result = await client.createEditDocumentDocxBlankDocument({ InitialText: "Hello world" });
 
         expect(result).toEqual(response);
@@ -80,7 +80,7 @@ describe("CloudmersiveconvertClient — createEditDocumentDocxBlankDocument", ()
     it("should throw ConnectorError on non-OK response", async () => {
         mockFetchError(400, "Bad Request");
 
-        const client = new CloudmersiveconvertClient(TestConnectionUrl, createMockCredential());
+        const client = new CloudmersiveConvertClient(TestConnectionUrl, createMockCredential());
         try {
             await client.createEditDocumentDocxBlankDocument({ InitialText: "Hello world" });
             throw new Error("Expected ConnectorError to be thrown.");
@@ -93,14 +93,14 @@ describe("CloudmersiveconvertClient — createEditDocumentDocxBlankDocument", ()
     });
 });
 
-describe("CloudmersiveconvertClient — multipart conversion", () => {
+describe("CloudmersiveConvertClient — multipart conversion", () => {
     afterEach(() => {
         jest.restoreAllMocks();
     });
 
     it("should POST a multipart file through the generated operation", async () => {
         mockFetchResponse({});
-        const client = new CloudmersiveconvertClient(TestConnectionUrl, createMockCredential());
+        const client = new CloudmersiveConvertClient(TestConnectionUrl, createMockCredential());
 
         const result = await client.convertDocumentAutodetectToPdf({
             inputFile: new Blob(["document content"], { type: "text/plain" }),

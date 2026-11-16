@@ -1,7 +1,7 @@
 // Copyright (c) Microsoft Corporation.  All rights reserved.
 
 import type { TokenCredential } from "@azure/core-auth";
-import { SendgridClient } from "../src/generated/SendgridExtensions.ts";
+import { SendGridClient } from "../src/generated/SendGridExtensions.ts";
 import { ConnectorError } from "../src/azureConnectors/connectorError.ts";
 import { ConnectorNames } from "../src/generated/connectorNames.ts";
 import { availableConnectors } from "../src/generated/ManagedConnectors.ts";
@@ -40,25 +40,25 @@ function mockFetchError(status: number, errorBody: string): void {
 // Runtime tests
 // ──────────────────────────────────────────────
 
-describe("SendgridClient — constructor", () => {
+describe("SendGridClient — constructor", () => {
     it("should construct with valid options", () => {
-        const client = new SendgridClient(TestConnectionUrl, createMockCredential());
+        const client = new SendGridClient(TestConnectionUrl, createMockCredential());
         expect(client).toBeDefined();
-        expect(client).toBeInstanceOf(SendgridClient);
+        expect(client).toBeInstanceOf(SendGridClient);
     });
 
     it("should throw on null connection URL", () => {
-        expect(() => new SendgridClient(null as unknown as string, createMockCredential()))
+        expect(() => new SendGridClient(null as unknown as string, createMockCredential()))
             .toThrow("Parameter 'connectionRuntimeUrl' cannot be null or undefined.");
     });
 
     it("should throw on undefined connection URL", () => {
-        expect(() => new SendgridClient(undefined as unknown as string, createMockCredential()))
+        expect(() => new SendGridClient(undefined as unknown as string, createMockCredential()))
             .toThrow("Parameter 'connectionRuntimeUrl' cannot be null or undefined.");
     });
 });
 
-describe("SendgridClient — getGlobalSuppression", () => {
+describe("SendGridClient — getGlobalSuppression", () => {
     afterEach(() => {
         jest.restoreAllMocks();
     });
@@ -67,7 +67,7 @@ describe("SendgridClient — getGlobalSuppression", () => {
         const suppression = { recipient_email: "user@example.com" };
         mockFetchResponse(suppression);
 
-        const client = new SendgridClient(TestConnectionUrl, createMockCredential());
+        const client = new SendGridClient(TestConnectionUrl, createMockCredential());
         const result = await client.getGlobalSuppression("user@example.com");
 
         expect(result).toEqual(suppression);
@@ -80,7 +80,7 @@ describe("SendgridClient — getGlobalSuppression", () => {
     it("should throw ConnectorError on non-OK response", async () => {
         mockFetchError(404, "Not Found");
 
-        const client = new SendgridClient(TestConnectionUrl, createMockCredential());
+        const client = new SendGridClient(TestConnectionUrl, createMockCredential());
         try {
             await client.getGlobalSuppression("user@example.com");
             throw new Error("Expected ConnectorError to be thrown.");

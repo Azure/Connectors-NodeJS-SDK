@@ -15,7 +15,7 @@
  */
 
 import { ManagedIdentityTokenProvider, ConnectorError } from "@azure/connectors";
-import { Office365groupsmailClient } from "@azure/connectors/generated/Office365groupsmailExtensions";
+import { Office365GroupsMailClient } from "@azure/connectors/generated/Office365GroupsMailExtensions";
 
 const CONNECTION_URL = process.env.OFFICE365GROUPSMAIL_CONNECTION_URL ?? "";
 
@@ -26,7 +26,7 @@ if (!CONNECTION_URL) {
 
 async function main(): Promise<void> {
     const tokenProvider = new ManagedIdentityTokenProvider();
-    const client = new Office365groupsmailClient(CONNECTION_URL, tokenProvider);
+    const client = new Office365GroupsMailClient(CONNECTION_URL, tokenProvider);
 
     const groupId = process.env.OFFICE365GROUPSMAIL_GROUP_ID;
     if (!groupId) {

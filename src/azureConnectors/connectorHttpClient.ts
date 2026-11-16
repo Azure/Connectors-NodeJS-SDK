@@ -187,16 +187,18 @@ export class ConnectorHttpClient {
         requestHeaders?: Readonly<Record<string, string>>,
         responseAsBlob = false,
     ): Promise<ConnectorResponse<TValue>> {
+        const normalizedMethod = method.toUpperCase() as HttpMethods;
         const effectiveScopes = scopes ?? ConnectorHttpClient.ApiHubScopes;
         const logUrl = ConnectorHttpClient.sanitizeUrlForLogging(url);
         const isFormDataBody = typeof FormData !== "undefined" && body instanceof FormData;
-        logger.info(`Request ${method} ${logUrl}`);
+        const blobBody = typeof Blob !== "undefined" && body instanceof Blob ? body : undefined;
+        logger.info(`Request ${normalizedMethod} ${logUrl}`);
         const request = createPipelineRequest({
             url,
-            method: method as HttpMethods,
+            method: normalizedMethod,
             body: body === undefined || isFormDataBody
                 ? undefined
-                : JSON.stringify(body),
+                : blobBody ? new Uint8Array(await blobBody.arrayBuffer()) : JSON.stringify(body),
             abortSignal,
             tracingOptions,
             streamResponseStatusCodes: responseAsBlob
@@ -206,7 +208,7 @@ export class ConnectorHttpClient {
         request.headers.set("Accept", "application/json, */*;q=0.8");
 
         if (body !== undefined && !isFormDataBody) {
-            request.headers.set("Content-Type", "application/json");
+            request.headers.set("Content-Type", blobBody?.type || (blobBody ? "application/octet-stream" : "application/json"));
         }
 
         for (const [name, value] of Object.entries(requestHeaders ?? {})) {
@@ -286,10 +288,15 @@ export class ConnectorHttpClient {
             pipeline.addPolicy(
                 {
                     name: ConnectorHttpClient.DefaultRetryPolicyName,
-                    sendRequest: (request, next) => this.retryUnsafeHttpMethods ||
-                        ConnectorHttpClient.SafeHttpMethods.has(request.method)
-                        ? retryPolicy.sendRequest(request, next)
-                        : next(request),
+                    sendRequest: (request, next) => {
+                        // Some connectors send SMS through a GET action; retrying it duplicates messages.
+                        const isSmsSendGet = request.method === "GET" &&
+                            new URL(request.url).pathname.endsWith("/sms/send");
+                        return !isSmsSendGet &&
+                            (this.retryUnsafeHttpMethods || ConnectorHttpClient.SafeHttpMethods.has(request.method))
+                            ? retryPolicy.sendRequest(request, next)
+                            : next(request);
+                    },
                 },
                 { phase: "Retry" },
             );

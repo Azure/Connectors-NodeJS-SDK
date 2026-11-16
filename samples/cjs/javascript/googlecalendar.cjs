@@ -16,7 +16,7 @@
 "use strict";
 
 const { ManagedIdentityTokenProvider, ConnectorError } = require("@azure/connectors");
-const { GooglecalendarClient } = require("@azure/connectors/generated/GooglecalendarExtensions");
+const { GoogleCalendarClient } = require("@azure/connectors/generated/GoogleCalendarExtensions");
 
 const CONNECTION_URL = process.env.GOOGLECALENDAR_CONNECTION_URL ?? "";
 
@@ -27,7 +27,7 @@ if (!CONNECTION_URL) {
 
 async function main() {
     const tokenProvider = new ManagedIdentityTokenProvider();
-    const client = new GooglecalendarClient(CONNECTION_URL, tokenProvider);
+    const client = new GoogleCalendarClient(CONNECTION_URL, tokenProvider);
 
     // Example: List the calendars available to the connection.
     try {

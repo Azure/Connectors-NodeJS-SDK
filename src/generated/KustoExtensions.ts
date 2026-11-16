@@ -120,7 +120,7 @@ export interface AsyncCommandResult {
 /**
  * Definition: MCPQueryRequest
  */
-export interface MCPQueryRequest {
+export interface McpQueryRequest {
     jsonrpc?: string;
     id?: string;
     method?: string;
@@ -133,7 +133,7 @@ export interface MCPQueryRequest {
 /**
  * Definition: MCPQueryResponse
  */
-export interface MCPQueryResponse {
+export interface McpQueryResponse {
     jsonrpc?: string;
     id?: string;
     method?: string;
@@ -248,16 +248,16 @@ export class KustoClient extends ConnectorClientBase {
      * Kusto Query MCP Server
      * @remarks This MCP server runs Kusto queries and manages the results.
      */
-    public async mcpKustoQueryManagement(input: MCPQueryRequest, options: McpKustoQueryManagementOptions = {}): Promise<MCPQueryResponse> {
+    public async mcpKustoQueryManagement(input: McpQueryRequest, options: McpKustoQueryManagementOptions = {}): Promise<McpQueryResponse> {
         const queryParams: string[] = [];
         if (options.sessionId !== undefined) {
             queryParams.push(`sessionId=${encodeURIComponent(String(options.sessionId))}`);
         }
         const requestPath = `/mcp/KustoQueryManagement` + (queryParams.length > 0 ? "?" + queryParams.join("&") : "");
         const requestUrl = this.resolveUrl(requestPath);
-        const httpResponse = await this.sendWithTracingAsync<MCPQueryResponse>("Kusto.mcpKustoQueryManagement", "mcp_KustoQueryManagement", "POST", requestUrl, input, options);
+        const httpResponse = await this.sendWithTracingAsync<McpQueryResponse>("Kusto.mcpKustoQueryManagement", "mcp_KustoQueryManagement", "POST", requestUrl, input, options);
 
-        return httpResponse.value as MCPQueryResponse;
+        return httpResponse.value as McpQueryResponse;
     }
 
 }

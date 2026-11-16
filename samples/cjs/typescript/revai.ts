@@ -2,12 +2,12 @@
 
 /** Rev.ai Connector SDK Sample - CJS TypeScript. */
 import { ConnectorError, ManagedIdentityTokenProvider } from "@azure/connectors";
-import { RevaiClient } from "@azure/connectors/generated/RevaiExtensions";
+import { RevAIClient } from "@azure/connectors/generated/RevAIExtensions";
 const CONNECTION_URL = process.env.REVAI_CONNECTION_URL ?? "";
 if (!CONNECTION_URL) throw new Error("REVAI_CONNECTION_URL is required.");
 async function main(): Promise<void> {
     try {
-        const transcriptions = await new RevaiClient(CONNECTION_URL, new ManagedIdentityTokenProvider()).getTranscriptions({ limit: 10 });
+        const transcriptions = await new RevAIClient(CONNECTION_URL, new ManagedIdentityTokenProvider()).getTranscriptions({ limit: 10 });
         console.log("Transcriptions:", JSON.stringify(transcriptions, null, 2));
     } catch (error) {
         if (error instanceof ConnectorError) console.error(`Connector error (${error.statusCode}): ${error.message}`);

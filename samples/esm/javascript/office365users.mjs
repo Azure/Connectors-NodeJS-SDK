@@ -19,7 +19,7 @@
  */
 
 import { ManagedIdentityTokenProvider, ConnectorError } from "@azure/connectors";
-import { Office365usersClient } from "@azure/connectors/generated/Office365usersExtensions";
+import { Office365UsersClient } from "@azure/connectors/generated/Office365UsersExtensions";
 
 const CONNECTION_URL = process.env.OFFICE365USERS_CONNECTION_URL ?? "";
 
@@ -33,7 +33,7 @@ async function main() {
     console.log("=".repeat(55));
 
     const tokenProvider = new ManagedIdentityTokenProvider();
-    const client = new Office365usersClient(CONNECTION_URL, tokenProvider);
+    const client = new Office365UsersClient(CONNECTION_URL, tokenProvider);
 
     // Example 1: Get my profile
     console.log("\n--- My Profile ---");

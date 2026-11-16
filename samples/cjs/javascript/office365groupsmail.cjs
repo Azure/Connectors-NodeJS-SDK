@@ -17,7 +17,7 @@
 "use strict";
 
 const { ManagedIdentityTokenProvider, ConnectorError } = require("@azure/connectors");
-const { Office365groupsmailClient } = require("@azure/connectors/generated/Office365groupsmailExtensions");
+const { Office365GroupsMailClient } = require("@azure/connectors/generated/Office365GroupsMailExtensions");
 
 const CONNECTION_URL = process.env.OFFICE365GROUPSMAIL_CONNECTION_URL ?? "";
 
@@ -28,7 +28,7 @@ if (!CONNECTION_URL) {
 
 async function main() {
     const tokenProvider = new ManagedIdentityTokenProvider();
-    const client = new Office365groupsmailClient(CONNECTION_URL, tokenProvider);
+    const client = new Office365GroupsMailClient(CONNECTION_URL, tokenProvider);
 
     const groupId = process.env.OFFICE365GROUPSMAIL_GROUP_ID;
     if (!groupId) {

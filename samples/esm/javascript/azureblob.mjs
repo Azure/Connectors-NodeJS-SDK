@@ -21,7 +21,7 @@
  */
 
 import { ManagedIdentityTokenProvider, ConnectorError } from "@azure/connectors";
-import { AzureblobClient } from "@azure/connectors/generated/AzureblobExtensions";
+import { AzureBlobClient } from "@azure/connectors/generated/AzureBlobExtensions";
 
 const CONNECTION_URL = process.env.AZUREBLOB_CONNECTION_URL ?? "";
 const STORAGE_ACCOUNT = process.env.BLOB_STORAGE_ACCOUNT ?? "";
@@ -37,7 +37,7 @@ async function main() {
     console.log("=".repeat(55));
 
     const tokenProvider = new ManagedIdentityTokenProvider();
-    const client = new AzureblobClient(CONNECTION_URL, tokenProvider);
+    const client = new AzureBlobClient(CONNECTION_URL, tokenProvider);
 
     // Example 1: List blobs in a container
     if (CONTAINER) {

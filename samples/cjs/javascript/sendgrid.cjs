@@ -17,7 +17,7 @@
 "use strict";
 
 const { ManagedIdentityTokenProvider, ConnectorError } = require("@azure/connectors");
-const { SendgridClient } = require("@azure/connectors/generated/SendgridExtensions");
+const { SendGridClient } = require("@azure/connectors/generated/SendGridExtensions");
 
 const CONNECTION_URL = process.env.SENDGRID_CONNECTION_URL ?? "";
 
@@ -28,7 +28,7 @@ if (!CONNECTION_URL) {
 
 async function main() {
     const tokenProvider = new ManagedIdentityTokenProvider();
-    const client = new SendgridClient(CONNECTION_URL, tokenProvider);
+    const client = new SendGridClient(CONNECTION_URL, tokenProvider);
 
     // Example 1: Look up a global suppression by email address.
     const email = process.env.SENDGRID_EMAIL ?? "user@example.com";

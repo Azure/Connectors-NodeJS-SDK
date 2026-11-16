@@ -16,7 +16,7 @@
 "use strict";
 
 const { ManagedIdentityTokenProvider, ConnectorError } = require("@azure/connectors");
-const { CloudmersiveconvertClient } = require("@azure/connectors/generated/CloudmersiveconvertExtensions");
+const { CloudmersiveConvertClient } = require("@azure/connectors/generated/CloudmersiveConvertExtensions");
 
 const CONNECTION_URL = process.env.CLOUDMERSIVECONVERT_CONNECTION_URL ?? "";
 
@@ -27,7 +27,7 @@ if (!CONNECTION_URL) {
 
 async function main() {
     const tokenProvider = new ManagedIdentityTokenProvider();
-    const client = new CloudmersiveconvertClient(CONNECTION_URL, tokenProvider);
+    const client = new CloudmersiveConvertClient(CONNECTION_URL, tokenProvider);
 
     // Example 1: Create a blank DOCX document with some initial text.
     try {

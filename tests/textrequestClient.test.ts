@@ -1,7 +1,7 @@
 // Copyright (c) Microsoft Corporation.  All rights reserved.
 
 import type { TokenCredential } from "@azure/core-auth";
-import { TextrequestClient } from "../src/generated/TextrequestExtensions.ts";
+import { TextRequestClient } from "../src/generated/TextRequestExtensions.ts";
 import { ConnectorError } from "../src/azureConnectors/connectorError.ts";
 import { ConnectorNames } from "../src/generated/connectorNames.ts";
 import { availableConnectors } from "../src/generated/ManagedConnectors.ts";
@@ -40,25 +40,25 @@ function mockFetchError(status: number, errorBody: string): void {
 // Runtime tests
 // ──────────────────────────────────────────────
 
-describe("TextrequestClient — constructor", () => {
+describe("TextRequestClient — constructor", () => {
     it("should construct with valid options", () => {
-        const client = new TextrequestClient(TestConnectionUrl, createMockCredential());
+        const client = new TextRequestClient(TestConnectionUrl, createMockCredential());
         expect(client).toBeDefined();
-        expect(client).toBeInstanceOf(TextrequestClient);
+        expect(client).toBeInstanceOf(TextRequestClient);
     });
 
     it("should throw on null connection URL", () => {
-        expect(() => new TextrequestClient(null as unknown as string, createMockCredential()))
+        expect(() => new TextRequestClient(null as unknown as string, createMockCredential()))
             .toThrow("Parameter 'connectionRuntimeUrl' cannot be null or undefined.");
     });
 
     it("should throw on undefined connection URL", () => {
-        expect(() => new TextrequestClient(undefined as unknown as string, createMockCredential()))
+        expect(() => new TextRequestClient(undefined as unknown as string, createMockCredential()))
             .toThrow("Parameter 'connectionRuntimeUrl' cannot be null or undefined.");
     });
 });
 
-describe("TextrequestClient — getMessagesByContactPhone", () => {
+describe("TextRequestClient — getMessagesByContactPhone", () => {
     afterEach(() => {
         jest.restoreAllMocks();
     });
@@ -67,7 +67,7 @@ describe("TextrequestClient — getMessagesByContactPhone", () => {
         const messages = { data: [{ id: "m1", body: "Hi there", direction: "outbound" }] };
         mockFetchResponse(messages);
 
-        const client = new TextrequestClient(TestConnectionUrl, createMockCredential());
+        const client = new TextRequestClient(TestConnectionUrl, createMockCredential());
         const result = await client.getMessagesByContactPhone(123, "+15555550100", 0, 50);
 
         expect(result).toEqual(messages);
@@ -80,7 +80,7 @@ describe("TextrequestClient — getMessagesByContactPhone", () => {
     it("should throw ConnectorError on non-OK response", async () => {
         mockFetchError(404, "Not Found");
 
-        const client = new TextrequestClient(TestConnectionUrl, createMockCredential());
+        const client = new TextRequestClient(TestConnectionUrl, createMockCredential());
         try {
             await client.getMessagesByContactPhone(123, "+15555550100", 0, 50);
             throw new Error("Expected ConnectorError to be thrown.");

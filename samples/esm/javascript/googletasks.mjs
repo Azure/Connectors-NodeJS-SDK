@@ -14,7 +14,7 @@
  */
 
 import { ManagedIdentityTokenProvider, ConnectorError } from "@azure/connectors";
-import { GoogletasksClient } from "@azure/connectors/generated/GoogletasksExtensions";
+import { GoogleTasksClient } from "@azure/connectors/generated/GoogleTasksExtensions";
 
 const CONNECTION_URL = process.env.GOOGLETASKS_CONNECTION_URL ?? "";
 
@@ -25,7 +25,7 @@ if (!CONNECTION_URL) {
 
 async function main() {
     const tokenProvider = new ManagedIdentityTokenProvider();
-    const client = new GoogletasksClient(CONNECTION_URL, tokenProvider);
+    const client = new GoogleTasksClient(CONNECTION_URL, tokenProvider);
 
     // Example: List the task lists, then the tasks in the first one.
     try {

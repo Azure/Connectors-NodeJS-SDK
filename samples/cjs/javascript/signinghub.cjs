@@ -19,7 +19,7 @@
 "use strict";
 
 const { ManagedIdentityTokenProvider, ConnectorError } = require("@azure/connectors");
-const { SigninghubClient } = require("@azure/connectors/generated/SigninghubExtensions");
+const { SigningHubClient } = require("@azure/connectors/generated/SigningHubExtensions");
 
 const CONNECTION_URL = process.env.SIGNINGHUB_CONNECTION_URL ?? "";
 const PACKAGE_ID = process.env.SIGNINGHUB_PACKAGE_ID ?? "";
@@ -48,7 +48,7 @@ if (!/^\d+$/.test(ATTACHMENT_ID)) {
 
 async function main() {
     const tokenProvider = new ManagedIdentityTokenProvider();
-    const client = new SigninghubClient(CONNECTION_URL, tokenProvider);
+    const client = new SigningHubClient(CONNECTION_URL, tokenProvider);
 
     // Example 1: Download a document attachment.
     try {

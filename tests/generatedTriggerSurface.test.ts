@@ -3,7 +3,7 @@
 import type { TokenCredential } from "@azure/core-auth";
 import * as fs from "node:fs";
 import * as path from "node:path";
-import type { HandSignature } from "../src/generated/SigninghubExtensions.ts";
+import type { HandSignature } from "../src/generated/SigningHubExtensions.ts";
 import {
     type ChannelWithOwnerTeamId,
     type ChatMessageList,
@@ -19,13 +19,13 @@ import {
 const TeamsConnectionUrl = "https://connection-runtime.azure.com/apim/teams/abc123";
 const GeneratedDirectory = path.join(process.cwd(), "src", "generated");
 const StandardActionVerbs = new Set([
-    "add", "approve", "cancel", "copy", "create", "decline", "delete", "disable", "download", "enable",
-    "execute", "export", "finish", "forward", "get", "list", "move", "patch", "register", "reject",
-    "remove", "rename", "replace", "resume", "rerun", "run", "search", "send", "set", "start", "stop",
-    "submit", "test", "unregister", "update", "upload", "upsert", "validate",
+    "add", "approve", "cancel", "copy", "create", "deallocate", "decline", "delete", "disable", "download", "enable",
+    "execute", "export", "finish", "forward", "get", "list", "move", "patch", "power", "poweroff", "reapply",
+    "redeploy", "register", "reimage", "reject", "remove", "rename", "replace", "restart", "resume", "rerun", "run",
+    "search", "send", "set", "start", "stop", "submit", "test", "unregister", "update", "upload", "upsert", "validate",
 ]);
 const CuratedActionMethodNames = new Set([
-    "Sendgrid.checkEmailIsInUnsubscribesList",
+    "SendGrid.checkEmailIsInUnsubscribesList",
 ]);
 
 /**
@@ -244,7 +244,7 @@ describe("Generated clients — no trigger operation is invoked as a data-plane 
 
     it("should emit query and header service options without leaking transport types", () => {
         const arm = generatedFiles.find(file => file.connector === "Arm");
-        const revai = generatedFiles.find(file => file.connector === "Revai");
+        const revai = generatedFiles.find(file => file.connector === "RevAI");
         expect(arm).toBeDefined();
         expect(revai).toBeDefined();
         expect(arm!.content).toContain("export interface ListResourceGroupsOptions extends ConnectorOperationOptions");
@@ -254,16 +254,16 @@ describe("Generated clients — no trigger operation is invoked as a data-plane 
     });
 
     it("should preserve named empty-object model references", () => {
-        const commonDataService = generatedFiles.find(file => file.connector === "Commondataservice");
+        const commonDataService = generatedFiles.find(file => file.connector === "CommonDataService");
         expect(commonDataService).toBeDefined();
         expect(commonDataService!.content).toContain("schema?: ObjectEntity;");
         expect(commonDataService!.content).toContain("export interface ObjectEntity");
     });
 
     it("should preserve curated connector action names", () => {
-        const clickSend = generatedFiles.find(file => file.connector === "Clicksendsms");
-        const googleTasks = generatedFiles.find(file => file.connector === "Googletasks");
-        const sendGrid = generatedFiles.find(file => file.connector === "Sendgrid");
+        const clickSend = generatedFiles.find(file => file.connector === "ClickSendSms");
+        const googleTasks = generatedFiles.find(file => file.connector === "GoogleTasks");
+        const sendGrid = generatedFiles.find(file => file.connector === "SendGrid");
         expect(clickSend).toBeDefined();
         expect(googleTasks).toBeDefined();
         expect(sendGrid).toBeDefined();
@@ -283,7 +283,7 @@ describe("Generated clients — no trigger operation is invoked as a data-plane 
         const handSignature: HandSignature = 2;
         const channel: ChannelWithOwnerTeamId = { ownerTeamId: "team1" };
         const teams = generatedFiles.find(file => file.connector === "Teams");
-        const signingHub = generatedFiles.find(file => file.connector === "Signinghub");
+        const signingHub = generatedFiles.find(file => file.connector === "SigningHub");
 
         expect(messages[0].id).toBe("message1");
         expect(JSON.stringify({ handSignature })).toBe('{"handSignature":2}');
@@ -294,7 +294,7 @@ describe("Generated clients — no trigger operation is invoked as a data-plane 
     });
 
     it("should emit every pinned multipart form-data operation", () => {
-        for (const connector of ["Cloudmersiveconvert", "Docuware"]) {
+        for (const connector of ["CloudmersiveConvert", "DocuWare"]) {
             const generated = generatedFiles.find(file => file.connector === connector);
             const apiName = connector.toLowerCase();
             const swagger = JSON.parse(
@@ -310,7 +310,7 @@ describe("Generated clients — no trigger operation is invoked as a data-plane 
                 .toHaveLength(multipartOperationCount);
         }
 
-        const docuware = generatedFiles.find(file => file.connector === "Docuware");
+        const docuware = generatedFiles.find(file => file.connector === "DocuWare");
         expect(docuware!.content).toContain("public async deleteFile(");
     });
 

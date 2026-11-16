@@ -1,7 +1,7 @@
 // Copyright (c) Microsoft Corporation.  All rights reserved.
 
 import type { TokenCredential } from "@azure/core-auth";
-import { ClicksendsmsClient, type SmsCampaignSendInput } from "../src/generated/ClicksendsmsExtensions.ts";
+import { ClickSendSmsClient, type SmsCampaignSendInput } from "../src/generated/ClickSendSmsExtensions.ts";
 import { ConnectorError } from "../src/azureConnectors/connectorError.ts";
 import { ConnectorNames } from "../src/generated/connectorNames.ts";
 import { availableConnectors } from "../src/generated/ManagedConnectors.ts";
@@ -40,25 +40,25 @@ function mockFetchError(status: number, errorBody: string): void {
 // Runtime tests
 // ──────────────────────────────────────────────
 
-describe("ClicksendsmsClient — constructor", () => {
+describe("ClickSendSmsClient — constructor", () => {
     it("should construct with valid options", () => {
-        const client = new ClicksendsmsClient(TestConnectionUrl, createMockCredential());
+        const client = new ClickSendSmsClient(TestConnectionUrl, createMockCredential());
         expect(client).toBeDefined();
-        expect(client).toBeInstanceOf(ClicksendsmsClient);
+        expect(client).toBeInstanceOf(ClickSendSmsClient);
     });
 
     it("should throw on null connection URL", () => {
-        expect(() => new ClicksendsmsClient(null as unknown as string, createMockCredential()))
+        expect(() => new ClickSendSmsClient(null as unknown as string, createMockCredential()))
             .toThrow("Parameter 'connectionRuntimeUrl' cannot be null or undefined.");
     });
 
     it("should throw on undefined connection URL", () => {
-        expect(() => new ClicksendsmsClient(undefined as unknown as string, createMockCredential()))
+        expect(() => new ClickSendSmsClient(undefined as unknown as string, createMockCredential()))
             .toThrow("Parameter 'connectionRuntimeUrl' cannot be null or undefined.");
     });
 });
 
-describe("ClicksendsmsClient — getContactLists", () => {
+describe("ClickSendSmsClient — getContactLists", () => {
     afterEach(() => {
         jest.restoreAllMocks();
     });
@@ -67,7 +67,7 @@ describe("ClicksendsmsClient — getContactLists", () => {
         const contactLists = { data: { total: 1, data: [{ list_id: 1, list_name: "Customers" }] } };
         mockFetchResponse(contactLists);
 
-        const client = new ClicksendsmsClient(TestConnectionUrl, createMockCredential());
+        const client = new ClickSendSmsClient(TestConnectionUrl, createMockCredential());
         const result = await client.getContactLists();
 
         expect(result).toEqual(contactLists);
@@ -80,7 +80,7 @@ describe("ClicksendsmsClient — getContactLists", () => {
     it("should throw ConnectorError on non-OK response", async () => {
         mockFetchError(404, "Not Found");
 
-        const client = new ClicksendsmsClient(TestConnectionUrl, createMockCredential());
+        const client = new ClickSendSmsClient(TestConnectionUrl, createMockCredential());
         try {
             await client.getContactLists();
             throw new Error("Expected ConnectorError to be thrown.");
@@ -93,7 +93,7 @@ describe("ClicksendsmsClient — getContactLists", () => {
     });
 });
 
-describe("ClicksendsmsClient - sendSmsCampaign", () => {
+describe("ClickSendSmsClient - sendSmsCampaign", () => {
     const campaign: SmsCampaignSendInput = {
         list_id: 12,
         name: "Customer update",
@@ -109,7 +109,7 @@ describe("ClicksendsmsClient - sendSmsCampaign", () => {
     it("should send the typed campaign to the live-defined route", async () => {
         const response = { http_code: 200, data: { campaign_id: 123 } };
         mockFetchResponse(response);
-        const client = new ClicksendsmsClient(TestConnectionUrl, createMockCredential());
+        const client = new ClickSendSmsClient(TestConnectionUrl, createMockCredential());
 
         expect(await client.sendSmsCampaign(campaign)).toEqual(response);
 
@@ -121,13 +121,52 @@ describe("ClicksendsmsClient - sendSmsCampaign", () => {
 
     it("should preserve campaign service failures", async () => {
         mockFetchError(400, '{"error":"Invalid campaign."}');
-        const client = new ClicksendsmsClient(TestConnectionUrl, createMockCredential());
+        const client = new ClickSendSmsClient(TestConnectionUrl, createMockCredential());
 
         await expect(client.sendSmsCampaign(campaign)).rejects.toMatchObject({
             connectorName: "clicksendsms",
             operation: "sms_campaign_send",
             statusCode: 400,
             responseBody: '{"error":"Invalid campaign."}',
+        });
+    });
+});
+
+describe("ClickSendSmsClient — restored service actions", () => {
+    const cases = [
+        { method: "sendVoice", path: "/voice/send", operation: "send_voice",
+            body: { messages: [{ to: "+12065550123", body: "Hello" }] } },
+        { method: "sendFax", path: "/fax/send", operation: "send_fax",
+            body: { messages: [{ to: "+12065550123" }], file_url: "https://example.test/fax.pdf" } },
+        { method: "sendLetter", path: "/post/letters/send", operation: "send_letter",
+            body: { file_url: "https://example.test/letter.pdf", colour: 0, duplex: 1,
+                recipients: [{ name: "Recipient" }], source: "sdk-test" } },
+        { method: "sendPostcard", path: "/post/postcards/send", operation: "send_postcard",
+            body: { recipients: [{ name: "Recipient" }], file_urls: ["https://example.test/card.pdf"] } },
+    ] as const;
+
+    afterEach(() => {
+        jest.restoreAllMocks();
+    });
+
+    it.each(cases)("preserves $method route and typed request fields", async ({ method, path, body }) => {
+        const response = { http_code: 202, data: { id: "queued" } };
+        mockFetchResponse(response);
+        const client = new ClickSendSmsClient(TestConnectionUrl, createMockCredential());
+
+        expect(await client[method](body as never)).toEqual(response);
+        const [requestUrl, request] = (global.fetch as jest.Mock).mock.calls[0];
+        expect(requestUrl).toBe(`${TestConnectionUrl}${path}`);
+        expect(request.method).toBe("POST");
+        expect(JSON.parse(request.body)).toEqual(body);
+    });
+
+    it.each(cases)("preserves $method raw operation ID on error", async ({ method, body, operation }) => {
+        mockFetchError(400, '{"error":"Rejected"}');
+        const client = new ClickSendSmsClient(TestConnectionUrl, createMockCredential());
+
+        await expect(client[method](body as never)).rejects.toMatchObject({
+            connectorName: "clicksendsms", operation, statusCode: 400,
         });
     });
 });

@@ -1,7 +1,7 @@
 // Copyright (c) Microsoft Corporation.  All rights reserved.
 
 import type { TokenCredential } from "@azure/core-auth";
-import { SigninghubClient } from "../src/generated/SigninghubExtensions.ts";
+import { SigningHubClient } from "../src/generated/SigningHubExtensions.ts";
 import { ConnectorError } from "../src/azureConnectors/connectorError.ts";
 import { ConnectorNames } from "../src/generated/connectorNames.ts";
 import { availableConnectors } from "../src/generated/ManagedConnectors.ts";
@@ -40,25 +40,25 @@ function mockFetchError(status: number, errorBody: string): void {
 // Runtime tests
 // ──────────────────────────────────────────────
 
-describe("SigninghubClient — constructor", () => {
+describe("SigningHubClient — constructor", () => {
     it("should construct with valid options", () => {
-        const client = new SigninghubClient(TestConnectionUrl, createMockCredential());
+        const client = new SigningHubClient(TestConnectionUrl, createMockCredential());
         expect(client).toBeDefined();
-        expect(client).toBeInstanceOf(SigninghubClient);
+        expect(client).toBeInstanceOf(SigningHubClient);
     });
 
     it("should throw on null connection URL", () => {
-        expect(() => new SigninghubClient(null as unknown as string, createMockCredential()))
+        expect(() => new SigningHubClient(null as unknown as string, createMockCredential()))
             .toThrow("Parameter 'connectionRuntimeUrl' cannot be null or undefined.");
     });
 
     it("should throw on undefined connection URL", () => {
-        expect(() => new SigninghubClient(undefined as unknown as string, createMockCredential()))
+        expect(() => new SigningHubClient(undefined as unknown as string, createMockCredential()))
             .toThrow("Parameter 'connectionRuntimeUrl' cannot be null or undefined.");
     });
 });
 
-describe("SigninghubClient — downloadAttachmentAttachment", () => {
+describe("SigningHubClient — downloadAttachmentAttachment", () => {
     afterEach(() => {
         jest.restoreAllMocks();
     });
@@ -67,7 +67,7 @@ describe("SigninghubClient — downloadAttachmentAttachment", () => {
         const attachment = { fileName: "contract.pdf", contentType: "application/pdf" };
         mockFetchResponse(attachment);
 
-        const client = new SigninghubClient(TestConnectionUrl, createMockCredential());
+        const client = new SigningHubClient(TestConnectionUrl, createMockCredential());
         const result = await client.downloadAttachmentAttachment(
             123,
             456,
@@ -86,7 +86,7 @@ describe("SigninghubClient — downloadAttachmentAttachment", () => {
     it("should throw ConnectorError on non-OK response", async () => {
         mockFetchError(404, "Not Found");
 
-        const client = new SigninghubClient(TestConnectionUrl, createMockCredential());
+        const client = new SigningHubClient(TestConnectionUrl, createMockCredential());
         try {
             await client.downloadAttachmentAttachment(
                 123,

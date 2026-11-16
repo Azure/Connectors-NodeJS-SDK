@@ -15,7 +15,7 @@
  */
 
 import { ManagedIdentityTokenProvider, ConnectorError } from "@azure/connectors";
-import { GoogledriveClient } from "@azure/connectors/generated/GoogledriveExtensions";
+import { GoogleDriveClient } from "@azure/connectors/generated/GoogleDriveExtensions";
 
 const CONNECTION_URL = process.env.GOOGLEDRIVE_CONNECTION_URL ?? "";
 
@@ -26,7 +26,7 @@ if (!CONNECTION_URL) {
 
 async function main() {
     const tokenProvider = new ManagedIdentityTokenProvider();
-    const client = new GoogledriveClient(CONNECTION_URL, tokenProvider);
+    const client = new GoogleDriveClient(CONNECTION_URL, tokenProvider);
 
     // Example 1: List the root folder.
     try {

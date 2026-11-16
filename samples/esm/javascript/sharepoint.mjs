@@ -21,7 +21,7 @@
  */
 
 import { ManagedIdentityTokenProvider, ConnectorError } from "@azure/connectors";
-import { SharepointonlineClient } from "@azure/connectors/generated/SharepointonlineExtensions";
+import { SharePointOnlineClient } from "@azure/connectors/generated/SharePointOnlineExtensions";
 
 const CONNECTION_URL = process.env.SHAREPOINT_CONNECTION_URL ?? "";
 const SITE_URL = process.env.SHAREPOINT_SITE_URL ?? "";
@@ -41,7 +41,7 @@ async function main() {
     console.log("=".repeat(55));
 
     const tokenProvider = new ManagedIdentityTokenProvider();
-    const client = new SharepointonlineClient(CONNECTION_URL, tokenProvider);
+    const client = new SharePointOnlineClient(CONNECTION_URL, tokenProvider);
     const listName = process.env.TEST_LIST_NAME ?? "Documents";
 
     // Example 1: Get all lists and libraries

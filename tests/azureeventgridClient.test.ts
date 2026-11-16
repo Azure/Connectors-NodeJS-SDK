@@ -1,7 +1,7 @@
 // Copyright (c) Microsoft Corporation.  All rights reserved.
 
 import type { TokenCredential } from "@azure/core-auth";
-import { AzureeventgridClient } from "../src/generated/AzureeventgridExtensions.ts";
+import { AzureEventGridClient } from "../src/generated/AzureEventGridExtensions.ts";
 import { ConnectorNames } from "../src/generated/connectorNames.ts";
 import { availableConnectors } from "../src/generated/ManagedConnectors.ts";
 
@@ -21,20 +21,20 @@ function createMockCredential(): TokenCredential {
 // Runtime tests
 // ──────────────────────────────────────────────
 
-describe("AzureeventgridClient — constructor", () => {
+describe("AzureEventGridClient — constructor", () => {
     it("should construct with valid options", () => {
-        const client = new AzureeventgridClient(TestConnectionUrl, createMockCredential());
+        const client = new AzureEventGridClient(TestConnectionUrl, createMockCredential());
         expect(client).toBeDefined();
-        expect(client).toBeInstanceOf(AzureeventgridClient);
+        expect(client).toBeInstanceOf(AzureEventGridClient);
     });
 
     it("should throw on null connection URL", () => {
-        expect(() => new AzureeventgridClient(null as unknown as string, createMockCredential()))
+        expect(() => new AzureEventGridClient(null as unknown as string, createMockCredential()))
             .toThrow("Parameter 'connectionRuntimeUrl' cannot be null or undefined.");
     });
 
     it("should throw on undefined connection URL", () => {
-        expect(() => new AzureeventgridClient(undefined as unknown as string, createMockCredential()))
+        expect(() => new AzureEventGridClient(undefined as unknown as string, createMockCredential()))
             .toThrow("Parameter 'connectionRuntimeUrl' cannot be null or undefined.");
     });
 });

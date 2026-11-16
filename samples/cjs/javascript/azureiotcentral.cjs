@@ -16,7 +16,7 @@
 "use strict";
 
 const { ManagedIdentityTokenProvider, ConnectorError } = require("@azure/connectors");
-const { AzureiotcentralClient } = require("@azure/connectors/generated/AzureiotcentralExtensions");
+const { AzureIoTCentralClient } = require("@azure/connectors/generated/AzureIoTCentralExtensions");
 
 const CONNECTION_URL = process.env.AZUREIOTCENTRAL_CONNECTION_URL ?? "";
 const APPLICATION_ID = process.env.AZUREIOTCENTRAL_APPLICATION_ID ?? "";
@@ -33,7 +33,7 @@ if (!APPLICATION_ID) {
 
 async function main() {
     const tokenProvider = new ManagedIdentityTokenProvider();
-    const client = new AzureiotcentralClient(CONNECTION_URL, tokenProvider);
+    const client = new AzureIoTCentralClient(CONNECTION_URL, tokenProvider);
 
     // Example 1: List the device groups in the application.
     try {

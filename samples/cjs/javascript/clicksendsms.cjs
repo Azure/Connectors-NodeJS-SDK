@@ -16,7 +16,7 @@
 "use strict";
 
 const { ManagedIdentityTokenProvider, ConnectorError } = require("@azure/connectors");
-const { ClicksendsmsClient } = require("@azure/connectors/generated/ClicksendsmsExtensions");
+const { ClickSendSmsClient } = require("@azure/connectors/generated/ClickSendSmsExtensions");
 
 const CONNECTION_URL = process.env.CLICKSENDSMS_CONNECTION_URL ?? "";
 
@@ -27,7 +27,7 @@ if (!CONNECTION_URL) {
 
 async function main() {
     const tokenProvider = new ManagedIdentityTokenProvider();
-    const client = new ClicksendsmsClient(CONNECTION_URL, tokenProvider);
+    const client = new ClickSendSmsClient(CONNECTION_URL, tokenProvider);
 
     // Example 1: List the contact lists.
     try {
