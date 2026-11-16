@@ -3,9 +3,9 @@
 Type-safe TypeScript and JavaScript clients for Azure managed connectors,
 with asynchronous operations, typed models, pagination, and trigger metadata.
 
-> **Early preview:** This SDK is not intended for production use. Breaking
-> changes are expected. These docs describe the current `main` branch, which
-> may differ from the version published on npm.
+> **General availability:** Version 1.0.0 is the first stable SDK release.
+> These docs describe the current `main` branch, which may differ from the
+> version published on npm.
 
 ## Install
 
