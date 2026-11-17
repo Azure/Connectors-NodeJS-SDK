@@ -2,19 +2,21 @@
 
 > Working draft. Confirm release status and approval to publish backend implementation details before publishing. The source references and publication checklist at the end are author notes, not part of the finished post.
 
-Connecting an application to an external service takes more than an HTTP request. The application needs an authorized connection, a way to detect changes, a delivery mechanism, and code that processes those changes.
+Say you run a shared support inbox. Each time a customer writes in, you want a function to read the email, pick out the important parts, and post a summary in your team's Teams channel. The business logic might be twenty lines.
 
-Our connector integration with Azure Functions separates these responsibilities. The connector platform manages connectivity and source-trigger execution. Azure Functions hosts and invokes application code. The Node.js SDK and Functions extension give developers typed APIs for calling actions and handling events.
+The rest of the work takes longer. You need permission to read the mailbox, some way to notice new mail and get it to your function, and separate permission to post in Teams. You'll rebuild most of that the next time you connect to a different service.
 
-This separation lets developers use managed connectors from code without rebuilding each service integration. To understand how, we need to follow both directions through the architecture: an application calling an external service, and an external event invoking an application.
+Azure connectors and the connector SDKs handle that work for you. The platform manages connections and authorization: you grant consent and set access policies once, and your function never handles Outlook or Teams tokens. The same app can react to an email in one service and call operations in another without integration code of its own. You also choose how events reach you. Webhook delivery pushes them to your function, and Poll delivery lets the function pull them when it's ready. We kept both on purpose so you can use whichever fits your app.
 
-## 1. What are the main architectural layers?
+Each language has one SDK for the connector catalog, which covers Microsoft 365, Azure services, and many SaaS and enterprise systems. Operations and payloads are typed, so IntelliSense and the compiler can check the fields you use. You set up connections and triggers from VS Code, the editor you already use for Functions, and SDKs are available for .NET, Python, and Node.js (JavaScript and TypeScript) from day one.
 
-The architecture has a configuration layer and two runtime paths.
+Below, we follow one email from the customer's Send button to the Teams channel.
 
-The configuration layer contains the Connector Namespace, connections, access policies, and trigger configurations. These define which service to connect to, who may use the connection, and which events the platform should deliver.
+## Architecture overview
 
-The action path starts with application code and ends with an external service operation. The event path starts with a change in an external service and ends with a function invocation.
+Before any code runs, you configure a Connector Namespace. It holds your connections, access policies, and trigger configurations, which together define the services you connect to, who can use each connection, and which events you want.
+
+At runtime, events travel from an external service to your function, and actions travel from your code to an external service. The support-inbox function uses both: the email arrives as an event, and the Teams post goes out as an action.
 
 ```mermaid
 flowchart TB
@@ -67,55 +69,42 @@ flowchart TB
     class SOURCE,TARGET external;
 ```
 
-Solid arrows show runtime flow. Dotted arrows show configuration dependencies, not event delivery. The host, extension, and handler boxes describe layers within the application, not separate deployed services.
+Solid arrows show runtime traffic, and dotted arrows show configuration that the runtime reads. The host, extension, and handler run inside your Function App as layers of one app.
 
-The generated SDK is not a second implementation of every SaaS integration. It provides the programming interface, while the managed connector runtime performs the service integration. Likewise, the Functions trigger helper does not implement a remote subscription protocol. It registers a handler with the host and makes delivered events easier to consume.
+The SDK gives you a typed API for each connector, and the managed connector runtime handles the integration with Outlook, Teams, or Salesforce. On the trigger side, the Functions helper registers your handler and cleans up the payload, while the platform talks to the source service.
 
-## 2. Why separate configuration from runtime execution?
+## Step 1: Authorize the Outlook connection
 
-Creating a connection and using a connection are different operations.
+Before the function can see the mailbox, you need an authorized Outlook connection and a trigger configuration that says what to watch.
 
-The management path defines:
+In the Outlook sample, `azd up` handles most of the setup. It provisions the Function App, the Connector Namespace, and the access policies, opens the browser for Outlook consent, and sets up the new-email trigger on your Inbox. The Poll version of the trigger is created separately. Both the connection and the subscription exist before your handler runs, so your code never creates them.
 
-- The connector and external account or service.
-- The authorization required by that external service.
-- The application identities allowed to access the connection.
-- The trigger operation and its source parameters.
-- The event-delivery mode.
+Two separate permission checks are involved:
 
-The runtime path uses that configuration to call an action or deliver an event.
+```mermaid
+flowchart LR
+    APP["Function App<br/>Managed identity"]
+    ACCESS["Connector platform<br/>Application access policy"]
+    CONNECTION["Authorized connection<br/>External service credentials or consent"]
+    SERVICE["External service<br/>Service-specific permissions"]
 
-This keeps resource setup out of the function handler. An email handler should not recreate an Outlook connection or establish a new source subscription on each invocation. It should process the event.
+    APP -->|"Application authentication"| ACCESS
+    ACCESS -->|"Use permitted connection"| CONNECTION
+    CONNECTION -->|"External service authorization"| SERVICE
 
-The sample deployment follows this separation. Infrastructure provisioning creates resources such as the Function App, Connector Namespace, and access policies. Deployment hooks complete connector authorization and trigger setup. The function processes events after those steps succeed.
+    classDef application fill:#ecfdf5,stroke:#059669,color:#111827;
+    classDef platform fill:#e0f2fe,stroke:#0284c7,color:#111827;
+    classDef external fill:#fff7ed,stroke:#ea580c,color:#111827;
+    class APP application;
+    class ACCESS,CONNECTION platform;
+    class SERVICE external;
+```
 
-The distinction also helps with troubleshooting. A connection that needs consent, a disabled trigger configuration, and an exception in application code are different failures. Each belongs to a different layer.
+The Function App's managed identity lets it use the connection through the connector platform. The connection holds the Outlook consent, so the managed identity alone can't read anyone's mailbox. Connectors also differ in how they authorize. If your app authenticates to the platform and its calls still fail, check whether the connection needs consent.
 
-## 3. How does an action call reach the external service?
+## Step 2: Start the trigger
 
-On the action path, developers use a generated connector client.
-
-The client exposes operation-specific methods and models derived from connector metadata. Shared SDK components handle the common work beneath those methods: constructing requests, acquiring bearer tokens through `TokenCredential`, applying HTTP policies, and exposing errors and tracing information.
-
-For the Connector Namespace proxy path, the service resolves the application-facing connection to its backing managed connector connection. It then forwards the operation through the connection runtime.
-
-This design separates three concerns:
-
-1. **The generated method** describes the operation, parameters, and response model.
-2. **The shared SDK layer** handles the common HTTP and credential behavior.
-3. **The connector runtime** handles the external service integration.
-
-Adding another generated client does not require another implementation of the shared transport layer.
-
-The SDK can also run outside Azure Functions. A Node.js service can use the same action clients without a Functions host. Functions adds an integrated event-processing environment; it is not a requirement for every connector action call.
-
-Transport policies do not remove application-level correctness concerns. Sending an email or creating a record can have non-idempotent effects. Applications still need to understand which operations they can safely repeat.
-
-## 4. How does a trigger configuration become an active event source?
-
-The event path begins with a trigger configuration, not the TypeScript handler.
-
-That configuration identifies the connection, connector operation, source parameters, and delivery settings. The platform uses it to generate a backing workflow that executes the connector trigger.
+The event path begins with the trigger configuration. It names the connection, the operation (`OnNewEmailV3` in this example), its parameters, and the delivery mode. The platform uses it to generate a backing workflow that runs the connector trigger.
 
 ```mermaid
 flowchart LR
@@ -146,51 +135,33 @@ flowchart LR
     class GENERATOR,SOURCE,CONDITIONS,DELIVERY,CALLBACK,QUEUE platform;
 ```
 
-The conditions and splitting box summarizes trigger behavior; it is not a separate workflow action.
+The conditions box groups trigger behavior and isn't a separate workflow step. The generator handles webhook, notification, and polling triggers, applies the trigger conditions you set, and uses connector metadata to split batches into individual items. The workflow's last action either calls your webhook or adds the output to a queue for your app to pull.
 
-The generator handles different source-trigger forms, including webhook, notification, and polling-based operations. It can apply configured trigger conditions and derive item-splitting behavior from connector metadata.
+Connector triggers already run on Logic Apps workflow infrastructure, so we reused it for Functions instead of building a second event engine. You don't write or manage this workflow. You work with the connection, the trigger configuration, and your handler.
 
-The generated workflow combines source-trigger execution with a delivery action. That action either sends output to a callback or buffers it for Poll consumers.
+When a customer sends an email, the workflow detects it. How the platform detected the email and how the email reaches your function are separate questions.
 
-The design reuses the existing connector-trigger runtime instead of building another source-integration engine for Functions.
+## Step 3: Separate source polling from Poll delivery
 
-**Developers do not need to author a workflow to use connector events in Functions, but the platform reuses workflow infrastructure to execute the source trigger.**
+The word "polling" appears on both sides of the platform with different meanings, which makes the two easy to mix up.
 
-The backing workflow is a platform implementation detail. The developer-facing contract remains the connection, trigger configuration, and function handler.
+Source polling is how the platform finds out about a change. Some services send notifications through a subscription, and others are checked on a schedule. Poll delivery is how your function receives events the platform has already captured.
 
-## 5. Is source polling the same as Poll delivery?
+You can combine them. The platform might check a mailbox on a schedule and push each new email to your function by webhook, or a service notification might wait in a Poll queue until your function picks it up. The connector handles detection, and you pick the delivery mode. Check which combinations your operation supports, because some aren't available for every operation.
 
-No. Polling can describe two different boundaries.
+## Step 4: Choose webhook or Poll delivery
 
-**Source polling** asks: how does the platform detect a change in the external service?
+The right choice depends on your network setup and how you want to process work.
 
-Some services send notifications through subscriptions. Other connector operations check the source on a schedule.
+### Webhook delivery
 
-**Poll delivery** asks: how does the application receive events that the platform has already produced?
+With webhook delivery, the platform sends each event to a callback on your Function App, which passes it to your handler. Use it when your app already has an endpoint the platform can reach.
 
-For example, the platform can periodically check a mailbox and then send the resulting events to an application callback. Source acquisition uses polling, but application delivery uses a webhook.
+Starting the Functions host on your laptop doesn't make it reachable; the trigger configuration has to point at an endpoint the platform can call. Deliveries can also fail or arrive twice, so handle both cases.
 
-An event acquired through a source subscription can also enter the Poll delivery path.
+### Poll delivery
 
-Separating acquisition from delivery prevents each consumer from needing to understand how every external service detects changes. The connector handles the source-facing behavior. Delivery settings determine how the application receives the resulting event.
-
-Do not infer that every combination is available for every connector operation. The architecture separates the concerns; the selected operation and supported configuration still define what an application can use.
-
-## 6. How do webhook and Poll delivery differ?
-
-### Webhook delivery: the platform calls the application
-
-In webhook delivery, the platform sends the configured event payload to an application callback.
-
-For Functions, that callback enters the connector-trigger integration, which invokes the registered handler.
-
-This path needs a callback endpoint that the platform can reach. Starting a local Functions host is not enough: the remote trigger configuration must target a reachable endpoint.
-
-Webhook delivery provides a push path, but it does not remove failure handling. Consumers should still account for unsuccessful delivery and possible repeated processing.
-
-### Poll delivery: the application receives buffered events
-
-In Poll delivery, the platform writes trigger outputs to a queue associated with the trigger configuration. The consumer receives events through runtime endpoints rather than exposing a callback for this delivery path.
+With Poll delivery, the platform writes trigger output to a queue tied to the trigger configuration, and your Function App pulls from that queue. You don't expose a public callback, which helps with local development and locked-down networks, and your app can work through events at its own pace.
 
 ```mermaid
 flowchart TB
@@ -222,129 +193,79 @@ flowchart TB
     LISTENER -.->|"Large-output retrieval"| STORED
 ```
 
-The acknowledgement operation belongs to the delivery protocol. Its exact timing relative to handler completion depends on the Functions host implementation and release; this diagram does not define that policy.
+Receiving and removing are separate operations in the queue protocol. A receive call returns events under a temporary lease, and an acknowledge call deletes them using the message IDs and lock tokens from the receive. Your app can also check whether events are waiting and get an approximate queue depth.
 
-The protocol separates receiving from removal:
+The Functions host decides when to acknowledge relative to your handler finishing, and that timing may change between releases.
 
-- **Receive** retrieves events under a temporary visibility lease.
-- **Acknowledge** deletes received events using message identifiers and lock tokens.
-- **Availability and depth queries** expose whether events exist and an approximate queue depth.
+Events stay in the queue until your app receives them, within the service's retention limits. If a lease expires before acknowledgement, the event comes back, so make side effects idempotent where you can.
 
-This decouples event production from the consumer's receive rate. If the application does not receive an event immediately, it can remain buffered, subject to service retention and operating limits.
+Large outputs, such as an email with a big attachment, aren't stored in the queue. The platform keeps the run output and queues a reference, and your function follows the link to fetch the content.
 
-A receive operation is not permanent removal. Applications should account for possible redelivery and make important side effects idempotent where possible.
+## Step 5: Run the handler
 
-For large outputs, the implementation can queue a backing-run reference rather than the full payload. The receive path then provides a link to the persisted output. The delivery record stays small without requiring the complete event to fit inside one queue message.
+In the Function App, the host's connector binding turns each delivery into a function invocation. The Node.js connector extension wraps registration and gives your handler a typed context.
 
-## 7. What do the Functions host and Node.js extension each do?
-
-There are two distinct integration layers on the Functions side.
-
-The **host-side connector binding** connects event delivery to function invocation.
-
-The **Node.js connector extension** wraps the host registration API and gives application code a consistent, typed context.
-
-| Layer | Responsibility |
+| Layer | What it does |
 | --- | --- |
-| Connector platform | Connection configuration, source-trigger execution, and event delivery. |
-| Functions host and connector binding | Listener integration and function invocation. |
-| Node.js connector extension | Payload normalization and typed registration helpers. |
-| Application handler | Business validation, transformation, and side effects. |
+| Connector platform | Holds connections, runs source triggers, delivers events. |
+| Functions host and connector binding | Listens for events and invokes your function. |
+| Node.js connector extension | Normalizes payloads and provides typed registration helpers. |
+| Your handler | Validates data, transforms it, and does the actual work. |
 
-The JavaScript wrapper does not implement remote event transport or create the source subscription.
+Payloads arrive as a single item, a collection, or an array of Poll envelopes. The extension flattens each shape into `context.items`, and connector-specific helpers expose the same items as `context.emails`, `context.messages`, or `context.files`. The original envelopes stay available in `context.rawPayload`.
 
-Incoming data can contain a single-item envelope, an envelope with a collection, or an array of polling envelopes. The wrapper normalizes these into `context.items`.
+The types help in the editor, but nothing checks them at runtime. Validate any field your logic depends on, especially in dynamic records.
 
-Connector-specific helpers expose readable aliases such as `context.emails`, `context.messages`, or `context.files`. The original envelope representation remains available through `context.rawPayload`.
+The Outlook sample registers its Poll handler like this:
 
-This makes the handler less dependent on transport envelope differences. It does not erase the distinction between an event envelope and the business items inside it.
+```typescript
+import { Cardinality, DeliveryMode, InvocationContext } from "@azure/functions";
+import { connectors, EmailTriggerContext } from "@azure/functions-extensions-connectors";
 
-TypeScript models improve development-time checks and IntelliSense. They do not prove that every incoming field has passed runtime schema validation. Application code must still validate fields required by its business rules, especially dynamic records.
+connectors.office365.onNewEmail("OnNewEmailPoll", {
+    deliveryMode: DeliveryMode.Poll,
+    connection: "ConnectorNamespace",
+    triggerConfigName: "%OnNewEmailPollTriggerConfigName%",
+    cardinality: Cardinality.Many,
+    maxBatchSize: 4,
+    targetPendingEventThreshold: 16,
+    handler: async (context: EmailTriggerContext, invocationContext: InvocationContext) => {
+        for (const email of context.emails) {
+            invocationContext.log(`Subject: '${email.subject}', From: '${email.from}'.`);
+        }
 
-## 8. How do batching and scaling controls relate?
-
-Batching can occur at several points:
-
-1. The source trigger can produce a collection.
-2. The platform can split that collection into separate executions, depending on metadata and configuration.
-3. Poll delivery can return several event envelopes together.
-4. The Node.js wrapper can combine items from those envelopes into one handler context.
-
-**The number of delivered events is not necessarily the number of business items.**
-
-The Outlook polling sample sets `maxBatchSize: 4`. That limits the number of Poll events per invocation, not necessarily the number of entries in `context.emails`. An event can contain multiple emails.
-
-Functions registration exposes separate controls for cardinality, concurrency, and a pending-event target used for scaling:
-
-- **Cardinality and batch size** control how events enter an invocation.
-- **Concurrency** controls how much invocation work can run at once.
-- **The pending-event target** provides an input for scaling decisions.
-
-Increasing all three does not guarantee better throughput. An external service may throttle requests, and a handler may perform expensive or non-idempotent work. Tune against the complete processing path rather than the receive rate alone.
-
-## 9. How do identities cross these layers?
-
-Authentication has separate boundaries.
-
-First, the application needs permission to use the connector platform. The polling sample configures the Function App's managed identity and access policies for this purpose.
-
-Second, the connection needs authorization to access the external service. For Outlook, the sample completes OAuth consent for the connected account.
-
-```mermaid
-flowchart LR
-    APP["Function App<br/>Managed identity"]
-    ACCESS["Connector platform<br/>Application access policy"]
-    CONNECTION["Authorized connection<br/>External service credentials or consent"]
-    SERVICE["External service<br/>Service-specific permissions"]
-
-    APP -->|"Application authentication"| ACCESS
-    ACCESS -->|"Use permitted connection"| CONNECTION
-    CONNECTION -->|"External service authorization"| SERVICE
-
-    classDef application fill:#ecfdf5,stroke:#059669,color:#111827;
-    classDef platform fill:#e0f2fe,stroke:#0284c7,color:#111827;
-    classDef external fill:#fff7ed,stroke:#ea580c,color:#111827;
-    class APP application;
-    class ACCESS,CONNECTION platform;
-    class SERVICE external;
+        return context.rawPayload;
+    },
+});
 ```
 
-These are logical authorization boundaries, not four separate authentication services.
+The registration names the function, sets delivery and batching options, and supplies the handler. Connection authorization and trigger setup happened in step 1. The sample is disabled by default and logs email metadata, so run it against a test account.
 
-Managed identity at the application boundary does not automatically remove external-service consent. Nor should a design assume every connector uses the same authorization method.
+### Batching and scaling
 
-This distinction helps explain a common diagnostic case: a Function App can authenticate to the platform while its external connection still needs authorization.
+Batching can happen in four places. The source trigger can return a collection, and the platform can split that collection into separate runs based on metadata and configuration. Poll delivery can then return several events at once, and the Node.js extension combines the items from those events into one handler call.
 
-## 10. How does one event move through the whole architecture?
+As a result, the event count and the email count can differ. In the sample, `maxBatchSize: 4` limits each invocation to four Poll events, but one event can hold several emails, so `context.emails` can have more than four entries.
 
-Consider an Outlook integration that receives new email through Poll delivery.
+Cardinality and batch size control how events are grouped into an invocation. `MaxConcurrentCalls` limits concurrent calls when events arrive one at a time; the host ignores it for batched bindings like the sample's. The pending-event target is an input to scaling decisions.
 
-1. Deployment creates the Function App, Connector Namespace, connection configuration, and access policies.
-2. The user completes Outlook consent.
-3. Setup creates a trigger configuration for the chosen mailbox folder and operation.
-4. The platform generates the backing trigger workflow.
-5. The source trigger detects new email.
-6. The delivery action buffers the resulting event output.
-7. The Functions connector listener receives events through the Poll runtime API.
-8. The host invokes the registered function.
-9. The Node.js extension exposes the normalized emails through `context.emails`.
-10. Application code validates the data and performs its business work, potentially calling another connector action through a generated SDK client.
+Raising every setting won't necessarily increase throughput. The external service may throttle you, and your handler may do slow or non-repeatable work, so measure throughput across the whole pipeline, from receiving the event to finishing its side effects.
 
-The TypeScript registration is only one part of this sequence. It names the function, selects delivery and batching options, and supplies the handler. It does not replace connection authorization or remote trigger setup.
+## Step 6: Post the summary to Teams
 
-The sample keeps those responsibilities separate so the handler can focus on what should happen when an email arrives.
+Once the handler has pulled the important details out of the email, it posts them to Teams. This call uses the action path from the overview diagram, which is independent of how the email arrived.
 
-## What does this architecture enable?
+You create a `TeamsClient` for your Teams connection and call one of its typed methods. A shared SDK layer builds the request, gets a token through `TokenCredential`, applies retries and other HTTP policies, and reports errors and tracing. The Connector Namespace resolves your connection and passes the call to the managed connector runtime, which calls Teams.
 
-The benefit is not just fewer lines of code. It is a clear division of responsibilities:
+Other generated clients follow the same pattern; you could use `SharePointOnlineClient` to save the attachment. You can also use the clients in Node.js apps outside Azure Functions.
 
-- The connector platform handles external-service integration and source-trigger execution.
-- The delivery layer supports callbacks and consumer-driven event receipt.
-- Azure Functions hosts and invokes application code.
-- The SDK and Node.js extension provide typed action and event APIs.
-- The application owns business validation, side effects, and idempotent processing.
+Retries don't make every call safe to repeat. If the same summary is posted twice, your team sees it twice, so know which operations your app can retry safely.
 
-Together, these layers let developers use existing connectors from code without putting connection management, source detection, delivery protocols, and business logic inside the same function.
+## Recap
+
+The connector detected the email in the mailbox, the platform delivered it by webhook or Poll, Functions invoked your handler, and an SDK client posted the summary to Teams. Your code ran only in the last two steps. The platform owns connections, detection, and delivery; Functions hosts your code; the SDK and the Node.js extension provide typed APIs; and your code owns validation, side effects, and idempotency.
+
+To try it, deploy the Outlook sample with `azd up` using a test account and send that account an email. The sample logs each email it receives, and you can add the Teams post from step 6.
 
 ---
 
@@ -362,16 +283,18 @@ These references describe the inspected local source, not a guarantee that every
 | SDK transport and authentication | [Connector HTTP pipeline](../Connectors-NodeJS-SDK/src/azureConnectors/connectorHttpClient.ts). |
 | Functions registration and normalization | [Node.js connector trigger wrapper](azure-functions-nodejs-extensions-connectors/src/connectors/connectorTrigger.ts). |
 | Functions helper options | [Connector extension guide](azure-functions-nodejs-extensions-connectors/README.md). |
-| Batched handler | [Outlook polling function](../functions-connectors-typescript/office365App/polling/src/functions/onNewEmailPoll.ts). |
-| Deployment and identity setup | [Outlook polling deployment](../functions-connectors-typescript/office365App/polling/README.md). |
+| Batched handler | [Outlook polling function](../../../functions-connectors-typescript/office365App/src/functions/onNewEmailPoll.ts). |
+| Deployment and identity setup | [Outlook sample deployment](../../../functions-connectors-typescript/office365App/README.md). |
 
 ## Author notes: publication checklist
 
 - Confirm approval to disclose backing workflows, queue behavior, and large-output references.
 - Pin the package versions used in any accompanying example. The SDK README describes 1.0.0 GA, while the inspected samples use preview packages.
 - Confirm supported connector operations and delivery combinations for the demonstrated release.
+- The intro states day-one support for .NET, Python, and Node.js, VS Code tooling, and a single-library catalog without qualification. Confirm release status, feature parity, and the connectors included in each package before publishing.
 - Verify exact host acknowledgement timing, failure handling, and scaling behavior against the matching host implementation before adding stronger claims.
 - Do not promise exactly-once processing, global ordering, a latency target, or unlimited buffering.
 - Run one end-to-end example using test data and capture the resulting function invocation.
+- The support-inbox story ends with a Teams post that the Outlook sample doesn't include. Consider adding a short `TeamsClient` snippet once the exact method and connection setup are confirmed.
 - Preview the Mermaid diagrams in a renderer that supports Mermaid before publishing. Export them as images if the blog platform does not render Mermaid.
 - Remove these author notes and replace internal source links with approved public references.
