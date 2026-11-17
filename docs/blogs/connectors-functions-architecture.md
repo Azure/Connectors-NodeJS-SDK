@@ -17,7 +17,7 @@ So we didn't write a second integration for each service. We built a new front d
 3. A Functions connector extension, with host and worker pieces, that receives events by webhook or by polling and feeds the Functions scale controller.
 4. One code generator that emits typed SDKs for .NET, Python, and Node.js from live connector metadata, plus tooling that sets everything up.
 
-![Animated architecture overview: the Outlook mailbox, the connector platform, and the Function App, with every flow from the email arriving to the summary reaching Teams](./images/architecture/architecture-all.gif)
+![Azure Connectors and Azure Functions architecture: the Outlook mailbox, the connector platform, and the Function App, with every flow from the email arriving to the summary reaching Teams](./images/architecture/architecture-all.gif)
 
 The [interactive version of this diagram](./connectors-functions-architecture-explorer.html) steps through each stage and lets you switch between webhook and Poll delivery.
 
@@ -27,7 +27,7 @@ A Connector Namespace is an Azure Resource Manager resource of type `Microsoft.W
 
 A connection is the application-facing name for a backing API Hub connection, the same kind Logic Apps uses. The consent you grant for Outlook lives there. An access policy lists the Microsoft Entra identities, such as a Function App's managed identity, that may use a connection. That split means the identity that calls the connection and the account that consented to the mailbox are separate, and you can change one without touching the other.
 
-![Animated Step 1: the Function App's managed identity presents a token to the access policies, and the Outlook and Teams connections hold OAuth consent for their accounts](./images/architecture/step-1-authorize.gif)
+![Authorize the connections: the Function App's managed identity presents a token to the access policies, and the Outlook and Teams connections hold OAuth consent for their accounts](./images/architecture/step-1-authorize.gif)
 
 A trigger configuration describes an event source. Its properties include the connection, the connector operation (for the support inbox, `OnNewEmailV3`), the operation's parameters, optional trigger conditions and settings, and a delivery mode. For webhook delivery it carries the callback details; for Poll delivery the service fills in the polling endpoints.
 
@@ -52,7 +52,7 @@ The SDK side is thin on purpose. Generated clients extend a shared base class th
 
 When you create a trigger configuration, the trigger API validates the request, generates a Logic Apps workflow definition, creates the workflow directly in a platform-owned subscription under a generated name, and stores the workflow details alongside the trigger configuration. Updates rewrite the workflow, and deleting the trigger configuration removes the workflow, its Poll queue, and its message history.
 
-![Animated Step 2: the trigger configuration generates the backing trigger workflow, which uses the Outlook connection](./images/architecture/step-2-trigger.gif)
+![Start the trigger: the trigger configuration generates the backing trigger workflow, which uses the Outlook connection](./images/architecture/step-2-trigger.gif)
 
 The workflow generator picks the right trigger shape for the operation's metadata: a notification subscription, a webhook subscription, or a recurring poll. It adds `splitOn` for operations that return batches, so each item becomes its own run unless the configuration opts out, and it applies any trigger conditions you set. The workflow ends with a connector delivery action.
 
@@ -66,7 +66,7 @@ How the platform notices a new email and how the event reaches your function are
 
 For webhook delivery, which is the default, the delivery action makes an HTTPS call to the callback in the trigger configuration, using the workflow engine's HTTP retry policy. On the Function App side, the callback is the host's `/runtime/webhooks/connector` route, protected by a system key named `connector_extension`. A `functionName` query parameter selects the function. The host returns `202` when the invocation succeeds, `400` for a missing or invalid name, `404` for an unknown function, and `500` when the invocation fails.
 
-![Animated Step 4 with webhook delivery: the delivery action calls the Functions host back over HTTPS](./images/architecture/step-4-webhook.gif)
+![Deliver the event by webhook: the delivery action calls the Functions host back over HTTPS](./images/architecture/step-4-webhook.gif)
 
 ### Poll delivery
 
@@ -74,7 +74,7 @@ For Poll delivery, the delivery action writes the event to an Azure Storage queu
 
 The Poll runtime API sits in front of the queue and has four operations: `receive`, `acknowledge`, `hasMessages`, and `approximateQueueDepth`. `receive` hands out events under a temporary lease with an opaque lock token. `acknowledge` deletes an event only when the message ID and a still-valid lock token match. If the lease expires first, the event becomes visible again. The reported depth is approximate and excludes leased messages.
 
-![Animated Step 4 with Poll delivery: the delivery action enqueues the event, and the Functions host receives and acknowledges it from the Poll queue](./images/architecture/step-4-poll.gif)
+![Deliver the event by Poll: the delivery action enqueues the event, and the Functions host receives and acknowledges it from the Poll queue](./images/architecture/step-4-poll.gif)
 
 Poll delivery means the Function App never exposes an inbound endpoint, and work can build up safely when the app is busy, scaled to zero, or running on a developer's laptop.
 
@@ -121,6 +121,18 @@ export const onUpdatedFiles = registerFileTrigger;
 ```
 
 `BlobMetadata` comes from the same generated module that the OneDrive client uses for actions, so a trigger payload and an action response share one type, defined once from the connector's metadata.
+
+### Calling out from the handler
+
+After reading the email, the handler posts a summary to Teams. That call leaves the Function App through the same connector platform, going the other way.
+
+The handler calls a generated Teams client with typed input. The client holds the Teams connection's runtime URL and an Azure Identity credential, gets a Microsoft Entra token, usually for the Function App's managed identity, and sends the request. The Function App never holds a Teams token or secret.
+
+The connection's access policies decide whether that identity may use the Teams connection, and the connection holds the OAuth consent for the account that posts. The connector runtime resolves the connection, replaces the caller's identity headers with a platform token, and runs the operation against Teams.
+
+![Post the summary to Teams: the handler calls the Teams SDK client, the request goes through the connector runtime using the Function App's identity and the Teams connection's consent, and the runtime posts the message to Teams](./images/architecture/step-6-teams.gif)
+
+This path doesn't depend on how the email arrived, so it works the same with webhook or Poll delivery and with any connector in the catalog. Idempotency is the handler's job. The SDK won't retry a failed post, but a redelivered event runs the whole invocation again, so the handler should check before posting the same summary twice.
 
 ## One generator, three SDKs
 
