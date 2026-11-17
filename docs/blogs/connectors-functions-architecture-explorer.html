@@ -1,0 +1,933 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Interactive architecture: How connectors work with Azure Functions</title>
+<meta name="description" content="Step through how an email travels from an Outlook inbox, through Azure connectors and Azure Functions, to a Teams channel.">
+<style>
+  :root {
+    --bg: #f8fafc;
+    --surface: #ffffff;
+    --surface-2: #f1f5f9;
+    --text: #0f172a;
+    --muted: #475569;
+    --border: #cbd5e1;
+    --accent: #2563eb;
+    --accent-text: #ffffff;
+    --code-bg: #0f172a;
+    --code-text: #e2e8f0;
+    --node-text: #0f172a;
+    --node-sub: #475569;
+    --dim: 0.22;
+    --external-fill: #fff7ed; --external-stroke: #ea580c;
+    --platform-fill: #e0f2fe; --platform-stroke: #0284c7;
+    --app-fill: #ecfdf5; --app-stroke: #059669;
+    --config-fill: #eef2ff; --config-stroke: #4f46e5;
+    --group-external: rgba(234, 88, 12, 0.06);
+    --group-platform: rgba(2, 132, 199, 0.06);
+    --group-app: rgba(5, 150, 105, 0.06);
+    --label-bg: #ffffff;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #0b1220;
+      --surface: #111a2e;
+      --surface-2: #17223a;
+      --text: #e2e8f0;
+      --muted: #94a3b8;
+      --border: #334155;
+      --accent: #60a5fa;
+      --accent-text: #0b1220;
+      --code-bg: #020617;
+      --code-text: #e2e8f0;
+      --node-text: #f1f5f9;
+      --node-sub: #cbd5e1;
+      --dim: 0.2;
+      --external-fill: #3b1d0a; --external-stroke: #fb923c;
+      --platform-fill: #082f49; --platform-stroke: #38bdf8;
+      --app-fill: #052e22; --app-stroke: #34d399;
+      --config-fill: #1e1b4b; --config-stroke: #a5b4fc;
+      --group-external: rgba(251, 146, 60, 0.06);
+      --group-platform: rgba(56, 189, 248, 0.06);
+      --group-app: rgba(52, 211, 153, 0.06);
+      --label-bg: #0b1220;
+    }
+  }
+
+  * { box-sizing: border-box; }
+
+  body {
+    margin: 0;
+    font-family: "Segoe UI", system-ui, -apple-system, Roboto, Helvetica, Arial, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.5;
+  }
+
+  .explorer {
+    max-width: 1320px;
+    margin: 0 auto;
+    padding: 20px;
+  }
+
+  .explorer:fullscreen {
+    max-width: none;
+    background: var(--bg);
+    overflow: auto;
+  }
+
+  header h1 {
+    font-size: 1.4rem;
+    margin: 0 0 4px;
+  }
+
+  header p {
+    margin: 0 0 16px;
+    color: var(--muted);
+  }
+
+  .toolbar {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    align-items: center;
+    margin-bottom: 12px;
+  }
+
+  .segmented {
+    display: inline-flex;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    overflow: hidden;
+    background: var(--surface);
+  }
+
+  .segmented button,
+  .button {
+    font: inherit;
+    font-size: 0.9rem;
+    border: 0;
+    background: transparent;
+    color: var(--text);
+    padding: 6px 12px;
+    cursor: pointer;
+  }
+
+  .segmented button + button {
+    border-left: 1px solid var(--border);
+  }
+
+  .segmented button[aria-pressed="true"] {
+    background: var(--accent);
+    color: var(--accent-text);
+  }
+
+  .button {
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    background: var(--surface);
+  }
+
+  button:focus-visible,
+  [tabindex="0"]:focus-visible {
+    outline: 3px solid var(--accent);
+    outline-offset: 2px;
+  }
+
+  .toolbar .label {
+    font-size: 0.8rem;
+    color: var(--muted);
+    margin-right: -6px;
+  }
+
+  .spacer { flex: 1; }
+
+  .layout {
+    display: grid;
+    grid-template-columns: minmax(0, 2.2fr) minmax(300px, 1fr);
+    gap: 16px;
+  }
+
+  @media (max-width: 960px) {
+    .layout { grid-template-columns: 1fr; }
+  }
+
+  .stage {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 8px;
+  }
+
+  .stage svg {
+    width: 100%;
+    height: auto;
+    display: block;
+  }
+
+  .legend {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 14px;
+    padding: 6px 8px 2px;
+    font-size: 0.8rem;
+    color: var(--muted);
+  }
+
+  .legend span::before {
+    content: "";
+    display: inline-block;
+    width: 18px;
+    height: 0;
+    border-top: 3px solid var(--swatch);
+    margin-right: 6px;
+    vertical-align: middle;
+  }
+
+  .legend span.dashed::before { border-top-style: dashed; }
+
+  .panel {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    min-width: 0;
+  }
+
+  .panel h2 {
+    font-size: 1.05rem;
+    margin: 0;
+  }
+
+  .panel h3 {
+    font-size: 0.95rem;
+    margin: 0 0 4px;
+  }
+
+  .panel p {
+    margin: 0 0 8px;
+  }
+
+  .panel .eyebrow {
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--muted);
+    margin-bottom: 2px;
+  }
+
+  .inspector {
+    border-top: 1px solid var(--border);
+    padding-top: 12px;
+  }
+
+  .inspector .hint {
+    color: var(--muted);
+    font-size: 0.9rem;
+  }
+
+  pre {
+    background: var(--code-bg);
+    color: var(--code-text);
+    border-radius: 8px;
+    padding: 10px 12px;
+    font-size: 0.78rem;
+    overflow-x: auto;
+    margin: 6px 0 8px;
+  }
+
+  code {
+    font-family: "Cascadia Code", ui-monospace, Menlo, Consolas, monospace;
+    font-size: 0.85em;
+  }
+
+  .panel table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.82rem;
+  }
+
+  .panel th,
+  .panel td {
+    text-align: left;
+    padding: 4px 6px;
+    border-bottom: 1px solid var(--border);
+    vertical-align: top;
+  }
+
+  .nav-row {
+    display: flex;
+    gap: 8px;
+  }
+
+  /* SVG */
+  .group-box { stroke-width: 1.4; }
+  .group-title { font-size: 12px; font-weight: 700; letter-spacing: 0.06em; fill: var(--muted); }
+  .node rect { stroke-width: 1.6; transition: opacity 0.25s, stroke-width 0.2s; }
+  .node text { pointer-events: none; }
+  .node .title { font-size: 13.5px; font-weight: 600; fill: var(--node-text); }
+  .node .sub { font-size: 11.5px; fill: var(--node-sub); }
+  .node { cursor: pointer; transition: opacity 0.25s; }
+  .node.selected rect { stroke-width: 3.4; }
+  .node.dim, .edge.dim { opacity: var(--dim); }
+  .edge { cursor: pointer; transition: opacity 0.25s; }
+  .edge .line { fill: none; stroke-width: 2; }
+  .edge.active .line { stroke-width: 3; }
+  .edge.selected .line { stroke-width: 3.6; }
+  .edge.dashed .line { stroke-dasharray: 6 5; }
+  .edge .hit { fill: none; stroke: transparent; stroke-width: 14; }
+  .edge .tag rect { fill: var(--label-bg); stroke-width: 1; }
+  .edge .tag text { font-size: 10.5px; fill: var(--text); font-family: "Cascadia Code", ui-monospace, Menlo, Consolas, monospace; }
+  .edge.hidden { display: none; }
+  .edge.active .line { animation: flow 0.9s linear infinite; stroke-dasharray: 10 6; }
+
+  @keyframes flow {
+    to { stroke-dashoffset: -16; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .edge.active .line { animation: none; }
+    .packet { display: none; }
+  }
+</style>
+</head>
+<body>
+<div class="explorer" id="explorer">
+  <header>
+    <h1>How connectors work with Azure Functions</h1>
+    <p>Follow one email from a support inbox to a Teams channel. Pick a step and switch between webhook and Poll delivery. Select any box or arrow to see what it does.</p>
+  </header>
+
+  <div class="toolbar" role="toolbar" aria-label="Explorer controls">
+    <span class="label" id="step-label">Step</span>
+    <div class="segmented" id="phase-buttons" role="group" aria-labelledby="step-label"></div>
+    <div class="nav-row">
+      <button class="button" id="prev" type="button" aria-label="Previous step">&#8592; Back</button>
+      <button class="button" id="play" type="button" aria-pressed="false">&#9654; Play</button>
+      <button class="button" id="next" type="button" aria-label="Next step">Next &#8594;</button>
+    </div>
+    <div class="spacer"></div>
+    <span class="label" id="delivery-label">Delivery</span>
+    <div class="segmented" id="delivery-buttons" role="group" aria-labelledby="delivery-label">
+      <button type="button" data-delivery="webhook">Webhook</button>
+      <button type="button" data-delivery="poll">Poll</button>
+    </div>
+    <button class="button" id="fullscreen" type="button">&#x26F6; Expand</button>
+  </div>
+
+  <div class="layout">
+    <div class="stage">
+      <svg id="diagram" viewBox="0 0 1200 570" role="group" aria-label="Architecture diagram"></svg>
+      <div class="legend" id="legend"></div>
+    </div>
+    <aside class="panel" aria-live="polite">
+      <section id="phase-panel"></section>
+      <section class="inspector" id="inspector"></section>
+    </aside>
+  </div>
+</div>
+
+<script>
+(function () {
+  "use strict";
+
+  const SVG_NS = "http://www.w3.org/2000/svg";
+  const PLAY_INTERVAL_MS = 4000;
+  const NODE_WIDTH = 180;
+  const APP_NODE_WIDTH = 170;
+  const NODE_HEIGHT = 52;
+  const EXTERNAL_WIDTH = 160;
+
+  const EDGE_KINDS = {
+    config: { color: "#6366f1", label: "Configuration", dashed: true },
+    auth: { color: "#d97706", label: "Identity and consent", dashed: true },
+    event: { color: "#ea580c", label: "Event path" },
+    delivery: { color: "#0284c7", label: "Delivery" },
+    invoke: { color: "#059669", label: "Invocation" },
+    action: { color: "#9333ea", label: "Action path" },
+  };
+
+  const GROUPS = [
+    { id: "external", title: "EXTERNAL SERVICES", x: 20, y: 50, width: 200, height: 500, fill: "var(--group-external)", stroke: "var(--external-stroke)" },
+    { id: "platform", title: "CONNECTOR PLATFORM", x: 250, y: 50, width: 440, height: 500, fill: "var(--group-platform)", stroke: "var(--platform-stroke)" },
+    { id: "app", title: "FUNCTION APP", x: 740, y: 50, width: 440, height: 500, fill: "var(--group-app)", stroke: "var(--app-stroke)" },
+  ];
+
+  const TONES = {
+    external: { fill: "var(--external-fill)", stroke: "var(--external-stroke)" },
+    platform: { fill: "var(--platform-fill)", stroke: "var(--platform-stroke)" },
+    config: { fill: "var(--config-fill)", stroke: "var(--config-stroke)" },
+    app: { fill: "var(--app-fill)", stroke: "var(--app-stroke)" },
+  };
+
+  const POLL_SETTINGS = [
+    ["Batched invocations", "Deliver several events to one invocation."],
+    ["Maximum batch size", "Up to 32 events per invocation; the default is 1."],
+    ["Concurrent calls", "Limits concurrent calls when events arrive one at a time. Ignored for batched functions, which handle one batch at a time per listener."],
+    ["Pending-event target", "Queue depth divided by this target decides how many instances run."],
+  ];
+
+  const NODES = [
+    { id: "mailbox", tone: "external", x: 40, y: 190, width: EXTERNAL_WIDTH, title: "Outlook mailbox", sub: "Support inbox",
+      body: "A customer emails the shared support inbox. Outlook knows nothing about your function; the connector watches the mailbox on your behalf." },
+    { id: "teams", tone: "external", x: 40, y: 470, width: EXTERNAL_WIDTH, title: "Teams channel", sub: "Triage channel",
+      body: "Where the summary ends up. The Teams connector posts the message using the consent stored on the Teams connection." },
+    { id: "triggerConfig", tone: "config", x: 270, y: 100, title: "Trigger configuration", sub: "OnNewEmailV3 on Inbox",
+      body: "Names the connection, the connector operation, its parameters, and the delivery mode. The event path starts here, before any of your code runs." },
+    { id: "outlookConnection", tone: "config", x: 270, y: 290, title: "Outlook connection", sub: "Holds OAuth consent",
+      body: "Holds the consent to read the mailbox. Managed identity on its own can't read anyone's mail; that permission lives here." },
+    { id: "teamsConnection", tone: "config", x: 270, y: 380, title: "Teams connection", sub: "Holds OAuth consent",
+      body: "A separate connection with its own consent, so the account that posts to Teams can differ from the one that reads the mailbox." },
+    { id: "runtime", tone: "platform", x: 270, y: 470, title: "Connector runtime", sub: "Resolves and forwards calls",
+      body: "The Connector Namespace resolves your connection and passes SDK calls to the managed connector runtime, which talks to the external service." },
+    { id: "policy", tone: "config", x: 490, y: 100, title: "Access policies", sub: "Who may use connections",
+      body: "List the identities allowed to use each connection. If the Function App's identity isn't on the list, calls are rejected even when consent is in place." },
+    { id: "workflow", tone: "platform", x: 490, y: 190, title: "Backing trigger workflow", sub: "Detects new email",
+      body: "Generated by the platform from the trigger configuration. It runs the connector trigger on existing Logic Apps workflow infrastructure, applies trigger conditions, and splits batches into items. You never write or manage it." },
+    { id: "delivery", tone: "platform", x: 490, y: 280, title: "Delivery action", sub: "Webhook or Poll",
+      body: "The last step of the backing workflow. It either calls your Function App's webhook or writes the event to the Poll queue." },
+    { id: "queue", tone: "platform", x: 490, y: 380, title: "Poll queue", sub: "Lease and acknowledge",
+      body: "Used only with Poll delivery. Events wait here, within retention limits, until your app receives them under a temporary lease. Acknowledging deletes them; an expired lease makes the event visible again. Large outputs are stored separately and queued as a link." },
+    { id: "identity", tone: "app", x: 755, y: 100, width: APP_NODE_WIDTH, title: "Managed identity", sub: "Function App identity",
+      body: "The Function App authenticates to the connector platform with its managed identity. Access policies decide which connections it may use." },
+    { id: "host", tone: "app", x: 755, y: 280, width: APP_NODE_WIDTH, title: "Functions host", sub: "Connector trigger binding",
+      body: "The host's connector binding turns each delivery into a function invocation. With Poll delivery it also runs the listener that receives and acknowledges events." },
+    { id: "extension", tone: "app", x: 755, y: 380, width: APP_NODE_WIDTH, title: "Connector extension", sub: "Functions worker",
+      body: "The connector extension runs in the Functions worker. It turns the payload into typed objects and provides registration helpers. The architecture is the same in every supported language." },
+    { id: "handler", tone: "app", x: 995, y: 380, width: APP_NODE_WIDTH, title: "Your handler", sub: "Summarize the email",
+      body: "Your business logic. The types help in the editor, but nothing checks them at runtime, so validate the fields you depend on." },
+    { id: "client", tone: "app", x: 995, y: 470, width: APP_NODE_WIDTH, title: "Teams SDK client", sub: "TeamsClient",
+      body: "A generated, typed client. Under it, the SDK builds the request, gets a token from an Azure Identity credential, applies retries and other HTTP policies, and reports errors. The clients also work outside Azure Functions." },
+  ];
+
+  const EDGES = [
+    { id: "outlookConsent", from: ["outlookConnection", "l", 0.5], to: ["mailbox", "r", 0.8], kind: "auth", label: "consent",
+      body: "You complete OAuth consent once. The connection keeps it, so your function never handles Outlook tokens." },
+    { id: "teamsConsent", from: ["teamsConnection", "l", 0.5], to: ["teams", "t", 0.7], kind: "auth", label: "consent",
+      body: "The Teams connection has its own consent, separate from the Outlook one." },
+    { id: "identityToken", from: ["identity", "l", 0.5], to: ["policy", "r", 0.5], kind: "auth", label: "token",
+      body: "The Function App presents a token for its managed identity. The access policy decides whether that identity may use the connection." },
+    { id: "generates", from: ["triggerConfig", "r", 0.5], to: ["workflow", "t", 0.5], kind: "config", label: "generates", labelPosition: { x: 470, y: 171 },
+      body: "The platform generates the backing workflow from the trigger configuration and the connector's metadata." },
+    { id: "usesConnection", from: ["outlookConnection", "t", 0.7], to: ["workflow", "l", 0.8], kind: "config", label: "uses",
+      body: "The backing workflow runs the trigger through the Outlook connection." },
+    { id: "detect", from: ["mailbox", "r", 0.4], to: ["workflow", "l", 0.4], kind: "event", label: "new email",
+      body: "Source detection. Some services notify through a subscription; others are checked on a schedule. This is separate from how the event reaches your function." },
+    { id: "triggerOutput", from: ["workflow", "b", 0.5], to: ["delivery", "t", 0.5], kind: "event", label: "trigger output",
+      body: "The trigger's output moves to the delivery action." },
+    { id: "webhook", from: ["delivery", "r", 0.5], to: ["host", "l", 0.4], kind: "delivery", label: "callback", mode: "webhook",
+      body: "Webhook delivery. The platform calls an endpoint on your Function App, so that endpoint has to be reachable. Deliveries can fail or arrive twice." },
+    { id: "enqueue", from: ["delivery", "b", 0.5], to: ["queue", "t", 0.5], kind: "delivery", label: "enqueue", mode: "poll",
+      body: "Poll delivery. The event is written to a queue tied to the trigger configuration." },
+    { id: "receive", from: ["host", "l", 0.85], to: ["queue", "r", 0.4], kind: "delivery", label: "receive, ack", mode: "poll",
+      body: "The host's listener receives events under a lease, then acknowledges them with the lock tokens it got back. No public callback is needed." },
+    { id: "invoke", from: ["host", "b", 0.5], to: ["extension", "t", 0.5], kind: "invoke", label: "invoke",
+      body: "The host invokes your function through the Functions worker." },
+    { id: "typed", from: ["extension", "r", 0.5], to: ["handler", "l", 0.5], kind: "invoke", label: "emails",
+      body: "The extension hands your handler typed email objects." },
+    { id: "post", from: ["handler", "b", 0.5], to: ["client", "t", 0.5], kind: "action", label: "post summary",
+      body: "The handler calls the Teams client. This is the action path, independent of how the email arrived." },
+    { id: "call", from: ["client", "l", 0.5], to: ["runtime", "r", 0.5], kind: "action", label: "connection runtime call",
+      body: "The SDK sends the request to the connection's runtime URL with a token for the Function App's identity. Retries don't make every call safe to repeat; a duplicate post means a duplicate message." },
+    { id: "teamsCredentials", from: ["teamsConnection", "b", 0.5], to: ["runtime", "t", 0.5], kind: "auth", label: "consent",
+      body: "The runtime uses the consent stored on the Teams connection." },
+    { id: "teamsApi", from: ["runtime", "l", 0.5], to: ["teams", "r", 0.5],     kind: "action", label: "post",
+      body: "The managed connector runtime posts the message to Teams." },
+  ];
+
+  const PHASES = [
+    { id: "overview", short: "All", title: "The whole route",
+      nodes: null, edges: null,
+      text: () => `<p>Configuration lives in a Connector Namespace: connections, access policies, and trigger configurations. At runtime, events travel from an external service to your function, and actions travel from your code to an external service.</p><p>The support-inbox function uses both paths. The email arrives as an event, and the Teams post goes out as an action. Press Play or pick a step to follow it.</p>` },
+    { id: "authorize", short: "1", title: "Step 1: Authorize the connections",
+      nodes: ["outlookConnection", "teamsConnection", "policy", "identity", "mailbox", "teams"],
+      edges: ["outlookConsent", "teamsConsent", "identityToken"],
+      text: () => `<p>Two separate checks are involved. The Function App's managed identity lets it use a connection through the platform, and the connection holds the consent for the external account.</p><p>If your app authenticates to the platform and its calls still fail, check whether the connection needs consent.</p>` },
+    { id: "trigger", short: "2", title: "Step 2: Start the trigger",
+      nodes: ["triggerConfig", "workflow", "outlookConnection", "mailbox"],
+      edges: ["generates", "usesConnection"],
+      text: () => `<p>The trigger configuration names the connection, the operation (<code>OnNewEmailV3</code>), its parameters, and the delivery mode. The platform generates a backing workflow from it.</p><p>Connector triggers already run on Logic Apps workflow infrastructure, so we reused it instead of building a second event engine. You never write or manage this workflow.</p>` },
+    { id: "detect", short: "3", title: "Step 3: Detect the email",
+      nodes: ["mailbox", "workflow", "delivery"],
+      edges: ["detect", "triggerOutput"],
+      text: () => `<p>A customer sends an email and the workflow detects it. Source polling, meaning how the platform notices the change, is separate from Poll delivery, meaning how your function receives the event.</p><p>The platform can check a mailbox on a schedule and still push the result to you by webhook.</p>` },
+    { id: "deliver", short: "4", title: "Step 4: Deliver the event",
+      nodes: (state) => state.delivery === "poll" ? ["delivery", "queue", "host"] : ["delivery", "host"],
+      edges: (state) => state.delivery === "poll" ? ["enqueue", "receive"] : ["webhook"],
+      text: (state) => state.delivery === "poll"
+        ? `<p>With Poll delivery the event waits in a queue until your Function App pulls it. You don't expose a public callback, which helps with local development and locked-down networks.</p><p>Receiving and removing are separate. If a lease expires before acknowledgement, the event comes back, so make side effects idempotent.</p>${pollSettingsTable()}`
+        : `<p>With webhook delivery the platform calls an endpoint on your Function App. The endpoint has to be reachable from the platform; starting the host on your laptop doesn't make it reachable.</p><p>Deliveries can fail or arrive twice, so handle both. Switch to Poll to compare.</p>` },
+    { id: "handler", short: "5", title: "Step 5: Run the handler",
+      nodes: ["host", "extension", "handler"],
+      edges: ["invoke", "typed"],
+      text: () => `<p>The host's connector binding invokes your function, and the connector extension in the Functions worker passes the email to your handler as typed objects.</p><p>This works the same way in every supported language. Your handler only has to deal with the emails.</p>` },
+    { id: "action", short: "6", title: "Step 6: Post the summary to Teams",
+      nodes: ["handler", "client", "runtime", "teamsConnection", "teams", "identity", "policy"],
+      edges: ["post", "call", "teamsCredentials", "teamsApi"],
+      text: () => `<p>The handler posts the summary with a generated Teams client. The SDK adds a token for the Function App's identity, the Connector Namespace resolves the connection, and the runtime calls Teams.</p><p>Retries don't make every call safe to repeat. A duplicate post means your team sees the summary twice.</p>` },
+  ];
+
+  const state = {
+    phaseIndex: 0,
+    delivery: "webhook",
+    selected: null,
+    playing: false,
+  };
+
+  let playTimer = null;
+
+  const svg = document.getElementById("diagram");
+  const phaseButtons = document.getElementById("phase-buttons");
+  const phasePanel = document.getElementById("phase-panel");
+  const inspector = document.getElementById("inspector");
+  const playButton = document.getElementById("play");
+  const explorer = document.getElementById("explorer");
+  const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  function escapeHtml(text) {
+    return String(text)
+      .replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;")
+      .replace(/"/g, "&quot;");
+  }
+
+  function pollSettingsTable() {
+    const rows = POLL_SETTINGS
+      .map((setting) => `<tr><td>${setting[0]}</td><td>${setting[1]}</td></tr>`)
+      .join("");
+
+    return `<h3>Poll settings</h3><table><tbody>${rows}</tbody></table>`;
+  }
+
+  function createElement(name, attributes, parent) {
+    const element = document.createElementNS(SVG_NS, name);
+    for (const [key, value] of Object.entries(attributes || {})) {
+      element.setAttribute(key, value);
+    }
+
+    if (parent) {
+      parent.appendChild(element);
+    }
+
+    return element;
+  }
+
+  function nodeById(id) {
+    return NODES.find((node) => node.id === id);
+  }
+
+  function nodeWidth(node) {
+    return node.width || NODE_WIDTH;
+  }
+
+  function anchor(nodeId, side, fraction) {
+    const node = nodeById(nodeId);
+    const width = nodeWidth(node);
+    switch (side) {
+      case "l": return { x: node.x, y: node.y + NODE_HEIGHT * fraction, dx: -1, dy: 0 };
+      case "r": return { x: node.x + width, y: node.y + NODE_HEIGHT * fraction, dx: 1, dy: 0 };
+      case "t": return { x: node.x + width * fraction, y: node.y, dx: 0, dy: -1 };
+      default: return { x: node.x + width * fraction, y: node.y + NODE_HEIGHT, dx: 0, dy: 1 };
+    }
+  }
+
+  function edgeGeometry(edge) {
+    const start = anchor(...edge.from);
+    const end = anchor(...edge.to);
+    const distance = Math.hypot(end.x - start.x, end.y - start.y);
+    const pull = Math.min(90, Math.max(24, distance * 0.4));
+    const control1 = { x: start.x + start.dx * pull, y: start.y + start.dy * pull };
+    const control2 = { x: end.x + end.dx * pull, y: end.y + end.dy * pull };
+    const path = `M${start.x},${start.y} C${control1.x},${control1.y} ${control2.x},${control2.y} ${end.x},${end.y}`;
+    const midpoint = edge.labelPosition || {
+      x: 0.125 * start.x + 0.375 * control1.x + 0.375 * control2.x + 0.125 * end.x,
+      y: 0.125 * start.y + 0.375 * control1.y + 0.375 * control2.y + 0.125 * end.y,
+    };
+
+    return { path, midpoint };
+  }
+
+  function resolve(value) {
+    return typeof value === "function" ? value(state) : value;
+  }
+
+  function currentPhase() {
+    return PHASES[state.phaseIndex];
+  }
+
+  function edgeVisible(edge) {
+    return !edge.mode || edge.mode === state.delivery;
+  }
+
+  function buildDiagram() {
+    const defs = createElement("defs", {}, svg);
+    for (const [kind, style] of Object.entries(EDGE_KINDS)) {
+      const marker = createElement("marker", {
+        id: `arrow-${kind}`,
+        markerWidth: 10,
+        markerHeight: 10,
+        refX: 9,
+        refY: 5,
+        orient: "auto",
+        markerUnits: "userSpaceOnUse",
+      }, defs);
+      createElement("path", { d: "M0,0 L10,5 L0,10 Z", fill: style.color }, marker);
+    }
+
+    for (const group of GROUPS) {
+      const groupElement = createElement("g", {}, svg);
+      createElement("rect", {
+        class: "group-box",
+        x: group.x,
+        y: group.y,
+        width: group.width,
+        height: group.height,
+        rx: 14,
+        fill: group.fill,
+        stroke: group.stroke,
+        "stroke-opacity": 0.5,
+      }, groupElement);
+      const title = createElement("text", { class: "group-title", x: group.x + 14, y: group.y + 22 }, groupElement);
+      title.textContent = group.title;
+    }
+
+    const edgeLayer = createElement("g", {}, svg);
+    createElement("g", { id: "packets" }, svg);
+
+    // NOTE(swapnil-nagar): Labels sit in their own layer above the packets so moving dots never cover label text.
+    const tagLayer = createElement("g", {}, svg);
+    for (const edge of EDGES) {
+      const style = EDGE_KINDS[edge.kind];
+      const geometry = edgeGeometry(edge);
+      const edgeElement = createElement("g", {
+        class: `edge${style.dashed ? " dashed" : ""}`,
+        "data-edge": edge.id,
+        tabindex: 0,
+        role: "button",
+        "aria-label": `${edge.label}: ${nodeById(edge.from[0]).title} to ${nodeById(edge.to[0]).title}`,
+      }, edgeLayer);
+      createElement("path", { class: "hit", d: geometry.path }, edgeElement);
+      createElement("path", {
+        class: "line",
+        id: `path-${edge.id}`,
+        d: geometry.path,
+        stroke: style.color,
+        "marker-end": `url(#arrow-${edge.kind})`,
+      }, edgeElement);
+
+      const tagWidth = edge.label.length * 6.6 + 12;
+      const tagGroup = createElement("g", {
+        class: `edge${style.dashed ? " dashed" : ""}`,
+        "data-edge": edge.id,
+        "aria-hidden": "true",
+      }, tagLayer);
+      const tag = createElement("g", {
+        class: "tag",
+        transform: `translate(${geometry.midpoint.x - tagWidth / 2}, ${geometry.midpoint.y - 9})`,
+      }, tagGroup);
+      createElement("rect", { width: tagWidth, height: 18, rx: 4, stroke: style.color }, tag);
+      const tagText = createElement("text", { x: tagWidth / 2, y: 12.5, "text-anchor": "middle" }, tag);
+      tagText.textContent = edge.label;
+    }
+
+    const nodeLayer = createElement("g", {}, svg);
+    for (const node of NODES) {
+      const tone = TONES[node.tone];
+      const width = nodeWidth(node);
+      const nodeElement = createElement("g", {
+        class: "node",
+        "data-node": node.id,
+        tabindex: 0,
+        role: "button",
+        "aria-label": node.title,
+      }, nodeLayer);
+      createElement("rect", {
+        x: node.x,
+        y: node.y,
+        width,
+        height: NODE_HEIGHT,
+        rx: 10,
+        fill: tone.fill,
+        stroke: tone.stroke,
+      }, nodeElement);
+      const title = createElement("text", { class: "title", x: node.x + width / 2, y: node.y + 22, "text-anchor": "middle" }, nodeElement);
+      title.textContent = node.title;
+      const sub = createElement("text", { class: "sub", x: node.x + width / 2, y: node.y + 40, "text-anchor": "middle" }, nodeElement);
+      sub.setAttribute("data-sub", node.id);
+      sub.textContent = node.sub;
+    }
+
+    svg.addEventListener("click", (event) => {
+      const target = event.target.closest("[data-node], [data-edge]");
+      if (target) {
+        select(target);
+      }
+    });
+
+    svg.addEventListener("keydown", (event) => {
+      if (event.key !== "Enter" && event.key !== " ") {
+        return;
+      }
+
+      const target = event.target.closest("[data-node], [data-edge]");
+      if (target) {
+        event.preventDefault();
+        select(target);
+      }
+    });
+
+    const legend = document.getElementById("legend");
+    for (const style of Object.values(EDGE_KINDS)) {
+      const item = document.createElement("span");
+      item.textContent = style.label;
+      item.style.setProperty("--swatch", style.color);
+      if (style.dashed) {
+        item.classList.add("dashed");
+      }
+
+      legend.appendChild(item);
+    }
+  }
+
+  function select(target) {
+    const nodeId = target.getAttribute("data-node");
+    const edgeId = target.getAttribute("data-edge");
+    state.selected = nodeId
+      ? { type: "node", id: nodeId }
+      : { type: "edge", id: edgeId };
+    render();
+  }
+
+  function buildControls() {
+    PHASES.forEach((phase, index) => {
+      const button = document.createElement("button");
+      button.type = "button";
+      button.textContent = phase.short;
+      button.setAttribute("aria-label", phase.title);
+      button.title = phase.title;
+      button.addEventListener("click", () => {
+        stopPlaying();
+        goToPhase(index);
+      });
+      phaseButtons.appendChild(button);
+    });
+
+    document.getElementById("prev").addEventListener("click", () => {
+      stopPlaying();
+      goToPhase(Math.max(0, state.phaseIndex - 1));
+    });
+
+    document.getElementById("next").addEventListener("click", () => {
+      stopPlaying();
+      goToPhase(Math.min(PHASES.length - 1, state.phaseIndex + 1));
+    });
+
+    playButton.addEventListener("click", () => {
+      if (state.playing) {
+        stopPlaying();
+        return;
+      }
+
+      startPlaying();
+    });
+
+    document.querySelectorAll("[data-delivery]").forEach((button) => {
+      button.addEventListener("click", () => {
+        state.delivery = button.getAttribute("data-delivery");
+        render();
+      });
+    });
+
+    document.getElementById("fullscreen").addEventListener("click", async () => {
+      try {
+        if (document.fullscreenElement) {
+          await document.exitFullscreen();
+        } else {
+          await explorer.requestFullscreen();
+        }
+      } catch (error) {
+        console.error(`Fullscreen request failed: '${error.message}'.`);
+      }
+    });
+
+    document.addEventListener("fullscreenchange", () => {
+      document.getElementById("fullscreen").textContent = document.fullscreenElement
+        ? "\u2715 Close"
+        : "\u26F6 Expand";
+    });
+
+    document.addEventListener("keydown", (event) => {
+      if (event.target.closest && event.target.closest("input, textarea")) {
+        return;
+      }
+
+      if (event.key === "ArrowRight") {
+        stopPlaying();
+        goToPhase(Math.min(PHASES.length - 1, state.phaseIndex + 1));
+      } else if (event.key === "ArrowLeft") {
+        stopPlaying();
+        goToPhase(Math.max(0, state.phaseIndex - 1));
+      }
+    });
+  }
+
+  function goToPhase(index) {
+    state.phaseIndex = index;
+    state.selected = null;
+    render();
+  }
+
+  function startPlaying() {
+    state.playing = true;
+    if (state.phaseIndex === 0 || state.phaseIndex === PHASES.length - 1) {
+      goToPhase(1);
+    } else {
+      render();
+    }
+
+    playTimer = window.setInterval(() => {
+      if (state.phaseIndex >= PHASES.length - 1) {
+        stopPlaying();
+        return;
+      }
+
+      goToPhase(state.phaseIndex + 1);
+    }, PLAY_INTERVAL_MS);
+  }
+
+  function stopPlaying() {
+    if (playTimer !== null) {
+      window.clearInterval(playTimer);
+      playTimer = null;
+    }
+
+    if (state.playing) {
+      state.playing = false;
+      render();
+    }
+  }
+
+  function renderPackets(activeEdges) {
+    const layer = document.getElementById("packets");
+    layer.replaceChildren();
+    if (reducedMotion || !activeEdges) {
+      return;
+    }
+
+    for (const edgeId of activeEdges) {
+      const edge = EDGES.find((candidate) => candidate.id === edgeId);
+      if (!edge || !edgeVisible(edge)) {
+        continue;
+      }
+
+      const packet = createElement("circle", {
+        class: "packet",
+        r: 5,
+        fill: "#ffffff",
+        stroke: EDGE_KINDS[edge.kind].color,
+        "stroke-width": 2.5,
+      }, layer);
+      const motion = createElement("animateMotion", { dur: "1.4s", repeatCount: "indefinite" }, packet);
+      createElement("mpath", { href: `#path-${edge.id}` }, motion);
+    }
+  }
+
+  function renderInspector() {
+    if (!state.selected) {
+      inspector.innerHTML = `<p class="hint">Select a box or an arrow in the diagram to see what it does.</p>`;
+      return;
+    }
+
+    if (state.selected.type === "node") {
+      const node = nodeById(state.selected.id);
+      inspector.innerHTML = `<div class="eyebrow">Component</div><h3>${escapeHtml(node.title)}</h3><p>${escapeHtml(node.body)}</p>`;
+      return;
+    }
+
+    const edge = EDGES.find((candidate) => candidate.id === state.selected.id);
+    const from = nodeById(edge.from[0]).title;
+    const to = nodeById(edge.to[0]).title;
+    inspector.innerHTML = `<div class="eyebrow">${escapeHtml(EDGE_KINDS[edge.kind].label)}</div><h3>${escapeHtml(from)} &#8594; ${escapeHtml(to)}</h3><p>${escapeHtml(edge.body)}</p>`;
+  }
+
+  function syncHash() {
+    const params = new URLSearchParams({
+      step: currentPhase().id,
+      delivery: state.delivery,
+    });
+    history.replaceState(null, "", `#${params.toString()}`);
+  }
+
+  function readHash() {
+    const params = new URLSearchParams(window.location.hash.replace(/^#/, ""));
+    const phaseIndex = PHASES.findIndex((phase) => phase.id === params.get("step"));
+    if (phaseIndex >= 0) {
+      state.phaseIndex = phaseIndex;
+    }
+
+    if (params.get("delivery") === "poll" || params.get("delivery") === "webhook") {
+      state.delivery = params.get("delivery");
+    }
+  }
+
+  function render() {
+    const phase = currentPhase();
+    const activeNodes = resolve(phase.nodes);
+    const activeEdges = resolve(phase.edges);
+    const activeNodeSet = activeNodes ? new Set(activeNodes) : null;
+    const activeEdgeSet = activeEdges ? new Set(activeEdges) : null;
+
+    svg.querySelectorAll("[data-node]").forEach((element) => {
+      const id = element.getAttribute("data-node");
+      const dimmedForMode = id === "queue" && state.delivery === "webhook";
+      const dimmed = activeNodeSet ? !activeNodeSet.has(id) : dimmedForMode;
+      element.classList.toggle("dim", dimmed);
+      element.classList.toggle("selected", state.selected?.type === "node" && state.selected.id === id);
+      element.setAttribute("aria-pressed", String(state.selected?.id === id));
+    });
+
+    svg.querySelectorAll("[data-edge]").forEach((element) => {
+      const id = element.getAttribute("data-edge");
+      const edge = EDGES.find((candidate) => candidate.id === id);
+      const visible = edgeVisible(edge);
+      const active = Boolean(activeEdgeSet && activeEdgeSet.has(id));
+      element.classList.toggle("hidden", !visible);
+      element.classList.toggle("active", active && visible);
+      element.classList.toggle("dim", Boolean(activeEdgeSet) && !active);
+      element.classList.toggle("selected", state.selected?.type === "edge" && state.selected.id === id);
+      element.setAttribute("aria-pressed", String(state.selected?.id === id));
+    });
+
+    renderPackets(activeEdges);
+
+    phasePanel.innerHTML = `<div class="eyebrow">Step ${state.phaseIndex} of ${PHASES.length - 1}</div><h2>${escapeHtml(phase.title)}</h2>${phase.text(state)}`;
+    renderInspector();
+
+    phaseButtons.querySelectorAll("button").forEach((button, index) => {
+      button.setAttribute("aria-pressed", String(index === state.phaseIndex));
+    });
+
+    document.querySelectorAll("[data-delivery]").forEach((button) => {
+      button.setAttribute("aria-pressed", String(button.getAttribute("data-delivery") === state.delivery));
+    });
+
+    playButton.setAttribute("aria-pressed", String(state.playing));
+    playButton.innerHTML = state.playing ? "&#10074;&#10074; Pause" : "&#9654; Play";
+
+    syncHash();
+  }
+
+  readHash();
+  buildDiagram();
+  buildControls();
+  render();
+})();
+</script>
+</body>
+</html>

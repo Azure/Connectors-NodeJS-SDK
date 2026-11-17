@@ -18,58 +18,11 @@ Before any code runs, you configure a Connector Namespace. It holds your connect
 
 At runtime, events travel from an external service to your function, and actions travel from your code to an external service. The support-inbox function uses both: the email arrives as an event, and the Teams post goes out as an action.
 
-```mermaid
-flowchart TB
-    subgraph CONFIG["Configuration and management"]
-        direction LR
-        NS["Connector Namespace"]
-        CONN["Connections<br/>External service authorization"]
-        POLICY["Access policies<br/>Application permissions"]
-        TRIGGER["Trigger configurations<br/>Source operation and delivery settings"]
-        NS --- CONN
-        NS --- POLICY
-        NS --- TRIGGER
-    end
+![Animated architecture overview: the Outlook mailbox, the connector platform, and the Function App, with every flow from the email arriving to the summary reaching Teams](./images/architecture/architecture-all.gif)
 
-    subgraph ACTION["Action execution: application to external service"]
-        direction TB
-        APP["Azure Function or other application"]
-        CLIENT["Generated connector client<br/>Typed operations and models"]
-        HTTP["Shared SDK HTTP pipeline<br/>TokenCredential, transport policies, tracing"]
-        PROXY["Connection runtime endpoint<br/>Connection resolution and forwarding"]
-        RUNTIME["Managed connector runtime"]
-        TARGET["External service"]
-        APP --> CLIENT --> HTTP --> PROXY --> RUNTIME --> TARGET
-    end
+Arrow colors follow the legend under the diagram: configuration, identity and consent, the event path, delivery, invocation, and the action path. The host, extension, and handler run inside your Function App as layers of one app.
 
-    subgraph EVENTS["Event execution: external service to application"]
-        direction TB
-        SOURCE["External service"]
-        ACQUIRE["Source event acquisition<br/>Subscription or scheduled polling"]
-        EXECUTE["Platform-managed trigger execution"]
-        DELIVERY["Event delivery<br/>Webhook or Poll"]
-        HOST["Azure Functions host<br/>Connector trigger binding"]
-        WRAPPER["Language worker connector extension<br/>Typed trigger payload"]
-        HANDLER["Application handler<br/>Business logic"]
-        SOURCE --> ACQUIRE --> EXECUTE --> DELIVERY --> HOST --> WRAPPER --> HANDLER
-    end
-
-    CONN -.-> PROXY
-    POLICY -.-> PROXY
-    CONN -.-> EXECUTE
-    TRIGGER -.-> EXECUTE
-
-    classDef config fill:#eef2ff,stroke:#4f46e5,color:#111827;
-    classDef platform fill:#e0f2fe,stroke:#0284c7,color:#111827;
-    classDef application fill:#ecfdf5,stroke:#059669,color:#111827;
-    classDef external fill:#fff7ed,stroke:#ea580c,color:#111827;
-    class NS,CONN,POLICY,TRIGGER config;
-    class PROXY,RUNTIME,ACQUIRE,EXECUTE,DELIVERY platform;
-    class APP,CLIENT,HTTP,HOST,WRAPPER,HANDLER application;
-    class SOURCE,TARGET external;
-```
-
-Solid arrows show runtime traffic, and dotted arrows show configuration that the runtime reads. The host, extension, and handler run inside your Function App as layers of one app.
+The [interactive version of this diagram](./connectors-functions-architecture-explorer.html) steps through the six stages below and lets you switch between webhook and Poll delivery.
 
 The SDK gives you a typed API for each connector, and the managed connector runtime handles the integration with Outlook, Teams, or Salesforce. On the trigger side, the Functions helper registers your handler and cleans up the payload, while the platform talks to the source service.
 
@@ -81,24 +34,7 @@ In the Outlook sample, `azd up` handles most of the setup. It provisions the Fun
 
 Two separate permission checks are involved:
 
-```mermaid
-flowchart LR
-    APP["Function App<br/>Managed identity"]
-    ACCESS["Connector platform<br/>Application access policy"]
-    CONNECTION["Authorized connection<br/>External service credentials or consent"]
-    SERVICE["External service<br/>Service-specific permissions"]
-
-    APP -->|"Application authentication"| ACCESS
-    ACCESS -->|"Use permitted connection"| CONNECTION
-    CONNECTION -->|"External service authorization"| SERVICE
-
-    classDef application fill:#ecfdf5,stroke:#059669,color:#111827;
-    classDef platform fill:#e0f2fe,stroke:#0284c7,color:#111827;
-    classDef external fill:#fff7ed,stroke:#ea580c,color:#111827;
-    class APP application;
-    class ACCESS,CONNECTION platform;
-    class SERVICE external;
-```
+![Animated Step 1: the Function App's managed identity presents a token to the access policies, and the Outlook and Teams connections hold OAuth consent for their accounts](./images/architecture/step-1-authorize.gif)
 
 The Function App's managed identity lets it use the connection through the connector platform. The connection holds the Outlook consent, so the managed identity alone can't read anyone's mailbox. Connectors also differ in how they authorize. If your app authenticates to the platform and its calls still fail, check whether the connection needs consent.
 
@@ -106,36 +42,9 @@ The Function App's managed identity lets it use the connection through the conne
 
 The event path begins with the trigger configuration. It names the connection, the operation (`OnNewEmailV3` in this example), its parameters, and the delivery mode. The platform uses it to generate a backing workflow that runs the connector trigger.
 
-```mermaid
-flowchart LR
-    CONFIG["Trigger configuration<br/>Connection, operation, parameters,<br/>conditions, delivery mode"]
-    METADATA["Connector metadata<br/>Operation shape and trigger behavior"]
-    GENERATOR["Trigger workflow generator"]
+![Animated Step 2: the trigger configuration generates the backing trigger workflow, which uses the Outlook connection](./images/architecture/step-2-trigger.gif)
 
-    subgraph BACKING["Platform-managed backing workflow"]
-        direction TB
-        SOURCE["Source trigger<br/>Webhook, notification, or polling"]
-        CONDITIONS["Configured trigger conditions<br/>and metadata-derived splitting"]
-        DELIVERY["Connector delivery action"]
-        SOURCE --> CONDITIONS --> DELIVERY
-    end
-
-    CALLBACK["Webhook callback"]
-    QUEUE["Poll delivery queue"]
-
-    CONFIG --> GENERATOR
-    METADATA --> GENERATOR
-    GENERATOR --> SOURCE
-    DELIVERY -->|"Webhook"| CALLBACK
-    DELIVERY -->|"Poll"| QUEUE
-
-    classDef platform fill:#e0f2fe,stroke:#0284c7,color:#111827;
-    classDef config fill:#eef2ff,stroke:#4f46e5,color:#111827;
-    class CONFIG,METADATA config;
-    class GENERATOR,SOURCE,CONDITIONS,DELIVERY,CALLBACK,QUEUE platform;
-```
-
-The conditions box groups trigger behavior and isn't a separate workflow step. The generator handles webhook, notification, and polling triggers, applies the trigger conditions you set, and uses connector metadata to split batches into individual items. The workflow's last action either calls your webhook or adds the output to a queue for your app to pull.
+The generator handles webhook, notification, and polling triggers, applies the trigger conditions you set, and uses connector metadata to split batches into individual items. The workflow's last action either calls your webhook or adds the output to a queue for your app to pull.
 
 Connector triggers already run on Logic Apps workflow infrastructure, so we reused it for Functions instead of building a second event engine. You don't write or manage this workflow. You work with the connection, the trigger configuration, and your handler.
 
@@ -163,35 +72,7 @@ Starting the Functions host on your laptop doesn't make it reachable; the trigge
 
 With Poll delivery, the platform writes trigger output to a queue tied to the trigger configuration, and your Function App pulls from that queue. You don't expose a public callback, which helps with local development and locked-down networks, and your app can work through events at its own pace.
 
-```mermaid
-flowchart TB
-    subgraph PLATFORM["Connector platform"]
-        direction TB
-        OUTPUT["Completed source-trigger output"]
-        WRITER["Delivery action<br/>Prepare event envelope"]
-        QUEUE["Per-trigger delivery queue<br/>Buffered events"]
-        API["Poll runtime API<br/>Receive, acknowledge,<br/>availability, approximate depth"]
-        STORED["Persisted backing-run outputs<br/>Referenced when output is too large to inline"]
-        OUTPUT --> WRITER
-        WRITER -->|"Inline output or run reference"| QUEUE
-        OUTPUT -.-> STORED
-        QUEUE -->|"Lease events"| API
-        API -->|"Delete with valid lock token"| QUEUE
-    end
-
-    subgraph FUNCTIONS["Function App"]
-        direction TB
-        LISTENER["Functions connector listener"]
-        BINDING["Host invocation and worker dispatch"]
-        CONTEXT["Language worker connector extension<br/>Unpack envelopes into items"]
-        CODE["User handler"]
-        LISTENER --> BINDING --> CONTEXT --> CODE
-    end
-
-    LISTENER -->|"Receive request"| API
-    API -->|"Events, lock tokens,<br/>optional output links"| LISTENER
-    LISTENER -.->|"Large-output retrieval"| STORED
-```
+![Animated Step 4 with Poll delivery: the delivery action enqueues the event, and the Functions host receives and acknowledges it from the Poll queue](./images/architecture/step-4-poll.gif)
 
 Receiving and removing are separate operations in the queue protocol. A receive call returns events under a temporary lease, and an acknowledge call deletes them using the message IDs and lock tokens from the receive. Your app can also check whether events are waiting and get an approximate queue depth.
 
@@ -274,34 +155,20 @@ The types help in the editor, but nothing checks them at runtime. Validate any f
 
 ### Batching and scaling
 
-Batching can happen in four places. The source trigger can return a collection, and the platform can split that collection into separate runs based on metadata and configuration. Poll delivery can then return several events at once, which the extension passes to a single handler call.
+Batching can happen in four places. The source trigger can return a collection, and the platform can split that collection into separate runs based on metadata and configuration. Poll delivery can then return several events at once, and a batched function receives them in a single invocation.
 
-The TypeScript Poll sample sets the batch options explicitly:
+So the event count and the email count can differ. With a maximum batch size of 4, each invocation gets at most four Poll events, but one event can hold several emails, so your handler can see more than four.
 
-```typescript
-import { Cardinality, DeliveryMode, InvocationContext } from "@azure/functions";
-import { connectors, EmailTriggerContext } from "@azure/functions-extensions-connectors";
+Poll delivery has the same settings in every language, under slightly different names:
 
-connectors.office365.onNewEmail("OnNewEmailPoll", {
-    deliveryMode: DeliveryMode.Poll,
-    connection: "ConnectorNamespace",
-    triggerConfigName: "%OnNewEmailPollTriggerConfigName%",
-    cardinality: Cardinality.Many,
-    maxBatchSize: 4,
-    targetPendingEventThreshold: 16,
-    handler: async (context: EmailTriggerContext, invocationContext: InvocationContext) => {
-        for (const email of context.emails) {
-            invocationContext.log(`Subject: '${email.subject}', From: '${email.from}'.`);
-        }
+| Setting | .NET isolated | Python | Node.js |
+| --- | --- | --- | --- |
+| Receive several events per invocation | `IsBatched = true` | `cardinality=func.Cardinality.MANY` | `cardinality: Cardinality.Many` |
+| Maximum events per invocation | `MaxBatchSize` | `max_batch_size` | `maxBatchSize` |
+| Concurrent single-event calls | `MaxConcurrentCalls` | `max_concurrent_calls` | `maxConcurrentCalls` |
+| Pending events per instance, for scaling | `TargetPendingEventThreshold` | `target_pending_event_threshold` | `targetPendingEventThreshold` |
 
-        return context.rawPayload;
-    },
-});
-```
-
-The event count and the email count can differ. Here `maxBatchSize: 4` limits each invocation to four Poll events, but one event can hold several emails, so `context.emails` can have more than four entries. This sample is disabled by default.
-
-Cardinality and batch size control how events are grouped into an invocation. `MaxConcurrentCalls` limits concurrent calls when events arrive one at a time; the host ignores it for batched bindings like this one. The pending-event target is an input to scaling decisions.
+The batch size can be 1 through 32 and defaults to 1. The concurrency limit applies only when events arrive one at a time. A batched function processes one batch at a time per listener, and the host ignores a concurrency value set on it. The scaling target is independent of both: the platform divides the queue depth by it to decide how many instances to run, and neither batch size nor concurrency changes that calculation.
 
 Raising every setting won't necessarily increase throughput. The external service may throttle you, and your handler may do slow or non-repeatable work, so measure throughput across the whole pipeline, from receiving the event to finishing its side effects.
 
@@ -354,7 +221,8 @@ These references describe the inspected local source, not a guarantee that every
 - Verify exact host acknowledgement timing, failure handling, and scaling behavior against the matching host implementation before adding stronger claims.
 - Do not promise exactly-once processing, global ordering, a latency target, or unlimited buffering.
 - Run one end-to-end example using test data and capture the resulting function invocation.
-- The only Poll and batching example is TypeScript, because the inspected Python and .NET samples use webhook delivery. Confirm Poll delivery and batch options for the Python and .NET extensions, and add matching examples if they exist.
+- The batching settings table and the batch-size range and default come from a local, unpublished checkout of the Poll extension source, including its .NET, Python, and Node.js Poll test apps. Confirm the names, defaults, and the Python `azure-functions>=2.4.0b1` requirement against the released packages.
 - The .NET and Python snippets are trimmed from the samples. Build and run each snippet before publishing.
-- Preview the Mermaid diagrams in a renderer that supports Mermaid before publishing. Export them as images if the blog platform does not render Mermaid.
+- The diagrams are animated GIFs in `images/architecture`, captured from `connectors-functions-architecture-explorer.html`. Regenerate them whenever the explorer changes, and confirm the blog platform plays GIFs.
+- Publish `connectors-functions-architecture-explorer.html` alongside the post, or embed it in an iframe, and update the link. If the blog platform blocks scripts, link to a hosted copy (for example, GitHub Pages). Keep the explorer's text in sync with the article.
 - Remove these author notes and replace internal source links with approved public references.
