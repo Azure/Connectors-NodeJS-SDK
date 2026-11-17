@@ -4,11 +4,11 @@ Say you run a shared support inbox. Each time a customer writes in, you want a f
 
 Azure Connectors and the Connector SDKs take that work on. The platform manages connections and authorization. The same app can react to events in one service and call operations in another. Webhook and poll delivery give you push or pull, so you can pick what fits your app. One SDK per language covers the Connector catalog with typed operations and payloads, VS Code tooling handles setup, and SDKs are available for .NET, Python, and Node.js from day one.
 
-Underneath those promises are a handful of pieces we built and a few decisions about where each one stops. The support inbox runs through all of them.
+Underneath those promises are a handful of pieces we built and a few decisions about where each one stops. The support inbox runs through all of them. Follow that one email from Outlook to Teams, and you'll know exactly how to wire up the next hundred integrations yourself.
 
 ## Starting from what Azure already has
 
-Azure already runs more than 1,000 managed Connectors, connecting to 1,600+ services. They power Azure Logic Apps and Power Automate, and API Hub hosts their connections, OAuth consent, and runtime. Logic Apps already knows how to run Connector triggers, whether the source sends notifications, accepts a webhook subscription, or has to be polled.
+Azure already runs more than 1,600 managed Connectors to services like Salesforce, SAP, SQL Server etc. They power Azure Logic Apps and Power Automate, and API Hub hosts their connections, OAuth consent, and runtime. Logic Apps already knows how to run Connector triggers, whether the source sends notifications, accepts a webhook subscription, or has to be polled.
 
 So we didn't write a second integration for each service. We built a new front door to the existing Connector runtime, one that application code can use directly, and added the glue Azure Functions needs on top. Most of the new work falls into four areas:
 
@@ -86,9 +86,20 @@ The Functions side has two layers. A host extension, written as a WebJobs extens
 
 The host extension registers a `connectorTrigger` binding. Each function picks webhook or poll delivery, and the binding starts the matching listener.
 
-The poll listener runs a receive loop. When the queue is empty it backs off with jitter, up to a configurable maximum interval, and receive failures get their own capped backoff. It authenticates to the polling endpoint with the connection's credential, usually the Function App's managed identity. A function that takes one event at a time can run several invocations in parallel, up to `MaxConcurrentCalls`. A batched function processes one batch at a time per listener. An event is acknowledged only after its invocation succeeds; a failed invocation leaves the event unacknowledged so it comes back when the lease expires. When an event holds a link to a large output, the listener downloads it, with a 100 MiB default cap.
+The poll listener runs a receive loop, with a few rules worth knowing:
 
-Poll delivery also plugs into Azure Functions target-based scaling. The Connector trigger reports how much work is waiting by reading the queue's approximate depth through the same poll runtime API. Azure Functions does the scaling, aiming for `ceil(depth / target)` instances. The target is the function's pending-event threshold, or the per-instance concurrency that the platform supplies when it has one. Batch size and concurrency don't change that calculation.
+- **Backoff:** an empty queue backs off with jitter, up to a configurable maximum interval; receive failures get their own capped backoff.
+- **Auth:** the listener authenticates to the polling endpoint with the connection's credential, usually the Function App's managed identity.
+- **Concurrency:** a function that takes one event at a time can run several invocations in parallel, up to `MaxConcurrentCalls`. A batched function processes one batch at a time per listener.
+- **Acknowledgment:** an event is acknowledged only after its invocation succeeds; a failed invocation leaves it unacknowledged so it comes back when the lease expires.
+- **Large outputs:** when an event holds a link to a large output, the listener downloads it, with a 100 MiB default cap.
+
+Poll delivery also plugs into Azure Functions target-based scaling:
+
+- The Connector trigger reports how much work is waiting by reading the queue's approximate depth through the same poll runtime API.
+- Azure Functions does the scaling, aiming for `ceil(depth / target)` instances.
+- The target is the function's pending-event threshold, or the per-instance concurrency that the platform supplies when it has one.
+- Batch size and concurrency don't change that calculation.
 
 Batching therefore happens in several places. The source trigger can return a collection, `splitOn` can split it into separate runs, and the poll listener can deliver several events to one invocation. The batch settings have the same meaning in every language:
 
@@ -136,7 +147,7 @@ This path doesn't depend on how the email arrived, so it works the same with web
 
 ## One generator, three SDKs
 
-The SDKs are generated. A shared generator in the Logic Apps codebase, `CodefulSdkGenerator`, reads live Connector Swagger definitions through Azure Resource Manager, cleans them up, and emits clients for C#, Python, and TypeScript. Each SDK repository records what produced it in a generation manifest: the generator commits, the metadata API version, and a hash of every Connector's Swagger input. That makes each regeneration traceable to a specific generator revision and a specific set of Connector definitions.
+The SDKs are generated. A shared generator, `CodefulSdkGenerator`, reads live Connector Swagger definitions through Azure Resource Manager, cleans them up, and emits clients for C#, Python, and TypeScript. Each SDK repository records what produced it in a generation manifest: the generator commits, the metadata API version, and a hash of every Connector's Swagger input. That makes each regeneration traceable to a specific generator revision and a specific set of Connector definitions.
 
 Besides action methods, the generator emits models for request and response bodies, typed trigger payloads and trigger operation constants, catalog constants that list the available Connectors, and support for paging and dynamic schemas. Each language then has a small handwritten runtime (the base client, the HTTP pipeline, errors, and paging) that the generated code builds on. Naming rules are kept consistent across languages, so the same Connector and operation have recognizable names whether you write C#, Python, or TypeScript.
 
