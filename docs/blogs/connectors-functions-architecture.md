@@ -2,164 +2,97 @@
 
 > Working draft. Confirm release status and approval to publish backend implementation details before publishing. The source references and publication checklist at the end are author notes, not part of the finished post.
 
-Say you run a shared support inbox. Each time a customer writes in, you want a function to read the email, pick out the important parts, and post a summary in your team's Teams channel. The business logic might be twenty lines.
+Say you run a shared support inbox. Each time a customer writes in, you want a function to read the email, pick out the important parts, and post a summary in your team's Teams channel. The business logic might be twenty lines. The rest is authorization, change detection, event delivery, and a second set of permissions to post in Teams, and you rebuild most of it for every service you touch.
 
-The rest of the work takes longer. You need permission to read the mailbox, some way to notice new mail and get it to your function, and separate permission to post in Teams. You'll rebuild most of that the next time you connect to a different service.
+Azure connectors and the connector SDKs take that work on. The platform manages connections and authorization. The same app can react to events in one service and call operations in another. Webhook and Poll delivery give you push or pull, so you can pick what fits your app. One SDK per language covers the connector catalog with typed operations and payloads, VS Code tooling handles setup, and SDKs are available for .NET, Python, and Node.js from day one.
 
-Azure connectors and the connector SDKs handle that work for you. The platform manages connections and authorization: you grant consent and set access policies once, and your function never handles Outlook or Teams tokens. The same app can react to an email in one service and call operations in another without integration code of its own. You also choose how events reach you. Webhook delivery pushes them to your function, and Poll delivery lets the function pull them when it's ready. We kept both on purpose so you can use whichever fits your app.
+Underneath those promises are a handful of pieces we built and a few decisions about where each one stops. The support inbox runs through all of them.
 
-Each language has one SDK for the connector catalog, which covers Microsoft 365, Azure services, and many SaaS and enterprise systems. Operations and payloads are typed, so IntelliSense and the compiler can check the fields you use. You set up connections and triggers from VS Code, the editor you already use for Functions, and SDKs are available for .NET, Python, and Node.js (JavaScript and TypeScript) from day one.
+## Why we reused the connector runtime
 
-Below, we follow one email from the customer's Send button to the Teams channel.
+Azure already runs more than 1,000 managed connectors. They power Azure Logic Apps and Power Automate, and API Hub hosts their connections, OAuth consent, and runtime. Logic Apps already knows how to run connector triggers, whether the source sends notifications, accepts a webhook subscription, or has to be polled.
 
-## Architecture overview
+So we didn't write a second integration for each service. We built a new front door to the existing connector runtime, one that application code can use directly, and added the glue Azure Functions needs on top. Most of the new work falls into four areas:
 
-Before any code runs, you configure a Connector Namespace. It holds your connections, access policies, and trigger configurations, which together define the services you connect to, who can use each connection, and which events you want.
-
-At runtime, events travel from an external service to your function, and actions travel from your code to an external service. The support-inbox function uses both: the email arrives as an event, and the Teams post goes out as an action.
+1. A control plane, the Connector Namespace, that exposes connections, access policies, and trigger configurations as Azure resources.
+2. A runtime layer that proxies SDK calls into API Hub and turns trigger configurations into system-managed workflows with a delivery step at the end.
+3. A Functions connector extension, with host and worker pieces, that receives events by webhook or by polling and feeds the Functions scale controller.
+4. One code generator that emits typed SDKs for .NET, Python, and Node.js from live connector metadata, plus tooling that sets everything up.
 
 ![Animated architecture overview: the Outlook mailbox, the connector platform, and the Function App, with every flow from the email arriving to the summary reaching Teams](./images/architecture/architecture-all.gif)
 
-Arrow colors follow the legend under the diagram: configuration, identity and consent, the event path, delivery, invocation, and the action path. The host, extension, and handler run inside your Function App as layers of one app.
+The [interactive version of this diagram](./connectors-functions-architecture-explorer.html) steps through each stage and lets you switch between webhook and Poll delivery.
 
-The [interactive version of this diagram](./connectors-functions-architecture-explorer.html) steps through the six stages below and lets you switch between webhook and Poll delivery.
+## The control plane: Connector Namespace
 
-The SDK gives you a typed API for each connector, and the managed connector runtime handles the integration with Outlook, Teams, or Salesforce. On the trigger side, the Functions helper registers your handler and cleans up the payload, while the platform talks to the source service.
+A Connector Namespace is an Azure Resource Manager resource of type `Microsoft.Web/connectorGateways`. Under it sit three child resource types: connections, connection access policies, and trigger configurations. Because they're ARM resources, you can create them with Bicep, the CLI, or the VS Code tooling, and they get the usual Azure role-based access control and lifecycle.
 
-## Step 1: Authorize the Outlook connection
-
-Before the function can see the mailbox, you need an authorized Outlook connection and a trigger configuration that says what to watch.
-
-In the Outlook sample, `azd up` handles most of the setup. It provisions the Function App, the Connector Namespace, and the access policies, opens the browser for Outlook consent, and sets up the new-email trigger on your Inbox. The Poll version of the trigger is created separately. Both the connection and the subscription exist before your handler runs, so your code never creates them.
-
-Two separate permission checks are involved:
+A connection is the application-facing name for a backing API Hub connection, the same kind Logic Apps uses. The consent you grant for Outlook lives there. An access policy lists the Microsoft Entra identities, such as a Function App's managed identity, that may use a connection. That split means the identity that calls the connection and the account that consented to the mailbox are separate, and you can change one without touching the other.
 
 ![Animated Step 1: the Function App's managed identity presents a token to the access policies, and the Outlook and Teams connections hold OAuth consent for their accounts](./images/architecture/step-1-authorize.gif)
 
-The Function App's managed identity lets it use the connection through the connector platform. The connection holds the Outlook consent, so the managed identity alone can't read anyone's mailbox. Connectors also differ in how they authorize. If your app authenticates to the platform and its calls still fail, check whether the connection needs consent.
+A trigger configuration describes an event source. Its properties include the connection, the connector operation (for the support inbox, `OnNewEmailV3`), the operation's parameters, optional trigger conditions and settings, and a delivery mode. For webhook delivery it carries the callback details; for Poll delivery the service fills in the polling endpoints.
 
-## Step 2: Start the trigger
+Each namespace also gets a stable host name, and a background job repairs its DNS record if it drifts.
 
-The event path begins with the trigger configuration. It names the connection, the operation (`OnNewEmailV3` in this example), its parameters, and the delivery mode. The platform uses it to generate a backing workflow that runs the connector trigger.
+## The action path: a proxy into API Hub
+
+When your handler posts the summary to Teams, the generated SDK client sends an HTTPS request to the connection's runtime URL. On the platform side that URL maps to `api/connectorGateways/{gateway}/connections/{connection}/runtime`, followed by the operation's own path.
+
+Behind that route, the runtime processor handles each request in four steps:
+
+1. It resolves the application-facing connection to its backing API Hub connection and environment, in the namespace's scale unit.
+2. It builds the API Hub runtime URL and checks that the requested path stays inside that connection, so a caller can't reach a different connection by rewriting the path.
+3. It strips identity headers supplied by the caller and attaches a platform service token, plus headers that pass the caller's managed identity through.
+4. It forwards the method, path, query, and body to API Hub, which runs the connector operation against Teams.
+
+The caller authenticates with a Microsoft Entra token for the API Hub audience. In the Node.js SDK the default scope is `https://apihub.azure.com/.default`, and the token comes from any Azure Identity `TokenCredential`, typically the Function App's managed identity.
+
+The SDK side is thin on purpose. Generated clients extend a shared base class that holds the runtime URL and credential. A shared HTTP pipeline built on Azure Core adds the token, a user agent, tracing, and retries. Retries apply by default only to safe methods such as `GET` and `HEAD`, because retrying a `POST` that sends a message could send it twice. Paged operations follow `nextLink` values. When a continuation link points at a different host, as some connector back ends return, the SDK reroutes its path and query through the connection's runtime URL, so paging stays behind the proxy. Failures surface as a `ConnectorError` that carries the connector name, the operation, the status code, and the response body.
+
+## The trigger path: system-managed workflows
+
+When you create a trigger configuration, the trigger API validates the request, generates a Logic Apps workflow definition, creates the workflow directly in a platform-owned subscription under a generated name, and stores the workflow details alongside the trigger configuration. Updates rewrite the workflow, and deleting the trigger configuration removes the workflow, its Poll queue, and its message history.
 
 ![Animated Step 2: the trigger configuration generates the backing trigger workflow, which uses the Outlook connection](./images/architecture/step-2-trigger.gif)
 
-The generator handles webhook, notification, and polling triggers, applies the trigger conditions you set, and uses connector metadata to split batches into individual items. The workflow's last action either calls your webhook or adds the output to a queue for your app to pull.
+The workflow generator picks the right trigger shape for the operation's metadata: a notification subscription, a webhook subscription, or a recurring poll. It adds `splitOn` for operations that return batches, so each item becomes its own run unless the configuration opts out, and it applies any trigger conditions you set. The workflow ends with a connector delivery action.
 
-Connector triggers already run on Logic Apps workflow infrastructure, so we reused it for Functions instead of building a second event engine. You don't write or manage this workflow. You work with the connection, the trigger configuration, and your handler.
+We generate a workflow per trigger configuration because Logic Apps already has years of hardening around subscription renewal, polling state, and trigger history, and every connector trigger already runs on it. The workflow stays an implementation detail: customers work with the trigger configuration resource and never see or edit the workflow.
 
-When a customer sends an email, the workflow detects it. How the platform detected the email and how the email reaches your function are separate questions.
+## Two ways to deliver an event
 
-## Step 3: Separate source polling from Poll delivery
-
-The word "polling" appears on both sides of the platform with different meanings, which makes the two easy to mix up.
-
-Source polling is how the platform finds out about a change. Some services send notifications through a subscription, and others are checked on a schedule. Poll delivery is how your function receives events the platform has already captured.
-
-You can combine them. The platform might check a mailbox on a schedule and push each new email to your function by webhook, or a service notification might wait in a Poll queue until your function picks it up. The connector handles detection, and you pick the delivery mode. Check which combinations your operation supports, because some aren't available for every operation.
-
-## Step 4: Choose webhook or Poll delivery
-
-The right choice depends on your network setup and how you want to process work.
+How the platform notices a new email and how the event reaches your function are separate problems. The backing workflow handles the first. The delivery action at the end of the workflow handles the second, and it supports two transports.
 
 ### Webhook delivery
 
-With webhook delivery, the platform sends each event to a callback on your Function App, which passes it to your handler. Use it when your app already has an endpoint the platform can reach.
+For webhook delivery, which is the default, the delivery action makes an HTTPS call to the callback in the trigger configuration, using the workflow engine's HTTP retry policy. On the Function App side, the callback is the host's `/runtime/webhooks/connector` route, protected by a system key named `connector_extension`. A `functionName` query parameter selects the function. The host returns `202` when the invocation succeeds, `400` for a missing or invalid name, `404` for an unknown function, and `500` when the invocation fails.
 
-Starting the Functions host on your laptop doesn't make it reachable; the trigger configuration has to point at an endpoint the platform can call. Deliveries can also fail or arrive twice, so handle both cases.
+![Animated Step 4 with webhook delivery: the delivery action calls the Functions host back over HTTPS](./images/architecture/step-4-webhook.gif)
 
 ### Poll delivery
 
-With Poll delivery, the platform writes trigger output to a queue tied to the trigger configuration, and your Function App pulls from that queue. You don't expose a public callback, which helps with local development and locked-down networks, and your app can work through events at its own pace.
+For Poll delivery, the delivery action writes the event to an Azure Storage queue owned by that trigger configuration and records it in a message history table. Storage queue messages are limited to 64 KiB, so when an event is larger the action queues a reference to the workflow run's output instead of the output itself.
+
+The Poll runtime API sits in front of the queue and has four operations: `receive`, `acknowledge`, `hasMessages`, and `approximateQueueDepth`. `receive` hands out events under a temporary lease with an opaque lock token. `acknowledge` deletes an event only when the message ID and a still-valid lock token match. If the lease expires first, the event becomes visible again. The reported depth is approximate and excludes leased messages.
 
 ![Animated Step 4 with Poll delivery: the delivery action enqueues the event, and the Functions host receives and acknowledges it from the Poll queue](./images/architecture/step-4-poll.gif)
 
-Receiving and removing are separate operations in the queue protocol. A receive call returns events under a temporary lease, and an acknowledge call deletes them using the message IDs and lock tokens from the receive. Your app can also check whether events are waiting and get an approximate queue depth.
+Poll delivery means the Function App never exposes an inbound endpoint, and work can build up safely when the app is busy, scaled to zero, or running on a developer's laptop.
 
-The Functions host decides when to acknowledge relative to your handler finishing, and that timing may change between releases.
+## Inside Azure Functions: the connector extension
 
-Events stay in the queue until your app receives them, within the service's retention limits. If a lease expires before acknowledgement, the event comes back, so make side effects idempotent where you can.
+The Functions side has two layers. A host extension, written as a WebJobs extension, owns transport and scaling. A worker extension for each language turns payloads into typed objects for your handler.
 
-Large outputs, such as an email with a big attachment, aren't stored in the queue. The platform keeps the run output and queues a reference, and your function follows the link to fetch the content.
+### The host extension
 
-## Step 5: Run the handler
+The host extension registers a `connectorTrigger` binding. Each function picks webhook or Poll delivery, and the binding starts the matching listener.
 
-In the Function App, the host's connector binding turns each delivery into a function invocation. Each language worker has a connector extension that passes the payload to your handler as typed objects: `Microsoft.Azure.Functions.Worker.Extensions.Connector` for the .NET isolated worker, `azurefunctions-extensions-connectors` for Python, and `@azure/functions-extensions-connectors` for Node.js.
+The Poll listener runs a receive loop. When the queue is empty it backs off with jitter, up to a configurable maximum interval, and receive failures get their own capped backoff. It authenticates to the polling endpoint with the connection's credential, usually the Function App's managed identity. A function that takes one event at a time can run several invocations in parallel, up to `MaxConcurrentCalls`. A batched function processes one batch at a time per listener. An event is acknowledged only after its invocation succeeds; a failed invocation leaves the event unacknowledged so it comes back when the lease expires. When an event holds a link to a large output, the listener downloads it, with a 100 MiB default cap.
 
-| Layer | What it does |
-| --- | --- |
-| Connector platform | Holds connections, runs source triggers, delivers events. |
-| Functions host and connector binding | Listens for events and invokes your function. |
-| Language worker connector extension | Turns payloads into typed objects and provides registration helpers. |
-| Your handler | Validates data, transforms it, and does the actual work. |
+Poll delivery also plugs into Azure Functions target-based scaling. The connector trigger reports how much work is waiting by reading the queue's approximate depth through the same Poll runtime API. Azure Functions does the scaling, aiming for `ceil(depth / target)` instances. The target is the function's pending-event threshold, or the per-instance concurrency that the platform supplies when it has one. Batch size and concurrency don't change that calculation.
 
-The handler code looks a little different in each language. In .NET you bind to a typed payload such as `Office365OnNewEmailTriggerPayload`. In Python your function receives a list of typed messages. In Node.js the extension collects single items, collections, and Poll envelopes into `context.emails` and keeps the original envelopes in `context.rawPayload`.
-
-These new-email handlers are adapted from the samples:
-
-```csharp
-[Function("OnNewEmail")]
-public IActionResult OnNewEmail(
-    [ConnectorTrigger()] Office365OnNewEmailTriggerPayload payload)
-{
-    var emails = payload?.Body?.Value;
-    if (emails is null)
-    {
-        return new OkResult();
-    }
-
-    foreach (var email in emails)
-    {
-        _logger.LogInformation("Subject: {Subject}, From: {From}", email.Subject, email.From);
-    }
-
-    return new OkResult();
-}
-```
-
-```python
-import logging
-from typing import List
-
-import azure.functions as func
-import azurefunctions.extensions.connectors.office365 as office365
-
-app = func.FunctionApp()
-
-
-@app.function_name(name="OnNewEmail")
-@app.connector_trigger(arg_name="emails")
-def on_new_email(emails: List[office365.ClientReceiveMessage]) -> None:
-    for email in emails:
-        logging.info(f"Subject: '{email.subject}', From: '{email.from_}'.")
-```
-
-```typescript
-import { InvocationContext } from "@azure/functions";
-import { connectors, EmailTriggerContext } from "@azure/functions-extensions-connectors";
-
-connectors.office365.onNewEmail("OnNewEmail", {
-    handler: async (context: EmailTriggerContext, invocationContext: InvocationContext) => {
-        for (const email of context.emails) {
-            invocationContext.log(`Subject: '${email.subject}', From: '${email.from}'.`);
-        }
-
-        return context.rawPayload;
-    },
-});
-```
-
-Each registration names the function and supplies the handler. Connection authorization and trigger setup happened in step 1. The samples log email metadata, so run them against a test account.
-
-The types help in the editor, but nothing checks them at runtime. Validate any field your logic depends on, especially in dynamic records.
-
-### Batching and scaling
-
-Batching can happen in four places. The source trigger can return a collection, and the platform can split that collection into separate runs based on metadata and configuration. Poll delivery can then return several events at once, and a batched function receives them in a single invocation.
-
-So the event count and the email count can differ. With a maximum batch size of 4, each invocation gets at most four Poll events, but one event can hold several emails, so your handler can see more than four.
-
-Poll delivery has the same settings in every language, under slightly different names:
+Batching therefore happens in several places. The source trigger can return a collection, `splitOn` can split it into separate runs, and the Poll listener can deliver several events to one invocation. The batch settings have the same meaning in every language:
 
 | Setting | .NET isolated | Python | Node.js |
 | --- | --- | --- | --- |
@@ -168,61 +101,55 @@ Poll delivery has the same settings in every language, under slightly different 
 | Concurrent single-event calls | `MaxConcurrentCalls` | `max_concurrent_calls` | `maxConcurrentCalls` |
 | Pending events per instance, for scaling | `TargetPendingEventThreshold` | `target_pending_event_threshold` | `targetPendingEventThreshold` |
 
-The batch size can be 1 through 32 and defaults to 1. The concurrency limit applies only when events arrive one at a time. A batched function processes one batch at a time per listener, and the host ignores a concurrency value set on it. The scaling target is independent of both: the platform divides the queue depth by it to decide how many instances to run, and neither batch size nor concurrency changes that calculation.
+The batch size can be 1 through 32 and defaults to 1.
 
-Raising every setting won't necessarily increase throughput. The external service may throttle you, and your handler may do slow or non-repeatable work, so measure throughput across the whole pipeline, from receiving the event to finishing its side effects.
+### The worker extensions
 
-## Step 6: Post the summary to Teams
+Because the host extension does the transport work, each language worker only has to bind payloads. The .NET isolated worker extension deserializes the payload into the type your function declares, such as a generated `Office365OnNewEmailTriggerPayload`, or into `ConnectorEvent<T>[]` when you also want each Poll message ID. Python functions use the `connector_trigger` decorator from the `azure-functions` library. Other workers reach the same host extension through the Functions extension bundle and the `connectorTrigger` binding type.
 
-Once the handler has pulled the important details out of the email, it posts them to Teams. This call uses the action path from the overview diagram, which is independent of how the email arrived.
+The Node.js extension shows how thin this layer is. One generic wrapper registers the trigger and flattens every payload shape (a single item, a collection in `body.value`, or an array of Poll envelopes) into one list of items, keeping the original in `rawPayload`. Each connector's helper is then a few lines that add a friendly alias and borrow the item type from the generated SDK. This is the whole OneDrive for Business file:
 
-The .NET email triage sample does this. For each email its classifier marks as important, it calls `PostMessageToConversationAsync` on a `TeamsClient` to post a triage card, then uses an `Office365Client` to flag the source email in Outlook. The Python and Node.js SDKs generate the same kind of client for each connector.
+```typescript
+import { BlobMetadata } from "@azure/connectors/generated/OneDriveForBusinessExtensions";
+import { OneDriveFileTriggerContext } from "../../types";
+import { createConnectorTrigger } from "./createConnectorTrigger";
 
-Under each client, the SDK builds the request, gets a token from an Azure Identity credential, applies retries and other HTTP policies, and reports errors. The Connector Namespace resolves your connection and passes the call to the managed connector runtime, which calls Teams.
+const registerFileTrigger = createConnectorTrigger<BlobMetadata, OneDriveFileTriggerContext>(
+    (context) => ({ ...context, files: context.items }),
+);
 
-Other generated clients follow the same pattern; you could use the SharePoint Online client to save the attachment. The clients also work outside Azure Functions, in any .NET, Python, or Node.js app.
+export const onNewFiles = registerFileTrigger;
+export const onUpdatedFiles = registerFileTrigger;
+```
 
-Retries don't make every call safe to repeat. If the same summary is posted twice, your team sees it twice, so know which operations your app can retry safely.
+`BlobMetadata` comes from the same generated module that the OneDrive client uses for actions, so a trigger payload and an action response share one type, defined once from the connector's metadata.
+
+## One generator, three SDKs
+
+The SDKs are generated. A shared generator in the Logic Apps codebase, `CodefulSdkGenerator`, reads live connector Swagger definitions through Azure Resource Manager, cleans them up, and emits clients for C#, Python, and TypeScript. Each SDK repository records what produced it in a generation manifest: the generator commits, the metadata API version, and a hash of every connector's Swagger input. That makes each regeneration traceable to a specific generator revision and a specific set of connector definitions.
+
+Besides action methods, the generator emits models for request and response bodies, typed trigger payloads and trigger operation constants, catalog constants that list the available connectors, and support for paging and dynamic schemas. Each language then has a small handwritten runtime (the base client, the HTTP pipeline, errors, and paging) that the generated code builds on. Naming rules are kept consistent across languages, so the same connector and operation have recognizable names whether you write C#, Python, or TypeScript.
+
+For setup, the VS Code connection manager and the connection-setup skill create the namespace and connection through the ARM preview API, open the OAuth consent page and check that the connection reports `Connected`, add access policies for your developer identity or the Function App's managed identity, and write the runtime URLs into local or deployed app settings.
 
 ## Recap
 
-The connector detected the email in the mailbox, the platform delivered it by webhook or Poll, Functions invoked your handler, and an SDK client posted the summary to Teams. Your code ran only in the last two steps. The platform owns connections, detection, and delivery; Functions hosts your code; the SDKs and language extensions provide typed APIs; and your code owns validation, side effects, and idempotency.
+When a customer writes in, the backing workflow detects the email through API Hub's existing connector trigger. The delivery action then either calls the Function App's webhook or writes to a per-trigger Storage queue that the host extension polls and scales on. The language worker binds the payload to a type that came from the same generator as the SDK, and the handler uses a generated Teams client whose calls go through the namespace's runtime proxy into API Hub.
 
-To try it, deploy one of the samples with `azd up` using a test account and send that account an email. The TypeScript and Python Outlook samples log each new email, and the .NET email triage sample also posts to Teams.
+Each piece reuses what was already there: the Logic Apps workflow engine for triggers, API Hub for connections and connector runtime, the Functions extension model and scale controller for hosting, and Azure Identity for credentials. The new parts are the namespace resources that tie them together, the delivery step, the Functions extension, and the generator that keeps every language's types in step with the connectors themselves.
 
 ---
 
 ## Author notes: source references
 
-These references describe the inspected local source, not a guarantee that every detail has shipped in a public release. The sibling-repository links assume the repositories share a parent folder.
+These links point to the `main` branch of the public GitHub repositories. The connector platform internals described in the post (the resource model, runtime proxy, trigger workflows, delivery action, and Poll runtime API) aren't in a public repository, so they have no links here.
 
 | Architecture | Implementation reference |
 | --- | --- |
-| Connector action runtime proxy | [Connection runtime processor](../AzureUX-BPM/src/flow/Roles/Flow.Web.Cloud.NetCore/RequestProcessors/ConnectorGatewayConnectionRuntimeProcessor.cs). |
-| Trigger setup and Poll protocol | [Trigger configuration engine](../AzureUX-BPM/src/flow/Roles/Flow.Web.Cloud.New/ApiEngines/AIGateways/AIGatewayTriggerConfigApiEngine.cs). |
-| Generated trigger execution | [Trigger workflow generator](../AzureUX-BPM/src/flow/Roles/Flow.Web.Cloud.New/ApiEngines/AIGateways/AIGatewayTriggerConfigWorkflowGenerator.cs). |
-| Push versus queue delivery | [Connector delivery action](../AzureUX-BPM/src/flow/Roles/Flow.Worker.Common/Jobs/Actions/ConnectorGatewayActionJob.cs). |
-| Shared action client | [Connector client base](../Connectors-NodeJS-SDK/src/azureConnectors/clientBase.ts). |
-| SDK transport and authentication | [Connector HTTP pipeline](../Connectors-NodeJS-SDK/src/azureConnectors/connectorHttpClient.ts). |
-| Functions registration and normalization | [Node.js connector trigger wrapper](azure-functions-nodejs-extensions-connectors/src/connectors/connectorTrigger.ts). |
-| Functions helper options | [Connector extension guide](azure-functions-nodejs-extensions-connectors/README.md). |
-| Batched handler | [Outlook polling function](../../../functions-connectors-typescript/office365App/src/functions/onNewEmailPoll.ts). |
-| Deployment and identity setup | [Outlook sample deployment](../../../functions-connectors-typescript/office365App/README.md). |
-| TypeScript new-email handler | [Outlook webhook function](../../../functions-connectors-typescript/office365App/src/functions/onNewEmail.ts). |
-| Python new-email handler | [Python Outlook sample](../../../functions-connectors-python/office365App/function_app.py). |
-| .NET trigger and Teams action | [.NET email triage function](../../../functions-connectors-net-e2e-email-users-teams/function-app/ProcessEmail.cs). |
-
-## Author notes: publication checklist
-
-- Confirm approval to disclose backing workflows, queue behavior, and large-output references.
-- Pin the package versions used in any accompanying example. The SDK README describes 1.0.0 GA, while the inspected samples use preview packages.
-- Confirm supported connector operations and delivery combinations for the demonstrated release.
-- The intro states day-one support for .NET, Python, and Node.js, VS Code tooling, and a single-library catalog without qualification. Confirm release status, feature parity, and the connectors included in each package before publishing.
-- Verify exact host acknowledgement timing, failure handling, and scaling behavior against the matching host implementation before adding stronger claims.
-- Do not promise exactly-once processing, global ordering, a latency target, or unlimited buffering.
-- Run one end-to-end example using test data and capture the resulting function invocation.
-- The batching settings table and the batch-size range and default come from a local, unpublished checkout of the Poll extension source, including its .NET, Python, and Node.js Poll test apps. Confirm the names, defaults, and the Python `azure-functions>=2.4.0b1` requirement against the released packages.
-- The .NET and Python snippets are trimmed from the samples. Build and run each snippet before publishing.
-- The diagrams are animated GIFs in `images/architecture`, captured from `connectors-functions-architecture-explorer.html`. Regenerate them whenever the explorer changes, and confirm the blog platform plays GIFs.
-- Publish `connectors-functions-architecture-explorer.html` alongside the post, or embed it in an iframe, and update the link. If the blog platform blocks scripts, link to a hosted copy (for example, GitHub Pages). Keep the explorer's text in sync with the article.
-- Remove these author notes and replace internal source links with approved public references.
+| Webhook host extension | [Extension config provider](https://github.com/Azure/azure-functions-connector-extension/blob/main/src/Microsoft.Azure.Functions.Extensions.Connector/ConnectorExtensionConfigProvider.cs) and [extension roadmap](https://github.com/Azure/azure-functions-connector-extension/blob/main/README.md). |
+| Poll listener and scaler | [Poll listener](https://github.com/Azure/azure-functions-connector-extension/blob/main/src/Microsoft.Azure.Functions.Extensions.Connector/Polling/ConnectorPollingListener.cs) and [target scaler](https://github.com/Azure/azure-functions-connector-extension/blob/main/src/Microsoft.Azure.Functions.Extensions.Connector/Polling/Scaling/ConnectorTargetScaler.cs). |
+| Isolated worker converter | [Connector trigger converter](https://github.com/Azure/azure-functions-connector-extension/blob/main/src/Microsoft.Azure.Functions.Worker.Extensions.Connector/Converters/ConnectorTriggerConverter.cs). |
+| Node.js worker extension | [Connector trigger wrapper](https://github.com/Azure/azure-functions-nodejs-extensions/blob/main/azure-functions-nodejs-extensions-connectors/src/connectors/connectorTrigger.ts) and [OneDrive for Business triggers](https://github.com/Azure/azure-functions-nodejs-extensions/blob/main/azure-functions-nodejs-extensions-connectors/src/connectors/oneDriveForBusinessTriggers.ts). |
+| SDK runtime | [Connector client base](https://github.com/Azure/Connectors-NodeJS-SDK/blob/main/src/azureConnectors/clientBase.ts) and [Connector HTTP pipeline](https://github.com/Azure/Connectors-NodeJS-SDK/blob/main/src/azureConnectors/connectorHttpClient.ts). |
+| Generation pipeline | [Generation guide](https://github.com/Azure/Connectors-NodeJS-SDK/blob/main/GENERATION.md) and [generation manifest](https://github.com/Azure/Connectors-NodeJS-SDK/blob/main/generation.manifest.json). |
+| Setup tooling | [Connection setup skill](https://github.com/Azure/Connectors-NodeJS-SDK/blob/main/.github/skills/connection-setup/SKILL.md). |
