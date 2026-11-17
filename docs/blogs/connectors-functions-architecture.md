@@ -33,7 +33,7 @@ flowchart TB
 
     subgraph ACTION["Action execution: application to external service"]
         direction TB
-        APP["Azure Function or Node.js application"]
+        APP["Azure Function or other application"]
         CLIENT["Generated connector client<br/>Typed operations and models"]
         HTTP["Shared SDK HTTP pipeline<br/>TokenCredential, transport policies, tracing"]
         PROXY["Connection runtime endpoint<br/>Connection resolution and forwarding"]
@@ -49,7 +49,7 @@ flowchart TB
         EXECUTE["Platform-managed trigger execution"]
         DELIVERY["Event delivery<br/>Webhook or Poll"]
         HOST["Azure Functions host<br/>Connector trigger binding"]
-        WRAPPER["Node.js connector extension<br/>Normalized, typed context"]
+        WRAPPER["Language worker connector extension<br/>Typed trigger payload"]
         HANDLER["Application handler<br/>Business logic"]
         SOURCE --> ACQUIRE --> EXECUTE --> DELIVERY --> HOST --> WRAPPER --> HANDLER
     end
@@ -183,7 +183,7 @@ flowchart TB
         direction TB
         LISTENER["Functions connector listener"]
         BINDING["Host invocation and worker dispatch"]
-        CONTEXT["Node.js extension<br/>Normalize envelopes into items"]
+        CONTEXT["Language worker connector extension<br/>Unpack envelopes into items"]
         CODE["User handler"]
         LISTENER --> BINDING --> CONTEXT --> CODE
     end
@@ -203,20 +203,80 @@ Large outputs, such as an email with a big attachment, aren't stored in the queu
 
 ## Step 5: Run the handler
 
-In the Function App, the host's connector binding turns each delivery into a function invocation. The Node.js connector extension wraps registration and gives your handler a typed context.
+In the Function App, the host's connector binding turns each delivery into a function invocation. Each language worker has a connector extension that passes the payload to your handler as typed objects: `Microsoft.Azure.Functions.Worker.Extensions.Connector` for the .NET isolated worker, `azurefunctions-extensions-connectors` for Python, and `@azure/functions-extensions-connectors` for Node.js.
 
 | Layer | What it does |
 | --- | --- |
 | Connector platform | Holds connections, runs source triggers, delivers events. |
 | Functions host and connector binding | Listens for events and invokes your function. |
-| Node.js connector extension | Normalizes payloads and provides typed registration helpers. |
+| Language worker connector extension | Turns payloads into typed objects and provides registration helpers. |
 | Your handler | Validates data, transforms it, and does the actual work. |
 
-Payloads arrive as a single item, a collection, or an array of Poll envelopes. The extension flattens each shape into `context.items`, and connector-specific helpers expose the same items as `context.emails`, `context.messages`, or `context.files`. The original envelopes stay available in `context.rawPayload`.
+The handler code looks a little different in each language. In .NET you bind to a typed payload such as `Office365OnNewEmailTriggerPayload`. In Python your function receives a list of typed messages. In Node.js the extension collects single items, collections, and Poll envelopes into `context.emails` and keeps the original envelopes in `context.rawPayload`.
+
+These new-email handlers are adapted from the samples:
+
+```csharp
+[Function("OnNewEmail")]
+public IActionResult OnNewEmail(
+    [ConnectorTrigger()] Office365OnNewEmailTriggerPayload payload)
+{
+    var emails = payload?.Body?.Value;
+    if (emails is null)
+    {
+        return new OkResult();
+    }
+
+    foreach (var email in emails)
+    {
+        _logger.LogInformation("Subject: {Subject}, From: {From}", email.Subject, email.From);
+    }
+
+    return new OkResult();
+}
+```
+
+```python
+import logging
+from typing import List
+
+import azure.functions as func
+import azurefunctions.extensions.connectors.office365 as office365
+
+app = func.FunctionApp()
+
+
+@app.function_name(name="OnNewEmail")
+@app.connector_trigger(arg_name="emails")
+def on_new_email(emails: List[office365.ClientReceiveMessage]) -> None:
+    for email in emails:
+        logging.info(f"Subject: '{email.subject}', From: '{email.from_}'.")
+```
+
+```typescript
+import { InvocationContext } from "@azure/functions";
+import { connectors, EmailTriggerContext } from "@azure/functions-extensions-connectors";
+
+connectors.office365.onNewEmail("OnNewEmail", {
+    handler: async (context: EmailTriggerContext, invocationContext: InvocationContext) => {
+        for (const email of context.emails) {
+            invocationContext.log(`Subject: '${email.subject}', From: '${email.from}'.`);
+        }
+
+        return context.rawPayload;
+    },
+});
+```
+
+Each registration names the function and supplies the handler. Connection authorization and trigger setup happened in step 1. The samples log email metadata, so run them against a test account.
 
 The types help in the editor, but nothing checks them at runtime. Validate any field your logic depends on, especially in dynamic records.
 
-The Outlook sample registers its Poll handler like this:
+### Batching and scaling
+
+Batching can happen in four places. The source trigger can return a collection, and the platform can split that collection into separate runs based on metadata and configuration. Poll delivery can then return several events at once, which the extension passes to a single handler call.
+
+The TypeScript Poll sample sets the batch options explicitly:
 
 ```typescript
 import { Cardinality, DeliveryMode, InvocationContext } from "@azure/functions";
@@ -239,15 +299,9 @@ connectors.office365.onNewEmail("OnNewEmailPoll", {
 });
 ```
 
-The registration names the function, sets delivery and batching options, and supplies the handler. Connection authorization and trigger setup happened in step 1. The sample is disabled by default and logs email metadata, so run it against a test account.
+The event count and the email count can differ. Here `maxBatchSize: 4` limits each invocation to four Poll events, but one event can hold several emails, so `context.emails` can have more than four entries. This sample is disabled by default.
 
-### Batching and scaling
-
-Batching can happen in four places. The source trigger can return a collection, and the platform can split that collection into separate runs based on metadata and configuration. Poll delivery can then return several events at once, and the Node.js extension combines the items from those events into one handler call.
-
-As a result, the event count and the email count can differ. In the sample, `maxBatchSize: 4` limits each invocation to four Poll events, but one event can hold several emails, so `context.emails` can have more than four entries.
-
-Cardinality and batch size control how events are grouped into an invocation. `MaxConcurrentCalls` limits concurrent calls when events arrive one at a time; the host ignores it for batched bindings like the sample's. The pending-event target is an input to scaling decisions.
+Cardinality and batch size control how events are grouped into an invocation. `MaxConcurrentCalls` limits concurrent calls when events arrive one at a time; the host ignores it for batched bindings like this one. The pending-event target is an input to scaling decisions.
 
 Raising every setting won't necessarily increase throughput. The external service may throttle you, and your handler may do slow or non-repeatable work, so measure throughput across the whole pipeline, from receiving the event to finishing its side effects.
 
@@ -255,17 +309,19 @@ Raising every setting won't necessarily increase throughput. The external servic
 
 Once the handler has pulled the important details out of the email, it posts them to Teams. This call uses the action path from the overview diagram, which is independent of how the email arrived.
 
-You create a `TeamsClient` for your Teams connection and call one of its typed methods. A shared SDK layer builds the request, gets a token through `TokenCredential`, applies retries and other HTTP policies, and reports errors and tracing. The Connector Namespace resolves your connection and passes the call to the managed connector runtime, which calls Teams.
+The .NET email triage sample does this. For each email its classifier marks as important, it calls `PostMessageToConversationAsync` on a `TeamsClient` to post a triage card, then uses an `Office365Client` to flag the source email in Outlook. The Python and Node.js SDKs generate the same kind of client for each connector.
 
-Other generated clients follow the same pattern; you could use `SharePointOnlineClient` to save the attachment. You can also use the clients in Node.js apps outside Azure Functions.
+Under each client, the SDK builds the request, gets a token from an Azure Identity credential, applies retries and other HTTP policies, and reports errors. The Connector Namespace resolves your connection and passes the call to the managed connector runtime, which calls Teams.
+
+Other generated clients follow the same pattern; you could use the SharePoint Online client to save the attachment. The clients also work outside Azure Functions, in any .NET, Python, or Node.js app.
 
 Retries don't make every call safe to repeat. If the same summary is posted twice, your team sees it twice, so know which operations your app can retry safely.
 
 ## Recap
 
-The connector detected the email in the mailbox, the platform delivered it by webhook or Poll, Functions invoked your handler, and an SDK client posted the summary to Teams. Your code ran only in the last two steps. The platform owns connections, detection, and delivery; Functions hosts your code; the SDK and the Node.js extension provide typed APIs; and your code owns validation, side effects, and idempotency.
+The connector detected the email in the mailbox, the platform delivered it by webhook or Poll, Functions invoked your handler, and an SDK client posted the summary to Teams. Your code ran only in the last two steps. The platform owns connections, detection, and delivery; Functions hosts your code; the SDKs and language extensions provide typed APIs; and your code owns validation, side effects, and idempotency.
 
-To try it, deploy the Outlook sample with `azd up` using a test account and send that account an email. The sample logs each email it receives, and you can add the Teams post from step 6.
+To try it, deploy one of the samples with `azd up` using a test account and send that account an email. The TypeScript and Python Outlook samples log each new email, and the .NET email triage sample also posts to Teams.
 
 ---
 
@@ -285,6 +341,9 @@ These references describe the inspected local source, not a guarantee that every
 | Functions helper options | [Connector extension guide](azure-functions-nodejs-extensions-connectors/README.md). |
 | Batched handler | [Outlook polling function](../../../functions-connectors-typescript/office365App/src/functions/onNewEmailPoll.ts). |
 | Deployment and identity setup | [Outlook sample deployment](../../../functions-connectors-typescript/office365App/README.md). |
+| TypeScript new-email handler | [Outlook webhook function](../../../functions-connectors-typescript/office365App/src/functions/onNewEmail.ts). |
+| Python new-email handler | [Python Outlook sample](../../../functions-connectors-python/office365App/function_app.py). |
+| .NET trigger and Teams action | [.NET email triage function](../../../functions-connectors-net-e2e-email-users-teams/function-app/ProcessEmail.cs). |
 
 ## Author notes: publication checklist
 
@@ -295,6 +354,7 @@ These references describe the inspected local source, not a guarantee that every
 - Verify exact host acknowledgement timing, failure handling, and scaling behavior against the matching host implementation before adding stronger claims.
 - Do not promise exactly-once processing, global ordering, a latency target, or unlimited buffering.
 - Run one end-to-end example using test data and capture the resulting function invocation.
-- The support-inbox story ends with a Teams post that the Outlook sample doesn't include. Consider adding a short `TeamsClient` snippet once the exact method and connection setup are confirmed.
+- The only Poll and batching example is TypeScript, because the inspected Python and .NET samples use webhook delivery. Confirm Poll delivery and batch options for the Python and .NET extensions, and add matching examples if they exist.
+- The .NET and Python snippets are trimmed from the samples. Build and run each snippet before publishing.
 - Preview the Mermaid diagrams in a renderer that supports Mermaid before publishing. Export them as images if the blog platform does not render Mermaid.
 - Remove these author notes and replace internal source links with approved public references.
