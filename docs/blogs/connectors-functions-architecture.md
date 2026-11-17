@@ -1,14 +1,12 @@
 # Inside the architecture: How connectors work with Azure Functions
 
-> Working draft. Confirm release status and approval to publish backend implementation details before publishing. The source references and publication checklist at the end are author notes, not part of the finished post.
-
 Say you run a shared support inbox. Each time a customer writes in, you want a function to read the email, pick out the important parts, and post a summary in your team's Teams channel. The business logic might be twenty lines. The rest is authorization, change detection, event delivery, and a second set of permissions to post in Teams, and you rebuild most of it for every service you touch.
 
 Azure connectors and the connector SDKs take that work on. The platform manages connections and authorization. The same app can react to events in one service and call operations in another. Webhook and Poll delivery give you push or pull, so you can pick what fits your app. One SDK per language covers the connector catalog with typed operations and payloads, VS Code tooling handles setup, and SDKs are available for .NET, Python, and Node.js from day one.
 
 Underneath those promises are a handful of pieces we built and a few decisions about where each one stops. The support inbox runs through all of them.
 
-## Why we reused the connector runtime
+## Starting from what Azure already has
 
 Azure already runs more than 1,000 managed connectors. They power Azure Logic Apps and Power Automate, and API Hub hosts their connections, OAuth consent, and runtime. Logic Apps already knows how to run connector triggers, whether the source sends notifications, accepts a webhook subscription, or has to be polled.
 
@@ -138,11 +136,38 @@ When a customer writes in, the backing workflow detects the email through API Hu
 
 Each piece reuses what was already there: the Logic Apps workflow engine for triggers, API Hub for connections and connector runtime, the Functions extension model and scale controller for hosting, and Azure Identity for credentials. The new parts are the namespace resources that tie them together, the delivery step, the Functions extension, and the generator that keeps every language's types in step with the connectors themselves.
 
+## Resources
+
+### Connectors SDKs
+
+| Language | Repository |
+| --- | --- |
+| .NET | [Azure/Connectors-NET-SDK](https://github.com/Azure/Connectors-NET-SDK) |
+| Python | [Azure/Connectors-Python-SDK](https://github.com/Azure/Connectors-Python-SDK) |
+| Node.js | [Azure/Connectors-NodeJS-SDK](https://github.com/Azure/Connectors-NodeJS-SDK) |
+
+### Azure Functions connector extensions
+
+| Component | Repository |
+| --- | --- |
+| Host extension and .NET isolated worker extension | [Azure/azure-functions-connector-extension](https://github.com/Azure/azure-functions-connector-extension) |
+| Python worker extension | [azurefunctions-extensions-connectors](https://github.com/Azure/azure-functions-python-extensions/tree/dev/azurefunctions-extensions-connectors) |
+| Node.js worker extension | [azure-functions-nodejs-extensions-connectors](https://github.com/Azure/azure-functions-nodejs-extensions/tree/main/azure-functions-nodejs-extensions-connectors) |
+
+### Samples
+
+| Sample | Repository |
+| --- | --- |
+| .NET email triage into Teams | [Azure-Samples/functions-connectors-net-e2e-email-users-teams](https://github.com/Azure-Samples/functions-connectors-net-e2e-email-users-teams) |
+| .NET connector samples | [Azure/Connectors-NET-samples](https://github.com/Azure/Connectors-NET-samples) |
+| Python connector samples | [Azure-Samples/functions-connectors-python](https://github.com/Azure-Samples/functions-connectors-python) |
+| TypeScript connector samples | [Azure-Samples/functions-connectors-typescript](https://github.com/Azure-Samples/functions-connectors-typescript) |
+
 ---
 
-## Author notes: source references
+## References
 
-These links point to the `main` branch of the public GitHub repositories. The connector platform internals described in the post (the resource model, runtime proxy, trigger workflows, delivery action, and Poll runtime API) aren't in a public repository, so they have no links here.
+
 
 | Architecture | Implementation reference |
 | --- | --- |
@@ -153,3 +178,5 @@ These links point to the `main` branch of the public GitHub repositories. The co
 | SDK runtime | [Connector client base](https://github.com/Azure/Connectors-NodeJS-SDK/blob/main/src/azureConnectors/clientBase.ts) and [Connector HTTP pipeline](https://github.com/Azure/Connectors-NodeJS-SDK/blob/main/src/azureConnectors/connectorHttpClient.ts). |
 | Generation pipeline | [Generation guide](https://github.com/Azure/Connectors-NodeJS-SDK/blob/main/GENERATION.md) and [generation manifest](https://github.com/Azure/Connectors-NodeJS-SDK/blob/main/generation.manifest.json). |
 | Setup tooling | [Connection setup skill](https://github.com/Azure/Connectors-NodeJS-SDK/blob/main/.github/skills/connection-setup/SKILL.md). |
+
+> Note: The connector platform internals described in the post (the resource model, runtime proxy, trigger workflows, delivery action, and Poll runtime API) aren't in a public repository, so they have no links here.
